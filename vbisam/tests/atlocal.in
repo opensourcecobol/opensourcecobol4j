@@ -1,0 +1,6 @@
+CC="@CC@"
+PATH="${abs_top_builddir}/bin:${abs_top_builddir}/libvbisam/.libs:${PATH}"
+export LD_LIBRARY_PATH="${abs_top_builddir}/libvbisam/.libs:$LD_LIBRARY_PATH"
+export DYLD_LIBRARY_PATH="${abs_top_builddir}/libvbisam/.libs:$DYLD_LIBRARY_PATH"
+export SHLIB_PATH="${abs_top_builddir}/libvbisam/.libs:$SHLIB_PATH"
+export LIBPATH="${abs_top_builddir}/libvbisam/.libs:$LIBPATH"

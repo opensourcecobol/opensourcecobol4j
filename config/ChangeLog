@@ -1,0 +1,77 @@
+2007-12-27  Roger While <simrw@sim-basis.de>
+
+	** Mark 1.0 RELEASE
+
+2007-08-23  Roger While <simrw@sim-basis.de>
+
+	* Remove deprecated v023.conf
+	  Remove display-sign
+
+2007-01-29  Roger While <simrw@sim-basis.de>
+
+	* Add odo-without-to, default OK, set to unconformable
+		for 85/2002
+
+2006-09-30  Roger While <simrw@sim-basis.de>
+
+	* All conf's : Make filename-mapping default
+
+2006-02-02  Roger While <simrw@sim-basis.de>
+
+	* Add relax-level-hierarchy to ibm.conf, mvs.conf,
+	  mf.conf, bs2000.conf
+
+2006-01-20  Roger While <simrw@sim-basis.de>
+
+	* Add relax-level-hierarchy to default.conf
+	  Allows mismatched level numbers
+
+2005-12-18  Roger While <simrw@sim-basis.de>
+
+	* Add perform-osvs, sticky-linkage to ibm.conf, mvs.conf
+
+2005-11-25  Roger While <simrw@sim-basis.de>
+
+	* New variable - sticky-linkage
+	  New config file - bs2000.conf
+
+2005-11-05  Roger While <simrw@sim-basis.de>
+
+	* New variable - perform-osvs
+
+2005-05-15  Roger While <simrw@sim-basis.de>
+
+	* Do not nest includes. All config files include
+	  default.conf. We will need this for individual
+	  "not-resrved" words.
+
+2005-05-12  Roger While <simrw@sim-basis.de>
+
+	* Revert cobol2002.conf
+
+2005-05-03  Roger While <simrw@sim-basis.de>
+
+	* default.conf, cobol2002.conf, mf.conf
+	  New variable - larger-redefines-ok
+	  New variable - relaxed-syntax-check
+
+2005-03-07  Roger While <simrw@sim-basis.de>
+
+	* default.conf, mvs.conf :
+	  New variable - not-reserved
+	  Document in default.conf
+	  CYCLE as not reserved in mvs.conf 
+
+2003-08-30  Keisuke Nishida  <kxn30@yahoo.co.jp>
+
+	* gnu.conf: Removed.
+	* default.conf: Renamed from default.inc.
+
+2003-08-28  Keisuke Nishida  <kxn30@yahoo.co.jp>
+
+	* v023.conf: New file.
+
+2003-08-09  Keisuke Nishida  <knishida@netlab.jp>
+
+	* gnu.conf, cobol85.conf, cobol2002.conf, mf.conf, mvs.conf: New files.
+	* default.inc, Makefile.am: New files.

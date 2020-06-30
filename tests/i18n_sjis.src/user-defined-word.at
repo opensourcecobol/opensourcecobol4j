@@ -1,0 +1,485 @@
+AT_SETUP([Program name])
+
+AT_DATA([prog.cob], [
+       IDENTIFICATION   DIVISION.
+       PROGRAM-ID.      “ú–{Œê‚ÌƒvƒƒOƒ‰ƒ€–¼.
+       PROCEDURE        DIVISION.
+           STOP RUN.
+])
+
+AT_CHECK([${COMPILE} -x prog.cob])
+
+AT_CLEANUP
+
+AT_SETUP([Field name])
+
+AT_DATA([prog.cob], [
+       IDENTIFICATION   DIVISION.
+       PROGRAM-ID.      prog.
+       DATA             DIVISION.
+       WORKING-STORAGE  SECTION.
+       01 ‚n|•¶š—ñ PIC X(7) USAGE DISPLAY.
+       PROCEDURE        DIVISION.
+           MOVE "Unicode" TO ‚n|•¶š—ñ.
+           DISPLAY ‚n|•¶š—ñ WITH NO ADVANCING.
+           STOP RUN.
+])
+
+AT_CHECK([${COMPILE} -x prog.cob])
+AT_CHECK([./prog], [0], [Unicode])
+
+AT_CLEANUP
+
+AT_SETUP([Long field name])
+
+AT_DATA([prog.cob], [
+       IDENTIFICATION   DIVISION.
+       PROGRAM-ID.      prog.
+       DATA             DIVISION.
+       WORKING-STORAGE  SECTION.
+       01   €–Ú‚`‚a‚b‚c‚d‚e‚f‚g‚O‚P‚Q‚R‚S5
+            PIC X(7).
+       PROCEDURE        DIVISION.
+           MOVE "Unicode"
+             TO
+           €–Ú‚`‚a‚b‚c‚d‚e‚f‚g‚O‚P‚Q‚R‚S5.
+           DISPLAY
+            €–Ú‚`‚a‚b‚c‚d‚e‚f‚g‚O‚P‚Q‚R‚S5
+	     WITH NO ADVANCING.
+           STOP RUN.
+])
+
+AT_CHECK([${COMPILE} -x prog.cob])
+AT_CHECK([./prog], [0], [Unicode])
+
+AT_CLEANUP
+
+
+AT_SETUP([Field lookup])
+
+AT_DATA([prog.cob], [
+       IDENTIFICATION   DIVISION.
+       PROGRAM-ID.      prog.
+       DATA             DIVISION.
+       WORKING-STORAGE  SECTION.
+       01 €–Ú‚Q PIC X(1) VALUE "A".
+       01 €–Ú‚q PIC X(1) VALUE "B".
+       PROCEDURE        DIVISION.
+           DISPLAY €–Ú‚Q €–Ú‚q WITH NO ADVANCING.
+           STOP RUN.
+])
+
+AT_CHECK([${COMPILE} -x prog.cob])
+AT_CHECK([./prog], [0], [AB])
+
+AT_CLEANUP
+
+AT_SETUP([Section name])
+
+AT_DATA([prog.cob], [
+       IDENTIFICATION   DIVISION.
+       PROGRAM-ID.      prog.
+       DATA             DIVISION.
+       WORKING-STORAGE  SECTION.
+       PROCEDURE        DIVISION.
+       PERFORM    ‚r|‰Šú‰».
+       PERFORM    ‚r|I—¹.
+       ‚r|‰Šú‰»       SECTION.
+           DISPLAY "Hello, " WITH NO ADVANCING.
+       ‚r|I—¹         SECTION.
+           DISPLAY "and good bye." WITH NO ADVANCING.
+           STOP RUN.
+])
+
+AT_CHECK([${COMPILE} -x prog.cob])
+AT_CHECK([./prog], [0], [Hello, and good bye.])
+
+AT_CLEANUP
+
+AT_SETUP([Long section name])
+
+AT_DATA([prog.cob], [
+       IDENTIFICATION   DIVISION.
+       PROGRAM-ID.      prog.
+       DATA             DIVISION.
+       WORKING-STORAGE  SECTION.
+       PROCEDURE        DIVISION.
+       PERFORM s‚P‚Q‚R‚S‚T‚U‚V‚W‚X‚O1234567890.
+       PERFORM    ‚r|I—¹.
+       s‚P‚Q‚R‚S‚T‚U‚V‚W‚X‚O1234567890 SECTION.
+           DISPLAY "Hello, " WITH NO ADVANCING.
+       ‚r|I—¹         SECTION.
+           DISPLAY "and good bye." WITH NO ADVANCING.
+           STOP RUN.
+])
+
+AT_CHECK([${COMPILE} -x prog.cob])
+AT_CHECK([./prog], [0], [Hello, and good bye.])
+
+AT_CLEANUP
+
+AT_SETUP([Too long section name])
+
+AT_DATA([prog.cob], [
+       IDENTIFICATION   DIVISION.
+       PROGRAM-ID.      prog.
+       DATA             DIVISION.
+       WORKING-STORAGE  SECTION.
+       PROCEDURE        DIVISION.
+       PERFORM s‚P‚Q‚R‚S‚T‚U‚V‚W‚X‚O123456789012345678901.
+       PERFORM    ‚r|I—¹.
+       s‚P‚Q‚R‚S‚T‚U‚V‚W‚X‚O123456789012345678901 SECTION.
+           DISPLAY "Hello, " WITH NO ADVANCING.
+       ‚r|I—¹         SECTION.
+           DISPLAY "and good bye." WITH NO ADVANCING.
+           STOP RUN.
+])
+
+AT_CHECK([${COMPILE} -x prog.cob], [1], [],
+[prog.cob:7: Error: User defined name must be less than 32 characters
+prog.cob:9: Error: User defined name must be less than 32 characters
+])
+
+AT_CLEANUP
+
+AT_SETUP([Nihongo Filename])
+
+AT_DATA([prog.cob], [
+       IDENTIFICATION   DIVISION.
+       PROGRAM-ID.      prog.
+       ENVIRONMENT      DIVISION.
+       INPUT-OUTPUT     SECTION.
+       FILE-CONTROL.
+       SELECT ƒeƒXƒgƒtƒ@ƒCƒ‹ ASSIGN TO "./ƒeƒXƒg_ƒtƒ@ƒCƒ‹"
+                        ORGANIZATION IS  INDEXED
+                        ACCESS MODE  IS  SEQUENTIAL
+                        RECORD KEY   IS  TEST-KEY.
+       DATA             DIVISION.
+       FILE             SECTION.
+       FD ƒeƒXƒgƒtƒ@ƒCƒ‹.
+       01 TEST-KEY      PIC X(10).
+       PROCEDURE        DIVISION.
+           OPEN  OUTPUT ƒeƒXƒgƒtƒ@ƒCƒ‹.
+           MOVE "TEST000000" TO TEST-KEY.
+           WRITE TEST-KEY.
+           CLOSE ƒeƒXƒgƒtƒ@ƒCƒ‹.
+           OPEN  INPUT  ƒeƒXƒgƒtƒ@ƒCƒ‹.
+           READ  ƒeƒXƒgƒtƒ@ƒCƒ‹
+               NOT AT END
+                   DISPLAY "OK" NO ADVANCING
+           END-READ.
+           CLOSE ƒeƒXƒgƒtƒ@ƒCƒ‹.
+           STOP RUN.
+])
+
+AT_CHECK([${COMPILE} -x prog.cob])
+AT_CHECK([./prog], [0], [OK])
+
+AT_CLEANUP
+
+AT_SETUP([Nihongo field name in numeric test msg.])
+
+AT_DATA([prog.cob], [
+       IDENTIFICATION    DIVISION.
+       PROGRAM-ID.       numcheck.
+       DATA              DIVISION.
+       WORKING-STORAGE   SECTION.
+       01  TEST-REC.
+         03  U€–Ú  PIC  9(4) VALUE  1000.
+       01  X€–Ú    PIC  X(4) VALUE 'ABCD'.
+       PROCEDURE         DIVISION.
+           MOVE X€–Ú TO TEST-REC.
+           ADD 1 TO U€–Ú.
+           GOBACK.
+])
+
+AT_CHECK([${COMPILE} -debug -x prog.cob])
+AT_CHECK([./prog], [1], [],
+[prog.cob:11: libcob: 'U€–Ú' not numeric: 'ABCD'
+])
+
+AT_CLEANUP
+
+AT_SETUP([Nihongo field name in BASED test msg.])
+
+AT_DATA([prog.cob], [
+       IDENTIFICATION    DIVISION.
+       PROGRAM-ID.       basedcheck.
+       DATA              DIVISION.
+       WORKING-STORAGE   SECTION.
+       01  X€–Ú    PIC  X(4) VALUE 'ABCD'.
+       01  Y€–Ú    PIC  X(4) BASED.
+       PROCEDURE         DIVISION.
+           MOVE X€–Ú TO Y€–Ú.
+           GOBACK.
+])
+
+AT_CHECK([${COMPILE} -debug -x prog.cob])
+AT_CHECK([./prog], [1], [],
+[prog.cob:9: libcob: BASED/LINKAGE item 'Y€–Ú' has NULL address
+])
+
+AT_CLEANUP
+
+AT_SETUP([Nihongo field name in ODO test msg.])
+
+AT_DATA([prog.cob], [
+       IDENTIFICATION    DIVISION.
+       PROGRAM-ID.       odocheck.
+       DATA              DIVISION.
+       WORKING-STORAGE   SECTION.
+       01  I€–Ú         PIC 9 VALUE 4.
+       01  X.
+         03  Y€–Ú       PIC 9 OCCURS 1 TO 3 DEPENDING ON I€–Ú.
+       PROCEDURE         DIVISION.
+           MOVE 1 TO Y€–Ú(3).
+           GOBACK.
+])
+
+AT_CHECK([${COMPILE} -debug -x prog.cob])
+AT_CHECK([./prog], [1], [],
+[prog.cob:10: libcob: OCCURS DEPENDING ON 'I€–Ú' out of bounds: 4
+])
+
+AT_CLEANUP
+
+AT_SETUP([Nihongo field name in Subscript test msg.])
+
+AT_DATA([prog.cob], [
+       IDENTIFICATION    DIVISION.
+       PROGRAM-ID.       odocheck.
+       DATA              DIVISION.
+       WORKING-STORAGE   SECTION.
+       01  I€–Ú         PIC 9 VALUE 2.
+       01  X.
+         03  Y€–Ú       PIC 9 OCCURS 1 TO 3 DEPENDING ON I€–Ú.
+       PROCEDURE         DIVISION.
+           MOVE 1 TO Y€–Ú(3).
+           GOBACK.
+])
+
+AT_CHECK([${COMPILE} -debug -x prog.cob])
+AT_CHECK([./prog], [1], [],
+[prog.cob:10: libcob: Subscript of 'Y€–Ú' out of bounds: 3
+])
+
+AT_CLEANUP
+
+AT_SETUP([Nihongo field name in length of ref_mod test msg.])
+
+AT_DATA([prog.cob], [
+       IDENTIFICATION    DIVISION.
+       PROGRAM-ID.       refcheck.
+       DATA              DIVISION.
+       WORKING-STORAGE   SECTION.
+       01  I             PIC 9    VALUE 2.
+       01  J             PIC 9    VALUE 6.
+       01  X€–Ú         PIC X(5) VALUE "ABCDE".
+       PROCEDURE         DIVISION.
+           DISPLAY X€–Ú(I:J).
+           GOBACK.
+])
+
+AT_CHECK([${COMPILE} -debug -x prog.cob])
+AT_CHECK([./prog], [1], [],
+[prog.cob:10: libcob: Length of 'X€–Ú' out of bounds: 6
+])
+
+AT_CLEANUP
+
+AT_SETUP([Nihongo field name in offset of ref_mod test msg.])
+
+AT_DATA([prog.cob], [
+       IDENTIFICATION    DIVISION.
+       PROGRAM-ID.       refcheck.
+       DATA              DIVISION.
+       WORKING-STORAGE   SECTION.
+       01  I             PIC 9    VALUE 6.
+       01  J             PIC 9    VALUE 2.
+       01  X€–Ú         PIC X(5) VALUE "ABCDE".
+       PROCEDURE         DIVISION.
+           DISPLAY X€–Ú(I:J).
+           GOBACK.
+])
+
+AT_CHECK([${COMPILE} -debug -x prog.cob])
+AT_CHECK([./prog], [1], [],
+[prog.cob:10: libcob: Offset of 'X€–Ú' out of bounds: 6
+])
+
+AT_CLEANUP
+
+AT_SETUP([Nihongo field name in length of N_refmod test msg.])
+
+AT_DATA([prog.cob], [
+       IDENTIFICATION    DIVISION.
+       PROGRAM-ID.       refcheck.
+       DATA              DIVISION.
+       WORKING-STORAGE   SECTION.
+       01  I             PIC 9    VALUE 2.
+       01  J             PIC 99   VALUE 18.
+       01  X€–Ú         PIC N(5) VALUE "‚`‚a‚b‚c‚d".
+       PROCEDURE         DIVISION.
+           DISPLAY X€–Ú(I:J).
+           GOBACK.
+])
+
+AT_CHECK([${COMPILE} -debug -x prog.cob])
+AT_CHECK([./prog], [1], [],
+[prog.cob:10: libcob: Length of 'X€–Ú' out of bounds: 18
+])
+
+AT_CLEANUP
+
+AT_SETUP([Nihongo field name in offset of N_refmod test msg.])
+
+AT_DATA([prog.cob], [
+       IDENTIFICATION    DIVISION.
+       PROGRAM-ID.       refcheck.
+       DATA              DIVISION.
+       WORKING-STORAGE   SECTION.
+       01  I             PIC 99   VALUE 18.
+       01  J             PIC 9    VALUE 2.
+       01  X€–Ú         PIC N(5) VALUE "‚`‚a‚b‚c‚d".
+       PROCEDURE         DIVISION.
+           DISPLAY X€–Ú(I:J).
+           GOBACK.
+])
+
+AT_CHECK([${COMPILE} -debug -x prog.cob])
+AT_CHECK([./prog], [1], [],
+[prog.cob:10: libcob: Offset of 'X€–Ú' out of bounds: 18
+])
+
+AT_CLEANUP
+
+AT_SETUP([Nihongo field name in extaddr test msg.])
+
+AT_DATA([prog.cob], [
+       IDENTIFICATION    DIVISION.
+       PROGRAM-ID.       check1.
+       DATA              DIVISION.
+       WORKING-STORAGE   SECTION.
+       01  X€–Ú         PIC X(5) EXTERNAL.
+       PROCEDURE         DIVISION.
+           CALL 'check2'.
+
+       IDENTIFICATION    DIVISION.
+       PROGRAM-ID.       check2.
+       DATA              DIVISION.
+       WORKING-STORAGE   SECTION.
+       01  X€–Ú         PIC X(6) EXTERNAL.
+       PROCEDURE         DIVISION.
+           END PROGRAM check2.
+           END PROGRAM check1.
+])
+
+AT_CHECK([${COMPILE} -debug -x prog.cob])
+AT_CHECK([./prog], [1], [],
+[prog.cob:8: libcob: EXTERNAL item 'X€–Ú' has size > 6
+])
+
+AT_CLEANUP
+
+AT_SETUP([Nihongo field name in undefined error msg.])
+
+AT_DATA([prog.cob], [
+       IDENTIFICATION   DIVISION.
+       PROGRAM-ID.      prog.
+       DATA             DIVISION.
+       WORKING-STORAGE  SECTION.
+       01 GW’c€–Ú.
+          03 A€–Ú PIC X.
+       PROCEDURE        DIVISION.
+001009     DISPLAY NO-FLD.
+001010     DISPLAY NO-FLD IN G-GRP.
+001011     DISPLAY NO-FLD IN NO-GRP.
+001012     DISPLAY NO€–Ú.
+001013     DISPLAY NO€–Ú IN GW’c€–Ú.
+001014     DISPLAY NO€–Ú IN NOW’c€–Ú.
+001015     DISPLAY NO-FLD IN GW’c€–Ú.
+001016     DISPLAY NO-FLD IN NOW’c€–Ú.
+001017     DISPLAY NO€–Ú IN G-GRP.
+001018     DISPLAY NO€–Ú IN NO-GRP.
+001019     DISPLAY NO€–Ú IN GW’c€–Ú IN NOW’c€–Ú.
+])
+
+AT_CHECK([${COMPILE} -debug -x prog.cob], [1], [],
+[prog.cob:9: Error: 'NO-FLD' undefined
+prog.cob:10: Error: 'NO-FLD' in 'G-GRP' undefined
+prog.cob:11: Error: 'NO-FLD' in 'NO-GRP' undefined
+prog.cob:12: Error: 'NO€–Ú' undefined
+prog.cob:13: Error: 'NO€–Ú' in 'GW’c€–Ú' undefined
+prog.cob:14: Error: 'NO€–Ú' in 'NOW’c€–Ú' undefined
+prog.cob:15: Error: 'NO-FLD' in 'GW’c€–Ú' undefined
+prog.cob:16: Error: 'NO-FLD' in 'NOW’c€–Ú' undefined
+prog.cob:17: Error: 'NO€–Ú' in 'G-GRP' undefined
+prog.cob:18: Error: 'NO€–Ú' in 'NO-GRP' undefined
+prog.cob:19: Error: 'NO€–Ú' in 'GW’c€–Ú' in 'NOW’c€–Ú' undefined
+])
+
+AT_CLEANUP
+
+AT_SETUP([Nihongo field name in ambiguous error msg.])
+
+AT_DATA([prog.cob], [
+       IDENTIFICATION   DIVISION.
+       PROGRAM-ID.      prog.
+       DATA             DIVISION.
+       WORKING-STORAGE  SECTION.
+       01 A€–Ú PIC X.
+       01 G1W’c.
+          03 A€–Ú PIC X.
+          03 B€–Ú PIC X.
+          03 G2W’c.
+             05 A€–Ú PIC X.
+             05 B€–Ú PIC X.
+       PROCEDURE        DIVISION.
+001014     DISPLAY A€–Ú.
+001015     DISPLAY B€–Ú IN G1W’c.
+           GOBACK.
+])
+
+AT_CHECK([${COMPILE_ONLY} prog.cob], [1], [],
+[prog.cob:8: Warning: Redefinition of 'A€–Ú'
+prog.cob:6: Warning: 'A€–Ú' previously defined here
+prog.cob:11: Warning: Redefinition of 'A€–Ú'
+prog.cob:6: Warning: 'A€–Ú' previously defined here
+prog.cob:14: Error: 'A€–Ú' ambiguous; need qualification
+prog.cob:6: Error: 'A€–Ú' defined here
+prog.cob:8: Error: 'A€–Ú' in 'G1W’c' defined here
+prog.cob:11: Error: 'A€–Ú' in 'G2W’c' in 'G1W’c' defined here
+prog.cob:15: Error: 'B€–Ú' in 'G1W’c' ambiguous; need qualification
+prog.cob:9: Error: 'B€–Ú' in 'G1W’c' defined here
+prog.cob:12: Error: 'B€–Ú' in 'G2W’c' in 'G1W’c' defined here
+])
+
+AT_CLEANUP
+
+AT_SETUP([Nihongo label name in ambiguous error msg.])
+
+AT_DATA([prog.cob], [
+       IDENTIFICATION   DIVISION.
+       PROGRAM-ID.      prog.
+       DATA             DIVISION.
+       PROCEDURE        DIVISION.
+001006   L0Œ©o‚µ.
+001007     GO TO L1Œ©o‚µ.
+001008     GO TO L2Œ©o‚µ IN S1ß.
+001009   L1Œ©o‚µ. GOBACK.
+001010   L1Œ©o‚µ. GOBACK.
+001011 S1ß             SECTION.
+001012   L2Œ©o‚µ. GOBACK.
+001013   L2Œ©o‚µ. GOBACK.
+])
+
+AT_CHECK([${COMPILE_ONLY} prog.cob], [1], [],
+[prog.cob:7: Error: 'L1Œ©o‚µ' ambiguous; need qualification
+prog.cob:9: Error: 'L1Œ©o‚µ' in 'MAIN SECTION' defined here
+prog.cob:10: Error: 'L1Œ©o‚µ' in 'MAIN SECTION' defined here
+prog.cob:8: Error: 'L2Œ©o‚µ' in 'S1ß' ambiguous; need qualification
+prog.cob:12: Error: 'L2Œ©o‚µ' in 'S1ß' defined here
+prog.cob:13: Error: 'L2Œ©o‚µ' in 'S1ß' defined here
+])
+
+AT_CLEANUP

@@ -1,0 +1,22 @@
+AT_SETUP([COPY: last line break in copybook])
+AT_KEYWORDS([copy])
+
+AT_DATA([prog.cob], [
+       IDENTIFICATION   DIVISION.
+       PROGRAM-ID.      prog.
+       DATA             DIVISION.
+       WORKING-STORAGE  SECTION.
+       COPY "copy.inc".
+       PROCEDURE        DIVISION.
+           DISPLAY TEST-VAR NO ADVANCING
+           END-DISPLAY.
+           STOP RUN.
+])
+
+AT_CHECK([echo -n '       01 TEST-VAR PIC X(2) VALUE "OK".' > copy.inc
+])
+AT_CHECK([${COMPILE} -o prog prog.cob], [0], ,
+[copy.inc:1: Warning: Line not terminated by a newline
+])
+AT_CHECK([./prog], [0], [OK])
+AT_CLEANUP

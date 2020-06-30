@@ -1,0 +1,146 @@
+AT_SETUP([FUNCTION STORED-CHAR-LENGTH(PIC X)])
+
+AT_DATA([prog.cob], [
+       IDENTIFICATION   DIVISION.
+       PROGRAM-ID.      prog.
+       DATA             DIVISION.
+       WORKING-STORAGE  SECTION.
+       77 NSTR         PIC X(30) USAGE DISPLAY.
+       77 NLEN         PIC 9(2)  USAGE DISPLAY.
+       PROCEDURE        DIVISION.
+           MOVE ".プリウスα" TO NSTR.
+           MOVE FUNCTION STORED-CHAR-LENGTH(NSTR) TO NLEN.
+           DISPLAY NLEN WITH NO ADVANCING.
+           STOP RUN.
+])
+
+AT_CHECK([${COMPILE} -x prog.cob])
+AT_CHECK([./prog], [0], [06])
+
+AT_CLEANUP
+
+AT_SETUP([FUNCTION STORED-CHAR-LENGTH(PIC X) /w SPC])
+
+AT_DATA([prog.cob], [
+       IDENTIFICATION   DIVISION.
+       PROGRAM-ID.      prog.
+       DATA             DIVISION.
+       WORKING-STORAGE  SECTION.
+       77 NSTR         PIC X(30) USAGE DISPLAY.
+       77 NLEN         PIC 9(2)  USAGE DISPLAY.
+       PROCEDURE        DIVISION.
+           MOVE ".プリウスα " TO NSTR.
+           MOVE FUNCTION STORED-CHAR-LENGTH(NSTR) TO NLEN.
+           DISPLAY NLEN WITH NO ADVANCING.
+           STOP RUN.
+])
+
+AT_CHECK([${COMPILE} -x prog.cob])
+AT_CHECK([./prog], [0], [06])
+
+AT_CLEANUP
+
+AT_SETUP([FUNCTION STORED-CHAR-LENGTH(PIC X) /w wSPC])
+
+AT_DATA([prog.cob], [
+       IDENTIFICATION   DIVISION.
+       PROGRAM-ID.      prog.
+       DATA             DIVISION.
+       WORKING-STORAGE  SECTION.
+       77 NSTR         PIC X(30) USAGE DISPLAY.
+       77 NLEN         PIC 9(2)  USAGE DISPLAY.
+       PROCEDURE        DIVISION.
+           MOVE ".プリウスα　" TO NSTR.
+           MOVE FUNCTION STORED-CHAR-LENGTH(NSTR) TO NLEN.
+           DISPLAY NLEN WITH NO ADVANCING.
+           STOP RUN.
+])
+
+AT_CHECK([${COMPILE} -x prog.cob])
+AT_CHECK([./prog], [0], [06])
+
+AT_CLEANUP
+
+AT_SETUP([FUNCTION STORED-CHAR-LENGTH(PIC X) /w SPCs])
+
+AT_DATA([prog.cob], [
+       IDENTIFICATION   DIVISION.
+       PROGRAM-ID.      prog.
+       DATA             DIVISION.
+       WORKING-STORAGE  SECTION.
+       77 NSTR         PIC X(30) USAGE DISPLAY.
+       77 NLEN         PIC 9(2)  USAGE DISPLAY.
+       PROCEDURE        DIVISION.
+           MOVE ".プリウスα　 " TO NSTR.
+           MOVE FUNCTION STORED-CHAR-LENGTH(NSTR) TO NLEN.
+           DISPLAY NLEN WITH NO ADVANCING.
+           STOP RUN.
+])
+
+AT_CHECK([${COMPILE} -x prog.cob])
+AT_CHECK([./prog], [0], [06])
+
+AT_CLEANUP
+
+AT_SETUP([FUNCTION STORED-CHAR-LENGTH(PIC N)])
+
+AT_DATA([prog.cob], [
+       IDENTIFICATION   DIVISION.
+       PROGRAM-ID.      prog.
+       DATA             DIVISION.
+       WORKING-STORAGE  SECTION.
+       77 NSTR         PIC N(10) USAGE DISPLAY.
+       77 NLEN         PIC 9(2)  USAGE DISPLAY.
+       PROCEDURE        DIVISION.
+           MOVE ".プリウスα" TO NSTR.
+           MOVE FUNCTION STORED-CHAR-LENGTH(NSTR) TO NLEN.
+           DISPLAY NLEN WITH NO ADVANCING.
+           STOP RUN.
+])
+
+AT_CHECK([${COMPILE} -x prog.cob])
+AT_CHECK([./prog], [0], [06])
+
+AT_CLEANUP
+
+AT_SETUP([FUNCTION STORED-CHAR-LENGTH(SINGLE-BYTE SPACE)])
+
+AT_DATA([prog.cob], [
+       IDENTIFICATION   DIVISION.
+       PROGRAM-ID.      prog.
+       DATA             DIVISION.
+       WORKING-STORAGE  SECTION.
+       01  Y   PIC   X(24).
+       PROCEDURE        DIVISION.
+           MOVE "1234567   12" TO Y.
+           DISPLAY FUNCTION STORED-CHAR-LENGTH ( Y )
+           END-DISPLAY.
+           STOP RUN.
+])
+
+AT_CHECK([${COMPILE} -o prog prog.cob])
+AT_CHECK([./prog], [0], [00000012
+])
+
+AT_CLEANUP
+
+AT_SETUP([FUNCTION STORED-CHAR-LENGTH(DOUBLE-BYTE SPACE)])
+
+AT_DATA([prog.cob], [
+       IDENTIFICATION   DIVISION.
+       PROGRAM-ID.      prog.
+       DATA             DIVISION.
+       WORKING-STORAGE  SECTION.
+       01  Y   PIC   X(24).
+       PROCEDURE        DIVISION.
+           MOVE "１２　４" TO Y.
+           DISPLAY FUNCTION STORED-CHAR-LENGTH ( Y )
+           END-DISPLAY.
+           STOP RUN.
+])
+
+AT_CHECK([${COMPILE} -o prog prog.cob])
+AT_CHECK([./prog], [0], [00000004
+])
+
+AT_CLEANUP

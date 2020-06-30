@@ -1,0 +1,40 @@
+AT_SETUP([COB_VERBOSE file sort])
+
+AT_DATA([prog.cob], [
+       IDENTIFICATION       DIVISION.
+       PROGRAM-ID.          prog.
+       ENVIRONMENT          DIVISION.
+       INPUT-OUTPUT         SECTION.
+       FILE-CONTROL.
+           SELECT SORT-FILE1 ASSIGN TO "S01"
+               ORGANIZATION SEQUENTIAL.
+           SELECT INPUT-FILE1  ASSIGN TO "./input.txt".
+           SELECT OUTPUT-FILE1 ASSIGN TO "./output.txt".
+       DATA                 DIVISION.
+       FILE		    SECTION.
+       SD SORT-FILE1.
+       01 SORT-REC1.
+          02 SORT-KEY1  PIC XX.
+          02 SORT-DATA1 PIC XX.
+       FD INPUT-FILE1.
+       01 INPUT-REC1.
+          02 XFLD1   PIC X(2).
+          02 XFLD2   PIC X(2).
+       FD OUTPUT-FILE1.
+       01 OUTPUT-REC1.
+          02 XFLD1   PIC X(2).
+          02 XFLD2   PIC X(2).
+       PROCEDURE            DIVISION.
+          SORT SORT-FILE1 ON ASCENDING KEY SORT-KEY1
+             USING INPUT-FILE1
+             GIVING OUTPUT-FILE1.
+          GOBACK.
+])
+
+AT_CHECK([echo -n 11CC33AA22BB >input.txt])
+AT_CHECK([${COMPILE} prog.cob])
+AT_CHECK([COB_VERBOSE=Y ./prog], [0],
+[libcob: END OF SORT/MERGE, RECORD= 3.
+])
+
+AT_CLEANUP

@@ -1,0 +1,68 @@
+AT_SETUP([Zenkaku SPC delims in headings])
+
+AT_DATA([prog.cob], [
+       IDENTIFICATION　DIVISION.
+       PROGRAM-ID.      prog.
+       DATA 　　　　　 DIVISION.
+       WORKING-STORAGE　 SECTION.
+       01 項目 PIC X.
+       PROCEDURE 　　DIVISION.
+           DISPLAY "OK" WITH NO ADVANCING.
+           STOP RUN.
+])
+
+AT_CHECK([${COMPILE} -x prog.cob])
+AT_CHECK([./prog], [0], [OK])
+
+AT_CLEANUP
+
+AT_SETUP([Zenkaku SPC delims in record def])
+
+AT_DATA([prog.cob], [
+       IDENTIFICATION   DIVISION.
+       PROGRAM-ID.      prog.
+       DATA             DIVISION.
+       WORKING-STORAGE  SECTION.
+       01 項目　PIC X(40) VALUE
+          "Zen SPC between item name and PIC clause".
+　     01  F00 PIC X.
+  　   01  F01 PIC X.
+       01　F02 PIC X.
+       01　F03 PIC　X.
+       01　F04 PIC X　.
+       PROCEDURE        DIVISION.
+           DISPLAY 項目 WITH NO ADVANCING.
+           STOP RUN.
+])
+
+AT_CHECK([${COMPILE} -x prog.cob])
+AT_CHECK([./prog], [0], [Zen SPC between item name and PIC clause])
+
+AT_CLEANUP
+
+AT_SETUP([Zenkaku SPC delims in COPY stmt])
+
+AT_DATA([inc.cpy], [
+       01 項目　PIC X(2) VALUE "OK".
+　     01  F00 PIC X.
+  　   01  F01 PIC X.
+       01　F02 PIC X.
+       01　F03 PIC　X.
+       01　F04 PIC X　.
+])
+
+AT_DATA([prog.cob], [
+       IDENTIFICATION   DIVISION.
+       PROGRAM-ID.      prog.
+       DATA             DIVISION.
+       WORKING-STORAGE  SECTION.
+       COPY 　inc.
+       PROCEDURE        DIVISION.
+           DISPLAY 項目 WITH NO ADVANCING.
+           STOP RUN.
+])
+
+AT_CHECK([${COMPILE} -x prog.cob])
+AT_CHECK([./prog], [0], [OK])
+
+AT_CLEANUP

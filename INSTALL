@@ -1,0 +1,23 @@
+Installation Instructions
+*************************
+
+Copyright (C) 2020 TOKYO SYSTEM HOUSE Co., Ltd.
+
+Basic Installation
+==================
+
+The simplest way to use this package is:
+
+  1. installing `cobc` by `configure` and `make` like opensource COBOL(C ver.).
+
+  2. build `libcobj` java libraries by `compile_libcobj.sh`
+
+  3. set java `CLASSPATH` environment value to `libcobj/bin` directory.
+
+  4. compile your COBOL programs by `cobc` to create `{PROGRAM-ID}.java`.
+
+  5. run COBOL applications by java command like `java {PROGRAM-ID}`
+
+  6. if you want to use ISAM files, add BerkleyDBJavaEdition's jar libraries to `CLASSPATH`.
+     e.g.)
+	 $ CLASSPATH="$CLASSPATH":'/var/lib/BerkleyDBJavaEdition/je-7.5.11/lib/je-7.5.11.jar'

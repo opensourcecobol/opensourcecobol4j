@@ -1,0 +1,87 @@
+AT_SETUP([PROGRAM-ID NATIONAL C89 no warning])
+
+AT_DATA([test.conf], [
+include "default.conf"
+c89-identifier-length-check: yes
+])
+
+AT_DATA([prog.cob], [
+       IDENTIFICATION   DIVISION.
+       PROGRAM-ID.      東京都.
+       DATA             DIVISION.
+       PROCEDURE DIVISION.
+           END PROGRAM 東京都.
+])
+
+AT_CHECK([${COMPILE} -conf=test.conf -x prog.cob], [0])
+
+AT_CLEANUP
+
+AT_SETUP([PROGRAM-ID NATIONAL C89 warning])
+
+AT_DATA([test.conf], [
+include "default.conf"
+c89-identifier-length-check: yes
+])
+
+AT_DATA([prog.cob], [
+       IDENTIFICATION   DIVISION.
+       PROGRAM-ID.      東京湾岸港湾局.
+       DATA             DIVISION.
+       PROCEDURE DIVISION.
+           END PROGRAM 東京湾岸港湾局.
+])
+
+AT_CHECK([${COMPILE} -conf=test.conf -x prog.cob], [0], [],
+[prog.cob:3: Warning: PROGRAM-ID length exceeds C89 function name limit
+prog.cob:6: Warning: PROGRAM-ID length exceeds C89 function name limit
+])
+
+AT_CLEANUP
+
+AT_SETUP([PROGRAM-ID NATIONAL C89 ignore])
+
+AT_DATA([prog.cob], [
+       IDENTIFICATION   DIVISION.
+       PROGRAM-ID.      東京湾岸港湾局.
+       DATA             DIVISION.
+       PROCEDURE DIVISION.
+           END PROGRAM 東京湾岸港湾局.
+])
+
+AT_CHECK([${COMPILE} -x prog.cob], [0])
+
+AT_CLEANUP
+
+AT_SETUP([PROGRAM-ID NATIONAL 32 character no over])
+
+AT_DATA([prog.cob], [
+       IDENTIFICATION   DIVISION.
+       PROGRAM-ID.      あいうえおかきくけこさしすせそ
+      -たちつてとなにぬねのはひふへほ.
+       DATA             DIVISION.
+       PROCEDURE DIVISION.
+           STOP RUN.
+])
+
+AT_CHECK([${COMPILE} -x prog.cob], [0])
+
+AT_CLEANUP
+
+AT_SETUP([PROGRAM-ID NATIONAL 32 character over])
+
+AT_DATA([prog.cob], [
+       IDENTIFICATION   DIVISION.
+       PROGRAM-ID.      あいうえおかきくけこさしすせそ
+      -たちつてとなにぬねのはひふへほまみ.
+       DATA             DIVISION.
+       PROCEDURE DIVISION.
+           STOP RUN.
+])
+
+AT_CHECK([${COMPILE} -x prog.cob], [1], [],
+[prog.cob:3: Error: User defined name must be less than 32 characters
+])
+
+AT_CLEANUP
+

@@ -1,0 +1,88 @@
+AT_SETUP([CALL C$CALLEDBY])
+
+AT_DATA([callee.cob], [
+       IDENTIFICATION   DIVISION.
+       PROGRAM-ID.      callee.
+       DATA             DIVISION.
+       WORKING-STORAGE  SECTION.
+       01 PROG-NAME     PIC X(30).
+       01 RET-CODE      PIC 9.
+       PROCEDURE        DIVISION.
+           CALL "C$CALLEDBY" USING  PROG-NAME
+                             GIVING RET-CODE
+           END-CALL.
+           DISPLAY PROG-NAME RET-CODE
+           END-DISPLAY.
+           EXIT PROGRAM.
+])
+
+AT_DATA([caller.cob], [
+       IDENTIFICATION   DIVISION.
+       PROGRAM-ID.      caller.
+       DATA             DIVISION.
+       WORKING-STORAGE  SECTION.
+       01 PROG-NAME     PIC X(30).
+       01 RET-CODE      PIC 9.
+       PROCEDURE        DIVISION.
+           CALL "callee"
+           END-CALL.
+           CALL "C$CALLEDBY" USING  PROG-NAME
+                             GIVING RET-CODE
+           END-CALL.
+           DISPLAY PROG-NAME RET-CODE
+           END-DISPLAY.
+           STOP RUN.
+])
+
+AT_CHECK([${COMPILE} caller.cob])
+AT_CHECK([${COMPILE_MODULE} callee.cob])
+AT_CHECK([./caller], [0],
+[caller                        1
+                              0
+])
+
+AT_CLEANUP
+AT_SETUP([CALL C$LIST-DIRECTORY])
+
+AT_DATA([prog.cob], [
+       IDENTIFICATION   DIVISION.
+       PROGRAM-ID.      prog.
+       DATA             DIVISION.
+       WORKING-STORAGE  SECTION.
+       01  PATTERN       PIC X(5) VALUE "*".
+       01  DIRECTORY     PIC X(256) VALUE
+       "./list".
+       01  FILENAME      PIC X(30).
+       01  MYDIR         PIC 9(8) COMP-5.
+       PROCEDURE        DIVISION.
+           CALL "C$LIST-DIRECTORY" USING 1,
+                                         DIRECTORY,
+                                         PATTERN
+           END-CALL.
+           MOVE RETURN-CODE TO MYDIR.
+           CALL "C$LIST-DIRECTORY" USING 2,
+                                         MYDIR,
+                                         FILENAME
+           END-CALL.
+           PERFORM WITH TEST AFTER UNTIL FILENAME = SPACES
+             DISPLAY FUNCTION TRIM(FILENAME)
+             CALL "C$LIST-DIRECTORY" USING 2,
+                                           MYDIR,
+                                           FILENAME
+             END-CALL
+           END-PERFORM.
+           CALL "C$LIST-DIRECTORY" USING 3, MYDIR
+           END-CALL.
+           MOVE 0           TO RETURN-CODE.
+           EXIT PROGRAM.
+])
+
+AT_CHECK([mkdir list])
+AT_CHECK([echo -n 1 >list/input1.txt])
+AT_CHECK([echo -n 1 >list/input2.txt])
+AT_CHECK([ls -1f list > list1])
+AT_CHECK([${COMPILE} prog.cob])
+AT_CHECK([./prog > list2])
+AT_CHECK([diff list1 list2], [0],[])
+AT_CLEANUP
+

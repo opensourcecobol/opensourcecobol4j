@@ -1,0 +1,6 @@
+#!/bin/sh 
+echo
+echo "## Data representation tests with -O option ##"
+echo
+. ./atconfig
+COBOL_FLAGS='-O' ${abs_srcdir}/data-rep

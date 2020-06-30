@@ -1,0 +1,102 @@
+### OpenCOBOL Test Suite				-*- m4 -*-
+
+## Copyright (C) 2003-2009 Keisuke Nishida
+## Copyright (C) 2007-2009 Roger While
+##
+## This program is free software; you can redistribute it and/or modify
+## it under the terms of the GNU General Public License as published by
+## the Free Software Foundation; either version 2, or (at your option)
+## any later version.
+## 
+## This program is distributed in the hope that it will be useful,
+## but WITHOUT ANY WARRANTY; without even the implied warranty of
+## MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+## GNU General Public License for more details.
+## 
+## You should have received a copy of the GNU General Public License
+## along with this software; see the file COPYING.  If not, write to
+## the Free Software Foundation, 51 Franklin Street, Fifth Floor
+## Boston, MA 02110-1301 USA
+
+### ISO+IEC+1989-2002 8.4.1.2 Subscripts
+
+## 8.4.1.2.2 Syntax rules
+
+
+# 1) DONE
+
+
+# 2) DONE
+
+AT_SETUP([Subscripted item requires OCCURS clause])
+
+AT_DATA([prog.cob], [
+       IDENTIFICATION   DIVISION.
+       PROGRAM-ID.      prog.
+       DATA             DIVISION.
+       WORKING-STORAGE  SECTION.
+       01 G.
+         02 X           PIC X.
+       PROCEDURE        DIVISION.
+           DISPLAY G(1)
+           END-DISPLAY.
+           DISPLAY X(1)
+           END-DISPLAY.
+           STOP RUN.
+])
+
+AT_CHECK([${COMPILE_ONLY} prog.cob], [1], ,
+[prog.cob:9: Error: 'G' cannot be subscripted
+prog.cob:11: Error: 'X' cannot be subscripted
+])
+
+AT_CLEANUP
+
+
+# 3) DONE
+
+AT_SETUP([The number of subscripts])
+
+AT_DATA([prog.cob], [
+       IDENTIFICATION   DIVISION.
+       PROGRAM-ID.      prog.
+       DATA             DIVISION.
+       WORKING-STORAGE  SECTION.
+       01 G1.
+         02 X           OCCURS 2.
+           03 Y         PIC X OCCURS 3.
+       PROCEDURE        DIVISION.
+           DISPLAY X
+           END-DISPLAY.
+           DISPLAY X(1)
+           END-DISPLAY.
+           DISPLAY X(1, 2)
+           END-DISPLAY.
+           DISPLAY Y(1)
+           END-DISPLAY.
+           DISPLAY Y(1, 2)
+           END-DISPLAY.
+           DISPLAY Y(1, 2, 3)
+           END-DISPLAY.
+           STOP RUN.
+])
+
+AT_CHECK([${COMPILE_ONLY} prog.cob], [1], ,
+[prog.cob:10: Error: 'X' requires 1 subscript
+prog.cob:14: Error: 'X' requires 1 subscript
+prog.cob:16: Error: 'Y' requires 2 subscripts
+prog.cob:20: Error: 'Y' requires 2 subscripts
+])
+
+AT_CLEANUP
+
+
+# 4) TODO
+
+# 5) TODO
+
+# 6) TODO
+
+# 7) TODO
+
+# 8) TODO

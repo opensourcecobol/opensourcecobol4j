@@ -1,0 +1,87 @@
+AT_SETUP([PROGRAM-ID NATIONAL C89 no warning])
+
+AT_DATA([test.conf], [
+include "default.conf"
+c89-identifier-length-check: yes
+])
+
+AT_DATA([prog.cob], [
+       IDENTIFICATION   DIVISION.
+       PROGRAM-ID.      ìåãûìs.
+       DATA             DIVISION.
+       PROCEDURE DIVISION.
+           END PROGRAM ìåãûìs.
+])
+
+AT_CHECK([${COMPILE} -conf=test.conf -x prog.cob], [0])
+
+AT_CLEANUP
+
+AT_SETUP([PROGRAM-ID NATIONAL C89 warning])
+
+AT_DATA([test.conf], [
+include "default.conf"
+c89-identifier-length-check: yes
+])
+
+AT_DATA([prog.cob], [
+       IDENTIFICATION   DIVISION.
+       PROGRAM-ID.      ìåãûòpä›ç`òpã«.
+       DATA             DIVISION.
+       PROCEDURE DIVISION.
+           END PROGRAM ìåãûòpä›ç`òpã«.
+])
+
+AT_CHECK([${COMPILE} -conf=test.conf -x prog.cob], [0], [],
+[prog.cob:3: Warning: PROGRAM-ID length exceeds C89 function name limit
+prog.cob:6: Warning: PROGRAM-ID length exceeds C89 function name limit
+])
+
+AT_CLEANUP
+
+AT_SETUP([PROGRAM-ID NATIONAL C89 ignore])
+
+AT_DATA([prog.cob], [
+       IDENTIFICATION   DIVISION.
+       PROGRAM-ID.      ìåãûòpä›ç`òpã«.
+       DATA             DIVISION.
+       PROCEDURE DIVISION.
+           END PROGRAM ìåãûòpä›ç`òpã«.
+])
+
+AT_CHECK([${COMPILE} -x prog.cob], [0])
+
+AT_CLEANUP
+
+AT_SETUP([PROGRAM-ID NATIONAL 32 character no over])
+
+AT_DATA([prog.cob], [
+       IDENTIFICATION   DIVISION.
+       PROGRAM-ID.      Ç†Ç¢Ç§Ç¶Ç®Ç©Ç´Ç≠ÇØÇ±Ç≥ÇµÇ∑ÇπÇª
+      -ÇΩÇøÇ¬ÇƒÇ∆Ç»Ç…Ç ÇÀÇÃÇÕÇ–Ç”Ç÷ÇŸ.
+       DATA             DIVISION.
+       PROCEDURE DIVISION.
+           STOP RUN.
+])
+
+AT_CHECK([${COMPILE} -x prog.cob], [0])
+
+AT_CLEANUP
+
+AT_SETUP([PROGRAM-ID NATIONAL 32 character over])
+
+AT_DATA([prog.cob], [
+       IDENTIFICATION   DIVISION.
+       PROGRAM-ID.      Ç†Ç¢Ç§Ç¶Ç®Ç©Ç´Ç≠ÇØÇ±Ç≥ÇµÇ∑ÇπÇª
+      -ÇΩÇøÇ¬ÇƒÇ∆Ç»Ç…Ç ÇÀÇÃÇÕÇ–Ç”Ç÷ÇŸÇ‹Ç›.
+       DATA             DIVISION.
+       PROCEDURE DIVISION.
+           STOP RUN.
+])
+
+AT_CHECK([${COMPILE} -x prog.cob], [1], [],
+[prog.cob:3: Error: User defined name must be less than 32 characters
+])
+
+AT_CLEANUP
+

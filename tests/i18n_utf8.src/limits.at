@@ -1,0 +1,272 @@
+AT_SETUP([Field length limit PIC A/VALID])
+
+AT_DATA([prog.cob], [
+       IDENTIFICATION   DIVISION.
+       PROGRAM-ID.      prog.
+       DATA             DIVISION.
+       WORKING-STORAGE  SECTION.
+       01 VALID-X       PIC A(16777216).
+       PROCEDURE        DIVISION.
+           STOP RUN.
+])
+
+AT_CHECK([${COMPILE_LIMIT_TEST} -o prog prog.cob], [0])
+
+AT_CLEANUP
+
+AT_SETUP([Field length limit PIC A/TOO LONG])
+
+AT_DATA([prog.cob], [
+       IDENTIFICATION   DIVISION.
+       PROGRAM-ID.      prog.
+       DATA             DIVISION.
+       WORKING-STORAGE  SECTION.
+       01 VALID-X       PIC A(16777217).
+       PROCEDURE        DIVISION.
+           STOP RUN.
+])
+
+AT_CHECK([${COMPILE_LIMIT_TEST} -o prog prog.cob], [1], [],
+[prog.cob:6: Error: Alphabetic field cannot be larger than 16777216 digits
+])
+
+AT_CLEANUP
+
+AT_SETUP([Field length limit PIC X/VALID])
+
+AT_DATA([prog.cob], [
+       IDENTIFICATION   DIVISION.
+       PROGRAM-ID.      prog.
+       DATA             DIVISION.
+       WORKING-STORAGE  SECTION.
+       01 VALID-X       PIC X(16777216).
+       PROCEDURE        DIVISION.
+           STOP RUN.
+])
+
+AT_CHECK([${COMPILE_LIMIT_TEST} -o prog prog.cob], [0])
+
+AT_CLEANUP
+
+AT_SETUP([Field length limit PIC X/TOO LONG])
+
+AT_DATA([prog.cob], [
+       IDENTIFICATION   DIVISION.
+       PROGRAM-ID.      prog.
+       DATA             DIVISION.
+       WORKING-STORAGE  SECTION.
+       01 VALID-X       PIC X(16777217).
+       PROCEDURE        DIVISION.
+           STOP RUN.
+])
+
+AT_CHECK([${COMPILE_LIMIT_TEST} -o prog prog.cob], [1], [],
+[prog.cob:6: Error: AlphaNumeric field cannot be larger than 16777216 digits
+])
+
+AT_CLEANUP
+
+AT_SETUP([Field length limit PIC B9/VALID])
+
+AT_DATA([prog.cob], [
+       IDENTIFICATION   DIVISION.
+       PROGRAM-ID.      prog.
+       DATA             DIVISION.
+       WORKING-STORAGE  SECTION.
+       01 VALID-X       PIC B9(159).
+       PROCEDURE        DIVISION.
+           STOP RUN.
+])
+
+AT_CHECK([${COMPILE_LIMIT_TEST} -o prog prog.cob], [0])
+
+AT_CLEANUP
+
+AT_SETUP([Field length limit PIC B9/TOO LONG])
+
+AT_DATA([prog.cob], [
+       IDENTIFICATION   DIVISION.
+       PROGRAM-ID.      prog.
+       DATA             DIVISION.
+       WORKING-STORAGE  SECTION.
+       01 VALID-X       PIC B9(160).
+       PROCEDURE        DIVISION.
+           STOP RUN.
+])
+
+AT_CHECK([${COMPILE_LIMIT_TEST} -o prog prog.cob], [1], [],
+[prog.cob:6: Error: NumericEdit field cannot be larger than 160 digits
+])
+
+AT_CLEANUP
+
+AT_SETUP([Field length limit PIC B/VALID])
+
+AT_DATA([prog.cob], [
+       IDENTIFICATION   DIVISION.
+       PROGRAM-ID.      prog.
+       DATA             DIVISION.
+       WORKING-STORAGE  SECTION.
+       01 VALID-X       PIC B(16777216).
+       PROCEDURE        DIVISION.
+           STOP RUN.
+])
+
+AT_CHECK([${COMPILE_LIMIT_TEST} -o prog prog.cob], [0])
+
+AT_CLEANUP
+
+AT_SETUP([Field length limit PIC B/TOO LONG])
+
+AT_DATA([prog.cob], [
+       IDENTIFICATION   DIVISION.
+       PROGRAM-ID.      prog.
+       DATA             DIVISION.
+       WORKING-STORAGE  SECTION.
+       01 VALID-X       PIC B(16777217).
+       PROCEDURE        DIVISION.
+           STOP RUN.
+])
+
+AT_CHECK([${COMPILE_LIMIT_TEST} -o prog prog.cob], [1], [],
+[prog.cob:6: Error: AlphaNumericEdit field cannot be larger than 16777216 digits
+])
+
+AT_CLEANUP
+
+AT_SETUP([Field length limit PIC BA/VALID])
+
+AT_DATA([prog.cob], [
+       IDENTIFICATION   DIVISION.
+       PROGRAM-ID.      prog.
+       DATA             DIVISION.
+       WORKING-STORAGE  SECTION.
+       01 VALID-X       PIC BA(16777215).
+       PROCEDURE        DIVISION.
+           STOP RUN.
+])
+
+AT_CHECK([${COMPILE_LIMIT_TEST} -o prog prog.cob], [0])
+
+AT_CLEANUP
+
+AT_SETUP([Field length limit PIC BA/TOO LONG])
+
+AT_DATA([prog.cob], [
+       IDENTIFICATION   DIVISION.
+       PROGRAM-ID.      prog.
+       DATA             DIVISION.
+       WORKING-STORAGE  SECTION.
+       01 VALID-X       PIC BA(16777216).
+       PROCEDURE        DIVISION.
+           STOP RUN.
+])
+
+AT_CHECK([${COMPILE_LIMIT_TEST} -o prog prog.cob], [1], [],
+[prog.cob:6: Error: AlphaNumericEdit field cannot be larger than 16777216 digits
+])
+
+AT_CLEANUP
+
+AT_SETUP([Field length limit PIC BX/VALID])
+
+AT_DATA([prog.cob], [
+       IDENTIFICATION   DIVISION.
+       PROGRAM-ID.      prog.
+       DATA             DIVISION.
+       WORKING-STORAGE  SECTION.
+       01 VALID-X       PIC BX(16777215).
+       PROCEDURE        DIVISION.
+           STOP RUN.
+])
+
+AT_CHECK([${COMPILE_LIMIT_TEST} -o prog prog.cob], [0])
+
+AT_CLEANUP
+
+AT_SETUP([Field length limit PIC BX/TOO LONG])
+
+AT_DATA([prog.cob], [
+       IDENTIFICATION   DIVISION.
+       PROGRAM-ID.      prog.
+       DATA             DIVISION.
+       WORKING-STORAGE  SECTION.
+       01 VALID-X       PIC BX(16777216).
+       PROCEDURE        DIVISION.
+           STOP RUN.
+])
+
+AT_CHECK([${COMPILE_LIMIT_TEST} -o prog prog.cob], [1], [],
+[prog.cob:6: Error: AlphaNumericEdit field cannot be larger than 16777216 digits
+])
+
+AT_CLEANUP
+
+AT_SETUP([Field length limit PIC N/VALID (UTF-8)])
+
+AT_DATA([prog.cob], [
+       IDENTIFICATION   DIVISION.
+       PROGRAM-ID.      prog.
+       DATA             DIVISION.
+       WORKING-STORAGE  SECTION.
+       01 VALID-N       PIC N(5592405).
+       PROCEDURE        DIVISION.
+           STOP RUN.
+])
+
+AT_CHECK([${COMPILE_LIMIT_TEST} -o prog prog.cob], [0])
+
+AT_CLEANUP
+
+AT_SETUP([Field length limit PIC N/TOO LONG (UTF-8)])
+
+AT_DATA([prog.cob], [
+       IDENTIFICATION   DIVISION.
+       PROGRAM-ID.      prog.
+       DATA             DIVISION.
+       WORKING-STORAGE  SECTION.
+       01 INVALID-N     PIC N(5592406).
+       PROCEDURE        DIVISION.
+           STOP RUN.
+])
+
+AT_CHECK([${COMPILE_LIMIT_TEST} -o prog prog.cob], [1], [],
+[prog.cob:6: Error: National field cannot be larger than 5592405 digits
+])
+
+AT_CLEANUP
+
+AT_SETUP([Field length limit PIC BN/VALID (UTF-8)])
+
+AT_DATA([prog.cob], [
+       IDENTIFICATION   DIVISION.
+       PROGRAM-ID.      prog.
+       DATA             DIVISION.
+       WORKING-STORAGE  SECTION.
+       01 VALID-BN      PIC BN(5592404).
+       PROCEDURE        DIVISION.
+           STOP RUN.
+])
+
+AT_CHECK([${COMPILE_LIMIT_TEST} -o prog prog.cob], [0])
+
+AT_CLEANUP
+
+AT_SETUP([Field length limit PIC BN/TOO LONG (UTF-8)])
+
+AT_DATA([prog.cob], [
+       IDENTIFICATION   DIVISION.
+       PROGRAM-ID.      prog.
+       DATA             DIVISION.
+       WORKING-STORAGE  SECTION.
+       01 INVALID-BN    PIC BN(5592405).
+       PROCEDURE        DIVISION.
+           STOP RUN.
+])
+
+AT_CHECK([${COMPILE_LIMIT_TEST} -o prog prog.cob], [1], [],
+[prog.cob:6: Error: NationalEdit field cannot be larger than 5592405 digits
+])
+
+AT_CLEANUP
+

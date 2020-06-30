@@ -1,0 +1,78 @@
+AT_SETUP([COPY REPLACING LEADING])
+AT_KEYWORDS([copy])
+
+AT_DATA([copy.inc], [
+       01 LEADER-VAR-TRAILER PIC X(2) VALUE "OK".
+])
+
+AT_DATA([prog.cob], [
+       IDENTIFICATION   DIVISION.
+       PROGRAM-ID.      prog.
+       DATA             DIVISION.
+       WORKING-STORAGE  SECTION.
+       COPY "copy.inc" REPLACING
+           LEADING  ==LEADER==  BY ==I==.
+       PROCEDURE        DIVISION.
+           DISPLAY I-VAR-TRAILER NO ADVANCING
+           END-DISPLAY.
+           STOP RUN.
+])
+
+AT_CHECK([${COMPILE_JP_COMPAT} -o prog prog.cob])
+AT_CHECK([./prog], [0], [OK])
+
+AT_CLEANUP
+
+AT_SETUP([COPY REPLACING TRAILING])
+AT_KEYWORDS([copy])
+
+AT_DATA([copy.inc], [
+       01 LEADER-VAR-TRAILER PIC X(2) VALUE "OK".
+])
+
+AT_DATA([prog.cob], [
+       IDENTIFICATION   DIVISION.
+       PROGRAM-ID.      prog.
+       DATA             DIVISION.
+       WORKING-STORAGE  SECTION.
+       COPY "copy.inc" REPLACING
+           TRAILING ==TRAILER== BY ==01==.
+       PROCEDURE        DIVISION.
+           DISPLAY LEADER-VAR-01 NO ADVANCING
+           END-DISPLAY.
+           STOP RUN.
+])
+
+AT_CHECK([${COMPILE_JP_COMPAT} -o prog prog.cob])
+AT_CHECK([./prog], [0], [OK])
+
+AT_CLEANUP
+
+AT_SETUP([COPY REPLACING LEADING TRAILING])
+AT_KEYWORDS([copy])
+
+AT_DATA([copy.inc], [
+       01 LEADER-VAR         PIC X(2) VALUE "OK".
+       01 VAR-TRAILER        PIC X(2) VALUE "OK".
+])
+
+AT_DATA([prog.cob], [
+       IDENTIFICATION   DIVISION.
+       PROGRAM-ID.      prog.
+       DATA             DIVISION.
+       WORKING-STORAGE  SECTION.
+       COPY "copy.inc" REPLACING
+           LEADING  ==LEADER==  BY ==I==
+           TRAILING ==TRAILER== BY ==01==.
+       PROCEDURE        DIVISION.
+           DISPLAY I-VAR  NO ADVANCING
+           END-DISPLAY.
+           DISPLAY VAR-01 NO ADVANCING
+           END-DISPLAY.
+           STOP RUN.
+])
+
+AT_CHECK([${COMPILE_JP_COMPAT} -o prog prog.cob])
+AT_CHECK([./prog], [0], [OKOK])
+
+AT_CLEANUP

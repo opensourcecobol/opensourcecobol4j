@@ -1,0 +1,117 @@
+### OpenCOBOL Test Suite				-*- m4 -*-
+
+## Copyright (C) 2003-2009 Keisuke Nishida
+## Copyright (C) 2007-2009 Roger While
+##
+## This program is free software; you can redistribute it and/or modify
+## it under the terms of the GNU General Public License as published by
+## the Free Software Foundation; either version 2, or (at your option)
+## any later version.
+## 
+## This program is distributed in the hope that it will be useful,
+## but WITHOUT ANY WARRANTY; without even the implied warranty of
+## MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+## GNU General Public License for more details.
+## 
+## You should have received a copy of the GNU General Public License
+## along with this software; see the file COPYING.  If not, write to
+## the Free Software Foundation, 51 Franklin Street, Fifth Floor
+## Boston, MA 02110-1301 USA
+
+### Non-standard extensions
+
+AT_SETUP([RETURN-CODE moving])
+
+AT_DATA([prog.cob], [
+       IDENTIFICATION   DIVISION.
+       PROGRAM-ID.      prog.
+       DATA             DIVISION.
+       WORKING-STORAGE  SECTION.
+       01 I             PIC 99 COMP.
+       PROCEDURE        DIVISION.
+           INITIALIZE RETURN-CODE.
+           MOVE ZERO TO RETURN-CODE.
+           MOVE 1 TO RETURN-CODE.
+           MOVE RETURN-CODE TO I.
+           DISPLAY I NO ADVANCING
+           END-DISPLAY.
+           STOP RUN.
+])
+
+AT_CHECK([${COMPILE} -o prog prog.cob])
+AT_CHECK([./prog], [1], [01])
+
+AT_CLEANUP
+
+AT_SETUP([RETURN-CODE passing])
+
+AT_DATA([mod1.cob], [
+       IDENTIFICATION   DIVISION.
+       PROGRAM-ID.      mod1.
+       PROCEDURE        DIVISION.
+           DISPLAY RETURN-CODE NO ADVANCING
+           END-DISPLAY.
+           MOVE 1 TO RETURN-CODE.
+           DISPLAY RETURN-CODE NO ADVANCING
+           END-DISPLAY.
+           EXIT PROGRAM.
+])
+
+AT_DATA([mod2.cob], [
+       IDENTIFICATION   DIVISION.
+       PROGRAM-ID.      mod2.
+       PROCEDURE        DIVISION.
+           EXIT PROGRAM.
+])
+
+AT_DATA([prog.cob], [
+       IDENTIFICATION   DIVISION.
+       PROGRAM-ID.      prog.
+       PROCEDURE        DIVISION.
+           CALL "mod1"
+           END-CALL.
+           DISPLAY RETURN-CODE NO ADVANCING
+           END-DISPLAY.
+           CALL "mod2"
+           END-CALL.
+           DISPLAY RETURN-CODE NO ADVANCING
+           END-DISPLAY.
+           STOP RUN.
+])
+
+AT_CHECK([${COMPILE_MODULE} mod1.cob])
+AT_CHECK([${COMPILE_MODULE} mod2.cob])
+AT_CHECK([${COMPILE} -o prog prog.cob])
+AT_CHECK([./prog], [0], [+000000000+000000001+000000001+000000000])
+
+AT_CLEANUP
+
+AT_SETUP([RETURN-CODE nested])
+
+AT_DATA([prog.cob], [
+       IDENTIFICATION   DIVISION.
+       PROGRAM-ID.      prog.
+       PROCEDURE        DIVISION.
+           MOVE 1 TO RETURN-CODE.
+           DISPLAY RETURN-CODE NO ADVANCING
+           END-DISPLAY.
+           CALL "mod1"
+           END-CALL.
+           DISPLAY RETURN-CODE NO ADVANCING
+           END-DISPLAY.
+           MOVE ZERO TO RETURN-CODE.
+           STOP RUN.
+       PROGRAM-ID.      mod1.
+       PROCEDURE        DIVISION.
+           DISPLAY RETURN-CODE NO ADVANCING
+           END-DISPLAY.
+           MOVE 2 TO RETURN-CODE.
+           EXIT PROGRAM.
+       END PROGRAM mod1.
+       END PROGRAM prog.
+])
+
+AT_CHECK([${COMPILE} -o prog prog.cob])
+AT_CHECK([./prog], [0], [+000000001+000000001+000000002])
+
+AT_CLEANUP

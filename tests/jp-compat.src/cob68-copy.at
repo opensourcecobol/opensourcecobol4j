@@ -1,0 +1,135 @@
+AT_SETUP([COBOL68 COPY])
+
+AT_DATA([prog.cob], [
+       IDENTIFICATION   DIVISION.
+       PROGRAM-ID.      prog.
+       DATA             DIVISION.
+       WORKING-STORAGE  SECTION.
+       01 X-01 COPY inc1.
+       PROCEDURE        DIVISION.
+           DISPLAY X-01 WITH NO ADVANCING.
+          GOBACK.
+])
+
+AT_DATA([inc1.cpy], [
+       01 X-NN.
+           03 X-11 PIC X VALUE 'A'.
+           03 X-12 PIC X VALUE 'B'.
+           03 X-13 PIC X VALUE 'C'.
+])
+
+AT_CHECK([${COMPILE_JP_COMPAT} prog.cob], [0])
+AT_CHECK([./prog], [0], [ABC])
+AT_CLEANUP
+
+AT_SETUP([COBOL68 COPY nested])
+
+AT_DATA([prog.cob], [
+       IDENTIFICATION   DIVISION.
+       PROGRAM-ID.      prog.
+       DATA             DIVISION.
+       WORKING-STORAGE  SECTION.
+       01 X-01 COPY inc1.
+       PROCEDURE        DIVISION.
+           DISPLAY X-01 WITH NO ADVANCING.
+          GOBACK.
+])
+
+AT_DATA([inc1.cpy], [
+       01 X-N1 COPY inc2.
+])
+
+AT_DATA([inc2.cpy], [
+       01 X-N2.
+           03 X-11 PIC X VALUE 'A'.
+           03 X-12 PIC X VALUE 'B'.
+           03 X-13 PIC X VALUE 'C'.
+])
+
+AT_CHECK([${COMPILE_JP_COMPAT} prog.cob], [0])
+AT_CHECK([./prog], [0], [ABC])
+AT_CLEANUP
+
+AT_SETUP([COBOL68 COPY nested fragments])
+
+AT_DATA([prog.cob], [
+       IDENTIFICATION   DIVISION.
+       PROGRAM-ID.      prog.
+       DATA             DIVISION.
+       WORKING-STORAGE  SECTION.
+       01 X-01 COPY inc1.
+       PROCEDURE        DIVISION.
+           DISPLAY X-01 WITH NO ADVANCING.
+          GOBACK.
+])
+
+AT_DATA([inc1.cpy], [
+       01 X-N1 COPY inc2.
+           03 X-12 PIC X VALUE 'B'.
+           03 X-13 PIC X VALUE 'C'.
+])
+
+AT_DATA([inc2.cpy], [
+       01 X-N2.
+           03 X-11 PIC X VALUE 'A'.
+])
+
+AT_CHECK([${COMPILE_JP_COMPAT} prog.cob], [0])
+AT_CHECK([./prog], [0], [ABC])
+AT_CLEANUP
+
+AT_SETUP([COBOL68 COPY nested w/ normal])
+
+AT_DATA([prog.cob], [
+       IDENTIFICATION   DIVISION.
+       PROGRAM-ID.      prog.
+       DATA             DIVISION.
+       WORKING-STORAGE  SECTION.
+       01 X-01 COPY inc1.
+       PROCEDURE        DIVISION.
+           DISPLAY X-01 WITH NO ADVANCING.
+          GOBACK.
+])
+
+AT_DATA([inc1.cpy], [
+       COPY inc2.
+])
+
+AT_DATA([inc2.cpy], [
+       01 X-N2.
+           03 X-11 PIC X VALUE 'A'.
+           03 X-12 PIC X VALUE 'B'.
+           03 X-13 PIC X VALUE 'C'.
+])
+
+AT_CHECK([${COMPILE_JP_COMPAT} prog.cob], [0])
+AT_CHECK([./prog], [0], [ABC])
+AT_CLEANUP
+
+AT_SETUP([COBOL68 COPY nested w/ normal 2])
+
+AT_DATA([prog.cob], [
+       IDENTIFICATION   DIVISION.
+       PROGRAM-ID.      prog.
+       DATA             DIVISION.
+       WORKING-STORAGE  SECTION.
+       01 X-01 COPY inc1.
+       PROCEDURE        DIVISION.
+           DISPLAY X-01 WITH NO ADVANCING.
+          GOBACK.
+])
+
+AT_DATA([inc1.cpy], [
+       01 X-N2.
+       COPY inc2.
+])
+
+AT_DATA([inc2.cpy], [
+           03 X-11 PIC X VALUE 'A'.
+           03 X-12 PIC X VALUE 'B'.
+           03 X-13 PIC X VALUE 'C'.
+])
+
+AT_CHECK([${COMPILE_JP_COMPAT} prog.cob], [0])
+AT_CHECK([./prog], [0], [ABC])
+AT_CLEANUP

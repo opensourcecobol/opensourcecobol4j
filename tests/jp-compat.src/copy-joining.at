@@ -1,0 +1,211 @@
+AT_SETUP([COPY JOINING AS PREFIX])
+AT_KEYWORDS([copy])
+
+AT_DATA([copy.inc], [
+       01 TEST-VAR PIC X(2) VALUE "OK".
+])
+
+AT_DATA([prog.cob], [
+       IDENTIFICATION   DIVISION.
+       PROGRAM-ID.      prog.
+       DATA             DIVISION.
+       WORKING-STORAGE  SECTION.
+       COPY "copy.inc" JOINING O AS PREFIX.
+       PROCEDURE        DIVISION.
+           DISPLAY O-TEST-VAR NO ADVANCING
+           END-DISPLAY.
+           STOP RUN.
+])
+
+AT_CHECK([${COMPILE_JP_COMPAT} -o prog prog.cob])
+AT_CHECK([./prog], [0], [OK])
+
+AT_CLEANUP
+
+AT_SETUP([COPY JOINING AS SUFFIX])
+AT_KEYWORDS([copy])
+
+AT_DATA([copy.inc], [
+       01 TEST-VAR PIC X(2) VALUE "OK".
+])
+
+AT_DATA([prog.cob], [
+       IDENTIFICATION   DIVISION.
+       PROGRAM-ID.      prog.
+       DATA             DIVISION.
+       WORKING-STORAGE  SECTION.
+       COPY "copy.inc" JOINING X AS SUFFIX.
+       PROCEDURE        DIVISION.
+           DISPLAY TEST-VAR-X NO ADVANCING
+           END-DISPLAY.
+           STOP RUN.
+])
+
+AT_CHECK([${COMPILE_JP_COMPAT} -o prog prog.cob])
+AT_CHECK([./prog], [0], [OK])
+
+AT_CLEANUP
+
+AT_SETUP([JOINING in RECURSIVE COPY])
+AT_KEYWORDS([copy])
+
+AT_DATA([copy-2.inc], [
+       01 TEST-VAR PIC X(2) VALUE "OK".
+])
+
+AT_DATA([copy-1.inc], [
+       COPY "copy-2.inc".
+])
+
+AT_DATA([prog.cob], [
+       IDENTIFICATION   DIVISION.
+       PROGRAM-ID.      prog.
+       DATA             DIVISION.
+       WORKING-STORAGE  SECTION.
+       COPY "copy-1.inc" JOINING O AS PREFIX.
+       PROCEDURE        DIVISION.
+           DISPLAY O-TEST-VAR NO ADVANCING
+           END-DISPLAY.
+           STOP RUN.
+])
+
+AT_CHECK([${COMPILE_JP_COMPAT} -o prog prog.cob])
+AT_CHECK([./prog], [0], [OK])
+
+AT_CLEANUP
+
+AT_SETUP([JOINed in REDEFINES clause])
+AT_KEYWORDS([copy])
+
+AT_DATA([copy.inc], [
+       01 TEST-VAR PIC X(2) VALUE "OK".
+       01 TEST-VAR2 REDEFINES TEST-VAR PIC X(2).
+])
+
+AT_DATA([prog.cob], [
+       IDENTIFICATION   DIVISION.
+       PROGRAM-ID.      prog.
+       DATA             DIVISION.
+       WORKING-STORAGE  SECTION.
+       COPY "copy.inc" JOINING O AS PREFIX.
+       PROCEDURE        DIVISION.
+           DISPLAY O-TEST-VAR2 NO ADVANCING
+           END-DISPLAY.
+           STOP RUN.
+])
+
+AT_CHECK([${COMPILE_JP_COMPAT} -o prog prog.cob])
+AT_CHECK([./prog], [0], [OK])
+
+AT_CLEANUP
+
+AT_SETUP([COPY JOINING EXISTING NAME])
+
+AT_DATA([copy.inc], [
+       01 TEST-VAR PIC X(2) VALUE "OK".
+])
+
+AT_DATA([prog.cob], [
+       IDENTIFICATION   DIVISION.
+       PROGRAM-ID.      prog.
+       DATA             DIVISION.
+       WORKING-STORAGE  SECTION.
+       01 TEST1.
+         03 DATA1   PIC X(01).
+       COPY "copy.inc" JOINING TEST1 AS PREFIX.
+       PROCEDURE        DIVISION.
+           DISPLAY TEST1-TEST-VAR NO ADVANCING
+           END-DISPLAY.
+           STOP RUN.
+])
+
+AT_CHECK([${COMPILE_JP_COMPAT} -o prog prog.cob])
+AT_CHECK([./prog], [0], [OK])
+
+AT_CLEANUP
+
+AT_SETUP([COPY JOINING Group fields])
+
+AT_DATA([copy.inc], [
+       01 TEST-VAR.
+         03 TEST-VAR2 PIC X(2) VALUE "NG".
+         03 TEST-VAR3 PIC X(2) VALUE "OK".
+])
+
+AT_DATA([prog.cob], [
+       IDENTIFICATION   DIVISION.
+       PROGRAM-ID.      prog.
+       DATA             DIVISION.
+       WORKING-STORAGE  SECTION.
+       01 TEST1.
+         03 DATA1   PIC X(01).
+       COPY "copy.inc" JOINING TEST1 AS PREFIX.
+       PROCEDURE        DIVISION.
+           DISPLAY TEST1-TEST-VAR3 NO ADVANCING
+           END-DISPLAY.
+           STOP RUN.
+])
+
+AT_CHECK([${COMPILE_JP_COMPAT} -o prog prog.cob])
+AT_CHECK([./prog], [0], [OK])
+
+AT_CLEANUP
+
+AT_SETUP([*NO* JOINING following JOINING ])
+
+AT_DATA([copy1.inc], [
+       01 TEST1-VAR PIC X(2) VALUE "NG".
+])
+
+AT_DATA([copy2.inc], [
+       01 TEST2-VAR PIC X(2) VALUE "OK".
+])
+
+AT_DATA([prog.cob], [
+       IDENTIFICATION   DIVISION.
+       PROGRAM-ID.      prog.
+       DATA             DIVISION.
+       WORKING-STORAGE  SECTION.
+       01 TEST1.
+         03 DATA1   PIC X(01).
+       COPY "copy1.inc" JOINING TEST1 AS PREFIX.
+       COPY "copy2.inc".
+       PROCEDURE        DIVISION.
+           DISPLAY TEST2-VAR NO ADVANCING
+           END-DISPLAY.
+           STOP RUN.
+])
+
+AT_CHECK([${COMPILE_JP_COMPAT} -o prog prog.cob])
+AT_CHECK([./prog], [0], [OK])
+
+AT_CLEANUP
+
+AT_SETUP([*NO* JOINING FILLER])
+
+AT_DATA([copy.inc], [
+       01 TEST-REC.
+         03 TEST-VAR1  PIC X(2).
+         03 FILLER     PIC X(2).
+         03 TEST-VAR2  PIC X(2).
+         03 FILLER     PIC X(2).
+])
+
+AT_DATA([prog.cob], [
+       IDENTIFICATION   DIVISION.
+       PROGRAM-ID.      prog.
+       ENVIRONMENT      DIVISION.
+       INPUT-OUTPUT     SECTION.
+       FILE-CONTROL.
+       SELECT IN-FILE   ASSIGN "IN-FILE".
+       DATA             DIVISION.
+       FILE             SECTION.
+       FD IN-FILE.
+       COPY "copy.inc" JOINING I AS PREFIX.
+       PROCEDURE        DIVISION.
+           STOP RUN.
+])
+
+AT_CHECK([${COMPILE_JP_COMPAT} -E prog.cob | grep I-FILLER], [1])
+
+AT_CLEANUP

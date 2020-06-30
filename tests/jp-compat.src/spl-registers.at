@@ -1,0 +1,351 @@
+AT_SETUP([PROGRAM-STATUS])
+
+AT_DATA([prog.cob], [
+       IDENTIFICATION   DIVISION.
+       PROGRAM-ID.      prog.
+       PROCEDURE        DIVISION.
+           MOVE 99 TO PROGRAM-STATUS.
+           EXIT PROGRAM.
+])
+
+AT_CHECK([${COMPILE_JP_COMPAT} -o prog prog.cob])
+AT_CHECK([./prog], [99])
+
+AT_CLEANUP
+
+AT_SETUP([SORT-STATUS (alias SORT-RETURN)])
+
+AT_DATA([prog.cob], [
+       IDENTIFICATION       DIVISION.
+       PROGRAM-ID.          prog.
+       PROCEDURE            DIVISION.
+          MOVE 16 TO SORT-STATUS.
+          DISPLAY SORT-RETURN WITH NO ADVANCING.
+          STOP RUN.
+])
+
+AT_CHECK([${COMPILE_JP_COMPAT} -o prog prog.cob])
+AT_CHECK([./prog], [0], [+000000016])
+
+AT_CLEANUP
+
+AT_SETUP([SORT-STATUS (Break in input section)])
+
+AT_DATA([prog.cob], [
+       IDENTIFICATION       DIVISION.
+       PROGRAM-ID.          prog.
+       ENVIRONMENT          DIVISION.
+       INPUT-OUTPUT         SECTION.
+       FILE-CONTROL.
+           SELECT SORT-FILE1 ASSIGN TO "S01".
+           SELECT INPUT-FILE1  ASSIGN TO "./input.txt".
+           SELECT OUTPUT-FILE1 ASSIGN TO "./output.txt".
+       DATA                 DIVISION.
+       FILE		    SECTION.
+       SD SORT-FILE1.
+       01 SORT-REC1.
+          02 SORT-KEY1  PIC XX.
+          02 SORT-DATA1 PIC XX.
+       FD INPUT-FILE1.
+       01 INPUT-REC1.
+          02 XFLD1   PIC X(2).
+          02 XFLD2   PIC X(2).
+       FD OUTPUT-FILE1.
+       01 OUTPUT-REC1.
+          02 XFLD1   PIC X(2).
+          02 XFLD2   PIC X(2).
+       PROCEDURE            DIVISION.
+          SORT SORT-FILE1 ON ASCENDING KEY SORT-KEY1
+             INPUT  PROCEDURE IS IPROC1
+             OUTPUT PROCEDURE IS OPROC1.
+          GOBACK.
+       IPROC1               SECTION.
+          OPEN INPUT INPUT-FILE1.
+       BEGIN-IPROC1.
+          READ INPUT-FILE1 AT END GO TO END-IPROC1.
+          MOVE INPUT-REC1 TO SORT-REC1.
+          RELEASE SORT-REC1.
+      * Break by SORT-STATUS!!
+          MOVE 16 TO SORT-STATUS.
+          GO TO BEGIN-IPROC1.
+       END-IPROC1.
+          CLOSE INPUT-FILE1.
+          EXIT.
+       OPROC1               SECTION.
+          OPEN OUTPUT OUTPUT-FILE1.
+       BEGIN-OPROC1.
+          RETURN SORT-FILE1 AT END GO TO END-OPROC1.
+          MOVE SORT-REC1 TO OUTPUT-REC1.
+          WRITE OUTPUT-REC1.
+          GO TO BEGIN-OPROC1.
+       END-OPROC1.
+          CLOSE OUTPUT-FILE1.
+          EXIT.
+       END PROGRAM prog.
+])
+
+AT_CHECK([echo -n 030303020301020302020201010301020101 >input.txt], [0])
+AT_CHECK([${COMPILE_JP_COMPAT} -o prog prog.cob])
+AT_CHECK([./prog], [0], [],
+[WARNING - Implicit CLOSE of INPUT-FILE1 ("./input.txt")
+])
+AT_CHECK([if test -f output.txt ; then echo -n NG ; else echo -n OK ; fi], [0], [OK])
+
+AT_CLEANUP
+
+AT_SETUP([SORT-STATUS (Break in output section)])
+
+AT_DATA([prog.cob], [
+       IDENTIFICATION       DIVISION.
+       PROGRAM-ID.          prog.
+       ENVIRONMENT          DIVISION.
+       INPUT-OUTPUT         SECTION.
+       FILE-CONTROL.
+           SELECT SORT-FILE1 ASSIGN TO "S01".
+           SELECT INPUT-FILE1  ASSIGN TO "./input.txt".
+           SELECT OUTPUT-FILE1 ASSIGN TO "./output.txt".
+       DATA                 DIVISION.
+       FILE		    SECTION.
+       SD SORT-FILE1.
+       01 SORT-REC1.
+          02 SORT-KEY1  PIC XX.
+          02 SORT-DATA1 PIC XX.
+       FD INPUT-FILE1.
+       01 INPUT-REC1.
+          02 XFLD1   PIC X(2).
+          02 XFLD2   PIC X(2).
+       FD OUTPUT-FILE1.
+       01 OUTPUT-REC1.
+          02 XFLD1   PIC X(2).
+          02 XFLD2   PIC X(2).
+       PROCEDURE            DIVISION.
+          SORT SORT-FILE1 ON ASCENDING KEY SORT-KEY1
+             INPUT  PROCEDURE IS IPROC1
+             OUTPUT PROCEDURE IS OPROC1.
+          GOBACK.
+       IPROC1               SECTION.
+          OPEN INPUT INPUT-FILE1.
+       BEGIN-IPROC1.
+          READ INPUT-FILE1 AT END GO TO END-IPROC1.
+          MOVE INPUT-REC1 TO SORT-REC1.
+          RELEASE SORT-REC1.
+          GO TO BEGIN-IPROC1.
+       END-IPROC1.
+          CLOSE INPUT-FILE1.
+          EXIT.
+       OPROC1               SECTION.
+          OPEN OUTPUT OUTPUT-FILE1.
+       BEGIN-OPROC1.
+          RETURN SORT-FILE1 AT END GO TO END-OPROC1.
+          MOVE SORT-REC1 TO OUTPUT-REC1.
+          WRITE OUTPUT-REC1.
+      * Break by SORT-STATUS!!
+          MOVE 16 TO SORT-STATUS.
+          GO TO BEGIN-OPROC1.
+       END-OPROC1.
+          CLOSE OUTPUT-FILE1.
+          EXIT.
+       END PROGRAM prog.
+])
+
+AT_CHECK([echo -n 030303020301020302020201010301020101 >input.txt], [0])
+AT_CHECK([${COMPILE_JP_COMPAT} -o prog prog.cob])
+AT_CHECK([./prog], [0], [],
+[WARNING - Implicit CLOSE of OUTPUT-FILE1 ("./output.txt")
+])
+AT_CHECK([cat output.txt], [0], [0103])
+
+AT_CLEANUP
+
+AT_SETUP([SORT-STATUS (Break in section with THRU)])
+
+AT_DATA([prog.cob], [
+       IDENTIFICATION       DIVISION.
+       PROGRAM-ID.          prog.
+       ENVIRONMENT          DIVISION.
+       INPUT-OUTPUT         SECTION.
+       FILE-CONTROL.
+           SELECT SORT-FILE1 ASSIGN TO "S01".
+           SELECT INPUT-FILE1  ASSIGN TO "./input.txt".
+           SELECT OUTPUT-FILE1 ASSIGN TO "./output.txt".
+       DATA                 DIVISION.
+       FILE		    SECTION.
+       SD SORT-FILE1.
+       01 SORT-REC1.
+          02 SORT-KEY1  PIC XX.
+          02 SORT-DATA1 PIC XX.
+       FD INPUT-FILE1.
+       01 INPUT-REC1.
+          02 XFLD1   PIC X(2).
+          02 XFLD2   PIC X(2).
+       FD OUTPUT-FILE1.
+       01 OUTPUT-REC1.
+          02 XFLD1   PIC X(2).
+          02 XFLD2   PIC X(2).
+       PROCEDURE            DIVISION.
+          SORT SORT-FILE1 ON ASCENDING KEY SORT-KEY1
+             INPUT  PROCEDURE IS IPROC1 THRU END-IPROC1
+             OUTPUT PROCEDURE IS OPROC1.
+          GOBACK.
+       IPROC1               SECTION.
+          OPEN INPUT INPUT-FILE1.
+       BEGIN-IPROC1.
+          READ INPUT-FILE1 AT END GO TO END-IPROC1.
+          MOVE INPUT-REC1 TO SORT-REC1.
+          RELEASE SORT-REC1.
+          GO TO BEGIN-IPROC1.
+       END-IPROC1           SECTION.
+          CLOSE INPUT-FILE1.
+       AFTER-IPROC1         SECTION.
+          DISPLAY "OVERRUN!!!!" WITH NO ADVANCING.
+          EXIT.
+       OPROC1               SECTION.
+          OPEN OUTPUT OUTPUT-FILE1.
+       BEGIN-OPROC1.
+          RETURN SORT-FILE1 AT END GO TO END-OPROC1.
+          MOVE SORT-REC1 TO OUTPUT-REC1.
+          WRITE OUTPUT-REC1.
+      * Break by SORT-STATUS!!
+          MOVE 16 TO SORT-STATUS.
+          GO TO BEGIN-OPROC1.
+       END-OPROC1           SECTION.
+          CLOSE OUTPUT-FILE1.
+       AFTER-OPROC1         SECTION.
+          DISPLAY "OVERRUN!!!!" WITH NO ADVANCING.
+          EXIT.
+       END PROGRAM prog.
+])
+
+AT_CHECK([echo -n 030303020301020302020201010301020101 >input.txt], [0])
+AT_CHECK([${COMPILE_JP_COMPAT} -o prog prog.cob])
+AT_CHECK([./prog], [0], [],
+[WARNING - Implicit CLOSE of OUTPUT-FILE1 ("./output.txt")
+])
+AT_CHECK([cat output.txt], [0], [0103])
+
+AT_CLEANUP
+
+AT_SETUP([SORT-STATUS break in MERGE])
+
+AT_DATA([prog.cob], [
+       IDENTIFICATION       DIVISION.
+       PROGRAM-ID.          prog.
+       ENVIRONMENT          DIVISION.
+       INPUT-OUTPUT         SECTION.
+       FILE-CONTROL.
+           SELECT MERGE-FILE1 ASSIGN TO "M01".
+           SELECT INPUT-FILE1  ASSIGN TO "./input.txt".
+           SELECT INPUT-FILE2  ASSIGN TO "./input2.txt".
+           SELECT OUTPUT-FILE1 ASSIGN TO "./output.txt".
+       DATA                 DIVISION.
+       FILE		    SECTION.
+       SD MERGE-FILE1.
+       01 MERGE-REC1.
+          02 MERGE-KEY1  PIC XX.
+          02 MERGE-DATA1 PIC XX.
+       FD INPUT-FILE1.
+       01 INPUT-REC1.
+          02 XFLD1   PIC X(2).
+          02 XFLD2   PIC X(2).
+       FD INPUT-FILE2.
+       01 INPUT-REC2.
+          02 XFLD1   PIC X(2).
+          02 XFLD2   PIC X(2).
+       FD OUTPUT-FILE1.
+       01 OUTPUT-REC1.
+          02 XFLD1   PIC X(2).
+          02 XFLD2   PIC X(2).
+       PROCEDURE            DIVISION.
+          MERGE MERGE-FILE1 ON ASCENDING KEY MERGE-KEY1
+             USING INPUT-FILE1 INPUT-FILE2
+             OUTPUT PROCEDURE IS OPROC1.
+          GOBACK.
+       OPROC1               SECTION.
+          OPEN OUTPUT OUTPUT-FILE1.
+       BEGIN-OPROC1.
+          RETURN MERGE-FILE1 AT END GO TO END-OPROC1.
+          MOVE MERGE-REC1 TO OUTPUT-REC1.
+          WRITE OUTPUT-REC1.
+      * Break by SORT-STATUS!!
+          MOVE 16 TO SORT-STATUS.
+          GO TO BEGIN-OPROC1.
+       END-OPROC1.
+          CLOSE OUTPUT-FILE1.
+          EXIT.
+       END PROGRAM prog.
+])
+
+AT_CHECK([echo -n 030303020301020302020201010301020101 >input.txt], [0])
+AT_CHECK([echo -n 030603040305020502060204010601040104 >input2.txt], [0])
+AT_CHECK([${COMPILE_JP_COMPAT} -o prog prog.cob])
+AT_CHECK([./prog], [0], [],
+[WARNING - Implicit CLOSE of OUTPUT-FILE1 ("./output.txt")
+])
+AT_CHECK([cat output.txt], [0], [0103])
+
+AT_CLEANUP
+
+AT_SETUP([SORT-STATUS break with No SORT-STATUS in pgm])
+
+AT_DATA([prog.cob], [
+       IDENTIFICATION       DIVISION.
+       PROGRAM-ID.          prog.
+       ENVIRONMENT          DIVISION.
+       INPUT-OUTPUT         SECTION.
+       FILE-CONTROL.
+           SELECT SORT-FILE1 ASSIGN TO "S01".
+           SELECT INPUT-FILE1  ASSIGN TO "./input.txt".
+           SELECT OUTPUT-FILE1 ASSIGN TO "./output.txt".
+       DATA                 DIVISION.
+       FILE		    SECTION.
+       SD SORT-FILE1.
+       01 SORT-REC1.
+          02 SORT-KEY1  PIC XX.
+          02 SORT-DATA1 PIC XX.
+       FD INPUT-FILE1.
+       01 INPUT-REC1.
+          02 XFLD1   PIC X(2).
+          02 XFLD2   PIC X(2).
+       FD OUTPUT-FILE1.
+       01 OUTPUT-REC1.
+          02 XFLD1   PIC X(2).
+          02 XFLD2   PIC X(2).
+       PROCEDURE            DIVISION.
+          SORT SORT-FILE1 ON ASCENDING KEY SORT-KEY1
+             INPUT  PROCEDURE IS IPROC1
+             OUTPUT PROCEDURE IS OPROC1.
+          GOBACK.
+       IPROC1               SECTION.
+          OPEN INPUT INPUT-FILE1.
+       BEGIN-IPROC1.
+          READ INPUT-FILE1 AT END GO TO END-IPROC1.
+          MOVE INPUT-REC1 TO SORT-REC1.
+          RELEASE SORT-REC1.
+          GO TO BEGIN-IPROC1.
+       END-IPROC1.
+          CLOSE INPUT-FILE1.
+          EXIT.
+       OPROC1               SECTION.
+          OPEN OUTPUT OUTPUT-FILE1.
+       BEGIN-OPROC1.
+          RETURN SORT-FILE1 AT END GO TO END-OPROC1.
+          MOVE SORT-REC1 TO OUTPUT-REC1.
+          WRITE OUTPUT-REC1.
+      * Break by SORT-RETURN!!
+          MOVE 16 TO SORT-RETURN.
+          GO TO BEGIN-OPROC1.
+       END-OPROC1.
+          CLOSE OUTPUT-FILE1.
+          EXIT.
+       END PROGRAM prog.
+])
+
+AT_CHECK([echo -n 030303020301020302020201010301020101 >input.txt], [0])
+AT_CHECK([${COMPILE_JP_COMPAT} -o prog prog.cob])
+AT_CHECK([./prog], [1], [],
+[prog.cob:42: libcob: SORT-STATUS is set to 16.
+WARNING - Implicit CLOSE of OUTPUT-FILE1 ("./output.txt")
+])
+AT_CHECK([cat output.txt], [0], [0103])
+
+AT_CLEANUP

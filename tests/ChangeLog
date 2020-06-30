@@ -1,0 +1,408 @@
+2009-01-20  Roger While <simrw@sim-basis.de>
+
+	* OC tests for DPC and 78 levels
+
+2008-12-02  Roger While <simrw@sim-basis.de>
+
+	* Activate some more ANSI85 tests
+
+2008-11-28  Roger While <simrw@sim-basis.de>
+
+	* Adjust ANSI85 results; USE GLOBAL tests now run
+	* Adjust ANSI85 report output
+
+2008-11-25  Roger While <simrw@sim-basis.de>
+
+	* cobol85/*.pl : Fix warning when running perl with -w
+
+2008-11-07  Roger While <simrw@sim-basis.de>
+
+	* Adjust ANSI85 results; we successfully execute one of the GLOBAL tests
+
+2008-10-17  Roger While <simrw@sim-basis.de>
+
+	* Add test for non-ALLOCATED BASED item
+
+2008-10-11  Roger While <simrw@sim-basis.de>
+
+	* cobol85/Makefile.am : Refix out of source directory builds
+
+2008-09-30  Roger While <simrw@sim-basis.de>
+
+	* Makefile.am : Fix out of source directory builds
+	* cobol85/Makefile.am : Ditto
+
+2008-08-09  Roger While <simrw@sim-basis.de>
+
+	* Change ENTRY test so as not to use obscure/obsoleted options
+
+2008-07-02  Roger While <simrw@sim-basis.de>
+
+	* General for all OC tests - Cater for activated END-xxx checking
+
+2008-05-23  Roger While <simrw@sim-basis.de>
+
+	* Due to display POINTER changes, ignore output from POINTER datarep test
+
+2008-03-25  Roger While <simrw@sim-basis.de>
+
+	* Add OC tests for reference modification of FUNCTIONS
+	* Add OC test for COB_LOAD_CASE
+
+2008-02-18  Roger While <simrw@sim-basis.de>
+
+	* Add OC test for ANY LENGTH
+
+2008-02-14  Roger While <simrw@sim-basis.de>
+
+	* atlocal.in : Fix up library search order
+
+2008-01-09  Roger While <simrw@sim-basis.de>
+
+	* BY CONTENT not allowed in PROCEDURE header
+
+2008-01-02  Roger While <simrw@sim-basis.de>
+
+	*  Cobol85 tests rechanged to cater for unsupported ALTER
+
+2007-12-27  Roger While <simrw@sim-basis.de>
+
+	** Mark 1.0 RELEASE
+
+2007-12-27  Roger While <simrw@sim-basis.de>
+
+	* Add OC test for WHEN-COMPILED
+
+2007-12-21  Roger While <simrw@sim-basis.de>
+
+	*  Cobol85 tests changed to cater for unsupported ALTER
+
+2007-10-27  Roger While <simrw@sim-basis.de>
+
+	* OC test for INSPECT with figurative constant
+
+2007-05-11  Roger While <simrw@sim-basis.de>
+
+	* Adjust OC test result to agree with tightened input
+	  file presence check
+
+2007-03-05  Roger While <simrw@sim-basis.de>
+
+	* OC tests for LOCALE-DATE, LOCALE-TIME
+
+2007-01-29  Roger While <simrw@sim-basis.de>
+
+	* OC test for ODO without TO clause
+
+2007-01-16  Roger While <simrw@sim-basis.de>
+
+	* OC test for ASSIGN [TO] KEYBOARD/DISPLAY
+
+2006-12-17  Roger While <simrw@sim-basis.de>
+
+	* OC test for NUMVAL-C
+
+2006-12-14  Roger While <simrw@sim-basis.de>
+
+	* OC tests for TRIM, UPPER-CASE
+
+2006-10-23  Roger While <simrw@sim-basis.de>
+
+	* Change C code in the tests to prototype functions
+
+2006-07-23  Roger While <simrw@sim-basis.de>
+
+	* run.src, atlocal.in, cobol85/report.pl : Remove SWITCH settings from
+		atlocal and insert directly into the tests
+
+2006-07-19  Roger While <simrw@sim-basis.de>
+
+	* syntax.src, run.src : Change tests to accomodate revised
+		messages
+
+2006-07-06  Roger While <simrw@sim-basis.de>
+
+	cobol85/report.pl : Cater for DB_HOME (BDB >= 4.1)
+
+2006-05-18  Roger While <simrw@sim-basis.de>
+
+	* OC tests for FUNCTION's EXCEPTION-FILE,
+		EXCEPTION-LOCATION, EXCEPTION-STATEMENT, EXCEPTION-STATUS
+
+2006-05-08  Roger While <simrw@sim-basis.de>
+
+	* OC test for PROCEDURE DIVISION CHAINING
+	* OC test for INSPECT REPLACING TRAILING
+
+2006-03-22  Roger While <simrw@sim-basis.de>
+
+	* OC test for EBCDIC table SORT
+
+2006-03-04  Roger While <simrw@sim-basis.de>
+
+	* OC test for 88 level FALSE IS clause and
+	  SET TO FALSE.
+
+2006-02-08  Roger While <simrw@sim-basis.de>
+
+	* Adjust results for cobol85 suite. We now pass
+	  some nested program tests.
+
+2006-01-29  Roger While <simrw@sim-basis.de>
+
+	* OC test for COB_PRE_LOAD
+
+2006-01-26  Roger While <simrw@sim-basis.de>
+
+	* OC test for UNSTRING DELIMITED LOW-VALUE
+
+2006-01-21  Roger While <simrw@sim-basis.de>
+
+	* tests/syntax.src/definition.at : Test mismatched levels
+
+2006-01-05  Roger While <simrw@sim-basis.de>
+
+	* General : Bootstrap up to new libtool / automake
+	  atlocal.in : More fixes for HP/IBM/Sun
+	  cobol85/ifedit.sh : Fix up test IX110A -
+	  This has an incorrect PIC clause in the
+	  compressed file newcob.val.Z.
+
+2005-12-30  Roger While <simrw@sim-basis.de>
+
+	* Relax LOG10 test
+	  Fix big endian shell test
+	  atlocal.in : Insert SHLIB_PATH/LIBPATH for AIX/HP-UX
+
+2005-12-28  Roger While <simrw@sim-basis.de>
+
+	* run.src/extensions.at : Remove A\$B (MingW)
+
+2005-12-09  Roger While <simrw@sim-basis.de>
+
+	* atlocal.in, run.src/*, cobol85/report.pl, cobol85/Makefile.am :
+	  Changes for '-x' option
+
+2005-12-05  Roger While <simrw@sim-basis.de>
+
+	* atlocal.in : Include libcob/.libs in PATH
+		       Needed for Win
+	* cobol85/report.pl, cobol85/Makefile.am : Fix perl usage
+
+2005-12-04  Roger While <simrw@sim-basis.de>
+
+	* Relax EXP test for MingW
+
+2005-11-25  Roger While <simrw@sim-basis.de>
+
+	* New OC test for sticky-linkage
+
+2005-11-09  Roger While <simrw@sim-basis.de>
+
+	* Adjust Cobol85 test results for SAME RECORD implementation.
+
+2005-11-07  Roger While <simrw@sim-basis.de>
+
+	* New test for PERFORM type OSVS.
+	* Get the FUNCTION tests in alphabetical order.
+
+2005-11-01  Roger While <simrw@sim-basis.de>
+
+	* Relax TAN test.
+
+2005-10-28  Roger While <simrw@sim-basis.de>
+
+	* Relax the range check for STANDARD-DEVIATION
+	  Don't do native binary tests when native = big-endian
+
+2005-10-27  Roger While <simrw@sim-basis.de>
+
+	* Fixes all over for MAC (Darwin)
+	  We had "-shared" hard-coded in several places.
+	  Pick up the real value from the configure.
+
+2005-10-14  Roger While <simrw@sim-basis.de>
+
+	* Fix a typo
+
+2005-10-13  Roger While <simrw@sim-basis.de>
+
+	* Fix various tests for GCC 4
+
+2005-10-01  Roger While <simrw@sim-basis.de>
+
+	* cobol85/Makefile.am : Include IF.txt, ifedit.sh
+
+2005-07-31  Roger While <simrw@sim-basis.de>
+
+	* Tests for SIGN, FRACTION-PART.
+	* Tweak the tests a bit more to cater for the
+	  abysmal precision of MingW.
+
+2005-07-14  Roger While <simrw@sim-basis.de>
+
+	* New test for START of SEQ file.
+	* Tweak the IF tests a bit. This should cater
+	  for the precison vagueries of doubles.
+
+2005-07-02  Roger While <simrw@sim-basis.de>
+
+	* run.src/functions.at : New Intrinsic Function tests
+
+2005-06-13  Roger While <simrw@sim-basis.de>
+
+	* atlocal.in : Export COB_SWITCH_1/2 for OC
+	  and Cobol85 tests.
+	  run, run.src/misc.at : Test for SWITCH.
+
+2005-06-11  Roger While <simrw@sim-basis.de>
+
+	* Add in INSPECT BEFORE/AFTER tests
+
+2005-05-28  Roger While <simrw@sim-basis.de>
+
+	* Use absolute path for cobcrun; seems that some
+	  environments do not propogate the path correctly.
+
+2005-05-15  Roger While <simrw@sim-basis.de>
+
+	* Adjust tests for "Warning" and "Error".
+
+2005-05-12  Roger While <simrw@sim-basis.de>
+
+	* Adjust tests for larger redefines
+	  (not allowed for cobol2002)
+
+2005-05-03  Roger While <simrw@sim-basis.de>
+
+	* tests/cobol85/* :    Allow to run without a "make install".
+			       Update expected results.
+			       EXEC85.conf.in - Change 2 params.
+	  Makexx :	       Due to autoreconf.
+	  run-O, data-rep-O :  Use -O instead of -fruntime-inlining
+	  run.src,syntax.src : Add tests for duplicate paras and larger
+			       redefines.
+			       Adjust for endianness.
+
+2005-04-15  Keisuke Nishida  <knishida@open-cobol.org>
+
+	* atlocal.in (BIGENDIAN): New variable.
+	* data-rep.src/binary.at: Don't test native binary on big-endian
+	machines.
+	(COMP-5): Moved from run.src/extensions.at.
+
+2005-04-13  Keisuke Nishida  <knishida@open-cobol.org>
+
+	* atlocal.in (CC): Set -fPIC when necessary.
+
+2005-03-03  Roger While <simrw@sim-basis.de>
+
+	* cobol85/SQ.txt, cobol85/summary.txt :
+	  We now pass the LINAGE tests
+	* run.src/extensions.at :
+	  Fix a dangling file in /tmp
+
+	  Small cleanups in other files
+
+2005-02-22  Roger While <simrw@sim-basis.de>
+
+	* run, run.src/misc.at : Fix REF/CONTENT/VALUE test
+
+2005-02-12  Roger While <simrw@sim-basis.de>
+
+	* run.src/misc.at : .. BY CONTENT LENGTH OF ..
+	  run.src/subscripts.at : Clean up a little
+	  run.src/return-code.at : Clean up a little
+
+2005-02-11  Roger While <simrw@sim-basis.de>
+
+	* Dummy entry
+
+2005-02-11  Roger While <simrw@sim-basis.de>
+
+	* run.src/extensions.at : Fix ARGUMENT check
+
+2005-02-08  Roger While <simrw@sim-basis.de>
+
+	* run.src/misc.at, run : Add EXTERNAL as Literal check
+
+2005-02-08  Roger While <simrw@sim-basis.de>
+
+	* run.src/misc.at, run : Add cobcrun check
+
+2005-02-04  Roger While <simrw@sim-basis.de>
+
+	* run.src/extensions.at : MF extensions
+
+2004-03-06  Keisuke Nishida  <knishida@wind.sannet.ne.jp>
+
+	* data-rep.src/pointer.at: New file.
+
+2004-03-01  Keisuke Nishida  <knishida@wind.sannet.ne.jp>
+
+	* Reorganized tests into run.src, syntax.src, and data-rep.src.
+
+2003-11-26  Keisuke Nishida  <kxn30@yahoo.co.jp>
+
+	* cobol2002-run.src, cobol2002-syntax.src, data-rep.src,
+	extension.src: New subdirectories.
+
+2003-08-21  Keisuke Nishida  <kxn30@yahoo.co.jp>
+
+	* display.at, packed.at: New files.
+
+2003-08-10  Keisuke Nishida  <knishida@netlab.jp>
+
+	* binary.at: New file.
+
+2003-05-30  Keisuke Nishida  <knishida@netlab.jp>
+
+	* occurs.at: New file.
+
+2003-05-21  Keisuke Nishida  <knishida@netlab.jp>
+
+	* multiply.at: New file.
+	* extension.at: New file.
+
+2003-04-29  Keisuke Nishida  <knishida@netlab.jp>
+
+	* fundamental.at, entry.at: New files.
+
+2003-04-26  Keisuke Nishida  <knishida@netlab.jp>
+
+	* subscripts.at, ref-mod.at: Divided from reference.at.
+	* value.at: Renamed from constant.at.
+	* usage.at: Renamed from packed.at.
+	* initialize.at: New file.
+
+2003-04-10  Keisuke Nishida  <knishida@netlab.jp>
+
+	* constant.at, move.at: New files.
+
+2003-04-04  Keisuke Nishida  <knishida@netlab.jp>
+
+	* packed.at: New file.
+
+2003-03-08  Keisuke Nishida  <knishida@netlab.jp>
+
+	* testsuite.at: Include all *.at files.
+	* Makefile.am: Build only a single testsuite script.
+
+2003-02-28  Keisuke Nishida  <knishida@netlab.jp>
+
+	* reference.at: Combine runtime.at and subref.at.
+
+2003-02-25  Keisuke Nishida  <knishida@netlab.jp>
+
+	* definition.at, misc.at: New files.
+	* redef.at: Removed.
+
+2002-12-12  Keisuke Nishida  <knishida@netlab.jp>
+
+	* redefines.at: New file.
+
+2002-12-10  Keisuke Nishida  <knishida@netlab.jp>
+
+	* Makefile.am, atlocal.in: New files.
+	* redef.at, subref.at, runtime.at: New files.
+

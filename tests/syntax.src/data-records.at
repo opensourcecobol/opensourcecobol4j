@@ -1,0 +1,22 @@
+AT_SETUP([completely ignore DATA RECORDS])
+
+AT_DATA([prog.cob], [
+       IDENTIFICATION   DIVISION.
+       PROGRAM-ID.      prog.
+       ENVIRONMENT      DIVISION.
+       INPUT-OUTPUT     SECTION.
+       FILE-CONTROL.
+       SELECT TEST-FILE ASSIGN "TEST-FILE".
+       DATA             DIVISION.
+       FILE             SECTION.
+       FD TEST-FILE
+          DATA RECORD IS MISSING-REF.
+       01 TEST-RECORD.
+         03 TEST-KEY    PIC 9(10).
+])
+
+AT_CHECK([${COMPILE_ONLY} -std=cobol85 prog.cob], [0], [],
+[prog.cob:11: Warning: DATA RECORDS is obsolete in COBOL 85
+])
+
+AT_CLEANUP

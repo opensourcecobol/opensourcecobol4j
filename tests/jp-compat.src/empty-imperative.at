@@ -1,0 +1,158 @@
+AT_SETUP([Allow empty EVALUATE-WHEN OTHER])
+
+AT_DATA([prog.cob], [
+       IDENTIFICATION   DIVISION.
+       PROGRAM-ID.      prog.
+       DATA             DIVISION.
+       WORKING-STORAGE  SECTION.
+       01 A PIC 9 VALUE 1.
+       01 B PIC 9 VALUE 1.
+       PROCEDURE        DIVISION.
+       EVALUATE A ALSO B
+          WHEN 1 ALSO 1
+             DISPLAY "OK" WITH NO ADVANCING
+          WHEN OTHER
+       END-EVALUATE.
+       GOBACK.
+])
+
+AT_CHECK([${COMPILE_JP_COMPAT} prog.cob])
+AT_CHECK([./prog], [0], [OK])
+
+AT_CLEANUP
+
+AT_SETUP([Allow empty ELSE])
+
+AT_DATA([prog.cob], [
+       IDENTIFICATION   DIVISION.
+       PROGRAM-ID.      prog.
+       DATA             DIVISION.
+       WORKING-STORAGE  SECTION.
+       01 A PIC 9 VALUE 1.
+       01 B PIC 9 VALUE 1.
+       PROCEDURE        DIVISION.
+       IF A = B THEN
+          DISPLAY "OK" WITH NO ADVANCING
+       ELSE
+       END-IF.
+       GOBACK.
+])
+
+AT_CHECK([${COMPILE_JP_COMPAT} prog.cob])
+AT_CHECK([./prog], [0], [OK])
+
+AT_CLEANUP
+
+AT_SETUP([Empty IF by unsupported stmt])
+
+AT_DATA([prog.cob], [
+       IDENTIFICATION        DIVISION.
+       PROGRAM-ID.           prog.
+       DATA                  DIVISION.
+       WORKING-STORAGE       SECTION.
+       01  X-01              PIC X(10).
+       PROCEDURE             DIVISION.
+            if X-01 = " "  stop "test".
+            GOBACK.
+])
+
+AT_CHECK([${COMPILE_DEFAULT} prog.cob])
+AT_CHECK([./prog], [0])
+
+AT_CLEANUP
+
+AT_SETUP([Allow empty EVALUATE- before WHEN OTHER])
+
+AT_DATA([prog.cob], [
+       IDENTIFICATION   DIVISION.
+       PROGRAM-ID.      prog.
+       DATA             DIVISION.
+       WORKING-STORAGE  SECTION.
+       01 A PIC 9 VALUE 0.
+       PROCEDURE        DIVISION.
+           EVALUATE A
+             WHEN 1
+               DISPLAY "NG" WITH NO ADVANCING
+             WHEN 2
+             WHEN OTHER
+               DISPLAY "OK" WITH NO ADVANCING
+           END-EVALUATE.
+           GOBACK.
+])
+
+AT_CHECK([${COMPILE_JP_COMPAT} prog.cob])
+AT_CHECK([./prog], [0], [OK])
+
+AT_CLEANUP
+
+AT_SETUP([Allow empty EVALUATE- semantics])
+
+AT_DATA([prog.cob], [
+       IDENTIFICATION   DIVISION.
+       PROGRAM-ID.      prog.
+       DATA             DIVISION.
+       WORKING-STORAGE  SECTION.
+       01 A PIC 9 VALUE 1.
+       PROCEDURE        DIVISION.
+           EVALUATE A
+             WHEN 1
+             WHEN 2
+             WHEN OTHER
+               DISPLAY "OK" WITH NO ADVANCING
+           END-EVALUATE.
+           GOBACK.
+])
+
+AT_CHECK([${COMPILE_JP_COMPAT} prog.cob])
+AT_CHECK([./prog], [0], [OK])
+
+AT_CLEANUP
+
+AT_SETUP([Allow empty EVALUATE- semantics 2])
+
+AT_DATA([prog.cob], [
+       IDENTIFICATION   DIVISION.
+       PROGRAM-ID.      prog.
+       DATA             DIVISION.
+       WORKING-STORAGE  SECTION.
+       01 A PIC 9 VALUE 1.
+       PROCEDURE        DIVISION.
+           EVALUATE A
+             WHEN 0
+               DISPLAY "NG" WITH NO ADVANCING
+             WHEN 1
+             WHEN 2
+             WHEN OTHER
+               DISPLAY "OK" WITH NO ADVANCING
+           END-EVALUATE.
+           GOBACK.
+])
+
+AT_CHECK([${COMPILE_JP_COMPAT} prog.cob])
+AT_CHECK([./prog], [0], [OK])
+
+AT_CLEANUP
+
+AT_SETUP([Allow empty EVALUATE- semantics 3])
+
+AT_DATA([prog.cob], [
+       IDENTIFICATION   DIVISION.
+       PROGRAM-ID.      prog.
+       DATA             DIVISION.
+       WORKING-STORAGE  SECTION.
+       01 A PIC 9 VALUE 0.
+       PROCEDURE        DIVISION.
+           EVALUATE A
+             WHEN 1
+             WHEN 2
+             WHEN OTHER
+               DISPLAY "OK" WITH NO ADVANCING
+           END-EVALUATE.
+           GOBACK.
+])
+
+AT_CHECK([${COMPILE_JP_COMPAT} prog.cob])
+AT_CHECK([./prog], [0], [OK])
+
+AT_CLEANUP
+

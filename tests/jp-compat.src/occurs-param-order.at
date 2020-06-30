@@ -1,0 +1,18 @@
+AT_SETUP([OCCURS INDEXED before KEY])
+
+AT_DATA([prog.cob], [
+       IDENTIFICATION   DIVISION.
+       PROGRAM-ID.      prog.
+       DATA             DIVISION.
+       WORKING-STORAGE  SECTION.
+       01 X.
+         03 XX OCCURS 10
+                 INDEXED       BY I01
+                 ASCENDING KEY IS X01.
+           05 X01 PIC 9.
+           05 X02 PIC X.
+])
+
+AT_CHECK([${COMPILE_ONLY} prog.cob], [0])
+
+AT_CLEANUP

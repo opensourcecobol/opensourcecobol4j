@@ -1,0 +1,14 @@
+AT_SETUP([Allow wrong pgm-name in END-PROGRAM])
+
+AT_DATA([prog.cob], [
+       IDENTIFICATION   DIVISION.
+       PROGRAM-ID.      prog.
+       DATA             DIVISION.
+       PROCEDURE        DIVISION.
+          DISPLAY "OK" WITH NO ADVANCING.
+       END PROGRAM      progprog.
+])
+
+AT_CHECK([${COMPILE_JP_COMPAT} prog.cob])
+
+AT_CLEANUP

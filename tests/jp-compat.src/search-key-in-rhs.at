@@ -1,0 +1,35 @@
+AT_SETUP([SEARCH KEY IN RHS])
+
+AT_DATA([prog.cob], [
+       IDENTIFICATION   DIVISION.
+       PROGRAM-ID.      prog.
+       DATA             DIVISION.
+       WORKING-STORAGE  SECTION.
+       01  WK00.
+         03 TBL00 OCCURS 5 TIMES
+                  ASCENDING KEY D0001
+                  INDEXED BY    TBL00-IDX.
+           05 D0001         PIC 9(4).
+           05 D0002         PIC X(4).
+       77  CNT00            PIC 9(4).
+       PROCEDURE        DIVISION.
+           MOVE 1 TO D0001(1).
+           MOVE 2 TO D0001(2).
+           MOVE 3 TO D0001(3).
+           MOVE 4 TO D0001(4).
+           MOVE 5 TO D0001(5).
+           MOVE "VAL1" TO D0002(1).
+           MOVE "VAL2" TO D0002(2).
+           MOVE "VAL3" TO D0002(3).
+           MOVE "VAL4" TO D0002(4).
+           MOVE "VAL5" TO D0002(5).
+           MOVE 3 TO CNT00.
+           SEARCH ALL TBL00 WHEN CNT00 = D0001(TBL00-IDX)
+               DISPLAY D0002(TBL00-IDX) WITH NO ADVANCING
+           END-SEARCH.
+           GOBACK.
+])
+
+AT_CHECK([${COMPILE_JP_COMPAT} prog.cob], [0])
+AT_CHECK([./prog], [0], [VAL3])
+AT_CLEANUP

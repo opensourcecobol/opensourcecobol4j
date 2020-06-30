@@ -1,0 +1,40 @@
+AT_SETUP([STRING Alphanumeric to National])
+
+AT_DATA([prog.cob], [
+       IDENTIFICATION  DIVISION.
+       PROGRAM-ID.     prog.
+       DATA            DIVISION.
+       WORKING-STORAGE SECTION.
+       01 X       PIC X(6) value "procob".
+       01 Y       PIC N(6).
+       PROCEDURE       DIVISION.
+           STRING X DELIMITED BY SIZE INTO Y.
+           DISPLAY Y NO ADVANCING.
+           STOP RUN.
+])
+
+AT_CHECK([${COMPILE} -x prog.cob])
+AT_CHECK([./prog], [0], [procob            ])
+
+AT_CLEANUP
+
+AT_SETUP([STRING National to Alphanumeric])
+
+AT_DATA([prog.cob], [
+       IDENTIFICATION  DIVISION.
+       PROGRAM-ID.     prog.
+       DATA            DIVISION.
+       WORKING-STORAGE SECTION.
+       01 X       PIC N(6) VALUE "ｐｒｏｃｏｂ".
+       01 Y       PIC X(18).
+       PROCEDURE DIVISION.
+           STRING X DELIMITED BY SIZE INTO Y.
+           DISPLAY Y NO ADVANCING.
+           STOP RUN.
+])
+
+AT_CHECK([${COMPILE} -x prog.cob])
+AT_CHECK([./prog], [0], [ｐｒｏｃｏｂ])
+
+AT_CLEANUP
+

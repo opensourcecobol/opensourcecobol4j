@@ -1,0 +1,63 @@
+### OpenCOBOL Test Suite				-*- m4 -*-
+
+## Copyright (C) 2004-2009 Keisuke Nishida
+## Copyright (C) 2007-2009 Roger While
+##
+## This program is free software; you can redistribute it and/or modify
+## it under the terms of the GNU General Public License as published by
+## the Free Software Foundation; either version 2, or (at your option)
+## any later version.
+## 
+## This program is distributed in the hope that it will be useful,
+## but WITHOUT ANY WARRANTY; without even the implied warranty of
+## MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+## GNU General Public License for more details.
+## 
+## You should have received a copy of the GNU General Public License
+## along with this software; see the file COPYING.  If not, write to
+## the Free Software Foundation, 51 Franklin Street, Fifth Floor
+## Boston, MA 02110-1301 USA
+
+### ISO+IEC+1989-2002 14.8.1 ACCEPT statement
+
+AT_SETUP([ACCEPT])
+
+AT_DATA([prog.cob], [
+       IDENTIFICATION   DIVISION.
+       PROGRAM-ID.      prog.
+       DATA             DIVISION.
+       WORKING-STORAGE  SECTION.
+       01 X             PIC X(8).
+       PROCEDURE        DIVISION.
+           ACCEPT X FROM DATE
+           END-ACCEPT.
+           INSPECT X CONVERTING "012345678" TO "999999999".
+           DISPLAY "(" X ")"
+           END-DISPLAY.
+           ACCEPT X FROM DATE YYYYMMDD
+           END-ACCEPT.
+           INSPECT X CONVERTING "012345678" TO "999999999".
+           DISPLAY "(" X ")"
+           END-DISPLAY.
+           ACCEPT X FROM DAY
+           END-ACCEPT.
+           INSPECT X CONVERTING "012345678" TO "999999999".
+           DISPLAY "(" X ")"
+           END-DISPLAY.
+           ACCEPT X FROM DAY YYYYDDD
+           END-ACCEPT.
+           INSPECT X CONVERTING "012345678" TO "999999999".
+           DISPLAY "(" X ")"
+           END-DISPLAY.
+           STOP RUN.
+])
+
+AT_CHECK([${COMPILE} -o prog prog.cob])
+AT_CHECK([./prog], [0],
+[(999999  )
+(99999999)
+(99999   )
+(9999999 )
+])
+
+AT_CLEANUP

@@ -1,0 +1,78 @@
+AT_SETUP([undefined not message])
+
+AT_DATA([prog.cob], [
+       identification division.
+       program-id. prog.
+       data division.
+       working-storage section.
+       01 wk-01.
+         03 wk-02  pic x(4).
+         03 ｗｋ－０３  redefines wk-02 pic n(2).
+       01 cnt  pic 9(1).
+       procedure division.
+          inspect ｗｋ－０３ tallying cnt
+            for characters before initial space.
+          stop run.
+])
+
+AT_CHECK([${COMPILE} -x prog.cob], [1], [],
+[prog.cob:8: Error: Size of 'ｗｋ－０３' larger than size of 'wk-02'
+])
+
+AT_CLEANUP
+
+AT_SETUP([Encoding alphanumeric name item])
+
+AT_DATA([prog.cob], [
+       IDENTIFICATION   DIVISION.
+       PROGRAM-ID.      prog.
+       DATA             DIVISION.
+       PROCEDURE DIVISION.
+           DISPLAY A___E38182___A.
+           STOP RUN.
+])
+
+AT_CHECK([${COMPILE} -x prog.cob], [1], [],
+[prog.cob:6: Error: 'A___E38182___A' undefined
+])
+
+AT_CLEANUP
+
+AT_SETUP([Encoding national name item])
+
+AT_DATA([prog.cob], [
+       IDENTIFICATION   DIVISION.
+       PROGRAM-ID.      prog.
+       DATA             DIVISION.
+       PROCEDURE DIVISION.
+           DISPLAY A___あ___A.
+           STOP RUN.
+])
+
+AT_CHECK([${COMPILE} -x prog.cob], [1], [],
+[prog.cob:6: Error: 'A___あ___A' undefined
+])
+
+AT_CLEANUP
+
+AT_SETUP([Decoding national section name])
+
+AT_DATA([prog.cob], [
+       IDENTIFICATION   DIVISION.
+       PROGRAM-ID.      prog.
+       DATA             DIVISION.
+       PROCEDURE        DIVISION.
+       テスト SECTION.
+           MOVE 1 TO 項目1.
+       テスト段落.
+           MOVE 1 TO 項目2.
+])
+
+AT_CHECK([${COMPILE} -x prog.cob], [1], [],
+[prog.cob: In section 'テスト':
+prog.cob:7: Error: '項目1' undefined
+prog.cob: In paragraph 'テスト段落':
+prog.cob:9: Error: '項目2' undefined
+])
+
+AT_CLEANUP

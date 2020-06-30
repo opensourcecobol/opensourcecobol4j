@@ -1,0 +1,163 @@
+AT_SETUP([ACCEPT ARGUMENT-NUMBER])
+
+AT_DATA([prog.cob], [
+       IDENTIFICATION   DIVISION.
+       PROGRAM-ID.      prog.
+       ENVIRONMENT      DIVISION.
+       CONFIGURATION    SECTION.
+       SPECIAL-NAMES.
+           ARGUMENT-NUMBER IS NUMARG.
+       DATA             DIVISION.
+       WORKING-STORAGE  SECTION.
+       01 argc  PIC 99  USAGE DISPLAY.
+       PROCEDURE        DIVISION.
+           ACCEPT argc FROM NUMARG.
+           DISPLAY argc WITH NO ADVANCING.
+           STOP RUN.
+])
+
+AT_CHECK([${COMPILE_JP_COMPAT} -x prog.cob], [0])
+AT_CHECK([./prog this is arg], [0], [03])
+
+AT_CLEANUP
+
+AT_SETUP([ACCEPT ARGUMENT-VALUE])
+
+AT_DATA([prog.cob], [
+       IDENTIFICATION   DIVISION.
+       PROGRAM-ID.      prog.
+       ENVIRONMENT      DIVISION.
+       CONFIGURATION    SECTION.
+       SPECIAL-NAMES.
+           ARGUMENT-VALUE  IS ARGVAL.
+       DATA             DIVISION.
+       WORKING-STORAGE  SECTION.
+       01 argv PIC X(8) USAGE DISPLAY.
+       PROCEDURE        DIVISION.
+           DISPLAY 3   UPON ARGUMENT-NUMBER
+           ACCEPT argv FROM ARGVAL.
+           DISPLAY argv NO ADVANCING.
+           STOP RUN.
+])
+
+AT_CHECK([${COMPILE_JP_COMPAT} -x prog.cob], [0])
+AT_CHECK([./prog this is arg], [0], [arg     ])
+
+AT_CLEANUP
+
+AT_SETUP([ACCEPT ENVIRONMENT-VALUE])
+
+AT_DATA([prog.cob], [
+       IDENTIFICATION   DIVISION.
+       PROGRAM-ID.      prog.
+       ENVIRONMENT      DIVISION.
+       CONFIGURATION    SECTION.
+       SPECIAL-NAMES.
+           ENVIRONMENT-VALUE IS ENVVAL.
+       DATA             DIVISION.
+       WORKING-STORAGE  SECTION.
+       01 env1 PIC X(8) USAGE DISPLAY.
+       PROCEDURE        DIVISION.
+           DISPLAY 'TESTENV' UPON ENVIRONMENT-NAME.
+           ACCEPT env1 FROM ENVVAL.
+           DISPLAY env1 WITH NO ADVANCING.
+           STOP RUN.
+])
+
+AT_CHECK([${COMPILE_JP_COMPAT} -x prog.cob], [0])
+AT_CHECK([export TESTENV=envvalue && ./prog], [0], [envvalue])
+
+AT_CLEANUP
+
+AT_SETUP([DISPLAY ARGUMENT-NUMBER])
+
+AT_DATA([prog.cob], [
+       IDENTIFICATION   DIVISION.
+       PROGRAM-ID.      prog.
+       ENVIRONMENT      DIVISION.
+       CONFIGURATION    SECTION.
+       SPECIAL-NAMES.
+           ARGUMENT-NUMBER IS NUMARG.
+       DATA             DIVISION.
+       WORKING-STORAGE  SECTION.
+       01 argv PIC X(8) USAGE DISPLAY.
+       PROCEDURE        DIVISION.
+           DISPLAY 3 UPON NUMARG.
+           ACCEPT argv FROM ARGUMENT-VALUE.
+           DISPLAY argv WITH NO ADVANCING.
+           STOP RUN.
+])
+
+AT_CHECK([${COMPILE_JP_COMPAT} -x prog.cob], [0])
+AT_CHECK([./prog this is arg], [0], [arg     ])
+
+AT_CLEANUP
+
+AT_SETUP([DISPLAY ENVIRONMENT-NAME])
+
+AT_DATA([prog.cob], [
+       IDENTIFICATION   DIVISION.
+       PROGRAM-ID.      prog.
+       ENVIRONMENT      DIVISION.
+       CONFIGURATION    SECTION.
+       SPECIAL-NAMES.
+           ENVIRONMENT-NAME IS ENVNAME.
+       DATA             DIVISION.
+       WORKING-STORAGE  SECTION.
+       01 env1 PIC X(8) USAGE DISPLAY.
+       PROCEDURE        DIVISION.
+           DISPLAY 'TESTENV' UPON ENVNAME.
+           ACCEPT env1 FROM ENVIRONMENT-VALUE.
+           DISPLAY env1 WITH NO ADVANCING.
+           STOP RUN.
+])
+
+AT_CHECK([${COMPILE_JP_COMPAT} -x prog.cob], [0])
+AT_CHECK([export TESTENV=envvalue && ./prog], [0], [envvalue])
+
+AT_CLEANUP
+
+AT_SETUP([DISPLAY ENVIRONMENT-VALUE])
+
+AT_DATA([prog.cob], [
+       IDENTIFICATION   DIVISION.
+       PROGRAM-ID.      prog.
+       ENVIRONMENT      DIVISION.
+       CONFIGURATION    SECTION.
+       SPECIAL-NAMES.
+           ENVIRONMENT-VALUE IS ENVVAL.
+       DATA             DIVISION.
+       WORKING-STORAGE  SECTION.
+       01 env1 PIC X(8) USAGE DISPLAY.
+       PROCEDURE        DIVISION.
+           DISPLAY 'TESTENV' UPON ENVIRONMENT-NAME.
+           ACCEPT env1 FROM ENVVAL.
+           DISPLAY env1 WITH NO ADVANCING.
+           DISPLAY ":" WITH NO ADVANCING.
+           DISPLAY 'newvalue' UPON ENVVAL.
+           ACCEPT env1 FROM ENVVAL.
+           DISPLAY env1 WITH NO ADVANCING.
+           STOP RUN.
+])
+
+AT_CHECK([${COMPILE_JP_COMPAT} -x prog.cob], [0])
+AT_CHECK([export TESTENV=envvalue && ./prog], [0], [envvalue:newvalue])
+
+AT_CLEANUP
+
+AT_SETUP([SPECIAL NAMES unterminated])
+
+AT_DATA([prog.cob], [
+       IDENTIFICATION   DIVISION.
+       PROGRAM-ID.      prog.
+       ENVIRONMENT      DIVISION.
+       CONFIGURATION    SECTION.
+       SPECIAL-NAMES.
+           SWITCH-1 IS SW01 ON SW01ON OFF SW01OFF
+           C01      IS LF
+       DATA             DIVISION.
+])
+
+AT_CHECK([${COMPILE} prog.cob], [0])
+
+AT_CLEANUP

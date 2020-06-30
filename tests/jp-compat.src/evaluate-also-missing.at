@@ -1,0 +1,50 @@
+AT_SETUP([Allow missing ALSO in EVALUATE-WHEN])
+
+AT_DATA([prog.cob], [
+       IDENTIFICATION   DIVISION.
+       PROGRAM-ID.      prog.
+       DATA             DIVISION.
+       WORKING-STORAGE  SECTION.
+       01 A PIC 9 VALUE 1.
+       01 B PIC 9 VALUE 1.
+       PROCEDURE        DIVISION.
+       EVALUATE A B
+          WHEN 1 1
+             DISPLAY "OK" WITH NO ADVANCING
+          WHEN OTHER
+             DISPLAY "NG" WITH NO ADVANCING
+       END-EVALUATE.
+       GOBACK.
+])
+
+AT_CHECK([${COMPILE_JP_COMPAT} prog.cob])
+AT_CHECK([./prog], [0], [OK])
+
+AT_CLEANUP
+
+AT_SETUP([Allow missing both ALSO and class condition IS in EVALUATE])
+
+AT_DATA([prog.cob], [
+       IDENTIFICATION   DIVISION.
+       PROGRAM-ID.      prog.
+       ENVIRONMENT      DIVISION.
+       CONFIGURATION    SECTION.
+       SPECIAL-NAMES.
+       CLASS C-ALPHA IS "A" THRU "Z".
+       DATA             DIVISION.
+       WORKING-STORAGE  SECTION.
+       01 C PIC X VALUE "C".
+       PROCEDURE        DIVISION.
+       EVALUATE C C-ALPHA
+          WHEN TRUE
+             DISPLAY "OK" WITH NO ADVANCING
+          WHEN OTHER
+             DISPLAY "NG" WITH NO ADVANCING
+       END-EVALUATE.
+       GOBACK.
+])
+
+AT_CHECK([${COMPILE_JP_COMPAT} prog.cob])
+AT_CHECK([./prog], [0], [OK])
+
+AT_CLEANUP

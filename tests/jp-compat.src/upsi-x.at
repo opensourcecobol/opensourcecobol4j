@@ -1,0 +1,54 @@
+AT_SETUP([UPSI-x])
+
+AT_DATA([prog.cob], [
+       IDENTIFICATION   DIVISION.
+       PROGRAM-ID.      prog.
+       ENVIRONMENT DIVISION.
+       CONFIGURATION SECTION.
+       SPECIAL-NAMES.
+           UPSI-0 IS SWIT1
+             ON IS SWIT1-ON
+             OFF IS SWIT1-OFF
+           UPSI-1 IS SWIT2
+             ON IS SWIT2-ON
+             OFF IS SWIT2-OFF.
+       DATA             DIVISION.
+       WORKING-STORAGE  SECTION.
+       PROCEDURE        DIVISION.
+           IF SWIT1-ON
+              DISPLAY "ON" NO ADVANCING
+              END-DISPLAY
+           ELSE
+              DISPLAY "OFF" NO ADVANCING
+              END-DISPLAY
+           END-IF.
+           IF SWIT2-ON
+              DISPLAY "ON" NO ADVANCING
+              END-DISPLAY
+           ELSE
+              DISPLAY "OFF" NO ADVANCING
+              END-DISPLAY
+           END-IF.
+           SET SWIT1 TO OFF.
+           SET SWIT2 TO ON.
+           IF SWIT1-ON
+              DISPLAY "ON" NO ADVANCING
+              END-DISPLAY
+           ELSE
+              DISPLAY "OFF" NO ADVANCING
+              END-DISPLAY
+           END-IF.
+           IF SWIT2-ON
+              DISPLAY "ON" NO ADVANCING
+              END-DISPLAY
+           ELSE
+              DISPLAY "OFF" NO ADVANCING
+              END-DISPLAY
+           END-IF.
+           STOP RUN.
+])
+
+AT_CHECK([${COMPILE_JP_COMPAT} prog.cob])
+AT_CHECK([COB_SWITCH_1=ON COB_SWITCH_2=OFF ./prog], [0], [ONOFFOFFON])
+
+AT_CLEANUP

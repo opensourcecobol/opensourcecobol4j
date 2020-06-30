@@ -1,0 +1,485 @@
+AT_SETUP([Program name])
+
+AT_DATA([prog.cob], [
+       IDENTIFICATION   DIVISION.
+       PROGRAM-ID.      日本語のプログラム名.
+       PROCEDURE        DIVISION.
+           STOP RUN.
+])
+
+AT_CHECK([${COMPILE} -x prog.cob])
+
+AT_CLEANUP
+
+AT_SETUP([Field name])
+
+AT_DATA([prog.cob], [
+       IDENTIFICATION   DIVISION.
+       PROGRAM-ID.      prog.
+       DATA             DIVISION.
+       WORKING-STORAGE  SECTION.
+       01 Ｏ−文字列 PIC X(7) USAGE DISPLAY.
+       PROCEDURE        DIVISION.
+           MOVE "Unicode" TO Ｏ−文字列.
+           DISPLAY Ｏ−文字列 WITH NO ADVANCING.
+           STOP RUN.
+])
+
+AT_CHECK([${COMPILE} -x prog.cob])
+AT_CHECK([./prog], [0], [Unicode])
+
+AT_CLEANUP
+
+AT_SETUP([Long field name])
+
+AT_DATA([prog.cob], [
+       IDENTIFICATION   DIVISION.
+       PROGRAM-ID.      prog.
+       DATA             DIVISION.
+       WORKING-STORAGE  SECTION.
+       01   項目ＡＢＣＤＥＦＧＨ０１２３４５６７８９
+            PIC X(7).
+       PROCEDURE        DIVISION.
+           MOVE "Unicode"
+             TO
+           項目ＡＢＣＤＥＦＧＨ０１２３４５６７８９.
+           DISPLAY
+            項目ＡＢＣＤＥＦＧＨ０１２３４５６７８９
+	     WITH NO ADVANCING.
+           STOP RUN.
+])
+
+AT_CHECK([${COMPILE} -x prog.cob])
+AT_CHECK([./prog], [0], [Unicode])
+
+AT_CLEANUP
+
+
+AT_SETUP([Field lookup])
+
+AT_DATA([prog.cob], [
+       IDENTIFICATION   DIVISION.
+       PROGRAM-ID.      prog.
+       DATA             DIVISION.
+       WORKING-STORAGE  SECTION.
+       01 項目２ PIC X(1) VALUE "A".
+       01 項目Ｒ PIC X(1) VALUE "B".
+       PROCEDURE        DIVISION.
+           DISPLAY 項目２ 項目Ｒ WITH NO ADVANCING.
+           STOP RUN.
+])
+
+AT_CHECK([${COMPILE} -x prog.cob])
+AT_CHECK([./prog], [0], [AB])
+
+AT_CLEANUP
+
+AT_SETUP([Section name])
+
+AT_DATA([prog.cob], [
+       IDENTIFICATION   DIVISION.
+       PROGRAM-ID.      prog.
+       DATA             DIVISION.
+       WORKING-STORAGE  SECTION.
+       PROCEDURE        DIVISION.
+       PERFORM    Ｓ−初期化.
+       PERFORM    Ｓ−終了.
+       Ｓ−初期化       SECTION.
+           DISPLAY "Hello, " WITH NO ADVANCING.
+       Ｓ−終了         SECTION.
+           DISPLAY "and good bye." WITH NO ADVANCING.
+           STOP RUN.
+])
+
+AT_CHECK([${COMPILE} -x prog.cob])
+AT_CHECK([./prog], [0], [Hello, and good bye.])
+
+AT_CLEANUP
+
+AT_SETUP([Long section name])
+
+AT_DATA([prog.cob], [
+       IDENTIFICATION   DIVISION.
+       PROGRAM-ID.      prog.
+       DATA             DIVISION.
+       WORKING-STORAGE  SECTION.
+       PROCEDURE        DIVISION.
+       PERFORM s１２３４５６７８９０12345678901234567890.
+       PERFORM    Ｓ−終了.
+       s１２３４５６７８９０12345678901234567890 SECTION.
+           DISPLAY "Hello, " WITH NO ADVANCING.
+       Ｓ−終了         SECTION.
+           DISPLAY "and good bye." WITH NO ADVANCING.
+           STOP RUN.
+])
+
+AT_CHECK([${COMPILE} -x prog.cob])
+AT_CHECK([./prog], [0], [Hello, and good bye.])
+
+AT_CLEANUP
+
+AT_SETUP([Too long section name])
+
+AT_DATA([prog.cob], [
+       IDENTIFICATION   DIVISION.
+       PROGRAM-ID.      prog.
+       DATA             DIVISION.
+       WORKING-STORAGE  SECTION.
+       PROCEDURE        DIVISION.
+       PERFORM s１２３４５６７８９０123456789012345678901.
+       PERFORM    Ｓ−終了.
+       s１２３４５６７８９０123456789012345678901 SECTION.
+           DISPLAY "Hello, " WITH NO ADVANCING.
+       Ｓ−終了         SECTION.
+           DISPLAY "and good bye." WITH NO ADVANCING.
+           STOP RUN.
+])
+
+AT_CHECK([${COMPILE} -x prog.cob], [1], [],
+[prog.cob:7: Error: User defined name must be less than 32 characters
+prog.cob:9: Error: User defined name must be less than 32 characters
+])
+
+AT_CLEANUP
+
+AT_SETUP([Nihongo Filename])
+
+AT_DATA([prog.cob], [
+       IDENTIFICATION   DIVISION.
+       PROGRAM-ID.      prog.
+       ENVIRONMENT      DIVISION.
+       INPUT-OUTPUT     SECTION.
+       FILE-CONTROL.
+       SELECT テストファイル ASSIGN TO "./テスト_ファイル"
+                        ORGANIZATION IS  INDEXED
+                        ACCESS MODE  IS  SEQUENTIAL
+                        RECORD KEY   IS  TEST-KEY.
+       DATA             DIVISION.
+       FILE             SECTION.
+       FD テストファイル.
+       01 TEST-KEY      PIC X(10).
+       PROCEDURE        DIVISION.
+           OPEN  OUTPUT テストファイル.
+           MOVE "TEST000000" TO TEST-KEY.
+           WRITE TEST-KEY.
+           CLOSE テストファイル.
+           OPEN  INPUT  テストファイル.
+           READ  テストファイル
+               NOT AT END
+                   DISPLAY "OK" NO ADVANCING
+           END-READ.
+           CLOSE テストファイル.
+           STOP RUN.
+])
+
+AT_CHECK([${COMPILE} -x prog.cob])
+AT_CHECK([./prog], [0], [OK])
+
+AT_CLEANUP
+
+AT_SETUP([Nihongo field name in numeric test msg.])
+
+AT_DATA([prog.cob], [
+       IDENTIFICATION    DIVISION.
+       PROGRAM-ID.       numcheck.
+       DATA              DIVISION.
+       WORKING-STORAGE   SECTION.
+       01  TEST-REC.
+         03  U項目  PIC  9(4) VALUE  1000.
+       01  X項目    PIC  X(4) VALUE 'ABCD'.
+       PROCEDURE         DIVISION.
+           MOVE X項目 TO TEST-REC.
+           ADD 1 TO U項目.
+           GOBACK.
+])
+
+AT_CHECK([${COMPILE} -debug -x prog.cob])
+AT_CHECK([./prog], [1], [],
+[prog.cob:11: libcob: 'U項目' not numeric: 'ABCD'
+])
+
+AT_CLEANUP
+
+AT_SETUP([Nihongo field name in BASED test msg.])
+
+AT_DATA([prog.cob], [
+       IDENTIFICATION    DIVISION.
+       PROGRAM-ID.       basedcheck.
+       DATA              DIVISION.
+       WORKING-STORAGE   SECTION.
+       01  X項目    PIC  X(4) VALUE 'ABCD'.
+       01  Y項目    PIC  X(4) BASED.
+       PROCEDURE         DIVISION.
+           MOVE X項目 TO Y項目.
+           GOBACK.
+])
+
+AT_CHECK([${COMPILE} -debug -x prog.cob])
+AT_CHECK([./prog], [1], [],
+[prog.cob:9: libcob: BASED/LINKAGE item 'Y項目' has NULL address
+])
+
+AT_CLEANUP
+
+AT_SETUP([Nihongo field name in ODO test msg.])
+
+AT_DATA([prog.cob], [
+       IDENTIFICATION    DIVISION.
+       PROGRAM-ID.       odocheck.
+       DATA              DIVISION.
+       WORKING-STORAGE   SECTION.
+       01  I項目         PIC 9 VALUE 4.
+       01  X.
+         03  Y項目       PIC 9 OCCURS 1 TO 3 DEPENDING ON I項目.
+       PROCEDURE         DIVISION.
+           MOVE 1 TO Y項目(3).
+           GOBACK.
+])
+
+AT_CHECK([${COMPILE} -debug -x prog.cob])
+AT_CHECK([./prog], [1], [],
+[prog.cob:10: libcob: OCCURS DEPENDING ON 'I項目' out of bounds: 4
+])
+
+AT_CLEANUP
+
+AT_SETUP([Nihongo field name in Subscript test msg.])
+
+AT_DATA([prog.cob], [
+       IDENTIFICATION    DIVISION.
+       PROGRAM-ID.       odocheck.
+       DATA              DIVISION.
+       WORKING-STORAGE   SECTION.
+       01  I項目         PIC 9 VALUE 2.
+       01  X.
+         03  Y項目       PIC 9 OCCURS 1 TO 3 DEPENDING ON I項目.
+       PROCEDURE         DIVISION.
+           MOVE 1 TO Y項目(3).
+           GOBACK.
+])
+
+AT_CHECK([${COMPILE} -debug -x prog.cob])
+AT_CHECK([./prog], [1], [],
+[prog.cob:10: libcob: Subscript of 'Y項目' out of bounds: 3
+])
+
+AT_CLEANUP
+
+AT_SETUP([Nihongo field name in length of ref_mod test msg.])
+
+AT_DATA([prog.cob], [
+       IDENTIFICATION    DIVISION.
+       PROGRAM-ID.       refcheck.
+       DATA              DIVISION.
+       WORKING-STORAGE   SECTION.
+       01  I             PIC 9    VALUE 2.
+       01  J             PIC 9    VALUE 6.
+       01  X項目         PIC X(5) VALUE "ABCDE".
+       PROCEDURE         DIVISION.
+           DISPLAY X項目(I:J).
+           GOBACK.
+])
+
+AT_CHECK([${COMPILE} -debug -x prog.cob])
+AT_CHECK([./prog], [1], [],
+[prog.cob:10: libcob: Length of 'X項目' out of bounds: 6
+])
+
+AT_CLEANUP
+
+AT_SETUP([Nihongo field name in offset of ref_mod test msg.])
+
+AT_DATA([prog.cob], [
+       IDENTIFICATION    DIVISION.
+       PROGRAM-ID.       refcheck.
+       DATA              DIVISION.
+       WORKING-STORAGE   SECTION.
+       01  I             PIC 9    VALUE 6.
+       01  J             PIC 9    VALUE 2.
+       01  X項目         PIC X(5) VALUE "ABCDE".
+       PROCEDURE         DIVISION.
+           DISPLAY X項目(I:J).
+           GOBACK.
+])
+
+AT_CHECK([${COMPILE} -debug -x prog.cob])
+AT_CHECK([./prog], [1], [],
+[prog.cob:10: libcob: Offset of 'X項目' out of bounds: 6
+])
+
+AT_CLEANUP
+
+AT_SETUP([Nihongo field name in length of N_refmod test msg.])
+
+AT_DATA([prog.cob], [
+       IDENTIFICATION    DIVISION.
+       PROGRAM-ID.       refcheck.
+       DATA              DIVISION.
+       WORKING-STORAGE   SECTION.
+       01  I             PIC 9    VALUE 2.
+       01  J             PIC 99   VALUE 18.
+       01  X項目         PIC N(5) VALUE "ＡＢＣＤＥ".
+       PROCEDURE         DIVISION.
+           DISPLAY X項目(I:J).
+           GOBACK.
+])
+
+AT_CHECK([${COMPILE} -debug -x prog.cob])
+AT_CHECK([./prog], [1], [],
+[prog.cob:10: libcob: Length of 'X項目' out of bounds: 18
+])
+
+AT_CLEANUP
+
+AT_SETUP([Nihongo field name in offset of N_refmod test msg.])
+
+AT_DATA([prog.cob], [
+       IDENTIFICATION    DIVISION.
+       PROGRAM-ID.       refcheck.
+       DATA              DIVISION.
+       WORKING-STORAGE   SECTION.
+       01  I             PIC 99   VALUE 18.
+       01  J             PIC 9    VALUE 2.
+       01  X項目         PIC N(5) VALUE "ＡＢＣＤＥ".
+       PROCEDURE         DIVISION.
+           DISPLAY X項目(I:J).
+           GOBACK.
+])
+
+AT_CHECK([${COMPILE} -debug -x prog.cob])
+AT_CHECK([./prog], [1], [],
+[prog.cob:10: libcob: Offset of 'X項目' out of bounds: 18
+])
+
+AT_CLEANUP
+
+AT_SETUP([Nihongo field name in extaddr test msg.])
+
+AT_DATA([prog.cob], [
+       IDENTIFICATION    DIVISION.
+       PROGRAM-ID.       check1.
+       DATA              DIVISION.
+       WORKING-STORAGE   SECTION.
+       01  X項目         PIC X(5) EXTERNAL.
+       PROCEDURE         DIVISION.
+           CALL 'check2'.
+
+       IDENTIFICATION    DIVISION.
+       PROGRAM-ID.       check2.
+       DATA              DIVISION.
+       WORKING-STORAGE   SECTION.
+       01  X項目         PIC X(6) EXTERNAL.
+       PROCEDURE         DIVISION.
+           END PROGRAM check2.
+           END PROGRAM check1.
+])
+
+AT_CHECK([${COMPILE} -debug -x prog.cob])
+AT_CHECK([./prog], [1], [],
+[prog.cob:8: libcob: EXTERNAL item 'X項目' has size > 6
+])
+
+AT_CLEANUP
+
+AT_SETUP([Nihongo field name in undefined error msg.])
+
+AT_DATA([prog.cob], [
+       IDENTIFICATION   DIVISION.
+       PROGRAM-ID.      prog.
+       DATA             DIVISION.
+       WORKING-STORAGE  SECTION.
+       01 G集団項目.
+          03 A項目 PIC X.
+       PROCEDURE        DIVISION.
+001009     DISPLAY NO-FLD.
+001010     DISPLAY NO-FLD IN G-GRP.
+001011     DISPLAY NO-FLD IN NO-GRP.
+001012     DISPLAY NO項目.
+001013     DISPLAY NO項目 IN G集団項目.
+001014     DISPLAY NO項目 IN NO集団項目.
+001015     DISPLAY NO-FLD IN G集団項目.
+001016     DISPLAY NO-FLD IN NO集団項目.
+001017     DISPLAY NO項目 IN G-GRP.
+001018     DISPLAY NO項目 IN NO-GRP.
+001019     DISPLAY NO項目 IN G集団項目 IN NO集団項目.
+])
+
+AT_CHECK([${COMPILE} -debug -x prog.cob], [1], [],
+[prog.cob:9: Error: 'NO-FLD' undefined
+prog.cob:10: Error: 'NO-FLD' in 'G-GRP' undefined
+prog.cob:11: Error: 'NO-FLD' in 'NO-GRP' undefined
+prog.cob:12: Error: 'NO項目' undefined
+prog.cob:13: Error: 'NO項目' in 'G集団項目' undefined
+prog.cob:14: Error: 'NO項目' in 'NO集団項目' undefined
+prog.cob:15: Error: 'NO-FLD' in 'G集団項目' undefined
+prog.cob:16: Error: 'NO-FLD' in 'NO集団項目' undefined
+prog.cob:17: Error: 'NO項目' in 'G-GRP' undefined
+prog.cob:18: Error: 'NO項目' in 'NO-GRP' undefined
+prog.cob:19: Error: 'NO項目' in 'G集団項目' in 'NO集団項目' undefined
+])
+
+AT_CLEANUP
+
+AT_SETUP([Nihongo field name in ambiguous error msg.])
+
+AT_DATA([prog.cob], [
+       IDENTIFICATION   DIVISION.
+       PROGRAM-ID.      prog.
+       DATA             DIVISION.
+       WORKING-STORAGE  SECTION.
+       01 A項目 PIC X.
+       01 G1集団.
+          03 A項目 PIC X.
+          03 B項目 PIC X.
+          03 G2集団.
+             05 A項目 PIC X.
+             05 B項目 PIC X.
+       PROCEDURE        DIVISION.
+001014     DISPLAY A項目.
+001015     DISPLAY B項目 IN G1集団.
+           GOBACK.
+])
+
+AT_CHECK([${COMPILE_ONLY} prog.cob], [1], [],
+[prog.cob:8: Warning: Redefinition of 'A項目'
+prog.cob:6: Warning: 'A項目' previously defined here
+prog.cob:11: Warning: Redefinition of 'A項目'
+prog.cob:6: Warning: 'A項目' previously defined here
+prog.cob:14: Error: 'A項目' ambiguous; need qualification
+prog.cob:6: Error: 'A項目' defined here
+prog.cob:8: Error: 'A項目' in 'G1集団' defined here
+prog.cob:11: Error: 'A項目' in 'G2集団' in 'G1集団' defined here
+prog.cob:15: Error: 'B項目' in 'G1集団' ambiguous; need qualification
+prog.cob:9: Error: 'B項目' in 'G1集団' defined here
+prog.cob:12: Error: 'B項目' in 'G2集団' in 'G1集団' defined here
+])
+
+AT_CLEANUP
+
+AT_SETUP([Nihongo label name in ambiguous error msg.])
+
+AT_DATA([prog.cob], [
+       IDENTIFICATION   DIVISION.
+       PROGRAM-ID.      prog.
+       DATA             DIVISION.
+       PROCEDURE        DIVISION.
+001006   L0見出し.
+001007     GO TO L1見出し.
+001008     GO TO L2見出し IN S1節.
+001009   L1見出し. GOBACK.
+001010   L1見出し. GOBACK.
+001011 S1節             SECTION.
+001012   L2見出し. GOBACK.
+001013   L2見出し. GOBACK.
+])
+
+AT_CHECK([${COMPILE_ONLY} prog.cob], [1], [],
+[prog.cob:7: Error: 'L1見出し' ambiguous; need qualification
+prog.cob:9: Error: 'L1見出し' in 'MAIN SECTION' defined here
+prog.cob:10: Error: 'L1見出し' in 'MAIN SECTION' defined here
+prog.cob:8: Error: 'L2見出し' in 'S1節' ambiguous; need qualification
+prog.cob:12: Error: 'L2見出し' in 'S1節' defined here
+prog.cob:13: Error: 'L2見出し' in 'S1節' defined here
+])
+
+AT_CLEANUP

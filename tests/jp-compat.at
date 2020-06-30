@@ -1,0 +1,53 @@
+### OpenCOBOL Test Suite				-*- m4 -*-
+
+## Copyright (C) 2003-2009 Keisuke Nishida
+## Copyright (C) 2007-2009 Roger While
+##
+## This program is free software; you can redistribute it and/or modify
+## it under the terms of the GNU General Public License as published by
+## the Free Software Foundation; either version 2, or (at your option)
+## any later version.
+## 
+## This program is distributed in the hope that it will be useful,
+## but WITHOUT ANY WARRANTY; without even the implied warranty of
+## MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+## GNU General Public License for more details.
+## 
+## You should have received a copy of the GNU General Public License
+## along with this software; see the file COPYING.  If not, write to
+## the Free Software Foundation, 51 Franklin Street, Fifth Floor
+## Boston, MA 02110-1301 USA
+
+AT_INIT([JP products compatibility])
+
+AT_TESTED([cobc])
+
+m4_include([split-keys.at])
+m4_include([compat-check.at])
+m4_include([copy-leading-trailing.at])
+m4_include([end-program-wrong.at])
+m4_include([evaluate-also-missing.at])
+m4_include([empty-imperative.at])
+m4_include([spl-registers.at])
+m4_include([special-names.at])
+m4_include([intr-funcs.at])
+m4_include([file-control.at])
+m4_include([file-userfh.at])
+m4_include([copy-joining.at])
+m4_include([assign-devicename.at])
+m4_include([job-date.at])
+m4_include([nibble-c-for-unsigned.at])
+m4_include([upsi-x.at])
+m4_include([cob68-copy.at])
+m4_include([switch-no-mnemonic.at])
+m4_include([data-desc-no-dot.at])
+m4_include([sort-key-is.at])
+m4_include([search-key-in-rhs.at])
+m4_include([verbose-runtime.at])
+m4_include([occurs-param-order.at])
+m4_include([io-control.at])
+m4_include([greater-less-than-equal.at])
+m4_include([file-desc.at])
+m4_include([abort-on-file-error.at])
+m4_include([system-routine.at])
+m4_include([catch-exception.at])

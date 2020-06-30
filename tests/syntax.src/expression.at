@@ -1,0 +1,71 @@
+### OpenCOBOL Test Suite				-*- m4 -*-
+
+## Copyright (C) 2004-2009 Keisuke Nishida
+## Copyright (C) 2007-2009 Roger While
+##
+## This program is free software; you can redistribute it and/or modify
+## it under the terms of the GNU General Public License as published by
+## the Free Software Foundation; either version 2, or (at your option)
+## any later version.
+## 
+## This program is distributed in the hope that it will be useful,
+## but WITHOUT ANY WARRANTY; without even the implied warranty of
+## MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+## GNU General Public License for more details.
+## 
+## You should have received a copy of the GNU General Public License
+## along with this software; see the file COPYING.  If not, write to
+## the Free Software Foundation, 51 Franklin Street, Fifth Floor
+## Boston, MA 02110-1301 USA
+
+AT_SETUP([Ambiguous AND/OR])
+
+AT_DATA([prog.cob], [
+       IDENTIFICATION   DIVISION.
+       PROGRAM-ID.      prog.
+       PROCEDURE        DIVISION.
+           IF 3 = 1 AND 2 OR 3
+               DISPLAY "OK"
+               END-DISPLAY
+           END-IF.
+           IF 3 = 1 OR 2 AND 3
+               DISPLAY "NO"
+               END-DISPLAY
+           END-IF.
+           STOP RUN.
+])
+
+AT_CHECK([${COMPILE_ONLY} prog.cob], [0], ,
+[prog.cob:6: Warning: Suggest parentheses around AND within OR
+prog.cob:10: Warning: Suggest parentheses around AND within OR
+])
+
+AT_CLEANUP
+
+AT_SETUP([START on SEQUENTIAL file])
+
+AT_DATA([prog.cob], [
+       IDENTIFICATION   DIVISION.
+       PROGRAM-ID.      prog.
+       ENVIRONMENT      DIVISION.
+       INPUT-OUTPUT     SECTION.
+       FILE-CONTROL.
+       SELECT TEST-FILE ASSIGN       "./TEST-FILE"
+                        ORGANIZATION IS LINE SEQUENTIAL.
+       DATA             DIVISION.
+       FILE             SECTION.
+       FD TEST-FILE.
+       01 TEST-REC      PIC X(4).
+       PROCEDURE        DIVISION.
+           OPEN  INPUT TEST-FILE.
+           START TEST-FILE KEY EQUAL TEST-REC
+           END-START.
+           CLOSE TEST-FILE.
+           STOP RUN.
+])
+
+AT_CHECK([${COMPILE_ONLY} prog.cob], [1], ,
+[prog.cob:16: Error: START not allowed on SEQUENTIAL files
+])
+
+AT_CLEANUP

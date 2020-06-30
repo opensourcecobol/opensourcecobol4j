@@ -1,0 +1,458 @@
+AT_SETUP([PIC N Value clause])
+
+AT_DATA([prog.cob], [
+       IDENTIFICATION   DIVISION.
+       PROGRAM-ID.      prog.
+       DATA             DIVISION.
+       WORKING-STORAGE  SECTION.
+       01 F0 PIC N(7) VALUE "ì˙ñ{åÍÇÃï∂éöóÒ".
+       PROCEDURE        DIVISION.
+           DISPLAY F0 WITH NO ADVANCING.
+           STOP RUN.
+])
+
+AT_CHECK([${COMPILE} -x prog.cob])
+AT_CHECK([./prog], [0], [ì˙ñ{åÍÇÃï∂éöóÒ])
+
+AT_CLEANUP
+
+AT_SETUP([PIC N Move])
+
+AT_DATA([prog.cob], [
+       IDENTIFICATION   DIVISION.
+       PROGRAM-ID.      prog.
+       DATA             DIVISION.
+       WORKING-STORAGE  SECTION.
+       01 F0 PIC N(7).
+       PROCEDURE        DIVISION.
+           MOVE "ì˙ñ{åÍÇÃï∂éöóÒ" TO F0.
+           DISPLAY F0 WITH NO ADVANCING.
+           STOP RUN.
+])
+
+AT_CHECK([${COMPILE} -x prog.cob])
+AT_CHECK([./prog], [0], [ì˙ñ{åÍÇÃï∂éöóÒ])
+
+AT_CLEANUP
+
+AT_SETUP([PIC N Move with trunc])
+
+AT_DATA([prog.cob], [
+       IDENTIFICATION   DIVISION.
+       PROGRAM-ID.      prog.
+       DATA             DIVISION.
+       WORKING-STORAGE  SECTION.
+       01 F0 PIC N(3).
+       PROCEDURE        DIVISION.
+           MOVE "ì˙ñ{åÍÇÃï∂éöóÒ" TO F0.
+           DISPLAY F0 WITH NO ADVANCING.
+           STOP RUN.
+])
+
+AT_CHECK([${COMPILE} -x prog.cob], [0], [],
+[prog.cob:8: Warning: Value size exceeds data size
+prog.cob:6: Warning: 'F0' defined here as PIC N(3)
+])
+AT_CHECK([./prog], [0], [ì˙ñ{åÍ])
+
+AT_CLEANUP
+
+AT_SETUP([PIC N Move with padding by full-width SPC])
+
+AT_DATA([prog.cob], [
+       IDENTIFICATION   DIVISION.
+       PROGRAM-ID.      prog.
+       DATA             DIVISION.
+       WORKING-STORAGE  SECTION.
+       01 F0 PIC N(9).
+       PROCEDURE        DIVISION.
+           MOVE "ì˙ñ{åÍÇÃï∂éöóÒ" TO F0.
+           DISPLAY F0 WITH NO ADVANCING.
+           STOP RUN.
+])
+
+AT_CHECK([${COMPILE} -x prog.cob], [0])
+AT_CHECK([./prog], [0], [ì˙ñ{åÍÇÃï∂éöóÒÅ@Å@])
+
+AT_CLEANUP
+
+AT_SETUP([PIC N Move with justify])
+
+AT_DATA([prog.cob], [
+       IDENTIFICATION   DIVISION.
+       PROGRAM-ID.      prog.
+       DATA             DIVISION.
+       WORKING-STORAGE  SECTION.
+       01 F0 PIC N(9) JUSTIFIED RIGHT.
+       PROCEDURE        DIVISION.
+           MOVE "ì˙ñ{åÍÇÃï∂éöóÒ" TO F0.
+           DISPLAY F0 WITH NO ADVANCING.
+           STOP RUN.
+])
+
+AT_CHECK([${COMPILE} -x prog.cob], [0])
+AT_CHECK([./prog], [0], [Å@Å@ì˙ñ{åÍÇÃï∂éöóÒ])
+
+AT_CLEANUP
+
+AT_SETUP([PIC N EDITED w/ VALUE])
+
+AT_DATA([prog.cob], [
+       IDENTIFICATION   DIVISION.
+       PROGRAM-ID.      prog.
+       DATA             DIVISION.
+       WORKING-STORAGE  SECTION.
+       01 F0 PIC NN/NNBNN0 VALUE 'ì˙ñ{Å^íÜçëÅ@ï∂éöÇO'.
+       PROCEDURE        DIVISION.
+           DISPLAY F0 WITH NO ADVANCING.
+           STOP RUN.
+])
+
+AT_CHECK([${COMPILE} -x prog.cob], [0])
+AT_CHECK([./prog], [0], [ì˙ñ{Å^íÜçëÅ@ï∂éöÇO])
+
+AT_CLEANUP
+
+AT_SETUP([INITIALIZE PIC N EDITED])
+
+AT_DATA([prog.cob], [
+       IDENTIFICATION   DIVISION.
+       PROGRAM-ID.      prog.
+       DATA             DIVISION.
+       WORKING-STORAGE  SECTION.
+       01 F0 PIC NN/NNBNN0 VALUE 'ì˙ñ{Å^íÜçëÅ@ï∂éöÇO'.
+       PROCEDURE        DIVISION.
+           MOVE "ètâƒèHì~ä¶íg" TO F0.
+           INITIALIZE F0.
+           DISPLAY F0 WITH NO ADVANCING.
+           STOP RUN.
+])
+
+AT_CHECK([${COMPILE} -x prog.cob], [0])
+AT_CHECK([./prog], [0], [Å@Å@Å^Å@Å@Å@Å@Å@ÇO])
+
+AT_CLEANUP
+
+AT_SETUP([INITIALIZE PIC N EDITED TO VALUE])
+
+AT_DATA([prog.cob], [
+       IDENTIFICATION   DIVISION.
+       PROGRAM-ID.      prog.
+       DATA             DIVISION.
+       WORKING-STORAGE  SECTION.
+       01 F0 PIC NN/NNBNN0 VALUE 'ì˙ñ{Å^íÜçëÅ@ï∂éöÇO'.
+       PROCEDURE        DIVISION.
+           MOVE "ètâƒèHì~ä¶íg" TO F0.
+           INITIALIZE F0 NATIONAL TO VALUE.
+           DISPLAY F0 WITH NO ADVANCING.
+           STOP RUN.
+])
+
+AT_CHECK([${COMPILE} -x prog.cob], [0])
+AT_CHECK([./prog], [0], [ì˙ñ{Å^íÜçëÅ@ï∂éöÇO])
+
+AT_CLEANUP
+
+AT_SETUP([PIC N Move to NATIONAL EDITED])
+
+AT_DATA([prog.cob], [
+       IDENTIFICATION   DIVISION.
+       PROGRAM-ID.      prog.
+       DATA             DIVISION.
+       WORKING-STORAGE  SECTION.
+       01 F0 PIC NN/NNBNN0.
+       PROCEDURE        DIVISION.
+           MOVE "ì˙ñ{íÜçëï∂éö" TO F0.
+           DISPLAY F0 WITH NO ADVANCING.
+           STOP RUN.
+])
+
+AT_CHECK([${COMPILE} -x prog.cob], [0])
+AT_CHECK([./prog], [0], [ì˙ñ{Å^íÜçëÅ@ï∂éöÇO])
+
+AT_CLEANUP
+
+AT_SETUP([PIC N Move with half-width alnum conv.])
+
+AT_DATA([prog.cob], [
+       IDENTIFICATION   DIVISION.
+       PROGRAM-ID.      prog.
+       DATA             DIVISION.
+       WORKING-STORAGE  SECTION.
+       01 F0 PIC N(7).
+       PROCEDURE        DIVISION.
+           MOVE "ABC0123" TO F0.
+           DISPLAY F0 WITH NO ADVANCING.
+           STOP RUN.
+])
+
+AT_CHECK([${COMPILE} -x prog.cob], [0])
+AT_CHECK([./prog], [0], [Ç`ÇaÇbÇOÇPÇQÇR])
+
+AT_CLEANUP
+
+AT_SETUP([PIC N Move with half-width kana conv.])
+
+AT_DATA([prog.cob], [
+       IDENTIFICATION   DIVISION.
+       PROGRAM-ID.      prog.
+       DATA             DIVISION.
+       WORKING-STORAGE  SECTION.
+       01 F0 PIC N(7).
+       PROCEDURE        DIVISION.
+           MOVE "∫“¿ﬁ∫∞À∞" TO F0.
+           DISPLAY F0 WITH NO ADVANCING.
+           STOP RUN.
+])
+
+AT_CHECK([${COMPILE} -x prog.cob], [0])
+AT_CHECK([./prog | od -tx1 -An | sed -e 's/  */ /g' -e 's/ *$//'], [0], [ 83 52 83 81 83 5f 83 52 81 5b 83 71 81 5b
+])
+
+AT_CLEANUP
+
+AT_SETUP([PIC N Ref mod(n:)])
+
+AT_DATA([prog.cob], [
+       IDENTIFICATION   DIVISION.
+       PROGRAM-ID.      prog.
+       DATA             DIVISION.
+       WORKING-STORAGE  SECTION.
+       01 F0 PIC N(7).
+       PROCEDURE        DIVISION.
+           MOVE "ì˙ñ{åÍÇÃï∂éöóÒ" TO F0.
+           DISPLAY F0(5:) WITH NO ADVANCING.
+           STOP RUN.
+])
+
+AT_CHECK([${COMPILE} -x prog.cob], [0])
+AT_CHECK([./prog], [0], [ï∂éöóÒ])
+
+AT_CLEANUP
+
+AT_SETUP([PIC N Ref mod(n:m)])
+
+AT_DATA([prog.cob], [
+       IDENTIFICATION   DIVISION.
+       PROGRAM-ID.      prog.
+       DATA             DIVISION.
+       WORKING-STORAGE  SECTION.
+       01 F0 PIC N(7).
+       PROCEDURE        DIVISION.
+           MOVE "ì˙ñ{åÍÇÃï∂éöóÒ" TO F0.
+           DISPLAY F0(5:2) WITH NO ADVANCING.
+           STOP RUN.
+])
+
+AT_CHECK([${COMPILE} -x prog.cob], [0])
+AT_CHECK([./prog], [0], [ï∂éö])
+
+AT_CLEANUP
+
+AT_SETUP([PIC N STRING by size])
+
+AT_DATA([prog.cob], [
+       IDENTIFICATION   DIVISION.
+       PROGRAM-ID.      prog.
+       DATA             DIVISION.
+       WORKING-STORAGE  SECTION.
+       01 F0 PIC N(2)  VALUE "éÑÇÃ".
+       01 F1 PIC N(3)  VALUE "ñºëOÇÕ".
+       01 F2 PIC N(5) VALUE "Ç†ÇËÇ‹ÇπÇÒ".
+       01 FF PIC N(10).
+       PROCEDURE        DIVISION.
+           STRING F0 F1 F2 DELIMITED BY SIZE
+             INTO FF.
+           DISPLAY FF WITH NO ADVANCING.
+           STOP RUN.
+])
+
+AT_CHECK([${COMPILE} -x prog.cob], [0])
+AT_CHECK([./prog], [0], [éÑÇÃñºëOÇÕÇ†ÇËÇ‹ÇπÇÒ])
+
+AT_CLEANUP
+
+AT_SETUP([PIC N STRING with delimiter (causes warn)])
+
+AT_DATA([prog.cob], [
+       IDENTIFICATION   DIVISION.
+       PROGRAM-ID.      prog.
+       DATA             DIVISION.
+       WORKING-STORAGE  SECTION.
+       01 F0 PIC N(2)  VALUE "éÑÇÃ".
+       01 F1 PIC N(4)  VALUE "ñºëOÅ¢ÇÕ".
+       01 F2 PIC N(6) VALUE "Å¢Ç†ÇËÇ‹ÇπÇÒ".
+       01 FF PIC N(4).
+       PROCEDURE        DIVISION.
+           STRING F0 F1 F2 DELIMITED BY "Å¢"
+             INTO FF.
+           DISPLAY FF WITH NO ADVANCING.
+           STOP RUN.
+])
+
+AT_CHECK([${COMPILE} -x prog.cob])
+AT_CHECK([./prog], [0], [éÑÇÃñºëO])
+
+AT_CLEANUP
+
+AT_SETUP([PIC N STRING with NATIONAL delimiter])
+
+AT_DATA([prog.cob], [
+       IDENTIFICATION   DIVISION.
+       PROGRAM-ID.      prog.
+       DATA             DIVISION.
+       WORKING-STORAGE  SECTION.
+       01 F0 PIC N(2)  VALUE "éÑÇÃ".
+       01 F1 PIC N(4)  VALUE "ñºëOÅ¢ÇÕ".
+       01 F2 PIC N(6) VALUE "Å¢Ç†ÇËÇ‹ÇπÇÒ".
+       01 FF PIC N(4).
+       PROCEDURE        DIVISION.
+           STRING F0 F1 F2 DELIMITED BY N"Å¢"
+             INTO FF.
+           DISPLAY FF WITH NO ADVANCING.
+           STOP RUN.
+])
+
+AT_CHECK([${COMPILE} -x prog.cob], [0])
+AT_CHECK([./prog], [0], [éÑÇÃñºëO])
+
+AT_CLEANUP
+
+AT_SETUP([PIC N STRING with pointer])
+
+AT_DATA([prog.cob], [
+       IDENTIFICATION   DIVISION.
+       PROGRAM-ID.      prog.
+       DATA             DIVISION.
+       WORKING-STORAGE  SECTION.
+       01 F0 PIC N(2)  VALUE "éÑÇÃ".
+       01 F1 PIC N(3)  VALUE "ñºëOÇÕ".
+       01 F2 PIC N(5)  VALUE "Ç†ÇËÇ‹ÇπÇÒ".
+       01 FF PIC N(10) VALUE "åæÇ¶Ç‹ÇπÇÒÅõÅ¶Å¢Å°Å~".
+       01 FP PIC 99    VALUE 6.
+       PROCEDURE        DIVISION.
+           STRING F0 F1 F2 DELIMITED BY SIZE
+             INTO FF WITH POINTER FP.
+           DISPLAY FF WITH NO ADVANCING.
+           STOP RUN.
+])
+
+AT_CHECK([${COMPILE} -x prog.cob])
+AT_CHECK([./prog], [0], [åæÇ¶Ç‹ÇπÇÒéÑÇÃñºëOÇÕ])
+
+AT_CLEANUP
+
+AT_SETUP([PIC N INSPECT REPLACING])
+
+AT_DATA([prog.cob], [
+       IDENTIFICATION   DIVISION.
+       PROGRAM-ID.      prog.
+       DATA             DIVISION.
+       WORKING-STORAGE  SECTION.
+       01 F0 PIC N(10)  VALUE "ÇPÇQÇRÇSÇTÇPÇQÇRÇSÇT".
+       PROCEDURE        DIVISION.
+           INSPECT F0 REPLACING ALL "ÇT" BY "ÇO".
+           DISPLAY F0 WITH NO ADVANCING.
+           STOP RUN.
+])
+
+AT_CHECK([${COMPILE} -x prog.cob], [0])
+AT_CHECK([./prog], [0], [ÇPÇQÇRÇSÇOÇPÇQÇRÇSÇO])
+
+AT_CLEANUP
+
+AT_SETUP([PIC N INSPECT REPLACING by ZERO])
+
+AT_DATA([prog.cob], [
+       IDENTIFICATION   DIVISION.
+       PROGRAM-ID.      prog.
+       DATA             DIVISION.
+       WORKING-STORAGE  SECTION.
+       01 F0 PIC N(10)  VALUE "ÇPÇQÇRÇSÇTÇPÇQÇRÇSÇT".
+       PROCEDURE        DIVISION.
+           INSPECT F0 REPLACING ALL "ÇT" BY ZERO.
+           DISPLAY F0 WITH NO ADVANCING.
+           STOP RUN.
+])
+
+AT_CHECK([${COMPILE} -x prog.cob], [0])
+AT_CHECK([./prog], [0], [ÇPÇQÇRÇSÇOÇPÇQÇRÇSÇO])
+
+AT_CLEANUP
+
+AT_SETUP([PIC N INSPECT REPLACING by NATIONAL ZERO])
+
+AT_DATA([prog.cob], [
+       IDENTIFICATION   DIVISION.
+       PROGRAM-ID.      prog.
+       DATA             DIVISION.
+       WORKING-STORAGE  SECTION.
+       01 F0 PIC N(10)  VALUE "ÇPÇQÇRÇSÇTÇPÇQÇRÇSÇT".
+       PROCEDURE        DIVISION.
+           INSPECT F0 REPLACING ALL N"ÇT" BY ZERO.
+           DISPLAY F0 WITH NO ADVANCING.
+           STOP RUN.
+])
+
+AT_CHECK([${COMPILE} -x prog.cob], [0])
+AT_CHECK([./prog], [0], [ÇPÇQÇRÇSÇOÇPÇQÇRÇSÇO])
+
+AT_CLEANUP
+
+AT_SETUP([PIC N INSPECT TALLYING])
+
+AT_DATA([prog.cob], [
+       IDENTIFICATION   DIVISION.
+       PROGRAM-ID.      prog.
+       DATA             DIVISION.
+       WORKING-STORAGE  SECTION.
+       01 F0 PIC N(10)  VALUE "ÇPÇQÇRÇSÇTÇPÇQÇRÇSÇT".
+       01 CN PIC 99.
+       PROCEDURE        DIVISION.
+           INSPECT F0 TALLYING CN FOR ALL "ÇSÇT".
+           DISPLAY CN WITH NO ADVANCING.
+           STOP RUN.
+])
+
+AT_CHECK([${COMPILE} -x prog.cob], [0])
+AT_CHECK([./prog], [0], [02])
+
+AT_CLEANUP
+
+AT_SETUP([PIC N Move with half-width dakuten kana.])
+
+AT_DATA([prog.cob], [
+       IDENTIFICATION   DIVISION.
+       PROGRAM-ID.      prog.
+       DATA             DIVISION.
+       WORKING-STORAGE  SECTION.
+       01 F0 PIC N(7).
+       PROCEDURE        DIVISION.
+           MOVE "ﬁ¿ﬁ•≥ﬁ®›¡" TO F0.
+           DISPLAY F0 WITH NO ADVANCING.
+           STOP RUN.
+])
+
+AT_CHECK([${COMPILE} -x prog.cob], [0])
+AT_CHECK([./prog], [0], [ÅJÉ_ÅEÉîÉBÉìÉ`])
+
+AT_CLEANUP
+
+AT_SETUP([PIC N Move with half-width han-dakuten kana.])
+
+AT_DATA([prog.cob], [
+       IDENTIFICATION   DIVISION.
+       PROGRAM-ID.      prog.
+       DATA             DIVISION.
+       WORKING-STORAGE  SECTION.
+       01 F0 PIC N(7).
+       PROCEDURE        DIVISION.
+           MOVE "ﬂŒﬂ›√ﬁÿ›∏ﬁ" TO F0.
+           DISPLAY F0 WITH NO ADVANCING.
+           STOP RUN.
+])
+
+AT_CHECK([${COMPILE} -x prog.cob], [0])
+AT_CHECK([./prog], [0], [ÅKÉ|ÉìÉfÉäÉìÉO])
+
+AT_CLEANUP

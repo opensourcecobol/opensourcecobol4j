@@ -1,0 +1,62 @@
+AT_SETUP([ignore invalid (too short) RECORD CONTAINS ])
+
+AT_DATA([prog.cob], [
+       IDENTIFICATION   DIVISION.
+       PROGRAM-ID.      prog.
+       ENVIRONMENT      DIVISION.
+       INPUT-OUTPUT     SECTION.
+       FILE-CONTROL.
+       SELECT TEST-FILE ASSIGN "TEST-FILE".
+       DATA             DIVISION.
+       FILE             SECTION.
+       FD TEST-FILE  RECORD CONTAINS 2.
+       01 TEST-REC      PIC X(4).
+       PROCEDURE        DIVISION.
+           OPEN OUTPUT TEST-FILE.
+           MOVE  ALL "A" TO TEST-REC.
+           WRITE TEST-REC.
+           CLOSE TEST-FILE.
+           STOP RUN.
+])
+
+AT_CHECK([${COMPILE} prog.cob], [1], [],
+[prog.cob:12: Error: Record size too large 'TEST-REC' (4)
+])
+AT_CHECK([${COMPILE_JP_COMPAT} prog.cob])
+AT_CHECK([./prog], [0])
+AT_CHECK([od -An -tx1 TEST-FILE | sed -e 's/  */ /g' -e 's/ *$//'], [0], [ 41 41 41 41
+])
+
+AT_CLEANUP
+
+AT_SETUP([ignore invalid (too large) RECORD CONTAINS ])
+
+AT_DATA([prog.cob], [
+       IDENTIFICATION   DIVISION.
+       PROGRAM-ID.      prog.
+       ENVIRONMENT      DIVISION.
+       INPUT-OUTPUT     SECTION.
+       FILE-CONTROL.
+       SELECT TEST-FILE ASSIGN "TEST-FILE".
+       DATA             DIVISION.
+       FILE             SECTION.
+       FD TEST-FILE  RECORD CONTAINS 8.
+       01 TEST-REC      PIC X(4).
+       PROCEDURE        DIVISION.
+           OPEN OUTPUT TEST-FILE.
+           MOVE  ALL "A" TO TEST-REC.
+           WRITE TEST-REC.
+           CLOSE TEST-FILE.
+           STOP RUN.
+])
+
+AT_CHECK([${COMPILE} prog.cob])
+AT_CHECK([./prog], [0])
+AT_CHECK([od -An -tx1 TEST-FILE | sed -e 's/  */ /g' -e 's/ *$//'], [0], [ 00 04 00 00 41 41 41 41
+])
+AT_CHECK([${COMPILE_JP_COMPAT} prog.cob])
+AT_CHECK([./prog], [0])
+AT_CHECK([od -An -tx1 TEST-FILE | sed -e 's/  */ /g' -e 's/ *$//'], [0], [ 41 41 41 41
+])
+
+AT_CLEANUP

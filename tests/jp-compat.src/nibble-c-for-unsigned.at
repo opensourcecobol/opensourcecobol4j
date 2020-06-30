@@ -1,0 +1,29 @@
+AT_SETUP([Decimal nibble C as unsigned])
+
+AT_DATA([prog.cob], [
+       IDENTIFICATION   DIVISION.
+       PROGRAM-ID.      prog.
+       DATA             DIVISION.
+       WORKING-STORAGE  SECTION.
+       01  UNI01.
+         03 SIGNED01.
+           05 SDEC01 PIC S9(2) COMP-3.
+         03 UNSIGNED01 REDEFINES SIGNED01.
+           05 UDEC01 PIC  9(2) COMP-3.
+       PROCEDURE        DIVISION.
+           MOVE 1 TO SDEC01.
+           IF SDEC01 IS NUMERIC THEN
+               DISPLAY "S" WITH NO ADVANCING
+           END-IF.
+           IF UDEC01 IS NUMERIC THEN
+               DISPLAY "U" WITH NO ADVANCING
+           END-IF.
+           STOP RUN.
+])
+
+AT_CHECK([${COMPILE} prog.cob], [0])
+AT_CHECK([./prog], [0], [S])
+AT_CHECK([COB_NIBBLE_C_UNSIGNED=Y ./prog], [0], [SU])
+
+AT_CLEANUP
+

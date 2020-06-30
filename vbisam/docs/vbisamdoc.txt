@@ -1,0 +1,1667 @@
+VBISAM - Definition
+
+Credits
+
+VBISAM (Pronounced: Vee Bee Eye Sam) is copyright © Trevor van Bremen,
+All rights reserved.
+
+VBISAM - Implementation specifics
+
+Multi-user (i.e. Row-locking)
+
+Variable length records (A limitation being that all indexes MUST exist
+in the static area)
+
+64-bit file-I/O OR 32-bit file-I/O selectable by a library compile-time
+switch
+
+Transactions (Commit / Rollback) HARD
+
+Unlimited keys per table - Late breaking news: Decided to limit key
+count to 32 for now, will make it dynamic in the future.
+
+Up to 32 parts per key
+
+Index depth <= 65535 levels (Highly unlikely that > 4 or 5 levels would
+ever exist!)
+
+Virtualization of the underlying file system (i.e. All data can
+optionally reside in one file / disk-partition if desired)
+
+Complete CISAM / DISAM compatibility (in 32-bit mode)
+
+External function entry points
+
+Available functions
+
+Note that the functions in red text are only implemented as placeholders
+and always return 0.  They might be implemented at some later date.
+
+isaddindex (int, struct keydesc *);
+
+isaudit (int, char *, int);
+
+isbegin (void);
+
+isbuild (char *, int, struct keydesc *, int);
+
+iscleanup (void);
+
+isclose (int);
+
+iscluster (int, struct keydesc *);
+
+iscommit (void);
+
+isdelcurr (int);
+
+isdelete (int, char *);
+
+isdelindex (int, struct keydesc *);
+
+isdelrec (int, off_t);
+
+iserase (char *);
+
+isflush (int);
+
+isindexInfo (int, struct keydesc *, int);
+
+islock (int);
+
+islogclose (void);
+
+islogopen (char *);
+
+isopen (char *, int);
+
+isread (int, char *, int);
+
+isrecover (void);	
+
+isrelease (int);
+
+isrename (char *, char *);
+
+isrewcurr (int, char *);
+
+isrewrec (int, off_t, char *);
+
+isrewrite (int, char *);
+
+isrollback (void);
+
+issetunique (int, off_t);
+
+isstart (int, struct keydesc *, int, char *, int);
+
+isuniqueid  (int, off_t *);
+
+isunlock (int);
+
+iswrcurr (int, char *);
+
+iswrite (int, char *);
+
+ldchar (char *, int, char *);
+
+lddbl (char *);
+
+lddblnull (char *, short *);
+
+lddecimal (char *, int, dec_t *);
+
+ldfloat (char *);
+
+ldfltnull (char *, short *);
+
+ldlong (char *);
+
+stchar (char *, char *, int);
+
+stdblnull (double, char *, int);
+
+stdecimal (dec_t *, char *, int);
+
+stfltnull (double, char *, int);
+
+stdbl (double, char *);
+
+stfloat (double, char *);
+
+stlong (long, char *);
+
+Additional functions
+
+These functions are either additional to those found in C-ISAM or are
+defined as functions rather than as macros.
+
+ldint (char *);
+
+ldquad (char *);
+
+stint (int, char *);
+
+stquad (off_t, char *);
+
+Unavailable functions
+
+These functions are present in C-ISAM but are not supported in VBISAM
+
+islangchk (void);
+
+islanginfo (char *);
+
+isnlsversion (char *);
+
+isglsversion (char *);
+
+isnolangchk (void);
+
+File Formats
+
+Data File
+
+The data file is a simple flat file with some additional data appended
+to each row.
+
+The first piece of `additional data' is always present.  It is a single
+byte that signifies whether the row is deleted (0x00) or active (0x0a).
+
+In the case of a variable length row VBISAM file, there are three
+additional pieces of data appended after the abovementioned byte:
+
+A 16-bit number that signifies the length of the additional data in the
+row.
+
+An 8-bit number that references the `slot-number' in the first
+additional variable length data node of the index file
+
+A 24-bit number that references the index node containing the first
+additional row data.
+
+Index File
+
+Like C-ISAM® or D-ISAM® index files, VBISAM stores row numbers in the B+
+Tree leaf nodes of the index file.  The non-leaf nodes store node
+numbers in the B+ Tree nodes.  Every entry in the B+ Tree node can have
+leading compression, trailing compression and duplicate value
+compression.  The leading compression and trailing compression fields
+are 8-bit values in 32-bit file I/O mode and 16-bit values in 64-bit
+file I/O mode.  The row numbers, node numbers and duplicate numbers are
+32-bit values in 32-bit file I/O mode and 64-bit values in 64-bit file
+I/O mode.
+
+The node types present in any index file are limited to the following:
+
+Dictionary (Always the FIRST node in the file!)
+
+Key Descriptor
+
+B+ Tree Data
+
+Free List
+
+Free Node
+
+Variable Length row Data
+
+Dictionary Node
+
+The dictionary node shall always be the first node in the index file. 
+There shall never be more than one (1) dictionary node in any given
+index file.  The purpose of the dictionary node is to coherently `link'
+the variable information of all other nodes in the index file together. 
+Additionally, certain `integrity' testing data and transactional
+processing data shall be stored in the dictionary node.  The dictionary
+node of any given index file will be the most frequently updated node
+and extra care should be taken with regard to how long this node remains
+in a locked state.
+
+Content of the dictionary node (CISAM / DISAM compatibility mode):
+
+OFFSET	LENGTH	DESCRIPTION	VALUE
+
+0x0000	0x02	Validation	0xfe53
+
+0x0002	0x01	Node header reserved bytes	0x02
+
+0x0003	0x01	Node footer reserved bytes	0x02
+
+0x0004	0x01	Reserved bytes per key entry	0x04
+
+0x0005	0x01	Reserved by Informix	0x04
+
+0x0006	0x02	Node length -1	0x01ff or 0x03ff
+
+0x0008	0x02	Number of indexes	Varies
+
+0x000a	0x02	Reserved by Informix	Set = 0x0704
+
+0x000c	0x01	File version number	Set = 0x00
+
+0x000d	0x02	Minimum data row length	Max around 32k
+
+0x000f	0x04	Pointer to first key descriptor node	Normally 0x00000002
+
+0x0013	0x01	Localized index flag	Set = 0x00
+
+0x0014	0x05	Reserved by Informix	Set = 0x00...
+
+0x0019	0x04	Pointer to first data free node	0 - 2^31
+
+0x001d	0x04	Pointer to first index free node	0 - 2^31
+
+0x0021	0x04	Next row in data file?	0 - 2^31
+
+0x0025	0x04	Next node in index file?	2 - 2^31
+
+0x0029	0x04	Next sequential transaction number?	1 - 2^31
+
+0x002d	0x04	Next sequential unique ID?	1 - 2^31
+
+0x0031	0x04	Pointer to audit trail index node	Not yet used!
+
+0x0035	0x02	Locking method	Set = 0x0008
+
+0x0037	0x04	UNKNOWN	Set = 0x00...
+
+0x003b	0x02	Maximum data row length	Set = 0x00 if not ISVARLEN
+
+0x003d	0x04	Free group 0 head (Variable length)	<= 8 bytes free
+
+0x0041	0x04	Free group 1 head (Variable length)	<= 32 bytes free
+
+0x0045	0x04	Free group 2 head (Variable length)	<= 128 bytes free
+
+0x0049	0x04	Free group 3 head (Variable length)	<= 512 bytes free
+
+0x004d	0x04	Free group 4 head (Variable length)	> 512 bytes free
+
+0x0051	0x24	Localized index stuff	Set to 0x00...
+
+0x0075	0x038b	Padding (RFU)	0x00...
+
+See notes on the variable length node for discrepancies of the
+Free-Group-n head pointers.Content of the dictionary node (64-bit file
+I/O mode):
+
+OFFSET	LENGTH	DESCRIPTION	VALUE
+
+0x0000	0x02	Validation	0x5642 (``VB'')
+
+0x0002	0x01	Node header reserved bytes	0x02
+
+0x0003	0x01	Node footer reserved bytes	0x02
+
+0x0004	0x01	Reserved bytes per key entry	0x04
+
+0x0005	0x01	Reserved by Informix	0x04
+
+0x0006	0x02	Node length -1	0x03ff
+
+0x0008	0x02	Number of indexes	Varies
+
+0x000a	0x02	Reserved by Informix	Set = 0x0704
+
+0x000c	0x01	File version number	Set = 0x00
+
+0x000d	0x02	Minimum data row length	Max around 32k
+
+0x000f	0x08	Pointer to first key descriptor node	Normally 0x00000002
+
+0x0017	0x01	Localized index flag	Set = 0x00
+
+0x0018	0x05	Reserved by Informix	Set = 0x00...
+
+0x001d	0x08	Pointer to first data free node	0 - 2^63
+
+0x0025	0x08	Pointer to first index free node	0 - 2^63
+
+0x002d	0x08	Next row in data file?	0 - 2^63
+
+0x0035	0x08	Next node in index file?	2 - 2^63
+
+0x003d	0x08	Next sequential transaction number?	1 - 2^63
+
+0x0045	0x08	Next sequential unique ID?	1 - 2^63
+
+0x004d	0x08	Pointer to audit trail index node	Not yet used!
+
+0x0055	0x02	Locking method	Set = 0x0008
+
+0x0057	0x08	UNKNOWN	Set = 0x00...
+
+0x005f	0x02	Maximum data row length	About 32k
+
+0x0061	0x08	Free group 0 head (Variable length)	<= 16 bytes free
+
+0x0069	0x08	Free group 1 head (Variable length)	<= 32 bytes free
+
+0x0071	0x08	Free group 2 head (Variable length)	<= 64 bytes free
+
+0x0079	0x08	Free group 3 head (Variable length)	<= 128 bytes free
+
+0x0081	0x08	Free group 4 head (Variable length)	<= 256 bytes free
+
+0x0089	0x08	Free group 5 head (Variable length)	<= 512 bytes free
+
+0x0091	0x08	Free group 6 head (Variable length)	<= 1024 bytes free
+
+0x0099	0x08	Free group 7 head (Variable length)	<= 2048 bytes free
+
+0x00a1	0x08	Free group 8 head (Variable length)	> 2048 bytes free
+
+0x00a9	0x24	Localized index stuff	Set to 0x00...
+
+0x00cd	0x0f33	Padding (RFU)	0x00...
+
+Key Descriptor Node
+
+The key descriptor node is present to signify exactly what indexes
+exist.
+
+Content of a key descriptor node (CISAM / DISAM compatibility mode):
+
+OFFSET	LENGTH	DESCRIPTION	VALUE
+
+0x0000	0x02	Length used in this node	Varies
+
+0x0002	0x04	Pointer to next keydesc node	0x00000000 = End of list
+
+The following fields are repeated per key
+
++0x00	0x02	Length of this keydesc	7 + (5 * Number of parts)
+
++0x02	0x04	Pointer to this keys root node	3 - 2^31
+
++0x06	0x01	Compression / duplicates flags
+
+
+
+The following fields are repeated per key part
+
++0x00	0x02	Length of this part	1 - 32767 (Other limits apply)
+
++0x02	0x02	Offset of this part	0 - 32k or so
+
++0x04	0x01	Type of this part	See vbisam.h - Can include ISDESC
+
+Varies	Varies	Padding (RFU)	0x00...
+
+0x3fd	0x03	Signature	0xff7e00
+
+Content of a key descriptor node (64-bit file I/O mode):
+
+OFFSET	LENGTH	DESCRIPTION	VALUE
+
+0x0000	0x02	Length used in this node	Varies
+
+0x0002	0x04	Pointer to next keydesc node	0x00000000 = End of list
+
+The following fields are repeated per key
+
++0x00	0x02	Length of this keydesc	11 + (5 * Number of parts)
+
++0x02	0x08	Pointer to this keys root node	3 - 2^63
+
++0x06	0x01	Compression / duplicates flags
+
+
+
+The following fields are repeated per key part
+
++0x00	0x02	Length of this part	1 - 32767 (Other limits apply)
+
++0x02	0x02	Offset of this part	0 - 32k or so
+
++0x04	0x01	Type of this part	See vbisam.h - Can include ISDESC
+
+Varies	Varies	Padding (RFU)	0x00...
+
+0x0ffd	0x03	Signature	0xff7e00
+
+B+ Tree Node
+
+The B+ Tree node data format differs in content dependant upon the key
+compression specifics.  For each of these instances that are true, the
+corresponding table entry contains an additional field:
+
+The key is setup to allow leading compression (Optional field marked in
+GREEN)
+
+The key is setup to allow trailing blank compression (Optional field
+marked in BLUE)
+
+The key is setup to allow duplicate compression (Optional field marked
+in RED)
+
+Content of a B+ Tree node (CISAM / DISAM compatibility mode):
+
+OFFSET	LENGTH	DESCRIPTION	VALUE
+
+0x0000	0x02	Length used in this node	Varies
+
+Fields below are repeated per key
+
++0x00	0x01	Count leading bytes compression	Number of bytes suppressed
+
++0x01	0x01	Count trailing space compression	Number of bytes suppressed
+
++0x02	Varies	The actual key data	(After any compression applied)
+
+Varies	0x04	Duplicate number
+
+	Varies	4	Row number / Node number	MSB set: more duplicates follow
+
+	Varies	Padding (RFU)	0x00...
+
+0x03fe	0x02	B+ Tree level number + null	0xnn 0x00
+
+Content of a B+ Tree node (64-bit file I/O):
+
+OFFSET	LENGTH	DESCRIPTION	VALUE
+
+0x00	0x02	Length used in this node	Varies
+
+0x02	0x08	Transaction stamp	Unique field in 64-bit mode
+
+Fields below are repeated per key
+
++0x00	0x02	Count leading bytes compression	Number of bytes suppressed
+
++0x02	0x02	Count trailing space compression	Number of bytes suppressed
+
++0x03	Varies	The actual key data	(After any compression applied)
+
+Varies	0x08	Duplicate number
+
+	Varies	0x08	Row number / Node number	MSB set: more duplicates follow
+
+	Varies	Padding (RFU)	0x00...
+
+0xffe	0x02	B+ Tree level number + null	0xnn 0x00
+
+Free List Node
+
+There are two (2) types of free list present in the index file:
+
+Free index node list
+
+Free data row list
+
+The basic format of these lists is identical in order to make the list
+manipulation functions similar.
+
+Content of a free-list node (CISAM / DISAM compatibility mode):
+
+OFFSET	LENGTH	DESCRIPTION	VALUE
+
+0x0000	0x02	Length used in this node	Varies
+
+0x0004	0x04	Pointer to next node in free list	0x00000000 = End of list
+
++0x00	0x04	Pointer to actual free space	Repeated as needed
+
+	Varies	Padding (RFU)	0x00...
+
+0x03fd	0x03	Signature	Data Node:  0xff,  0x7f, 0x00
+
+Index Node: 0xfe, 0x7f, 0x00
+
+Content of a free-list node (64-bit file I/O):
+
+OFFSET	LENGTH	DESCRIPTION	VALUE
+
+0x0000	0x02	Length used in this node	Varies
+
+0x0004	0x08	Pointer to next node in free list	0x00000000 = End of list
+
++0x00	0x08	Pointer to actual free space	Repeated as needed
+
+	Varies	Padding (RFU)	0x00...
+
+0x0ffd	0x03	Signature	Data Node:  0xff,  0x7f, 0x00
+
+Index Node: 0xfe, 0x7f, 0x00
+
+Free Node
+
+A free node is one that has been previously consumed but is now
+superfluous.
+
+Content of a free node (Identical in any mode):
+
+OFFSET	LENGTH	DESCRIPTION	VALUE
+
+0x0000	0x02	Length used in this node	0x0002 (2)
+
+	Varies	Padding	0x00...
+
+Variable Length Data Node
+
+Given that each `slot' in a node consumes four (4) bytes to describe the
+length and offset, the maximum number of available `slots' given a node
+size of x must be <= (x/4).  This is why C-ISAM only allocated 8-bits as
+a slot number (i.e. 255 slots per 1024 byte node).  Therefore, I propose
+using a 10-bit slot number (1023 slots) on a 4096-byte (12-bits) node. 
+This means there's some `bit-shifting' required.  However, this is
+countered by the fact that it can save up to 2770 bytes per node being
+wasted (worst case).
+#define SLOTS_PER_NODE  ((MAX_NODE_LENGTH >> 2) - 1)
+
+Important note
+
+There is a distinct difference between VBISAM and C-ISAM in the way the
+free-group pointers in the dictionary node are used.  This is because I
+firmly believe that C-ISAM is stupid in the chosen method!  C-ISAM
+defines each of the 5 chains of free groups by the amount of free space
+available in the node.  (This part is logical).  However, C-ISAM imposes
+linear cutoffs at 200 byte increments.  Therefore, group-0 has <= 200
+free bytes, group-1 has <= 400 free bytes, group-2 has <= 600 free
+bytes, group-3 has <= 800 free bytes and anything more is in group-4.
+
+In VBISAM, I have chosen to use a more logarithmic approach instead.
+
+Thus, group-0 has <= 8 free bytes, group-1 has <= 32 free bytes, group-2
+has <= 128 free bytes, group-3 has <= 512 free bytes, groiup-4 has <=
+1024 free bytes.  THIS NEEDS TO BE TESTED WITH C-ISAM TO ASCERTAIN IF IT
+WILL CONFUSE C-ISAM IN ANY DANGEROUS WAY.  When in 64-bit file I/O mode
+(and thus 4096 byte nodes), I will use the values 16, 32, 64, 128, 256,
+512, 1024, 2048 for group-0 thru group-7 respectively.  (Note that
+64-bit mode has several additional groups!)
+
+Hopefully, this will mean a better `bisection' algorithm that is more
+`efficient' at saving space.
+
+The format of a variable length data node is, at best, very messy. 
+However, it has to be this messy in order to conform to the `standard'
+set by the competition.  An important point to note is that the
+references to other nodes are sometimes `operator overloaded' with a
+slot number in the most significant bits.  (The overloading is 8-bits in
+C-ISAM mode, 10-bits in 64-bit file I/O mode).  Given that a C-ISAM node
+is 1024 bytes long (i.e. 10-bits), and given that it is impossible to
+exceed 2GB with C-ISAM (31 bits), the use of the most significant 8 bits
+for holding a slot number does not in any way impede storage capability.
+
+Given that a 64-bit VBISAM node is 4096 bytes long (i.e. 12-bits), and
+given that it is impossible to exceed 8192PB (PETABYTE) with C-ISAM (63
+bits), the use of the most significant 10 bits for holding a slot number
+does not in any way impede storage capability.
+
+In the case where the variable length data of any given row is too large
+to fit in a single variable length data node, the system will always
+write the initial component(s) into solitary nodes rather than squeezing
+the data into (potentially hundreds) of variable length nodes with some
+remaining space.  Only the tail of the variable length data can be mixed
+with other tail data in a single variable length node.  This has the
+effect of speeding processing of a row in that the minimum number of
+nodes is used to hold the variable length data.  I suspect that C-ISAM
+does likewise!
+
+Content of a variable length data node (CISAM / DISAM compatibility
+mode):
+
+OFFSET	LENGTH	DESCRIPTION	VALUE
+
+0x0000	0x02	Constant value	0x0000 (Check!)
+
+0x0002	0x02	Constant value	0x7e26
+
+0x0004	0x04	Free list forward pointer	Points to next `free' node
+
+0x0008	0x04	Free list backward pointer	Points to previous `free' node
+
+0x000c	0x02	Amount of free space, THIS node
+
+0x000e	0x02	Offset of free space, THIS node
+
+0x0010	0x04	Pointer to next remainder space	(Includes slot number)
+
+0x0014	0x01	Flags	?
+
+0x0015	0x01	Number of slots used
+
+0x0016	0x01	Hash group	?
+
+0x0017	Varies	Actual data
+
+0x03f9 - (n * 0x04)	0x02	Length of slot n
+
+0x03fb - (n * 0x04)	0x02	Offset of slot n
+
+0x03f9	0x02	Length of slot 0x00
+
+0x03fb	0x02	Offset of slot 0x00
+
+0x03fd	0x01	Signature	0x7c
+
+0x03fe	0x02	Constant	0x00, 0x00
+
+Content of a variable length data node (64-bit file I/O mode):
+
+OFFSET	LENGTH	DESCRIPTION	VALUE
+
+0x0000	0x02	Constant value	0x0000 (Check!)
+
+0x0002	0x02	Constant value	0x7e26
+
+0x0004	0x08	Free list forward pointer	Points to next `free' node
+
+0x000c	0x08	Free list backward pointer	Points to previous `free' node
+
+0x0014	0x02	Amount of free space, THIS node
+
+0x0016	0x02	Offset of free space, THIS node
+
+0x0018	0x08	Pointer to next remainder space	(Includes slot number)
+
+0x0020	0x01	Flags	?
+
+0x0021	0x02	Number of slots used
+
+0x0023	0x01	Hash group	?
+
+0x0024	Varies	Actual data
+
+0x0ff9 - (n * 0x04)	0x02	Length of slot `n'
+
+0x0ffb - (n * 0x04)	0x02	Offset of slot `n'
+
+0x0ff9	0x02	Length of slot 0x00
+
+0x0ffb	0x02	Offset of slot 0x00
+
+0x0ffd	0x01	Signature	0x7c
+
+0x0ffe	0x02	Constant	0x00, 0x00
+
+
+
+Memory Management
+
+Memory allocation / releasing
+
+The entire VBISAM library allocates and releases all memory with a
+`wrapper' to the standard `C' malloc () and free () functions.  This
+approach offers the following distinct benefits:
+
+The library offers a function to confirm there were no memory-leaks
+(when compiled in DEBUG mode)
+
+If the allocation attempt failed due to a lack of available system
+memory, the allocation call can aggressively release memory allocated to
+other VBISAM lists in order to satisfy the memory allocation request.
+
+The memory management functions are available to end-users as:
+
+void *pvVBMalloc (size_t tLength);
+
+void vVBFree (void *pvPointer, size_t tLength);
+
+void vVBMallocReport (void);
+
+Please note that the function to release memory (vVBFree) requires an
+additional argument that the normal free () system call does not
+require.
+
+The latter function (vVBMallocReport) is called automatically after all
+memory has been released back to the system with the vVBFree function if
+the VBISAM library was compiled with -DDEBUG set.  It simply writes two
+lines of text out to the stderr file descriptor stating what the MAXIMUM
+memory usage was throughout the duration of the current process and the
+amount still allocated at this point, the latter figure being defined as
+the amount of memory-leakage.
+
+In-memory tree / key lists
+
+Upon exiting any primary VBISAM function, the library performs a check
+of the in-memory allocated tree lists for the VBISAM file in question
+and removes any superfluous entries by moving them to their
+corresponding free lists.  In order to speed up overall processing, the
+library intentionally retains some of the data for future VBISAM calls. 
+The actual amount of data retained in the in-memory lists is
+configurable by way of a system environment variable named
+VB_TREE_LEVEL.  The value of this environment variable defines how many
+tree levels of data from the current VBISAM file are retained in memory.
+ If not present, this variable defaults to a value of 4 levels.
+
+If there is not a current row, the system will default to retain ALL
+in-memory data.  (This situation occurs when a row is deleted from the
+file).
+
+The in-memory lists are not completely released back to the operating
+system by the above process.  Instead, they are retained in
+corresponding free lists to avoid having to re-allocate them in future.
+
+Given the shear volume of memory that can possibly be allocated with
+index files of huge proportions, I suggest that this dynamic
+de-allocation of memory needs to be significantly more user-tunable.  To
+that end, I am promoting these additional environment variables for
+tuning purposes.
+
+VB_TREE_BYTE - Maximum allowable RAM within all TREE structures
+
+VB_FILE_TREE_BYTE - Maximum allowable RAM within any given FILE
+
+VB_INDEX_TREE_BYTE - Maximum allowable RAM within any given INDEX
+
+VB_FILE_TREE_KEY - Maximum allowable key count within any given FILE
+
+VB_INDEX_TREE_KEY - Maximum allowable key count within any given INDEX
+
+In 32-bit mode, the default value of the latter 4 will be zero since the
+nodes do not have the transaction stamp available to determine validity
+
+Locking
+
+Overview
+
+Three (3) basic types of locks are used on the data and index files.
+
+End-user rowlocks
+
+Concurrency control locks
+
+Signaling locks
+
+Note that the locking strategy used in VBISAM is completely compatible
+with that of C-ISAM and thus is able to interactively lock data files
+correctly that are in use by programs compiled with the C-ISAM library. 
+The locking strategy of C-ISAM was determined by way of using the STRACE
+process and, although exhaustive testing has been performed, may be
+subject to minor differences.
+
+End-User Rowlocks
+
+An end-user rowlock signifies a lock held by an end-user process upon a
+nominated row-number within the data file.  The actual data locked shall
+be a single byte in length on the index file starting at offset
+calculated as the row number plus a certain offset.  A linked list of
+locks held on the file is retained in memory in order to differentiate
+between locks forming part of a transaction versus a simple read lock. 
+Some end-user processes may request to wait for a rowlock to become
+available (if held by some other process) while others may wish to be
+informed immediately.  Therefore, two locking modes could be employed.
+
+VBWRLOCK - Apply a write lock with error return if already locked
+
+VBWRLCKW - Apply a write lock waiting indefinitely if already locked
+
+Concurrency Control Locks
+
+A concurrency control lock is used (as the name implies) to handle the
+isolation of regions of the files and thus guarantee atomicity of file
+updates.  This style of lock will always wait indefinitely to apply a
+lock if some other process currently holds a conflicting lock.  I.e. it
+will use VBRDLCKW or VBWRLCKW rather than VBRDLOCK or VBWRLOCK.
+
+Signaling Locks
+
+A signaling lock is used (as the name implies) to signal certain events
+to other processes.  At present, this is only used to signal that the
+process has actually opened the file in question.  (Possibly
+exclusively)
+
+ Basic rowlocks
+
+Offset (32-bit):	0x40000000 thru 0x7FFFFFFE
+
+Length (32-bit):	0x00000001
+
+Offset (64-bit):	0x4000000000000000 thru 0x7FFFFFFFFFFFFFFE
+
+Length (64-bit):	0x0000000000000001
+
+Lock Mode:	Always a write lock (VBWRLOCK or VBWRLCKW)
+
+Index file is in use lock
+
+Offset (32-bit):	0x00000000
+
+Length (32-bit):	0x3FFFFFFF
+
+Offset (64-bit):	0x0000000000000000
+
+Length (64-bit):	0x3FFFFFFFFFFFFFFF
+
+Lock Mode:
+
+Read lock for a non-modifying lock (VBRDLCKW)
+
+Write lock for a modifying lock (VBWRLCKW)
+
+VBISAM file is open lock
+
+Offset (32-bit):	0x7FFFFFFF
+
+Length (32-bit):	0x00000001
+
+Offset (64-bit):	0x7FFFFFFFFFFFFFFF
+
+Length (64-bit):	0x0000000000000001
+
+Lock Mode:	Always a read lock (VBRDLOCK)
+
+VBISAM file is exclusively open lock
+
+Offset (32-bit):	0x7FFFFFFF
+
+Length (32-bit):	0x00000001
+
+Offset (64-bit):	0x7FFFFFFFFFFFFFFF
+
+Length (64-bit):	0x0000000000000001
+
+Lock Mode:	Always a write lock (VBWRLOCK)
+
+Key manipulation
+
+Overview
+
+The complexities in key manipulation include the following, performed in
+the vbKeys.c module:
+
+Reading a B+ Tree node into memory
+
+Writing a B+ Tree node to disk
+
+Key Insertion / Key Deletion / Key Modification
+
+Key compression
+
+Three (3) methods of key compression are employed:
+
+Leading duplication compression
+
+Trailing constant compression
+
+Complete duplicate compression
+
+Reading a B+ Tree node into memory
+
+This is accomplished with the iNodeLoad function.  Once the node has
+been read into memory with a call to iVBBlockRead, the node is
+decompressed into the internal VBTREE and VBKEY linked lists.  This is
+one of the four most intensively utilized functions in the VBISAM
+library and thus should be a prime candidate for optimization.
+
+Writing a B+ Tree node to disk
+
+This is accomplished with the iNodeSave function.  It is important to
+note that due to keys being inserted into the memory-based VBTREE and
+VBKEY linked lists, it is possible to exceed the available space in a
+node.  Therefore, this function also deals with splitting a B+ Tree node
+and thus cascading any changes up the B+ Tree towards the root node of
+the index.  This is one of the four most intensively utilized functions
+in the VBISAM library and thus should be a prime candidate for
+optimization.
+
+Adding a new key entry to an index
+
+The relevant function here is iKeyInsert.  The insertion of a new key
+into an index is simplified by passing the complexities of splitting a
+node to the iNodeSave function described above.  Thus, key insertion
+simply involves inserting a new key into the corresponding VBTREE linked
+list followed by calling the iNodeSave function to write it to disk.
+
+Removing a key entry from an index
+
+The relevant function here is iKeyDelete.  The removal of a key from an
+index is a multi-step process.  Firstly, the key is removed from the
+corresponding VBTREE linked list.  If the removed key was not the last
+entry in the node, then the node is re-written to disk by calling the
+iNodeSave function above.  If the removed key was the last key in the
+node, then a recursive process of node de-allocation is performed up the
+B+ Tree toward the index root node.  (This is like a reversal of the
+node splitting process that occurs in the iNodeSave function).
+
+Modification of a key within an index
+
+This function is carried out by way of deleting the existing key entry
+and then creating a new key entry.  Therefore, please refer to the above
+text.  However, keep in mind that the system intelligently tests whether
+each index has actually been modified before carrying out the delete /
+insert operations.
+
+Key searching
+
+Overview
+
+The possible uses for the key searching algorithm include:
+
+Positioning for an ISSTART call
+
+Positioning for an ISREAD call
+
+Positioning for an ISWR* call
+
+Positioning for an ISREW* call
+
+Positioning for an ISDEL* call
+
+The possible modes to use for a key search are:
+
+ISFIRST -  (ISSTART, ISREAD)
+
+ISLAST - (ISSTART, ISREAD)
+
+ISNEXT - (ISREAD)
+
+ISPREV - (ISREAD)
+
+ISCURR - (ISREAD)
+
+ISEQUAL - (ISSTART, ISREAD, ISWR*)
+
+ISGTEQ - (ISSTART, ISREAD)
+
+ISGREAT - (ISSTART, ISREAD)
+
+ISLTEQ - (ISSTART, ISREAD)
+
+ISLESS - (ISSTART, ISREAD)
+
+Special-Case - (ISDEL*, ISREW*)
+
+The ISNEXT, ISPREV and ISCURR modes are treated differently than the
+others in order to speed up processing.  Specifically, they do not
+always cause a complete re-load of the B+ Tree node list from the root
+node each time.  Instead, they read in the transaction number from the
+index file dictionary node.  If this number has not changed since the
+last call, then it's safe to assume that the index file has not been
+altered and thus the existing B+ Tree node list is still valid.  If the
+transaction number has changed, then the index file has changed and
+therefore the entire B+ Tree must be flushed and reloaded.  In this
+latter instance, the ISNEXT needs to be mapped onto an ISGREAT and the
+ISPREV needs to be mapped onto an ISLESS.
+
+The ISNEXT, ISPREV and ISCURR need to take into account the duplicate
+number.
+
+The Special-Case mode is used to locate a given data row number within
+the index prior to it being tested and / or removed.  It is only used
+internally by VBISAM functions.
+
+MODE	PARAMETERS	If index is stable, use:	If index is unstable, use:
+
+ISFIRST	NULL + -1	>	>
+
+ISLAST	HIGHVALUE + HIGHVALUE	<	<
+
+ISNEXT	Key + Duplicate	NEXT	>
+
+ISPREV	Key + Duplicate	PREV	<
+
+ISCURR	Key + (Duplicate - 1)	>	>
+
+ISEQUAL	Key + 0	=	=
+
+ISGTEQ	Key + -1	>	>
+
+ISGREAT	Key + HIGHVALUE	>	>
+
+ISLTEQ	Key + HIGHVALUE	<	<
+
+ISLESS	Key + -1	<	<
+
+Maximum number of keys possible in one B+ Tree node
+
+The following two (2) tables assume that full index compression is
+enabled and a key of type ISNODUPS that is 2 bytes in length. 
+Additionally, they are only relevant for native VBISAM files as the
+CISAM / DISAM file format is slightly different.
+
+The maximum number of keys that can fit in a node is given by the
+following formula:
+
+1: Calculate available space for keys per node
+
+A = NODELENGTH - (4 + (INTSIZE * 2) + QUADSIZE)
+
+Node	64-bit	32-bit
+Length	I/O	I/O
+
+65536	65520	65524
+
+32768	32752	32756
+
+16384	16368	16372
+
+8192	8176	8180
+
+4096	4080	4084
+
+2048	2032	2036
+
+1024	1008	1012
+
+512	496	500
+
+256	240	244
+
+128	112	116
+
+2: Calculate maximum keys possible in length above assuming maximum
+compression.
+
+MAX_KEYS_PER_NODE = INT (A / ((INTSIZE * 2) + 2 + (QUADSIZE * 2)))
+#define	MAX_KEYS_PER_NODE	((MAX_NODE_LENGTH - (INTSIZE + QUADSIZE + 2)) / (QUADSIZE + 1))
+#define	MAX_KEYS_PER_NODE	((MAX_NODE_LENGTH - (INTSIZE + 2)) / (QUADSIZE + 1))
+
+Nodeh	64-bit	32-bit
+Length	I/O	I/O
+
+65536	2978	4680
+
+32768	1488	2339
+
+16384	744	1169
+
+8192	371	584
+
+4096	185	291	64-bit default
+
+2048	92	145
+
+1024	45	72	32-bit default
+
+512	22	35
+
+256	10	17
+
+128	5	8
+
+	It is worth noting that the above tables include some ridiculously
+large node lengths.  The actual maxima are set as 4096 bytes per node
+(64-bit file I/O) and 1024 bytes per node (32-bit file I/O).
+
+Inserting a New Key into an Index
+
+Overview
+
+When a new row needs to be written to a VBISAM file, all the various
+indexes associated with the file need a new key entry added.  The new
+key is always inserted into a leaf-node (defined as a level 0 node) in
+the relevant place.  When a new entry is added to a leaf-node, the
+duplicate number is always calculated as the highest current duplicate
+number + 1 (with the first entry having a duplicate number of 0).
+
+Sometimes, the node will get filled up such that it cannot accept the
+new key without overflowing.  In this instance, the leaf node in
+question needs to be split into two separate nodes.  The action of
+splitting a node into two separate nodes causes a ripple-up effect to
+the next higher-level node.  This splitting can potentially cascade all
+the way up to and include the root node of the index.  When a split
+causes the ripple effect to higher-level nodes, the duplicate number
+added into the higher-level node will be that of the highest duplicate
+existing in the (newly replaced) lower-level node.  (An exception to
+this rule occurs only at the far right of each level of the inverted
+tree structure.  In this instance, the node gets an entry as follows:
+
+Leading compression:	Length of complete key
+
+Trailing compression:	0
+
+Key data:		NULL (0 length)
+
+Duplicate number:	0 (? Should this be HI VALUES?)
+
+Row/Node pointer:	As expected
+
+Node Splitting
+
+General
+
+An index node is split when the addition of the new key into the node
+would otherwise cause the length of the node to exceed the limit defined
+in the files dictionary node.  Two different methods of splitting a node
+exist in order to handle the special cases of splitting the root node
+versus splitting all other nodes.
+
+Any given split in an index node can cause a split to occur at the next
+higher level and thus recursion is imperative.
+
+Note that by following the logic below in order, the index file should
+avoid being corrupted as much as possible by inadvertent process
+termination.  However, corruption of the index file is still a remote
+possibility.
+
+Root Node - Split
+
+When the root node needs to be split, a special circumstance exists. 
+The root node of the index must remain at the same node number within
+the file.  (This is because other processes that already have the file
+open contain an in-memory reference to the root node number of the
+index).  Therefore, the root node is split using the following algorithm
+irrespective of the level of the root node.  (I.e. Even if the root node
+is a leaf node, the root node split follows this logic)
+
+Allocate a new node at the same level as the outgoing root node
+
+Copy the upper half of the extended current root node into this new node
+(See exception below)
+
+Allocate another new node at the same level as the outgoing root node
+
+Copy the lower half of the extended current root node into this new node
+(See exception below)
+
+Empty the current root node and set the level number to the old root
+level number + 1
+
+Insert exactly two (2) pointers into the newly created root node
+pointing to the nodes allocated in A. and C. above.  The key entry of
+the 1st pointer is set as the highest entry (inclusive of the
+corresponding duplicate number) in the node allocated in A.  The key
+entry of the 2nd pointer is always the special case greater than pointer
+where the leading compression is set to a value of negative 1.  (See top
+of this page)
+
+Fix the in-memory VBTREE list
+
+All Other Nodes - Split
+
+When any non-root node needs to be split, the logic is as follows:
+
+Allocate a new node at the same level as the current node
+
+Copy the lower half of the extended current root node into this new node
+(See exception below)
+
+Recreate the current node with the upper half of the extended current
+node
+
+Insert a new key into the parent node pointing to the maximum key/dup of
+node created in B. above.
+
+Fix the in-memory VBTREE list
+
+Process termination occurring after the current node has been rewritten
+in C (i.e. during D or E) can cause serious index corruption.  (Lost
+pointers)
+
+Exception - Node Splitting when the value being inserted is above all
+others in the node
+
+When the new key being added to any given node is greater than every
+other key in the node being split, the logic is changed to force the new
+key to be added as the sole key in the new node instead of using the
+lower / upper half style of split.  This causes the lower-value nodes to
+remain more `full' and thus limits the number of B+ Tree levels for
+files with large quantities of data.
+
+Transaction Processing / Logging
+
+Definition
+
+A transaction is defined as a group of operations carried out upon one
+or more tables that must either succeed in their entirety or fail in
+their entirety.
+
+As an example, consider a banking scenario where funds are being
+transferred from account A to account B.  Without the use of
+transactions, it might be possible to extract the funds from account A
+successfully but the deposition of the funds in account B might fail. 
+This leads to an imbalance scenario.  If a transaction were used in this
+banking scenario, the failure of the deposition of funds into account B
+would make the program fall into a `ROLLBACK' state that would undo any
+and all preceding operations within the transaction.  (In this case, it
+would revert the account A balance to its prior value).
+
+Known BUGS in transaction processing
+
+ISROLLBACK can fail
+
+In order to be 100% compatible with a competing ISAM product, I have
+decided to replicate something that I personally consider a BUG.  It is
+possible for a call to ISROLLBACK to FAIL.  Consider the following
+scenario:
+
+Process A begins a transaction and within that transaction it deletes
+row X from a table.  (Note that the table has a unique index on the
+row).
+
+Process B then begins a transaction and proceeds to write a row to the
+same table.  In this instance, the unique index of the row added happens
+to be identical to the row X that was deleted by process A.  Process B
+then decides its transaction is complete and calls the ISCOMMIT function
+successfully.
+
+Process A then fails in performing some subsequent operation and decides
+to call the ISROLLBACK function.  In doing so, process A attempts to
+re-create the row X that it had deleted.  However, this row cannot be
+added because it will now conflict with the row added by process B with
+an EDUPL error.  Therefore, the call to ISROLLBACK fails!
+
+A similar possibility exists when using the ISREWRITE function.
+
+In order to alleviate this BUG in transaction processing, the system
+would need to leave the original values in the B+ Tree (and the data
+file too) only removing them when the ISCOMMIT function is called. 
+Additionally, any rows written or rewritten during a transaction should
+remain invisible to other processes reading data until the ISCOMMIT call
+has been processed.  This latter requirement of invisibility is
+partially implemented by way of leaving the rewritten / written rows in
+a LOCKED state until the transaction has been committed with ISCOMMIT. 
+However, it IS possible to read a locked row from other processes.  They
+simply cannot modify the row.
+
+Abnormal process termination
+
+If a process terminates abnormally with a signal that bypasses the
+processing of an ATEXIT call is suppressed (for example, due to
+reception of a signal that is not locally processed), then any
+transaction in process will not be rolled back.
+
+Implementation specifics
+
+Before any transaction can begin, a log file must be open with the
+ISLOGOPEN function.
+
+Any operations upon tables that are to be considered part of the
+transaction must be opened using the ISTRANS option of the ISOPEN
+function.
+
+If the log file is closed with the ISLOGCLOSE function during a
+transaction, the partial transaction will be rolled back with an
+implicit call to the ISROLLBACK function.
+
+The means by which VBISAM implements transaction processing is
+implemented in a similar fashion to the competing product.  To the best
+of my knowledge, the log file format is identical to that of the
+competing product.
+
+Logged transactions are defined as any transaction that changes a VBISAM
+table in any way.  However, most transactions cannot be rolled back. 
+The transactions that can be rolled back are:
+
+Insert a new row into a table
+
+Remove a row from a table
+
+Modify a row in a table
+
+Log file format - Header
+
+The log file consists of entries of varying length.  Each entry has a
+fixed length header component and a fixed length trailer.
+
+Header content
+
+Offset	Length	Content	Notes
+
+0x00	0x02	Varies	Inclusive of the header / trailer length
+
+0x02	0x02	OPCODE	One of ``BU'', ``BW'', ``CI'', ``CL'', ``CW'', ``DE'',
+``DI'', ``ER'', ``FC'', ``FO'', ``IN'', ``RE'', ``RW'', ``SU'', ``UN'',
+``UP''
+
+0x04	0x02	PID	Taken straight from a getpid () call
+
+0x06	0x02	UID	Taken straight from a getuid () call
+
+0x08	0x04	TIME	Taken straight from a time () call
+
+0x0c	0x02	Unsure	My investigations have never found a non-zero value
+here
+
+0x0e	0x02	Previous	See notes 1 and 2 below
+
+0x10	0x02	Previous	See note 2 below
+
+Note 1:
+
+This is the least significant 16 bits of the position in the log file of
+the previous transaction able to be rolled back.
+
+Note 2:
+
+These two fields are set to zero (0) if the transaction is unable to be
+rolled back.  (Notable exceptions to this rule are the two transactions
+for opening and closing a table)
+
+Log file format - Trailer
+
+The trailer content is simply the length of the content repeated as a
+16-bit value.
+
+Log file format - Transaction Payload
+
+The payload (defined as everything between the header and the trailer)
+varies depending upon the OPCODE.  A complete list follows:
+
+OPCODE BW (Begin Work)
+
+No additional data exists in the payload
+
+OPCODE CW (Commit Work)
+
+No additional data exists in the payload
+
+OPCODE RW (Rollback Work)
+
+No additional data exists in the payload
+
+OPCODE SU (Set Unique)
+
+Offset	Length	Content	Notes
+
+0x00	0x02	Handle	The handle of the open VBISAM file
+
+0x02	0x04	New ID	The new Unique ID being set
+
+OPCODE UN (Unique ID)
+
+Offset	Length	Content	Notes
+
+0x00	0x02	Handle	The handle of the open VBISAM file
+
+0x02	0x04	New ID	The new Unique ID being set
+
+OPCODE RE (Rename)
+
+Offset	Length	Content	Notes
+
+0x00	0x02	Old Len	The length of the original name
+
+0x02	0x02	New Len	The length of the new name
+
+0x04	Varies	Old	The (null terminated) old name of the VBISAM file
+
+Varies	Varies	New	The (null terminated) new name of the VBISAM file
+
+OPCODE ER (Erase File)
+
+Offset	Length	Content	Notes
+
+0x00	Varies	Filename	The (null terminated) name of the VBISAM file being
+erased
+
+OPCODE FC (File Close)
+
+Offset	Length	Content	Notes
+
+0x00	0x02	Handle	The returned handle
+
+0x02	Varies	Filename	The (null terminated) name of the VBISAM file being
+closed
+
+OPCODE FO (File Open)
+
+Offset	Length	Content	Notes
+
+0x00	0x02	Handle	The handle of the open VBISAM file
+
+0x02	Varies	Filename	The (null terminated) name of the VBISAM file being
+opened
+
+OPCODE DE (Delete Row)
+
+Offset	Length	Content	Notes
+
+0x00	0x02	Handle	The handle of the open VBISAM file
+
+0x02	0x04	Row No	The row number being deleted
+
+0x06	0x02	Row Len	The length of the deleted row
+
+0x08	Varies	Row	The actual deleted row data
+
+OPCODE IN (Insert Row)
+
+Offset	Length	Content	Notes
+
+0x00	0x02	Handle	The handle of the open VBISAM file
+
+0x02	0x04	Row No	The row number being inserted
+
+0x06	0x02	Row Len	The length of the inserted row
+
+0x08	Varies	Row	The actual inserted row data
+
+
+
+OPCODE UP (Update Row)
+
+Offset	Length	Content	Notes
+
+0x00	0x02	Handle	The handle of the open VBISAM file
+
+0x02	0x04	Row No	The row number being modified
+
+0x06	0x02	Old Len	The length of the original row
+
+0x08	0x02	New Len	The length of the replacement row
+
+0x08	Varies	Old Row	The original row data
+
+Varies	Varies	New Row	The replacement row data
+
+OPCODE BU (Build)
+
+Note that the last three fields are repeated k_nparts times
+
+Offset	Length	Content	Notes
+
+0x00	0x02	Constant	The value 0x0806 (for compatibility reasons)
+
+0x02	0x02	Min Len	The minimum row length
+
+0x04	0x02	Max Len	The maximum row length
+
+0x06	0x02	Key flags	The content of the keydesc k_flags field
+
+0x08	0x02	Parts	The content of the keydesc k_nparts field
+
+0x0a	0x02	Length	The total (uncompressed) index length
+
+0x0c	0x02	Start	The content of the keydesc k_part [n].kp_start field
+
+0x0e	0x02	Length	The content of the keydesc k_part [n].kp_leng field
+
+0x10	0x02	Type	The content of the keydesc k_part [n].kp_type field
+
+OPCODE CI (Create Index)
+
+Note that the last three fields are repeated k_nparts times
+
+Offset	Length	Content	Notes
+
+0x00	0x02	Handle	The handle of the open VBISAM table
+
+0x02	0x02	Key flags	The content of the keydesc k_flags field
+
+0x04	0x02	Parts	The content of the keydesc k_nparts field
+
+0x06	0x02	Length	The total (uncompressed) index length
+
+0x08	0x02	Start	The content of the keydesc k_part [n].kp_start field
+
+0x0a	0x02	Length	The content of the keydesc k_part [n].kp_leng field
+
+0x0c	0x02	Type	The content of the keydesc k_part [n].kp_type field
+
+OPCODE DI (Delete Index)
+
+Note that the last three fields are repeated k_nparts times
+
+Offset	Length	Content	Notes
+
+0x00	0x02	Handle	The handle of the open VBISAM table
+
+0x02	0x02	Key flags	The content of the keydesc k_flags field
+
+0x04	0x02	Parts	The content of the keydesc k_nparts field
+
+0x06	0x02	Length	The total (uncompressed) index length
+
+0x08	0x02	Start	The content of the keydesc k_part [n].kp_start field
+
+0x0a	0x02	Length	The content of the keydesc k_part [n].kp_leng field
+
+0x0c	0x02	Type	The content of the keydesc k_part [n].kp_type field
+
+OPCODE CL (Cluster?)
+
+Unsupported transaction!
+
+Usage
+
+Compatibility
+
+The actual functions used are the same as those of the competing
+product.  Therefore, any applications code written for the competing
+product should run flawlessly on VBISAM.  The documentation for the
+competing product states that it is imperative that any given
+transaction performs the open (ISOPEN) and close (ISCLOSE) of the
+affected tables within the transaction.  No doubt, this is because the
+log file payload for most operations is based upon the handle of the
+table that is dynamically assigned.  In my not so humble opinion, I
+believe that instructing an applications programmer to open and close
+the active tables so often is a serious issue given that many operating
+systems are relatively slow in performing the open / close operations. 
+Therefore, I am relaxing this requirement by providing the applications
+programmer with the following caveat:
+
+In order for the ISROLLBACK and ISRECOVER functions to perform as
+intended, it is imperative that any affected tables are either:
+
+Both opened and closed within the scope of the transactions (As per
+competitor)
+
+Open with same mode and the same VBISAM handle it was when the logged
+data was originally created and the corresponding open and close
+transactions are logged within their own unique transaction.
+
+It is recommended (although not 100% imperative) that the open and close
+operations on any tables be performed within their own unique
+transactions.
+
+In order to explain the above in more detail, consider this scenario
+(each of the below is within a unique transaction).
+
+Process PID1 opens table T1 and is given VBISAM handle H1
+
+Process PID2 also opens table T1 and is also given VBISAM handle H1
+
+Process PID1 performs various operations upon handle H1
+
+Process PID2 also opens table T1 and is also given VBISAM handle H1
+
+Process PID1 performs more operations upon handle H1
+
+Process PID2 also performs more operations upon handle H1
+
+Process PID1 closes handle H1
+
+Process PID2 closes handle H1
+
+ISROLLBACK
+
+Because each process has its transactions uniquely stamped with its own
+process ID, there is no risk of any ISROLLBACK conflicts between the
+processes.  Additionally, if either process had closed the table
+(outside of a transaction) and then performed actions upon that handle
+(inside a transaction), then the ISROLLBACK would perform as expected. 
+The ISROLLBACK function is written so as to `undo' the effect of all
+possible transactions from the current transaction (the ISROLLBACK
+itself) all the way back to the most recent BEGIN transaction for the
+current process.  Although it should never occur in practice, the
+ISROLLBACK will fail if it does not locate a corresponding BEGIN
+transaction and the tables in question need to be considered corrupted.
+
+ISRECOVER
+
+This is the trickier scenario to deal with.  The concept of ISRECOVER is
+to replay all transactions within a log file independently of whichever
+process ID generated the transactions.  Additionally, these transactions
+must be replayed chronologically as there may have been adverse
+interactions upon the same table between different processes. 
+Therefore, the ISRECOVER processing code needs to build it's own
+internal cross-reference list containing the transaction PID / HANDLE
+and the corresponding handle of the table from the process running the
+ISRECOVER function itself.  There is an extremely high possibility that
+during the processing of an ISRECOVER, the library will exceed the
+number of available file handles due to the fact that the ISRECOVER
+needs to open the same tables of ALL processes that were writing
+transactions to the log file.  Therefore, the cross-reference list also
+contains the table name from the open transaction and has been written
+to dynamically open / close tables on an on-demand basis.
+
+Appendix A
+
+Informix® CISAMtm versus VBISAM - Differences
+
+Overview
+
+There are a few subtle differences between VBISAM and CISAMtm.  These
+differences are dependant upon whether VBISAM has been compiled for
+64-bit file I/O or 32-bit file I/O.
+
+32-bit file I/O differences
+
+The following is a list of differences a user needs to be aware of when
+converting a program from CISAM to VBISAM:
+
+Constants defined differently
+
+NPARTS is defined as 8 in CISAM. NPARTS is defined as 32 in VBISAM. 
+This has direct implications when dealing with Informix® SE based CISAM
+databases as the SYSINDEXES catalog implicitly expects up to 8 parts per
+index.
+
+MAXKEYSIZE is 120 in CISAM.  In VBISAM, MAXKEYSIZE is dependant on the
+node length of the file.  The intent being to define it such that at
+least 8 entries will fit into any given index node.
+
+VBISAM currently imposes a limit (MAXSUBS) on the number of indexes on
+any given file.  The default value of MAXSUBS is 32.  Future versions of
+VBISAM will completely remove this restriction by making the associated
+structures that are dependant on MAXSUBS dynamic.
+
+ISRECNUM changes from LONG to OFF_T.  (Same effective length, but allows
+for easy migration to 64-bit file I/O, may require addition of type
+casts in code)
+
+ISRECLEN changes from INT to OFF_T.  (Same effective length, but allows
+for easy migration to 64-bit file I/O, may require addition of type
+casts in code)
+
+ISERRIO is not used
+
+KEYDESC structure
+
+The K_ROOTNODE (TROOTNODE) variable changes type from LONG to OFF_T. In
+a normal IA32 32-bit system, this has no direct effect on the length of
+the structure, but to avoid compilation warnings / errors, casting may
+be required.
+
+DICTINFO structure
+
+The DI_NRECORDS changes from LONG to OFF_T (to allow for easy migration
+to 64-bit file I/O).  May require type casts to avoid compilation
+warnings.
+
+64-bit file I/O differences
+
+The above differences for 32-bit file I/O are all relevant for 64-bit
+file I/O.  In addition, there are the following differences:
+
+The variables defined as OFF_T in VBISAM become 64-bit values and this
+changes the size of the KEYDESC, KEYPART and DICTINFO structures as well
+as the ISRECNUM and ISRECLEN variables.
+
+The underlying VBISAM files are physically incompatible due to 32-bit
+versus 64-bit values contained therein
+
+The leading / trailing key compression lengths change from 8-bit to
+16-bit values
+
+The row / node number and duplicate number within the B+ Tree node
+become 64 bit values
+
+An additional value is stored in the B+ Tree node being the transaction
+number that caused the last write to this node.  This speeds processing
+of the iNodeLoad function by suppressing the need to de-compress the
+node again if it hasn't been changed since the last time it was read.

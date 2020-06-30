@@ -1,0 +1,94 @@
+AT_SETUP([USERFH - READ LOCK - so])
+
+AT_CHECK([test $SHREXT != "dll" || exit 77])
+
+AT_DATA([hoge.c], [
+#include <stdio.h>
+#include <string.h>
+#include <libcob/fileio.h>
+
+int hoge (unsigned char *s1, unsigned char *s2, unsigned char *s3, unsigned char *s4,
+          unsigned char *s5, unsigned char *s6, unsigned char *s7, unsigned char *s8,
+          unsigned char **s9, unsigned char *s10)
+{
+	if (s8) {
+		printf("%s", s8);
+	}
+	return 0;
+}
+])
+
+AT_DATA([prog.cob], [
+       IDENTIFICATION        DIVISION.
+       PROGRAM-ID.           prog.
+       ENVIRONMENT           DIVISION.
+       INPUT-OUTPUT          SECTION.
+       FILE-CONTROL.
+       SELECT INPUT-FILE     ASSIGN TO "./input.txt".
+       DATA                  DIVISION.
+       FILE                  SECTION.
+       FD  INPUT-FILE.
+       01  INPUT-REC.
+           03  REC-KEY1      PIC X(4).
+           03  REC-KEY2      PIC X(4).
+       PROCEDURE             DIVISION.
+           OPEN INPUT INPUT-FILE.
+           READ INPUT-FILE WITH IGNORE LOCK.
+           CLOSE INPUT-FILE.
+           STOP RUN.
+])
+
+AT_CHECK([echo -n 12341234 >input.txt], [0])
+AT_CHECK([${CC} -shared -I${abs_top_srcdir} -o hoge.${SHREXT} hoge.c -fPIC])
+AT_CHECK([${COMPILE} -x prog.cob])
+AT_CHECK([export OC_USERFH=hoge && ./prog], [0], [257])
+
+AT_CLEANUP
+
+AT_SETUP([USERFH - READ LOCK - dll])
+
+AT_CHECK([test $SHREXT = "dll" || exit 77])
+
+AT_DATA([hoge.c], [
+#include <stdio.h>
+#include <string.h>
+#include <libcob/fileio.h>
+
+int hoge (unsigned char *s1, unsigned char *s2, unsigned char *s3, unsigned char *s4,
+          unsigned char *s5, unsigned char *s6, unsigned char *s7, unsigned char *s8,
+          unsigned char **s9, unsigned char *s10)
+{
+	if (s8) {
+		printf("%s", s8);
+	}
+	return 0;
+}
+])
+
+AT_DATA([prog.cob], [
+       IDENTIFICATION        DIVISION.
+       PROGRAM-ID.           prog.
+       ENVIRONMENT           DIVISION.
+       INPUT-OUTPUT          SECTION.
+       FILE-CONTROL.
+       SELECT INPUT-FILE     ASSIGN TO "./input.txt".
+       DATA                  DIVISION.
+       FILE                  SECTION.
+       FD  INPUT-FILE.
+       01  INPUT-REC.
+           03  REC-KEY1      PIC X(4).
+           03  REC-KEY2      PIC X(4).
+       PROCEDURE             DIVISION.
+           OPEN INPUT INPUT-FILE.
+           READ INPUT-FILE WITH IGNORE LOCK.
+           CLOSE INPUT-FILE.
+           STOP RUN.
+])
+
+AT_CHECK([echo -n 12341234 >input.txt], [0])
+AT_CHECK([${CC} -shared -I${abs_top_srcdir} -o hoge.${SHREXT} hoge.c])
+AT_CHECK([${COMPILE} -x prog.cob])
+AT_CHECK([export OC_USERFH=hoge && ./prog], [0], [257])
+
+AT_CLEANUP
+

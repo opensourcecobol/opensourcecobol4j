@@ -1,0 +1,23 @@
+AT_SETUP([GREATER/LESS THAN (implicit 'OR') EQUAL])
+
+AT_DATA([prog.cob], [
+       IDENTIFICATION   DIVISION.
+       PROGRAM-ID.      prog.
+       PROCEDURE        DIVISION.
+           IF 1 GREATER THAN EQUAL 1 THEN
+               DISPLAY "GE OK"
+           END-IF.
+           IF 1 LESS THAN EQUAL 1 THEN
+               DISPLAY "LE OK"
+           END-IF.
+           GOBACK.
+])
+
+AT_CHECK([${COMPILE} prog.cob], [0])
+
+AT_CHECK([./prog], [0],
+[GE OK
+LE OK
+])
+
+AT_CLEANUP

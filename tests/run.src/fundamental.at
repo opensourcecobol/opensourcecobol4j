@@ -1,0 +1,308 @@
+### OpenCOBOL Test Suite				-*- m4 -*-
+
+## Copyright (C) 2003-2009 Keisuke Nishida
+## Copyright (C) 2007-2009 Roger While
+##
+## This program is free software; you can redistribute it and/or modify
+## it under the terms of the GNU General Public License as published by
+## the Free Software Foundation; either version 2, or (at your option)
+## any later version.
+## 
+## This program is distributed in the hope that it will be useful,
+## but WITHOUT ANY WARRANTY; without even the implied warranty of
+## MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+## GNU General Public License for more details.
+## 
+## You should have received a copy of the GNU General Public License
+## along with this software; see the file COPYING.  If not, write to
+## the Free Software Foundation, 51 Franklin Street, Fifth Floor
+## Boston, MA 02110-1301 USA
+
+### Fundamental Tests
+
+AT_SETUP([DISPLAY literals])
+
+AT_DATA([prog.cob], [
+       IDENTIFICATION   DIVISION.
+       PROGRAM-ID.      prog.
+       PROCEDURE        DIVISION.
+           DISPLAY "abc"
+           END-DISPLAY.
+           DISPLAY  123
+           END-DISPLAY.
+           DISPLAY +123
+           END-DISPLAY.
+           DISPLAY -123
+           END-DISPLAY.
+           DISPLAY  12.3
+           END-DISPLAY.
+           DISPLAY +12.3
+           END-DISPLAY.
+           DISPLAY -12.3
+           END-DISPLAY.
+           STOP RUN.
+])
+
+AT_CHECK([${COMPILE} prog.cob])
+AT_CHECK([./prog], [0],
+[abc
+123
++123
+-123
+12.3
++12.3
+-12.3
+])
+
+AT_CLEANUP
+
+
+AT_SETUP([DISPLAY literals, DECIMAL-POINT is COMMA])
+
+AT_DATA([prog.cob], [
+       IDENTIFICATION   DIVISION.
+       PROGRAM-ID.      prog.
+       ENVIRONMENT      DIVISION.
+       CONFIGURATION    SECTION.
+       SPECIAL-NAMES.
+           DECIMAL-POINT    IS COMMA.
+       PROCEDURE        DIVISION.
+           DISPLAY  12,3
+           END-DISPLAY.
+           DISPLAY +12,3
+           END-DISPLAY.
+           DISPLAY -12,3
+           END-DISPLAY.
+           STOP RUN.
+])
+
+AT_CHECK([${COMPILE} prog.cob])
+AT_CHECK([./prog], [0],
+[12,3
++12,3
+-12,3
+])
+
+AT_CLEANUP
+
+AT_SETUP([Hexadecimal literal])
+
+AT_DATA([dump.c], [
+#include <stdio.h>
+int dump (unsigned char *data);
+int dump (unsigned char *data)
+{
+  int i;
+  for (i = 0; i < 4; i++)
+    printf ("%02x", data[[i]]);
+  puts ("");
+  return 0;
+}
+])
+
+AT_CHECK([${CC} ${SHROPT} -o dump.${SHREXT} dump.c])
+
+AT_DATA([prog.cob], [
+       IDENTIFICATION   DIVISION.
+       PROGRAM-ID.      prog.
+       PROCEDURE        DIVISION.
+           DISPLAY X"313233"
+           END-DISPLAY.
+           CALL "dump" USING X"000102"
+           END-CALL.
+           STOP RUN.
+])
+
+AT_CHECK([${COMPILE} prog.cob])
+AT_CHECK([./prog], [0],
+[123
+00010200
+])
+
+AT_CLEANUP
+
+AT_SETUP([DISPLAY data items with VALUE clause])
+
+AT_DATA([prog.cob], [
+       IDENTIFICATION   DIVISION.
+       PROGRAM-ID.      prog.
+       DATA             DIVISION.
+       WORKING-STORAGE  SECTION.
+       01 X-ABC         PIC XXX   VALUE "abc".
+       01 X-123         PIC 999   VALUE  123.
+       01 X-P123        PIC S999  VALUE +123.
+       01 X-N123        PIC S999  VALUE -123.
+       01 X-12-3        PIC 99V9  VALUE  12.3.
+       01 X-P12-3       PIC S99V9 VALUE +12.3.
+       01 X-N12-3       PIC S99V9 VALUE -12.3.
+       PROCEDURE        DIVISION.
+           DISPLAY X-ABC
+           END-DISPLAY.
+           DISPLAY X-123
+           END-DISPLAY.
+           DISPLAY X-P123
+           END-DISPLAY.
+           DISPLAY X-N123
+           END-DISPLAY.
+           DISPLAY X-12-3
+           END-DISPLAY.
+           DISPLAY X-P12-3
+           END-DISPLAY.
+           DISPLAY X-N12-3
+           END-DISPLAY.
+           STOP RUN.
+])
+
+AT_CHECK([${COMPILE} prog.cob])
+AT_CHECK([./prog], [0],
+[abc
+123
++123
+-123
+12.3
++12.3
+-12.3
+])
+
+AT_CLEANUP
+
+AT_SETUP([DISPLAY data items with MOVE statement])
+
+AT_DATA([prog.cob], [
+       IDENTIFICATION   DIVISION.
+       PROGRAM-ID.      prog.
+       DATA             DIVISION.
+       WORKING-STORAGE  SECTION.
+       01 X-ABC         PIC XXX   VALUE "abc".
+       01 X-123         PIC 999   VALUE  123.
+       01 X-P123        PIC S999  VALUE +123.
+       01 X-N123        PIC S999  VALUE -123.
+       01 X-12-3        PIC 99V9  VALUE  12.3.
+       01 X-P12-3       PIC S99V9 VALUE +12.3.
+       01 X-N12-3       PIC S99V9 VALUE -12.3.
+       PROCEDURE        DIVISION.
+           MOVE "abc" TO X-ABC.    DISPLAY X-ABC
+           END-DISPLAY.
+           MOVE  123  TO X-123.    DISPLAY X-123
+           END-DISPLAY.
+           MOVE +123  TO X-P123.   DISPLAY X-P123
+           END-DISPLAY.
+           MOVE -123  TO X-N123.   DISPLAY X-N123
+           END-DISPLAY.
+           MOVE  12.3 TO X-12-3.   DISPLAY X-12-3
+           END-DISPLAY.
+           MOVE +12.3 TO X-P12-3.  DISPLAY X-P12-3
+           END-DISPLAY.
+           MOVE -12.3 TO X-N12-3.  DISPLAY X-N12-3
+           END-DISPLAY.
+           STOP RUN.
+])
+
+AT_CHECK([${COMPILE} prog.cob])
+AT_CHECK([./prog], [0],
+[abc
+123
++123
+-123
+12.3
++12.3
+-12.3
+])
+
+AT_CLEANUP
+
+
+AT_SETUP([GLOBAL at same level])
+
+AT_DATA([prog.cob], [
+       IDENTIFICATION   DIVISION.
+       PROGRAM-ID.      prog.
+       DATA DIVISION.
+       WORKING-STORAGE SECTION.
+       01  X   PIC X(5) GLOBAL  VALUE "prog1".
+       PROCEDURE        DIVISION.
+           DISPLAY X
+           END-DISPLAY.
+           CALL "prog2"
+           END-CALL
+           CALL "prog3"
+           END-CALL
+           STOP RUN.
+        IDENTIFICATION   DIVISION.
+        PROGRAM-ID.      prog2.
+        DATA DIVISION.
+        WORKING-STORAGE SECTION.
+        01  X   PIC X(5) GLOBAL  VALUE "prog2".
+        PROCEDURE        DIVISION.
+            DISPLAY X
+            END-DISPLAY.
+            EXIT PROGRAM.
+        END PROGRAM prog2.
+        IDENTIFICATION   DIVISION.
+        PROGRAM-ID.      prog3.
+        DATA DIVISION.
+        WORKING-STORAGE SECTION.
+        PROCEDURE        DIVISION.
+            DISPLAY X
+            END-DISPLAY.
+            EXIT PROGRAM.
+        END PROGRAM prog3.
+       END PROGRAM prog.
+])
+
+AT_CHECK([${COMPILE} prog.cob])
+AT_CHECK([./prog], [0],
+[prog1
+prog2
+prog1
+])
+
+AT_CLEANUP
+
+
+AT_SETUP([GLOBAL at lower level])
+
+AT_DATA([prog.cob], [
+       IDENTIFICATION   DIVISION.
+       PROGRAM-ID.      prog.
+       DATA DIVISION.
+       WORKING-STORAGE SECTION.
+       01  X   PIC X(5) GLOBAL  VALUE "prog1".
+       PROCEDURE        DIVISION.
+           DISPLAY X
+           END-DISPLAY.
+           CALL "prog2"
+           END-CALL
+           CALL "prog3"
+           END-CALL
+           STOP RUN.
+        IDENTIFICATION   DIVISION.
+        PROGRAM-ID.      prog2.
+        DATA DIVISION.
+        WORKING-STORAGE SECTION.
+        01  X   PIC X(5) GLOBAL  VALUE "prog2".
+        PROCEDURE        DIVISION.
+            DISPLAY X
+            END-DISPLAY.
+            EXIT PROGRAM.
+         IDENTIFICATION   DIVISION.
+         PROGRAM-ID.      prog3.
+         DATA DIVISION.
+         WORKING-STORAGE SECTION.
+         PROCEDURE        DIVISION.
+             DISPLAY X
+             END-DISPLAY.
+             EXIT PROGRAM.
+         END PROGRAM prog3.
+        END PROGRAM prog2.
+       END PROGRAM prog.
+])
+
+AT_CHECK([${COMPILE} prog.cob])
+AT_CHECK([./prog], [0],
+[prog1
+prog2
+prog2
+])
+
+AT_CLEANUP

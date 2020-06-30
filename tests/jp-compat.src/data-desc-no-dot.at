@@ -1,0 +1,97 @@
+AT_SETUP([Data description unterminated])
+
+AT_DATA([prog.cob], [
+       IDENTIFICATION   DIVISION.
+       PROGRAM-ID.      prog.
+       DATA             DIVISION.
+       WORKING-STORAGE  SECTION.
+       01 X-01 PIC X VALUE "A"
+       01 X-02 PIC X
+       PROCEDURE        DIVISION.
+           MOVE "B" TO X-02.
+           DISPLAY X-01 X-02 WITH NO ADVANCING.
+          GOBACK.
+])
+
+AT_CHECK([${COMPILE_JP_COMPAT} prog.cob], [0])
+AT_CHECK([./prog], [0], [AB])
+AT_CLEANUP
+
+AT_SETUP([Data desc. ambiguous level-num 1])
+
+AT_DATA([prog.cob], [
+       IDENTIFICATION   DIVISION.
+       PROGRAM-ID.      prog.
+       DATA             DIVISION.
+       WORKING-STORAGE  SECTION.
+       01 X-01 PIC 9 VALUE 03
+       01 X-02 PIC 9
+       PROCEDURE        DIVISION.
+           MOVE 4 TO X-02.
+           DISPLAY X-01 X-02 WITH NO ADVANCING.
+          GOBACK.
+])
+
+AT_CHECK([${COMPILE_JP_COMPAT} prog.cob], [0])
+AT_CHECK([./prog], [0], [34])
+AT_CLEANUP
+
+AT_SETUP([Data desc. ambiguous level-num 2])
+
+AT_DATA([prog.cob], [
+       IDENTIFICATION   DIVISION.
+       PROGRAM-ID.      prog.
+       DATA             DIVISION.
+       WORKING-STORAGE  SECTION.
+       01 X-01 PIC 9 VALUE
+       03
+       01 X-02 PIC 9
+       PROCEDURE        DIVISION.
+           MOVE 4 TO X-02.
+           DISPLAY X-01 X-02 WITH NO ADVANCING.
+          GOBACK.
+])
+
+AT_CHECK([${COMPILE_JP_COMPAT} prog.cob], [0])
+AT_CHECK([./prog], [0], [34])
+AT_CLEANUP
+
+AT_SETUP([Data desc. level-num error after 88])
+
+AT_DATA([prog.cob], [
+       IDENTIFICATION   DIVISION.
+       PROGRAM-ID.      prog.
+       DATA             DIVISION.
+       WORKING-STORAGE  SECTION.
+       01 X-01 PIC 9
+          88 V-01 VALUES 01
+       02
+       03.
+       01 X-02 PIC 9
+       01 X-03 PIC 9
+          88 V-03 VALUES 01 02 03
+       01 X-04 PIC 9
+       PROCEDURE        DIVISION.
+          GOBACK.
+])
+
+AT_CHECK([${COMPILE_JP_COMPAT} prog.cob], [1], [],
+[prog.cob:10: Error: syntax error, unexpected Identifier, expecting end of file or FUNCTION-ID or PROGRAM-ID
+])
+AT_CLEANUP
+
+AT_SETUP([Data desc. ambiguous level-num (degrade check)])
+
+AT_DATA([prog.cob], [
+       IDENTIFICATION   DIVISION.
+       PROGRAM-ID.      prog.
+       DATA             DIVISION.
+       WORKING-STORAGE  SECTION.
+       01 X-01 PIC 9. 01
+       X-02 PIC 9.
+       PROCEDURE        DIVISION.
+          GOBACK.
+])
+
+AT_CHECK([${COMPILE_JP_COMPAT} prog.cob], [0])
+AT_CLEANUP

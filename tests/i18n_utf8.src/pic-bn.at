@@ -1,0 +1,61 @@
+AT_SETUP([PIC BN Value clause])
+
+AT_DATA([prog.cob], [
+       IDENTIFICATION   DIVISION.
+       PROGRAM-ID.      prog.
+       DATA             DIVISION.
+       WORKING-STORAGE  SECTION.
+       01 F0 PIC BN(3) VALUE "日本語".
+      * PIC B has no effects on initial VALUE.
+      * See JIS X3002 13.16.61.2 8)
+       PROCEDURE        DIVISION.
+           DISPLAY F0 WITH NO ADVANCING.
+           STOP RUN.
+])
+
+AT_CHECK([${COMPILE} -x prog.cob])
+AT_CHECK([./prog], [0], [日本語   ])
+
+AT_CLEANUP
+
+AT_SETUP([PIC BN Move])
+
+AT_DATA([prog.cob], [
+       IDENTIFICATION   DIVISION.
+       PROGRAM-ID.      prog.
+       DATA             DIVISION.
+       WORKING-STORAGE  SECTION.
+       01 F0 PIC BN(3).
+       PROCEDURE        DIVISION.
+           MOVE "日本語" TO F0.
+           DISPLAY F0 WITH NO ADVANCING.
+           STOP RUN.
+])
+
+AT_CHECK([${COMPILE} -x prog.cob])
+AT_CHECK([./prog], [0], [　日本語])
+
+AT_CLEANUP
+
+AT_SETUP([PIC BN Refmod char by char])
+
+AT_DATA([prog.cob], [
+       IDENTIFICATION   DIVISION.
+       PROGRAM-ID.      prog.
+       DATA             DIVISION.
+       WORKING-STORAGE  SECTION.
+       01 F0 PIC BN(3) VALUE "日本語".
+      * PIC B has no effects on initial VALUE.
+      * See JIS X3002 13.16.61.2 8)
+       PROCEDURE        DIVISION.
+           DISPLAY F0(1:3) WITH NO ADVANCING.
+           DISPLAY F0(4:3) WITH NO ADVANCING.
+           DISPLAY F0(7:3) WITH NO ADVANCING.
+           DISPLAY F0(10:3) WITH NO ADVANCING.
+           STOP RUN.
+])
+
+AT_CHECK([${COMPILE} -x prog.cob])
+AT_CHECK([./prog], [0], [日本語   ])
+
+AT_CLEANUP

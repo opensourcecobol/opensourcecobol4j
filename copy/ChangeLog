@@ -1,0 +1,22 @@
+2012-08-30   Luke Bryan <lukebryan@bdumail.com> 
+
+   * screenio.cpy : Added for extended Accept: 
+                       Tab = 2007 return code. 
+                       Back tab = 2008 return code. 
+
+2008-08-09  Roger While <simrw@sim-basis.de>
+
+	* Add color definitions  to screenio.cpy
+
+2008-07-05  Roger While <simrw@sim-basis.de>
+
+	* Extend screenio.cpy
+
+2008-06-24  Roger While <simrw@sim-basis.de>
+
+	* Add screenio.cpy
+
+2008-04-16  Roger While <simrw@sim-basis.de>
+
+	* New directory "copy" for OC supplied COPY elements
+	* Add Makefile*, ChangeLog, sqlca.cpy, sqlda.cpy

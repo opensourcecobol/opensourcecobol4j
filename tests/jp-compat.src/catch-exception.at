@@ -1,0 +1,228 @@
+# 1) DONE
+
+AT_SETUP([Divide by zero: by '0' - option yes])
+
+AT_DATA([prog.cob], [
+       IDENTIFICATION   DIVISION.
+       PROGRAM-ID.      prog.
+       DATA             DIVISION.
+       WORKING-STORAGE  SECTION.
+       01 X             PIC 9.
+       PROCEDURE        DIVISION.
+           MOVE 1 TO X.
+           DIVIDE X BY 0 GIVING X.
+           GOBACK.
+])
+
+AT_CHECK([${COMPILE_JP_COMPAT} prog.cob], [1], ,
+[prog.cob:9: Error: Detected division by zero.
+])
+
+AT_CLEANUP
+
+
+# 2) DONE
+
+AT_SETUP([Divide by zero: by '0' - option no])
+
+AT_DATA([prog.cob], [
+       IDENTIFICATION   DIVISION.
+       PROGRAM-ID.      prog.
+       DATA             DIVISION.
+       WORKING-STORAGE  SECTION.
+       01 X             PIC 9.
+       PROCEDURE        DIVISION.
+           MOVE 1 TO X.
+           DIVIDE X BY 0 GIVING X.
+           DISPLAY X.
+           GOBACK.
+])
+
+AT_CHECK([${COMPILE} prog.cob])
+AT_CHECK([./prog], [0],
+[1
+])
+
+AT_CLEANUP
+
+
+# 3) DONE
+
+AT_SETUP([Divide by zero: by variable - option yes])
+
+AT_DATA([prog.cob], [
+       IDENTIFICATION   DIVISION.
+       PROGRAM-ID.      prog.
+       DATA             DIVISION.
+       WORKING-STORAGE  SECTION.
+       01 X             PIC 9.
+       01 Y             PIC 9.
+       PROCEDURE        DIVISION.
+           MOVE 1 TO X.
+           MOVE 0 TO Y.
+           DIVIDE X BY Y GIVING X.
+           GOBACK.
+])
+
+AT_CHECK([${COMPILE_JP_COMPAT} prog.cob])
+AT_CHECK([./prog], [1], ,
+[prog.cob:11: libcob: Detected division by zero.
+])
+
+AT_CLEANUP
+
+
+# 4) DONE
+
+AT_SETUP([Divide by zero: by variable - option no])
+
+AT_DATA([prog.cob], [
+       IDENTIFICATION   DIVISION.
+       PROGRAM-ID.      prog.
+       DATA             DIVISION.
+       WORKING-STORAGE  SECTION.
+       01 X             PIC 9.
+       01 Y             PIC 9.
+       PROCEDURE        DIVISION.
+           MOVE 1 TO X.
+           MOVE 0 TO Y.
+           DIVIDE X BY Y GIVING X.
+           DISPLAY X.
+           GOBACK.
+])
+
+AT_CHECK([${COMPILE} prog.cob])
+AT_CHECK([./prog], [0],
+[1
+])
+
+AT_CLEANUP
+
+# 5) DONE
+
+AT_SETUP([Divide by zero: by '0' compute - option yes])
+
+AT_DATA([prog.cob], [
+       IDENTIFICATION   DIVISION.
+       PROGRAM-ID.      prog.
+       DATA             DIVISION.
+       WORKING-STORAGE  SECTION.
+       01 X             PIC 9.
+       PROCEDURE        DIVISION.
+           MOVE 1 TO X.
+           COMPUTE X = X / 0.
+           GOBACK.
+])
+
+AT_CHECK([${COMPILE_JP_COMPAT} prog.cob], [1], ,
+[prog.cob:9: Error: Detected division by zero.
+])
+
+AT_CLEANUP
+
+
+# 6) DONE
+
+AT_SETUP([Divide by zero: by '0' compute - option no])
+
+AT_DATA([prog.cob], [
+       IDENTIFICATION   DIVISION.
+       PROGRAM-ID.      prog.
+       DATA             DIVISION.
+       WORKING-STORAGE  SECTION.
+       01 X             PIC 9.
+       PROCEDURE        DIVISION.
+           MOVE 1 TO X.
+           COMPUTE X = X / 0.
+           DISPLAY X.
+           GOBACK.
+])
+
+AT_CHECK([${COMPILE} prog.cob])
+AT_CHECK([./prog], [0],
+[1
+])
+
+AT_CLEANUP
+
+
+# 7) DONE
+
+AT_SETUP([Divide by zero: by variable compute - option yes])
+
+AT_DATA([prog.cob], [
+       IDENTIFICATION   DIVISION.
+       PROGRAM-ID.      prog.
+       DATA             DIVISION.
+       WORKING-STORAGE  SECTION.
+       01 X             PIC 9.
+       01 Y             PIC 9.
+       PROCEDURE        DIVISION.
+           MOVE 1 TO X.
+           MOVE 0 TO Y.
+           COMPUTE X = X / Y.
+           GOBACK.
+])
+
+AT_CHECK([${COMPILE_JP_COMPAT} prog.cob])
+AT_CHECK([./prog], [1], ,
+[prog.cob:11: libcob: Detected division by zero.
+])
+
+AT_CLEANUP
+
+
+# 8) DONE
+
+AT_SETUP([Divide by zero: by variable compute - option no])
+
+AT_DATA([prog.cob], [
+       IDENTIFICATION   DIVISION.
+       PROGRAM-ID.      prog.
+       DATA             DIVISION.
+       WORKING-STORAGE  SECTION.
+       01 X             PIC 9.
+       01 Y             PIC 9.
+       PROCEDURE        DIVISION.
+           MOVE 1 TO X.
+           MOVE 0 TO Y.
+           COMPUTE X = X / Y.
+           DISPLAY X.
+           GOBACK.
+])
+
+AT_CHECK([${COMPILE} prog.cob])
+AT_CHECK([./prog], [0],
+[1
+])
+
+AT_CLEANUP
+
+
+# 9) DONE
+
+AT_SETUP([Divide by zero: by variable with on size error])
+
+AT_DATA([prog.cob], [
+       IDENTIFICATION   DIVISION.
+       PROGRAM-ID.      prog.
+       DATA             DIVISION.
+       WORKING-STORAGE  SECTION.
+       01 X             PIC 9.
+       01 Y             PIC 9.
+       PROCEDURE        DIVISION.
+           MOVE 1 TO X.
+           MOVE 0 TO Y.
+           COMPUTE X = X / Y
+             ON SIZE ERROR
+                DISPLAY "ON SIZE ERROR"
+           END-COMPUTE.
+           GOBACK.
+])
+
+AT_CHECK([${COMPILE_JP_COMPAT} prog.cob])
+AT_CHECK([./prog], [0],
+[ON SIZE ERROR
+])
+
+AT_CLEANUP

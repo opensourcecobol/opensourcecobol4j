@@ -1,0 +1,167 @@
+AT_SETUP([COB_DATE])
+
+AT_DATA([prog.cob], [
+       IDENTIFICATION   DIVISION.
+       PROGRAM-ID.      prog.
+       DATA             DIVISION.
+       WORKING-STORAGE  SECTION.
+       01  DATE-YMD.
+         03  DATE-YY PIC X(2).
+         03  DATE-MM PIC X(2).
+         03  DATE-DD PIC X(2).
+       PROCEDURE        DIVISION.
+           ACCEPT DATE-YMD FROM DATE.
+           DISPLAY DATE-YMD.
+           GOBACK.
+])
+
+AT_CHECK([${COMPILE_JP_COMPAT} -o prog prog.cob])
+AT_CHECK([COB_DATE=1970/01/02 ./prog], [0], [700102
+])
+
+AT_CLEANUP
+
+
+AT_SETUP([COB_DATE YYYYMMDD])
+
+AT_DATA([prog.cob], [
+       IDENTIFICATION   DIVISION.
+       PROGRAM-ID.      prog.
+       DATA             DIVISION.
+       WORKING-STORAGE  SECTION.
+       01  DATE-YMD.
+         03  DATE-YYYY PIC X(4).
+         03  DATE-MM   PIC X(2).
+         03  DATE-DD   PIC X(2).
+       PROCEDURE        DIVISION.
+           ACCEPT DATE-YMD FROM DATE YYYYMMDD.
+           DISPLAY DATE-YMD.
+           GOBACK.
+])
+
+AT_CHECK([${COMPILE_JP_COMPAT} -o prog prog.cob])
+AT_CHECK([COB_DATE=1970/01/02 ./prog], [0], [19700102
+])
+
+AT_CLEANUP
+
+AT_SETUP([COB_DATE DAY])
+
+AT_DATA([prog.cob], [
+       IDENTIFICATION   DIVISION.
+       PROGRAM-ID.      prog.
+       DATA             DIVISION.
+       WORKING-STORAGE  SECTION.
+       01  DAY-YD.
+         03  DAY-YY PIC X(2).
+         03  DAY-DD PIC X(3).
+       PROCEDURE        DIVISION.
+           ACCEPT DAY-YD FROM DAY.
+           DISPLAY DAY-YD.
+           GOBACK.
+])
+
+AT_CHECK([${COMPILE_JP_COMPAT} -o prog prog.cob])
+AT_CHECK([COB_DATE=1970/02/01 ./prog], [0], [70032
+])
+
+AT_CLEANUP
+
+AT_SETUP([COB_DATE DAY YYYYDDD])
+
+AT_DATA([prog.cob], [
+       IDENTIFICATION   DIVISION.
+       PROGRAM-ID.      prog.
+       DATA             DIVISION.
+       WORKING-STORAGE  SECTION.
+       01  DAY-YD.
+         03  DAY-YYYY PIC X(4).
+         03  DAY-DD   PIC X(3).
+       PROCEDURE        DIVISION.
+           ACCEPT DAY-YD FROM DAY YYYYDDD.
+           DISPLAY DAY-YD.
+           GOBACK.
+])
+
+AT_CHECK([${COMPILE_JP_COMPAT} -o prog prog.cob])
+AT_CHECK([COB_DATE=1970/02/01 ./prog], [0], [1970032
+])
+
+AT_CLEANUP
+
+AT_SETUP([COB_DATE FUNC. CURRENT-DATE])
+
+AT_DATA([prog.cob], [
+       IDENTIFICATION   DIVISION.
+       PROGRAM-ID.      prog.
+       DATA             DIVISION.
+       WORKING-STORAGE  SECTION.
+       01  CURR-DATE.
+         03  CURR-YYYY PIC X(4).
+         03  CURR-MM   PIC X(2).
+         03  CURR-DD   PIC X(2).
+         03  FILLER    PIC X(13).
+       PROCEDURE        DIVISION.
+           MOVE FUNCTION CURRENT-DATE TO CURR-DATE.
+           DISPLAY CURR-YYYY CURR-MM CURR-DD.
+           GOBACK.
+])
+
+AT_CHECK([${COMPILE_JP_COMPAT} -o prog prog.cob])
+AT_CHECK([COB_DATE=1970/01/02 ./prog], [0], [19700102
+])
+
+AT_CLEANUP
+
+AT_SETUP([COB_DATE FUNC. CURRENT-DATE of time])
+
+AT_CHECK([test $SHREXT != "dll" || exit 77])
+
+AT_DATA([prog.cob], [
+       IDENTIFICATION   DIVISION.
+       PROGRAM-ID.      prog.
+       DATA             DIVISION.
+       WORKING-STORAGE  SECTION.
+       01  CURR-DATE.
+         03  CURR-YYYY PIC 9(4).
+         03  CURR-MM   PIC 9(2).
+         03  CURR-DD   PIC 9(2).
+         03  CURR-H    PIC 9(2).
+         03  CURR-M    PIC 9(2).
+         03  CURR-S    PIC 9(2).
+         03  FILLER    PIC X(7).
+       01 CMDLN.
+         03  CMDLN-CMD  PIC X(18) VALUE 'expr \( `date +%s`';
+         03  FILLER     PIC X(3)  VALUE ' - ';
+         03  CMDLN-DT1  PIC X(8)  VALUE '`date -d';
+         03  FILLER     PIC X(1)  VALUE "'";
+         03  CMDLN-YYYY PIC 9(4);
+         03  FILLER     PIC X(1)  VALUE '-';
+         03  CMDLN-MM   PIC 9(2);
+         03  FILLER     PIC X(1)  VALUE '-';
+         03  CMDLN-DD   PIC 9(2);
+         03  FILLER     PIC X(1)  VALUE ' ';
+         03  CMDLN-H    PIC 9(2);
+         03  FILLER     PIC X(1)  VALUE ':';
+         03  CMDLN-M    PIC 9(2);
+         03  FILLER     PIC X(1)  VALUE ':';
+         03  CMDLN-S    PIC 9(2);
+         03  FILLER     PIC X(1)  VALUE "'";
+         03  CMDLN_DT2  PIC X(13) VALUE ' +%s` \) / 2';
+       PROCEDURE        DIVISION.
+           MOVE FUNCTION CURRENT-DATE TO CURR-DATE.
+           MOVE CURR-YYYY TO CMDLN-YYYY.
+           MOVE CURR-MM   TO CMDLN-MM.
+           MOVE CURR-DD   TO CMDLN-DD.
+           MOVE CURR-H    TO CMDLN-H.
+           MOVE CURR-M    TO CMDLN-M.
+           MOVE CURR-S    TO CMDLN-S.
+           CALL "SYSTEM" USING CMDLN.
+           GOBACK.
+])
+
+AT_CHECK([${COMPILE_JP_COMPAT} -o prog prog.cob])
+AT_CHECK([COB_DATE=`date +%Y/%m/%d` ./prog], [0], [0
+])
+
+AT_CLEANUP

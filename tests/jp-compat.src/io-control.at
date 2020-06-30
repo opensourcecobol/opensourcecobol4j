@@ -1,0 +1,56 @@
+AT_SETUP([I-O-CONTROL clauses unterminated])
+
+AT_DATA([prog.cob], [
+       IDENTIFICATION   DIVISION.
+       PROGRAM-ID.      prog.
+       ENVIRONMENT      DIVISION.
+       INPUT-OUTPUT     SECTION.
+       FILE-CONTROL.
+           SELECT F01 ASSIGN "TEST-FILE".
+           SELECT F02 ASSIGN "TEST-FILE2".
+       I-O-CONTROL.
+          SAME RECORD AREA FOR F01 F02
+       DATA             DIVISION.
+       FILE             SECTION.
+       FD F01.
+       01 TEST-RECORD.
+         03 TEST-KEY    PIC 9(10).
+       FD F02.
+       01 TEST-RECORD2.
+         03 TEST-KEY2   PIC 9(10).
+])
+
+AT_CHECK([${COMPILE_ONLY} prog.cob])
+
+AT_CLEANUP
+
+AT_SETUP([APPLY Clauses (not supported)])
+
+AT_DATA([prog.cob], [
+       IDENTIFICATION       DIVISION.
+       PROGRAM-ID.          prog.
+       ENVIRONMENT          DIVISION.
+       INPUT-OUTPUT         SECTION.
+       FILE-CONTROL.
+           SELECT FILE1  ASSIGN TO "file1".
+       I-O-CONTROL.
+           APPLY FORMS-OVERLAY TO FMS-OVL   ON FILE1.
+           APPLY CLOSE-NOFEED               ON FILE1.
+           APPLY COMMITMENT-CONTROL         ON FILE1.
+           APPLY CORE-INDEX    TO CORE-IDX  ON FILE1.
+           APPLY CYL-OVERFLOW  OF 10 TRACKS ON FILE1.
+       DATA                 DIVISION.
+       WORKING-STORAGE      SECTION.
+       01 FMS-OVL   PIC X(8).
+       01 CORE-IDX  PIC X(4).
+])
+
+AT_CHECK([${COMPILE_ONLY} prog.cob], [0], [],
+[prog.cob:9: Warning: 'APPLY FORMS-OVERLAY' not implemented
+prog.cob:10: Warning: 'APPLY CLOSE-NOFEED' not implemented
+prog.cob:11: Warning: 'APPLY COMMITMENT-CONTROL' not implemented
+prog.cob:12: Warning: 'APPLY CORE-INDEX' not implemented
+prog.cob:13: Warning: 'APPLY CYL-OVERFLOW' not implemented
+])
+
+AT_CLEANUP

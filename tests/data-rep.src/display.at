@@ -1,0 +1,270 @@
+### OpenCOBOL Test Suite				-*- m4 -*-
+
+## Copyright (C) 2003-2009 Keisuke Nishida
+## Copyright (C) 2007-2009 Roger While
+##
+## This program is free software; you can redistribute it and/or modify
+## it under the terms of the GNU General Public License as published by
+## the Free Software Foundation; either version 2, or (at your option)
+## any later version.
+##
+## This program is distributed in the hope that it will be useful,
+## but WITHOUT ANY WARRANTY; without even the implied warranty of
+## MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+## GNU General Public License for more details.
+##
+## You should have received a copy of the GNU General Public License
+## along with this software; see the file COPYING.  If not, write to
+## the Free Software Foundation, 51 Franklin Street, Fifth Floor
+## Boston, MA 02110-1301 USA
+
+
+AT_SETUP([DISPLAY: Sign ASCII])
+
+AT_DATA([prog.cob], [
+       IDENTIFICATION   DIVISION.
+       PROGRAM-ID.      prog.
+       DATA             DIVISION.
+       WORKING-STORAGE  SECTION.
+       01 G.
+         02 X           PIC X(5).
+         02 X-9         REDEFINES X PIC 9(4).
+         02 X-S9        REDEFINES X PIC S9(4).
+         02 X-S9-L      REDEFINES X PIC S9(4) LEADING.
+         02 X-S9-LS     REDEFINES X PIC S9(4) LEADING SEPARATE.
+         02 X-S9-T      REDEFINES X PIC S9(4) TRAILING.
+         02 X-S9-TS     REDEFINES X PIC S9(4) TRAILING SEPARATE.
+       PROCEDURE        DIVISION.
+           MOVE ZERO TO X. MOVE  1234 TO X-9.     DISPLAY X
+           END-DISPLAY.
+           MOVE ZERO TO X. MOVE  1234 TO X-S9.    DISPLAY X
+           END-DISPLAY.
+           MOVE ZERO TO X. MOVE -1234 TO X-S9.    DISPLAY X
+           END-DISPLAY.
+           MOVE ZERO TO X. MOVE  1234 TO X-S9-L.  DISPLAY X
+           END-DISPLAY.
+           MOVE ZERO TO X. MOVE -1234 TO X-S9-L.  DISPLAY X
+           END-DISPLAY.
+           MOVE ZERO TO X. MOVE  1234 TO X-S9-LS. DISPLAY X
+           END-DISPLAY.
+           MOVE ZERO TO X. MOVE -1234 TO X-S9-LS. DISPLAY X
+           END-DISPLAY.
+           MOVE ZERO TO X. MOVE  1234 TO X-S9-T.  DISPLAY X
+           END-DISPLAY.
+           MOVE ZERO TO X. MOVE -1234 TO X-S9-T.  DISPLAY X
+           END-DISPLAY.
+           MOVE ZERO TO X. MOVE  1234 TO X-S9-TS. DISPLAY X
+           END-DISPLAY.
+           MOVE ZERO TO X. MOVE -1234 TO X-S9-TS. DISPLAY X
+           END-DISPLAY.
+           STOP RUN.
+])
+
+AT_CHECK([${COMPILE} -fsign-ascii -o prog prog.cob])
+AT_CHECK([./prog], [0],
+[12340
+12340
+123t0
+12340
+q2340
++1234
+-1234
+12340
+123t0
+1234+
+1234-
+])
+
+AT_CLEANUP
+
+AT_SETUP([DISPLAY: Sign ASCII (2)])
+
+AT_DATA([prog.cob], [
+       IDENTIFICATION   DIVISION.
+       PROGRAM-ID.      prog.
+       DATA             DIVISION.
+       WORKING-STORAGE  SECTION.
+       01 G.
+         02 X           PIC X(10).
+         02 X-S99       REDEFINES X PIC S99.
+         02 X-S9        REDEFINES X PIC S9 OCCURS 10.
+       PROCEDURE        DIVISION.
+           MOVE 0 TO X-S9(1).
+           MOVE 1 TO X-S9(2).
+           MOVE 2 TO X-S9(3).
+           MOVE 3 TO X-S9(4).
+           MOVE 4 TO X-S9(5).
+           MOVE 5 TO X-S9(6).
+           MOVE 6 TO X-S9(7).
+           MOVE 7 TO X-S9(8).
+           MOVE 8 TO X-S9(9).
+           MOVE 9 TO X-S9(10).
+           DISPLAY X NO ADVANCING
+           END-DISPLAY.
+           MOVE -10 TO X-S99. MOVE X(2:1) TO X(1:1).
+           MOVE -1 TO X-S9(2).
+           MOVE -2 TO X-S9(3).
+           MOVE -3 TO X-S9(4).
+           MOVE -4 TO X-S9(5).
+           MOVE -5 TO X-S9(6).
+           MOVE -6 TO X-S9(7).
+           MOVE -7 TO X-S9(8).
+           MOVE -8 TO X-S9(9).
+           MOVE -9 TO X-S9(10).
+           DISPLAY X NO ADVANCING
+           END-DISPLAY.
+           STOP RUN.
+])
+
+AT_CHECK([${COMPILE} -fsign-ascii  -o prog prog.cob])
+AT_CHECK([./prog], [0], [0123456789pqrstuvwxy])
+
+AT_CLEANUP
+
+
+AT_SETUP([DISPLAY: Sign EBCDIC])
+
+AT_DATA([prog.cob], [
+       IDENTIFICATION   DIVISION.
+       PROGRAM-ID.      prog.
+       DATA             DIVISION.
+       WORKING-STORAGE  SECTION.
+       01 G.
+         02 X           PIC X(10).
+         02 X-S99       REDEFINES X PIC S99.
+         02 X-S9        REDEFINES X PIC S9 OCCURS 10.
+       PROCEDURE        DIVISION.
+           MOVE 0 TO X-S9(1).
+           MOVE 1 TO X-S9(2).
+           MOVE 2 TO X-S9(3).
+           MOVE 3 TO X-S9(4).
+           MOVE 4 TO X-S9(5).
+           MOVE 5 TO X-S9(6).
+           MOVE 6 TO X-S9(7).
+           MOVE 7 TO X-S9(8).
+           MOVE 8 TO X-S9(9).
+           MOVE 9 TO X-S9(10).
+           DISPLAY X NO ADVANCING
+           END-DISPLAY.
+           MOVE -10 TO X-S99. MOVE X(2:1) TO X(1:1).
+           MOVE -1 TO X-S9(2).
+           MOVE -2 TO X-S9(3).
+           MOVE -3 TO X-S9(4).
+           MOVE -4 TO X-S9(5).
+           MOVE -5 TO X-S9(6).
+           MOVE -6 TO X-S9(7).
+           MOVE -7 TO X-S9(8).
+           MOVE -8 TO X-S9(9).
+           MOVE -9 TO X-S9(10).
+           DISPLAY X NO ADVANCING
+           END-DISPLAY.
+           STOP RUN.
+])
+
+AT_CHECK([${COMPILE} -fsign-ebcdic -o prog prog.cob])
+AT_CHECK([./prog], [0], [{ABCDEFGHI}JKLMNOPQR])
+
+AT_CLEANUP
+
+
+AT_SETUP([DISPLAY: Sign Separate])
+
+AT_DATA([prog.cob], [
+       IDENTIFICATION   DIVISION.
+       PROGRAM-ID.      prog.
+       DATA             DIVISION.
+       WORKING-STORAGE  SECTION.
+       01 G1.
+         02 X1-S9-LS     PIC S9(4) LEADING SEPARATE.
+         02 FILLER       PIC  X(1) VALUE SPACE.
+         02 X1-S9-TS     PIC S9(4) TRAILING SEPARATE.
+       01 G2.
+         02 X2-S9-LS     PIC S9(4) LEADING SEPARATE.
+         02 FILLER       PIC  X(1) VALUE SPACE.
+         02 X2-S9-TS     PIC S9(4) TRAILING SEPARATE.
+       01 G3.
+         02 X3-S9-LS     PIC S9(4) LEADING SEPARATE   VALUE ZERO.
+         02 FILLER       PIC  X(1) VALUE SPACE.
+         02 X3-S9-TS     PIC S9(4) TRAILING SEPARATE  VALUE ZERO.
+       PROCEDURE        DIVISION.
+           MOVE ZERO TO X1-S9-LS.
+           MOVE ZERO TO X1-S9-TS.
+           DISPLAY G1.
+           INITIALIZE G2.
+           DISPLAY G2.
+           DISPLAY G3.
+           STOP RUN.
+])
+
+AT_CHECK([${COMPILE} -fsign-ascii -o prog prog.cob])
+AT_CHECK([./prog], [0],
+[+0000 0000+
++0000 0000+
++0000 0000+
+])
+
+AT_CLEANUP
+
+
+AT_SETUP([DISPLAY: Initialize Sign ASCII])
+
+AT_DATA([prog.cob], [
+       IDENTIFICATION   DIVISION.
+       PROGRAM-ID.      prog.
+       DATA             DIVISION.
+       WORKING-STORAGE  SECTION.
+       01 G1.
+         02 X1-S9        PIC S9(4).
+       01 G2.
+         02 X2-S9        PIC S9(4).
+       01 G3.
+         02 X3-S9        PIC S9(4) VALUE ZERO.
+       PROCEDURE        DIVISION.
+           MOVE ZERO TO X1-S9.
+           DISPLAY G1.
+           INITIALIZE G2.
+           DISPLAY G2.
+           DISPLAY G3.
+           STOP RUN.
+])
+
+AT_CHECK([${COMPILE} -fsign-ascii -o prog prog.cob])
+AT_CHECK([./prog], [0],
+[0000
+0000
+0000
+])
+
+AT_CLEANUP
+
+
+AT_SETUP([DISPLAY: Initialize Sign EBCDIC])
+
+AT_DATA([prog.cob], [
+       IDENTIFICATION   DIVISION.
+       PROGRAM-ID.      prog.
+       DATA             DIVISION.
+       WORKING-STORAGE  SECTION.
+       01 G1.
+         02 X1-S9        PIC S9(4).
+       01 G2.
+         02 X2-S9        PIC S9(4).
+       01 G3.
+         02 X3-S9        PIC S9(4) VALUE ZERO.
+       PROCEDURE        DIVISION.
+           MOVE ZERO TO X1-S9.
+           DISPLAY G1.
+           INITIALIZE G2.
+           DISPLAY G2.
+           DISPLAY G3.
+           STOP RUN.
+])
+
+AT_CHECK([${COMPILE} -fsign-ebcdic -o prog prog.cob])
+AT_CHECK([./prog], [0],
+[000{
+000{
+000{
+])
+
+AT_CLEANUP

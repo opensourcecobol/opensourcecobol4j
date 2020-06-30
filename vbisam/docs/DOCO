@@ -1,0 +1,193 @@
+/*
+ * Title:	DOCO
+ * Copyright:	(C) 2003 Trevor van Bremen
+ * Author:	Trevor van Bremen
+ * Created:	01Dec2003
+ * Description:
+ *	This is just my little list of things to do, things I did etc.
+ * Version:
+ *	$Id: DOCO,v 1.1 2004/06/06 20:56:42 trev_vb Exp $
+ * Modification History:
+ *	$Log: DOCO,v $
+ *	Revision 1.1  2004/06/06 20:56:42  trev_vb
+ *	06Jun2004 TvB Forgot to 'cvs add' a few files in subdirectories
+ *	
+ *	Revision 1.4  2004/01/06 14:31:59  trev_vb
+ *	TvB 06Jan2004 Added in VARLEN processing (In a fairly unstable sorta way)
+ *	
+ *	Revision 1.3  2004/01/03 02:28:48  trev_vb
+ *	TvB 02Jan2004 WAY too many changes to enumerate!
+ *	TvB 02Jan2003 Transaction processing done (excluding iscluster)
+ *	
+ *	Revision 1.2  2003/12/22 04:43:15  trev_vb
+ *	TvB 21Dec2003 Added in a cvs header section
+ *	
+ */
+NOTES:
+TRANSACTIONS
+============
+	Consider a VBISAM file opened in ISAUTOLOCK mode *WITH* transactions
+	enabled.  If there are a LARGE number of operations within the
+	transaction (i.e. betweem the isbegin() and the iscommit()
+	(or isrollback()) call, this will populate the memory based locks
+	linked list.  Since the ISAUTOLOCK causes each read to begin by
+	unlocking any locked rows before applying a new lock, the current lock
+	list of the file must be entirely traversed by an isrelease () call to
+	unlock ONLY the non-transactional rowlocks.  This leads to VBISAM
+	performing somewhat slower than the competitive product in this
+	circumstance.  However, I believe it is unlikely that there will be
+	many applications programs performing THOUSANDS of operations between
+	isbegin () and iscommit () when in ISAUTOLOCK mode.  Technically, this
+	could be addressed in several ways:
+	1: Make the VBLOCK into a double linked list...  One link would be
+	strictly ordered by row number, the other link would be ordered by
+	transactional flag and then row number within that.  Thus the
+	isrelease call could exit immediately it came across a transactional
+	lock. 
+	2: Another option would be to retain independant lists, one for
+	transactional locks and the other for 'normal' locks.
+	3: Another option is to suppress the non-transactional locks from EVER
+	being logged in the list at all...  The isrelease code would thus have
+	to 'unlock' blocks of rows in between any of the existing transactional
+	locks on a form of 'blind faith'.
+	4: Yet another option is to retain the singly linked list, but order it
+	by the transactional flag and then the row number.  Thus the isrelease
+	code can exit early.  (For now, I am going to TRY this)
+	In *ALL* other respects, VBISAM outperforms the competitor in elapsed
+	wallclock time and also has fewer system calls.  This is partially
+	achieved at the expense of using more RAM at runtime and partially by
+	*BETTER* coding!
+BUFFERING
+=========
+	The in-memory buffering of the TREE data when in CISAM compatible mode
+	(32-bit mode), is somewhat useless given that there is no 'stamp' on the
+	node to determine whether it is stale.  However, this buffering REALLY
+	comes into play when in 64-bit mode since the timestamp can mean the
+	library can completely ignore de-compressing a node that's not changed.
+	Heck, I could even 'engineer' the node routines to *FORCE* there to be
+	additional space for a QUADSIZE (trans stamp) value in the node when it
+	gets written back to disk?
+--------------------------------------------------------------------------------
+TODO:3	Look into the TREE buffering further
+	Since this area has the potential to have a *LOT* of memory allocated,
+	I believe it's worthwhile offering the end-user far more options for
+	configuring how much is actually buffered.
+	Suggestions:
+	-	Limit buffering per file to 'n' bytes
+	-	Limit buffering per index within a file to 'n' bytes
+	-	Limit buffering per file to 'n' keys
+	-	Limit buffering per index within a file to 'n' keys
+	-	The existing method (Limit buffering to 'n' tree levels)
+	As soon as *ANY* limit is exceeded, the vVBExit() routine should begin
+	de-allocation.  Naturally, the current leaf-to-root structure within
+	any given TREE *MUST* be retained, but everything else is viable for
+	an 'extreme prejudice' de-allocation.
+
+TODO:5	Virtual filesystem
+
+TODO:9	Write the iscluster () function (inclusive of dealing with the
+	corresponding transaction that goes with it)
+
+DONE	Deal with ISVARLEN files
+
+DONE	Delay writing blocks till absolutely necessary
+	This implies having a 'block is dirty' flag per block as well as
+	knowing the block number and the file (data or index) where it resides
+	It *APPEARS* that all block reads / writes take place within the
+	constraints of iVBEnter / iVBExit and thus iVBExit can be modified to
+	'flush' the dirty buffers.  Additionally, if the table is open in
+	ISEXCLLOCK mode, the iVBForceExit code would need to flush them too.
+	Therefore, a table opened with ISEXCLLOCK would ONLY write data to the
+	files when the table is closed or when there are no free buffers left.
+	This *SHOULD* be a minor improvement to processing throughput overall
+	given that writes to the underlying files are coalesced if the same
+	block number is written multiple times within the scope of a single
+	iVBEnter / iVBExit.
+
+DONE	Transaction processing
+	isopen() needs to fail if ISTRANS is set and a logfile isn't open
+	isclose() needs to physically unlock any / all locked rows
+	Need to compare CISAM begin/commit/rollback if not opened with ISTRANS
+	iswrite() / isrewrite() needs to apply a transactional lock
+
+DONE	Profiling
+	a:
+	The iVBLockInsert is taking an inordinate amount of time as the local
+	(file based) lock list gets larger.  *WHY* is it getting large?
+	In ISAUTOLOCK mode, the locks should be deleted on a 1 by 1 basis!
+	b:
+	A quick check (OK I admit, I used gprof) shows that 80% of the grunt
+	is consumed in 4 basic functions:
+	o	iNodeSave
+	o	iTreeLoad
+	o	iPartCompare
+	o	iKeyCompare
+	OPTIMIZE those suckers!
+
+DONE	Still needs more work on vbIndexIO.c to deal with NodeFree / DataFree
+
+DONE	Currently, data row locking will THRASH the fcntl due to the islock() /
+	isunlock () lock that's applied to 0-0 of the data file.  Thus any file
+	open in ISAUTOLOCK mode will require TWO locks per row!
+
+DONE	Possibly look into being able to read / write / lock genuine C-ISAM data
+	The iNodeLoad and iNodeSave functions in vbKeys.c would bear the brunt
+	of these changes.  Additionally, I should endeavor to make the locking
+	strategy C-ISAM compatible too.
+	Thus, the affected files would be:
+	-	isinternal.h
+	-	vbKeys.c
+	-	isopen.c
+	-	isbuild.c
+	-	vbIndexIO.c
+	-	vbLocking.c
+
+DONE	Possibly look at changing data file I/O to use nodes and, when possible,
+	avoid re-reading a node that's not changed.  Use a simple LRU algorithm!
+
+DONE	Change isbuild.c and isopen.c to use the sDictNode structure
+
+DONE	Deal with ISEXCLLOCK mode in isopen()
+
+DONE	Logically, I need to combine isread() amd isstart() into a single module
+
+DONE	Handle the ISDESC flag on a keypart type in iVBPartCompare ()
+
+DONE	Technically, it should be feasible for ALL of the VBISAM files open in
+	one process to *SHARE* a common row buffer and / or common index node
+	buffer(s).  This will require changes to isinternal.h (pcRowBuffer) and
+	also isopen.c
+
+DONE	Need to add in locking / exclusivity et al into:
+		isdelete.c
+		isopen.c
+		isread.c
+		isrewrite.c
+		isstart.c
+		istrans.c
+		iswrite.c
+
+vbKeys.c
+DONE	RAM utilization is somewhat EXCESSIVE... Limit this?
+DONE	A nice addition would be to make use of the QUADSIZE variable in each
+	B+ Tree node within the iNodeLoad () function to alleviate some unneeded
+	reloading.  More importantly, the iNodeLoad will require an extra arg to
+	specify if loading the node is MANDATORY or ELECTIVE
+DONE	This value would have to be set in the iNodeSave () function.
+
+vbCheck.c
+=========
+1: Index Check Phase
+	a: Confirm each index is 'in order'
+		i) Sequentially read indexes (possibly validating against data)
+		ii) If out-of-order or node already consumed, rebuild index
+	b: Sequentially read entire index-free list
+		i) If a node is already consumed, empty entire list
+		ii) If invalid signature, empty entire list
+	c: Sequentially read entire data-free list (possible data check)
+		i) If a node is already consumed, empty entire list
+		ii) If invalid signature, empty entire list
+		iii) If data check or list was emptied in i or ii, rebuild list
+	d: Confirm each node in the index file is referenced
+		i) Add any 'missing' nodes to the free list
+2: Data Check phase

@@ -1,0 +1,238 @@
+AT_SETUP([FUNCTION NATIONAL single-byte])
+
+AT_DATA([prog.cob], [
+       IDENTIFICATION   DIVISION.
+       PROGRAM-ID.      prog.
+       DATA             DIVISION.
+       WORKING-STORAGE  SECTION.
+       01 I-STR    PIC X(5).
+       01 O-STR    PIC X(10).
+       PROCEDURE        DIVISION.
+           MOVE "ABCDZ" TO I-STR.
+           MOVE FUNCTION NATIONAL(I-STR) TO O-STR.
+           DISPLAY O-STR WITH NO ADVANCING.
+           STOP RUN.
+])
+
+AT_CHECK([${COMPILE_JP_COMPAT} -x prog.cob])
+AT_CHECK([./prog], [0], [Ç`ÇaÇbÇcÇy])
+
+AT_CLEANUP
+
+AT_SETUP([FUNCTION NATIONAL multi-byte])
+
+AT_DATA([prog.cob], [
+       IDENTIFICATION   DIVISION.
+       PROGRAM-ID.      prog.
+       DATA             DIVISION.
+       WORKING-STORAGE  SECTION.
+       01 I-STR    PIC X(9).
+       01 O-STR    PIC X(12).
+       PROCEDURE        DIVISION.
+           MOVE "AÇaCÇP2ÇR" TO I-STR.
+           MOVE FUNCTION NATIONAL(I-STR) TO O-STR.
+           DISPLAY O-STR WITH NO ADVANCING.
+           STOP RUN.
+])
+
+AT_CHECK([${COMPILE_JP_COMPAT} -x prog.cob])
+AT_CHECK([./prog], [0], [Ç`ÇaÇbÇPÇQÇR])
+
+AT_CLEANUP
+
+AT_SETUP([FUNCTION NATIONAL KIGOU-exclamation])
+
+AT_DATA([prog.cob], [
+       IDENTIFICATION   DIVISION.
+       PROGRAM-ID.      prog.
+       DATA             DIVISION.
+       WORKING-STORAGE  SECTION.
+       01 I-STR    PIC X(5).
+       01 O-STR    PIC X(10).
+       PROCEDURE        DIVISION.
+           MOVE "!!!!!" TO I-STR.
+           MOVE FUNCTION NATIONAL(I-STR) TO O-STR.
+           DISPLAY O-STR WITH NO ADVANCING.
+           STOP RUN.
+])
+
+AT_CHECK([${COMPILE_JP_COMPAT} -x prog.cob])
+AT_CHECK([./prog], [0], [ÅIÅIÅIÅIÅI])
+
+AT_CLEANUP
+
+AT_SETUP([FUNCTION NATIONAL KIGOU-yen])
+
+AT_DATA([prog.cob], [
+       IDENTIFICATION   DIVISION.
+       PROGRAM-ID.      prog.
+       DATA             DIVISION.
+       WORKING-STORAGE  SECTION.
+       01 I-STR    PIC X(1).
+       01 O-STR    PIC X(10).
+       PROCEDURE        DIVISION.
+           MOVE "\" TO I-STR.
+           MOVE FUNCTION NATIONAL(I-STR) TO O-STR.
+           DISPLAY O-STR WITH NO ADVANCING.
+           STOP RUN.
+])
+
+AT_CHECK([${COMPILE_JP_COMPAT} -x prog.cob])
+AT_CHECK([./prog], [0], [Åè        ])
+
+AT_CLEANUP
+
+AT_SETUP([FUNCTION NATIONAL KIGOU-plus])
+
+AT_DATA([prog.cob], [
+       IDENTIFICATION   DIVISION.
+       PROGRAM-ID.      prog.
+       DATA             DIVISION.
+       WORKING-STORAGE  SECTION.
+       01 I-STR    PIC X(2).
+       01 O-STR    PIC X(10).
+       PROCEDURE        DIVISION.
+           MOVE "+ " TO I-STR.
+           MOVE FUNCTION NATIONAL(I-STR) TO O-STR.
+           DISPLAY O-STR WITH NO ADVANCING.
+           STOP RUN.
+])
+
+AT_CHECK([${COMPILE_JP_COMPAT} -x prog.cob])
+AT_CHECK([./prog], [0], [Å{Å@      ])
+
+AT_CLEANUP
+
+AT_SETUP([FUNCTION NATIONAL (HanKana w/ Daku-on)])
+
+AT_DATA([prog.cob], [
+       IDENTIFICATION   DIVISION.
+       PROGRAM-ID.      prog.
+       DATA             DIVISION.
+       WORKING-STORAGE  SECTION.
+       01 I-STR    PIC X(16).
+       01 O-STR    PIC X(16).
+       PROCEDURE        DIVISION.
+           MOVE "⁄√ﬁ®∂ﬁ∂ﬁ" TO I-STR.
+           MOVE FUNCTION NATIONAL(I-STR) TO O-STR.
+           DISPLAY O-STR WITH NO ADVANCING.
+           STOP RUN.
+])
+
+AT_CHECK([${COMPILE_JP_COMPAT} -x prog.cob])
+AT_CHECK([./prog], [0], [ÉåÉfÉBÉKÉKÅ@Å@Å@])
+
+AT_CLEANUP
+
+AT_SETUP([FUNCTION NATIONAL (HanKana w/ Han-daku-on)])
+
+AT_DATA([prog.cob], [
+       IDENTIFICATION   DIVISION.
+       PROGRAM-ID.      prog.
+       DATA             DIVISION.
+       WORKING-STORAGE  SECTION.
+       01 I-STR    PIC X(10).
+       01 O-STR    PIC X(10).
+       PROCEDURE        DIVISION.
+           MOVE "ŒﬂÀﬂ›" TO I-STR.
+           MOVE FUNCTION NATIONAL(I-STR) TO O-STR.
+           DISPLAY O-STR WITH NO ADVANCING.
+           STOP RUN.
+])
+
+AT_CHECK([${COMPILE_JP_COMPAT} -x prog.cob])
+AT_CHECK([./prog], [0], [É|ÉsÉìÅ@Å@])
+
+AT_CLEANUP
+
+AT_SETUP([N Literal (NO zenakaku conversion)])
+
+AT_DATA([prog.cob], [
+       IDENTIFICATION   DIVISION.
+       PROGRAM-ID.      prog.
+       PROCEDURE        DIVISION.
+           DISPLAY N"Ç¢ÇÎÇÕ".
+           DISPLAY N"≤€ ".
+           DISPLAY N"ŒﬂÀﬂ›".
+           DISPLAY N"ABC".
+           DISPLAY N"#$%".
+           STOP RUN.
+])
+
+AT_CHECK([${COMPILE} -x prog.cob])
+AT_CHECK([./prog], [0],
+[Ç¢ÇÎÇÕ
+≤€ 
+ŒﬂÀﬂ›
+ABC
+#$%
+])
+
+AT_CLEANUP
+
+AT_SETUP([NC Literal (NO zenakaku conversion)])
+
+AT_DATA([prog.cob], [
+       IDENTIFICATION   DIVISION.
+       PROGRAM-ID.      prog.
+       PROCEDURE        DIVISION.
+           DISPLAY NC"Ç¢ÇÎÇÕ".
+           DISPLAY NC"≤€ ".
+           DISPLAY NC"ŒﬂÀﬂ›".
+           DISPLAY NC"ABC".
+           DISPLAY NC"#$%".
+           STOP RUN.
+])
+
+AT_CHECK([${COMPILE} -x prog.cob])
+AT_CHECK([./prog], [0],
+[Ç¢ÇÎÇÕ
+≤€ 
+ŒﬂÀﬂ›
+ABC
+#$%
+])
+
+AT_CLEANUP
+
+AT_SETUP([ND Literal (NO zenakaku conversion)])
+
+AT_DATA([prog.cob], [
+       IDENTIFICATION   DIVISION.
+       PROGRAM-ID.      prog.
+       PROCEDURE        DIVISION.
+           DISPLAY ND"Ç¢ÇÎÇÕ".
+           DISPLAY ND"≤€ ".
+           DISPLAY ND"ŒﬂÀﬂ›".
+           DISPLAY ND"ABC".
+           DISPLAY ND"#$%".
+           STOP RUN.
+])
+
+AT_CHECK([${COMPILE} -x prog.cob])
+AT_CHECK([./prog], [0],
+[Ç¢ÇÎÇÕ
+≤€ 
+ŒﬂÀﬂ›
+ABC
+#$%
+])
+
+AT_CLEANUP
+
+AT_SETUP([NX Literal])
+
+AT_DATA([prog.cob], [
+       IDENTIFICATION   DIVISION.
+       PROGRAM-ID.      prog.
+       PROCEDURE        DIVISION.
+           DISPLAY NX"82A282EB82CD".
+           STOP RUN.
+])
+
+AT_CHECK([${COMPILE} -x prog.cob])
+AT_CHECK([./prog], [0],
+[Ç¢ÇÎÇÕ
+])
+
+AT_CLEANUP

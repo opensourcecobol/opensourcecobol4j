@@ -1,0 +1,30 @@
+AT_SETUP([free_1col_aster OPTION])
+
+AT_DATA([prog.cob], [
+       IDENTIFICATION   DIVISION.
+       PROGRAM-ID.      prog.
+       PROCEDURE DIVISION.
+*          DISPLAY A.
+           STOP RUN.
+])
+
+AT_CHECK([${COMPILE} -x -free_1col_aster prog.cob], [0], [])
+
+AT_CLEANUP
+
+AT_SETUP([newline_count with free_1col_aster])
+
+AT_DATA([prog.cob], [
+       IDENTIFICATION   DIVISION.
+       PROGRAM-ID.      prog.
+       PROCEDURE DIVISION.
+*
+           DISPLAY A.
+           STOP RUN.
+])
+
+AT_CHECK([${COMPILE} -x -free_1col_aster prog.cob], [1], [],
+[prog.cob:6: Error: 'A' undefined
+])
+
+AT_CLEANUP

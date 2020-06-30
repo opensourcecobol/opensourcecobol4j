@@ -1,0 +1,182 @@
+### OpenCOBOL Test Suite				-*- m4 -*-
+
+## Copyright (C) 2004-2009 Keisuke Nishida
+## Copyright (C) 2007-2009 Roger While
+##
+## This program is free software; you can redistribute it and/or modify
+## it under the terms of the GNU General Public License as published by
+## the Free Software Foundation; either version 2, or (at your option)
+## any later version.
+## 
+## This program is distributed in the hope that it will be useful,
+## but WITHOUT ANY WARRANTY; without even the implied warranty of
+## MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+## GNU General Public License for more details.
+## 
+## You should have received a copy of the GNU General Public License
+## along with this software; see the file COPYING.  If not, write to
+## the Free Software Foundation, 51 Franklin Street, Fifth Floor
+## Boston, MA 02110-1301 USA
+
+
+AT_SETUP([COPY: file not found])
+AT_KEYWORDS([copy])
+
+AT_DATA([prog.cob], [
+       IDENTIFICATION   DIVISION.
+       PROGRAM-ID.      prog.
+       DATA             DIVISION.
+       WORKING-STORAGE  SECTION.
+       COPY "copy.inc".
+       PROCEDURE        DIVISION.
+           STOP RUN.
+])
+
+AT_CHECK([${COMPILE_ONLY} prog.cob], [1], ,
+[prog.cob:6: Error: copy.inc: No such file or directory
+])
+
+AT_CLEANUP
+
+
+AT_SETUP([COPY: replacement order])
+AT_KEYWORDS([copy])
+
+AT_DATA([copy.inc], [
+       01 TEST-VAR PIC X(2) VALUE "OK".
+])
+
+AT_DATA([prog.cob], [
+       IDENTIFICATION   DIVISION.
+       PROGRAM-ID.      prog.
+       DATA             DIVISION.
+       WORKING-STORAGE  SECTION.
+       COPY "copy.inc"
+          REPLACING ==TEST-VAR== BY ==FIRST-MATCH==
+                    ==TEST-VAR== BY ==SECOND-MATCH==.
+       PROCEDURE        DIVISION.
+           DISPLAY FIRST-MATCH NO ADVANCING
+           END-DISPLAY.
+           STOP RUN.
+])
+
+AT_CHECK([${COMPILE} -o prog prog.cob])
+AT_CHECK([./prog], [0], [OK])
+
+AT_CLEANUP
+
+
+AT_SETUP([COPY: separators])
+AT_KEYWORDS([copy])
+
+AT_DATA([copy.inc], [
+       01 TEST-VAR PIC X(2) VALUE "OK".
+])
+
+AT_DATA([prog.cob], [
+       IDENTIFICATION   DIVISION.
+       PROGRAM-ID.      prog.
+       DATA             DIVISION.
+       WORKING-STORAGE  SECTION.
+       COPY "copy.inc"
+          REPLACING ==TEST-VAR==, BY ==FIRST-MATCH==,
+                 ,  ==TEST-VAR==; BY ==SECOND-MATCH==;
+                 ;  ==TEST-VAR== , BY ==THIRD-MATCH==
+                    ==TEST-VAR== ; BY ==FOURTH-MATCH==.
+       PROCEDURE        DIVISION.
+           DISPLAY FIRST-MATCH NO ADVANCING
+           END-DISPLAY.
+           STOP RUN.
+])
+
+AT_CHECK([${COMPILE} -o prog prog.cob])
+AT_CHECK([./prog], [0], [OK])
+
+AT_CLEANUP
+
+
+AT_SETUP([COPY: partial replacement])
+AT_KEYWORDS([copy])
+
+AT_DATA([copy.inc], [
+       01 :TEST:-VAR PIC X(2) VALUE "OK".
+       01 (TEST)-VAR PIC X(2) VALUE "OK".
+])
+
+AT_DATA([prog.cob], [
+       IDENTIFICATION   DIVISION.
+       PROGRAM-ID.      prog.
+       DATA             DIVISION.
+       WORKING-STORAGE  SECTION.
+       COPY "copy.inc"
+          REPLACING ==:TEST:== BY ==COLON==
+	            ==(TEST)== BY ==PAREN==.
+       PROCEDURE        DIVISION.
+           DISPLAY COLON-VAR NO ADVANCING
+           END-DISPLAY.
+           DISPLAY PAREN-VAR NO ADVANCING
+           END-DISPLAY.
+           STOP RUN.
+])
+
+AT_CHECK([${COMPILE} -o prog prog.cob])
+AT_CHECK([./prog], [0], [OKOK])
+
+AT_CLEANUP
+
+
+AT_SETUP([COPY: recursive replacement])
+AT_KEYWORDS([copy])
+
+AT_DATA([copy-2.inc], [
+       01 TEST-VAR PIC X(2) VALUE "OK".
+])
+
+AT_DATA([copy-1.inc], [
+       COPY "copy-2.inc".
+])
+
+AT_DATA([prog.cob], [
+       IDENTIFICATION   DIVISION.
+       PROGRAM-ID.      prog.
+       DATA             DIVISION.
+       WORKING-STORAGE  SECTION.
+       COPY "copy-1.inc"
+           REPLACING ==TEST-VAR== BY ==COPY-VAR==.
+       PROCEDURE        DIVISION.
+           DISPLAY COPY-VAR NO ADVANCING
+           END-DISPLAY.
+           STOP RUN.
+])
+
+AT_CHECK([${COMPILE} -o prog prog.cob])
+AT_CHECK([./prog], [0], [OK])
+
+AT_CLEANUP
+
+
+AT_SETUP([COPY: after REPLACE])
+
+AT_DATA([copy_rep01.inc], [
+       01 WK-02          PIC X(2) value SP.
+])
+
+AT_DATA([prog.cob], [
+       IDENTIFICATION   DIVISION.
+       PROGRAM-ID.      prog.
+       DATA             DIVISION.
+       WORKING-STORAGE  SECTION.
+       REPLACE 'AA' BY 'ZZ'.
+       01 WK-01          PIC X(2) VALUE 'AA'.
+       COPY "copy_rep01.inc" REPLACING SP by space.
+       01 WK-03          PIC X(2) VALUE 'AA'.
+       PROCEDURE        DIVISION.
+           DISPLAY WK-01 WK-02 WK-03 NO ADVANCING
+           END-DISPLAY.
+           STOP RUN.
+])
+
+AT_CHECK([${COMPILE} -o prog prog.cob])
+AT_CHECK([./prog], [0], [ZZ  ZZ])
+
+AT_CLEANUP

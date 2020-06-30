@@ -1,0 +1,78 @@
+AT_SETUP([undefined not message])
+
+AT_DATA([prog.cob], [
+       identification division.
+       program-id. prog.
+       data division.
+       working-storage section.
+       01 wk-01.
+         03 wk-02  pic x(2).
+         03 ÇóÇãÅ|ÇOÇR  redefines wk-02 pic n(2).
+       01 cnt  pic 9(1).
+       procedure division.
+          inspect ÇóÇãÅ|ÇOÇR tallying cnt
+            for characters before initial space.
+          stop run.
+])
+
+AT_CHECK([${COMPILE} -x prog.cob], [1], [],
+[prog.cob:8: Error: Size of 'ÇóÇãÅ|ÇOÇR' larger than size of 'wk-02'
+])
+
+AT_CLEANUP
+
+AT_SETUP([Encoding alphanumeric name item])
+
+AT_DATA([prog.cob], [
+       IDENTIFICATION   DIVISION.
+       PROGRAM-ID.      prog.
+       DATA             DIVISION.
+       PROCEDURE DIVISION.
+           DISPLAY A___82A0___A.
+           STOP RUN.
+])
+
+AT_CHECK([${COMPILE} -x prog.cob], [1], [],
+[prog.cob:6: Error: 'A___82A0___A' undefined
+])
+
+AT_CLEANUP
+
+AT_SETUP([Encoding national name item])
+
+AT_DATA([prog.cob], [
+       IDENTIFICATION   DIVISION.
+       PROGRAM-ID.      prog.
+       DATA             DIVISION.
+       PROCEDURE DIVISION.
+           DISPLAY A___Ç†___A.
+           STOP RUN.
+])
+
+AT_CHECK([${COMPILE} -x prog.cob], [1], [],
+[prog.cob:6: Error: 'A___Ç†___A' undefined
+])
+
+AT_CLEANUP
+
+AT_SETUP([Decoding national section name])
+
+AT_DATA([prog.cob], [
+       IDENTIFICATION   DIVISION.
+       PROGRAM-ID.      prog.
+       DATA             DIVISION.
+       PROCEDURE        DIVISION.
+       ÉeÉXÉg SECTION.
+           MOVE 1 TO çÄñ⁄1.
+       ÉeÉXÉgíióé.
+           MOVE 1 TO çÄñ⁄2.
+])
+
+AT_CHECK([${COMPILE} -x prog.cob], [1], [],
+[prog.cob: In section 'ÉeÉXÉg':
+prog.cob:7: Error: 'çÄñ⁄1' undefined
+prog.cob: In paragraph 'ÉeÉXÉgíióé':
+prog.cob:9: Error: 'çÄñ⁄2' undefined
+])
+
+AT_CLEANUP

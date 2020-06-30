@@ -1,0 +1,1638 @@
+### OpenCOBOL Test Suite				-*- m4 -*-
+
+## Copyright (C) 2005-2009 Roger While
+##
+## This program is free software; you can redistribute it and/or modify
+## it under the terms of the GNU General Public License as published by
+## the Free Software Foundation; either version 2, or (at your option)
+## any later version.
+## 
+## This program is distributed in the hope that it will be useful,
+## but WITHOUT ANY WARRANTY; without even the implied warranty of
+## MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+## GNU General Public License for more details.
+## 
+## You should have received a copy of the GNU General Public License
+## along with this software; see the file COPYING.  If not, write to
+## the Free Software Foundation, 51 Franklin Street, Fifth Floor
+## Boston, MA 02110-1301 USA
+
+### ISO+IEC+1989-2002 15 Intrinsic Functions
+
+AT_SETUP([FUNCTION ABS])
+
+AT_DATA([prog.cob], [
+       IDENTIFICATION   DIVISION.
+       PROGRAM-ID.      prog.
+       DATA             DIVISION.
+       WORKING-STORAGE  SECTION.
+       01  X   PIC   S9(4)V9(4) VALUE -1.2345.
+       PROCEDURE        DIVISION.
+           DISPLAY FUNCTION ABS ( X )
+           END-DISPLAY.
+           STOP RUN.
+])
+
+AT_CHECK([${COMPILE} -o prog prog.cob])
+AT_CHECK([./prog], [0],
+[+0001.2345
+])
+
+AT_CLEANUP
+
+AT_SETUP([FUNCTION ACOS])
+
+AT_DATA([prog.cob], [
+       IDENTIFICATION   DIVISION.
+       PROGRAM-ID.      prog.
+       DATA             DIVISION.
+       WORKING-STORAGE  SECTION.
+       01  X   PIC   S9(4)V9(4) VALUE -0.2345.
+       01  Z   PIC   S9V9(17)   COMP.
+       PROCEDURE        DIVISION.
+           MOVE FUNCTION ACOS ( X ) TO Z.
+           IF Z >= 1.80750052110824325 AND
+              Z <= 1.80750052110824345
+                   DISPLAY "OK"
+                   END-DISPLAY
+           ELSE
+                   DISPLAY Z
+                   END-DISPLAY
+           END-IF.
+           STOP RUN.
+])
+
+AT_CHECK([${COMPILE} -o prog prog.cob])
+AT_CHECK([./prog], [0],
+[OK
+])
+
+AT_CLEANUP
+
+AT_SETUP([FUNCTION ANNUITY])
+
+AT_DATA([prog.cob], [
+       IDENTIFICATION   DIVISION.
+       PROGRAM-ID.      prog.
+       DATA             DIVISION.
+       WORKING-STORAGE  SECTION.
+       01  X   PIC   S9(4) VALUE 3.
+       01  Y   PIC   S9(4) VALUE 5.
+       01  Z   PIC   S9V9(17)   COMP.
+       PROCEDURE        DIVISION.
+           MOVE FUNCTION ANNUITY ( X, Y ) TO Z.
+           IF Z >= 3.002932551319648080 AND
+              Z <= 3.002932551319648110
+                   DISPLAY "OK"
+                   END-DISPLAY
+           ELSE
+                   DISPLAY Z
+                   END-DISPLAY
+           END-IF.
+           STOP RUN.
+])
+
+AT_CHECK([${COMPILE} -o prog prog.cob])
+AT_CHECK([./prog], [0],
+[OK
+])
+
+AT_CLEANUP
+
+AT_SETUP([FUNCTION ASIN])
+
+AT_DATA([prog.cob], [
+       IDENTIFICATION   DIVISION.
+       PROGRAM-ID.      prog.
+       DATA             DIVISION.
+       WORKING-STORAGE  SECTION.
+       01  X   PIC   S9(4)V9(4) VALUE -0.2345.
+       01  Y   PIC   S9V9(17)   COMP.
+       PROCEDURE        DIVISION.
+           MOVE FUNCTION ASIN ( X ) TO Y.
+           IF Y >= -0.23670419431334685 AND
+              Y <= -0.23670419431334675
+                   DISPLAY "OK"
+                   END-DISPLAY
+           ELSE
+                   DISPLAY Y
+                   END-DISPLAY
+           END-IF.
+           STOP RUN.
+])
+
+AT_CHECK([${COMPILE} -o prog prog.cob])
+AT_CHECK([./prog], [0],
+[OK
+])
+
+AT_CLEANUP
+
+AT_SETUP([FUNCTION ATAN])
+
+AT_DATA([prog.cob], [
+       IDENTIFICATION   DIVISION.
+       PROGRAM-ID.      prog.
+       DATA             DIVISION.
+       WORKING-STORAGE  SECTION.
+       01  X   PIC   S9(4)V9(4) VALUE 1.
+       01  Y   PIC   S9V9(17)   COMP.
+       PROCEDURE        DIVISION.
+           MOVE FUNCTION ATAN ( X ) TO Y.
+           IF Y >= 0.78539816339744825 AND
+              Y <= 0.78539816339744835
+                   DISPLAY "OK"
+                   END-DISPLAY
+           ELSE
+                   DISPLAY Y
+                   END-DISPLAY
+           END-IF.
+           STOP RUN.
+])
+
+AT_CHECK([${COMPILE} -o prog prog.cob])
+AT_CHECK([./prog], [0],
+[OK
+])
+
+AT_CLEANUP
+
+AT_SETUP([FUNCTION CHAR])
+
+AT_DATA([prog.cob], [
+       IDENTIFICATION   DIVISION.
+       PROGRAM-ID.      prog.
+       DATA             DIVISION.
+       WORKING-STORAGE  SECTION.
+       01  X   PIC   S9(4)V9(4) VALUE 108.
+       PROCEDURE        DIVISION.
+           DISPLAY FUNCTION CHAR ( X )
+           END-DISPLAY.
+           STOP RUN.
+])
+
+AT_CHECK([${COMPILE} -o prog prog.cob])
+AT_CHECK([./prog], [0],
+[k
+])
+
+AT_CLEANUP
+
+AT_SETUP([FUNCTION COMBINED-DATETIME])
+
+AT_DATA([prog.cob], [
+       IDENTIFICATION   DIVISION.
+       PROGRAM-ID.      prog.
+       DATA             DIVISION.
+       WORKING-STORAGE  SECTION.
+       PROCEDURE        DIVISION.
+           DISPLAY FUNCTION COMBINED-DATETIME ( 987, 345 )
+           END-DISPLAY.
+           STOP RUN.
+])
+
+AT_CHECK([${COMPILE} -o prog prog.cob])
+AT_CHECK([./prog], [0],
+[0000987.00345
+])
+
+AT_CLEANUP
+
+AT_SETUP([FUNCTION CONCATENATE])
+
+AT_DATA([prog.cob], [
+       IDENTIFICATION   DIVISION.
+       PROGRAM-ID.      prog.
+       DATA             DIVISION.
+       WORKING-STORAGE  SECTION.
+       01  Y   PIC   X(4).
+       PROCEDURE        DIVISION.
+           MOVE "defx" TO Y.
+           DISPLAY FUNCTION CONCATENATE ( Y "abc" "zz" "55" "666" )
+           END-DISPLAY.
+           STOP RUN.
+])
+
+AT_CHECK([${COMPILE} -o prog prog.cob])
+AT_CHECK([./prog], [0],
+[defxabczz55666
+])
+
+AT_CLEANUP
+
+AT_SETUP([FUNCTION CONCATENATE with reference modding])
+
+AT_DATA([prog.cob], [
+       IDENTIFICATION   DIVISION.
+       PROGRAM-ID.      prog.
+       DATA             DIVISION.
+       WORKING-STORAGE  SECTION.
+       01  Y   PIC   X(4).
+       PROCEDURE        DIVISION.
+           MOVE "defx" TO Y.
+           DISPLAY FUNCTION CONCATENATE
+                   ( Y "abc" "zz" "55" "666" ) (2 : 9)
+           END-DISPLAY.
+           STOP RUN.
+])
+
+AT_CHECK([${COMPILE} -o prog prog.cob])
+AT_CHECK([./prog], [0],
+[efxabczz5
+])
+
+AT_CLEANUP
+
+AT_SETUP([FUNCTION COS])
+
+AT_DATA([prog.cob], [
+       IDENTIFICATION   DIVISION.
+       PROGRAM-ID.      prog.
+       DATA             DIVISION.
+       WORKING-STORAGE  SECTION.
+       01  X   PIC   S9(4)V9(4) VALUE -0.2345.
+       01  Y   PIC   S9V9(17)   COMP.
+       PROCEDURE        DIVISION.
+           MOVE FUNCTION COS ( X ) TO Y.
+           IF Y >= 0.97263064125625815 AND
+              Y <= 0.97263064125625825
+                   DISPLAY "OK"
+                   END-DISPLAY
+           ELSE
+                   DISPLAY Y
+                   END-DISPLAY
+           END-IF.
+           STOP RUN.
+])
+
+AT_CHECK([${COMPILE} -o prog prog.cob])
+AT_CHECK([./prog], [0],
+[OK
+])
+
+AT_CLEANUP
+
+AT_SETUP([FUNCTION DATE-OF-INTEGER])
+
+AT_DATA([prog.cob], [
+       IDENTIFICATION   DIVISION.
+       PROGRAM-ID.      prog.
+       DATA             DIVISION.
+       WORKING-STORAGE  SECTION.
+       PROCEDURE        DIVISION.
+           DISPLAY FUNCTION DATE-OF-INTEGER ( 146000 )
+           END-DISPLAY.
+           STOP RUN.
+])
+
+AT_CHECK([${COMPILE} -o prog prog.cob])
+AT_CHECK([./prog], [0],
+[20000925
+])
+
+AT_CLEANUP
+
+AT_SETUP([FUNCTION DATE-TO-YYYYMMDD])
+
+AT_DATA([prog.cob], [
+       IDENTIFICATION   DIVISION.
+       PROGRAM-ID.      prog.
+       DATA             DIVISION.
+       WORKING-STORAGE  SECTION.
+       PROCEDURE        DIVISION.
+           DISPLAY FUNCTION DATE-TO-YYYYMMDD ( 981002, -10, 1994 )
+           END-DISPLAY.
+           STOP RUN.
+])
+
+AT_CHECK([${COMPILE} -o prog prog.cob])
+AT_CHECK([./prog], [0],
+[18981002
+])
+
+AT_CLEANUP
+
+AT_SETUP([FUNCTION DAY-OF-INTEGER])
+
+AT_DATA([prog.cob], [
+       IDENTIFICATION   DIVISION.
+       PROGRAM-ID.      prog.
+       DATA             DIVISION.
+       WORKING-STORAGE  SECTION.
+       PROCEDURE        DIVISION.
+           DISPLAY FUNCTION DAY-OF-INTEGER ( 146000 )
+           END-DISPLAY.
+           STOP RUN.
+])
+
+AT_CHECK([${COMPILE} -o prog prog.cob])
+AT_CHECK([./prog], [0],
+[2000269
+])
+
+AT_CLEANUP
+
+AT_SETUP([FUNCTION DAY-TO-YYYYDDD])
+
+AT_DATA([prog.cob], [
+       IDENTIFICATION   DIVISION.
+       PROGRAM-ID.      prog.
+       DATA             DIVISION.
+       WORKING-STORAGE  SECTION.
+       PROCEDURE        DIVISION.
+           DISPLAY FUNCTION DAY-TO-YYYYDDD ( 95005, -10, 2013 )
+           END-DISPLAY.
+           STOP RUN.
+])
+
+AT_CHECK([${COMPILE} -o prog prog.cob])
+AT_CHECK([./prog], [0],
+[01995005
+])
+
+AT_CLEANUP
+
+AT_SETUP([FUNCTION E])
+
+AT_DATA([prog.cob], [
+       IDENTIFICATION   DIVISION.
+       PROGRAM-ID.      prog.
+       DATA             DIVISION.
+       WORKING-STORAGE  SECTION.
+       PROCEDURE        DIVISION.
+           DISPLAY FUNCTION E
+           END-DISPLAY.
+           STOP RUN.
+])
+
+AT_CHECK([${COMPILE} -o prog prog.cob])
+AT_CHECK([./prog], [0],
+[2.7182818284590452353602874713526625
+])
+
+AT_CLEANUP
+
+AT_SETUP([FUNCTION EXCEPTION-FILE])
+
+AT_DATA([prog.cob], [
+       IDENTIFICATION   DIVISION.
+       PROGRAM-ID.      prog.
+       ENVIRONMENT      DIVISION.
+       INPUT-OUTPUT     SECTION.
+       FILE-CONTROL.
+           SELECT TEST-FILE ASSIGN "NOTEXIST"
+           FILE STATUS IS TEST-STATUS.
+       DATA             DIVISION.
+       FILE             SECTION.
+       FD  TEST-FILE.
+       01  TEST-REC      PIC X(4).
+       WORKING-STORAGE SECTION.
+       01  TEST-STATUS  PIC XX.
+       PROCEDURE        DIVISION.
+           OPEN INPUT TEST-FILE.
+           DISPLAY FUNCTION EXCEPTION-FILE
+           END-DISPLAY.
+           STOP RUN.
+])
+
+AT_CHECK([${COMPILE} -o prog prog.cob])
+AT_CHECK([./prog], [0],
+[35TEST-FILE
+])
+
+AT_CLEANUP
+
+AT_SETUP([FUNCTION EXCEPTION-LOCATION])
+
+AT_DATA([prog.cob], [
+       IDENTIFICATION   DIVISION.
+       PROGRAM-ID.      prog.
+       ENVIRONMENT      DIVISION.
+       INPUT-OUTPUT     SECTION.
+       FILE-CONTROL.
+           SELECT TEST-FILE ASSIGN "NOTEXIST"
+           FILE STATUS IS TEST-STATUS.
+       DATA             DIVISION.
+       FILE             SECTION.
+       FD  TEST-FILE.
+       01  TEST-REC      PIC X(4).
+       WORKING-STORAGE SECTION.
+       01  TEST-STATUS  PIC XX.
+       PROCEDURE        DIVISION.
+       A00-MAIN SECTION.
+       A00.
+           OPEN INPUT TEST-FILE.
+       B00-MAIN SECTION.
+       B00.
+           DISPLAY FUNCTION EXCEPTION-LOCATION
+                   NO ADVANCING
+           END-DISPLAY.
+           STOP RUN.
+])
+
+AT_CHECK([${COMPILE} -debug -o prog prog.cob])
+AT_CHECK([./prog], [0],
+[prog; A00 OF A00-MAIN; 18])
+
+AT_CLEANUP
+
+AT_SETUP([FUNCTION EXCEPTION-STATEMENT])
+
+AT_DATA([prog.cob], [
+       IDENTIFICATION   DIVISION.
+       PROGRAM-ID.      prog.
+       ENVIRONMENT      DIVISION.
+       INPUT-OUTPUT     SECTION.
+       FILE-CONTROL.
+           SELECT TEST-FILE ASSIGN "NOTEXIST"
+           FILE STATUS IS TEST-STATUS.
+       DATA             DIVISION.
+       FILE             SECTION.
+       FD  TEST-FILE.
+       01  TEST-REC      PIC X(4).
+       WORKING-STORAGE SECTION.
+       01  TEST-STATUS  PIC XX.
+       PROCEDURE        DIVISION.
+           OPEN INPUT TEST-FILE.
+           DISPLAY FUNCTION EXCEPTION-STATEMENT
+                   NO ADVANCING
+           END-DISPLAY.
+           STOP RUN.
+])
+
+AT_CHECK([${COMPILE} -debug -o prog prog.cob])
+AT_CHECK([./prog], [0],
+[OPEN                           ])
+
+AT_CLEANUP
+
+AT_SETUP([FUNCTION EXCEPTION-STATUS])
+
+AT_DATA([prog.cob], [
+       IDENTIFICATION   DIVISION.
+       PROGRAM-ID.      prog.
+       ENVIRONMENT      DIVISION.
+       INPUT-OUTPUT     SECTION.
+       FILE-CONTROL.
+           SELECT TEST-FILE ASSIGN "NOTEXIST"
+           FILE STATUS IS TEST-STATUS.
+       DATA             DIVISION.
+       FILE             SECTION.
+       FD  TEST-FILE.
+       01  TEST-REC      PIC X(4).
+       WORKING-STORAGE SECTION.
+       01  TEST-STATUS  PIC XX.
+       PROCEDURE        DIVISION.
+           OPEN INPUT TEST-FILE.
+           DISPLAY FUNCTION EXCEPTION-STATUS
+                   NO ADVANCING
+           END-DISPLAY.
+           STOP RUN.
+])
+
+AT_CHECK([${COMPILE} -o prog prog.cob])
+AT_CHECK([./prog], [0],
+[EC-I-O-PERMANENT-ERROR         ])
+
+AT_CLEANUP
+
+AT_SETUP([FUNCTION EXP])
+
+AT_DATA([prog.cob], [
+       IDENTIFICATION   DIVISION.
+       PROGRAM-ID.      prog.
+       DATA             DIVISION.
+       WORKING-STORAGE  SECTION.
+       01  Y   PIC   S99V9(16)   COMP.
+       PROCEDURE        DIVISION.
+           MOVE FUNCTION EXP ( 3 ) TO Y.
+           IF Y >= 20.0855369231876636 AND
+              Y <= 20.0855369231876644
+                   DISPLAY "OK"
+                   END-DISPLAY
+           ELSE
+                   DISPLAY Y
+                   END-DISPLAY
+           END-IF.
+           STOP RUN.
+])
+
+AT_CHECK([${COMPILE} -o prog prog.cob])
+AT_CHECK([./prog], [0],
+[OK
+])
+
+AT_CLEANUP
+
+AT_SETUP([FUNCTION FACTORIAL])
+
+AT_DATA([prog.cob], [
+       IDENTIFICATION   DIVISION.
+       PROGRAM-ID.      prog.
+       DATA             DIVISION.
+       WORKING-STORAGE  SECTION.
+       PROCEDURE        DIVISION.
+           DISPLAY FUNCTION FACTORIAL ( 6 )
+           END-DISPLAY.
+           STOP RUN.
+])
+
+AT_CHECK([${COMPILE} -o prog prog.cob])
+AT_CHECK([./prog], [0],
+[000000000000000720
+])
+
+AT_CLEANUP
+
+AT_SETUP([FUNCTION FRACTION-PART])
+
+AT_DATA([prog.cob], [
+       IDENTIFICATION   DIVISION.
+       PROGRAM-ID.      prog.
+       DATA             DIVISION.
+       WORKING-STORAGE  SECTION.
+       PROCEDURE        DIVISION.
+           DISPLAY FUNCTION FRACTION-PART ( 3.12345 )
+           END-DISPLAY.
+           DISPLAY FUNCTION FRACTION-PART ( -3.12345 )
+           END-DISPLAY.
+           STOP RUN.
+])
+
+AT_CHECK([${COMPILE} -o prog prog.cob])
+AT_CHECK([./prog], [0],
+[+.123450000000000000
+-.123450000000000000
+])
+
+AT_CLEANUP
+
+AT_SETUP([FUNCTION INTEGER])
+
+AT_DATA([prog.cob], [
+       IDENTIFICATION   DIVISION.
+       PROGRAM-ID.      prog.
+       DATA             DIVISION.
+       WORKING-STORAGE  SECTION.
+       01  X   PIC   S9(4)V9(4) VALUE -1.5.
+       PROCEDURE        DIVISION.
+           DISPLAY FUNCTION INTEGER ( X )
+           END-DISPLAY.
+           STOP RUN.
+])
+
+AT_CHECK([${COMPILE} -o prog prog.cob])
+AT_CHECK([./prog], [0],
+[-000000000000000002
+])
+
+AT_CLEANUP
+
+AT_SETUP([FUNCTION INTEGER-OF-DATE])
+
+AT_DATA([prog.cob], [
+       IDENTIFICATION   DIVISION.
+       PROGRAM-ID.      prog.
+       DATA             DIVISION.
+       WORKING-STORAGE  SECTION.
+       PROCEDURE        DIVISION.
+           DISPLAY FUNCTION INTEGER-OF-DATE ( 20000925 )
+           END-DISPLAY.
+           STOP RUN.
+])
+
+AT_CHECK([${COMPILE} -o prog prog.cob])
+AT_CHECK([./prog], [0],
+[00146000
+])
+
+AT_CLEANUP
+
+AT_SETUP([FUNCTION INTEGER-OF-DAY])
+
+AT_DATA([prog.cob], [
+       IDENTIFICATION   DIVISION.
+       PROGRAM-ID.      prog.
+       DATA             DIVISION.
+       WORKING-STORAGE  SECTION.
+       PROCEDURE        DIVISION.
+           DISPLAY FUNCTION INTEGER-OF-DAY ( 2000269 )
+           END-DISPLAY.
+           STOP RUN.
+])
+
+AT_CHECK([${COMPILE} -o prog prog.cob])
+AT_CHECK([./prog], [0],
+[00146000
+])
+
+AT_CLEANUP
+
+AT_SETUP([FUNCTION INTEGER-PART])
+
+AT_DATA([prog.cob], [
+       IDENTIFICATION   DIVISION.
+       PROGRAM-ID.      prog.
+       DATA             DIVISION.
+       WORKING-STORAGE  SECTION.
+       01  X   PIC   S9(4)V9(4) VALUE -1.5.
+       PROCEDURE        DIVISION.
+           DISPLAY FUNCTION INTEGER-PART ( X )
+           END-DISPLAY.
+           STOP RUN.
+])
+
+AT_CHECK([${COMPILE} -o prog prog.cob])
+AT_CHECK([./prog], [0],
+[-000000000000000001
+])
+
+AT_CLEANUP
+
+AT_SETUP([FUNCTION LENGTH])
+
+AT_DATA([prog.cob], [
+       IDENTIFICATION   DIVISION.
+       PROGRAM-ID.      prog.
+       DATA             DIVISION.
+       WORKING-STORAGE  SECTION.
+       01  X   PIC   S9(4)V9(4) VALUE -1.5.
+       PROCEDURE        DIVISION.
+           DISPLAY FUNCTION LENGTH ( X )
+           END-DISPLAY.
+           STOP RUN.
+])
+
+AT_CHECK([${COMPILE} -o prog prog.cob])
+AT_CHECK([./prog], [0],
+[8
+])
+
+AT_CLEANUP
+
+AT_SETUP([FUNCTION LOCALE-DATE])
+
+AT_DATA([prog.cob], [
+       IDENTIFICATION   DIVISION.
+       PROGRAM-ID.      prog.
+       DATA             DIVISION.
+       WORKING-STORAGE  SECTION.
+       01  X   PIC   X(32)   VALUE SPACES.
+       PROCEDURE        DIVISION.
+           MOVE FUNCTION LOCALE-DATE ( "19630302" ) TO X.
+           IF X NOT = SPACES
+                DISPLAY "OK"
+                END-DISPLAY
+           END-IF.
+           STOP RUN.
+])
+
+AT_CHECK([${COMPILE} -o prog prog.cob])
+AT_CHECK([./prog], [0],
+[OK
+])
+
+AT_CLEANUP
+
+AT_SETUP([FUNCTION LOCALE-TIME])
+
+AT_DATA([prog.cob], [
+       IDENTIFICATION   DIVISION.
+       PROGRAM-ID.      prog.
+       DATA             DIVISION.
+       WORKING-STORAGE  SECTION.
+       01  X   PIC   X(32)   VALUE SPACES.
+       PROCEDURE        DIVISION.
+           MOVE FUNCTION LOCALE-TIME ( "233012" ) TO X.
+           IF X NOT = SPACES
+                DISPLAY "OK"
+                END-DISPLAY
+           END-IF.
+           STOP RUN.
+])
+
+AT_CHECK([${COMPILE} -o prog prog.cob])
+AT_CHECK([./prog], [0],
+[OK
+])
+
+AT_CLEANUP
+
+AT_SETUP([FUNCTION LOCALE-TIME-FROM-SECONDS])
+
+AT_DATA([prog.cob], [
+       IDENTIFICATION   DIVISION.
+       PROGRAM-ID.      prog.
+       DATA             DIVISION.
+       WORKING-STORAGE  SECTION.
+       01  X   PIC   X(32)   VALUE SPACES.
+       PROCEDURE        DIVISION.
+           MOVE FUNCTION LOCALE-TIME-FROM-SECONDS ( 33012 ) TO X.
+           IF X NOT = SPACES
+                DISPLAY "OK"
+                END-DISPLAY
+           END-IF.
+           STOP RUN.
+])
+
+AT_CHECK([${COMPILE} -o prog prog.cob])
+AT_CHECK([./prog], [0],
+[OK
+])
+
+AT_CLEANUP
+
+AT_SETUP([FUNCTION LOG])
+
+AT_DATA([prog.cob], [
+       IDENTIFICATION   DIVISION.
+       PROGRAM-ID.      prog.
+       DATA             DIVISION.
+       WORKING-STORAGE  SECTION.
+       01  X   PIC   S9(4)V9(4) VALUE 1.5.
+       01  Y   PIC   S9V9(17)   COMP.
+       PROCEDURE        DIVISION.
+           MOVE FUNCTION LOG ( X ) TO Y.
+           IF Y >= 0.40546510810816435 AND
+              Y <= 0.40546510810816445
+                   DISPLAY "OK"
+                   END-DISPLAY
+           ELSE
+                   DISPLAY Y
+                   END-DISPLAY
+           END-IF.
+           STOP RUN.
+])
+
+AT_CHECK([${COMPILE} -o prog prog.cob])
+AT_CHECK([./prog], [0],
+[OK
+])
+
+AT_CLEANUP
+
+AT_SETUP([FUNCTION LOG10])
+
+AT_DATA([prog.cob], [
+       IDENTIFICATION   DIVISION.
+       PROGRAM-ID.      prog.
+       DATA             DIVISION.
+       WORKING-STORAGE  SECTION.
+       01  X   PIC   S9(4)V9(4) VALUE 1.5.
+       01  Y   PIC   S9V9(17)   COMP.
+       PROCEDURE        DIVISION.
+           MOVE FUNCTION LOG10 ( X ) TO Y.
+           IF Y >= 0.17609125905568120 AND
+              Y <= 0.17609125905568128
+                   DISPLAY "OK"
+                   END-DISPLAY
+           ELSE
+                   DISPLAY Y
+                   END-DISPLAY
+           END-IF.
+           STOP RUN.
+])
+
+AT_CHECK([${COMPILE} -o prog prog.cob])
+AT_CHECK([./prog], [0],
+[OK
+])
+
+AT_CLEANUP
+
+AT_SETUP([FUNCTION LOWER-CASE])
+
+AT_DATA([prog.cob], [
+       IDENTIFICATION   DIVISION.
+       PROGRAM-ID.      prog.
+       DATA             DIVISION.
+       WORKING-STORAGE  SECTION.
+       01  X   PIC   X(10) VALUE "A#B.C%D+E$".
+       PROCEDURE        DIVISION.
+           DISPLAY FUNCTION LOWER-CASE ( X )
+           END-DISPLAY.
+           STOP RUN.
+])
+
+AT_CHECK([${COMPILE} -o prog prog.cob])
+AT_CHECK([./prog], [0],
+[a#b.c%d+e$
+])
+
+AT_CLEANUP
+
+AT_SETUP([FUNCTION LOWER-CASE with reference modding])
+
+AT_DATA([prog.cob], [
+       IDENTIFICATION   DIVISION.
+       PROGRAM-ID.      prog.
+       DATA             DIVISION.
+       WORKING-STORAGE  SECTION.
+       01  X   PIC   X(10) VALUE "A#B.C%D+E$".
+       PROCEDURE        DIVISION.
+           DISPLAY FUNCTION LOWER-CASE ( X ) (1 : 3)
+           END-DISPLAY.
+           STOP RUN.
+])
+
+AT_CHECK([${COMPILE} -o prog prog.cob])
+AT_CHECK([./prog], [0],
+[a#b
+])
+
+AT_CLEANUP
+
+AT_SETUP([FUNCTION MAX])
+
+AT_DATA([prog.cob], [
+       IDENTIFICATION   DIVISION.
+       PROGRAM-ID.      prog.
+       DATA             DIVISION.
+       WORKING-STORAGE  SECTION.
+       PROCEDURE        DIVISION.
+           DISPLAY FUNCTION MAX ( 3 -14 0 8 -3 )
+           END-DISPLAY.
+           STOP RUN.
+])
+
+AT_CHECK([${COMPILE} -o prog prog.cob])
+AT_CHECK([./prog], [0],
+[8
+])
+
+AT_CLEANUP
+
+AT_SETUP([FUNCTION MEAN])
+
+AT_DATA([prog.cob], [
+       IDENTIFICATION   DIVISION.
+       PROGRAM-ID.      prog.
+       DATA             DIVISION.
+       WORKING-STORAGE  SECTION.
+       PROCEDURE        DIVISION.
+           DISPLAY FUNCTION MEAN ( 3 -14 0 8 -3 )
+           END-DISPLAY.
+           STOP RUN.
+])
+
+AT_CHECK([${COMPILE} -o prog prog.cob])
+AT_CHECK([./prog], [0],
+[-1.20000000000000000
+])
+
+AT_CLEANUP
+
+AT_SETUP([FUNCTION MEDIAN])
+
+AT_DATA([prog.cob], [
+       IDENTIFICATION   DIVISION.
+       PROGRAM-ID.      prog.
+       DATA             DIVISION.
+       WORKING-STORAGE  SECTION.
+       PROCEDURE        DIVISION.
+           DISPLAY FUNCTION MEDIAN ( 3 -14 0 8 -3 )
+           END-DISPLAY.
+           STOP RUN.
+])
+
+AT_CHECK([${COMPILE} -o prog prog.cob])
+AT_CHECK([./prog], [0],
+[0
+])
+
+AT_CLEANUP
+
+AT_SETUP([FUNCTION MIDRANGE])
+
+AT_DATA([prog.cob], [
+       IDENTIFICATION   DIVISION.
+       PROGRAM-ID.      prog.
+       DATA             DIVISION.
+       WORKING-STORAGE  SECTION.
+       PROCEDURE        DIVISION.
+           DISPLAY FUNCTION MIDRANGE ( 3 -14 0 8 -3 )
+           END-DISPLAY.
+           STOP RUN.
+])
+
+AT_CHECK([${COMPILE} -o prog prog.cob])
+AT_CHECK([./prog], [0],
+[-3.000000000000000000
+])
+
+AT_CLEANUP
+
+AT_SETUP([FUNCTION MIN])
+
+AT_DATA([prog.cob], [
+       IDENTIFICATION   DIVISION.
+       PROGRAM-ID.      prog.
+       DATA             DIVISION.
+       WORKING-STORAGE  SECTION.
+       PROCEDURE        DIVISION.
+           DISPLAY FUNCTION MIN ( 3 -14 0 8 -3 )
+           END-DISPLAY.
+           STOP RUN.
+])
+
+AT_CHECK([${COMPILE} -o prog prog.cob])
+AT_CHECK([./prog], [0],
+[-14
+])
+
+AT_CLEANUP
+
+AT_SETUP([FUNCTION MOD])
+
+AT_DATA([prog.cob], [
+       IDENTIFICATION   DIVISION.
+       PROGRAM-ID.      prog.
+       DATA             DIVISION.
+       WORKING-STORAGE  SECTION.
+       PROCEDURE        DIVISION.
+           DISPLAY FUNCTION MOD ( -11 5 )
+           END-DISPLAY.
+           STOP RUN.
+])
+
+AT_CHECK([${COMPILE} -o prog prog.cob])
+AT_CHECK([./prog], [0],
+[+000000000000000004
+])
+
+AT_CLEANUP
+
+AT_SETUP([FUNCTION NUMVAL])
+
+AT_DATA([prog.cob], [
+       IDENTIFICATION   DIVISION.
+       PROGRAM-ID.      prog.
+       DATA             DIVISION.
+       WORKING-STORAGE  SECTION.
+       01  X   PIC   X(12) VALUE " -9876.1234 ".
+       PROCEDURE        DIVISION.
+           DISPLAY FUNCTION NUMVAL ( X )
+           END-DISPLAY.
+           STOP RUN.
+])
+
+AT_CHECK([${COMPILE} -o prog prog.cob])
+AT_CHECK([./prog], [0],
+[-00000000009876.1234
+])
+
+AT_CLEANUP
+
+AT_SETUP([FUNCTION NUMVAL-C])
+
+AT_DATA([prog.cob], [
+       IDENTIFICATION   DIVISION.
+       PROGRAM-ID.      prog.
+       DATA             DIVISION.
+       WORKING-STORAGE  SECTION.
+       01  X   PIC   X(14) VALUE " % -9876.1234 ".
+       PROCEDURE        DIVISION.
+           DISPLAY FUNCTION NUMVAL-C ( X , "%" )
+           END-DISPLAY.
+           STOP RUN.
+])
+
+AT_CHECK([${COMPILE} -o prog prog.cob])
+AT_CHECK([./prog], [0],
+[-00000000009876.1234
+])
+
+AT_CLEANUP
+
+AT_SETUP([FUNCTION ORD])
+
+AT_DATA([prog.cob], [
+       IDENTIFICATION   DIVISION.
+       PROGRAM-ID.      prog.
+       DATA             DIVISION.
+       WORKING-STORAGE  SECTION.
+       PROCEDURE        DIVISION.
+           DISPLAY FUNCTION ORD ( "k" )
+           END-DISPLAY.
+           STOP RUN.
+])
+
+AT_CHECK([${COMPILE} -o prog prog.cob])
+AT_CHECK([./prog], [0],
+[00000108
+])
+
+AT_CLEANUP
+
+AT_SETUP([FUNCTION ORD-MAX])
+
+AT_DATA([prog.cob], [
+       IDENTIFICATION   DIVISION.
+       PROGRAM-ID.      prog.
+       DATA             DIVISION.
+       WORKING-STORAGE  SECTION.
+       PROCEDURE        DIVISION.
+           DISPLAY FUNCTION ORD-MAX ( 3 -14 0 8 -3 )
+           END-DISPLAY.
+           STOP RUN.
+])
+
+AT_CHECK([${COMPILE} -o prog prog.cob])
+AT_CHECK([./prog], [0],
+[00000004
+])
+
+AT_CLEANUP
+
+AT_SETUP([FUNCTION ORD-MIN])
+
+AT_DATA([prog.cob], [
+       IDENTIFICATION   DIVISION.
+       PROGRAM-ID.      prog.
+       DATA             DIVISION.
+       WORKING-STORAGE  SECTION.
+       PROCEDURE        DIVISION.
+           DISPLAY FUNCTION ORD-MIN ( 3 -14 0 8 -3 )
+           END-DISPLAY.
+           STOP RUN.
+])
+
+AT_CHECK([${COMPILE} -o prog prog.cob])
+AT_CHECK([./prog], [0],
+[00000002
+])
+
+AT_CLEANUP
+
+AT_SETUP([FUNCTION PI])
+
+AT_DATA([prog.cob], [
+       IDENTIFICATION   DIVISION.
+       PROGRAM-ID.      prog.
+       DATA             DIVISION.
+       WORKING-STORAGE  SECTION.
+       PROCEDURE        DIVISION.
+           DISPLAY FUNCTION PI
+           END-DISPLAY.
+           STOP RUN.
+])
+
+AT_CHECK([${COMPILE} -o prog prog.cob])
+AT_CHECK([./prog], [0],
+[3.1415926535897932384626433832795029
+])
+
+AT_CLEANUP
+
+AT_SETUP([FUNCTION PRESENT-VALUE])
+
+AT_DATA([prog.cob], [
+       IDENTIFICATION   DIVISION.
+       PROGRAM-ID.      prog.
+       DATA             DIVISION.
+       WORKING-STORAGE  SECTION.
+       PROCEDURE        DIVISION.
+           DISPLAY FUNCTION PRESENT-VALUE ( 3 2 1 )
+           END-DISPLAY.
+           STOP RUN.
+])
+
+AT_CHECK([${COMPILE} -o prog prog.cob])
+AT_CHECK([./prog], [0],
+[0.562500000000000000
+])
+
+AT_CLEANUP
+
+AT_SETUP([FUNCTION RANGE])
+
+AT_DATA([prog.cob], [
+       IDENTIFICATION   DIVISION.
+       PROGRAM-ID.      prog.
+       DATA             DIVISION.
+       WORKING-STORAGE  SECTION.
+       PROCEDURE        DIVISION.
+           DISPLAY FUNCTION RANGE ( 3 -14 0 8 -3 )
+           END-DISPLAY.
+           STOP RUN.
+])
+
+AT_CHECK([${COMPILE} -o prog prog.cob])
+AT_CHECK([./prog], [0],
+[+000000000000000022
+])
+
+AT_CLEANUP
+
+AT_SETUP([FUNCTION REM])
+
+AT_DATA([prog.cob], [
+       IDENTIFICATION   DIVISION.
+       PROGRAM-ID.      prog.
+       DATA             DIVISION.
+       WORKING-STORAGE  SECTION.
+       PROCEDURE        DIVISION.
+           DISPLAY FUNCTION REM ( -11 5 )
+           END-DISPLAY.
+           STOP RUN.
+])
+
+AT_CHECK([${COMPILE} -o prog prog.cob])
+AT_CHECK([./prog], [0],
+[-000000000000000001
+])
+
+AT_CLEANUP
+
+AT_SETUP([FUNCTION REVERSE])
+
+AT_DATA([prog.cob], [
+       IDENTIFICATION   DIVISION.
+       PROGRAM-ID.      prog.
+       DATA             DIVISION.
+       WORKING-STORAGE  SECTION.
+       01  X   PIC   X(10) VALUE "A#B.C%D+E$".
+       PROCEDURE        DIVISION.
+           DISPLAY FUNCTION REVERSE ( X )
+           END-DISPLAY.
+           STOP RUN.
+])
+
+AT_CHECK([${COMPILE} -o prog prog.cob])
+AT_CHECK([./prog], [0],
+[$E+D%C.B#A
+])
+
+AT_CLEANUP
+
+AT_SETUP([FUNCTION REVERSE with reference modding])
+
+AT_DATA([prog.cob], [
+       IDENTIFICATION   DIVISION.
+       PROGRAM-ID.      prog.
+       DATA             DIVISION.
+       WORKING-STORAGE  SECTION.
+       01  X   PIC   X(10) VALUE "A#B.C%D+E$".
+       PROCEDURE        DIVISION.
+           DISPLAY FUNCTION REVERSE ( X ) (1 : 4)
+           END-DISPLAY.
+           STOP RUN.
+])
+
+AT_CHECK([${COMPILE} -o prog prog.cob])
+AT_CHECK([./prog], [0],
+[$E+D
+])
+
+AT_CLEANUP
+
+AT_SETUP([FUNCTION SECONDS-FROM-FORMATTED-TIME])
+
+AT_DATA([prog.cob], [
+       IDENTIFICATION   DIVISION.
+       PROGRAM-ID.      prog.
+       DATA             DIVISION.
+       WORKING-STORAGE  SECTION.
+       01  X   PIC      X(6)   VALUE "hhmmss".
+       01  Y   PIC      9(8)   COMP-5.
+       01  Z   PIC      X(6)   VALUE "010203".
+       PROCEDURE        DIVISION.
+           MOVE FUNCTION SECONDS-FROM-FORMATTED-TIME (X, Z) TO Y.
+           IF Y = 3723
+                   DISPLAY "OK"
+                   END-DISPLAY
+           ELSE
+                   DISPLAY Y
+                   END-DISPLAY
+           END-IF.
+           STOP RUN.
+])
+
+AT_CHECK([${COMPILE} -o prog prog.cob])
+AT_CHECK([./prog], [0],
+[OK
+])
+
+AT_CLEANUP
+
+AT_SETUP([FUNCTION SECONDS-PAST-MIDNIGHT])
+
+AT_DATA([prog.cob], [
+       IDENTIFICATION   DIVISION.
+       PROGRAM-ID.      prog.
+       DATA             DIVISION.
+       WORKING-STORAGE  SECTION.
+       01  Y   PIC      9(8)   COMP-5.
+       PROCEDURE        DIVISION.
+           MOVE FUNCTION SECONDS-PAST-MIDNIGHT TO Y.
+           IF Y < 86402
+                   DISPLAY "OK"
+                   END-DISPLAY
+           ELSE
+                   DISPLAY Y
+                   END-DISPLAY
+           END-IF.
+           STOP RUN.
+])
+
+AT_CHECK([${COMPILE} -o prog prog.cob])
+AT_CHECK([./prog], [0],
+[OK
+])
+
+AT_CLEANUP
+
+AT_SETUP([FUNCTION SIGN])
+
+AT_DATA([prog.cob], [
+       IDENTIFICATION   DIVISION.
+       PROGRAM-ID.      prog.
+       DATA             DIVISION.
+       WORKING-STORAGE  SECTION.
+       PROCEDURE        DIVISION.
+           DISPLAY FUNCTION SIGN ( 3.12345 )
+           END-DISPLAY.
+           DISPLAY FUNCTION SIGN ( -0.0 )
+           END-DISPLAY.
+           DISPLAY FUNCTION SIGN ( 0.0 )
+           END-DISPLAY.
+           DISPLAY FUNCTION SIGN ( -3.12345 )
+           END-DISPLAY.
+           STOP RUN.
+])
+
+AT_CHECK([${COMPILE} -o prog prog.cob])
+AT_CHECK([./prog], [0],
+[+00000001
++00000000
++00000000
+-00000001
+])
+
+AT_CLEANUP
+
+AT_SETUP([FUNCTION SIN])
+
+AT_DATA([prog.cob], [
+       IDENTIFICATION   DIVISION.
+       PROGRAM-ID.      prog.
+       DATA             DIVISION.
+       WORKING-STORAGE  SECTION.
+       01  X   PIC   S9(4)V9(4) VALUE 1.5.
+       01  Y   PIC   S9V9(17)   COMP.
+       PROCEDURE        DIVISION.
+           MOVE FUNCTION SIN ( X ) TO Y.
+           IF Y >= 0.99749498660405440 AND
+              Y <= 0.99749498660405450
+                   DISPLAY "OK"
+                   END-DISPLAY
+           ELSE
+                   DISPLAY Y
+                   END-DISPLAY
+           END-IF.
+           STOP RUN.
+])
+
+AT_CHECK([${COMPILE} -o prog prog.cob])
+AT_CHECK([./prog], [0],
+[OK
+])
+
+AT_CLEANUP
+
+AT_SETUP([FUNCTION SQRT])
+
+AT_DATA([prog.cob], [
+       IDENTIFICATION   DIVISION.
+       PROGRAM-ID.      prog.
+       DATA             DIVISION.
+       WORKING-STORAGE  SECTION.
+       01  X   PIC   S9(4)V9(4) VALUE 1.5.
+       01  Y   PIC   S9V9(17)   COMP.
+       PROCEDURE        DIVISION.
+           MOVE FUNCTION SQRT ( X ) TO Y.
+           IF Y >= 1.22474487139158890 AND
+              Y <= 1.22474487139158899
+                   DISPLAY "OK"
+                   END-DISPLAY
+           ELSE
+                   DISPLAY Y
+                   END-DISPLAY
+           END-IF.
+           STOP RUN.
+])
+
+AT_CHECK([${COMPILE} -o prog prog.cob])
+AT_CHECK([./prog], [0],
+[OK
+])
+
+AT_CLEANUP
+
+AT_SETUP([FUNCTION STANDARD-DEVIATION])
+
+AT_DATA([prog.cob], [
+       IDENTIFICATION   DIVISION.
+       PROGRAM-ID.      prog.
+       DATA             DIVISION.
+       WORKING-STORAGE  SECTION.
+       01  Y   PIC   S9V9(17)   COMP.
+       PROCEDURE        DIVISION.
+           MOVE FUNCTION STANDARD-DEVIATION ( 3 -14 0 8 -3 ) TO Y.
+           IF Y >= 7.35934779718963925 AND
+              Y <= 7.35934779718964025
+                   DISPLAY "OK"
+                   END-DISPLAY
+           ELSE
+                   DISPLAY Y
+                   END-DISPLAY
+           END-IF.
+           STOP RUN.
+])
+
+AT_CHECK([${COMPILE} -o prog prog.cob])
+AT_CHECK([./prog], [0],
+[OK
+])
+
+AT_CLEANUP
+
+AT_SETUP([FUNCTION STORED-CHAR-LENGTH])
+
+AT_DATA([prog.cob], [
+       IDENTIFICATION   DIVISION.
+       PROGRAM-ID.      prog.
+       DATA             DIVISION.
+       WORKING-STORAGE  SECTION.
+       01  Y   PIC   X(24).
+       PROCEDURE        DIVISION.
+           MOVE "123456789012" TO Y.
+           DISPLAY FUNCTION STORED-CHAR-LENGTH ( Y )
+           END-DISPLAY.
+           STOP RUN.
+])
+
+AT_CHECK([${COMPILE} -o prog prog.cob])
+AT_CHECK([./prog], [0],
+[00000012
+])
+
+AT_CLEANUP
+
+AT_SETUP([FUNCTION SUBSTITUTE])
+
+AT_DATA([prog.cob], [
+       IDENTIFICATION   DIVISION.
+       PROGRAM-ID.      prog.
+       DATA             DIVISION.
+       WORKING-STORAGE  SECTION.
+       01  Y   PIC   X(20).
+       PROCEDURE        DIVISION.
+           MOVE "abc111444555defxxabc" TO Y.
+           DISPLAY FUNCTION SUBSTITUTE ( Y "abc" "zz" "55" "666" )
+           END-DISPLAY.
+           STOP RUN.
+])
+
+AT_CHECK([${COMPILE} -o prog prog.cob])
+AT_CHECK([./prog], [0],
+[zz1114446665defxxzz
+])
+
+AT_CLEANUP
+
+AT_SETUP([FUNCTION SUBSTITUTE with reference modding])
+
+AT_DATA([prog.cob], [
+       IDENTIFICATION   DIVISION.
+       PROGRAM-ID.      prog.
+       DATA             DIVISION.
+       WORKING-STORAGE  SECTION.
+       01  Y   PIC   X(20).
+       PROCEDURE        DIVISION.
+           MOVE "abc111444555defxxabc" TO Y.
+           DISPLAY FUNCTION SUBSTITUTE
+                   ( Y "abc" "zz" "55" "666" ) (2 : 9)
+           END-DISPLAY.
+           STOP RUN.
+])
+
+AT_CHECK([${COMPILE} -o prog prog.cob])
+AT_CHECK([./prog], [0],
+[z11144466
+])
+
+AT_CLEANUP
+
+AT_SETUP([FUNCTION SUBSTITUTE-CASE])
+
+AT_DATA([prog.cob], [
+       IDENTIFICATION   DIVISION.
+       PROGRAM-ID.      prog.
+       DATA             DIVISION.
+       WORKING-STORAGE  SECTION.
+       01  Y   PIC   X(20).
+       PROCEDURE        DIVISION.
+           MOVE "ABC111444555defxxabc" TO Y.
+           DISPLAY FUNCTION SUBSTITUTE-CASE (Y "abc" "zz" "55" "666")
+           END-DISPLAY.
+           STOP RUN.
+])
+
+AT_CHECK([${COMPILE} -o prog prog.cob])
+AT_CHECK([./prog], [0],
+[zz1114446665defxxzz
+])
+
+AT_CLEANUP
+
+AT_SETUP([FUNCTION SUBSTITUTE-CASE with reference mod])
+
+AT_DATA([prog.cob], [
+       IDENTIFICATION   DIVISION.
+       PROGRAM-ID.      prog.
+       DATA             DIVISION.
+       WORKING-STORAGE  SECTION.
+       01  Y   PIC   X(20).
+       PROCEDURE        DIVISION.
+           MOVE "abc111444555defxxabc" TO Y.
+           DISPLAY FUNCTION SUBSTITUTE-CASE
+                   ( Y "ABC" "zz" "55" "666" ) (2 : 9)
+           END-DISPLAY.
+           STOP RUN.
+])
+
+AT_CHECK([${COMPILE} -o prog prog.cob])
+AT_CHECK([./prog], [0],
+[z11144466
+])
+
+AT_CLEANUP
+
+AT_SETUP([FUNCTION TAN])
+
+AT_DATA([prog.cob], [
+       IDENTIFICATION   DIVISION.
+       PROGRAM-ID.      prog.
+       DATA             DIVISION.
+       WORKING-STORAGE  SECTION.
+       01  X   PIC   S9(4)V9(4) VALUE 1.5.
+       01  Y   PIC   S99V9(16)   COMP.
+       PROCEDURE        DIVISION.
+           MOVE FUNCTION TAN ( X ) TO Y.
+           IF Y >= 14.1014199471717185 AND
+              Y <= 14.1014199471717205
+                   DISPLAY "OK"
+                   END-DISPLAY
+           ELSE
+                   DISPLAY Y
+                   END-DISPLAY
+           END-IF.
+           STOP RUN.
+])
+
+AT_CHECK([${COMPILE} -o prog prog.cob])
+AT_CHECK([./prog], [0],
+[OK
+])
+
+AT_CLEANUP
+
+AT_SETUP([FUNCTION TRIM])
+
+AT_DATA([prog.cob], [
+       IDENTIFICATION   DIVISION.
+       PROGRAM-ID.      prog.
+       DATA             DIVISION.
+       WORKING-STORAGE  SECTION.
+       01  X   PIC   X(12) VALUE " a#b.c%d+e$ ".
+       PROCEDURE        DIVISION.
+           DISPLAY FUNCTION TRIM ( X )
+           END-DISPLAY.
+           DISPLAY FUNCTION TRIM ( X TRAILING )
+           END-DISPLAY.
+           STOP RUN.
+])
+
+AT_CHECK([${COMPILE} -o prog prog.cob])
+AT_CHECK([./prog], [0],
+[a#b.c%d+e$
+ a#b.c%d+e$
+])
+
+AT_CLEANUP
+
+AT_SETUP([FUNCTION TRIM with reference modding])
+
+AT_DATA([prog.cob], [
+       IDENTIFICATION   DIVISION.
+       PROGRAM-ID.      prog.
+       DATA             DIVISION.
+       WORKING-STORAGE  SECTION.
+       01  X   PIC   X(12) VALUE " a#b.c%d+e$ ".
+       PROCEDURE        DIVISION.
+           DISPLAY FUNCTION TRIM ( X ) (2 : 3)
+           END-DISPLAY.
+           DISPLAY FUNCTION TRIM ( X TRAILING ) (2 : 3)
+           END-DISPLAY.
+           STOP RUN.
+])
+
+AT_CHECK([${COMPILE} -o prog prog.cob])
+AT_CHECK([./prog], [0],
+[#b.
+a#b
+])
+
+AT_CLEANUP
+
+AT_SETUP([FUNCTION UPPER-CASE])
+
+AT_DATA([prog.cob], [
+       IDENTIFICATION   DIVISION.
+       PROGRAM-ID.      prog.
+       DATA             DIVISION.
+       WORKING-STORAGE  SECTION.
+       01  X   PIC   X(10) VALUE "a#b.c%d+e$".
+       PROCEDURE        DIVISION.
+           DISPLAY FUNCTION UPPER-CASE ( X )
+           END-DISPLAY.
+           STOP RUN.
+])
+
+AT_CHECK([${COMPILE} -o prog prog.cob])
+AT_CHECK([./prog], [0],
+[A#B.C%D+E$
+])
+
+AT_CLEANUP
+
+AT_SETUP([FUNCTION UPPER-CASE with reference modding])
+
+AT_DATA([prog.cob], [
+       IDENTIFICATION   DIVISION.
+       PROGRAM-ID.      prog.
+       DATA             DIVISION.
+       WORKING-STORAGE  SECTION.
+       01  X   PIC   X(10) VALUE "a#b.c%d+e$".
+       PROCEDURE        DIVISION.
+           DISPLAY FUNCTION UPPER-CASE ( X ) (1 : 3)
+           END-DISPLAY.
+           STOP RUN.
+])
+
+AT_CHECK([${COMPILE} -o prog prog.cob])
+AT_CHECK([./prog], [0],
+[A#B
+])
+
+AT_CLEANUP
+
+AT_SETUP([FUNCTION VARIANCE])
+
+AT_DATA([prog.cob], [
+       IDENTIFICATION   DIVISION.
+       PROGRAM-ID.      prog.
+       DATA             DIVISION.
+       WORKING-STORAGE  SECTION.
+       PROCEDURE        DIVISION.
+           DISPLAY FUNCTION VARIANCE ( 3 -14 0 8 -3 )
+           END-DISPLAY.
+           STOP RUN.
+])
+
+AT_CHECK([${COMPILE} -o prog prog.cob])
+AT_CHECK([./prog], [0],
+[+54.1600000000000000
+])
+
+AT_CLEANUP
+
+AT_SETUP([FUNCTION WHEN-COMPILED])
+
+AT_DATA([prog.cob], [
+       IDENTIFICATION   DIVISION.
+       PROGRAM-ID.      prog.
+       DATA             DIVISION.
+       WORKING-STORAGE  SECTION.
+       01  XYZ.
+           03 X         PIC X.
+           03 FILLER    PIC X(20).
+       PROCEDURE        DIVISION.
+           MOVE FUNCTION WHEN-COMPILED TO XYZ.
+           IF X = "2"
+              DISPLAY "OK"
+              END-DISPLAY
+           ELSE
+              DISPLAY "NOT OK"
+              END-DISPLAY
+           END-IF.
+           STOP RUN.
+])
+
+AT_CHECK([${COMPILE} -o prog prog.cob])
+AT_CHECK([./prog], [0],
+[OK
+])
+
+AT_CLEANUP

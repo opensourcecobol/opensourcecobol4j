@@ -1,0 +1,23 @@
+NEWS - user visible changes				-*- outline -*-
+
+* release opensource COBOL4J developers edition.
+
+** New features
+
+*** compilation to java from COBOL.
+    (1) Improved cobc to output Java file.
+        
+    (2) Converted the library `libcob` for using COBOL to Java `libcobj`.
+
+** Unimplemented
+
+*** Features under development
+	(1) Sort.
+
+	(2) Numeric Edited.
+
+	(3) Calling an external Java library.
+
+	and more....
+
+-----------------------------------------------------------------------

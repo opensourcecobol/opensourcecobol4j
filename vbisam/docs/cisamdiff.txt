@@ -1,0 +1,604 @@
+Known differences: C-ISAM® versus VBISAM©
+
+Overview
+
+The author has the impression that C-ISAM contains several BUGS that
+have been explicitly coded differently in VBISAM.  This section
+describes how VBISAM intentionally deviates from Informix C-ISAM.
+
+Transactional locks - Missing iscommit () or isrollback ()
+
+C-ISAM
+
+If a process opens the log, begins a transaction, opens a table, writes
+a row, closes the table and then closes the log (Note: There is no
+explicit call to either iscommit or isrollback), then the table still
+contains the row that was written.  However, the log contains an
+implicit isrollback.
+
+VBISAM
+
+In the above circumstances, the implicit isrollback is actually applied
+to the table itself thus the written row is `removed'.
+
+SYNOPSIS
+
+VBISAM endeavors to keep the table content matching the reality of the
+log file.
+
+Additionally, if a system-crash were to occur such as loss of power thus
+causing an `open' transaction (one without an explicit iscommit or
+isrollback) to appear in the log file, then this needs to be assumed as
+a rolled back transaction for the purposes of the isrecover call.  At
+present, VBISAM fails in this regard (as does CISAM) in that it
+chronologically `replays' all transactions in the log file during an
+isrecover call.  The simplest `cure' will be for isrecover to maintain a
+linked list of all `open' begin work transactions it encounters
+(inclusive of the offset within the log file).  Upon encountering an
+iscommit or isrollback transaction, the entry in the linked list is
+removed.  Upon reaching the end of the log file, the isrecover call
+needs to rollback all transactions that are currently `open'.  (These
+being simply defined as the current linked list content).  Thanks to
+Mikhail for having pointed this out to me.
+
+Note for self:  It may prove to be far more efficient to only replay
+transactions that have an explicit iscommit transaction.  I.e. for each
+isbegin transaction encountered in the log file, search for a
+corresponding iscommit transaction and, if not present, ignore the
+transaction as a whole thereby simulating an isrollback without having
+to perform all the intervening transactions.
+
+Late-breaking news:  Since I'm now seriously considering the two-phase
+commit approach, I'll be required to complicate the VBISAM equivalent to
+BCHECK since there becomes a higher likelihood of incomplete
+transactional data in the ISAM file should a system crash occur.
+
+An A.C.I.D. test (pretty basic really)
+
+C-ISAM
+
+Consider two independent processes, A and B working on a table with a
+unique index and the following timeline.
+
+A begins a transaction, opens the table, and deletes a pre-existing row
+from the table.
+
+B begins a transaction, opens the table, creates a new row with the same
+index as was deleted by A.  (And this succeeds although it is given a
+different physical row number since A still holds a lock on the old
+row).  B now closes the table and commits the transaction.
+
+A now decides it did not want to delete the row and therefore calls the
+isrollback function.  However, it cannot do so since re-creating the row
+in question would now cause an EDUPL error since B has re-created it. 
+Worse still is the fact that the data free list in the table is now
+physically corrupted (The row number associated with the deleted row is
+not appended to the data free list!)
+
+VBISAM
+
+The above highlights the fact that C-ISAM is far from able to pass a
+basic database `A.C.I.D.' test.  VBISAM will differ by delaying the
+physical deletion of the row in process A until an explicit call is made
+to iscommit ().  Therefore, Process B will correctly receive an EDUPL
+error when it tries to insert the row.  (Actually, this is an
+oversimplification of the difference, more details below)
+
+SYNOPSIS
+
+VBISAM rules! A.C.I.D. rules! C-ISAM simply drools.  (See below too)
+
+C-ISAM can deadlock itself (Single-process)
+
+C-ISAM
+
+This one is `scary'...
+
+A process opens the log, begins a transaction, opens a table, writes a
+row, reads a row with lock, locks the file (with islock), and then calls
+isrelease.
+
+C-ISAM has now deadlocked itself.  The isrelease call DOES NOT return! 
+The process is a runaway consuming all available CPU resource!
+
+VBISAM
+
+In VBISAM, the isrelease call will release all `non-transactional'
+locks.  However, since every row in the table is locked with a
+transactional lock (by way of the islock call), the isrelease call
+releases nothing.  (The row lock from the isread call was `promoted' to
+be part of the transactional islock call)
+
+SYNOPSIS
+
+Once again, VBISAM rules while C-ISAM drools.
+
+ACID: Atomicity, Consistency, Isolation, Durability
+
+ISWRITE, ISWRCURR
+
+Always inserts the new key values immediately (See note 1 below)
+
+When within a transaction
+
+Locks the data row prior to leaving the function
+
+Upon commit
+
+Downgrade the lock on the data row
+
+Upon rollback
+
+Remove the key values
+
+Downgrade the lock on the data row
+
+When not within a transaction
+
+Nothing more to do
+
+ISREWRITE, ISREWCURR, ISREWREC
+
+Always inserts the newly changed key values immediately (See note 1
+below)
+
+When within a transaction
+
+Locks the data row prior to leaving the function
+
+Upon commit
+
+Remove the old changed key values
+
+Downgrade the lock on the data row
+
+Upon rollback
+
+Remove the new changed key values
+
+Downgrade the lock on the data row
+
+When not within a transaction
+
+Remove the old changed key values
+
+ISDELETE, ISDELCURR, ISDELREC
+
+When within a transaction
+
+Locks the data row prior to leaving the function
+
+Upon commit
+
+Remove the key values
+
+Downgrade the lock on the data row
+
+Upon rollback
+
+Downgrade the lock on the data row
+
+When not within a transaction
+
+Remove the key values
+
+ISREAD
+
+Locks are applied as per function call / open type
+
+Note 1
+
+The fact that the deleted keys of rows the have been updated / removed
+are not actually removed until the time of committing when in
+transaction mode causes an issue.  Namely, if the process that performed
+the deletion / update of the row decides to re-create the same key
+values (either via an insert or an update), then it must be able to
+succeed despite the fact that there might be an EDUPL key violation. 
+The `safest' way I can think to do this is to hold a linked-list of
+every key that needs to be deleted  (Kept in key number order).  When
+processing a key insertion, it should not report an EDUPL if the key in
+question exists in the `keys to be deleted' list.  The linked list will
+need to hold the following pieces of information in order to correctly
+process the upcoming iscommit () / isrollback () call:
+
+Key value
+
+Key duplicate number
+
+Data file row number being deleted
+
+Data file row number of the possibly re-created row.  This is to avoid
+the possibility multiple re-creations within a single transaction.  It's
+noteworthy to mention that this methodology implies that the duplicate
+number will not necessarily be in the chronological order of creation in
+this instance but to my knowledge, this is not a requirement of any
+ISAM.
+
+Therefore, the iVBKeyInsert () function uses the following logic (Since
+the `deleted key' list will be empty when we're not within a
+transaction, this same logic will apply in either case!):
+
+Check whether the key is in the `deleted key' list...  If not, or if all
+the corresponding entries in the deleted-key list have already been
+`re-used', insert a completely new key and return to the caller
+
+Insert the new data row number into the relevant deleted-key list entry
+
+Read, update and rewrite the index node associated with the deleted key
+
+Return to the caller
+
+The iVBKeyDelete () function as it stands needs to become three separate
+functions.
+
+The first function, which will retain the name iVBKeyDelete (), remains
+the primary entry point to key deletion.  If this function determines
+that it is within a transaction, control will be immediately passed to
+the second function (below).  Otherwise, it will process as per the
+current logic.
+
+The second function, which will be named iVBKeyToList (), is only
+utilized when within a transaction.  All this function does is to
+allocate a deleted-key memory-node, populate it with the key-value,
+duplicate-number and data file row number, and then append the
+deleted-key memory-node to the corresponding key-deleted list.
+
+The third function, which will be named iVBListDelete (), is only
+utilized when within a transaction.  It will only be called from the
+iscommit () function.  Its sole purpose will be to physically delete all
+the keys in each of the tables' deleted-key lists.
+
+The iscommit () function should only need to be modified to call the new
+iVBListDelete () function described above.  The fact that the
+deleted-key linked list holds all the relevant information means that we
+should no longer need to call the iRollMeForward () function from within
+iscommit ().
+
+The isrollback () function requires significant modifications.  Since no
+key values were actually deleted during the transaction, they will not
+need to be re-inserted.  However, all keys that were inserted during the
+transaction need to be either deleted, or updated back to their original
+values (specifically, the row number) if they appeared in the
+deleted-key linked list and had been subsequently `re-created' during
+the lifecycle of the transaction.
+
+The isrecover () function was never correctly implemented in the first
+place.  The methodology to follow is to ONLY roll forward those
+transactions that have a corresponding commit work closing transaction. 
+The `non transactional' versions of the native ISAM functions should be
+called to write, rewrite or delete rows from within isrecover ().
+
+LOCKING
+
+Determining locking method at the time of the ISOPEN call
+
+Overview
+
+When an ISAM table is opened with the isopen () call, the last argument
+defines the locking strategy to be used.  One of the following three
+options must be specified to the isopen () call.
+
+ISEXCLLOCK
+
+The entire table is locked.
+
+If, at the time of executing this call any other process has the table
+open in any mode, the call to isopen () will fail.
+
+ISMANULOCK
+
+Locking is directly under the control of the executing process with the
+noted exception of locks applied by the library as part of a
+transaction.
+
+ISAUTOLOCK
+
+The isread () function call automatically applies a record-level lock
+upon every successful read.  Such locks are automatically released upon
+the next ISAM function call (including the next call to the isread ()
+function.  The isstart () call has the ability to `keep' the lock by way
+of including the ISKEEPLOCK value in the final argument.
+
+Assumption:  Only calls to ISAM functions that are directly related to
+the same table will cause the automatic lock-release to occur.
+
+Question: Does this include the following functions?
+
+isaddindex ()
+
+isaudit ()
+
+iscluster ()
+
+isdelindex ()
+
+isflush ()
+
+isindexinfo ()
+
+isrecover ()
+
+issetunique ()
+
+isuniqueid ()
+
+Assumption: No! The only calls that cause the automatic unlock are:
+
+isdelcurr ()
+
+isdelete ()
+
+isdelrec ()
+
+isread ()
+
+isrewcurr ()
+
+isrewrec ()
+
+isrewrite ()
+
+isstart () (With optional lock retention if ISKEEPLOCK is set)
+
+iswrcurr ()
+
+iswrite ()
+
+Table level locking
+
+There are two forms of table level locking.
+
+One is described above as the ISEXCLLOCK parameter being passed to the
+isopen () call.  This has the effect of making certain that no other
+process has the table open.
+
+The other method is to use the islock () and isunlock () calls.
+
+The islock () call has the effect of applying a lock to every possible
+row of the underlying table. This includes rows that do not even exist
+(yet). Therefore, it becomes impossible for any other process to acquire
+a lock upon any row within the table.  The isunlock () call effectively
+`undoes' the islock () call releasing any and all locks held on the
+table in question.
+
+An important note is that the islock () call is considered a
+transactional call even though it does not physically modify any data
+and nor is it recorded in the log file.  The effect of this is that a
+call to islock remains in effect until an explicit call is made to
+either iscommit () or isrollback.  In other words, calling isunlock ()
+or isrelease () within a transaction does not unlock any `transactional'
+locks.  The iscommit () and isrollback () calls explicitly release all
+locks held on any table.  (This information was found by empirically
+testing C-ISAM)
+
+Row level locking
+
+VBISAM - The internals
+
+Background
+
+I am writing this section of this document for various reasons.  One is
+to remind me of what the various internally used structures within
+VBISAM are for.  Another is to (hopefully) assist the next poor schmuck
+that decides he / she has the intestinal fortitude to crash and bash on
+the internals of VBISAM.
+
+This document assumes a thorough working knowledge of the actual
+physical file formats of the index, data and log files of C-ISAM (and
+thus of VBISAM too).
+
+Unless otherwise noted, this section is independent of whether VBISAM is
+compiled in 32-bit mode or 64-bit mode.
+
+Data File I/O
+
+Overview
+
+This is the simple stuff.  Really, it is.  Since the low level routines
+used to load / store rows in the data file are the same ones used by the
+Index I/O functions, I'll begin here.
+
+Primary Entry points
+
+There are only two entry points to be concerned with, iVBDataRead and
+iVBDataWrite.  These two functions convert from looking at a BLOCK sized
+structure (disk based) to a ROW sized structure (memory based) and vice
+versa.
+
+Caching
+
+All data is read and written in blocks that are equal in size to that of
+the corresponding index node.  The block size is totally independent of
+the index node size.  Every time a block is read / written to a file, it
+uses the iVBBlockRead / iVBBlockWrite functions.  These functions form a
+simple LRU (Least Recently Used) in-memory cache and, when a `cache-hit'
+occurs, they alleviate the unnecessary system call overhead. 
+Technically speaking, they would not greatly improve performance on a
+modern Unix-based system such as Linux since the underlying system
+already maintains a disk cache using all available memory.  However, on
+legacy systems (i.e. Micro$oft WinDoze and it's eight/sixteen-bit
+predecessors created by a two-bit company without one bit of sense),
+they really come into their own!
+
+The cache itself is totally unified in that it matters not whether the
+file being accessed is the data file or the index file.  The size of the
+cache in memory is controlled by two factors:
+
+The maximum node size as compiled into VBISAM
+
+The value of the VB_BLOCK_BUFFERS environment variable (defaults to 256)
+
+With the default 1024 byte (4096 bytes in 64-bit mode) maximum node size
+and the default value for VB_BLOCK_BUFFERS, this equates to reserving
+256kB (1MB) of memory for raw block caching.
+
+At present, VB_BLOCK_BUFFERS must be between 4 and 1024 inclusive.  If
+it's outside that range or if it is not defined, then the default value
+of 256 is used.
+
+Its is probably worth experimenting with systems such as Linux to find
+out how much of a detriment the double-caching is to overall
+performance... Especially on systems that are light on memory.  In
+addition, it's probably worth checking whether the overhead is
+outweighed by the positive side effect of caching data that might be
+resident on a remote NFS-like file system.
+
+An extremely important point to grasp is that the dictionary node of the
+index file is never cached within VBISAM as this node is used as a
+primary `concurrency check' to ascertain whether the cache remains
+consistent or should be invalidated.
+
+Index File I/O
+
+Overview
+
+Ouch, this is the really hard stuff.  As mentioned above, it is expected
+that you already know the basic internal node format of C-ISAM index
+files and, if not, I suggest that you go and read the relevant C-ISAM /
+VBISAM literature right now.
+
+DICTINFO
+
+This structure is the central `glue' of VBISAM.  There is an array of
+pointers (psVBFile []) to such structures.  Each non-null structure is
+the centralized starting point for a currently `open' VBISAM table.
+
+DICTNODE
+
+This structure holds the content of the dictionary node of the index
+file within a currently open VBISAM table.  The length of the fields
+defined within this structure are dependent upon whether VBISAM was
+compiled in 32-bit or 64-bit mode due to the value difference of
+QUADSIZE.
+
+Every open VBISAM table has a DICTNODE structure referenced as sDictInfo
+within the corresponding DICTINFO (psVBFile []) structure.
+
+VBTREE
+
+The VBTREE structure is the internal memory resident equivalent of a
+single B+ Tree node within the index file of a VBISAM table.
+
+The tNodeNumber field relates to the node number within the index file
+from whence this structure originated.
+
+The tTransNumber field is used in 64-bit mode to determine whether this
+VBTREE structure is `stale' or not.
+
+The psParent field is a backward link to the next higher level (moving
+away from the leaf nodes and towards the root node) in the B+ Tree list.
+
+The structure holds three `pointers' to a list of keys within the
+current node named psKeyFirst, psKeyLast and psKeyCurr.
+
+The psKeyFirst and psKeyLast entries represent the two ends of the list
+of keys.  The psKeyCurr entry represents a form of `insertion point'. 
+New key additions are always inserted before psKeyCurr.  For this
+reason, the psKeyLast entry is a special `dummy' entry that simplifies
+the insertion algorithm (at the cost of `wasting' a small amount of
+memory).
+
+A VBTREE structure is populated primarily by the iVBNodeLoad ()
+function.
+
+When a new key is inserted into a VBTREE structure with the iVBKeyInsert
+() function, it is a simple matter of adjusting a few memory pointers
+within the linked list.  However, it is at this point that the updated
+node is also written out to disk with the iNodeSave () function.  In
+doing so, it is quite possible that the node is now `overpopulated' such
+that it can no longer fit into a single node.  Therefore, the iNodeSave
+() function also handles the case of `splitting' an existing node into
+two separate nodes.  Since it's rather imperative to keep the root node
+of any given index at the same physical node on disk (in order to avoid
+having to update the corresponding key descriptor node), the root node
+split is handled slightly different than splitting any other node.
+
+Every open VBISAM table has an array of VBTREE structures referenced as
+psTree [] within the corresponding DICTINFO (psVBFile []) structure. 
+Each of these entries corresponds to the `root' node of the
+corresponding index.
+
+VBKEY
+
+The VBKEY structure is the internal memory resident equivalent of a
+single key with a B+ Tree node.  In order to make things easier, the
+actual key value held in the VBKEY structure is expanded to its fullest
+extent (i.e. The leading and trailing compression is performed when the
+node is written out from the VBKEY structure and the key value is
+decompressed with the node is read in)
+
+The VBKEY structure is maintained as a coherent linked list by way of
+the psNext and psPrev pointers.
+
+The psParent pointer references the VBTREE structure that `holds' this
+key.
+
+The psChild pointer references lower level VBTREE nodes (i.e. towards
+leaf nodes).  Therefore, it is obvious that a leaf key will have a NULL
+value for psChild.  It is additionally possible for a VBKEY structure
+that is not at the leaf node level to be NULL.  This is used to signify
+that the corresponding lower level tree is not presently in memory.
+
+Every open VBISAM table has an array of VBKEY structures referenced as
+psKeyCurr [] within the corresponding DICTINFO (psVBFile []) structure. 
+Each of these entries corresponds to the `current' key of the
+corresponding index.  It is quite `legal' for these to be NULL.
+
+Every open VBISAM table also has an array of VBKEY structures referenced
+as psKeyFree [] within the corresponding DICTINFO (psVBFile [])
+structure.  The only purpose of these entries is to hold allocated key
+entries that are no longer required.  The primary intent of these
+entries is to avoid memory thrashing due to frequent allocation /
+de-allocation of such structures.  Since the size of a VBKEY is variable
+dependant upon the size of the key itself, it was decided to retain this
+list locally rather than globally.  (By contrast, the VBTREE structures
+are fixed length and thus the free list of these is retained globally in
+the psTreeFree linked-list.)  It may prove worthwhile to analyze this
+methodology to see whether it's worthwhile holding global lists of free
+VBVKEY structures at multiples of 16 bytes of key length (thus using 8
+global lists to hold 16, 32, 48, 64, 80, 96, 112 and 128 byte key
+lengths).  The potential `memory-waste' of up to 15 bytes of unused key
+could thus be contrasted against the potential `memory-gain' of being
+able to reuse a free VBKEY structure that was superfluous to some
+`other' index.  Additional space savings are obviously possible on the
+`dummy' keys at the end of each node too.  I believe it would be
+overkill to look into the concept of splitting larger `free' key entries
+into multiple smaller ones.
+
+VBLOCK
+
+This structure (not to be confused with the VBBLOCK structure) is used
+to hold a linked-list of current rowlocks.  There are two types of
+rowlock being a `normal' rowlock and a `transactional' rowlock.  A
+`transactional' rowlock differs in the fact that it is released only at
+the time of completion of the associated transaction by way of the
+iscommit () / isrollback () functions.  It's noteworthy to add that the
+completion of a transaction will release all rowlocks including those
+that were not transactional.  Question: Should transactional completion
+also release rowlocks on tables that were not open in transactional mode
+(a.k.a. ISTRANS)?  If so, should this also include tables that had an
+outstanding rowlock before the transaction was started and had no other
+activity during the transaction?
+
+VBDELKEY
+
+VBBLOCK
+
+This structure holds memory copies of entire nodes (blocks) of the files
+on disk.  It's purpose being to `cache' the disk contents in memory to
+alleviate requiring the system to read / write the same block multiple
+times.  For operating systems that already perform admirable disk
+caching (e.g. *NIX), it's probably best to turn off the internal VBISAM
+caching as it only wastes memory.  However, if the data being accessed
+is on a remote (network) file system, then this local caching is
+probably quite healthy to performance figures.  The block pool is
+arranged as a very simple LRU (Least Recently Used) cache.  On a cache
+hit, the corresponding cache entry is moved to the top of the list.  On
+a cache miss, the last block in the cache is re-used and moved to the
+top.  If the last block was flagged as `dirty' (write cache), then all
+`dirty' blocks for that VBISAM handle are first flushed to disk.  When
+any operation on the table completes, the iVBExit () function flushes
+all `dirty' blocks for that table to disk in order to make certain other
+processes have a correct view of the file content.  The dictionary node
+of the index file is never cached as it is used as the node determining
+cache coherency.

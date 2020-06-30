@@ -1,0 +1,86 @@
+AT_SETUP([FUNCTION LENG (fixed)])
+
+AT_DATA([prog.cob], [
+       IDENTIFICATION   DIVISION.
+       PROGRAM-ID.      prog.
+       DATA             DIVISION.
+       WORKING-STORAGE  SECTION.
+       77 FIXED_FLD PIC X(8) USAGE DISPLAY.
+       77 NLEN      PIC 9(2) USAGE DISPLAY.
+       PROCEDURE        DIVISION.
+           MOVE FUNCTION LENG (FIXED_FLD) TO NLEN.
+           DISPLAY NLEN WITH NO ADVANCING.
+           STOP RUN.
+])
+
+AT_CHECK([${COMPILE_JP_COMPAT} -x prog.cob])
+AT_CHECK([./prog], [0], [08])
+
+AT_CLEANUP
+
+AT_SETUP([FUNCTION LENG (occur. depending)])
+
+AT_DATA([prog.cob], [
+       IDENTIFICATION   DIVISION.
+       PROGRAM-ID.      prog.
+       DATA             DIVISION.
+       WORKING-STORAGE  SECTION.
+       01 DEP_FLD.
+          03 DEP_ITEM  PIC X(2) OCCURS 1 TO 10 DEPENDING ON NDEP.
+       77 NDEP         PIC 9(2) USAGE DISPLAY.
+       77 NLEN         PIC 9(2) USAGE DISPLAY.
+       PROCEDURE        DIVISION.
+           MOVE 2 TO NDEP.
+           MOVE FUNCTION LENG (DEP_FLD) TO NLEN.
+           DISPLAY NLEN WITH NO ADVANCING.
+           STOP RUN.
+])
+
+AT_CHECK([${COMPILE_JP_COMPAT} -x prog.cob])
+AT_CHECK([./prog], [0], [04])
+
+AT_CLEANUP
+
+AT_SETUP([FUNCTION LENGTH-AN (fixed)])
+
+AT_DATA([prog.cob], [
+       IDENTIFICATION   DIVISION.
+       PROGRAM-ID.      prog.
+       DATA             DIVISION.
+       WORKING-STORAGE  SECTION.
+       77 FIXED_FLD PIC X(8) USAGE DISPLAY.
+       77 NLEN      PIC 9(2) USAGE DISPLAY.
+       PROCEDURE        DIVISION.
+           MOVE FUNCTION LENGTH-AN (FIXED_FLD) TO NLEN.
+           DISPLAY NLEN WITH NO ADVANCING.
+           STOP RUN.
+])
+
+AT_CHECK([${COMPILE_JP_COMPAT} -x prog.cob])
+AT_CHECK([./prog], [0], [08])
+
+AT_CLEANUP
+
+AT_SETUP([FUNCTION LENGTH-AN (occur. depending)])
+
+AT_DATA([prog.cob], [
+       IDENTIFICATION   DIVISION.
+       PROGRAM-ID.      prog.
+       DATA             DIVISION.
+       WORKING-STORAGE  SECTION.
+       01 DEP_FLD.
+          03 DEP_ITEM  PIC X(2) OCCURS 1 TO 10 DEPENDING ON NDEP.
+       77 NDEP         PIC 9(2) USAGE DISPLAY.
+       77 NLEN         PIC 9(2) USAGE DISPLAY.
+       PROCEDURE        DIVISION.
+           MOVE 2 TO NDEP.
+           MOVE FUNCTION LENGTH-AN (DEP_FLD) TO NLEN.
+           DISPLAY NLEN WITH NO ADVANCING.
+           STOP RUN.
+])
+
+AT_CHECK([${COMPILE_JP_COMPAT} -x prog.cob])
+AT_CHECK([./prog], [0], [04])
+
+AT_CLEANUP
+

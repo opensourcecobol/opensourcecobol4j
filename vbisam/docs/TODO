@@ -1,0 +1,76 @@
+vbKeysIO.c:	iVBKeyInsert () and iVBKeyDelete ()
+	These two functions require serious alterations in order to support a
+	form of two-phase commit (2PC) when within a transaction.  This was
+	determined due to the fact that if a delete occurs during a transaction
+	and then a separate process re-creates the row with the same unique
+	key, then it becomes impossible to rollback the transaction containing
+	the original delete without causing an EDUPL error.  By delaying the
+	actual key deletion until the time of committing the transaction, the
+	separate process will correctly receive the EDUPL error and the rollback
+	transaction will be guaranteed to succeed.
+	The 'hairy' part is that the process involved in the transaction itself
+	*MUST* be allowed to recreate a row with that same key during the
+	transaction and thus I created the VBDELKEY structure.
+	Additionally, it's potentially a cause for index file corruption since
+	it now becomes more possible for the system to 'crash' during an index
+	altering sequence of steps.  Instead of guaranteeing consistency of the
+	index file after each VBISAM call, the guarantee is delayed until the
+	transaction as a whole is either committed or rolled back.
+istrans.c:	iscommit () and isrollback ()
+	These two need alteration inline with the above modifications.
+isrecover.c:	isrecover ()
+	Handle the additional transaction types (grep source for stderr)
+isaudit.c:	isaudit ()
+	Well, there's only one SMALL bug in this module... It's EMPTY!
+	I seriously doubt anyone really USES this anyway.  It consumes MEGA
+	disk space for little (if any) benefit.  Just use logging instead!
+isHelper.c:	iscluster ()
+	Is this *TRULY* necessary?
+******
+istrans.c:
+	I need to check whether there are race conditions in writing to the
+	log file.  If so, I might need to implement a 1-byte exclusion lock
+	on the file while it's being written to.
+	(NOTE: Check for compatability with C-ISAM with strace)
+	DONE!
+isrecover.c:	isrecover ()
+	Suppress the recovery of a transaction if the closing transaction entry
+	is anything other than a CW (Commit Work) transaction.
+	This is so that a rolled back transaction is NOT replayed and neither is
+	a transaction that was not 'closed' due to system failure!
+	Note that the latter is reported as a BUG in C-ISAM!
+	DONE (I think)
+vbCheck.c:	ALL of it!
+	Write it!
+	DONE (I think)
+isopen.c:	isopen () and isclose ()
+	The act of calling isclose () when within a transaction needs to be
+	delayed until the transaction is committed.  This is simply to make sure
+	the outstanding rowlocks (which are, by nature, transactional locks) are
+	retained thus inhibiting interaction by foreign processes.  The fact
+	that this means that a psVBFile entry can be 'technically closed'
+	without being NULL will involve alteration of possibly many other
+	modules.
+	DONE!
+istrans.c:
+	Some of the file open (FO), and file close (FC) transactions need to be
+	suppressed in association with the above modifications.  For example,
+	consider the following VBISAM calls:
+		Begin Work
+		File Open
+		Insert Row
+		File Close
+		File Open
+		Delete Row
+		File Close
+		Commit Work
+	The above need to be recorded in the transaction file as:
+		BW, FO, IN, DE, FC, CW
+	DONE (I think)
+isrecover.c:	isrecover ()
+	Write it!
+	DONE
+Various / Unknown:
+	Various 'multiple process' errors still occur intermittently...
+	This is *MOST* noticable in MVTest.c when isrollback () code is enabled.
+	DONE (I think)

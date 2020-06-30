@@ -1,0 +1,33 @@
+AT_SETUP([SORT KEY IS])
+
+AT_DATA([prog.cob], [
+       IDENTIFICATION   DIVISION.
+       PROGRAM-ID.      prog.
+       ENVIRONMENT      DIVISION.
+       INPUT-OUTPUT     SECTION.
+       FILE-CONTROL.
+           SELECT SF01 ASSIGN TO "SFILE".
+           SELECT IF01 ASSIGN TO "IFILE".
+           SELECT OF01 ASSIGN TO "OFILE".
+       DATA             DIVISION.
+       FILE             SECTION.
+       SD  SF01.
+       01  A00.
+         02 A001        PIC X(6).
+       FD  IF01.
+       01  I-A00.
+         02 I-A001        PIC X(6).
+       FD  OF01.
+       01  O-A00.
+         02 O-A001        PIC X(6).
+       PROCEDURE        DIVISION.
+           SORT SF01 ASCENDING KEY IS A001
+                USING IF01 GIVING OF01.
+           GOBACK.
+])
+
+AT_CHECK([${COMPILE} prog.cob], [1], [],
+[prog.cob:23: Error: syntax error
+])
+AT_CHECK([${COMPILE_JP_COMPAT} prog.cob], [0])
+AT_CLEANUP

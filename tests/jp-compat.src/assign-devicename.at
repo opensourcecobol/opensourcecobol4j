@@ -1,0 +1,115 @@
+AT_SETUP([ASSIGN coded device name])
+
+AT_DATA([TEST1], [OK.
+])
+
+AT_DATA([prog.cob], [
+       IDENTIFICATION   DIVISION.
+       PROGRAM-ID.      prog.
+       ENVIRONMENT      DIVISION.
+       INPUT-OUTPUT     SECTION.
+       FILE-CONTROL.
+       SELECT F01 ASSIGN TO SYS01-DA-DK-S-TEST1
+                  ORGANIZATION LINE SEQUENTIAL.
+       DATA             DIVISION.
+       FILE             SECTION.
+       FD  F01.
+       01  F01R         PIC X(8).
+       PROCEDURE        DIVISION.
+           OPEN INPUT F01.
+           READ F01.
+           DISPLAY F01R WITH NO ADVANCING.
+           CLOSE F01.
+])
+
+AT_CHECK([${COMPILE_JP_COMPAT} prog.cob], [0])
+AT_CHECK([./prog], [0], [OK.     ])
+
+AT_CLEANUP
+
+AT_SETUP([ASSIGN coded device w/o def.name])
+
+AT_DATA([SYS01], [OK.
+])
+
+AT_DATA([prog.cob], [
+       IDENTIFICATION   DIVISION.
+       PROGRAM-ID.      prog.
+       ENVIRONMENT      DIVISION.
+       INPUT-OUTPUT     SECTION.
+       FILE-CONTROL.
+       SELECT F01 ASSIGN TO SYS01-DA-DK-S
+                  ORGANIZATION LINE SEQUENTIAL.
+       DATA             DIVISION.
+       FILE             SECTION.
+       FD  F01.
+       01  F01R         PIC X(8).
+       PROCEDURE        DIVISION.
+           OPEN INPUT F01.
+           READ F01.
+           DISPLAY F01R WITH NO ADVANCING.
+           CLOSE F01.
+])
+
+AT_CHECK([${COMPILE_JP_COMPAT} prog.cob], [0])
+AT_CHECK([./prog], [0], [OK.     ])
+
+AT_CLEANUP
+
+AT_SETUP([ASSIGN coded device name by env.var])
+
+AT_DATA([datafile], [OK.
+])
+
+AT_DATA([prog.cob], [
+       IDENTIFICATION   DIVISION.
+       PROGRAM-ID.      prog.
+       ENVIRONMENT      DIVISION.
+       INPUT-OUTPUT     SECTION.
+       FILE-CONTROL.
+       SELECT F01 ASSIGN TO SYS01-DA-DK-S-TEST1
+                  ORGANIZATION LINE SEQUENTIAL.
+       DATA             DIVISION.
+       FILE             SECTION.
+       FD  F01.
+       01  F01R         PIC X(8).
+       PROCEDURE        DIVISION.
+           OPEN INPUT F01.
+           READ F01.
+           DISPLAY F01R WITH NO ADVANCING.
+           CLOSE F01.
+])
+
+AT_CHECK([${COMPILE_JP_COMPAT} prog.cob], [0])
+AT_CHECK([TEST1=datafile ./prog], [0], [OK.     ])
+
+AT_CLEANUP
+
+AT_SETUP([ASSIGN coded device w/o def.name by env.var])
+
+AT_DATA([datafile], [OK.
+])
+
+AT_DATA([prog.cob], [
+       IDENTIFICATION   DIVISION.
+       PROGRAM-ID.      prog.
+       ENVIRONMENT      DIVISION.
+       INPUT-OUTPUT     SECTION.
+       FILE-CONTROL.
+       SELECT F01 ASSIGN TO SYS01-DA-DK-S
+                  ORGANIZATION LINE SEQUENTIAL.
+       DATA             DIVISION.
+       FILE             SECTION.
+       FD  F01.
+       01  F01R         PIC X(8).
+       PROCEDURE        DIVISION.
+           OPEN INPUT F01.
+           READ F01.
+           DISPLAY F01R WITH NO ADVANCING.
+           CLOSE F01.
+])
+
+AT_CHECK([${COMPILE_JP_COMPAT} prog.cob], [0])
+AT_CHECK([SYS01=datafile ./prog], [0], [OK.     ])
+
+AT_CLEANUP

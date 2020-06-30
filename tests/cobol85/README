@@ -1,0 +1,78 @@
+How to run the NIST CCVS85 (aka. ANSI85) Test Suite
+=====================================
+
+*NOTE* It is expected that WARNING messages appear
+when running the test.
+
+*NOTE* The language interpreter "perl" is required to run these tests.
+
+The final command of the the test is a diff between
+expected results and actual results.
+ie. diff summary.txt summary.log
+If there is any output from this command, please
+tar and compress the complete cobol85 directory
+and report this to the OC list. You will receive
+further instructions where to send this.
+
+*NOTE* This test can take a long time depending
+on your hardware.
+
+1. EITHER -
+a) Download the test archive from -
+	http://www.sim-basis.de/newcob.val.gz
+   Uncompress it -
+	gunzip newcob.val.gz	(alternatively gzip -d newcob.val.gz)
+
+OR
+
+b) Download the test archive `newcob.val.Z' from
+	http://www.itl.nist.gov/div897/ctg/cobol_form.htm
+   Uncompress it:
+	uncompress newcob.val.Z
+
+2. Move the file newcob.val to the tests/cobol85 directory
+
+3. Run the test suite:
+
+	cd tests/cobol85
+	make test
+
+4. Test report summary will be put in summary.log.
+
+5. When rerunning test as a result of a change, always
+   do a "make clean" before "make test"
+
+6. The default OC configuration tests are NC SM IC SQ RL IX ST SG OB IF
+
+Make Options
+------------
+
+- make test     run the test suite
+- make save     save test reports in *.txt
+- make diff     diff from *.txt to the last reports
+- make clean    remove built files
+
+Test Modules
+------------
+
+Core tests:
+
+  NC - COBOL nucleus tests
+  SM - COPY sentence tests
+  IC - CALL sentence tests
+
+File I-O tests:
+
+  SQ - Sequential file I-O tests
+  RL - Relative file I-O tests
+  IX - Indexed file I-O tests
+  ST - SORT sentence tests
+
+Advanced facilities:
+
+  RW - REPORT SECTION tests
+  CM - COMMUNICATION SECTION tests
+  IF - Intrinsic Function tests
+  SG - Segment tests
+  DB - Debugging facilities tests
+  OB - Obsolete facilities tests

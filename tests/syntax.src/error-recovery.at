@@ -1,0 +1,43 @@
+AT_SETUP([parse-error recovery after Data desc.])
+
+AT_DATA([prog.cob], [
+       IDENTIFICATION   DIVISION.
+       PROGRAM-ID.      prog.
+       DATA             DIVISION.
+       WORKING-STORAGE  SECTION.
+       01  Y  PIC 9 VALUE.
+       01  X.
+       01  Z  PIC 9.
+       PROCEDURE        DIVISION.
+])
+
+AT_CHECK([${COMPILE} -o prog prog.cob], [1], ,
+[prog.cob:6: Error: syntax error, unexpected '.'
+prog.cob:7: Error: PICTURE clause required for 'X'
+])
+
+AT_CLEANUP
+
+AT_SETUP([parse-error recovery after Headings.])
+
+AT_DATA([prog.cob], [
+       IDENTIFICATION   DIVISION.
+       PROGRAM-ID.      prog.
+       DATA             DIVISION.
+       WORKING-STORAGE  SECTION.
+       01  Z  PIC 9.
+       PROCEDURE        DIVISION.
+       S00 SECTION SECTION
+           IF Z = 0 THEN
+               DISPLAY Z UPON NOWHERE
+               DISPLAY ZZ UPON CONSOLE
+           END-IF.
+])
+
+AT_CHECK([${COMPILE} -o prog prog.cob], [1], ,
+[prog.cob:8: Error: syntax error, unexpected SECTION, expecting '.'
+prog.cob:10: Error: 'NOWHERE' undefined in SPECIAL-NAMES
+prog.cob:11: Error: 'ZZ' undefined
+])
+
+AT_CLEANUP

@@ -1,0 +1,535 @@
+AT_SETUP([PIC N Value clause])
+
+AT_DATA([prog.cob], [
+       IDENTIFICATION   DIVISION.
+       PROGRAM-ID.      prog.
+       DATA             DIVISION.
+       WORKING-STORAGE  SECTION.
+       01 F0 PIC N(7) VALUE "日本語の文字列".
+       PROCEDURE        DIVISION.
+           DISPLAY F0 WITH NO ADVANCING.
+           STOP RUN.
+])
+
+AT_CHECK([${COMPILE} -x prog.cob])
+AT_CHECK([./prog], [0], [日本語の文字列])
+
+AT_CLEANUP
+
+AT_SETUP([PIC N Value 2 bytes char])
+
+AT_DATA([prog.cob], [
+       IDENTIFICATION   DIVISION.
+       PROGRAM-ID.      prog.
+       DATA             DIVISION.
+       WORKING-STORAGE  SECTION.
+       01 F0 PIC N(2) VALUE "αβγ".
+       PROCEDURE        DIVISION.
+           DISPLAY F0 WITH NO ADVANCING.
+           STOP RUN.
+])
+
+AT_CHECK([${COMPILE} -x prog.cob], [0])
+AT_CHECK([./prog], [0], [αβγ])
+
+AT_CLEANUP
+
+AT_SETUP([PIC N Move])
+
+AT_DATA([prog.cob], [
+       IDENTIFICATION   DIVISION.
+       PROGRAM-ID.      prog.
+       DATA             DIVISION.
+       WORKING-STORAGE  SECTION.
+       01 F0 PIC N(7).
+       PROCEDURE        DIVISION.
+           MOVE "日本語の文字列" TO F0.
+           DISPLAY F0 WITH NO ADVANCING.
+           STOP RUN.
+])
+
+AT_CHECK([${COMPILE} -x prog.cob])
+AT_CHECK([./prog], [0], [日本語の文字列])
+
+AT_CLEANUP
+
+AT_SETUP([PIC N Move 2 bytes char.])
+
+AT_DATA([prog.cob], [
+       IDENTIFICATION   DIVISION.
+       PROGRAM-ID.      prog.
+       DATA             DIVISION.
+       WORKING-STORAGE  SECTION.
+       01 F0 PIC N(2).
+       PROCEDURE        DIVISION.
+           MOVE "αβγ" TO F0.
+           DISPLAY F0 WITH NO ADVANCING.
+           STOP RUN.
+])
+
+AT_CHECK([${COMPILE} -x prog.cob], [0])
+AT_CHECK([./prog], [0], [αβγ])
+
+AT_CLEANUP
+
+
+AT_SETUP([PIC N Move with trunc])
+
+AT_DATA([prog.cob], [
+       IDENTIFICATION   DIVISION.
+       PROGRAM-ID.      prog.
+       DATA             DIVISION.
+       WORKING-STORAGE  SECTION.
+       01 F0 PIC N(3).
+       PROCEDURE        DIVISION.
+           MOVE "日本語の文字列" TO F0.
+           DISPLAY F0 WITH NO ADVANCING.
+           STOP RUN.
+])
+
+AT_CHECK([${COMPILE} -x prog.cob], [0], [],
+[prog.cob:8: Warning: Value size exceeds data size
+prog.cob:6: Warning: 'F0' defined here as PIC N(3)
+])
+AT_CHECK([./prog], [0], [日本語])
+
+AT_CLEANUP
+
+AT_SETUP([PIC N Move with padding by full-width SPC])
+
+AT_DATA([prog.cob], [
+       IDENTIFICATION   DIVISION.
+       PROGRAM-ID.      prog.
+       DATA             DIVISION.
+       WORKING-STORAGE  SECTION.
+       01 F0 PIC N(9).
+       PROCEDURE        DIVISION.
+           MOVE "日本語の文字列" TO F0.
+           DISPLAY F0 WITH NO ADVANCING.
+           STOP RUN.
+])
+
+AT_CHECK([${COMPILE} -x prog.cob], [0])
+AT_CHECK([./prog], [0], [日本語の文字列      ])
+
+AT_CLEANUP
+
+AT_SETUP([PIC N Move 2 bytes char with padding])
+
+AT_DATA([prog.cob], [
+       IDENTIFICATION   DIVISION.
+       PROGRAM-ID.      prog.
+       DATA             DIVISION.
+       WORKING-STORAGE  SECTION.
+       01 F0 PIC N(2).
+       PROCEDURE        DIVISION.
+           MOVE "α" TO F0.
+           DISPLAY F0 WITH NO ADVANCING.
+           STOP RUN.
+])
+
+AT_CHECK([${COMPILE} -x prog.cob], [0])
+AT_CHECK([./prog], [0], [α    ])
+
+AT_CLEANUP
+
+
+AT_SETUP([PIC N Move with justify])
+
+AT_DATA([prog.cob], [
+       IDENTIFICATION   DIVISION.
+       PROGRAM-ID.      prog.
+       DATA             DIVISION.
+       WORKING-STORAGE  SECTION.
+       01 F0 PIC N(9) JUSTIFIED RIGHT.
+       PROCEDURE        DIVISION.
+           MOVE "日本語の文字列" TO F0.
+           DISPLAY F0 WITH NO ADVANCING.
+           STOP RUN.
+])
+
+AT_CHECK([${COMPILE} -x prog.cob], [0])
+AT_CHECK([./prog], [0], [      日本語の文字列])
+
+AT_CLEANUP
+
+AT_SETUP([PIC N Move 2 bytes char with justify])
+
+AT_DATA([prog.cob], [
+       IDENTIFICATION   DIVISION.
+       PROGRAM-ID.      prog.
+       DATA             DIVISION.
+       WORKING-STORAGE  SECTION.
+       01 F0 PIC N(2) JUSTIFIED RIGHT.
+       PROCEDURE        DIVISION.
+           MOVE "α" TO F0.
+           DISPLAY F0 WITH NO ADVANCING.
+           STOP RUN.
+])
+
+AT_CHECK([${COMPILE} -x prog.cob], [0])
+AT_CHECK([./prog], [0], [    α])
+
+AT_CLEANUP
+
+AT_SETUP([PIC N EDITED w/ VALUE])
+
+AT_DATA([prog.cob], [
+       IDENTIFICATION   DIVISION.
+       PROGRAM-ID.      prog.
+       DATA             DIVISION.
+       WORKING-STORAGE  SECTION.
+       01 F0 PIC NN/NNBNN0 VALUE '日本／中国　文字０'.
+       PROCEDURE        DIVISION.
+           DISPLAY F0 WITH NO ADVANCING.
+           STOP RUN.
+])
+
+AT_CHECK([${COMPILE} -x prog.cob], [0])
+AT_CHECK([./prog], [0], [日本／中国　文字０])
+
+AT_CLEANUP
+
+AT_SETUP([INITIALIZE PIC N EDITED])
+
+AT_DATA([prog.cob], [
+       IDENTIFICATION   DIVISION.
+       PROGRAM-ID.      prog.
+       DATA             DIVISION.
+       WORKING-STORAGE  SECTION.
+       01 F0 PIC NN/NNBNN0 VALUE '日本／中国　文字０'.
+       PROCEDURE        DIVISION.
+           MOVE "春夏秋冬寒暖" TO F0.
+           INITIALIZE F0.
+           DISPLAY F0 WITH NO ADVANCING.
+           STOP RUN.
+])
+
+AT_CHECK([${COMPILE} -x prog.cob], [0])
+AT_CHECK([./prog], [0], [      ／      　      ０])
+
+AT_CLEANUP
+
+AT_SETUP([INITIALIZE PIC N EDITED TO VALUE])
+
+AT_DATA([prog.cob], [
+       IDENTIFICATION   DIVISION.
+       PROGRAM-ID.      prog.
+       DATA             DIVISION.
+       WORKING-STORAGE  SECTION.
+       01 F0 PIC NN/NNBNN0 VALUE '日本／中国　文字０'.
+       PROCEDURE        DIVISION.
+           MOVE "春夏秋冬寒暖" TO F0.
+           INITIALIZE F0 NATIONAL TO VALUE.
+           DISPLAY F0 WITH NO ADVANCING.
+           STOP RUN.
+])
+
+AT_CHECK([${COMPILE} -x prog.cob], [0])
+AT_CHECK([./prog], [0], [日本／中国　文字０])
+
+AT_CLEANUP
+
+AT_SETUP([PIC N Move to NATIONAL EDITED])
+
+AT_DATA([prog.cob], [
+       IDENTIFICATION   DIVISION.
+       PROGRAM-ID.      prog.
+       DATA             DIVISION.
+       WORKING-STORAGE  SECTION.
+       01 F0 PIC NN/NNBNN0.
+       PROCEDURE        DIVISION.
+           MOVE "日本中国文字" TO F0.
+           DISPLAY F0 WITH NO ADVANCING.
+           STOP RUN.
+])
+
+AT_CHECK([${COMPILE} -x prog.cob], [0])
+AT_CHECK([./prog], [0], [日本／中国　文字０])
+
+AT_CLEANUP
+
+AT_SETUP([PIC N Move with half-width alnum conv.])
+
+AT_DATA([prog.cob], [
+       IDENTIFICATION   DIVISION.
+       PROGRAM-ID.      prog.
+       DATA             DIVISION.
+       WORKING-STORAGE  SECTION.
+       01 F0 PIC N(7).
+       PROCEDURE        DIVISION.
+           MOVE "ABC0123" TO F0.
+           DISPLAY F0 WITH NO ADVANCING.
+           STOP RUN.
+])
+
+AT_CHECK([${COMPILE} -x prog.cob], [0])
+AT_CHECK([./prog], [0], [ＡＢＣ０１２３])
+
+AT_CLEANUP
+
+AT_SETUP([PIC N Move with half-width kana conv.])
+
+AT_DATA([prog.cob], [
+       IDENTIFICATION   DIVISION.
+       PROGRAM-ID.      prog.
+       DATA             DIVISION.
+       WORKING-STORAGE  SECTION.
+       01 F0 PIC N(7).
+       PROCEDURE        DIVISION.
+           MOVE "ｺﾒﾀﾞｺｰﾋｰ" TO F0.
+           DISPLAY F0 WITH NO ADVANCING.
+           STOP RUN.
+])
+
+AT_CHECK([${COMPILE} -x prog.cob], [0])
+AT_CHECK([./prog], [0], [コメダコーヒー])
+
+AT_CLEANUP
+
+AT_SETUP([PIC N Ref mod(n:)])
+
+AT_DATA([prog.cob], [
+       IDENTIFICATION   DIVISION.
+       PROGRAM-ID.      prog.
+       DATA             DIVISION.
+       WORKING-STORAGE  SECTION.
+       01 F0 PIC N(7).
+       PROCEDURE        DIVISION.
+           MOVE "日本語の文字列" TO F0.
+           DISPLAY F0(13:) WITH NO ADVANCING.
+           STOP RUN.
+])
+
+AT_CHECK([${COMPILE} -x prog.cob], [0])
+AT_CHECK([./prog], [0], [文字列])
+
+AT_CLEANUP
+
+AT_SETUP([PIC N Ref mod(n:m)])
+
+AT_DATA([prog.cob], [
+       IDENTIFICATION   DIVISION.
+       PROGRAM-ID.      prog.
+       DATA             DIVISION.
+       WORKING-STORAGE  SECTION.
+       01 F0 PIC N(7).
+       PROCEDURE        DIVISION.
+           MOVE "日本語の文字列" TO F0.
+           DISPLAY F0(13:6) WITH NO ADVANCING.
+           STOP RUN.
+])
+
+AT_CHECK([${COMPILE} -x prog.cob], [0])
+AT_CHECK([./prog], [0], [文字])
+
+AT_CLEANUP
+
+AT_SETUP([PIC N STRING by size])
+
+AT_DATA([prog.cob], [
+       IDENTIFICATION   DIVISION.
+       PROGRAM-ID.      prog.
+       DATA             DIVISION.
+       WORKING-STORAGE  SECTION.
+       01 F0 PIC N(2)  VALUE "私の".
+       01 F1 PIC N(3)  VALUE "名前は".
+       01 F2 PIC N(5) VALUE "ありません".
+       01 FF PIC N(10).
+       PROCEDURE        DIVISION.
+           STRING F0 F1 F2 DELIMITED BY SIZE
+             INTO FF.
+           DISPLAY FF WITH NO ADVANCING.
+           STOP RUN.
+])
+
+AT_CHECK([${COMPILE} -x prog.cob], [0])
+AT_CHECK([./prog], [0], [私の名前はありません])
+
+AT_CLEANUP
+
+AT_SETUP([PIC N STRING with delimiter (causes warn)])
+
+AT_DATA([prog.cob], [
+       IDENTIFICATION   DIVISION.
+       PROGRAM-ID.      prog.
+       DATA             DIVISION.
+       WORKING-STORAGE  SECTION.
+       01 F0 PIC N(2)  VALUE "私の".
+       01 F1 PIC N(4)  VALUE "名前△は".
+       01 F2 PIC N(6) VALUE "△ありません".
+       01 FF PIC N(4).
+       PROCEDURE        DIVISION.
+           STRING F0 F1 F2 DELIMITED BY "△"
+             INTO FF.
+           DISPLAY FF WITH NO ADVANCING.
+           STOP RUN.
+])
+
+AT_CHECK([${COMPILE} -x prog.cob], [0])
+AT_CHECK([./prog], [0], [私の名前])
+
+AT_CLEANUP
+
+AT_SETUP([PIC N STRING with NATIONAL delimiter])
+
+AT_DATA([prog.cob], [
+       IDENTIFICATION   DIVISION.
+       PROGRAM-ID.      prog.
+       DATA             DIVISION.
+       WORKING-STORAGE  SECTION.
+       01 F0 PIC N(2)  VALUE "私の".
+       01 F1 PIC N(4)  VALUE "名前△は".
+       01 F2 PIC N(6) VALUE "△ありません".
+       01 FF PIC N(4).
+       PROCEDURE        DIVISION.
+           STRING F0 F1 F2 DELIMITED BY N"△"
+             INTO FF.
+           DISPLAY FF WITH NO ADVANCING.
+           STOP RUN.
+])
+
+AT_CHECK([${COMPILE} -x prog.cob], [0])
+AT_CHECK([./prog], [0], [私の名前])
+
+AT_CLEANUP
+
+AT_SETUP([PIC N STRING with pointer])
+
+AT_DATA([prog.cob], [
+       IDENTIFICATION   DIVISION.
+       PROGRAM-ID.      prog.
+       DATA             DIVISION.
+       WORKING-STORAGE  SECTION.
+       01 F0 PIC N(2)  VALUE "私の".
+       01 F1 PIC N(3)  VALUE "名前は".
+       01 F2 PIC N(5)  VALUE "ありません".
+       01 FF PIC N(10) VALUE "言えません◎○△■※".
+       01 FP PIC 99    VALUE 16.
+       PROCEDURE        DIVISION.
+           STRING F0 F1 F2 DELIMITED BY SIZE
+             INTO FF WITH POINTER FP.
+           DISPLAY FF WITH NO ADVANCING.
+           STOP RUN.
+])
+
+AT_CHECK([${COMPILE} -x prog.cob])
+AT_CHECK([./prog], [0], [言えません私の名前は])
+
+AT_CLEANUP
+
+AT_SETUP([PIC N INSPECT REPLACING])
+
+AT_DATA([prog.cob], [
+       IDENTIFICATION   DIVISION.
+       PROGRAM-ID.      prog.
+       DATA             DIVISION.
+       WORKING-STORAGE  SECTION.
+       01 F0 PIC N(10)  VALUE "１２３４５１２３４５".
+       PROCEDURE        DIVISION.
+           INSPECT F0 REPLACING ALL "５" BY "０".
+           DISPLAY F0 WITH NO ADVANCING.
+           STOP RUN.
+])
+
+AT_CHECK([${COMPILE} -x prog.cob], [0])
+AT_CHECK([./prog], [0], [１２３４０１２３４０])
+
+AT_CLEANUP
+
+AT_SETUP([PIC N INSPECT REPLACING by ZERO])
+
+AT_DATA([prog.cob], [
+       IDENTIFICATION   DIVISION.
+       PROGRAM-ID.      prog.
+       DATA             DIVISION.
+       WORKING-STORAGE  SECTION.
+       01 F0 PIC N(10)  VALUE "１２３４５１２３４５".
+       PROCEDURE        DIVISION.
+           INSPECT F0 REPLACING ALL "５" BY ZERO.
+           DISPLAY F0 WITH NO ADVANCING.
+           STOP RUN.
+])
+
+AT_CHECK([${COMPILE} -x prog.cob], [0])
+AT_CHECK([./prog], [0], [１２３４000１２３４000])
+
+AT_CLEANUP
+
+AT_SETUP([PIC N INSPECT REPLACING by NATIONAL ZERO])
+
+AT_DATA([prog.cob], [
+       IDENTIFICATION   DIVISION.
+       PROGRAM-ID.      prog.
+       DATA             DIVISION.
+       WORKING-STORAGE  SECTION.
+       01 F0 PIC N(10)  VALUE "１２３４５１２３４５".
+       PROCEDURE        DIVISION.
+           INSPECT F0 REPLACING ALL N"５" BY ZERO.
+           DISPLAY F0 WITH NO ADVANCING.
+           STOP RUN.
+])
+
+AT_CHECK([${COMPILE} -x prog.cob], [0])
+AT_CHECK([./prog], [0], [１２３４０１２３４０])
+
+AT_CLEANUP
+
+AT_SETUP([PIC N INSPECT TALLYING])
+
+AT_DATA([prog.cob], [
+       IDENTIFICATION   DIVISION.
+       PROGRAM-ID.      prog.
+       DATA             DIVISION.
+       WORKING-STORAGE  SECTION.
+       01 F0 PIC N(10)  VALUE "１２３４５１２３４５".
+       01 CN PIC 99.
+       PROCEDURE        DIVISION.
+           INSPECT F0 TALLYING CN FOR ALL "４５".
+           DISPLAY CN WITH NO ADVANCING.
+           STOP RUN.
+])
+
+AT_CHECK([${COMPILE} -x prog.cob], [0])
+AT_CHECK([./prog], [0], [02])
+
+AT_CLEANUP
+
+AT_SETUP([PIC N Move with half-width dakuten kana.])
+
+AT_DATA([prog.cob], [
+       IDENTIFICATION   DIVISION.
+       PROGRAM-ID.      prog.
+       DATA             DIVISION.
+       WORKING-STORAGE  SECTION.
+       01 F0 PIC N(7).
+       PROCEDURE        DIVISION.
+           MOVE "ﾞﾀﾞ･ｳﾞｨﾝﾁ" TO F0.
+           DISPLAY F0 WITH NO ADVANCING.
+           STOP RUN.
+])
+
+AT_CHECK([${COMPILE} -x prog.cob], [0])
+AT_CHECK([./prog], [0], [゛ダ・ヴィンチ])
+
+AT_CLEANUP
+
+AT_SETUP([PIC N Move with half-width han-dakuten kana.])
+
+AT_DATA([prog.cob], [
+       IDENTIFICATION   DIVISION.
+       PROGRAM-ID.      prog.
+       DATA             DIVISION.
+       WORKING-STORAGE  SECTION.
+       01 F0 PIC N(7).
+       PROCEDURE        DIVISION.
+           MOVE "ﾟﾎﾟﾝﾃﾞﾘﾝｸﾞ" TO F0.
+           DISPLAY F0 WITH NO ADVANCING.
+           STOP RUN.
+])
+
+AT_CHECK([${COMPILE} -x prog.cob], [0])
+AT_CHECK([./prog], [0], [゜ポンデリング])
+
+AT_CLEANUP
+

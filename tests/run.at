@@ -1,0 +1,36 @@
+### OpenCOBOL Test Suite				-*- m4 -*-
+
+## Copyright (C) 2003-2009 Keisuke Nishida
+## Copyright (C) 2007-2009 Roger While
+##
+## This program is free software; you can redistribute it and/or modify
+## it under the terms of the GNU General Public License as published by
+## the Free Software Foundation; either version 2, or (at your option)
+## any later version.
+## 
+## This program is distributed in the hope that it will be useful,
+## but WITHOUT ANY WARRANTY; without even the implied warranty of
+## MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+## GNU General Public License for more details.
+## 
+## You should have received a copy of the GNU General Public License
+## along with this software; see the file COPYING.  If not, write to
+## the Free Software Foundation, 51 Franklin Street, Fifth Floor
+## Boston, MA 02110-1301 USA
+
+AT_INIT([Run Tests])
+
+AT_TESTED([cobc])
+
+m4_include([fundamental.at])
+
+m4_include([subscripts.at])	# 8.4.1.2 Subscripts
+m4_include([ref-mod.at])	# 8.4.2.3 Reference-modification
+
+m4_include([accept.at])		# 14.8.1  ACCEPT statement
+m4_include([initialize.at])	# 14.8.19 INITIALIZE statement
+
+m4_include([misc.at])
+m4_include([extensions.at])
+m4_include([return-code.at])
+m4_include([functions.at])

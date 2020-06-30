@@ -1,0 +1,565 @@
+AT_SETUP([SPLIT KEYS (ALTERNATE KEY)])
+
+AT_CHECK([test $COB_SPLITKEY_FLAGS = "yes" || exit 77])
+
+AT_DATA([prog.cob], [
+       IDENTIFICATION   DIVISION.
+       PROGRAM-ID.      prog.
+       ENVIRONMENT      DIVISION.
+       INPUT-OUTPUT     SECTION.
+       FILE-CONTROL.
+       SELECT TEST-FILE ASSIGN TO "./TEST-FILE"
+                        ORGANIZATION IS  INDEXED
+                        ACCESS MODE  IS  RANDOM
+                        RECORD KEY   IS  TEST-KEY1
+                        ALTERNATE RECORD KEY IS ALT-KEY1
+                                                ALT-KEY2.
+       DATA             DIVISION.
+       FILE             SECTION.
+       FD TEST-FILE.
+       01 TEST-REC.
+          03 TEST-KEY1  PIC X(4).
+          03 ALT-KEY1   PIC X(4).
+          03 ALT-KEY2   PIC X(4).
+       PROCEDURE        DIVISION.
+           OPEN  OUTPUT TEST-FILE.
+           MOVE "AAAA" TO TEST-KEY1.
+           MOVE "ALT1" TO  ALT-KEY1.
+           MOVE "-001" TO  ALT-KEY2.
+           WRITE TEST-REC.
+           MOVE "BBBB" TO TEST-KEY1.
+           MOVE "ALT2" TO  ALT-KEY1.
+           MOVE "-002" TO  ALT-KEY2.
+           WRITE TEST-REC.
+           MOVE "CCCC" TO TEST-KEY1.
+           MOVE "ALT3" TO  ALT-KEY1.
+           MOVE "-003" TO  ALT-KEY2.
+           WRITE TEST-REC.
+           CLOSE TEST-FILE.
+           OPEN  INPUT  TEST-FILE.
+           MOVE "ALT2" TO  ALT-KEY1.
+           MOVE "-002" TO  ALT-KEY2.
+           READ  TEST-FILE KEY IS ALT-KEY1 ALT-KEY2.
+           DISPLAY TEST-KEY1 NO ADVANCING.
+           CLOSE TEST-FILE.
+           STOP RUN.
+])
+
+AT_CHECK([${COMPILE} -o prog prog.cob])
+AT_CHECK([./prog], [0], [BBBB])
+
+AT_CLEANUP
+
+AT_SETUP([SPLIT KEYS (ALTERNATE KEY - NOT YET)])
+
+AT_CHECK([test $COB_SPLITKEY_FLAGS = "no" || exit 77])
+
+AT_DATA([prog.cob], [
+       IDENTIFICATION   DIVISION.
+       PROGRAM-ID.      prog.
+       ENVIRONMENT      DIVISION.
+       INPUT-OUTPUT     SECTION.
+       FILE-CONTROL.
+       SELECT TEST-FILE ASSIGN TO "./TEST-FILE"
+                        ORGANIZATION IS  INDEXED
+                        ACCESS MODE  IS  RANDOM
+                        RECORD KEY   IS  TEST-KEY1
+                        ALTERNATE RECORD KEY IS ALT-KEY1
+                                                ALT-KEY2.
+       DATA             DIVISION.
+       FILE             SECTION.
+       FD TEST-FILE.
+       01 TEST-REC.
+          03 TEST-KEY1  PIC X(4).
+          03 ALT-KEY1   PIC X(4).
+          03 ALT-KEY2   PIC X(4).
+       PROCEDURE        DIVISION.
+           OPEN  OUTPUT TEST-FILE.
+           MOVE "AAAA" TO TEST-KEY1.
+           MOVE "ALT1" TO  ALT-KEY1.
+           MOVE "-001" TO  ALT-KEY2.
+           WRITE TEST-REC.
+           MOVE "BBBB" TO TEST-KEY1.
+           MOVE "ALT2" TO  ALT-KEY1.
+           MOVE "-002" TO  ALT-KEY2.
+           WRITE TEST-REC.
+           MOVE "CCCC" TO TEST-KEY1.
+           MOVE "ALT3" TO  ALT-KEY1.
+           MOVE "-003" TO  ALT-KEY2.
+           WRITE TEST-REC.
+           CLOSE TEST-FILE.
+           OPEN  INPUT  TEST-FILE.
+           MOVE "ALT2" TO  ALT-KEY1.
+           MOVE "-002" TO  ALT-KEY2.
+           READ  TEST-FILE KEY IS ALT-KEY1 ALT-KEY2.
+           DISPLAY TEST-KEY1 NO ADVANCING.
+           CLOSE TEST-FILE.
+           STOP RUN.
+])
+
+AT_CHECK([${COMPILE} -o prog prog.cob], [0], [],
+	[prog.cob:12: Warning: 'SPLIT KEYS' not implemented
+prog.cob:38: Warning: 'SPLIT KEYS' not implemented
+])
+
+AT_CLEANUP
+
+AT_SETUP([SPLIT KEYS (RECORD KEY)])
+
+AT_CHECK([test $COB_SPLITKEY_FLAGS = "yes" || exit 77])
+
+AT_DATA([prog.cob], [
+       IDENTIFICATION   DIVISION.
+       PROGRAM-ID.      prog.
+       ENVIRONMENT      DIVISION.
+       INPUT-OUTPUT     SECTION.
+       FILE-CONTROL.
+       SELECT TEST-FILE ASSIGN TO "./TEST-FILE"
+                        ORGANIZATION IS  INDEXED
+                        ACCESS MODE  IS  RANDOM
+                        RECORD KEY   IS  TEST-KEY1
+                                         TEST-KEY2
+                        ALTERNATE RECORD KEY IS ALT-KEY1.
+       DATA             DIVISION.
+       FILE             SECTION.
+       FD TEST-FILE.
+       01 TEST-REC.
+          03 TEST-KEY1  PIC X(4).
+          03 ALT-KEY1   PIC X(4).
+          03 TEST-KEY2  PIC X(4).
+       PROCEDURE        DIVISION.
+           OPEN  OUTPUT TEST-FILE.
+           MOVE "BBBB" TO TEST-KEY1.
+           MOVE "0001" TO TEST-KEY2.
+           MOVE "ALT1" TO  ALT-KEY1.
+           WRITE TEST-REC.
+           MOVE "BBBB" TO TEST-KEY1.
+           MOVE "0002" TO TEST-KEY2.
+           MOVE "ALT2" TO  ALT-KEY1.
+           WRITE TEST-REC.
+           MOVE "BBBB" TO TEST-KEY1.
+           MOVE "0003" TO TEST-KEY2.
+           MOVE "ALT3" TO  ALT-KEY1.
+           WRITE TEST-REC.
+           MOVE "CCCC" TO TEST-KEY1.
+           MOVE "0001" TO TEST-KEY2.
+           MOVE "ALT4" TO  ALT-KEY1.
+           WRITE TEST-REC.
+           MOVE "CCCC" TO TEST-KEY1.
+           MOVE "0002" TO TEST-KEY2.
+           MOVE "ALT5" TO  ALT-KEY1.
+           WRITE TEST-REC.
+           MOVE "CCCC" TO TEST-KEY1.
+           MOVE "0003" TO TEST-KEY2.
+           MOVE "ALT6" TO  ALT-KEY1.
+           WRITE TEST-REC.
+           CLOSE TEST-FILE.
+           OPEN  INPUT  TEST-FILE.
+           MOVE "BBBB" TO  TEST-KEY1.
+           MOVE "0002" TO  TEST-KEY2.
+           READ  TEST-FILE KEY IS TEST-KEY1 TEST-KEY2.
+           DISPLAY ALT-KEY1 NO ADVANCING.
+           CLOSE TEST-FILE.
+           STOP RUN.
+])
+
+AT_CHECK([${COMPILE} -o prog prog.cob])
+AT_CHECK([./prog], [0], [ALT2])
+
+AT_CLEANUP
+
+AT_SETUP([SPLIT KEYS (RECORD KEY - NOT YET)])
+
+AT_CHECK([test $COB_SPLITKEY_FLAGS = "no" || exit 77])
+
+AT_DATA([prog.cob], [
+       IDENTIFICATION   DIVISION.
+       PROGRAM-ID.      prog.
+       ENVIRONMENT      DIVISION.
+       INPUT-OUTPUT     SECTION.
+       FILE-CONTROL.
+       SELECT TEST-FILE ASSIGN TO "./TEST-FILE"
+                        ORGANIZATION IS  INDEXED
+                        ACCESS MODE  IS  RANDOM
+                        RECORD KEY   IS  TEST-KEY1
+                                         TEST-KEY2
+                        ALTERNATE RECORD KEY IS ALT-KEY1.
+       DATA             DIVISION.
+       FILE             SECTION.
+       FD TEST-FILE.
+       01 TEST-REC.
+          03 TEST-KEY1  PIC X(4).
+          03 ALT-KEY1   PIC X(4).
+          03 TEST-KEY2  PIC X(4).
+       PROCEDURE        DIVISION.
+           OPEN  OUTPUT TEST-FILE.
+           MOVE "BBBB" TO TEST-KEY1.
+           MOVE "0001" TO TEST-KEY2.
+           MOVE "ALT1" TO  ALT-KEY1.
+           WRITE TEST-REC.
+           MOVE "BBBB" TO TEST-KEY1.
+           MOVE "0002" TO TEST-KEY2.
+           MOVE "ALT2" TO  ALT-KEY1.
+           WRITE TEST-REC.
+           MOVE "BBBB" TO TEST-KEY1.
+           MOVE "0003" TO TEST-KEY2.
+           MOVE "ALT3" TO  ALT-KEY1.
+           WRITE TEST-REC.
+           MOVE "CCCC" TO TEST-KEY1.
+           MOVE "0001" TO TEST-KEY2.
+           MOVE "ALT4" TO  ALT-KEY1.
+           WRITE TEST-REC.
+           MOVE "CCCC" TO TEST-KEY1.
+           MOVE "0002" TO TEST-KEY2.
+           MOVE "ALT5" TO  ALT-KEY1.
+           WRITE TEST-REC.
+           MOVE "CCCC" TO TEST-KEY1.
+           MOVE "0003" TO TEST-KEY2.
+           MOVE "ALT6" TO  ALT-KEY1.
+           WRITE TEST-REC.
+           CLOSE TEST-FILE.
+           OPEN  INPUT  TEST-FILE.
+           MOVE "BBBB" TO  TEST-KEY1.
+           MOVE "0002" TO  TEST-KEY2.
+           READ  TEST-FILE KEY IS TEST-KEY1 TEST-KEY2.
+           DISPLAY ALT-KEY1 NO ADVANCING.
+           CLOSE TEST-FILE.
+           STOP RUN.
+])
+
+AT_CHECK([${COMPILE} -o prog prog.cob], [1], [],
+[prog.cob:12: Warning: 'SPLIT KEYS' not implemented
+prog.cob:7: Error: RECORD KEY clause is required for file 'TEST-FILE'
+prog.cob:50: Warning: 'SPLIT KEYS' not implemented
+])
+
+AT_CLEANUP
+
+AT_SETUP([SPLIT KEYS (START Syntax - EQUAL)])
+
+AT_CHECK([test $COB_SPLITKEY_FLAGS = "yes" || exit 77])
+
+AT_DATA([prog.cob], [
+       IDENTIFICATION   DIVISION.
+       PROGRAM-ID.      prog.
+       ENVIRONMENT      DIVISION.
+       INPUT-OUTPUT     SECTION.
+       FILE-CONTROL.
+       SELECT TEST-FILE ASSIGN TO "./TEST-FILE"
+                        ORGANIZATION IS  INDEXED
+                        ACCESS MODE  IS  SEQUENTIAL
+                        RECORD KEY   IS  TEST-KEY1 TEST-KEY2
+                        ALTERNATE RECORD KEY IS ALT-KEY1.
+       DATA             DIVISION.
+       FILE             SECTION.
+       FD TEST-FILE.
+       01 TEST-REC.
+          03 TEST-KEY1  PIC X(4).
+          03 TEST-KEY2  PIC X(4).
+          03 ALT-KEY1   PIC X(4).
+       PROCEDURE        DIVISION.
+           OPEN  OUTPUT TEST-FILE.
+           MOVE "0001" TO TEST-KEY1.
+           MOVE "1000" TO TEST-KEY2.
+           MOVE "ALT1" TO  ALT-KEY1.
+           WRITE TEST-REC.
+           MOVE "0001" TO TEST-KEY1.
+           MOVE "1001" TO TEST-KEY2.
+           MOVE "ALT2" TO  ALT-KEY1.
+           WRITE TEST-REC.
+           MOVE "0001" TO TEST-KEY1.
+           MOVE "1002" TO TEST-KEY2.
+           MOVE "ALT3" TO  ALT-KEY1.
+           WRITE TEST-REC.
+           MOVE "0002" TO TEST-KEY1.
+           MOVE "1000" TO TEST-KEY2.
+           MOVE "ALT4" TO  ALT-KEY1.
+           WRITE TEST-REC.
+           MOVE "0002" TO TEST-KEY1.
+           MOVE "1001" TO TEST-KEY2.
+           MOVE "ALT5" TO  ALT-KEY1.
+           WRITE TEST-REC.
+           MOVE "0002" TO TEST-KEY1.
+           MOVE "1002" TO TEST-KEY2.
+           MOVE "ALT6" TO  ALT-KEY1.
+           WRITE TEST-REC.
+           CLOSE TEST-FILE.
+           OPEN  INPUT  TEST-FILE.
+           MOVE "0001" TO TEST-KEY1.
+           MOVE "1001" TO TEST-KEY2.
+           START TEST-FILE KEY IS EQUAL TO TEST-KEY1 TEST-KEY2.
+           READ  TEST-FILE NEXT.
+           DISPLAY ALT-KEY1 NO ADVANCING.
+           CLOSE TEST-FILE.
+           STOP RUN.
+])
+
+AT_CHECK([${COMPILE} -o prog prog.cob])
+AT_CHECK([./prog], [0], [ALT2])
+
+AT_CLEANUP
+
+AT_SETUP([SPLIT KEYS (START Syntax - EQUAL - NOT YET)])
+
+AT_CHECK([test $COB_SPLITKEY_FLAGS = "no" || exit 77])
+
+AT_DATA([prog.cob], [
+       IDENTIFICATION   DIVISION.
+       PROGRAM-ID.      prog.
+       ENVIRONMENT      DIVISION.
+       INPUT-OUTPUT     SECTION.
+       FILE-CONTROL.
+       SELECT TEST-FILE ASSIGN TO "./TEST-FILE"
+                        ORGANIZATION IS  INDEXED
+                        ACCESS MODE  IS  SEQUENTIAL
+                        RECORD KEY   IS  TEST-KEY1 TEST-KEY2
+                        ALTERNATE RECORD KEY IS ALT-KEY1.
+       DATA             DIVISION.
+       FILE             SECTION.
+       FD TEST-FILE.
+       01 TEST-REC.
+          03 TEST-KEY1  PIC X(4).
+          03 TEST-KEY2  PIC X(4).
+          03 ALT-KEY1   PIC X(4).
+       PROCEDURE        DIVISION.
+           OPEN  OUTPUT TEST-FILE.
+           MOVE "0001" TO TEST-KEY1.
+           MOVE "1000" TO TEST-KEY2.
+           MOVE "ALT1" TO  ALT-KEY1.
+           WRITE TEST-REC.
+           MOVE "0001" TO TEST-KEY1.
+           MOVE "1001" TO TEST-KEY2.
+           MOVE "ALT2" TO  ALT-KEY1.
+           WRITE TEST-REC.
+           MOVE "0001" TO TEST-KEY1.
+           MOVE "1002" TO TEST-KEY2.
+           MOVE "ALT3" TO  ALT-KEY1.
+           WRITE TEST-REC.
+           MOVE "0002" TO TEST-KEY1.
+           MOVE "1000" TO TEST-KEY2.
+           MOVE "ALT4" TO  ALT-KEY1.
+           WRITE TEST-REC.
+           MOVE "0002" TO TEST-KEY1.
+           MOVE "1001" TO TEST-KEY2.
+           MOVE "ALT5" TO  ALT-KEY1.
+           WRITE TEST-REC.
+           MOVE "0002" TO TEST-KEY1.
+           MOVE "1002" TO TEST-KEY2.
+           MOVE "ALT6" TO  ALT-KEY1.
+           WRITE TEST-REC.
+           CLOSE TEST-FILE.
+           OPEN  INPUT  TEST-FILE.
+           MOVE "0001" TO TEST-KEY1.
+           MOVE "1001" TO TEST-KEY2.
+           START TEST-FILE KEY IS EQUAL TO TEST-KEY1 TEST-KEY2.
+           READ  TEST-FILE NEXT.
+           DISPLAY ALT-KEY1 NO ADVANCING.
+           CLOSE TEST-FILE.
+           STOP RUN.
+])
+
+AT_CHECK([${COMPILE} -o prog prog.cob], [1], [],
+[prog.cob:11: Warning: 'SPLIT KEYS' not implemented
+prog.cob:7: Error: RECORD KEY clause is required for file 'TEST-FILE'
+prog.cob:49: Warning: 'SPLIT KEYS' not implemented
+])
+
+AT_CLEANUP
+
+AT_SETUP([SPLIT KEYS (START Syntax - GREATER THAN)])
+
+AT_CHECK([test $COB_SPLITKEY_FLAGS = "yes" || exit 77])
+
+AT_DATA([prog.cob], [
+       IDENTIFICATION   DIVISION.
+       PROGRAM-ID.      prog.
+       ENVIRONMENT      DIVISION.
+       INPUT-OUTPUT     SECTION.
+       FILE-CONTROL.
+       SELECT TEST-FILE ASSIGN TO "./TEST-FILE"
+                        ORGANIZATION IS  INDEXED
+                        ACCESS MODE  IS  SEQUENTIAL
+                        RECORD KEY   IS  TEST-KEY1 TEST-KEY2
+                        ALTERNATE RECORD KEY IS ALT-KEY1.
+       DATA             DIVISION.
+       FILE             SECTION.
+       FD TEST-FILE.
+       01 TEST-REC.
+          03 TEST-KEY1  PIC X(4).
+          03 TEST-KEY2  PIC X(4).
+          03 ALT-KEY1   PIC X(4).
+       PROCEDURE        DIVISION.
+           OPEN  OUTPUT TEST-FILE.
+           MOVE "0001" TO TEST-KEY1.
+           MOVE "1000" TO TEST-KEY2.
+           MOVE "ALT1" TO  ALT-KEY1.
+           WRITE TEST-REC.
+           MOVE "0001" TO TEST-KEY1.
+           MOVE "1001" TO TEST-KEY2.
+           MOVE "ALT2" TO  ALT-KEY1.
+           WRITE TEST-REC.
+           MOVE "0001" TO TEST-KEY1.
+           MOVE "1002" TO TEST-KEY2.
+           MOVE "ALT3" TO  ALT-KEY1.
+           WRITE TEST-REC.
+           MOVE "0002" TO TEST-KEY1.
+           MOVE "1000" TO TEST-KEY2.
+           MOVE "ALT4" TO  ALT-KEY1.
+           WRITE TEST-REC.
+           MOVE "0002" TO TEST-KEY1.
+           MOVE "1001" TO TEST-KEY2.
+           MOVE "ALT5" TO  ALT-KEY1.
+           WRITE TEST-REC.
+           MOVE "0002" TO TEST-KEY1.
+           MOVE "1002" TO TEST-KEY2.
+           MOVE "ALT6" TO  ALT-KEY1.
+           WRITE TEST-REC.
+           CLOSE TEST-FILE.
+           OPEN  INPUT  TEST-FILE.
+           MOVE "0001" TO TEST-KEY1.
+           MOVE "1001" TO TEST-KEY2.
+           START TEST-FILE KEY IS GREATER THAN TEST-KEY1 TEST-KEY2.
+           READ  TEST-FILE NEXT.
+           DISPLAY ALT-KEY1 NO ADVANCING.
+           CLOSE TEST-FILE.
+           STOP RUN.
+])
+
+AT_CHECK([${COMPILE} -o prog prog.cob])
+AT_CHECK([./prog], [0], [ALT3])
+
+AT_CLEANUP
+
+AT_SETUP([SPLIT KEYS (START Syntax - GREATER THAN - NOT YET)])
+
+AT_CHECK([test $COB_SPLITKEY_FLAGS = "no" || exit 77])
+
+AT_DATA([prog.cob], [
+       IDENTIFICATION   DIVISION.
+       PROGRAM-ID.      prog.
+       ENVIRONMENT      DIVISION.
+       INPUT-OUTPUT     SECTION.
+       FILE-CONTROL.
+       SELECT TEST-FILE ASSIGN TO "./TEST-FILE"
+                        ORGANIZATION IS  INDEXED
+                        ACCESS MODE  IS  SEQUENTIAL
+                        RECORD KEY   IS  TEST-KEY1 TEST-KEY2
+                        ALTERNATE RECORD KEY IS ALT-KEY1.
+       DATA             DIVISION.
+       FILE             SECTION.
+       FD TEST-FILE.
+       01 TEST-REC.
+          03 TEST-KEY1  PIC X(4).
+          03 TEST-KEY2  PIC X(4).
+          03 ALT-KEY1   PIC X(4).
+       PROCEDURE        DIVISION.
+           OPEN  OUTPUT TEST-FILE.
+           MOVE "0001" TO TEST-KEY1.
+           MOVE "1000" TO TEST-KEY2.
+           MOVE "ALT1" TO  ALT-KEY1.
+           WRITE TEST-REC.
+           MOVE "0001" TO TEST-KEY1.
+           MOVE "1001" TO TEST-KEY2.
+           MOVE "ALT2" TO  ALT-KEY1.
+           WRITE TEST-REC.
+           MOVE "0001" TO TEST-KEY1.
+           MOVE "1002" TO TEST-KEY2.
+           MOVE "ALT3" TO  ALT-KEY1.
+           WRITE TEST-REC.
+           MOVE "0002" TO TEST-KEY1.
+           MOVE "1000" TO TEST-KEY2.
+           MOVE "ALT4" TO  ALT-KEY1.
+           WRITE TEST-REC.
+           MOVE "0002" TO TEST-KEY1.
+           MOVE "1001" TO TEST-KEY2.
+           MOVE "ALT5" TO  ALT-KEY1.
+           WRITE TEST-REC.
+           MOVE "0002" TO TEST-KEY1.
+           MOVE "1002" TO TEST-KEY2.
+           MOVE "ALT6" TO  ALT-KEY1.
+           WRITE TEST-REC.
+           CLOSE TEST-FILE.
+           OPEN  INPUT  TEST-FILE.
+           MOVE "0001" TO TEST-KEY1.
+           MOVE "1001" TO TEST-KEY2.
+           START TEST-FILE KEY IS GREATER THAN TEST-KEY1 TEST-KEY2.
+           READ  TEST-FILE NEXT.
+           DISPLAY ALT-KEY1 NO ADVANCING.
+           CLOSE TEST-FILE.
+           STOP RUN.
+])
+
+AT_CHECK([${COMPILE} -o prog prog.cob], [1], [],
+[prog.cob:11: Warning: 'SPLIT KEYS' not implemented
+prog.cob:7: Error: RECORD KEY clause is required for file 'TEST-FILE'
+prog.cob:49: Warning: 'SPLIT KEYS' not implemented
+])
+
+AT_CLEANUP
+
+AT_SETUP([SPLIT KEYS (key unmatch)])
+
+AT_CHECK([test $COB_SPLITKEY_FLAGS = "yes" || exit 77])
+
+AT_DATA([prog.cob], [
+       IDENTIFICATION   DIVISION.
+       PROGRAM-ID.      prog.
+       ENVIRONMENT      DIVISION.
+       INPUT-OUTPUT     SECTION.
+       FILE-CONTROL.
+       SELECT TEST-FILE ASSIGN TO "./TEST-FILE"
+                        ORGANIZATION IS  INDEXED
+                        ACCESS MODE  IS  SEQUENTIAL
+                        RECORD KEY   IS  TEST-KEY1 TEST-KEY2
+                        ALTERNATE RECORD KEY IS ALT-KEY1.
+       DATA             DIVISION.
+       FILE             SECTION.
+       FD TEST-FILE.
+       01 TEST-REC.
+          03 TEST-KEY1  PIC X(4).
+          03 TEST-KEY2  PIC X(4).
+          03 ALT-KEY1   PIC X(4).
+       PROCEDURE        DIVISION.
+           OPEN  OUTPUT TEST-FILE.
+           MOVE "0001" TO TEST-KEY1.
+           MOVE "1000" TO TEST-KEY2.
+           MOVE "ALT1" TO  ALT-KEY1.
+           WRITE TEST-REC.
+           MOVE "0001" TO TEST-KEY1.
+           MOVE "1001" TO TEST-KEY2.
+           MOVE "ALT2" TO  ALT-KEY1.
+           WRITE TEST-REC.
+           MOVE "0001" TO TEST-KEY1.
+           MOVE "1002" TO TEST-KEY2.
+           MOVE "ALT3" TO  ALT-KEY1.
+           WRITE TEST-REC.
+           MOVE "0002" TO TEST-KEY1.
+           MOVE "1000" TO TEST-KEY2.
+           MOVE "ALT4" TO  ALT-KEY1.
+           WRITE TEST-REC.
+           MOVE "0002" TO TEST-KEY1.
+           MOVE "1001" TO TEST-KEY2.
+           MOVE "ALT5" TO  ALT-KEY1.
+           WRITE TEST-REC.
+           MOVE "0002" TO TEST-KEY1.
+           MOVE "1002" TO TEST-KEY2.
+           MOVE "ALT6" TO  ALT-KEY1.
+           WRITE TEST-REC.
+           CLOSE TEST-FILE.
+           OPEN  INPUT  TEST-FILE.
+           MOVE "0001" TO TEST-KEY1.
+           MOVE "1001" TO TEST-KEY2.
+           START TEST-FILE KEY IS EQUAL TO  TEST-KEY2 TEST-KEY1.
+           READ  TEST-FILE NEXT.
+           DISPLAY ALT-KEY1 NO ADVANCING.
+           READ  TEST-FILE.
+           DISPLAY ALT-KEY1 NO ADVANCING.
+           CLOSE TEST-FILE.
+           STOP RUN.
+])
+
+AT_CHECK([${COMPILE} -o prog prog.cob], [1], [],
+[prog.cob:49: Error: Undefined compound keys
+])
+
+AT_CLEANUP

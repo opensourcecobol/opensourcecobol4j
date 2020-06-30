@@ -1,0 +1,362 @@
+/* config.h.in.  Generated from configure.ac by autoheader.  */
+
+/* Executable extension */
+#undef COB_EXEEXT
+
+/* Enable experimemental code (Developers only!) */
+#undef COB_EXPERIMENTAL
+
+/* Compile/link option for exporting symbols */
+#undef COB_EXPORT_DYN
+
+/* Extra Compiler Flags */
+#undef COB_EXTRA_FLAGS
+
+/* Can use inline keyword */
+#undef COB_HAS_INLINE
+
+/* long int is long long */
+#undef COB_LI_IS_LL
+
+/* Can not dlopen self */
+#undef COB_NO_SELFOPEN
+
+/* Enable CALL parameter checking */
+#undef COB_PARAM_CHECK
+
+/* Compile/link option for PIC code */
+#undef COB_PIC_FLAGS
+
+/* Compile/link option for shared code */
+#undef COB_SHARED_OPT
+
+/* Can use strftime for timezone */
+#undef COB_STRFTIME
+
+/* Strip command */
+#undef COB_STRIP_CMD
+
+/* Define to one of `_getb67', `GETB67', `getb67' for Cray-2 and Cray-YMP
+   systems. This function is required for `alloca.c' support on those systems.
+   */
+#undef CRAY_STACKSEG_END
+
+/* Define to 1 if using `alloca.c'. */
+#undef C_ALLOCA
+
+/* Define to 1 if translation of program messages to the user's native
+   language is requested. */
+#undef ENABLE_NLS
+
+/* Define to 1 if you have `alloca', as a function or macro. */
+#undef HAVE_ALLOCA
+
+/* Define to 1 if you have <alloca.h> and it should be used (not on Ultrix).
+   */
+#undef HAVE_ALLOCA_H
+
+/* Has __attribute__((aligned)) */
+#undef HAVE_ATTRIBUTE_ALIGNED
+
+/* curses has color_set function */
+#undef HAVE_COLOR_SET
+
+/* Define to 1 if you have the <curses.h> header file. */
+#undef HAVE_CURSES_H
+
+/* Define to 1 if you have the <db1/db.h> header file. */
+#undef HAVE_DB1_DB_H
+
+/* Define to 1 if you have the <db3/db_185.h> header file. */
+#undef HAVE_DB3_DB_185_H
+
+/* Define to 1 if you have the <db4.1/db_185.h> header file. */
+#undef HAVE_DB4_1_DB_185_H
+
+/* Define to 1 if you have the <db4.2/db_185.h> header file. */
+#undef HAVE_DB4_2_DB_185_H
+
+/* Define to 1 if you have the <db4.3/db_185.h> header file. */
+#undef HAVE_DB4_3_DB_185_H
+
+/* Define to 1 if you have the <db4.4/db_185.h> header file. */
+#undef HAVE_DB4_4_DB_185_H
+
+/* Define to 1 if you have the <db4.5/db_185.h> header file. */
+#undef HAVE_DB4_5_DB_185_H
+
+/* Define to 1 if you have the <db4/db_185.h> header file. */
+#undef HAVE_DB4_DB_185_H
+
+/* Define to 1 if you have the <db_185.h> header file. */
+#undef HAVE_DB_185_H
+
+/* Define to 1 if you have the <db.h> header file. */
+#undef HAVE_DB_H
+
+/* Define if the GNU dcgettext() function is already present or preinstalled.
+   */
+#undef HAVE_DCGETTEXT
+
+/* Define to 1 if you have the <disam.h> header file. */
+#undef HAVE_DISAM_H
+
+/* Define to 1 if you have the <dlfcn.h> header file. */
+#undef HAVE_DLFCN_H
+
+/* Define to 1 if you don't have `vprintf' but do have `_doprnt.' */
+#undef HAVE_DOPRNT
+
+/* Define to 1 if you have the `fcntl' function. */
+#undef HAVE_FCNTL
+
+/* Define to 1 if you have the <fcntl.h> header file. */
+#undef HAVE_FCNTL_H
+
+/* Define to 1 if you have the <getopt.h> header file. */
+#undef HAVE_GETOPT_H
+
+/* Define if the GNU gettext() function is already present or preinstalled. */
+#undef HAVE_GETTEXT
+
+/* Define to 1 if you have the `gettimeofday' function. */
+#undef HAVE_GETTIMEOFDAY
+
+/* Define to 1 if you have the <gmp.h> header file. */
+#undef HAVE_GMP_H
+
+/* Define if you have the iconv() function. */
+#undef HAVE_ICONV
+
+/* Define to 1 if you have the <inttypes.h> header file. */
+#undef HAVE_INTTYPES_H
+
+/* Define to 1 if you have the <isam.h> header file. */
+#undef HAVE_ISAM_H
+
+/* Define to 1 if you have the <kpathsea/getopt.h> header file. */
+#undef HAVE_KPATHSEA_GETOPT_H
+
+/* Define if you have <langinfo.h> and nl_langinfo(CODESET). */
+#undef HAVE_LANGINFO_CODESET
+
+/* Define to 1 if you have the `curses' library (-lcurses). */
+#undef HAVE_LIBCURSES
+
+/* Define to 1 if you have the `disam' library (-ldisam). */
+#undef HAVE_LIBDISAM
+
+/* Define to 1 if you have the `gmp' library (-lgmp). */
+#undef HAVE_LIBGMP
+
+/* Define to 1 if you have the `ifisam' library (-lifisam). */
+#undef HAVE_LIBIFISAM
+
+/* Define to 1 if you have the `ltdl' library (-lltdl). */
+#undef HAVE_LIBLTDL
+
+/* Define to 1 if you have the `ncurses' library (-lncurses). */
+#undef HAVE_LIBNCURSES
+
+/* Define to 1 if you have the `pdcurses' library (-lpdcurses). */
+#undef HAVE_LIBPDCURSES
+
+/* Define to 1 if you have the `posix4' library (-lposix4). */
+#undef HAVE_LIBPOSIX4
+
+/* Define to 1 if you have the `rt' library (-lrt). */
+#undef HAVE_LIBRT
+
+/* Define to 1 if you have the `vbisam' library (-lvbisam). */
+#undef HAVE_LIBVBISAM
+
+/* Define to 1 if you have the <locale.h> header file. */
+#undef HAVE_LOCALE_H
+
+/* Define to 1 if you have the <ltdl.h> header file. */
+#undef HAVE_LTDL_H
+
+/* Define to 1 if you have the <malloc.h> header file. */
+#undef HAVE_MALLOC_H
+
+/* Define to 1 if you have the `memmove' function. */
+#undef HAVE_MEMMOVE
+
+/* Define to 1 if you have the <memory.h> header file. */
+#undef HAVE_MEMORY_H
+
+/* Define to 1 if you have the `memset' function. */
+#undef HAVE_MEMSET
+
+/* Define to 1 if you have the <ncurses.h> header file. */
+#undef HAVE_NCURSES_H
+
+/* Define to 1 if you have the <ncurses/ncurses.h> header file. */
+#undef HAVE_NCURSES_NCURSES_H
+
+/* Define to 1 if you have the <pdcurses.h> header file. */
+#undef HAVE_PDCURSES_H
+
+/* Has -Wno-pointer-sign */
+#undef HAVE_PSIGN_OPT
+
+/* Define to 1 if you have the `setlocale' function. */
+#undef HAVE_SETLOCALE
+
+/* Define to 1 if you have the <signal.h> header file. */
+#undef HAVE_SIGNAL_H
+
+/* Define to 1 if you have the <stddef.h> header file. */
+#undef HAVE_STDDEF_H
+
+/* Define to 1 if you have the <stdint.h> header file. */
+#undef HAVE_STDINT_H
+
+/* Define to 1 if you have the <stdlib.h> header file. */
+#undef HAVE_STDLIB_H
+
+/* Define to 1 if you have the `strcasecmp' function. */
+#undef HAVE_STRCASECMP
+
+/* Define to 1 if you have the `strchr' function. */
+#undef HAVE_STRCHR
+
+/* Define to 1 if you have the `strdup' function. */
+#undef HAVE_STRDUP
+
+/* Define to 1 if you have the `strerror' function. */
+#undef HAVE_STRERROR
+
+/* Define to 1 if you have the <strings.h> header file. */
+#undef HAVE_STRINGS_H
+
+/* Define to 1 if you have the <string.h> header file. */
+#undef HAVE_STRING_H
+
+/* Define to 1 if you have the `strrchr' function. */
+#undef HAVE_STRRCHR
+
+/* Define to 1 if you have the `strstr' function. */
+#undef HAVE_STRSTR
+
+/* Define to 1 if you have the `strtol' function. */
+#undef HAVE_STRTOL
+
+/* Define to 1 if you have the <sys/stat.h> header file. */
+#undef HAVE_SYS_STAT_H
+
+/* Define to 1 if you have the <sys/time.h> header file. */
+#undef HAVE_SYS_TIME_H
+
+/* Define to 1 if you have the <sys/types.h> header file. */
+#undef HAVE_SYS_TYPES_H
+
+/* Has timezone variable */
+#undef HAVE_TIMEZONE
+
+/* Define to 1 if you have the <unistd.h> header file. */
+#undef HAVE_UNISTD_H
+
+/* Define to 1 if you have the <vbisam.h> header file. */
+#undef HAVE_VBISAM_H
+
+/* Define to 1 if you have the `vprintf' function. */
+#undef HAVE_VPRINTF
+
+/* Define to 1 if you have the <wchar.h> header file. */
+#undef HAVE_WCHAR_H
+
+/* Enable UTF-8 support */
+#undef I18N_UTF8
+
+/* Define as const if the declaration of iconv() needs const. */
+#undef ICONV_CONST
+
+/* Name of package */
+#undef PACKAGE
+
+/* Define to the address where bug reports for this package should be sent. */
+#undef PACKAGE_BUGREPORT
+
+/* Define to the full name of this package. */
+#undef PACKAGE_NAME
+
+/* Define to the full name and version of this package. */
+#undef PACKAGE_STRING
+
+/* Define to the one symbol short name of this package. */
+#undef PACKAGE_TARNAME
+
+/* Define to the version of this package. */
+#undef PACKAGE_VERSION
+
+/* Define a patch level */
+#undef PATCH_LEVEL
+
+/* If using the C implementation of alloca, define if you know the
+   direction of stack growth for your system; otherwise it will be
+   automatically deduced at run-time.
+	STACK_DIRECTION > 0 => grows toward higher addresses
+	STACK_DIRECTION < 0 => grows toward lower addresses
+	STACK_DIRECTION = 0 => direction of growth unknown */
+#undef STACK_DIRECTION
+
+/* Define to 1 if you have the ANSI C header files. */
+#undef STDC_HEADERS
+
+/* Define to 1 if your <sys/time.h> declares `struct tm'. */
+#undef TM_IN_SYS_TIME
+
+/* Use Berkeley DB library new features */
+#undef USE_DB41
+
+/* Use system dynamic loader */
+#undef USE_LIBDL
+
+/* Version number of package */
+#undef VERSION
+
+/* Use CISAM as ISAM handler */
+#undef WITH_CISAM
+
+/* Compile with the Berkeley DB library */
+#undef WITH_DB
+
+/* Use DISAM as ISAM handler */
+#undef WITH_DISAM
+
+/* Compile with an external ISAM handler */
+#undef WITH_INDEX_EXTFH
+
+/* Compile with an external SEQ/RAN handler */
+#undef WITH_SEQRA_EXTFH
+
+/* Define variable sequential file format */
+#undef WITH_VARSEQ
+
+/* Use VBISAM as ISAM handler */
+#undef WITH_VBISAM
+
+/* Define to 1 if your processor stores words with the most significant byte
+   first (like Motorola and SPARC, unlike Intel and VAX). */
+#undef WORDS_BIGENDIAN
+
+/* Define to 1 if on HPUX.  */
+#ifndef _XOPEN_SOURCE_EXTENDED
+# undef _XOPEN_SOURCE_EXTENDED
+#endif
+
+/* Compiler optimization */
+#undef __USE_STRING_INLINES
+
+/* Define to empty if `const' does not conform to ANSI C. */
+#undef const
+
+/* Define to `__inline__' or `__inline' if that's what the C compiler
+   calls it, or to nothing if 'inline' is not supported under any name.  */
+#ifndef __cplusplus
+#undef inline
+#endif
+
+/* Define to `unsigned' if <sys/types.h> does not define. */
+#undef size_t
