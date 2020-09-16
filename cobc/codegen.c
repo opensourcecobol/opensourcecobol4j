@@ -3140,19 +3140,19 @@ joutput_sort_proc_escape (struct cb_sort_proc *p)
 {
 	joutput_indent ("if (");
 	joutput_param (p->sort_return, 0);
-	joutput (" != 0)\n");
+	joutput (".intValue() != 0)\n");
 	joutput ("{\n");
-	joutput_indent ("  while (frame_ptr->current_sort_merge_file != ");
+	joutput_indent ("  /*while (frame_ptr->current_sort_merge_file != ");
 	joutput_param (p->sort_file, 0);
 	joutput (")\n");
-	joutput_line ("    --frame_ptr;\n");
+	joutput_line ("    /--frame_ptr;*/\n");
     joutput_line ("  System.out.println(\"[*] <Log> SORT PROC ESCAPE.\");");
 //#ifndef	__GNUC__
 //	joutput_line ("goto P_switch;");
 //#elif	COB_USE_SETJMP
 //	joutput_line ("longjmp (frame_ptr->return_address, 1);");
 //#else
-//	goutput_line ("goto *frame_ptr->return_address;");
+//	joutput_line ("goto *frame_ptr->return_address;");
 //#endif
     
 	joutput_line ("}");
@@ -3171,9 +3171,9 @@ static void
 joutput_file_release (struct cb_release *p)
 {
 	joutput_sort_proc_escape (&(p->proc));
-	joutput_prefix ();
+	joutput_indent ("CobolFileSort.release(");
 	joutput_param (p->proc.sort_file, 0);
-	joutput (".sortRelease();\n");
+	joutput (");\n");
 }
 
 static void

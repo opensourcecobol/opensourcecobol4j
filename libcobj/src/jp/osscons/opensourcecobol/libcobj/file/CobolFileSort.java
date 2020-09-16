@@ -797,4 +797,29 @@ public class CobolFileSort {
 		f.saveStatus(CobolFile.COB_STATUS_00_SUCCESS, fnstatus);
 		return;
 	}
+	
+	/**
+	 * libcob/fileio.cのcob_file_releaseの実装
+	 */
+	public static void release(CobolFile f) {
+		AbstractCobolField fnstatus = null;
+		CobolSort hp = f.filex;
+		
+		if(hp != null) {
+			fnstatus = hp.getFnstatus();
+		}
+		
+		int ret = CobolFileSort.sortSubmit(f, f.record.getDataStorage());
+		switch(ret) {
+		case 0:			
+			f.saveStatus(CobolFile.COB_STATUS_00_SUCCESS, fnstatus);
+			return;
+		default:
+			if(hp != null) {
+				hp.getSortReturn().set(16);
+			}			
+			f.saveStatus(CobolFile.COB_STATUS_30_PERMANENT_ERROR, fnstatus);
+			return;
+		}
+	}
 }
