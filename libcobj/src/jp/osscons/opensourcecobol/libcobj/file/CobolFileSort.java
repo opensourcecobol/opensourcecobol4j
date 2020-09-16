@@ -801,7 +801,7 @@ public class CobolFileSort {
 	/**
 	 * libcob/fileio.cのcob_file_releaseの実装
 	 */
-	public static void release(CobolFile f) {
+	public static void performRelease(CobolFile f) {
 		AbstractCobolField fnstatus = null;
 		CobolSort hp = f.filex;
 		

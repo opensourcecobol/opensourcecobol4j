@@ -3162,16 +3162,16 @@ static void
 joutput_file_return (struct cb_return *p)
 {
 	joutput_sort_proc_escape (&(p->proc));
-	joutput_prefix ();
+	joutput_indent ("CobolFileSort.performReturn(");
 	joutput_param (p->proc.sort_file, 0);
-	joutput (".sortReturn();\n");
+	joutput (");\n");
 }
 
 static void
 joutput_file_release (struct cb_release *p)
 {
 	joutput_sort_proc_escape (&(p->proc));
-	joutput_indent ("CobolFileSort.release(");
+	joutput_indent ("CobolFileSort.performRelease(");
 	joutput_param (p->proc.sort_file, 0);
 	joutput (");\n");
 }
