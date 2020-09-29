@@ -3142,11 +3142,10 @@ joutput_sort_proc_escape (struct cb_sort_proc *p)
 	joutput_param (p->sort_return, 0);
 	joutput (".intValue() != 0)\n");
 	joutput ("{\n");
-	joutput_indent ("  /*while (frame_ptr->current_sort_merge_file != ");
+	joutput_indent ("  while (frame_ptr->current_sort_merge_file != ");
 	joutput_param (p->sort_file, 0);
 	joutput (")\n");
-	joutput_line ("    /--frame_ptr;*/\n");
-    joutput_line ("  System.out.println(\"[*] <Log> SORT PROC ESCAPE.\");");
+	joutput_line ("    --frame_ptr;\n");
 //#ifndef	__GNUC__
 //	joutput_line ("goto P_switch;");
 //#elif	COB_USE_SETJMP
@@ -3161,8 +3160,9 @@ joutput_sort_proc_escape (struct cb_sort_proc *p)
 static void
 joutput_file_return (struct cb_return *p)
 {
-	joutput_sort_proc_escape (&(p->proc));
-	joutput_indent ("CobolFileSort.performReturn(");
+	//joutput_sort_proc_escape (&(p->proc));
+    joutput_prefix();
+	joutput ("CobolFileSort.performReturn(");
 	joutput_param (p->proc.sort_file, 0);
 	joutput (");\n");
 }
@@ -3170,8 +3170,9 @@ joutput_file_return (struct cb_return *p)
 static void
 joutput_file_release (struct cb_release *p)
 {
-	joutput_sort_proc_escape (&(p->proc));
-	joutput_indent ("CobolFileSort.performRelease(");
+	//joutput_sort_proc_escape (&(p->proc));
+    joutput_prefix();
+	joutput ("CobolFileSort.performRelease(");
 	joutput_param (p->proc.sort_file, 0);
 	joutput (");\n");
 }
