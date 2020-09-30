@@ -3084,93 +3084,97 @@ joutput_sort_proc (struct cb_sort_proc *p)
 	} else {
 		joutput_line ("/* PERFORM %s THRU %s */", lb->name, le->name);
 	}
-	joutput_line ("frame_ptr++;");
-	joutput_line ("memset (frame_ptr, 0, sizeof (struct cob_frame));");
-	if (cb_flag_stack_check) {
-		joutput_line ("if (unlikely(frame_ptr == frame_overflow))");
-		joutput_line ("    cob_fatal_error (COB_FERROR_STACK);");
-	}
-	joutput_line ("frame_ptr->perform_through = %d;", le->id);
-	joutput_prefix ();
-	joutput ("frame_ptr->current_sort_merge_file = ");
-	joutput_param (p->sort_file, 0);
-	joutput (";\n");
+	//joutput_line ("frame_ptr++;");
+	//joutput_line ("memset (frame_ptr, 0, sizeof (struct cob_frame));");
+	//if (cb_flag_stack_check) {
+	//	joutput_line ("if (unlikely(frame_ptr == frame_overflow))");
+	//	joutput_line ("    cob_fatal_error (COB_FERROR_STACK);");
+	//}
+	//joutput_line ("frame_ptr->perform_through = %d;", le->id);
+	//joutput_prefix ();
+	//joutput ("frame_ptr->current_sort_merge_file = ");
+	//joutput_param (p->sort_file, 0);
+	//joutput (";\n");
 #ifndef	__GNUC__
-	l = cobc_malloc (sizeof (struct label_list));
-	l->next = label_cache;
-	l->id = cb_id;
-	if (label_cache == NULL) {
-		l->call_num = 0;
-	} else {
-		l->call_num = label_cache->call_num + 1;
-	}
-	label_cache = l;
-	joutput_line ("frame_ptr->return_address = %d;", l->call_num);
-	joutput_prefix ();
-	joutput ("if (unlikely(*(int*)(");
-	joutput_param (p->sort_return, 0);
-	joutput (") != 0))\n");
-	joutput_prefix ();
-	joutput_line ("goto %s%d;", CB_PREFIX_LABEL, cb_id);
-	joutput_line ("goto %s%d;", CB_PREFIX_LABEL, lb->id);
-	joutput_line ("%s%d:", CB_PREFIX_LABEL, cb_id);
+	//l = cobc_malloc (sizeof (struct label_list));
+	//l->next = label_cache;
+	//l->id = cb_id;
+	//if (label_cache == NULL) {
+	//	l->call_num = 0;
+	//} else {
+	//	l->call_num = label_cache->call_num + 1;
+	//}
+	//label_cache = l;
+	//joutput_line ("frame_ptr->return_address = %d;", l->call_num);
+	//joutput_prefix ();
+	//joutput ("if (unlikely(*(int*)(");
+	//joutput_param (p->sort_return, 0);
+	//joutput (") != 0))\n");
+	//joutput_prefix ();
+	//joutput_line ("goto %s%d;", CB_PREFIX_LABEL, cb_id);
+	//joutput_line ("goto %s%d;", CB_PREFIX_LABEL, lb->id);
+	//joutput_line ("%s%d:", CB_PREFIX_LABEL, cb_id);
 #elif	COB_USE_SETJMP
-	joutput_line ("if (setjmp (frame_ptr->return_address) == 0)");
-	joutput_line ("  goto %s%d;", CB_PREFIX_LABEL, lb->id);
+	//joutput_line ("if (setjmp (frame_ptr->return_address) == 0)");
+	//joutput_line ("  goto %s%d;", CB_PREFIX_LABEL, lb->id);
 #else
-	joutput_line ("frame_ptr->return_address = &&%s%d;",
-		     CB_PREFIX_LABEL, cb_id);
-	joutput_prefix ();
-	joutput ("if (unlikely(*(int*)(");
-	joutput_param (p->sort_return, 0);
-	joutput (") != 0))\n");
-	joutput_prefix ();
-	joutput_line ("goto %s%d;", CB_PREFIX_LABEL, cb_id);
-	joutput_line ("goto %s%d;", CB_PREFIX_LABEL, lb->id);
-	joutput_line ("%s%d:", CB_PREFIX_LABEL, cb_id);
+	//joutput_line ("frame_ptr->return_address = &&%s%d;",
+	//	     CB_PREFIX_LABEL, cb_id);
+	//joutput_prefix ();
+	//joutput ("if (unlikely(*(int*)(");
+	//joutput_param (p->sort_return, 0);
+	//joutput (") != 0))\n");
+	//joutput_prefix ();
+	//joutput_line ("goto %s%d;", CB_PREFIX_LABEL, cb_id);
+	//joutput_line ("goto %s%d;", CB_PREFIX_LABEL, lb->id);
+	//joutput_line ("%s%d:", CB_PREFIX_LABEL, cb_id);
 #endif
-	cb_id++;
-	joutput_line ("frame_ptr--;");
+	//joutput_line ("/* perform call */");
+	joutput_line("entryFunc(%d, %d);", lb->id, le->id);
+	//cb_id++;
+	//joutput_line ("frame_ptr--;");
 }
 
 static void
 joutput_sort_proc_escape (struct cb_sort_proc *p)
 {
-	joutput ("    if (*(int*)(");
+	joutput_indent ("if (");
 	joutput_param (p->sort_return, 0);
-	joutput (") != 0)\n");
-	joutput ("      {\n");
-	joutput ("        while (frame_ptr->current_sort_merge_file != ");
+	joutput (".intValue() != 0)\n");
+	joutput ("{\n");
+	joutput_indent ("  while (frame_ptr->current_sort_merge_file != ");
 	joutput_param (p->sort_file, 0);
 	joutput (")\n");
-	joutput ("             --frame_ptr;\n");
-	joutput ("    ");
-#ifndef	__GNUC__
-	joutput_line ("goto P_switch;");
-#elif	COB_USE_SETJMP
-	joutput_line ("longjmp (frame_ptr->return_address, 1);");
-#else
-	joutput_line ("goto *frame_ptr->return_address;");
-#endif
-	joutput ("      }\n");
+	joutput_line ("    --frame_ptr;\n");
+//#ifndef	__GNUC__
+//	joutput_line ("goto P_switch;");
+//#elif	COB_USE_SETJMP
+//	joutput_line ("longjmp (frame_ptr->return_address, 1);");
+//#else
+//	joutput_line ("goto *frame_ptr->return_address;");
+//#endif
+    
+	joutput_line ("}");
 }
 
 static void
 joutput_file_return (struct cb_return *p)
 {
-	joutput_sort_proc_escape (&(p->proc));
-	joutput_prefix ();
+	//joutput_sort_proc_escape (&(p->proc));
+    joutput_prefix();
+	joutput ("CobolFileSort.performReturn(");
 	joutput_param (p->proc.sort_file, 0);
-	joutput ("sortReturn();\n");
+	joutput (");\n");
 }
 
 static void
 joutput_file_release (struct cb_release *p)
 {
-	joutput_sort_proc_escape (&(p->proc));
-	joutput_prefix ();
+	//joutput_sort_proc_escape (&(p->proc));
+    joutput_prefix();
+	joutput ("CobolFileSort.performRelease(");
 	joutput_param (p->proc.sort_file, 0);
-	joutput ("sortRelease();\n");
+	joutput (");\n");
 }
 
 static void
