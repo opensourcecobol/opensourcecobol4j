@@ -22,6 +22,7 @@ package jp.osscons.opensourcecobol.libcobj.data;
 import java.math.BigDecimal;
 import java.nio.ByteBuffer;
 
+import jp.osscons.opensourcecobol.libcobj.common.CobolConstant;
 import jp.osscons.opensourcecobol.libcobj.exceptions.CobolRuntimeException;
 
 /**
@@ -41,6 +42,9 @@ public abstract class AbstractCobolField {
 	 * 変数に関する様々な情報を保持するオブジェクト(符号付か,COMP-3指定かなど)
 	 */
 	protected CobolFieldAttribute attribute;
+	
+	static int lastsize = 0;	
+	static CobolDataStorage lastdata = null;
 
 	final static int[] cobExp10 = {
 		1,
@@ -120,6 +124,14 @@ public abstract class AbstractCobolField {
 	 */
 	public int getFieldSize() {
 		return this.size - (this.attribute.isFlagSignSeparate() ? 1 : 0);
+	}
+	
+	public CobolDataStorage getFieldData() {
+		if(this.attribute.isFlagSignSeparate() && this.attribute.isFlagSignLeading()) {
+			return new CobolDataStorage(this.dataStorage.getRefOfData(), this.dataStorage.getIndex() + 1);
+		} else {
+			return this.dataStorage;
+		}
 	}
 
 	/**
@@ -345,6 +357,134 @@ public abstract class AbstractCobolField {
 	public void putSign(int sign) {
 	}
 
+	protected AbstractCobolField preprocessOfMoving(AbstractCobolField src) {
+		AbstractCobolField src1;
+		
+		//TODO 以下の分岐は不要?
+		if(src == CobolConstant.quote ||
+		   src == CobolConstant.zenQuote ||
+		   src == CobolConstant.space ||
+		   src == CobolConstant.zenSpace ||
+		   src == CobolConstant.blank ||
+		   src == CobolConstant.zenBlank ||
+		   src == CobolConstant.zero ||
+		   src == CobolConstant.zenZero) {
+			src1 = src;
+		} else {
+			src1 = src;
+		}
+
+		if(src1.getAttribute().isTypeAlphanumAll() || src1.getAttribute().isTypeNationalAll()) {
+			this.moveFromAll(src);
+			return null;
+		}
+
+		if(this.getSize() == 0) {
+			return null;
+		}
+
+		CobolFieldAttribute srcAttr = src1.getAttribute();
+		CobolFieldAttribute dstAttr = this.getAttribute();
+		if(!srcAttr.isTypeGroup()) {
+			if((srcAttr.isTypeNumeric() || srcAttr.isTypeAlphanum() || srcAttr.isTypeAlphanumEdited()) &&
+				(dstAttr.isTypeNational() || dstAttr.isTypeNationalEdited())) {
+				byte[] pTmp = null;
+				int size = 0;
+				if(srcAttr.isTypeNumericDisplay() || srcAttr.isTypeAlphanum() || srcAttr.isTypeAlphanumEdited()) {
+					pTmp = CobolNationalField.judge_hankakujpn_exist(src1);
+					size = CobolNationalField.workReturnSize;
+				}
+				if(pTmp != null) {
+					src1.setDataStorage(new CobolDataStorage(pTmp));
+					src1.setSize(size);
+				}
+				if(src1.size == 0) {
+					src1 = CobolConstant.zenSpace;
+				}
+			}
+		}
+
+		if(src1.getSize() == 0) {
+			src1 = CobolConstant.space;
+		}
+
+		return src;
+	}
+
+	private class TmpTuple {
+		public CobolDataStorage storage;
+		public int size;
+	}
+	
+	protected void moveFromAll(AbstractCobolField src) {
+		int size = 0;
+		CobolDataStorage tmpSrcStorage = null;
+		int tmpSrcSize = 0;
+		boolean xToN = false;
+		CobolFieldAttribute attr;
+		int digcount;
+		
+		if((!src.getAttribute().isTypeNational() || src.getAttribute().isTypeNationalEdited()) &&
+		   (this.attribute.isTypeNational() || this.attribute.isTypeNationalEdited())) {
+			CobolDataStorage pTmp;
+			TmpTuple tuple = this.judgeHankakujpnExist(src, size);
+			pTmp = tuple.storage;
+			size = tuple.size;
+			if(pTmp != null) {
+				tmpSrcStorage = pTmp;
+				tmpSrcSize = size;
+			} else {
+				tmpSrcSize = 0;
+			}
+			xToN = true;
+		}
+		
+		if(xToN) {
+			attr = new CobolFieldAttribute(CobolFieldAttribute.COB_TYPE_NATIONAL, 0, 0, 0, null);
+		} else {
+			attr = new CobolFieldAttribute(CobolFieldAttribute.COB_TYPE_ALPHANUMERIC, 0, 0, 0, null);
+		}
+		if(this.attribute.isTypeNumeric()) {
+			digcount = 18;
+			attr.setType(CobolFieldAttribute.COB_TYPE_NUMERIC_DISPLAY);
+			attr.setDigits(18);
+		} else {
+			digcount = this.size;
+		}
+		if(digcount > AbstractCobolField.lastsize) {
+			AbstractCobolField.lastdata = new CobolDataStorage(digcount);
+			AbstractCobolField.lastsize = digcount;
+		}
+
+		AbstractCobolField temp = CobolFieldFactory.makeCobolField(digcount, lastdata, attr);
+
+		if(xToN && tmpSrcSize > 1) {
+			for(int i=0; i<digcount; ++i) {
+				lastdata.set(i, tmpSrcStorage.getByte(i % tmpSrcSize));
+			}
+		} else {
+			if(src.getSize() == 1) {
+				lastdata.memset(src.getDataStorage().getByte(0), digcount);
+			} else {
+				int i;
+				for(i=0; i<digcount; ++i) {
+					lastdata.set(i, src.getDataStorage().getByte(i % src.getSize()));
+				}
+				
+				if((0x81 <= lastdata.getByte(i  - 1) && lastdata.getByte(i - 1) <= 0x9F) ||
+				   (0xE0 <= lastdata.getByte(i  - 1) && lastdata.getByte(i - 1) <= 0xFC)) {
+					lastdata.set(i - 1, ' ');
+				}
+			}	
+		}
+		this.moveFrom(temp);
+	}
+	
+	private TmpTuple judgeHankakujpnExist(AbstractCobolField src, int size) {
+		TmpTuple ret = new TmpTuple();
+		return ret;
+	}
+	
 	/**
 	 * 引数で与えらえられたデータからthisへの代入を行う
 	 * @param field 代入元のデータ(AbstractCobolField型)
