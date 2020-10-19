@@ -88,18 +88,27 @@ public class CobolAlphanumericField extends AbstractCobolField {
 	 * @param field 代入元のデータ(AbstractCobolField型)
 	 */
 	@Override
-	public void moveFrom(AbstractCobolField field) {
-		switch(field.getAttribute().getType()) {
+	public void moveFrom(AbstractCobolField src) {
+		AbstractCobolField src1 = this.preprocessOfMoving(src);
+		if(src1 == null) {
+			return;
+		}
+
+		switch(src1.getAttribute().getType()) {
 		case CobolFieldAttribute.COB_TYPE_NUMERIC_DISPLAY:
-			this.moveDisplayToAlnum(field);
+			this.moveDisplayToAlnum(src1);
 			return;
 		case CobolFieldAttribute.COB_TYPE_NUMERIC_PACKED:
 		case CobolFieldAttribute.COB_TYPE_NUMERIC_BINARY:
-			this.moveFrom(field.getNumericField());
+			this.moveFrom(src1.getNumericField());
 			return;
 		case CobolFieldAttribute.COB_TYPE_ALPHANUMERIC:
 		case CobolFieldAttribute.COB_TYPE_NATIONAL:
-			this.moveAlphanumToAlphanum(field);
+		case CobolFieldAttribute.COB_TYPE_NUMERIC_EDITED:
+		case CobolFieldAttribute.COB_TYPE_ALPHANUMERIC_EDITED:
+		case CobolFieldAttribute.COB_TYPE_NATIONAL_EDITED:
+		case CobolFieldAttribute.COB_TYPE_GROUP:
+			this.moveAlphanumToAlphanum(src1);
 			return;
 		default:
 			throw new CobolRuntimeException(0, "未実装");
@@ -157,12 +166,16 @@ public class CobolAlphanumericField extends AbstractCobolField {
 	 * @param field 転記元のCobolNumericDisplay型のフィールド
 	 */
 	public void moveAlphanumToAlphanum(AbstractCobolField field) {
-		CobolDataStorage data1 = field.getDataStorage();
-		int size1 = field.getSize();
-		CobolDataStorage data2 = this.getDataStorage();
-		int size2 = this.getSize();
+		CobolAlphanumericField.moveAlphanumToAlphanum(this, field);
+	}
+
+	public static void moveAlphanumToAlphanum(AbstractCobolField dst, AbstractCobolField src) {
+		CobolDataStorage data1 = src.getDataStorage();
+		int size1 = src.getSize();
+		CobolDataStorage data2 = dst.getDataStorage();
+		int size2 = dst.getSize();
 		if(size1 >= size2) {
-			if(this.getAttribute().isFlagJustified()) {
+			if(dst.getAttribute().isFlagJustified()) {
 				for(int i=0; i<size2; ++i) {
 					data2.setByte(i, data1.getByte(size1 - size2 + i));
 				}
@@ -172,7 +185,7 @@ public class CobolAlphanumericField extends AbstractCobolField {
 				}
 			}
 		} else {
-			if(this.getAttribute().isFlagJustified()) {
+			if(dst.getAttribute().isFlagJustified()) {
 				for(int i=0; i<size2-size1; ++i) {
 					data2.setByte(i, (byte)0x20);
 				}
@@ -189,7 +202,7 @@ public class CobolAlphanumericField extends AbstractCobolField {
 			}
 		}
 	}
-
+	
 	/**
 	 * 引数で与えらえられたデータからthisへの代入を行う
 	 * @param field 代入元のデータ(byte[]型)
