@@ -3288,7 +3288,7 @@ cb_emit_accept_date (cb_tree var)
 	if (cb_validate_one (var)) {
 		return;
 	}
-	cb_emit (cb_build_funcall_1 ("cob_accept_date", var));
+	cb_emit (cb_build_funcall_1 ("CobolTerminal.acceptDate", var));
 }
 
 void
@@ -3297,7 +3297,7 @@ cb_emit_accept_date_yyyymmdd (cb_tree var)
 	if (cb_validate_one (var)) {
 		return;
 	}
-	cb_emit (cb_build_funcall_1 ("cob_accept_date_yyyymmdd", var));
+	cb_emit (cb_build_funcall_1 ("CobolTerminal.acceptDate_yyyymmdd", var));
 }
 
 void
@@ -3306,7 +3306,7 @@ cb_emit_accept_day (cb_tree var)
 	if (cb_validate_one (var)) {
 		return;
 	}
-	cb_emit (cb_build_funcall_1 ("cob_accept_day", var));
+	cb_emit (cb_build_funcall_1 ("CobolTerminal.acceptDay", var));
 }
 
 void
@@ -3315,7 +3315,7 @@ cb_emit_accept_day_yyyyddd (cb_tree var)
 	if (cb_validate_one (var)) {
 		return;
 	}
-	cb_emit (cb_build_funcall_1 ("cob_accept_day_yyyyddd", var));
+	cb_emit (cb_build_funcall_1 ("CobolTerminal.acceptDay_yyyyddd", var));
 }
 
 void
@@ -3324,7 +3324,7 @@ cb_emit_accept_day_of_week (cb_tree var)
 	if (cb_validate_one (var)) {
 		return;
 	}
-	cb_emit (cb_build_funcall_1 ("cob_accept_day_of_week", var));
+	cb_emit (cb_build_funcall_1 ("CobolTerminal.acceptDayOfWeek", var));
 }
 
 void
@@ -3333,7 +3333,7 @@ cb_emit_accept_time (cb_tree var)
 	if (cb_validate_one (var)) {
 		return;
 	}
-	cb_emit (cb_build_funcall_1 ("cob_accept_time", var));
+	cb_emit (cb_build_funcall_1 ("CobolTerminal.acceptTime", var));
 }
 
 void
@@ -3342,7 +3342,7 @@ cb_emit_accept_command_line (cb_tree var)
 	if (cb_validate_one (var)) {
 		return;
 	}
-	cb_emit (cb_build_funcall_1 ("cob_accept_command_line", var));
+	cb_emit (cb_build_funcall_1 ("CobolTerminal.acceptCommandLine", var));
 }
 
 void
@@ -3354,7 +3354,7 @@ cb_emit_get_environment (cb_tree envvar, cb_tree envval)
 	if (cb_validate_one (envval)) {
 		return;
 	}
-	cb_emit (cb_build_funcall_2 ("cob_get_environment", envvar, envval));
+	cb_emit (cb_build_funcall_2 ("CobolUtil.getEnvironment", envvar, envval));
 }
 
 void
@@ -3363,7 +3363,7 @@ cb_emit_accept_environment (cb_tree var)
 	if (cb_validate_one (var)) {
 		return;
 	}
-	cb_emit (cb_build_funcall_1 ("cob_accept_environment", var));
+	cb_emit (cb_build_funcall_1 ("CobolTerminal.acceptEnvironment", var));
 }
 
 void
@@ -3372,7 +3372,7 @@ cb_emit_accept_arg_number (cb_tree var)
 	if (cb_validate_one (var)) {
 		return;
 	}
-	cb_emit (cb_build_funcall_1 ("cob_accept_arg_number", var));
+	cb_emit (cb_build_funcall_1 ("CobolTerminal.acceptArgNumber", var));
 }
 
 void
@@ -3381,7 +3381,7 @@ cb_emit_accept_arg_value (cb_tree var)
 	if (cb_validate_one (var)) {
 		return;
 	}
-	cb_emit (cb_build_funcall_1 ("cob_accept_arg_value", var));
+	cb_emit (cb_build_funcall_1 ("CobolTerminal.acceptArgValue", var));
 }
 
 void
@@ -3688,7 +3688,7 @@ cb_emit_env_name (cb_tree value)
 	if (cb_validate_one (value)) {
 		return;
 	}
-	cb_emit (cb_build_funcall_1 ("cob_display_environment", value));
+	cb_emit (cb_build_funcall_1 ("CobolTerminal.displayEnvironment", value));
 }
 
 void
@@ -3697,7 +3697,7 @@ cb_emit_env_value (cb_tree value)
 	if (cb_validate_one (value)) {
 		return;
 	}
-	cb_emit (cb_build_funcall_1 ("cob_display_env_value", value));
+	cb_emit (cb_build_funcall_1 ("CobolTerminal.displayEnvValue", value));
 }
 
 void
@@ -3706,7 +3706,7 @@ cb_emit_arg_number (cb_tree value)
 	if (cb_validate_one (value)) {
 		return;
 	}
-	cb_emit (cb_build_funcall_1 ("cob_display_arg_number", value));
+	cb_emit (cb_build_funcall_1 ("CobolTerminal.displayArgNumber", value));
 }
 
 void
@@ -3715,7 +3715,7 @@ cb_emit_command_line (cb_tree value)
 	if (cb_validate_one (value)) {
 		return;
 	}
-	cb_emit (cb_build_funcall_1 ("cob_display_command_line", value));
+	cb_emit (cb_build_funcall_1 ("CobolTerminal.displayCommandLine", value));
 }
 
 void
@@ -6608,7 +6608,7 @@ cb_emit_search_all (cb_tree table, cb_tree at_end, cb_tree when, cb_tree stmts)
 void
 cb_emit_setenv (cb_tree x, cb_tree y)
 {
-	cb_emit (cb_build_funcall_2 ("cob_set_environment", x, y));
+	cb_emit (cb_build_funcall_2 ("CobolTerminal.setEnvironment", x, y));
 }
 
 void

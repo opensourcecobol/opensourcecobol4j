@@ -19,6 +19,14 @@
 
 package jp.osscons.opensourcecobol.libcobj.common;
 
+import java.time.DateTimeException;
+import java.time.LocalDateTime;
+import java.util.Scanner;
+import java.util.regex.MatchResult;
+
+import jp.osscons.opensourcecobol.libcobj.data.AbstractCobolField;
+import jp.osscons.opensourcecobol.libcobj.exceptions.CobolException;
+import jp.osscons.opensourcecobol.libcobj.exceptions.CobolExceptionId;
 import jp.osscons.opensourcecobol.libcobj.file.CobolFile;
 
 public class CobolUtil {
@@ -27,7 +35,16 @@ public class CobolUtil {
 	private static handlerlist hdlrs = null;
 	private static String cob_source_file = null;
 	private static int cob_source_line = 0;
-	private static String runtime_err_str = null;
+	private static String runtime_err_str = null;	
+	
+	public static LocalDateTime cobLocalTm = null;
+	public static String cobLocalEnv = null;
+	
+	public static String[] commandLineArgs = null;
+	public static int currentArgIndex = 1;
+	
+	public static int commlncnt = 0;
+	public static byte[] commlnptr = null;
 
 	abstract class handlerlist {
 		public handlerlist next = null;
@@ -64,7 +81,31 @@ public class CobolUtil {
 	 */
 	public static void cob_init(String[] argv, boolean cob_initialized) {
 		if(!cob_initialized) {
+			CobolUtil.commandLineArgs = argv;
 			CobolFile.cob_init_fileio();
+		}
+
+		String s;
+		
+		s = System.getenv("COB_DATE");
+		if(s != null) {
+			Scanner scan = new Scanner(s);
+			scan.findInLine("(\\d+)/(\\d+)/(\\d+)");
+			MatchResult result = scan.match();
+			date_time_block: if(result.groupCount() == 3) {
+				System.err.println("Warning: COB_DATE format invalid, ignored.");
+			} else  {
+				int year = Integer.parseInt(result.group(1));
+				int month = Integer.parseInt(result.group(2));
+				int dayOfMonth = Integer.parseInt(result.group(3));
+				LocalDateTime tm;
+				try {
+					tm = LocalDateTime.of(year, month, dayOfMonth, 0, 0);
+				} catch (DateTimeException e) {
+					break date_time_block;
+				}
+				cobLocalTm = tm;
+			}
 		}
 	}
 
@@ -113,5 +154,19 @@ public class CobolUtil {
 		}
 		System.err.println("libcob: " + s);
 		System.err.flush();
+	}
+
+	/**
+	 * libcob/common.c cob_get_environment
+	 * @param envname
+	 * @param envval
+	 */
+	public static void getEnvironment(AbstractCobolField envname, AbstractCobolField envval) {
+		String p = System.getenv(envname.fieldToString());
+		if(p == null) {
+			CobolException.setException(CobolExceptionId.COB_EC_IMP_ACCEPT);
+			p = " ";
+		}
+		envval.memcpy(p);
 	}
 }
