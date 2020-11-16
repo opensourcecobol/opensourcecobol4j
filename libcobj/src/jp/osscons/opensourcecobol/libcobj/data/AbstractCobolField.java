@@ -814,4 +814,41 @@ public abstract class AbstractCobolField {
 		AbstractCobolField temp = CobolFieldFactory.makeCobolField(4, data, attr);
 		this.moveFrom(temp);
 	}
+
+	/**
+	 * libcob/common.cのcob_memcpyの実装
+	 * @param src
+	 * @param size
+	 */
+	public void memcpy(byte[] src, int size) {
+		CobolFieldAttribute attr = new CobolFieldAttribute(CobolFieldAttribute.COB_TYPE_ALPHANUMERIC, 0, 0, 0, null);
+		AbstractCobolField temp = CobolFieldFactory.makeCobolField(size, new CobolDataStorage(src), attr);
+		this.moveFrom(temp);
+	}
+
+	/**
+	 * libcob/common.cのcob_memcpyの実装
+	 * @param src
+	 */
+	public void memcpy(byte[] src) {
+		this.memcpy(src, src.length);
+	}
+
+	/**
+	 * libcob/common.cのcob_memcpyの実装
+	 * @param src
+	 * @param size
+	 */
+	public void memcpy(String src, int size) {
+		byte[] bytes = src.getBytes();
+		this.memcpy(bytes, size);
+	}
+
+	/**
+	 * libcob/common.cのcob_memcpyの実装
+	 * @param src
+	 */
+	public void memcpy(String src) {
+		this.memcpy(src.getBytes());
+	}
 }

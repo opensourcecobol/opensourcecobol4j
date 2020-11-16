@@ -2660,7 +2660,7 @@ joutput_call (struct cb_call *p)
 			}
 
 			if (system_call) {
-				joutput ("%s", system_call);
+				joutput ("CobolSystemRoutine.%s", system_call);
 			} else {
 				joutput ("new %s.run",
 					cb_encode_program_id ((char *)(CB_LITERAL (p->name)->data)));
@@ -2737,13 +2737,13 @@ joutput_call (struct cb_call *p)
 		// 	break;
 		// }
 		if (CB_TREE_TAG (x) == CB_TAG_LITERAL) {
-			joutput ("CobolFieldFactory.makeCobolField(");
+			//joutput ("CobolFieldFactory.makeCobolField(");
 			if (CB_TREE_CLASS (x) == CB_CLASS_NUMERIC) {
 				joutput ("%d", cb_get_int (x));
 			} else {
 				joutput_data (x);
 			}
-			joutput (")");
+			//joutput (")");
 		} else {
 			f = cb_field (x);
 			joutput_param(x, -1);
@@ -5088,6 +5088,17 @@ joutput_entry_function()
 	joutput_line("}");
 }
 
+static void
+joutput_main_function (struct cb_program *prog)
+{
+	joutput_line ("/* Main function */");
+	joutput_line ("int");
+	joutput_line ("main (int argc, char **argv)");
+	joutput_indent ("{");
+	joutput_line ("cob_init (argc, argv);");
+	joutput_line ("cob_stop_run (%s ());", prog->program_id);
+	joutput_indent ("}\n");
+}
 
 void
 codegen (struct cb_program *prog, const int nested)
