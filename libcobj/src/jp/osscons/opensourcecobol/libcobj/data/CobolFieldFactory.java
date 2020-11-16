@@ -62,8 +62,18 @@ public class CobolFieldFactory {
 			return new CobolNationalField(size, data, attr);
 		case CobolFieldAttribute.COB_TYPE_GROUP:
 			return new CobolGroupField(size, data, attr);
+		case CobolFieldAttribute.COB_TYPE_ALPHANUMERIC_EDITED:
+			return new CobolAlphanumericEditedField(size, data, attr);
+		case CobolFieldAttribute.COB_TYPE_NUMERIC_EDITED:
+			return new CobolNumericEditedField(size, data, attr);
+		case CobolFieldAttribute.COB_TYPE_NATIONAL_EDITED:
+			return new CobolNationalEditedField(size, data, attr);
+		case CobolFieldAttribute.COB_TYPE_ALPHANUMERIC_ALL:
+			return new CobolAlphanumericAllField(size, data, attr);
+		case CobolFieldAttribute.COB_TYPE_NATIONAL_ALL:
+			return new CobolNationalAllField(size, data, attr);
 		default:
-			throw new CobolRuntimeException(0, "未実装");
+			throw new CobolRuntimeException(0, "This data type is not implemented.");
 		}
 	}
 

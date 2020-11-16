@@ -21,6 +21,9 @@ package jp.osscons.opensourcecobol.libcobj.data;
 
 import java.io.UnsupportedEncodingException;
 import java.math.BigDecimal;
+import java.nio.ByteBuffer;
+import java.nio.ByteOrder;
+import java.nio.charset.StandardCharsets;
 
 import jp.osscons.opensourcecobol.libcobj.common.CobolModule;
 import jp.osscons.opensourcecobol.libcobj.exceptions.CobolRuntimeException;
@@ -179,21 +182,34 @@ public class CobolNumericField extends AbstractCobolField {
 	 * @param field 代入元のデータ(AbstractCobolField型)
 	 */
 	@Override
-	public void moveFrom(AbstractCobolField field) {
-		switch(field.getAttribute().getType()) {
+	public void moveFrom(AbstractCobolField src) {
+		AbstractCobolField src1 = this.preprocessOfMoving(src);
+		if(src1 == null) {
+			return;
+		}
+
+		switch(src1.getAttribute().getType()) {
 		case CobolFieldAttribute.COB_TYPE_NUMERIC_DISPLAY:
-			this.moveDisplayToDisplay(field);
-			return;
+			this.moveDisplayToDisplay(src1);
+			break;
 		case CobolFieldAttribute.COB_TYPE_NUMERIC_PACKED:
-			this.movePackedToDisplay(field);
-			return;
+			this.movePackedToDisplay(src1);
+			break;
 		case CobolFieldAttribute.COB_TYPE_NATIONAL:
 		case CobolFieldAttribute.COB_TYPE_ALPHANUMERIC:
-			this.moveAlphanumericToDisplay(field);
-			return;
+		case CobolFieldAttribute.COB_TYPE_ALPHANUMERIC_EDITED:
+		case CobolFieldAttribute.COB_TYPE_NATIONAL_EDITED:
+			this.moveAlphanumericToDisplay(src1);
+			break;
 		case CobolFieldAttribute.COB_TYPE_NUMERIC_BINARY:
-			this.moveBinaryToDisplay(field);
-			return;
+			this.moveBinaryToDisplay(src1);
+			break;
+		case CobolFieldAttribute.COB_TYPE_NUMERIC_EDITED:
+			this.moveEditedToDisplay(src1);
+			break;
+		case CobolFieldAttribute.COB_TYPE_GROUP:
+			CobolAlphanumericField.moveAlphanumToAlphanum(this, src1);
+			break;
 		default:
 			throw new CobolRuntimeException(0, "未実装");
 		}
@@ -344,6 +360,64 @@ public class CobolNumericField extends AbstractCobolField {
 		}
 
 		this.storeCommonRegion(this, new CobolDataStorage(buff, 0), i, (20 - i), field.getAttribute().getScale());
+		this.putSign(sign);
+	}
+	
+	private void moveEditedToDisplay(AbstractCobolField field) {
+		byte[] buff = new byte[64];
+		int p = 0;
+		boolean havePoint = false;
+		int scale = 0;
+		int sign = 0;
+		
+		for(int i=0; i<field.getSize(); ++i) {
+			int cp = field.getDataStorage().getByte(i);
+			switch(cp) {
+			case '0': case '1': case '2': case '3': case '4': case '5': case '6': case '7': case '8': case '9':
+				buff[p++] = (byte)cp;
+				if(havePoint) {
+					++scale;
+				}
+				break;
+			case '.': case ',':
+				if(cp == CobolModule.getCurrentModule().decimal_point) {
+					havePoint = true;
+				}
+				break;
+			case '-': case 'C':
+				sign = -1;
+				break;
+			}
+		}
+		
+		byte[] picBytes = field.getAttribute().getPic().getBytes();
+		int count = 0;
+		if(scale == 0) {
+			for(int p1 = 0; p1 < picBytes.length; p1 += 5) {
+				byte c = picBytes[p1];
+				ByteBuffer buf = ByteBuffer.wrap(picBytes, p1 + 1, 4);
+				buf.order(ByteOrder.LITTLE_ENDIAN);
+				int n = buf.getInt();
+				if(c == '9' || c == '0' || c == 'Z' || c == '*') {
+					if(havePoint) {
+						scale += n;
+					} else {
+						count += n;
+					}
+				} else if(c == 'P') {
+					if(count == 0) {
+						havePoint = true;
+						scale += n;
+					} else {
+						scale -= n;
+					}
+				} else if(c == 'V') {
+					havePoint = true;
+				}
+			}
+		}
+		
+		storeCommonRegion(this, new CobolDataStorage(buff), p, scale);
 		this.putSign(sign);
 	}
 

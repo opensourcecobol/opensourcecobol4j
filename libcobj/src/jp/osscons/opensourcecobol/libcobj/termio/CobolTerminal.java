@@ -19,6 +19,8 @@
 
 package jp.osscons.opensourcecobol.libcobj.termio;
 
+import java.io.BufferedOutputStream;
+import java.io.BufferedWriter;
 import java.io.IOException;
 import java.io.PrintStream;
 
@@ -57,13 +59,8 @@ public class CobolTerminal {
 	}
 
 	private static void displayAlnum(AbstractCobolField f, PrintStream stream) {
-		CobolDataStorage data = f.getDataStorage();
-		try {
-			stream.write(data.getByteArray(0, f.getSize()));
-		} catch (IOException e) {
-			// TODO 自動生成された catch ブロック
-			//e.printStackTrace();
-		}
+		CobolDataStorage storage = f.getDataStorage();
+		stream.write(storage.getRefOfData(), storage.getIndex(), f.getSize());
 	}
 
 	/**

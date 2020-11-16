@@ -22,6 +22,7 @@ package jp.osscons.opensourcecobol.libcobj.data;
 import java.io.UnsupportedEncodingException;
 import java.math.BigDecimal;
 
+import jp.osscons.opensourcecobol.libcobj.common.CobolConstant;
 import jp.osscons.opensourcecobol.libcobj.exceptions.CobolRuntimeException;
 
 /**
@@ -106,8 +107,13 @@ public class CobolGroupField extends AbstractCobolField {
 	 * @param field 代入元のデータ(AbstractCobolField型)
 	 */
 	@Override
-	public void moveFrom(AbstractCobolField field) {
-		this.moveFrom(field.getBytes());
+	public void moveFrom(AbstractCobolField src) {
+		AbstractCobolField src1 = this.preprocessOfMoving(src);
+		if(src1 == null) {
+			return;
+		}
+
+		CobolAlphanumericField.moveAlphanumToAlphanum(this, src1);
 	}
 
 	/**

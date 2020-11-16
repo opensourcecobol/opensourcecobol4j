@@ -159,6 +159,18 @@ public class CobolDataStorage {
 			this.setByte(i, buf[i]);
 		}
 	}
+	
+	/**
+	 * C言語のmemcpy (offset指定あり)
+	 * @param offset
+	 * @param buf
+	 * @param size
+	 */
+	public void memcpy(int offset, byte[] buf, int size) {
+		for(int i=0; i<size; ++i) {
+			this.setByte(offset + i, buf[i]);
+		}
+	}
 
 	public void memcpy(byte[] buf) {
 		this.memcmp(buf, buf.length);

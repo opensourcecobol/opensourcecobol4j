@@ -12,3 +12,5 @@ javac -encoding UTF-8 \
     ${BASE_DIR}/libcobj/src/jp/osscons/opensourcecobol/libcobj/file/*.java \
     ${BASE_DIR}/libcobj/src/*.java \
     -d ${BASE_DIR}/libcobj/bin
+
+echo ${BASE_DIR}

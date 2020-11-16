@@ -141,17 +141,28 @@ public class CobolNumericPackedField extends AbstractCobolField {
 	 * @param field 代入元のデータ(AbstractCobolField型)
 	 */
 	@Override
-	public void moveFrom(AbstractCobolField field) {
-		switch(field.getAttribute().getType()) {
-		case CobolFieldAttribute.COB_TYPE_NUMERIC_DISPLAY:
-			this.moveDisplayToPacked(field);
+	public void moveFrom(AbstractCobolField src) {
+		AbstractCobolField src1 = this.preprocessOfMoving(src);
+		if(src1 == null) {
 			return;
+		}
+
+		switch(src1.getAttribute().getType()) {
+		case CobolFieldAttribute.COB_TYPE_NUMERIC_DISPLAY:
+			this.moveDisplayToPacked(src1);
+			break;
 		case CobolFieldAttribute.COB_TYPE_NUMERIC_PACKED:
 		case CobolFieldAttribute.COB_TYPE_ALPHANUMERIC:
 		case CobolFieldAttribute.COB_TYPE_NUMERIC_BINARY:
 		case CobolFieldAttribute.COB_TYPE_NATIONAL:
-			this.moveFrom(field.getNumericField());
-			return;
+		case CobolFieldAttribute.COB_TYPE_NUMERIC_EDITED:
+		case CobolFieldAttribute.COB_TYPE_ALPHANUMERIC_EDITED:
+		case CobolFieldAttribute.COB_TYPE_NATIONAL_EDITED:
+			this.moveFrom(src1.getNumericField());
+			break;
+		case CobolFieldAttribute.COB_TYPE_GROUP:
+			CobolAlphanumericField.moveAlphanumToAlphanum(this, src1);
+			break;
 		default:
 			throw new CobolRuntimeException(0, "未実装");
 		}

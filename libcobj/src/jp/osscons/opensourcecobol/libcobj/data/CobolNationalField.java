@@ -28,11 +28,8 @@ import jp.osscons.opensourcecobol.libcobj.exceptions.CobolRuntimeException;
  * PIC 文字列がN(5)やN(9)の変数を表現するクラス.
  */
 public class CobolNationalField extends AbstractCobolField {
-
-	/**
-	 * TODO 利用法の検討
-	 */
-	private int workReturnSize;
+	
+	public static int workReturnSize;
 
 	/**
 	 *  コンストラクタ
@@ -189,7 +186,7 @@ public class CobolNationalField extends AbstractCobolField {
 	 * @param src
 	 * @return
 	 */
-	private byte[] judge_hankakujpn_exist(AbstractCobolField src) {
+	public static byte[] judge_hankakujpn_exist(AbstractCobolField src) {
 		byte[] tmp_zenjpn_word = null;
 
 		if(src.getSize() <= 0) {
@@ -208,7 +205,7 @@ public class CobolNationalField extends AbstractCobolField {
 	 * @param size
 	 * @return
 	 */
-	private byte[] han2zen(byte[] str, int size) {
+	public static byte[] han2zen(byte[] str, int size) {
 		byte[] buf;
 
 		byte c, d = (byte) 0x00;
