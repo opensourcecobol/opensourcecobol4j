@@ -630,7 +630,7 @@ public class CobolFile {
 				}
 				if(c == '$') {
 					int i;
-					for(i = 1; ; i++) {
+					for(i = 1; src_i + i < src.length; i++) {
 						char d = (char)src[src_i + i];
 						if(!Character.isLetterOrDigit(d) && d != '_' && c != '-') {
 							break;
@@ -678,7 +678,7 @@ public class CobolFile {
 
 			file_open_name = new String(file_open_name_bytes);
 		}
-
+		
 		boolean was_not_exist = false;
 		if(this.organization == COB_ORG_INDEXED) {
 			//TODO INDEXファイル実装時に
@@ -768,7 +768,9 @@ public class CobolFile {
 				break;
 			}
 		} catch(IOException e) {
-			this.file.setChannel(fp, null);
+			if(fp != null) {
+				this.file.setChannel(fp, null);
+			}
 			if(Files.notExists(Paths.get(filename))) {
 				return ENOENT;
 			} else {
