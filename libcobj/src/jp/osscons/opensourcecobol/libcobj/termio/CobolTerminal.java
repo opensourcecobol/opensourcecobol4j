@@ -26,6 +26,7 @@ import java.io.PrintStream;
 import java.nio.ByteBuffer;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
+import java.util.Scanner;
 
 import jp.osscons.opensourcecobol.libcobj.common.CobolModule;
 import jp.osscons.opensourcecobol.libcobj.common.CobolUtil;
@@ -101,10 +102,13 @@ public class CobolTerminal {
 	 */
 	public static void accept(AbstractCobolField f) {
 		try {
-			//Scanner scan = new Scanner(System.in);
-			//scan.nextInt();
-			//TODO ロックのテストのための暫定的な実装
-			Thread.sleep(1000);
+			Scanner scan = new Scanner(System.in);
+			String input = scan.nextLine();
+			
+			//PIC X(n)型のデータに変換
+			AbstractCobolField field = CobolFieldFactory.makeCobolField(input);
+			
+			f.moveFrom(field);
 		} catch(Exception e) {
 
 		}
