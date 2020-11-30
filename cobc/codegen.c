@@ -878,7 +878,7 @@ joutput_integer (cb_tree x)
 		if (x == cb_zero) {
 			joutput ("0");
 		} else if (x == cb_null) {
-			joutput ("(unsigned char *)NULL");
+			joutput ("null");
 		} else {
 			joutput ("%s", CB_CONST (x)->val);
 		}
@@ -1476,30 +1476,30 @@ joutput_funcall (cb_tree x)
 			break;
 		case 'F':
 			/* Move of one character */
-			joutput ("*(");
 			joutput_data (p->argv[0]);
-			joutput (") = *(");
+			joutput (".setByte(");
 			joutput_data (p->argv[1]);
-			joutput (")");
+			joutput (".getByte(0))");
 			break;
 		case 'G':
 			/* Test of one character */
-			joutput ("(int)(*(");
+            joutput ("(((int)");
 			joutput_data (p->argv[0]);
+            joutput (".getByte(0))");
 			if (p->argv[1] == cb_space) {
-				joutput (") - ' ')");
+				joutput (" - (int)' ')");
 			} else if (p->argv[1] == cb_zero) {
-				joutput (") - '0')");
+				joutput (" - (int)'0')");
 			} else if (p->argv[1] == cb_low) {
-				joutput ("))");
+				joutput (")");
 			} else if (p->argv[1] == cb_high) {
-				joutput (") - 255)");
+				joutput (" - 255)");
 			} else if (CB_LITERAL_P (p->argv[1])) {
-				joutput (") - %d)", *(CB_LITERAL (p->argv[1])->data));
+				joutput (" - (int)%d)", *(CB_LITERAL (p->argv[1])->data));
 			} else {
-				joutput (") - *(");
+				joutput (" - ");
 				joutput_data (p->argv[1]);
-				joutput ("))");
+				joutput (".getByte(0))");
 			}
 			break;
 		default:
@@ -1825,9 +1825,8 @@ joutput_figurative (cb_tree x, struct cb_field *f, const int value)
 {
 	joutput_prefix ();
 	if (f->size == 1) {
-		joutput ("*(unsigned char *)(");
 		joutput_data (x);
-		joutput (") = %d;\n", value);
+		joutput (".setByte(0, (byte)%d);\n", value);
 	} else {
 		joutput_data (x);
 		joutput (".fillBytes (");
@@ -1861,33 +1860,59 @@ joutput_initialize_literal (cb_tree x, struct cb_field *f, struct cb_literal *l)
 		return;
 	}
 	if (l->size >= f->size) {
-		joutput_prefix ();
-		joutput ("LIBCOB.memcpy (");
+        //TODO 要テスト
+		//joutput_prefix ();
+		//joutput ("LIBCOB.memcpy (");
+		//joutput_data (x);
+		//joutput (", ");
+		//joutput_string (l->data, f->size);
+		//joutput (", %d);\n", f->size);
+        joutput_prefix ();
 		joutput_data (x);
-		joutput (", ");
+		joutput ("memcpy (");
 		joutput_string (l->data, f->size);
-		joutput (", %d);\n", f->size);
+		joutput (".getBytes(), %d);\n", f->size);
+
 		return;
 	}
 	i = f->size / l->size;
 	i_counters[0] = 1;
-	joutput_line ("for (i0 = 0; i0 < %u; i0++)", (unsigned int)i);
+
+    //TODO 要テスト
+	//joutput_line ("for (i0 = 0; i0 < %u; i0++)", (unsigned int)i);
+	//joutput_indent ("  {");
+	//joutput_prefix ();
+	//joutput ("LIBCOB.memcpy (");
+	//joutput_data (x);
+	//joutput (" + (i0 * %u), ", (unsigned int)l->size);
+	//joutput_string (l->data, l->size);
+	//joutput (", %u);\n", (unsigned int)l->size);
+	//joutput_indent ("  }");
+
+    joutput_line ("for (i0 = 0; i0 < %u; i0++)", (unsigned int)i);
 	joutput_indent ("  {");
 	joutput_prefix ();
-	joutput ("LIBCOB.memcpy (");
 	joutput_data (x);
-	joutput (" + (i0 * %u), ", (unsigned int)l->size);
+	joutput (".getSubDataStorage(i0 * %u).memcpy(", (unsigned int)l->size);
 	joutput_string (l->data, l->size);
-	joutput (", %u);\n", (unsigned int)l->size);
+	joutput (".getBytes(), %u);\n", (unsigned int)l->size);
 	joutput_indent ("  }");
+
+
 	n = f->size % l->size;
 	if (n) {
 		joutput_prefix ();
-		joutput ("LIBCOB.memcpy (");
+        //TODO 要テスト
+		//joutput ("LIBCOB.memcpy (");
+		//joutput_data (x);
+		//joutput (" + (i0 * %u), ", (unsigned int)l->size);
+		//joutput_string (l->data, n);
+		//joutput (", %u);\n", (unsigned int)n);
+
 		joutput_data (x);
-		joutput (" + (i0 * %u), ", (unsigned int)l->size);
+		joutput (".getSubDataStorage(i0 * %u).memcpy(", (unsigned int)l->size);
 		joutput_string (l->data, n);
-		joutput (", %u);\n", (unsigned int)n);
+		joutput (".getBytes(), %u);\n", (unsigned int)n);
 	}
 }
 
@@ -2079,9 +2104,8 @@ joutput_initialize_one (struct cb_initialize *p, cb_tree x)
 			}
 			joutput_prefix ();
 			if (f->size == 1) {
-				joutput ("*(unsigned char *) (");
 				joutput_data (x);
-				joutput (") = %d;\n", *(unsigned char *)buff);
+                joutput(".setByte(0, (byte)%d);", *(unsigned char *)buff);
 			} else {
 				buffchar = *buff;
 				for (i = 0; i < f->size; i++) {
@@ -3304,7 +3328,6 @@ joutput_stmt (cb_tree x)
 		}
 	}
 #endif
-
 	switch (CB_TREE_TAG (x)) {
 	case CB_TAG_STATEMENT:
 		p = CB_STATEMENT (x);
