@@ -21,12 +21,15 @@ package jp.osscons.opensourcecobol.libcobj.common;
 
 import java.time.DateTimeException;
 import java.time.LocalDateTime;
+import java.time.LocalTime;
 import java.util.Scanner;
 import java.util.regex.MatchResult;
 
 import jp.osscons.opensourcecobol.libcobj.data.AbstractCobolField;
 import jp.osscons.opensourcecobol.libcobj.exceptions.CobolException;
 import jp.osscons.opensourcecobol.libcobj.exceptions.CobolExceptionId;
+import jp.osscons.opensourcecobol.libcobj.exceptions.CobolRuntimeException;
+import jp.osscons.opensourcecobol.libcobj.exceptions.CobolStopRunException;
 import jp.osscons.opensourcecobol.libcobj.file.CobolFile;
 
 public class CobolUtil {
@@ -43,8 +46,15 @@ public class CobolUtil {
 	public static String[] commandLineArgs = null;
 	public static int currentArgIndex = 1;
 	
+	public static boolean nibbleCForUnsigned = false;
+	
 	public static int commlncnt = 0;
 	public static byte[] commlnptr = null;
+	
+	public static boolean[] cobSwitch = new boolean[8];
+	public static int cobSaveCallParams = 0;
+	
+	public static boolean verbose = false;
 
 	abstract class handlerlist {
 		public handlerlist next = null;
@@ -83,6 +93,16 @@ public class CobolUtil {
 		if(!cob_initialized) {
 			CobolUtil.commandLineArgs = argv;
 			CobolFile.cob_init_fileio();
+			
+			for(int i=0; i<8; ++i) {
+				String envVariableName = String.format("COB_SWITCH_%d", i + 1);
+				String envValue = System.getenv(envVariableName);
+				if(envValue == null) {
+					CobolUtil.cobSwitch[i] = false;
+				} else  {
+					CobolUtil.cobSwitch[i] = envValue.equals("ON");
+				}
+			}
 		}
 
 		String s;
@@ -109,6 +129,21 @@ public class CobolUtil {
 		}
 	}
 
+	/**
+	 * libcob/common.cとcob_localtime
+	 * @return
+	 */
+	public static LocalDateTime localtime() {
+		LocalDateTime rt = LocalDateTime.now();
+		if(CobolUtil.cobLocalTm != null) {
+			CobolUtil.cobLocalTm = CobolUtil.cobLocalTm
+					.withHour(rt.getHour())
+					.withMinute(rt.getMinute())
+					.withSecond(rt.getSecond());
+			rt = CobolUtil.cobLocalTm;
+		}
+		return rt;
+	}
 	/**
 	 * libcob/cob_verbose_outputの実装
 	 * opensourceCOBOLではprintfのように可変長引数を取るが,
@@ -168,5 +203,42 @@ public class CobolUtil {
 			p = " ";
 		}
 		envval.memcpy(p);
+	}
+
+	/**
+	 * libcob/common.cのCOB_CHK_PARMSの実装
+	 * @param funcName
+	 * @param numParams
+	 * @throws CobolStopRunException
+	 */
+	public static void COB_CHK_PARMS(String funcName, int numParams) throws CobolStopRunException {
+		//TODO ifの条件式の改修
+		if(false) {
+			String message = String.format("CALL to %s requires %d parameters", funcName, numParams);
+			CobolRuntimeException.displayRuntimeError(message);
+			CobolStopRunException.stopRunAndThrow(1);
+		}
+	}
+
+	/**
+	 * libcob/common.cのcob_get_switchの実装
+	 * @param n
+	 * @return
+	 */
+	public static boolean getSwitch(int n) {
+		return CobolUtil.cobSwitch[n];
+	}
+
+	/**
+	 * libcob/common.cのcob_set_switchの実装
+	 * @param n
+	 * @param flag
+	 */
+	public static void setSwitch(int n, int flag) {
+		if(flag == 0) {
+			CobolUtil.cobSwitch[n] = false;
+		} else if(flag == 1) {
+			CobolUtil.cobSwitch[n] = true;
+		}
 	}
 }

@@ -665,7 +665,7 @@ cb_define_switch_name (cb_tree name, cb_tree sname, cb_tree flag, cb_tree ref)
 		}
 	} else {
 		switch_id = cb_int (CB_SYSTEM_NAME (sname)->token);
-		value = cb_build_funcall_1 ("cob_get_switch", switch_id);
+		value = cb_build_funcall_1 ("CobolUtil.getSwitch", switch_id);
 		if (flag == cb_int0) {
 			value = cb_build_negation (value);
 		}
@@ -6714,7 +6714,7 @@ cb_emit_set_on_off (cb_tree l, cb_tree flag)
 	}
 	for (; l; l = CB_CHAIN (l)) {
 		s = CB_SYSTEM_NAME (cb_ref (CB_VALUE (l)));
-		cb_emit (cb_build_funcall_2 ("cob_set_switch", cb_int (s->token), flag));
+		cb_emit (cb_build_funcall_2 ("CobolUtil.setSwitch", cb_int (s->token), flag));
 	}
 }
 

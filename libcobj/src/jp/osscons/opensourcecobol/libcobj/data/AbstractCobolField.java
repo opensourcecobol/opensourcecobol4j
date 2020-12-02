@@ -23,6 +23,7 @@ import java.math.BigDecimal;
 import java.nio.ByteBuffer;
 
 import jp.osscons.opensourcecobol.libcobj.common.CobolConstant;
+import jp.osscons.opensourcecobol.libcobj.common.CobolUtil;
 import jp.osscons.opensourcecobol.libcobj.exceptions.CobolRuntimeException;
 
 /**
@@ -850,5 +851,117 @@ public abstract class AbstractCobolField {
 	 */
 	public void memcpy(String src) {
 		this.memcpy(src.getBytes());
+	}
+
+	/**
+	 * libcob/common.cのcob_is_omittedの実装
+	 * @return
+	 */
+	public boolean isOmitted() {
+		return this.dataStorage == null;
+	}
+	
+
+	/**
+	 * libcob/common.cのcob_is_numericの実装
+	 * @return
+	 */
+	public boolean isNumeric() {
+		int i;
+		char c = 0;
+		int sign = 0;
+		switch(this.getAttribute().getType()) {
+		case CobolFieldAttribute.COB_TYPE_NUMERIC_BINARY:
+		case CobolFieldAttribute.COB_TYPE_NUMERIC_FLOAT:
+		case CobolFieldAttribute.COB_TYPE_NUMERIC_DOUBLE:
+			return true;
+		case CobolFieldAttribute.COB_TYPE_NUMERIC_PACKED:
+			for(i=0; i<this.size - 1; ++i) {
+				c = (char)this.getDataStorage().getByte(i);
+				if((c & 0xF0) > 0x90 || (c & 0x0f) > 0x09) {
+					return false;
+				}
+			}
+			if((c & 0xf0) > 0x90) {
+				return false;
+			}
+			sign = c & 0x0f;
+			if(sign == 0x0f) {
+				return true;
+			}
+			if((this.getAttribute().getFlags() & CobolFieldAttribute.COB_FLAG_HAVE_SIGN) != 0) {
+				if(sign == 0x0c || sign == 0x0d) {
+					return true;
+				}
+			} else if(CobolUtil.nibbleCForUnsigned) {
+				if(sign == 0x0c) {
+					return true;
+				}
+			}
+			return false;
+		case CobolFieldAttribute.COB_TYPE_NUMERIC_DISPLAY:
+			int size = this.getFieldSize();
+			int firstIndex = this.getFirstDataIndex();
+			sign = this.getSign();
+			for(i=0; i < size; ++i) {
+				c = (char)this.getDataStorage().getByte(i + firstIndex);
+				if(!Character.isDigit(c)) {
+					this.putSign(sign);
+					return false;
+				}
+			}
+			this.putSign(sign);
+			return true;			
+		default:
+			for(i=0; i<this.size; ++i) {
+				c = (char)this.getDataStorage().getByte(i);
+				if(!Character.isDigit(c)) {
+					return false;
+				}
+			}
+			return true;
+		}
+	}
+	
+	/**
+	 * libcob/common.cのcob_is_alphaの実装
+	 * @return
+	 */
+	public boolean isAlpha() {
+		for(int i=0; i<this.size; ++i) {
+			char c = (char)this.getDataStorage().getByte(i);
+			if(!Character.isWhitespace(c) && !Character.isAlphabetic(c)) {
+				return false;
+			}
+		}
+		return true;
+	}
+	
+	/**
+	 * libcob/common.cのcob_is_upperの実装
+	 * @return
+	 */
+	public boolean isUpper() {
+		for(int i=0; i<this.size; ++i) {
+			char c = (char)this.getDataStorage().getByte(i);
+			if(!Character.isWhitespace(c) && !Character.isUpperCase(c)) {
+				return false;
+			}
+		}
+		return true;
+	}
+	
+	/**
+	 * libcob/common.cのcob_is_lowerの実装
+	 * @return
+	 */
+	public boolean isLower() {
+		for(int i=0; i<this.size; ++i) {
+			char c = (char)this.getDataStorage().getByte(i);
+			if(!Character.isWhitespace(c) && !Character.isLowerCase(c)) {
+				return false;
+			}
+		}
+		return true;
 	}
 }
