@@ -369,4 +369,12 @@ public class CobolNumericBinaryField extends AbstractCobolField {
 		n = ByteBuffer.wrap(nStorage.getByteArray(0, 8), 0, 8).getLong();
 		return n;
 	}
+
+	/**
+	 * libcob/common.cのcob_get_long_longの実装
+	 */
+	@Override
+	public long getLong() {
+		return this.binaryGetInt64();
+	}
 }

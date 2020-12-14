@@ -183,7 +183,7 @@ public class CobolTerminal {
 	 * @param f
 	 */
 	public static void acceptTime(AbstractCobolField f) {
-		LocalDateTime date = jobOrCurrentLocalTime();
+		LocalDateTime date = LocalDateTime.now();
 		DateTimeFormatter formatter = DateTimeFormatter.ofPattern("HHmmssSS");
 		f.memcpy(date.format(formatter));
 	}
@@ -222,12 +222,14 @@ public class CobolTerminal {
 		}
 
 		if(p == null) {
+			//TODO setExceptionは暫定実装
 			CobolException.setException(CobolExceptionId.COB_EC_IMP_ACCEPT);
 			p = " ";
 		}
 		
-		CobolFieldAttribute attr = new CobolFieldAttribute(CobolFieldAttribute.COB_TYPE_ALPHANUMERIC, 0, 0, 0, null);
-		//TODO 実装
+		AbstractCobolField src = CobolFieldFactory.makeCobolField(p);
+		//TODO hankakuMoveFromは暫定実装
+		f.hankakuMoveFrom(src);
 	}
 	
 	//CommandLine Arguments

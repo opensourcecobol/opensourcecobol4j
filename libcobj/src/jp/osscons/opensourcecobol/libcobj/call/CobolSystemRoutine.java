@@ -1,8 +1,10 @@
 package jp.osscons.opensourcecobol.libcobj.call;
 
 import java.io.IOException;
+import java.lang.ProcessBuilder.Redirect;
 import java.util.Arrays;
 import java.util.List;
+import java.util.concurrent.TimeUnit;
 
 import jp.osscons.opensourcecobol.libcobj.Const;
 import jp.osscons.opensourcecobol.libcobj.common.CobolModule;
@@ -13,6 +15,17 @@ import jp.osscons.opensourcecobol.libcobj.exceptions.CobolRuntimeException;
 import jp.osscons.opensourcecobol.libcobj.exceptions.CobolStopRunException;
 
 public class CobolSystemRoutine {
+	
+	public static int CBL_EXIT_PROC(CobolDataStorage x, CobolDataStorage pptr) {
+		//TODO 実装
+		return 0;
+	}
+	
+	public static int CBL_ERROR_PROC(CobolDataStorage x, CobolDataStorage pptr) {
+		//TODO 実装
+		return 0;
+	}
+	
 	/**
 	 * libcob/common.cのSYSTEMの実装
 	 * @param cmd
@@ -40,7 +53,7 @@ public class CobolSystemRoutine {
 				//TODO sccreen関連処理の追加
 				List<String> cmdList = Arrays.asList(cmd.substring(0, i+1).split("\\s+"));
 				ProcessBuilder pb = new ProcessBuilder(cmdList);
-				System.out.println(cmd.substring(0, i+1));
+				pb.redirectInput(Redirect.INHERIT).redirectOutput(Redirect.INHERIT).redirectError(Redirect.INHERIT);
 				try {
 					Process process = pb.start();
 					return process.waitFor();
@@ -426,5 +439,27 @@ public class CobolSystemRoutine {
 	
 	public static int CBL_TOUPPER(AbstractCobolField data, int length) throws CobolStopRunException {
 		return CBL_TOUPPER(data.getDataStorage(), length);
-	}	
+	}
+	
+	public static int CBL_OC_NANOSLEEP(CobolDataStorage data) throws CobolStopRunException {
+		CobolUtil.COB_CHK_PARMS("CBL_OC_NANOSLEEP", 1);
+	
+		AbstractCobolField param = CobolModule.getCurrentModule().cob_procedure_parameters.get(0);
+		if(param != null) {
+			long nsecs = param.getLong();
+			System.out.println(nsecs);
+			if(nsecs > 0) {
+				try {
+					TimeUnit.NANOSECONDS.sleep(nsecs);
+				} catch(InterruptedException e) {
+				}
+			}
+		}
+		return 0;
+	}
+	
+	public static int CBL_OC_NANOSLEEP(AbstractCobolField field) throws CobolStopRunException {
+		CobolSystemRoutine.CBL_OC_NANOSLEEP(field.getDataStorage());
+		return 0;
+	}
 }

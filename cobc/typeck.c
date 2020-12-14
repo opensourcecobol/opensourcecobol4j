@@ -1959,6 +1959,24 @@ cb_expr_shift_class (const char *name)
 }
 
 static void
+cb_expr_shift_class_method_call (const char *name)
+{
+	int	have_not = 0;
+
+	if (TOKEN (-1) == '!') {
+		have_not = 1;
+		expr_index--;
+	}
+	expr_reduce ('=');
+	if (TOKEN (-1) == 'x') {
+		VALUE (-1) = cb_build_method_call_1 (name, VALUE (-1));
+		if (have_not) {
+			VALUE (-1) = cb_build_negation (VALUE (-1));
+		}
+	}
+}
+
+static void
 cb_expr_shift (int token, cb_tree value)
 {
 	switch (token) {
@@ -2161,16 +2179,16 @@ cb_build_expr (cb_tree list)
 		op = CB_PURPOSE_INT (l);
 		switch (op) {
 		case '9': /* NUMERIC */
-			cb_expr_shift_class ("cob_is_numeric");
+			cb_expr_shift_class_method_call ("isNumeric");
 			break;
 		case 'A': /* ALPHABETIC */
-			cb_expr_shift_class ("cob_is_alpha");
+			cb_expr_shift_class_method_call ("isAlpha");
 			break;
 		case 'L': /* ALPHABETIC_LOWER */
-			cb_expr_shift_class ("cob_is_lower");
+			cb_expr_shift_class_method_call ("isLower");
 			break;
 		case 'U': /* ALPHABETIC_UPPER */
-			cb_expr_shift_class ("cob_is_upper");
+			cb_expr_shift_class_method_call ("isUpper");
 			break;
 		case 'P': /* POSITIVE */
 			cb_expr_shift_sign ('>');
@@ -2180,7 +2198,7 @@ cb_build_expr (cb_tree list)
 			break;
 		case 'O': /* OMITTED */
 			current_statement->null_check = NULL;
-			cb_expr_shift_class ("cob_is_omitted");
+			cb_expr_shift_class_method_call ("isOmitted");
 			break;
 /* RXW
 		case 'x':

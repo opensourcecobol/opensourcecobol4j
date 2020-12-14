@@ -23,6 +23,7 @@ import java.math.BigDecimal;
 import java.nio.ByteBuffer;
 
 import jp.osscons.opensourcecobol.libcobj.common.CobolConstant;
+import jp.osscons.opensourcecobol.libcobj.common.CobolModule;
 import jp.osscons.opensourcecobol.libcobj.common.CobolUtil;
 import jp.osscons.opensourcecobol.libcobj.exceptions.CobolRuntimeException;
 
@@ -348,7 +349,7 @@ public abstract class AbstractCobolField {
 	 * @return thisの保持する数値データが負ならば負数,0なら0,正なら正数を返す
 	 */
 	public int getSign() {
-		return 0;
+		return this.getAttribute().isFlagHaveSign() ? this.realGetSign() : 0;
 	}
 
 	/**
@@ -356,6 +357,9 @@ public abstract class AbstractCobolField {
 	 * @param sign 正符号を設定するときは正数,負符号を設定するときは負数,それ以外は0
 	 */
 	public void putSign(int sign) {
+		if(this.getAttribute().isFlagHaveSign()) {
+			this.realPutSign(sign);
+		}
 	}
 
 	protected AbstractCobolField preprocessOfMoving(AbstractCobolField src) {
@@ -573,57 +577,6 @@ public abstract class AbstractCobolField {
 			}
 		}
 		return field;
-	}
-
-	/**
-	 * thisの保持するデータと与えられたフィールドの保持するデータを比較する
-	 * @param field thisと比較するfield
-	 * @return
-	 */
-	public int cmpAlnum(AbstractCobolField field) {
-		int sign1 = this.getSign();
-		int sign2 =field.getSign();
-		int ret = this.cmpSimpleStr(field);
-		if(!this.getAttribute().isTypeNumericPacked()) {
-			this.putSign(sign1);
-		}
-		if(!field.getAttribute().isTypeNumericPacked()) {
-			field.putSign(sign1);
-		}
-		return ret;
-	}
-
-	/**
-	 * thisの保持するデータと与えられたフィールドの保持するデータを比較する
-	 * @param field thisと比較するfield
-	 * @return
-	 */
-	public int cmpSimpleStr(AbstractCobolField field) {
-		//TODO  条件分岐
-		AbstractCobolField lf, sf;
-		if(this.size < field.size) {
-			lf = field;
-			sf = this;;
-		} else {
-			lf = this;
-			sf = field;
-		}
-		//TODO moduleを参照するコードにする
-		CobolDataStorage s = null;
-		int ret;
-		if((ret = alnumCmps(this.getDataStorage(), 0, field.getDataStorage(), 0, sf.getSize(), s)) == 0) {
-			if(lf.getSize() > sf.getSize()) {
-				ret = (lf.getAttribute().isTypeNational()) ?
-						//TODO 実装
-						0
-						: commonCmpc(lf.getDataStorage(), sf.getSize(), ' ', lf.getSize() - sf.getSize());
-				//TODO 確認
-				if(this.getSize() < field.getSize()) {
-					ret = -ret;
-				}
-			}
-		}
-		return ret;
 	}
 
 	/*public int compareInt(int n) {
@@ -963,5 +916,268 @@ public abstract class AbstractCobolField {
 			}
 		}
 		return true;
+	}
+
+	/**
+	 * libcob/common.cのcob_cmp_charの実装
+	 * @param c
+	 * @return
+	 */
+	public int cmpChar(int c) {
+		int sign = this.getSign();
+		int ret = CobolUtil.commonCmpc(this.getDataStorage(), c, this.getSize());
+		if(this.getAttribute().getType() != CobolFieldAttribute.COB_TYPE_NUMERIC_PACKED) {
+			this.putSign(sign);
+		}
+		return ret;
+	}
+
+	private interface DataComparator {
+		public int compare(CobolDataStorage s1, CobolDataStorage s2, int size, CobolDataStorage col);
+	}
+	
+	private static DataComparator getComparator(AbstractCobolField f) {
+		if(f.getAttribute().isTypeNational()) {
+			return new DataComparator () {
+				public int compare(CobolDataStorage s1, CobolDataStorage s2, int size, CobolDataStorage col) {
+					return CobolUtil.nationalCmps(s1, s2, size, col);
+				}
+			};
+		} else {
+			return new DataComparator () {
+				public int compare(CobolDataStorage s1, CobolDataStorage s2, int size, CobolDataStorage col) {
+					return CobolUtil.alnumCmps(s1, s2, size, col);
+				}
+			};		
+		}
+	}
+
+	/**
+	 * libcob/common.cのcob_cmp_allの実装
+	 * @param other
+	 * @return
+	 */
+	public int cmpAll(AbstractCobolField other) {
+		int ret = 0;
+		DataComparator comparator = getComparator(this);
+		int sign = 0;
+		
+		if((this.getAttribute().getType() == CobolFieldAttribute.COB_TYPE_ALPHANUMERIC_ALL ||
+			this.getAttribute().getType() == CobolFieldAttribute.COB_TYPE_NATIONAL_ALL) &&
+			this.getSize() < other.getSize()) {
+			int size = other.getSize();
+			CobolDataStorage data = other.getDataStorage();
+			sign = other.getSign();
+			CobolDataStorage s = CobolModule.getCurrentModule().collating_sequence;
+			OUTSIDE : do {
+				while(size >= this.getSize()) {
+					ret = comparator.compare(this.getDataStorage(), data, this.getSize(), s);
+					if(ret != 0) {
+						break OUTSIDE;
+					}
+					size -= this.getSize();
+					data = data.getSubDataStorage(this.getSize());
+				}
+				if(size > 0) {
+					comparator.compare(this.getDataStorage(), data, size, s);
+				}
+			} while(false);
+		} else {
+			int size = this.getSize();
+			CobolDataStorage data = this.getDataStorage();
+			sign = this.getSign();
+			CobolDataStorage s = CobolModule.getCurrentModule().collating_sequence;		
+			OUTSIDE : do {
+				while(size >= other.getSize()) {
+					ret = comparator.compare(data, other.getDataStorage(), other.getSize(), s);
+					if(ret != 0) {
+						break OUTSIDE;
+					}
+					size -= other.getSize();
+					data = data.getSubDataStorage(other.getSize());
+				}
+				if(size > 0) {
+					comparator.compare(data, other.getDataStorage(), size, s);
+				}
+			} while(false);
+		}
+		
+		if(this.getAttribute().getType() != CobolFieldAttribute.COB_TYPE_NUMERIC_PACKED) {
+			this.putSign(sign);
+		}
+		return ret;
+	}
+
+	/**
+	 * libcob/common.cのcob_cmp_simple_strの実装
+	 * @param other
+	 * @return
+	 */
+	public int cmpSimpleStr(AbstractCobolField other) {
+		AbstractCobolField lf, sf;
+		DataComparator comparator = getComparator(this);
+		if(this.getSize() < other.getSize()) {
+			lf = other;
+			sf = this;
+		} else {
+			lf = this;
+			sf = other;
+		}
+		CobolDataStorage s = CobolModule.getCurrentModule().collating_sequence;
+		int ret = comparator.compare(this.getDataStorage(), other.getDataStorage(), sf.getSize(), s);
+		if(ret == 0) {
+			if(lf.getSize() > sf.getSize()) {
+				if((lf.getAttribute().getType() & CobolFieldAttribute.COB_TYPE_NATIONAL) != 0) {
+					ret = CobolUtil.isNationalPadding(lf.getDataStorage().getSubDataStorage(sf.getSize()), lf.getSize() - sf.getSize());
+				} else {
+					ret = CobolUtil.commonCmpc(lf.getDataStorage().getSubDataStorage(sf.getSize()), ' ', lf.getSize() - sf.getSize());
+				}
+				if(this.getSize() < other.getSize()) {
+					ret = -ret;
+				}
+			}
+		}
+		return ret;
+	}
+
+	/**
+	 * libcob/common.cのcob_alnum_cmpsの実装
+	 * @param other
+	 * @return
+	 */
+	public int cmpAlnum(AbstractCobolField other) {
+		int sign1 = this.getSign();
+		int sign2 = other.getSign();
+		int ret = this.cmpSimpleStr(other);
+		
+		if(this.getAttribute().getType() != CobolFieldAttribute.COB_TYPE_NUMERIC_PACKED) {
+			this.putSign(sign1);
+		}
+		if(other.getAttribute().getType() != CobolFieldAttribute.COB_TYPE_NUMERIC_PACKED) {
+			other.putSign(sign1);
+		}
+		return ret;
+	}
+
+	/**
+	 * libcob/common.cのcob_real_get_signの実装
+	 * @return
+	 */
+	public int realGetSign() {
+		CobolDataStorage p;
+		CobolFieldAttribute attr = this.getAttribute();
+		byte b;
+		
+		switch(this.getAttribute().getType()) {
+		case CobolFieldAttribute.COB_TYPE_NUMERIC:
+			if(attr.isFlagSignLeading()) {
+				p = this.getDataStorage();
+			} else {
+				p = this.getDataStorage().getSubDataStorage(this.getSize() - 1);
+			}
+			
+			b = p.getByte(0);
+			if(attr.isFlagSignSeparate()) {
+				return b == '+' ? 1 : -1;
+			} else {
+				if('0' <= b && b <= '9') {
+					return 1;
+				}
+				if(b == ' ') {
+					p.setByte(0, (byte)'0');
+					return 1;
+				}
+				if(CobolModule.getCurrentModule().display_sign != 0) {
+					return CobolUtil.getSignEbcdic(p);
+				} else {
+					//TODO マクロの分岐に関して調査
+					//#ifdef COB_EBCDIC_MACHINE
+					//CobolUtil.getSignAscii(p);
+					//#else
+					p.setByte(0, (byte)(b - 0x40));
+					//#endif
+					return -1;
+				}
+			}
+		case CobolFieldAttribute.COB_TYPE_NUMERIC_PACKED:
+			p = this.getDataStorage().getSubDataStorage(this.size - 1);
+			return ((p.getByte(0) & 0x0f) == 0x0d) ? -1 : 1;
+		default:
+			return 0;
+		}
+	}
+
+	/**
+	 * libcob/common.cのcob_real_put_signの実装
+	 * @param sign
+	 */
+	public void realPutSign(int sign) {
+			CobolDataStorage p;
+		CobolFieldAttribute attr = this.getAttribute();
+		byte b;
+		
+		switch(this.getAttribute().getType()) {
+		case CobolFieldAttribute.COB_TYPE_NUMERIC:
+			if(attr.isFlagSignLeading()) {
+				p = this.getDataStorage();
+			} else {
+				p = this.getDataStorage().getSubDataStorage(this.getSize() - 1);
+			}
+			
+			b = p.getByte(0);
+			if(attr.isFlagSignSeparate()) {
+				char c = (sign < 0) ? '-' : '+';
+				if(b != c) {
+					p.setByte(0, (byte)c);
+				}
+			} else if(CobolModule.getCurrentModule().display_sign != 0) {
+				CobolUtil.putSignEbcdic(p, sign);
+			} else if(sign < 0) {
+				//TODO マクロの分岐に関して調査
+				//#ifdef COB_EBCDIC_MACHINE
+				//CobolUtil.getSignAscii(p);
+				//#else
+				p.setByte(0, (byte)(b + 0x40));
+				//#endif			
+			}
+		case CobolFieldAttribute.COB_TYPE_NUMERIC_PACKED:
+			p = this.getDataStorage().getSubDataStorage(this.size - 1);
+			if(sign < 0) {
+				p.setByte(0, (byte) ((p.getByte(0) & 0xf0) | 0x0d));
+			} else {
+				p.setByte(0, (byte) ((p.getByte(0) & 0xf0) | 0x0c));
+			}
+			return;
+		default:
+			return;
+		}	
+	}
+
+	/**
+	 * libcob/move.cのcob_get_long_longの実装
+	 * @return
+	 */
+	public long getLong() {
+		long n;
+		CobolFieldAttribute attr = new CobolFieldAttribute(
+			CobolFieldAttribute.COB_TYPE_NUMERIC_BINARY,
+			18,
+			0,
+			CobolFieldAttribute.COB_FLAG_HAVE_SIGN,
+			null);
+		byte[] data = new byte[8];
+		CobolDataStorage storage = new CobolDataStorage(data);
+		AbstractCobolField field = CobolFieldFactory.makeCobolField(8, storage, attr);
+		field.moveFrom(this);
+		return ByteBuffer.wrap(data).getLong();
+	}
+
+	/**
+	 * libcob/move.cのcob_hankaku_moveの実装
+	 * @param src
+	 */
+	public void hankakuMoveFrom(AbstractCobolField src) {
+		//TODO 暫定実装
+		this.moveFrom(src);
 	}
 }

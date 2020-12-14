@@ -2856,14 +2856,17 @@ joutput_goto (struct cb_goto *p)
 	} else if (p->target == NULL) {
 		needs_exit_prog = 1;
 		if (cb_flag_implicit_init) {
-			joutput_line ("goto exit_program;");
+			//joutput_line ("goto exit_program;");
+            joutput_line ("CobolGoBackException.throwException(0);");
 		} else {
 			joutput_line ("if (module.next)");
-			joutput_line ("  goto exit_program;");
+			//joutput_line ("  goto exit_program;");
+            joutput_line ("  CobolGoBackException.throwException(0);");
 		}
 	} else if (p->target == cb_int1) {
 		needs_exit_prog = 1;
-		joutput_line ("goto exit_program;");
+		//joutput_line ("goto exit_program;");
+        joutput_line ("CobolGoBackException.throwException(0);");
 	} else {
 		joutput_goto_1 (p->target);
 	}
@@ -4525,25 +4528,25 @@ joutput_internal_function (struct cb_program *prog, cb_tree parameter_list)
 	//	output_newline ();
 	//}
 
-	///* Entry dispatch */
-	//output_line ("/* Entry dispatch */");
+	/* Entry dispatch */
+	//joutput_line ("/* Entry dispatch */");
 	//if (cb_list_length (prog->entry_list) > 1) {
-	//	output_newline ();
-	//	output_line ("switch (entry)");
-	//	output_line ("  {");
+	//	joutput_newline ();
+	//	joutput_line ("switch (entry)");
+	//	joutput_line ("  {");
 	//	for (i = 0, l = prog->entry_list; l; l = CB_CHAIN (l)) {
-	//		output_line ("  case %d:", i++);
-	//		output_line ("    goto %s%d;",
+	//		joutput_line ("  case %d:", i++);
+	//		joutput_line ("    goto %s%d;",
 	//			     CB_PREFIX_LABEL, CB_LABEL (CB_PURPOSE (l))->id);
 	//	}
-	//	output_line ("  }");
-	//	output_line ("/* This should never be reached */");
-	//	output_line ("cob_fatal_error (COB_FERROR_CHAINING);");
-	//	output_newline ();
+	//	joutput_line ("  }");
+	//	joutput_line ("/* This should never be reached */");
+	//	joutput_line ("cob_fatal_error (COB_FERROR_CHAINING);");
+	//	goutput_newline ();
 	//} else {
 	//	l = prog->entry_list;
-	//	output_line ("goto %s%d;", CB_PREFIX_LABEL, CB_LABEL (CB_PURPOSE (l))->id);
-	//	output_newline ();
+	//	joutput_line ("goto %s%d;", CB_PREFIX_LABEL, CB_LABEL (CB_PURPOSE (l))->id);
+	//	joutput_newline ();
 	//}
 
 	/* PROCEDURE DIVISION */

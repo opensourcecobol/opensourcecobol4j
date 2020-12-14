@@ -37,4 +37,26 @@ public class CobolConstant {
 	public static final AbstractCobolField zenSpace = CobolFieldFactory.makeCobolField(ZENCSIZ, new CobolDataStorage(ZENSPC), allAttr);
 	public static final AbstractCobolField zenBlank = CobolFieldFactory.makeCobolField(ZENCSIZ, new CobolDataStorage(ZENBLK), allAttr);
 	public static final AbstractCobolField zenQuote = CobolFieldFactory.makeCobolField(ZENCSIZ, new CobolDataStorage(ZENQUOT), allAttr);
+	
+	public static final long[] exp10LL = {
+		1L,
+		10L,
+		100L,
+		1000L,
+		10000L,
+		100000L,
+		1000000L,
+		10000000L,
+		100000000L,
+		1000000000L,
+		10000000000L,
+		100000000000L,
+		1000000000000L,
+		10000000000000L,
+		100000000000000L,
+		1000000000000000L,
+		10000000000000000L,
+		100000000000000000L,
+		1000000000000000000L
+	};
 }
