@@ -143,7 +143,8 @@ static const char	*const bin_compare_funcs[] = {
 	"cob_cmpswp_u56_binary",
 	"cob_cmpswp_u64_binary",
 	"cob_cmp_s8_binary",
-	"cob_cmpswp_s16_binary",
+	//"cob_cmpswp_s16_binary",
+    "cmpSwpS16Binary",
 	"cob_cmpswp_s24_binary",
 	"cob_cmpswp_s32_binary",
 	"cob_cmpswp_s40_binary",
@@ -178,7 +179,8 @@ static const char	*const bin_add_funcs[] = {
 	"cob_addswp_u56_binary",
 	"cob_addswp_u64_binary",
 	"cob_add_s8_binary",
-	"cob_addswp_s16_binary",
+	//"cob_addswp_s16_binary",
+    "addSwpS16Binary",
 	"cob_addswp_s24_binary",
 	"cob_addswp_s32_binary",
 	"cob_addswp_s40_binary",
@@ -665,7 +667,7 @@ cb_define_switch_name (cb_tree name, cb_tree sname, cb_tree flag, cb_tree ref)
 		}
 	} else {
 		switch_id = cb_int (CB_SYSTEM_NAME (sname)->token);
-		value = cb_build_funcall_1 ("cob_get_switch", switch_id);
+		value = cb_build_funcall_1 ("CobolUtil.getSwitch", switch_id);
 		if (flag == cb_int0) {
 			value = cb_build_negation (value);
 		}
@@ -1959,6 +1961,24 @@ cb_expr_shift_class (const char *name)
 }
 
 static void
+cb_expr_shift_class_method_call (const char *name)
+{
+	int	have_not = 0;
+
+	if (TOKEN (-1) == '!') {
+		have_not = 1;
+		expr_index--;
+	}
+	expr_reduce ('=');
+	if (TOKEN (-1) == 'x') {
+		VALUE (-1) = cb_build_method_call_1 (name, VALUE (-1));
+		if (have_not) {
+			VALUE (-1) = cb_build_negation (VALUE (-1));
+		}
+	}
+}
+
+static void
 cb_expr_shift (int token, cb_tree value)
 {
 	switch (token) {
@@ -2161,16 +2181,16 @@ cb_build_expr (cb_tree list)
 		op = CB_PURPOSE_INT (l);
 		switch (op) {
 		case '9': /* NUMERIC */
-			cb_expr_shift_class ("cob_is_numeric");
+			cb_expr_shift_class_method_call ("isNumeric");
 			break;
 		case 'A': /* ALPHABETIC */
-			cb_expr_shift_class ("cob_is_alpha");
+			cb_expr_shift_class_method_call ("isAlpha");
 			break;
 		case 'L': /* ALPHABETIC_LOWER */
-			cb_expr_shift_class ("cob_is_lower");
+			cb_expr_shift_class_method_call ("isLower");
 			break;
 		case 'U': /* ALPHABETIC_UPPER */
-			cb_expr_shift_class ("cob_is_upper");
+			cb_expr_shift_class_method_call ("isUpper");
 			break;
 		case 'P': /* POSITIVE */
 			cb_expr_shift_sign ('>');
@@ -2180,7 +2200,7 @@ cb_build_expr (cb_tree list)
 			break;
 		case 'O': /* OMITTED */
 			current_statement->null_check = NULL;
-			cb_expr_shift_class ("cob_is_omitted");
+			cb_expr_shift_class_method_call ("isOmitted");
 			break;
 /* RXW
 		case 'x':
@@ -2614,7 +2634,7 @@ cb_build_optim_cond (struct cb_binary_op *p)
 			s = bin_compare_funcs[n];
 #endif
 			if (s) {
-				return cb_build_funcall_2 (s,
+				return cb_build_method_call_2 (s,
 					cb_build_cast_address (p->x),
 					cb_build_cast_integer (p->y));
 			}
@@ -2792,7 +2812,7 @@ cb_build_cond (cb_tree x)
 
 				if (cb_chk_num_cond (p->x, p->y)) {
 					size1 = cb_field_size (p->x);
-					x = cb_build_funcall_3 ("memcmp",
+					x = cb_build_method_call_3 ("memcmp",
 						cb_build_cast_address (p->x),
 						cb_build_cast_address (p->y),
 						cb_int (size1));
@@ -2824,7 +2844,7 @@ cb_build_cond (cb_tree x)
 				if (size1 == 1 && size2 == 1) {
 					x = cb_build_funcall_2 ("$G", p->x, p->y);
 				} else if (size1 != 0 && size1 == size2) {
-					x = cb_build_funcall_3 ("memcmp",
+					x = cb_build_method_call_3 ("memcmp",
 						cb_build_cast_address (p->x),
 						cb_build_cast_address (p->y),
 						cb_int (size1));
@@ -2896,7 +2916,7 @@ cb_build_optim_add (cb_tree v, cb_tree n)
 			s = bin_add_funcs[z];
 #endif
 			if (s) {
-				return cb_build_funcall_2 (s,
+				return cb_build_method_call_2 (s,
 					cb_build_cast_address (v),
 					cb_build_cast_integer (n));
 			}
@@ -6714,7 +6734,7 @@ cb_emit_set_on_off (cb_tree l, cb_tree flag)
 	}
 	for (; l; l = CB_CHAIN (l)) {
 		s = CB_SYSTEM_NAME (cb_ref (CB_VALUE (l)));
-		cb_emit (cb_build_funcall_2 ("cob_set_switch", cb_int (s->token), flag));
+		cb_emit (cb_build_funcall_2 ("CobolUtil.setSwitch", cb_int (s->token), flag));
 	}
 }
 

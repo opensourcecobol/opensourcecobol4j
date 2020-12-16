@@ -25,6 +25,7 @@ import java.nio.ByteBuffer;
 import java.nio.ByteOrder;
 import java.nio.charset.StandardCharsets;
 
+import jp.osscons.opensourcecobol.libcobj.common.CobolConstant;
 import jp.osscons.opensourcecobol.libcobj.common.CobolModule;
 import jp.osscons.opensourcecobol.libcobj.exceptions.CobolRuntimeException;
 
@@ -698,21 +699,6 @@ public class CobolNumericField extends AbstractCobolField {
 	}
 
 	/**
-	 * thisと引数で与えられたデータとの数値比較を行う
-	 * @param field thisと比較するfield
-	 * @return 保持する数値データの比較を行い,this<fieldなら負の値,this==fieldなら0,this>fieldなら正の値
-	 */
-	@Override
-	public int compareTo(AbstractCobolField field) {
-		CobolFieldAttribute attr = field.getAttribute();
-		if(attr.isTypeNumeric()) {
-			return this.compareToNumeric(field);
-		} else {
-			return super.compareTo(field);
-		}
-	}
-
-	/**
 	 * thisとCobolNumericFieldを比較する
 	 * @param field 比較するデータ
 	 * @return thisのほうが大きいときは正数,thisのほうが小さいときは負数,それ以外は0を返す
@@ -995,5 +981,41 @@ public class CobolNumericField extends AbstractCobolField {
 	 */
 	public int addPackedInt(int n) {
 		throw new CobolRuntimeException(0, "実装しないコード");
+	}
+
+	/**
+	 * libcob/move.cのcob_display_get_long_longの実装
+	 */
+	@Override
+	public long getLong() {
+		int size = this.getSize();
+		CobolDataStorage data = this.getDataStorage();
+		int sign = this.getSign();
+		int i = 0;
+		
+		for(i=0; i<size; ++i) {
+			if(data.getByte(i) != '0') {
+				break;
+			}
+		}
+	
+		long val = 0;
+		int scale = this.getAttribute().getScale();
+		if(scale < 0) {
+			for(; i<size; ++i) {
+				val = val * 10 + (data.getByte(i) - '0');
+			}
+			val *= CobolConstant.exp10LL[-scale];
+		} else {
+			size -= scale;
+			for(; i<size; ++i) {
+				val = val * 10 + (data.getByte(i) - '0');
+			}
+		}
+		if(sign < 0) {
+			val = -val;
+		}
+		this.putSign(sign);
+		return val;
 	}
 }

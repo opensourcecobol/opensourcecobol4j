@@ -19,6 +19,8 @@
 
 package jp.osscons.opensourcecobol.libcobj.exceptions;
 
+import java.util.List;
+
 import jp.osscons.opensourcecobol.libcobj.data.CobolDataStorage;
 import jp.osscons.opensourcecobol.libcobj.file.CobolFile;
 
@@ -31,6 +33,8 @@ public class CobolStopRunException extends Exception {
 	 * 返り値
 	 */
 	private int returnCode;
+	
+	public static List<RuntimeExitHandler> exitHandlers = null;
 
 	/**
 	 * コンストラクタ
@@ -87,8 +91,19 @@ public class CobolStopRunException extends Exception {
 	/**
 	 * libcob/common.cのcob_stop_runの実装
 	 */
-	public static void stopRun() {
-		//TODO 残りを実装
+	public static void stopRunAndThrow(int status) throws CobolStopRunException {
+		stopRun();
+		CobolStopRunException.throwException(status);
+	}
+	
+	public static void stopRun(){
+		if(exitHandlers != null) {
+			for(RuntimeExitHandler handler : exitHandlers) {
+				handler.proc();
+			}
+		}
+		//TODO screen実装時に追加
+		//cob_screen_terminate();
 		CobolFile.exitFileIO();
 	}
 }

@@ -449,21 +449,6 @@ public class CobolNumericPackedField extends AbstractCobolField {
 	}
 
 	/**
-	 * thisと引数で与えられたデータとの数値比較を行う
-	 * @param field thisと比較するfield
-	 * @return 保持する数値データの比較を行い,this<fieldなら負の値,this==fieldなら0,this>fieldなら正の値
-	 */
-	@Override
-	public int compareTo(AbstractCobolField field) {
-		CobolFieldAttribute attr = field.getAttribute();
-		if(attr.isTypeNumeric()) {
-			return this.compareToNumeric(field);
-		} else {
-			return super.compareTo(field);
-		}
-	}
-
-	/**
 	 * thisとCobolNumericFieldとの数値比較を行う
 	 * @param field thisと比較するfield
 	 * @return 保持する数値データの比較を行い,this<fieldなら負の値,this==fieldなら0,this>fieldなら正の値
@@ -876,5 +861,32 @@ public class CobolNumericPackedField extends AbstractCobolField {
 			}
 		}
 		return 0;
+	}
+
+	/**
+	 * libcob/move.cのcob_packed_get_long_longの実装
+	 */
+	@Override
+	public long getLong() {
+		int digits = this.getAttribute().getDigits();
+		int scale = this.getAttribute().getScale();
+		CobolDataStorage data = this.getDataStorage();
+		int sign = this.getSign();
+		int offset = 1 - (this.getAttribute().getDigits() % 2);
+		int val = 0;
+		
+		for(int i=offset; i < digits - scale + offset; ++i) {
+			val *= 10;
+			if(i % 2 == 0) {
+				val += (0xFF & data.getByte(i / 2)) >> 4;
+			} else {
+				val += data.getByte(i / 2) & 0x0F;
+			}
+		}
+		
+		if(sign < 0) {
+			val = -val;
+		}
+		return val;
 	}
 }

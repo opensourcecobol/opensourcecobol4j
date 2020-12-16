@@ -19,6 +19,8 @@
 
 package jp.osscons.opensourcecobol.libcobj.exceptions;
 
+import java.util.List;
+
 /**
  * 実行時エラーを示す例外
  */
@@ -26,6 +28,11 @@ public class CobolRuntimeException extends RuntimeException {
 	public static int code;
 
 	public static final int COBOL_FITAL_ERROR = 9000;
+	
+	public static String source_file = null;
+	public static int source_line = 0;
+	
+	public static List<RuntimeErrorHandler> hdlrs = null;
 
 	/**
 	 * エラー番号
@@ -76,5 +83,29 @@ public class CobolRuntimeException extends RuntimeException {
 	public static void setException(int id) {
 		code = CobolExceptionTabCode.code[id];
 		//TODO common.c実装に残りをやる
+	}
+	
+	/**
+	 * libcob/common.cのcob_runtime_errorの実装
+	 */
+	public static void displayRuntimeError(String message) {
+		if(hdlrs != null && !hdlrs.isEmpty()) {
+			String runtime_err_str;
+			if(source_file != null) {
+				runtime_err_str = String.format("%s:%d: %s", source_file, source_line, message);
+			} else {
+				runtime_err_str = message; 
+			}
+			for(RuntimeErrorHandler h : hdlrs) {
+				h.proc(runtime_err_str);
+			}
+			hdlrs = null;
+		}
+		
+		if(source_file != null) {
+			System.err.print(String.format("%s:%d", source_file, source_line));
+		}
+		System.err.println("libcobj: " + message);
+		System.err.flush();
 	}
 }

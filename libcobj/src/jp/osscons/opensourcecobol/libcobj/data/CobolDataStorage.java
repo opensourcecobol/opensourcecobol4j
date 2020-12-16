@@ -201,6 +201,16 @@ public class CobolDataStorage {
 		}
 		return 0;
 	}
+	
+	/**
+	 *  C言語のmemcmp
+	 * @param buf
+	 * @param size
+	 * @return
+	 */
+	public int memcmp(String buf, int size) {
+		return this.memcmp(buf.getBytes(), size);
+	}
 
 	/**
 	 *  C言語のmemcmp
@@ -481,6 +491,10 @@ public class CobolDataStorage {
 	public CobolDataStorage getSubDataStorage(int index) {
 		return new CobolDataStorage(this.data, this.index + index);
 	}
+	
+	public CobolDataStorage getSubDataStorage(long index) {
+		return this.getDataStorage((int)index);
+	}
 
 	/**
 	 * libcob/codegen.hのcob_setswp_u24_binaryの実装
@@ -563,6 +577,44 @@ public class CobolDataStorage {
 	 */
 	public void setSwpS16Binary(int n) {
 		this.setSwpU16Binary(n);
+	}
+
+	/**
+	 * libcob/codegen.hのcob_addswp_s16_binaryの実装
+	 * @param val
+	 */
+	public void addSwpS16Binary(int val) {
+		short n = (short)(this.getByte(0) << 8 | this.getByte(1));
+		n += val;
+		this.setByte(0, (byte)(n >> 8));
+		this.setByte(1, (byte)(n));
+	}
+
+	/**
+	 * COB_BSWAP_16マクロの実装
+	 * @param val
+	 * @return
+	 */
+	private static short BSWAP16(short val) {
+		return (short)((val << 8) | (0x0f & (val >> 8)));
+	}
+
+	/**
+	 * libcob/codegen.hのcob_cmpswp_s16_binaryの実装
+	 * @param n
+	 * @return
+	 */
+	public int cmpSwpS16Binary(int n) {
+		ByteBuffer bb = ByteBuffer.wrap(this.getData());
+		short val = bb.getShort();
+		val = BSWAP16(val);
+		if (val < n) {
+			return -1;
+		} else if(val == n) {
+			return 0;
+		} else {
+			return 1;
+		}
 	}
 
 	/**

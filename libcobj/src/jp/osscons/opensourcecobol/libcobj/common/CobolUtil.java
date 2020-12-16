@@ -21,12 +21,16 @@ package jp.osscons.opensourcecobol.libcobj.common;
 
 import java.time.DateTimeException;
 import java.time.LocalDateTime;
+import java.time.LocalTime;
 import java.util.Scanner;
 import java.util.regex.MatchResult;
 
 import jp.osscons.opensourcecobol.libcobj.data.AbstractCobolField;
+import jp.osscons.opensourcecobol.libcobj.data.CobolDataStorage;
 import jp.osscons.opensourcecobol.libcobj.exceptions.CobolException;
 import jp.osscons.opensourcecobol.libcobj.exceptions.CobolExceptionId;
+import jp.osscons.opensourcecobol.libcobj.exceptions.CobolRuntimeException;
+import jp.osscons.opensourcecobol.libcobj.exceptions.CobolStopRunException;
 import jp.osscons.opensourcecobol.libcobj.file.CobolFile;
 
 public class CobolUtil {
@@ -43,8 +47,15 @@ public class CobolUtil {
 	public static String[] commandLineArgs = null;
 	public static int currentArgIndex = 1;
 	
+	public static boolean nibbleCForUnsigned = false;
+	
 	public static int commlncnt = 0;
 	public static byte[] commlnptr = null;
+	
+	public static boolean[] cobSwitch = new boolean[8];
+	public static int cobSaveCallParams = 0;
+	
+	public static boolean verbose = false;
 
 	abstract class handlerlist {
 		public handlerlist next = null;
@@ -83,6 +94,16 @@ public class CobolUtil {
 		if(!cob_initialized) {
 			CobolUtil.commandLineArgs = argv;
 			CobolFile.cob_init_fileio();
+			
+			for(int i=0; i<8; ++i) {
+				String envVariableName = String.format("COB_SWITCH_%d", i + 1);
+				String envValue = System.getenv(envVariableName);
+				if(envValue == null) {
+					CobolUtil.cobSwitch[i] = false;
+				} else  {
+					CobolUtil.cobSwitch[i] = envValue.equals("ON");
+				}
+			}
 		}
 
 		String s;
@@ -92,7 +113,7 @@ public class CobolUtil {
 			Scanner scan = new Scanner(s);
 			scan.findInLine("(\\d+)/(\\d+)/(\\d+)");
 			MatchResult result = scan.match();
-			date_time_block: if(result.groupCount() == 3) {
+			date_time_block: if(result.groupCount() != 3) {
 				System.err.println("Warning: COB_DATE format invalid, ignored.");
 			} else  {
 				int year = Integer.parseInt(result.group(1));
@@ -107,8 +128,28 @@ public class CobolUtil {
 				cobLocalTm = tm;
 			}
 		}
+		
+		s = System.getenv("COB_VERBOSE");
+		if(s != null && s.length() > 0 && (s.charAt(0) == 'y' || s.charAt(0) == 'Y')) {
+			CobolUtil.cob_verbose = true;
+		}
 	}
 
+	/**
+	 * libcob/common.cとcob_localtime
+	 * @return
+	 */
+	public static LocalDateTime localtime() {
+		LocalDateTime rt = LocalDateTime.now();
+		if(CobolUtil.cobLocalTm != null) {
+			CobolUtil.cobLocalTm = CobolUtil.cobLocalTm
+					.withHour(rt.getHour())
+					.withMinute(rt.getMinute())
+					.withSecond(rt.getSecond());
+			rt = CobolUtil.cobLocalTm;
+		}
+		return rt;
+	}
 	/**
 	 * libcob/cob_verbose_outputの実装
 	 * opensourceCOBOLではprintfのように可変長引数を取るが,
@@ -168,5 +209,376 @@ public class CobolUtil {
 			p = " ";
 		}
 		envval.memcpy(p);
+	}
+
+	/**
+	 * libcob/common.cのCOB_CHK_PARMSの実装
+	 * @param funcName
+	 * @param numParams
+	 * @throws CobolStopRunException
+	 */
+	public static void COB_CHK_PARMS(String funcName, int numParams) throws CobolStopRunException {
+		//TODO ifの条件式の改修
+		if(false) {
+			String message = String.format("CALL to %s requires %d parameters", funcName, numParams);
+			CobolRuntimeException.displayRuntimeError(message);
+			CobolStopRunException.stopRunAndThrow(1);
+		}
+	}
+
+	/**
+	 * libcob/common.cのcob_get_switchの実装
+	 * @param n
+	 * @return
+	 */
+	public static boolean getSwitch(int n) {
+		return CobolUtil.cobSwitch[n];
+	}
+
+	/**
+	 * libcob/common.cのcob_set_switchの実装
+	 * @param n
+	 * @param flag
+	 */
+	public static void setSwitch(int n, int flag) {
+		if(flag == 0) {
+			CobolUtil.cobSwitch[n] = false;
+		} else if(flag == 1) {
+			CobolUtil.cobSwitch[n] = true;
+		}
+	}
+
+	/**
+	 * libcob/common.cのcob_get_sign_asciiの実装
+	 * @param p
+	 */
+	public static void getSignAscii(CobolDataStorage p) {
+	    switch (p.getByte(0)) {
+	    case 'p':
+	        p.setByte(0,(byte)'0');
+	        return;
+	    case 'q':
+	        p.setByte(0, (byte)'1');
+	        return;
+	    case 'r':
+	        p.setByte(0, (byte)'2');
+	        return;
+	    case 's':
+	        p.setByte(0, (byte)'3');
+	        return;
+	    case 't':
+	        p.setByte(0, (byte)'4');
+	        return;
+	    case 'u':
+	        p.setByte(0, (byte)'5');
+	        return;
+	    case 'v':
+	        p.setByte(0, (byte)'6');
+	        return;
+	    case 'w':
+	        p.setByte(0, (byte)'7');
+	        return;
+	    case 'x':
+	        p.setByte(0, (byte)'8');
+	        return;
+	    case 'y':
+	        p.setByte(0, (byte)'9');
+	        return;
+	    }
+	}
+
+	/**
+	 * libcob/common.cのcob_get_sign_ebcdicの実装
+	 * @param p
+	 * @return
+	 */
+	public static int getSignEbcdic(CobolDataStorage p) {
+	    switch (p.getByte(0)) {
+	    case '{':
+	        p.setByte(0, (byte)'0');
+	        return 1;
+	    case 'A':
+	        p.setByte(0, (byte)'1');
+	        return 1;
+	    case 'B':
+	        p.setByte(0, (byte)'2');
+	        return 1;
+	    case 'C':
+	        p.setByte(0, (byte)'3');
+	        return 1;
+	    case 'D':
+	        p.setByte(0, (byte)'4');
+	        return 1;
+	    case 'E':
+	        p.setByte(0, (byte)'5');
+	        return 1;
+	    case 'F':
+	        p.setByte(0, (byte)'6');
+	        return 1;
+	    case 'G':
+	        p.setByte(0, (byte)'7');
+	        return 1;
+	    case 'H':
+	        p.setByte(0, (byte)'8');
+	        return 1;
+	    case 'I':
+	        p.setByte(0, (byte)'9');
+	        return 1;
+	    case '}':
+	        p.setByte(0, (byte)'0');
+	        return -1;
+	    case 'J':
+	        p.setByte(0, (byte)'1');
+	        return -1;
+	    case 'K':
+	        p.setByte(0, (byte)'2');
+	        return -1;
+	    case 'L':
+	        p.setByte(0, (byte)'3');
+	        return -1;
+	    case 'M':
+	        p.setByte(0, (byte)'4');
+	        return -1;
+	    case 'N':
+	        p.setByte(0, (byte)'5');
+	        return -1;
+	    case 'O':
+	        p.setByte(0, (byte)'6');
+	        return -1;
+	    case 'P':
+	        p.setByte(0, (byte)'7');
+	        return -1;
+	    case 'Q':
+	        p.setByte(0, (byte)'8');
+	        return -1;
+	    case 'R':
+	        p.setByte(0, (byte)'9');
+	        return -1;
+	    default:
+	        /* What to do here */
+	        p.setByte(0, (byte)'0');
+	        return 1;
+	    }
+	}
+
+	/**
+	 * libcob/common.cのcob_put_sign_asciiの実装
+	 * @param p
+	 */
+	public static void putSignAscii(CobolDataStorage p) {
+		switch(p.getByte(0)) {
+	    case '0':
+	        p.setByte(0, (byte)'p');
+	        return;
+	    case '1':
+	        p.setByte(0, (byte)'q');
+	        return;
+	    case '2':
+	        p.setByte(0, (byte)'r');
+	        return;
+	    case '3':
+	        p.setByte(0, (byte)'s');
+	        return;
+	    case '4':
+	        p.setByte(0, (byte)'t');
+	        return;
+	    case '5':
+	        p.setByte(0, (byte)'u');
+	        return;
+	    case '6':
+	        p.setByte(0, (byte)'v');
+	        return;
+	    case '7':
+	        p.setByte(0, (byte)'w');
+	        return;
+	    case '8':
+	        p.setByte(0, (byte)'x');
+	        return;
+	    case '9':
+	        p.setByte(0, (byte)'v');
+	        return;
+		}
+	}
+
+	/**
+	 * libcob/common.cのcob_put_sign_ebcdicの実装
+	 * @param p
+	 * @param sign
+	 */
+	public static void putSignEbcdic(CobolDataStorage p, int sign) {
+		if(sign < 0) {
+	        switch (p.getByte(0)) {
+	        case '0':
+	            p.setByte(0, (byte)'}');
+	            return;
+	        case '1':
+	            p.setByte(0, (byte)'J');
+	            return;
+	        case '2':
+	            p.setByte(0, (byte)'K');
+	            return;
+	        case '3':
+	            p.setByte(0, (byte)'L');
+	            return;
+	        case '4':
+	            p.setByte(0, (byte)'M');
+	            return;
+	        case '5':
+	            p.setByte(0, (byte)'N');
+	            return;
+	        case '6':
+	            p.setByte(0, (byte)'O');
+	            return;
+	        case '7':
+	            p.setByte(0, (byte)'P');
+	            return;
+	        case '8':
+	            p.setByte(0, (byte)'Q');
+	            return;
+	        case '9':
+	            p.setByte(0, (byte)'R');
+	            return;
+	        default:
+	            /* What to do here */
+	            p.setByte(0, (byte)'}');
+	            return;
+	        }
+			
+		}	
+	    switch (p.getByte(0)) {
+	    case '0':
+	        p.setByte(0, (byte)'{');
+	        return;
+	    case '1':
+	        p.setByte(0, (byte)'A');
+	        return;
+	    case '2':
+	        p.setByte(0, (byte)'B');
+	        return;
+	    case '3':
+	        p.setByte(0, (byte)'C');
+	        return;
+	    case '4':
+	        p.setByte(0, (byte)'D');
+	        return;
+	    case '5':
+	        p.setByte(0, (byte)'E');
+	        return;
+	    case '6':
+	        p.setByte(0, (byte)'F');
+	        return;
+	    case '7':
+	        p.setByte(0, (byte)'G');
+	        return;
+	    case '8':
+	        p.setByte(0, (byte)'H');
+	        return;
+	    case '9':
+	        p.setByte(0, (byte)'I');
+	        return;
+	    default:
+	        /* What to do here */
+	        p.setByte(0, (byte)'{');
+	        return;
+	    }
+	}
+
+	/**
+	 * libcob/common.cのcommon_compcの実装
+	 * @param s1
+	 * @param c
+	 * @param size
+	 * @return
+	 */
+	public static int commonCmpc(CobolDataStorage s1, int c, int size) {
+		CobolDataStorage s = CobolModule.getCurrentModule().collating_sequence;
+		if(s != null) {
+			for(int i=0; i<size; ++i) {
+				int ret = s.getByte(s1.getByte(i) - s.getByte(c));
+				if(ret != 0) {
+					return ret;
+				} }
+		} else {
+			for(int i=0; i<size; ++i) {
+				int ret = s1.getByte(i) - c;
+				if(ret != 0) {
+					return ret;
+				}
+			}
+		}
+		return 0;
+	}
+
+	/**
+	 * libcob/common.cのis_national_paddingの実装
+	 * @param s
+	 * @param size
+	 * @return
+	 */
+	public static int isNationalPadding(CobolDataStorage s, int size) {
+		int ret = 1;
+		int i = 0;
+		OUTER_LOOP: while(i < size && ret != 0) {
+			if(s.getByte(i) == ' ') {
+				i++;
+			} else if(size - i >= CobolConstant.ZENCSIZ) {
+				for(int j=0; j<CobolConstant.ZENCSIZ; ++j) {
+					if(s.getByte(i + j) != CobolConstant.ZENSPC[i]) {
+						continue OUTER_LOOP;
+					}
+				}
+				i += CobolConstant.ZENCSIZ;
+			} else {
+				ret = 0;
+			}
+		}
+		return ret;
+	}
+
+	/**
+	 * libcob/common.cのalnum_cmpsの実装
+	 * @param s1
+	 * @param s2
+	 * @param size
+	 * @param col
+	 * @return
+	 */
+	public static int alnumCmps(CobolDataStorage s1, CobolDataStorage s2, int size, CobolDataStorage col) {
+		if(col != null) {
+			for(int i=0; i<size; ++i) {
+				int ret = col.getByte(s1.getByte(i)) - col.getByte(s2.getByte(i));
+				if(ret != 0) {
+					return ret;
+				}
+			}
+		} else {
+			for(int i=0; i<size; ++i) {
+				int ret = s1.getByte(i) - s2.getByte(i);
+				if(ret != 0) {
+					return ret;
+				}
+			}
+		}
+		return 0;
+	}
+
+	/**
+	 * libcob/common.cのnational_cmpsの実装
+	 * @param s1
+	 * @param s2
+	 * @param size
+	 * @param col
+	 * @return
+	 */
+	public static int nationalCmps(CobolDataStorage s1, CobolDataStorage s2, int size, CobolDataStorage col) {
+		int ret = 0;
+		for(int i=0; i<size && ret == 0; i += 2) {
+			int b11 = s1.getByte(i);
+			int b12 = s1.getByte(i + 1);
+			int b21 = s2.getByte(i);
+			int b22 = s2.getByte(i + 1);
+			ret = ((b11 << 8 | b12) > (b21 << 8 | b22)) ? 1 : 0;
+		}
+		return ret;
 	}
 }
