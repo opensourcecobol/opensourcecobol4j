@@ -96,6 +96,14 @@ public class CobolFieldAttribute {
 		this.flags = flags;
 		this.pic = pic;
 	}
+	
+	public CobolFieldAttribute(CobolFieldAttribute other) {
+		this.type = other.type;
+		this.digits = other.digits;
+		this.scale = other.scale;
+		this.flags = other.flags;
+		this.pic = other.pic;
+	}
 
 	/**
 	 * this.typeのgetter

@@ -143,7 +143,8 @@ static const char	*const bin_compare_funcs[] = {
 	"cob_cmpswp_u56_binary",
 	"cob_cmpswp_u64_binary",
 	"cob_cmp_s8_binary",
-	"cob_cmpswp_s16_binary",
+	//"cob_cmpswp_s16_binary",
+    "cmpSwpS16Binary",
 	"cob_cmpswp_s24_binary",
 	"cob_cmpswp_s32_binary",
 	"cob_cmpswp_s40_binary",
@@ -178,7 +179,8 @@ static const char	*const bin_add_funcs[] = {
 	"cob_addswp_u56_binary",
 	"cob_addswp_u64_binary",
 	"cob_add_s8_binary",
-	"cob_addswp_s16_binary",
+	//"cob_addswp_s16_binary",
+    "addSwpS16Binary",
 	"cob_addswp_s24_binary",
 	"cob_addswp_s32_binary",
 	"cob_addswp_s40_binary",
@@ -2632,7 +2634,7 @@ cb_build_optim_cond (struct cb_binary_op *p)
 			s = bin_compare_funcs[n];
 #endif
 			if (s) {
-				return cb_build_funcall_2 (s,
+				return cb_build_method_call_2 (s,
 					cb_build_cast_address (p->x),
 					cb_build_cast_integer (p->y));
 			}
@@ -2810,7 +2812,7 @@ cb_build_cond (cb_tree x)
 
 				if (cb_chk_num_cond (p->x, p->y)) {
 					size1 = cb_field_size (p->x);
-					x = cb_build_funcall_3 ("memcmp",
+					x = cb_build_method_call_3 ("memcmp",
 						cb_build_cast_address (p->x),
 						cb_build_cast_address (p->y),
 						cb_int (size1));
@@ -2842,7 +2844,7 @@ cb_build_cond (cb_tree x)
 				if (size1 == 1 && size2 == 1) {
 					x = cb_build_funcall_2 ("$G", p->x, p->y);
 				} else if (size1 != 0 && size1 == size2) {
-					x = cb_build_funcall_3 ("memcmp",
+					x = cb_build_method_call_3 ("memcmp",
 						cb_build_cast_address (p->x),
 						cb_build_cast_address (p->y),
 						cb_int (size1));
@@ -2914,7 +2916,7 @@ cb_build_optim_add (cb_tree v, cb_tree n)
 			s = bin_add_funcs[z];
 #endif
 			if (s) {
-				return cb_build_funcall_2 (s,
+				return cb_build_method_call_2 (s,
 					cb_build_cast_address (v),
 					cb_build_cast_integer (n));
 			}

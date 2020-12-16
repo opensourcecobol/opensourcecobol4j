@@ -539,9 +539,119 @@ public abstract class AbstractCobolField {
 	 * @param field thisと比較するfield
 	 * @return 保持する数値データの比較を行い,this<fieldなら負の値,this==fieldなら0,this>fieldなら正の値
 	 */
-	public int compareTo(AbstractCobolField field) {
-		AbstractCobolField f1 = numericFieldToNumericDisplayField(this);
-		AbstractCobolField f2 = numericFieldToNumericDisplayField(field);
+	public int compareTo(AbstractCobolField other) {
+		//AbstractCobolField f1 = numericFieldToNumericDisplayField(this);
+		//AbstractCobolField f2 = numericFieldToNumericDisplayField(field);
+		//return f1.cmpAlnum(f2);
+		AbstractCobolField f1 = this;
+		AbstractCobolField f2 = other;
+		CobolFieldAttribute attr1 = f1.getAttribute();
+		CobolFieldAttribute attr2 = f2.getAttribute();
+		
+		if(attr1.isTypeNational() || attr1.isTypeNationalAll() || attr1.isTypeNationalEdited()) {
+			if(f2 == CobolConstant.quote) {
+				f2 = CobolConstant.zenQuote;
+			} else if(f2 == CobolConstant.space){
+				f2 = CobolConstant.zenSpace;
+			} else if(f2 == CobolConstant.zero) {
+				f2 = CobolConstant.zenZero;
+			}
+		}
+
+		if(attr2.isTypeNational() || attr2.isTypeNationalAll() || attr2.isTypeNationalEdited()) {
+			if(f1 == CobolConstant.quote) {
+				f1 = CobolConstant.zenQuote;
+			} else if(f1 == CobolConstant.space){
+				f1 = CobolConstant.zenSpace;
+			} else if(f1 == CobolConstant.zero) {
+				f1 = CobolConstant.zenZero;
+			}
+		}
+		
+		attr1 = f1.getAttribute();
+		attr2 = f2.getAttribute();
+		
+		if(attr1.isTypeNumeric() && attr2.isTypeNumeric()) {
+			return f1.numericCompareTo(f2);
+		}
+		if(attr2.isTypeAlphanumAll()) {
+			if(f2 == CobolConstant.zero && attr1.isTypeNumeric()) {
+				return f1.cmpInt(0);
+			} else if(f2.getSize() == 1) {				
+				return f1.cmpChar(f2.getDataStorage().getByte(0));
+			} else {
+				return f1.cmpAll(f2);
+			}
+		} else if(attr1.isTypeAlphanumAll()) {
+			if(f1 == CobolConstant.zenZero && attr2.isTypeNumeric()) {
+				return -f2.cmpInt(0);
+			} else if(f1.getSize() == 1) {
+				return -f2.cmpChar(f1.getDataStorage().getByte(0));
+			} else {				
+				return -f2.cmpAll(f1);
+			}
+		} else if(attr2.isTypeNationalAll()) {
+			if(f2 == CobolConstant.zenZero && attr1.isTypeNumeric()) {
+				return f1.cmpInt(0);
+			} else if(f2.getSize() == 1) {
+				return f1.cmpChar(f2.getDataStorage().getByte(0));
+			} else {
+				return f1.cmpAll(f2);
+			}
+		} else if(attr1.isTypeNationalAll()) {
+			if(f1 == CobolConstant.zenZero && attr2.isTypeNumeric()) {
+				return -f2.cmpInt(0);
+			} else if(f1.getSize() == 1) {
+				return -f2.cmpChar(f1.getDataStorage().getByte(0));
+			} else {
+				return -f2.cmpAll(f1);
+			}
+		} else if(attr1.isTypeGroup() || attr2.isTypeGroup()) {
+			return f1.cmpSimpleStr(f2);
+		} else {
+			if(attr1.isTypeNumeric()) {
+				if(attr1.getType() != CobolFieldAttribute.COB_TYPE_NUMERIC_DISPLAY) {
+					int tmpSize = attr1.getDigits();
+					CobolDataStorage tmpBuff = new CobolDataStorage(48);
+					CobolFieldAttribute tmpAttr = new CobolFieldAttribute(attr1);
+					tmpAttr.setType(CobolFieldAttribute.COB_TYPE_NUMERIC_DISPLAY);
+					tmpAttr.setFlags(tmpAttr.getFlags() & ~CobolFieldAttribute.COB_FLAG_HAVE_SIGN);
+					AbstractCobolField tmpField = CobolFieldFactory.makeCobolField(tmpSize, tmpBuff, tmpAttr);
+					tmpField.moveFrom(f1);
+					f1 = tmpField;
+				} else if(attr1.isFlagSignSeparate()) {
+					int tmpSize = attr1.getDigits();
+					CobolDataStorage tmpBuff = new CobolDataStorage(48);
+					CobolFieldAttribute tmpAttr = new CobolFieldAttribute(attr1);
+					tmpAttr.setType(CobolFieldAttribute.COB_TYPE_NUMERIC_DISPLAY);
+					tmpAttr.setFlags(CobolFieldAttribute.COB_FLAG_HAVE_SIGN);
+					AbstractCobolField tmpField = CobolFieldFactory.makeCobolField(tmpSize, tmpBuff, tmpAttr);
+					tmpField.moveFrom(f1);
+					f1 = tmpField;
+				}
+			}
+			if(attr2.isTypeNumeric()) {
+				if(attr2.getType() != CobolFieldAttribute.COB_TYPE_NUMERIC_DISPLAY) {
+					int tmpSize = attr2.getDigits();
+					CobolDataStorage tmpBuff = new CobolDataStorage(48);
+					CobolFieldAttribute tmpAttr = new CobolFieldAttribute(attr2);
+					tmpAttr.setType(CobolFieldAttribute.COB_TYPE_NUMERIC_DISPLAY);
+					tmpAttr.setFlags(tmpAttr.getFlags() & ~CobolFieldAttribute.COB_FLAG_HAVE_SIGN);
+					AbstractCobolField tmpField = CobolFieldFactory.makeCobolField(tmpSize, tmpBuff, tmpAttr);
+					tmpField.moveFrom(f2);
+					f2 = tmpField;
+				} else if(attr2.isFlagSignSeparate()) {
+					int tmpSize = attr2.getDigits();
+					CobolDataStorage tmpBuff = new CobolDataStorage(48);
+					CobolFieldAttribute tmpAttr = new CobolFieldAttribute(attr2);
+					tmpAttr.setType(CobolFieldAttribute.COB_TYPE_NUMERIC_DISPLAY);
+					tmpAttr.setFlags(CobolFieldAttribute.COB_FLAG_HAVE_SIGN);
+					AbstractCobolField tmpField = CobolFieldFactory.makeCobolField(tmpSize, tmpBuff, tmpAttr);
+					tmpField.moveFrom(f2);
+					f2 = tmpField;
+				}
+			}		
+		}
 		return f1.cmpAlnum(f2);
 	}
 

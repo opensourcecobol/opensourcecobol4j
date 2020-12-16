@@ -349,12 +349,12 @@ public class CobolNumericBinaryField extends AbstractCobolField {
 		CobolDataStorage nStorage = new CobolDataStorage(nBytes);
 		if(this.getAttribute().isFlagHaveSign()) {
 			CobolDecimal.numByteMemcpy(nStorage, 0, this.getDataStorage(), 0, this.getSize());
-			n = ByteBuffer.wrap(nStorage.getByteArray(0, this.getSize())).getLong();
+			n = ByteBuffer.wrap(nStorage.getByteArray(0, 8)).getLong();
 			//TODO ビット演算に誤りがいないか確認
 			n >>>= 8 * fsiz;
 		} else {
 			CobolDecimal.numByteMemcpy(nStorage, fsiz, this.getDataStorage(), 0,  this.getSize());
-			n = ByteBuffer.wrap(nStorage.getByteArray(0, this.getSize())).getLong();
+			n = ByteBuffer.wrap(nStorage.getByteArray(0, 8)).getLong();
 		}
 		return n;
 	}

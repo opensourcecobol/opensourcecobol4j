@@ -449,21 +449,6 @@ public class CobolNumericPackedField extends AbstractCobolField {
 	}
 
 	/**
-	 * thisと引数で与えられたデータとの数値比較を行う
-	 * @param field thisと比較するfield
-	 * @return 保持する数値データの比較を行い,this<fieldなら負の値,this==fieldなら0,this>fieldなら正の値
-	 */
-	@Override
-	public int compareTo(AbstractCobolField field) {
-		CobolFieldAttribute attr = field.getAttribute();
-		if(attr.isTypeNumeric()) {
-			return this.compareToNumeric(field);
-		} else {
-			return super.compareTo(field);
-		}
-	}
-
-	/**
 	 * thisとCobolNumericFieldとの数値比較を行う
 	 * @param field thisと比較するfield
 	 * @return 保持する数値データの比較を行い,this<fieldなら負の値,this==fieldなら0,this>fieldなら正の値

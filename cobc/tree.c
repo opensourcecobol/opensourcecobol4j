@@ -804,7 +804,7 @@ cb_init_constants (void)
 	cb_null = make_constant (CB_CATEGORY_DATA_POINTER, "0");
 	cb_zero = make_constant (CB_CATEGORY_NUMERIC, "CobolConstant.zero");
 	cb_one = make_constant (CB_CATEGORY_NUMERIC, "CobolConstant.One");
-	cb_space = make_constant (CB_CATEGORY_ALPHANUMERIC, "CobolConstant.s1pace");
+	cb_space = make_constant (CB_CATEGORY_ALPHANUMERIC, "CobolConstant.space");
 	//cb_blank = make_constant (CB_CATEGORY_ALPHANUMERIC, "&cob_blank");
 	cb_blank = make_constant (CB_CATEGORY_ALPHANUMERIC, "\"\"");
 	cb_low = make_constant (CB_CATEGORY_ALPHANUMERIC, "CobolConstant.low");
