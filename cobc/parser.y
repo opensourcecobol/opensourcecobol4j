@@ -3963,7 +3963,6 @@ paragraph_header:
 		emit_statement (CB_TREE (current_section));
 	}
 	current_paragraph = CB_LABEL (cb_build_label ($$, current_section));
-	current_paragraph->need_begin = 1;
 	if (current_section) {
 		current_section->children =
 			cb_cons (CB_TREE (current_paragraph), current_section->children);

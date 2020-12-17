@@ -878,6 +878,13 @@ public abstract class AbstractCobolField {
 		AbstractCobolField temp = CobolFieldFactory.makeCobolField(4, data, attr);
 		this.moveFrom(temp);
 	}
+	
+	/**
+	 * libcob/move.cのcob_set_intの実装
+	 */
+	public void setInt(CobolDataStorage data) {
+		this.setInt((int)data.getBinaryInt());
+	}
 
 	/**
 	 * libcob/common.cのcob_memcpyの実装
