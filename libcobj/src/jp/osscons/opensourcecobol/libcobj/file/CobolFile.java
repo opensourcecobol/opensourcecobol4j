@@ -40,6 +40,7 @@ import jp.osscons.opensourcecobol.libcobj.data.AbstractCobolField;
 import jp.osscons.opensourcecobol.libcobj.data.CobolDataStorage;
 import jp.osscons.opensourcecobol.libcobj.exceptions.CobolExceptionId;
 import jp.osscons.opensourcecobol.libcobj.exceptions.CobolRuntimeException;
+import jp.osscons.opensourcecobol.libcobj.exceptions.CobolStopRunException;
 
 public class CobolFile {
 	protected static final int COB_ORG_SEQUENTIAL = 0;
@@ -421,8 +422,9 @@ public class CobolFile {
 	 * TODO 実装
 	 * @param opt
 	 * @return
+	 * @throws CobolStopRunException 
 	 */
-	protected int linage_write_opt(int opt) {
+	protected int linage_write_opt(int opt) throws CobolStopRunException {
 		int i, n;
 		Linage lingptr = this.getLinorkeyptr();
 
@@ -1052,7 +1054,7 @@ public class CobolFile {
 		return 0;
 	}
 
-	public void write(AbstractCobolField rec, int opt, AbstractCobolField fnstatus) {
+	public void write(AbstractCobolField rec, int opt, AbstractCobolField fnstatus) throws CobolStopRunException {
 		if(this.access_mode == COB_ACCESS_SEQUENTIAL &&
 			this.last_open_mode == COB_OPEN_I_O &&
 			CobolUtil.cob_io_rewwrite_assumed() != 0) {
@@ -1105,11 +1107,11 @@ public class CobolFile {
 		return;
 	}
 
-	public void writeEx(AbstractCobolField rec, int opt, AbstractCobolField fnstatus) {
+	public void writeEx(AbstractCobolField rec, int opt, AbstractCobolField fnstatus) throws CobolStopRunException {
 		this.write_(opt);
 	}
 
-	public int write_(int opt) {
+	public int write_(int opt) throws CobolStopRunException {
 		System.out.println("super.write");
 		return 0;
 	}
@@ -1118,8 +1120,9 @@ public class CobolFile {
 	 * libcob/fileio.cのcob_file_write_optの実装
 	 * @param opt
 	 * @return
+	 * @throws CobolStopRunException 
 	 */
-	protected int file_write_opt(int opt) {
+	protected int file_write_opt(int opt) throws CobolStopRunException {
 		if((this.flag_select_features & COB_SELECT_LINAGE) != 0) {
 			return linage_write_opt(opt);
 		}

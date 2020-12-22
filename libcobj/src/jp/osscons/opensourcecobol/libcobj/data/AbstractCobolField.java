@@ -26,6 +26,7 @@ import jp.osscons.opensourcecobol.libcobj.common.CobolConstant;
 import jp.osscons.opensourcecobol.libcobj.common.CobolModule;
 import jp.osscons.opensourcecobol.libcobj.common.CobolUtil;
 import jp.osscons.opensourcecobol.libcobj.exceptions.CobolRuntimeException;
+import jp.osscons.opensourcecobol.libcobj.exceptions.CobolStopRunException;
 
 /**
  * COBOLで使用する変数を表現するクラス。
@@ -217,7 +218,7 @@ public abstract class AbstractCobolField {
 	 * @param opt 加算に関するオプション.詳しくはopensourceCOBOLを参照
 	 * @return 加算後のthisの保持する数値データ
 	 */
-	public int add(AbstractCobolField field, int opt) {
+	public int add(AbstractCobolField field, int opt) throws CobolStopRunException {
 		CobolDecimal d1 = this.getDecimal();
 		CobolDecimal d2 = field.getDecimal();
 		d1.add(d2);
@@ -231,7 +232,7 @@ public abstract class AbstractCobolField {
 	 * @param opt 減算に関するオプション.詳しくはopensourceCOBOLを参照
 	 * @return 減算後のthisの保持する数値データ
 	 */
-	public int sub(AbstractCobolField field, int opt) {
+	public int sub(AbstractCobolField field, int opt) throws CobolStopRunException {
 		CobolDecimal d1 = this.getDecimal();
 		CobolDecimal d2 = field.getDecimal();
 		d1.sub(d2);
@@ -244,7 +245,7 @@ public abstract class AbstractCobolField {
 	 * @param n thisの保持する数値データから加算する数値
 	 * @return 基本的に0が返される.詳しくはopensource COBOLを参照
 	 */
-	public int addInt(int n) {
+	public int addInt(int n) throws CobolStopRunException {
 		if(n == 0) {
 			return 0;
 		}
@@ -272,14 +273,14 @@ public abstract class AbstractCobolField {
 	 * @param n thisの保持する数値データから減算する数値
 	 * @return 基本的に0が返される.詳しくはopensource COBOLを参照
 	 */
-	public int subInt(int n) {
+	public int subInt(int n) throws CobolStopRunException {
 		return n == 0 ? 0 : this.addInt(-n);
 	}
 
 	/**
 	 * libcob/numeric.cのcob_div_quotientの実装
 	 */
-	public int divQuotient(AbstractCobolField divisor, AbstractCobolField quotient, int opt) {
+	public int divQuotient(AbstractCobolField divisor, AbstractCobolField quotient, int opt) throws CobolStopRunException {
 		AbstractCobolField dividend = this;
 		CobolDecimal d1 = dividend.getDecimal();
 		CobolDecimal d2 = divisor.getDecimal();
@@ -308,7 +309,7 @@ public abstract class AbstractCobolField {
 	 * @param opt
 	 * @return
 	 */
-	public int divRemainder(int opt) {
+	public int divRemainder(int opt) throws CobolStopRunException {
 		return CobolDecimal.cobD3.getField(this, opt);
 	}
 
@@ -323,6 +324,15 @@ public abstract class AbstractCobolField {
 		d2.setScale(0);
 		return d1.compareTo(d2);
 	}
+	
+	/**
+	 * libcob/numeric.cのcob_cmp_intの実装
+	 * @param n
+	 * @return
+	 */
+	public int cmpInt(long n) {
+		return this.cmpInt((int)n);
+	}
 
 	/**
 	 * libcob/numeric.cのcob_cmp_uintの実装
@@ -331,6 +341,15 @@ public abstract class AbstractCobolField {
 	 */
 	public int cmpUint(int n) {
 		return this.cmpInt(n);
+	}
+	
+	/**
+	 * libcob/numeric.cのcob_cmp_uintの実装
+	 * @param n
+	 * @return
+	 */
+	public int cmpUint(long n) {
+		return this.cmpUint((int)n);
 	}
 
 	/**

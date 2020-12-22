@@ -598,7 +598,7 @@ joutput_data (cb_tree x)
 		break;
 	case CB_TAG_CONST:
 		if (x == cb_null) {
-			joutput ("NULL");
+			joutput ("null");
 			return;
 		}
 		/* Fall through */
@@ -641,6 +641,7 @@ again:
 			if (p && (r->type == CB_SENDING_OPERAND
 			    || !cb_field_subordinate (cb_field (p->occurs_depending), q))) {
 				if (p->offset - q->offset > 0) {
+                    joutput("/*2222*/");
 					joutput ("%d + ", p->offset - q->offset);
 				}
 				if (p->size != 1) {
@@ -865,13 +866,14 @@ lookup_literal (cb_tree x)
 /*
  * Integer
  */
-
+static int joutput_integer_reference_flag = 0;
 static void
 joutput_integer (cb_tree x)
 {
 	struct cb_binary_op	*p;
 	struct cb_cast		*cp;
 	struct cb_field		*f;
+    int temp_reference_flag;
 
 	switch (CB_TREE_TAG (x)) {
 	case CB_TAG_CONST:
@@ -902,12 +904,19 @@ joutput_integer (cb_tree x)
 			if (need_double) {
 				joutput ("(double)");
 			}
+            temp_reference_flag = joutput_integer_reference_flag;
+            joutput_integer_reference_flag = 1;
 			joutput_integer (p->x);
+            joutput_integer_reference_flag = temp_reference_flag;
+
 			joutput (" %c ", p->op);
 			if (need_double) {
 				joutput ("(double)");
 			}
+            temp_reference_flag = joutput_integer_reference_flag;
+            joutput_integer_reference_flag = 1;
 			joutput_integer (p->y);
+            joutput_integer_reference_flag = temp_reference_flag;
 			joutput (")");
 		}
 		break;
@@ -987,6 +996,9 @@ joutput_integer (cb_tree x)
 		case CB_USAGE_COMP_X:
 			if (f->size == 1) {
 				joutput_data (x);
+                if(joutput_integer_reference_flag) {
+                    joutput(".intValue()");
+                }
 				return;
 			}
 #ifdef	COB_NON_ALIGNED
@@ -1103,7 +1115,12 @@ joutput_index (cb_tree x)
 		joutput ("(");
 
 		++index_read_flag;
+
+        int tmp_flag = joutput_integer_reference_flag;
+        joutput_integer_reference_flag = 1;
 		joutput_integer (x);
+        joutput_integer_reference_flag = tmp_flag;
+
 		--index_read_flag;
 
 		joutput (" - 1)");
@@ -1167,12 +1184,12 @@ joutput_param (cb_tree x, int id)
 #endif
 		case CB_ALPHABET_NATIVE:
 			gen_native = 1;
-			joutput ("NULL");
+			joutput ("null");
 			break;
 		case CB_ALPHABET_EBCDIC:
 #ifdef	COB_EBCDIC_MACHINE
 			gen_native = 1;
-			joutput ("NULL");
+			joutput ("null");
 #else
 			gen_ebcdic = 1;
 			joutput ("new CobolDataStorage(cob_a2e)");
@@ -1228,7 +1245,7 @@ joutput_param (cb_tree x, int id)
 			//++inside_check;
 			//joutput (" (\n");
 #endif
-			joutput("(new __B(){ public AbstractCobolField run() throws CobolStopRunException { ");
+			joutput("(new GetAbstractCobolField(){ public AbstractCobolField run() throws CobolStopRunException { ");
 			for (l = r->check; l; l = CB_CHAIN (l)) {
 				sav_stack_id = stack_id;
 				joutput_stmt (CB_VALUE (l));
@@ -1341,17 +1358,17 @@ joutput_param (cb_tree x, int id)
 			}
 			if (f->flag_local) {
 				//TODO any_length関連の影響調査
-				// if (f->flag_any_length && f->flag_anylen_done) {
-				// 	joutput ("%s%d", CB_PREFIX_FIELD, f->id);
-				// } else {
-				// 	joutput ("(%s%d.data = ", CB_PREFIX_FIELD, f->id);
-				// 	joutput_data (x);
-				// 	joutput (", %s%d)", CB_PREFIX_FIELD, f->id);
-				// 	if (f->flag_any_length) {
-				// 		f->flag_anylen_done = 1;
-				// 	}
-				// }
-				joutput ("%s%d", CB_PREFIX_FIELD, f->id);
+				 if (f->flag_any_length && f->flag_anylen_done) {
+				 	joutput ("%s%d", CB_PREFIX_FIELD, f->id);
+				 } else {
+				 	joutput ("new GetAbstractCobolField() { ");
+                    joutput ("public AbstractCobolField run() { %s%d.setDataStorage(", CB_PREFIX_FIELD, f->id);
+				 	joutput_data (x);
+				 	joutput ("); return %s%d; }}.run()", CB_PREFIX_FIELD, f->id);
+				 	if (f->flag_any_length) {
+				 		f->flag_anylen_done = 1;
+				 	}
+				 }
 			} else {
 				if (screenptr && f->storage == CB_STORAGE_SCREEN) {
 					joutput ("s_%d", f->id);
@@ -1606,26 +1623,26 @@ joutput_cond (cb_tree x, int save_flag)
 		case '>':
 		case ']':
 		case '~':
-			joutput ("((int)");
+			joutput ("((long)");
 			joutput_cond (p->x, save_flag);
 			switch (p->op) {
 			case '=':
-				joutput (" == 0");
+				joutput (" == 0L");
 				break;
 			case '<':
-				joutput (" <  0");
+				joutput (" <  0L");
 				break;
 			case '[':
-				joutput (" <= 0");
+				joutput (" <= 0L");
 				break;
 			case '>':
-				joutput (" >  0");
+				joutput (" >  0L");
 				break;
 			case ']':
-				joutput (" >= 0");
+				joutput (" >= 0L");
 				break;
 			case '~':
-				joutput (" != 0");
+				joutput (" != 0L");
 				break;
 			}
 			joutput (")");
@@ -1656,7 +1673,7 @@ joutput_cond (cb_tree x, int save_flag)
 //		++inside_check;
 //		joutput ("(\n");
 //#endif
-		joutput_indent("(new __C() {");
+		joutput_indent("(new GetInt() {");
 		joutput_indent_level += 2;
 		joutput_indent("public int run(){");
 		joutput_indent_level += 2;
@@ -2517,109 +2534,110 @@ joutput_call (struct cb_call *p)
 	}
 
 	/* Setup arguments */
-	// TODO BY VALUE and BY CONTENT
-	// for (l = p->args, n = 1; l; l = CB_CHAIN (l), n++) {
-	// 	x = CB_VALUE (l);
-	// 	switch (CB_PURPOSE_INT (l)) {
-	// 	case CB_CALL_BY_REFERENCE:
-	// 		if (CB_NUMERIC_LITERAL_P (x) || CB_BINARY_OP_P (x)) {
-	// 			output_line ("union {");
-	// 			output_line ("\tunsigned char data[8];");
-	// 			output_line ("\tlong long     datall;");
-	// 			output_line ("\tint           dataint;");
-	// 			output_line ("} content_%d;", (int)n);
-	// 		} else if (CB_CAST_P (x)) {
-	// 			output_line ("void *ptr_%d;", (int)n);
-	// 		}
-	// 		break;
-	// 	case CB_CALL_BY_CONTENT:
-	// 		if (CB_CAST_P (x)) {
-	// 			output_line ("void *ptr_%d;", (int)n);
-	// 		} else if (CB_TREE_TAG (x) != CB_TAG_INTRINSIC &&
-	// 		    x != cb_null && !(CB_CAST_P (x))) {
-	// 			output_line ("union {");
-	// 			output ("\tunsigned char data[");
-	// 			if (CB_NUMERIC_LITERAL_P (x) ||
-	// 			    CB_BINARY_OP_P (x) || CB_CAST_P(x)) {
-	// 				output ("8");
-	// 			} else {
-	// 				if (CB_REF_OR_FIELD_P (x)) {
-	// 					output ("%d", (int)cb_field (x)->size);
-	// 				} else {
-	// 					output_size (x);
-	// 				}
-	// 			}
-	// 			output ("];\n");
-	// 			output_line ("\tlong long     datall;");
-	// 			output_line ("\tint           dataint;");
-	// 			output_line ("} content_%d;", (int)n);
-	// 		}
-	// 		break;
-	// 	}
-	// }
-	// output ("\n");
-	// for (l = p->args, n = 1; l; l = CB_CHAIN (l), n++) {
-	// 	x = CB_VALUE (l);
-	// 	switch (CB_PURPOSE_INT (l)) {
-	// 	case CB_CALL_BY_REFERENCE:
-	// 		if (CB_NUMERIC_LITERAL_P (x)) {
-	// 			output_prefix ();
-	// 			if (cb_fits_int (x)) {
-	// 				output ("content_%d.dataint = ", (int)n);
-	// 				output ("%d", cb_get_int (x));
-	// 			} else {
-	// 				output ("content_%d.datall = ", (int)n);
-	// 				output ("%lldLL", cb_get_long_long (x));
-	// 			}
-	// 			output (";\n");
-	// 		} else if (CB_BINARY_OP_P (x)) {
-	// 			output_prefix ();
-	// 			output ("content_%d.dataint = ", (int)n);
-	// 			output_integer (x);
-	// 			output (";\n");
-	// 		} else if (CB_CAST_P (x)) {
-	// 			output_prefix ();
-	// 			output ("ptr_%d = ", (int)n);
-	// 			output_integer (x);
-	// 			output (";\n");
-	// 		}
-	// 		break;
-	// 	case CB_CALL_BY_CONTENT:
-	// 		if (CB_CAST_P (x)) {
-	// 			output_prefix ();
-	// 			output ("ptr_%d = ", (int)n);
-	// 			output_integer (x);
-	// 			output (";\n");
-	// 		} else if (CB_TREE_TAG (x) != CB_TAG_INTRINSIC) {
-	// 			if (CB_NUMERIC_LITERAL_P (x)) {
-	// 				output_prefix ();
-	// 				if (cb_fits_int (x)) {
-	// 					output ("content_%d.dataint = ", (int)n);
-	// 					output ("%d", cb_get_int (x));
-	// 				} else {
-	// 					output ("content_%d.datall = ", (int)n);
-	// 					output ("%lldLL", cb_get_long_long (x));
-	// 				}
-	// 				output (";\n");
-	// 			} else if (CB_REF_OR_FIELD_P (x) &&
-	// 				   CB_TREE_CATEGORY (x) == CB_CATEGORY_NUMERIC &&
-	// 				   cb_field (x)->usage == CB_USAGE_LENGTH) {
-	// 				output_prefix ();
-	// 				output ("content_%d.dataint = ", (int)n);
-	// 				output_integer (x);
-	// 				output (";\n");
-	// 			} else if (x != cb_null && !(CB_CAST_P (x))) {
-	// 				output_prefix ();
-	// 				output ("memcpy (content_%d.data, ", (int)n);
-	// 				output_data (x);
-	// 				output (", ");
-	// 				output_size (x);
-	// 				output (");\n");
-	// 			}
-	// 		}
-	// 		break;
-	// 	}
-	// }
+	//TODO BY VALUE and BY CONTENT
+	for (l = p->args, n = 1; l; l = CB_CHAIN (l), n++) {
+		x = CB_VALUE (l);
+		switch (CB_PURPOSE_INT (l)) {
+		case CB_CALL_BY_REFERENCE:
+			if (CB_NUMERIC_LITERAL_P (x) || CB_BINARY_OP_P (x)) {
+				joutput_line ("CobolCallDataContent content_%d = new CobolCallDataContent(8);", (int)n);
+				//joutput_line ("\tpublic CobolDataStorage data = new CobolDataStorage(8);");
+				//joutput_line ("\tpublic long     datall;");
+				//joutput_line ("\tpublic int      dataint;");
+				//joutput_line ("};");
+			} else if (CB_CAST_P (x)) {
+				joutput_line ("void *ptr_%d;", (int)n);
+			}
+			break;
+		case CB_CALL_BY_CONTENT:
+			if (CB_CAST_P (x)) {
+				joutput_line ("void *ptr_%d;", (int)n);
+			} else if (CB_TREE_TAG (x) != CB_TAG_INTRINSIC &&
+			    x != cb_null && !(CB_CAST_P (x))) {
+                joutput_prefix();
+				joutput ("CobolCallDataContent content_%d = new CobolCallDataContent (", (int)n);
+				//joutput ("\tpublic CobolDataStorage data = new CobolDataStorage(");
+				if (CB_NUMERIC_LITERAL_P (x) ||
+				    CB_BINARY_OP_P (x) || CB_CAST_P(x)) {
+					joutput ("8");
+				} else {
+					if (CB_REF_OR_FIELD_P (x)) {
+						joutput ("%d", (int)cb_field (x)->size);
+					} else {
+						joutput_size (x);
+					}
+				}
+				joutput_line (");");
+				//joutput_line ("\tlong     datall;");
+				//joutput_line ("\tint      dataint;");
+				//joutput_line ("};");
+			}
+			break;
+		}
+	}
+	joutput ("\n");
+	for (l = p->args, n = 1; l; l = CB_CHAIN (l), n++) {
+		x = CB_VALUE (l);
+		switch (CB_PURPOSE_INT (l)) {
+		case CB_CALL_BY_REFERENCE:
+			if (CB_NUMERIC_LITERAL_P (x)) {
+				joutput_prefix ();
+				if (cb_fits_int (x)) {
+					joutput ("content_%d.dataint = ", (int)n);
+					joutput ("%d", cb_get_int (x));
+				} else {
+					joutput ("content_%d.datall = ", (int)n);
+					joutput ("%lldLL", cb_get_long_long (x));
+				}
+				joutput (";\n");
+			} else if (CB_BINARY_OP_P (x)) {
+				joutput_prefix ();
+				joutput ("content_%d.dataint = ", (int)n);
+				joutput_integer (x);
+				joutput (";\n");
+			} else if (CB_CAST_P (x)) {
+				joutput_prefix ();
+				joutput ("ptr_%d = ", (int)n);
+				joutput_integer (x);
+				joutput (";\n");
+			}
+			break;
+		case CB_CALL_BY_CONTENT:
+			if (CB_CAST_P (x)) {
+				joutput_prefix ();
+				joutput ("ptr_%d = ", (int)n);
+				joutput_integer (x);
+				joutput (";\n");
+			} else if (CB_TREE_TAG (x) != CB_TAG_INTRINSIC) {
+				if (CB_NUMERIC_LITERAL_P (x)) {
+					joutput_prefix ();
+					if (cb_fits_int (x)) {
+						joutput ("content_%d.dataint = ", (int)n);
+						joutput ("%d", cb_get_int (x));
+					} else {
+						joutput ("content_%d.datall = ", (int)n);
+						joutput ("%lldLL", cb_get_long_long (x));
+					}
+					joutput (";\n");
+				} else if (CB_REF_OR_FIELD_P (x) &&
+					   CB_TREE_CATEGORY (x) == CB_CATEGORY_NUMERIC &&
+					   cb_field (x)->usage == CB_USAGE_LENGTH) {
+					joutput_prefix ();
+					joutput ("content_%d.dataint = ", (int)n);
+					joutput_integer (x);
+					joutput (";\n");
+				} else if (x != cb_null && !(CB_CAST_P (x))) {
+					joutput_prefix ();
+					joutput ("content_%d.data.memcpy(", (int)n);
+					joutput_data (x);
+					joutput (", ");
+					joutput_size (x);
+					joutput (");\n");
+				}
+			}
+			break;
+		}
+	}
 
 	/* Function name */
 	joutput_prefix ();
@@ -2753,28 +2771,148 @@ joutput_call (struct cb_call *p)
 	joutput (" (");
 	for (l = p->args, n = 1; l; l = CB_CHAIN (l), n++) {
 		x = CB_VALUE (l);
-		// switch (CB_PURPOSE_INT (l)) {
-		// case CB_CALL_BY_REFERENCE:
-		// 	//TODO
-		// 	break;
-		// case CB_CALL_BY_CONTENT:
-		// 	//TODO
-		// 	break;
-		// case CB_CALL_BY_VALUE:
-		// 	//TODO
-		// 	break;
-		// }
-		if (CB_TREE_TAG (x) == CB_TAG_LITERAL) {
-			//joutput ("CobolFieldFactory.makeCobolField(");
-			if (CB_TREE_CLASS (x) == CB_CLASS_NUMERIC) {
-				joutput ("%d", cb_get_int (x));
+		switch (CB_PURPOSE_INT (l)) {
+		case CB_CALL_BY_REFERENCE:
+			if (CB_NUMERIC_LITERAL_P (x) || CB_BINARY_OP_P (x)) {
+				joutput ("content_%d.data", (int)n);
+			} else if (CB_REFERENCE_P (x) && CB_FILE_P (cb_ref (x))) {
+				joutput_param (cb_ref (x), -1);
+			} else if (CB_CAST_P (x)) {
+				joutput ("&ptr_%d", (int)n);
 			} else {
 				joutput_data (x);
 			}
-			//joutput (")");
-		} else {
-			f = cb_field (x);
-			joutput_param(x, -1);
+			break;
+		case CB_CALL_BY_CONTENT:
+			if (CB_TREE_TAG (x) != CB_TAG_INTRINSIC && x != cb_null) {
+				if (CB_CAST_P (x)) {
+					joutput ("&ptr_%d", (int)n);
+				} else {
+					joutput ("content_%d.data", (int)n);
+				}
+			} else {
+				joutput_data (x);
+			}
+			break;
+		case CB_CALL_BY_VALUE:
+			if (CB_TREE_TAG (x) != CB_TAG_INTRINSIC) {
+				switch (CB_TREE_TAG (x)) {
+				case CB_TAG_CAST:
+					joutput_integer (x);
+					break;
+				case CB_TAG_LITERAL:
+					if (CB_TREE_CLASS (x) == CB_CLASS_NUMERIC) {
+						joutput ("%d", cb_get_int (x));
+					} else {
+						joutput ("%d", CB_LITERAL (x)->data[0]);
+					}
+					break;
+				default:
+/* RXWRXW
+					if (CB_TREE_CLASS (x) == CB_CLASS_NUMERIC) {
+						joutput_integer (x);
+					} else {
+						joutput ("*(");
+						joutput_data (x);
+						joutput (")");
+					}
+*/
+					f = cb_field (x);
+					switch (f->usage) {
+					case CB_USAGE_BINARY:
+					case CB_USAGE_COMP_5:
+					case CB_USAGE_COMP_X:
+					/* RXWRXW */
+					case CB_USAGE_PACKED:
+					case CB_USAGE_DISPLAY:
+						sizes = CB_SIZES_INT (l);
+						if (sizes == CB_SIZE_AUTO) {
+							if (f->pic->have_sign) {
+								joutput ("(unsigned ");
+							} else {
+								joutput ("(");
+							}
+							if (f->usage == CB_USAGE_PACKED ||
+							    f->usage == CB_USAGE_DISPLAY) {
+								sizes = f->pic->digits - f->pic->scale;
+							} else {
+								sizes = f->size;
+							}
+							switch (sizes) {
+							case 0:
+								sizes = CB_SIZE_4;
+								break;
+							case 1:
+								sizes = CB_SIZE_1;
+								break;
+							case 2:
+								sizes = CB_SIZE_2;
+								break;
+							case 3:
+								sizes = CB_SIZE_4;
+								break;
+							case 4:
+								sizes = CB_SIZE_4;
+								break;
+							case 5:
+								sizes = CB_SIZE_8;
+								break;
+							case 6:
+								sizes = CB_SIZE_8;
+								break;
+							case 7:
+								sizes = CB_SIZE_8;
+								break;
+							default:
+								sizes = CB_SIZE_8;
+								break;
+							}
+						} else {
+							if (CB_SIZES_INT_UNSIGNED(l)) {
+								joutput ("(unsigned ");
+							} else {
+								joutput ("(");
+							}
+						}
+						switch (sizes) {
+						case CB_SIZE_1:
+							joutput ("char");
+							break;
+						case CB_SIZE_2:
+							joutput ("short");
+							break;
+						case CB_SIZE_4:
+							joutput ("int");
+							break;
+						case CB_SIZE_8:
+							joutput ("long long");
+							break;
+						default:
+							joutput ("int");
+							break;
+						}
+						joutput (")(");
+						joutput_integer (x);
+						joutput (")");
+						break;
+					case CB_USAGE_INDEX:
+					case CB_USAGE_LENGTH:
+					case CB_USAGE_POINTER:
+					case CB_USAGE_PROGRAM_POINTER:
+						joutput_integer (x);
+						break;
+					default:
+						joutput ("*(");
+						joutput_data (x);
+						joutput (")");
+						break;
+					}
+					break;
+				}
+			} else {
+				joutput_data (x);
+			}
+			break;
 		}
 		if (CB_CHAIN (l)) {
 			joutput (", ");
@@ -2846,7 +2984,7 @@ joutput_goto (struct cb_goto *p)
 
 	if (p->depending) {
 		joutput_prefix ();
-		joutput ("switch (");
+		joutput ("switch ((int)");
 		joutput_param (cb_build_cast_integer (p->depending), 0);
 		joutput (")\n");
 		joutput_indent ("  {");
@@ -2861,16 +2999,23 @@ joutput_goto (struct cb_goto *p)
 		needs_exit_prog = 1;
 		if (cb_flag_implicit_init) {
 			//joutput_line ("goto exit_program;");
-            joutput_line ("CobolGoBackException.throwException(0);");
+            //joutput_line ("CobolGoBackException.throwException(0);");
+            joutput_line("entryFunc(-10);");
+            joutput_line("if(true) return false;");
 		} else {
-			joutput_line ("if (module.next != null)");
+			joutput_line ("if (!CobolModule.isQueueEmpty()) {");
+            joutput_line ("  entryFunc(-10);");
+            joutput_line ("  if(true) return false;");
+            joutput_line ("}");
 			//joutput_line ("  goto exit_program;");
-            joutput_line ("  CobolGoBackException.throwException(0);");
+            //joutput_line ("  CobolGoBackException.throwException(0);");
 		}
 	} else if (p->target == cb_int1) {
 		needs_exit_prog = 1;
 		//joutput_line ("goto exit_program;");
-        joutput_line ("CobolGoBackException.throwException(0);");
+        //joutput_line ("CobolGoBackException.throwException(0);");
+        joutput_line("entryFunc(-10);");
+        joutput_line("if(true) return false;");
 	} else {
 		joutput_goto_1 (p->target);
 	}
@@ -3363,17 +3508,17 @@ joutput_stmt (cb_tree x)
 				if (excp_current_section) {
 					joutput ("\"%s\", ", excp_current_section);
 				} else {
-					joutput ("NULL, ");
+					joutput ("null, ");
 				}
 				if (excp_current_paragraph) {
 					joutput ("\"%s\", ", excp_current_paragraph);
 				} else {
-					joutput ("NULL, ");
+					joutput ("null, ");
 				}
 				if (p->name) {
 					joutput ("\"%s\");\n", p->name);
 				} else {
-					joutput ("NULL);\n");
+					joutput ("null);\n");
 				}
 			}
 			last_line = x->source_line;
@@ -3553,6 +3698,7 @@ joutput_stmt (cb_tree x)
 			joutput_prefix ();
 			joutput_integer (ap->var);
 			joutput (".set(");
+            joutput ("/*xxxxxx*/");
 			++index_read_flag;
 			joutput_integer (ap->val);
 			--index_read_flag;
@@ -3572,6 +3718,7 @@ joutput_stmt (cb_tree x)
 
 		joutput_integer (ap->var);
 		joutput (".set(");
+        joutput ("/*yyyyyy*/");
 		++index_read_flag;
 		joutput_integer (ap->val);
 		--index_read_flag;
@@ -4009,34 +4156,35 @@ joutput_internal_function (struct cb_program *prog, cb_tree parameter_list)
 	//output_indent ("{");
 
 	joutput_prefix();
-	joutput ("int %s_ (int entry", prog->program_id);
-	// if (!prog->flag_chained) {
-	// 	for (l = parameter_list; l; l = CB_CHAIN (l)) {
-	// 		joutput (", AbstractCobolField *%s%d",
-	// 			CB_PREFIX_FIELD, cb_field (CB_VALUE (l))->id);
-	// 		parmnum++;
-	// 	}
-	// }
-	joutput (", AbstractCobolField... fields )\n");
-	joutput_line ("{");
+	joutput_line ("int %s_ (int entry, CobolDataStorage ...argStorages) {", prog->program_id);
+	//joutput (", CobolDataStorage... fields )\n");
 	joutput_indent_level += 2;
+
+	if (!prog->flag_chained) {
+        int k;
+		for (k =0, l = parameter_list; l; l = CB_CHAIN (l), ++k) {
+            joutput_line("this.%s%d = %d < argStorages.length ? argStorages[%d] : null;",
+                CB_PREFIX_BASE, cb_field (CB_VALUE (l))->id, k, k);
+			parmnum++;
+		}
+	}
 
 	joutput_line("this.initialized = false;");
 	joutput("\n");
 
-	if (!prog->flag_chained) {
-		for (l = parameter_list; l; l = CB_CHAIN (l)) {
-			joutput_line ("if (fields.length > %d) {", parmnum);
-			joutput_line ("  %s%d = fields[%d];",
-				CB_PREFIX_FIELD, cb_field (CB_VALUE (l))->id, parmnum);
-			joutput_line ("} else {");
-			joutput_line ("  %s%d = null;",
-				CB_PREFIX_FIELD, cb_field (CB_VALUE (l))->id);
-			joutput_line ("}");
-			parmnum++;
-		}
-	}
-	joutput("\n");
+	//if (!prog->flag_chained) {
+	//	for (l = parameter_list; l; l = CB_CHAIN (l)) {
+	//		joutput_line ("if (fields.length > %d) {", parmnum);
+	//		joutput_line ("  %s%d = fields[%d];",
+	//			CB_PREFIX_FIELD, cb_field (CB_VALUE (l))->id, parmnum);
+	//		joutput_line ("} else {");
+	//		joutput_line ("  %s%d = null;",
+	//			CB_PREFIX_FIELD, cb_field (CB_VALUE (l))->id);
+	//		joutput_line ("}");
+	//		parmnum++;
+	//	}
+	//}
+	//joutput("\n");
 
 	/* Local variables */
 	//output_line ("/* Local variables */");
@@ -4926,7 +5074,11 @@ void joutput_init_method(struct cb_program *prog) {
 			if (!k->f->flag_local && !k->f->flag_item_external) {
 				joutput_field (k->x);
 			} else {
-				joutput ("null");
+                joutput ("CobolFieldFactory.makeCobolField(");
+                joutput_size (k->x);
+                joutput (", (CobolDataStorage)null, ");
+                joutput_attr (k->x);
+                joutput (")");
 			}
 			joutput (";\t/* %s */\n", k->f->name);
 		}
@@ -4997,8 +5149,9 @@ void joutput_init_method(struct cb_program *prog) {
 /**
  * メンバ変数の宣言部分を出力
  */
-void joutput_declare_member_variables(struct cb_program *prog) {
+void joutput_declare_member_variables(struct cb_program *prog, cb_tree parameter_list) {
 	int			i;
+	cb_tree			l;
 	struct literal_list	*m;
 	struct field_list	*k;
 	unsigned char		*s;
@@ -5014,6 +5167,40 @@ void joutput_declare_member_variables(struct cb_program *prog) {
 		}
 		joutput ("\n");
 	}
+
+	/* Program local stuff */
+
+	/* CALL cache */
+	//if (call_cache) {
+	//	output_local ("\n/* Call pointers */\n");
+	//	for (clp = call_cache; clp; clp = clp->next) {
+	//		output_local ("static union cob_call_union\tcall_%s = { NULL };\n", clp->callname);
+	//	}
+	//	output_local ("\n");
+	//}
+
+	/* Local indexes */
+	for (i = 0; i < COB_MAX_SUBSCRIPTS; i++) {
+		if (i_counters[i]) {
+			output_local ("private int\t\ti%d;\n", i);
+		}
+	}
+
+	/* Local implicit fields */
+	if (num_cob_fields) {
+		output_local ("\n/* Local AbstractCobolField items */\n");
+		for (i = 0; i < num_cob_fields; i++) {
+			output_local ("AbstractCobolField\tf%d;\n", i);
+		}
+		output_local ("\n");
+	}
+
+	/* Skip to next nested program */
+
+	//if (prog->next_program) {
+	//	codegen (prog->next_program, 1);
+	//	return;
+	//}
 
 	/* CobolDataStorge型変数の宣言 */
 	if (base_cache) {
@@ -5039,6 +5226,12 @@ void joutput_declare_member_variables(struct cb_program *prog) {
 		}
 		joutput("\n");
 		joutput_line ("/* End of data storage */\n\n");
+	}
+
+    joutput_line("/* Call parameters */");
+	for (l = parameter_list; l; l = CB_CHAIN (l)) {
+        joutput_line("private CobolDataStorage %s%d;",
+            CB_PREFIX_BASE, cb_field (CB_VALUE (l))->id);
 	}
 
 
@@ -5124,6 +5317,7 @@ joutput_entry_function()
 		}
 		joutput_line("if(!continueFlag) break;", buf.label);
 	}
+    joutput_line("case -10: break;");
 	joutput_indent_level -= 4;
 	joutput_line("  }");
 	joutput_line("}");
@@ -5242,13 +5436,7 @@ codegen (struct cb_program *prog, const int nested)
 	joutput("\n");
 
 	joutput_line("public class %s implements CobolRunnable {", prog->program_id);
-	joutput_indent_level += 2;
-	joutput_line("interface __B {");
-	joutput_line("  public AbstractCobolField run() throws CobolStopRunException;");
-	joutput_line("}");
-	joutput_line("interface __C {");
-	joutput_line("  public int run();");
-	joutput_line("}");
+    joutput_indent_level += 2;
 	joutput("\n");
 
 	joutput_line("private boolean initialized;");
@@ -5261,14 +5449,15 @@ codegen (struct cb_program *prog, const int nested)
 	joutput_line("private CobolCallParams cobolSaveCallParams = null;");
 	joutput_line("private CobolCallParams cobolCallParams = null;");
 	joutput_line("private boolean cobolErrorOnExitFlag;");
+	joutput_line("private int i0;");
 	joutput("\n");
 
 	//output_storage ("union cob_call_union\tcob_unifunc;\n\n");
 	joutput_line("private CobolRunnable cob_unifunc;\n\n");
 
 	joutput_line("@Override");
-	joutput_line("public int run(AbstractCobolField... fields) {");
-	joutput_line("  return %s_(0, fields);", prog->program_id);
+	joutput_line("public int run(CobolDataStorage... argStorages) {");
+	joutput_line("  return %s_(0, argStorages);", prog->program_id);
 	joutput_line("}\n");
 
 	joutput_line("@Override");
@@ -5299,7 +5488,7 @@ codegen (struct cb_program *prog, const int nested)
 		//output ("/* Functions */\n\n");
 	}
 	for (l = prog->entry_list; l; l = CB_CHAIN (l)) {
-		//output_entry_function (prog, l, prog->parameter_list, 1);
+		//joutput_entry_function (prog, l, prog->parameter_list, 1);
 	}
 
 	//output_internal_function (prog, prog->parameter_list);
@@ -5353,7 +5542,7 @@ codegen (struct cb_program *prog, const int nested)
 	joutput_newline();
 
 	//メンバ変数の出力
-	joutput_declare_member_variables(prog);
+	joutput_declare_member_variables(prog, prog->parameter_list);
 	joutput("\n");
 
 	/* Files */
@@ -5422,6 +5611,9 @@ codegen (struct cb_program *prog, const int nested)
 	/* Skip to next nested program */
 
 	if (prog->next_program) {
+	    joutput_indent_level -= 2;
+	    joutput_line("}");
+	    fclose(joutput_target);
 		codegen (prog->next_program, 1);
 		return;
 	}

@@ -749,7 +749,6 @@ public class CobolNumericField extends AbstractCobolField {
 			for(int k=0; k<size; ++k) {
 				numBuffPtr[k] = (char)data.getByte(firstDataIndex + k);
 			}
-			numBuffPtr[size] = 0;
 			value = new BigDecimal(numBuffPtr);
 		}
 
@@ -757,6 +756,7 @@ public class CobolNumericField extends AbstractCobolField {
 			value = value.negate();
 		}
 		value.setScale(this.getAttribute().getScale());
+		this.putSign(sign);
 
 		return new CobolDecimal(value);
 	}

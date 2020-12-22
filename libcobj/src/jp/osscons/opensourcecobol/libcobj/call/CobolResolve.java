@@ -35,6 +35,7 @@ import jp.osscons.opensourcecobol.libcobj.data.AbstractCobolField;
 import jp.osscons.opensourcecobol.libcobj.data.CobolDataStorage;
 import jp.osscons.opensourcecobol.libcobj.exceptions.CobolCallException;
 import jp.osscons.opensourcecobol.libcobj.exceptions.CobolRuntimeException;
+import jp.osscons.opensourcecobol.libcobj.exceptions.CobolStopRunException;
 
 /**
  * ポインタ(UUID)やプログラム名とプログラムの実行を担うCobolRunnableのインスタンスを紐づけるクラス
@@ -371,7 +372,7 @@ public class CobolResolve {
 	//TODO 設置場所
 	/**
 	 * UUIDをバイト配列に変換する
-	 * @param uuid 変換前のUUID
+	 * @param uuid 変前のUUID
 	 * @return uuidから変換したバイト配列
 	 */
 	public static byte[] uuidToByteBuffer(UUID uuid) {
@@ -397,5 +398,22 @@ public class CobolResolve {
 		long l2 = ByteBuffer.wrap(bytes, Long.BYTES, Long.BYTES).getLong();
 
 		return new UUID(l1,l2);
+	}
+
+	
+	public static void fieldCancel(AbstractCobolField f) throws CobolStopRunException {
+		CobolResolve.cobCancel(f.fieldToString());
+	}
+	
+	public static void cobCancel(String name) throws CobolStopRunException {
+		if(name == null || name == "") {
+			//TODO cob_runtime_errorの実装
+			CobolStopRunException.stopRunAndThrow(1);
+		}
+		
+		CobolRunnable runner = callTable.get(name);
+		if (runner != null) {
+			runner.cancel();
+		}
 	}
 }

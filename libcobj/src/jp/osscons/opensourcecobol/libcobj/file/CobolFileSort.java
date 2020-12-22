@@ -35,6 +35,7 @@ import jp.osscons.opensourcecobol.libcobj.data.AbstractCobolField;
 import jp.osscons.opensourcecobol.libcobj.data.CobolDataStorage;
 import jp.osscons.opensourcecobol.libcobj.data.CobolFieldFactory;
 import jp.osscons.opensourcecobol.libcobj.exceptions.CobolRuntimeException;
+import jp.osscons.opensourcecobol.libcobj.exceptions.CobolStopRunException;
 
 public class CobolFileSort {
 	protected final static int COBSORTEND = 1;
@@ -734,8 +735,9 @@ public class CobolFileSort {
 	 * 
 	 * @param varcnt
 	 * @param fbase
+	 * @throws CobolStopRunException 
 	 */
-	public static void sortGiving(CobolFile sort_file, int varcnt, CobolFile... fbase) {
+	public static void sortGiving(CobolFile sort_file, int varcnt, CobolFile... fbase) throws CobolStopRunException {
 		if (SORT_STD_LIB) {
 			for (int i = 0; i < varcnt; i++) {
 				fbase[i].open(CobolFile.COB_OPEN_OUTPUT, 0, null);
