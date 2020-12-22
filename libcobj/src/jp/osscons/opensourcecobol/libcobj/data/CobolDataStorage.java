@@ -161,6 +161,15 @@ public class CobolDataStorage {
 	}
 	
 	/**
+	 * C言語のmemcpy
+	 * @param buf
+	 * @param size
+	 */
+	public void memcpy(String str, int size) {
+		this.memcpy(str.getBytes(), size);
+	}
+	
+	/**
 	 * C言語のmemcpy (offset指定あり)
 	 * @param offset
 	 * @param buf
@@ -185,6 +194,15 @@ public class CobolDataStorage {
 		for(int i=0; i<size; ++i) {
 			this.setByte(i, ch);
 		}
+	}
+	
+	/**
+	 *  C言語のmemset
+	 * @param ch
+	 * @param size
+	 */
+	public void memset(int ch, int size) {
+		this.memset((byte)ch, size);
 	}
 
 	/**
@@ -495,6 +513,39 @@ public class CobolDataStorage {
 	public CobolDataStorage getSubDataStorage(long index) {
 		return this.getDataStorage((int)index);
 	}
+	
+	
+	private long toLong(int numOfBytes, boolean isBigEndian) {
+		byte[] bytes = new byte[8];
+		
+		int start, d;
+		if(isBigEndian) {
+			start = 0; d = 1;
+		} else {
+			start = 7; d = -1;
+		}
+
+		long ret = 0;
+		for(int i = 0; i < numOfBytes; ++i) {
+			ret = (ret << 8) | this.getByte(start + i * d);
+		}
+		
+		return ret;
+	}
+	
+	private void fromLong(int numOfBytes, boolean isBigEndian, long n) {
+		
+	}
+	
+	
+	/**
+	 * COB_BSWAP_16マクロの実装
+	 * @param val
+	 * @return
+	 */
+	private static short BSWAP16(short val) {
+		return (short)((val << 8) | (0x0f & (val >> 8)));
+	}
 
 	/**
 	 * libcob/codegen.hのcob_setswp_u24_binaryの実装
@@ -588,15 +639,6 @@ public class CobolDataStorage {
 		n += val;
 		this.setByte(0, (byte)(n >> 8));
 		this.setByte(1, (byte)(n));
-	}
-
-	/**
-	 * COB_BSWAP_16マクロの実装
-	 * @param val
-	 * @return
-	 */
-	private static short BSWAP16(short val) {
-		return (short)((val << 8) | (0x0f & (val >> 8)));
 	}
 
 	/**

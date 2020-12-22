@@ -1228,7 +1228,7 @@ joutput_param (cb_tree x, int id)
 			//++inside_check;
 			//joutput (" (\n");
 #endif
-			joutput("(new __B(){ public AbstractCobolField run() { ");
+			joutput("(new __B(){ public AbstractCobolField run() throws CobolStopRunException { ");
 			for (l = r->check; l; l = CB_CHAIN (l)) {
 				sav_stack_id = stack_id;
 				joutput_stmt (CB_VALUE (l));
@@ -2126,11 +2126,15 @@ joutput_initialize_one (struct cb_initialize *p, cb_tree x)
 							}
 						}
 						if (n > 2) {
-							joutput_data(x);
-							joutput(".setString(");
+                            joutput_data (x);
+                            joutput (".memcpy(");
 							joutput_string ((ucharptr) buff,
 								       f->size - n);
-							joutput(");\n");
+                            joutput (", %d);\n", f->size - n);
+                            joutput_prefix ();
+                            joutput_data (x);
+                            joutput (".getSubDataStorage(%d)", f->size - n);
+                            joutput (".memset(%d, %d);", buffchar, n);
 							return;
 						}
 					}
@@ -2830,7 +2834,7 @@ joutput_call (struct cb_call *p)
 static void
 joutput_goto_1 (cb_tree x)
 {
-	joutput_line ("entryFunc(%d, -1);", CB_LABEL (cb_ref (x))->id);
+	joutput_line ("entryFunc(%d);", CB_LABEL (cb_ref (x))->id);
 	joutput_line("if(true) return false;");
 }
 
@@ -2859,7 +2863,7 @@ joutput_goto (struct cb_goto *p)
 			//joutput_line ("goto exit_program;");
             joutput_line ("CobolGoBackException.throwException(0);");
 		} else {
-			joutput_line ("if (module.next)");
+			joutput_line ("if (module.next != null)");
 			//joutput_line ("  goto exit_program;");
             joutput_line ("  CobolGoBackException.throwException(0);");
 		}
@@ -2883,19 +2887,19 @@ joutput_perform_call (struct cb_label *lb, struct cb_label *le)
 	struct label_list *l;
 #endif
 
-	//if (lb == le) {
-	//	joutput_line ("/* PERFORM %s */", lb->name);
-	//} else {
-	//	joutput_line ("/* PERFORM %s THRU %s */", lb->name, le->name);
-	//}
-	//joutput_line ("frame_ptr++;");
+	if (lb == le) {
+		joutput_line ("/* PERFORM %s */", lb->name);
+	} else {
+		joutput_line ("/* PERFORM %s THRU %s */", lb->name, le->name);
+	}
+	joutput_line ("this.frameIndex++;");
 
-	//joutput_line ("memset (frame_ptr, 0, sizeof (struct cob_frame));");
-	//if (cb_flag_stack_check) {
-	//	joutput_line ("if (unlikely(frame_ptr == frame_overflow))");
-	//	joutput_line ("    cob_fatal_error (COB_FERROR_STACK);");
-	//}
-	//joutput_line ("frame_ptr->perform_through = %d;", le->id);
+	if (cb_flag_stack_check) {
+		joutput_line ("if (unlikely(frame_ptr == frame_overflow))");
+		joutput_line ("    cob_fatal_error (COB_FERROR_STACK);");
+	}
+	joutput_line ("this.frameStack[this.frameIndex].setPerformThrough(%d);", le->id);
+	joutput_line("entryFunc(%d);", lb->id);
 #ifndef	__GNUC__
 	//l = cobc_malloc (sizeof (struct label_list));
 	//l->next = label_cache;
@@ -2918,10 +2922,9 @@ joutput_perform_call (struct cb_label *lb, struct cb_label *le)
 	//joutput_line ("goto %s%d;", CB_PREFIX_LABEL, lb->id);
 	//joutput_line ("%s%d:", CB_PREFIX_LABEL, cb_id);
 #endif
-	//cb_id++;
+	cb_id++;
 	//joutput_line ("frame_ptr--;");
-	joutput_line ("/* perform call */");
-	joutput_line("entryFunc(%d, %d);", lb->id, le->id);
+    joutput_line ("this.frameIndex--;");
 	//joutput_line ("throw new CobolRuntimeException(0, \"\");");
 }
 
@@ -2940,8 +2943,9 @@ joutput_perform_exit (struct cb_label *l)
 		joutput_line ("}");
 	}
 	if (!cb_perform_osvs) {
-//		joutput_newline ();
-//		joutput_line ("if (frame_ptr->perform_through == %d)", l->id);
+		joutput_newline ();
+		joutput_line ("if (this.frameStack[frameIndex].getPerformThrough() == %d)", l->id);
+        joutput_line ("  return false;");
 //#ifndef	__GNUC__
 //		joutput_line ("  goto P_switch;");
 //#elif	COB_USE_SETJMP
@@ -3111,6 +3115,14 @@ joutput_sort_proc (struct cb_sort_proc *p)
 	} else {
 		joutput_line ("/* PERFORM %s THRU %s */", lb->name, le->name);
 	}
+	joutput_line ("this.frameIndex++;");
+
+	if (cb_flag_stack_check) {
+		joutput_line ("if (unlikely(frame_ptr == frame_overflow))");
+		joutput_line ("    cob_fatal_error (COB_FERROR_STACK);");
+	}
+	joutput_line ("this.frameStack[this.frameIndex].setPerformThrough(%d);", le->id);
+	joutput_line("entryFunc(%d);", lb->id);
 	//joutput_line ("frame_ptr++;");
 	//joutput_line ("memset (frame_ptr, 0, sizeof (struct cob_frame));");
 	//if (cb_flag_stack_check) {
@@ -3157,9 +3169,11 @@ joutput_sort_proc (struct cb_sort_proc *p)
 	//joutput_line ("%s%d:", CB_PREFIX_LABEL, cb_id);
 #endif
 	//joutput_line ("/* perform call */");
-	joutput_line("entryFunc(%d, %d);", lb->id, le->id);
+	//joutput_line("entryFunc(%d, %d);", lb->id, le->id);
 	//cb_id++;
 	//joutput_line ("frame_ptr--;");
+	cb_id++;
+    joutput_line ("this.frameIndex--;");
 }
 
 static void
@@ -4048,7 +4062,7 @@ joutput_internal_function (struct cb_program *prog, cb_tree parameter_list)
 	//}
 
 	joutput_prefix();
-	joutput("CobolModule module = new CobolModule(null, ");
+	joutput("this.module = new CobolModule(null, ");
 	if (prog->collating_sequence) {
 		joutput_param (cb_ref (prog->collating_sequence), -1);
 	} else {
@@ -4275,6 +4289,7 @@ joutput_internal_function (struct cb_program *prog, cb_tree parameter_list)
 	//}
 
 	joutput_line("/* Initialize frame stack */");
+    joutput_line("this.frameIndex = 0;");
 	joutput_line("this.frameStack = new CobolFrame[255];");
 	joutput_line("for(int i=0; i<frameStack.length; ++i){");
 	joutput_line("  frameStack[i] = new CobolFrame();");
@@ -4563,7 +4578,7 @@ joutput_internal_function (struct cb_program *prog, cb_tree parameter_list)
 		joutput_stmt (CB_VALUE (l));
 	}
 	joutput_buffered = 0;
-	joutput_line("entryFunc(0, -1);");
+	joutput_line("entryFunc(0);");
 
 	joutput_indent_level -= 2;
 	joutput_line("  CobolStopRunException.stopRun();");
@@ -5094,7 +5109,7 @@ static void
 joutput_entry_function()
 {
 	int i;
-	joutput_line("public void entryFunc(int begin, int end) throws CobolRuntimeException, CobolGoBackException, CobolStopRunException {");
+	joutput_line("public void entryFunc(int begin) throws CobolRuntimeException, CobolGoBackException, CobolStopRunException {");
 	joutput_line("  boolean continueFlag;");
 	joutput_line("  switch(begin) {");
 	joutput_indent_level += 4;
@@ -5107,7 +5122,7 @@ joutput_entry_function()
 			joutput_line("case %d:", buf.label);
 			joutput_line("continueFlag = LABEL_%d();", buf.label);
 		}
-		joutput_line("if(!continueFlag || end == %d) break;", buf.label);
+		joutput_line("if(!continueFlag) break;", buf.label);
 	}
 	joutput_indent_level -= 4;
 	joutput_line("  }");
@@ -5229,7 +5244,7 @@ codegen (struct cb_program *prog, const int nested)
 	joutput_line("public class %s implements CobolRunnable {", prog->program_id);
 	joutput_indent_level += 2;
 	joutput_line("interface __B {");
-	joutput_line("  public AbstractCobolField run();");
+	joutput_line("  public AbstractCobolField run() throws CobolStopRunException;");
 	joutput_line("}");
 	joutput_line("interface __C {");
 	joutput_line("  public int run();");
@@ -5238,6 +5253,8 @@ codegen (struct cb_program *prog, const int nested)
 
 	joutput_line("private boolean initialized;");
 	joutput_line("private CobolModule cobolCurrentModule;");
+    joutput_line("private int frameIndex;");
+    joutput_line("private CobolModule module;");
 	joutput_line("private CobolFrame frame;");
 	joutput_line("private CobolFrame[] frameStack;");
 	joutput_line("private static boolean cobolInitialized = false;");
