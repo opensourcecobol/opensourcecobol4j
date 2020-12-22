@@ -80,11 +80,11 @@ foreach $in (sort (glob("*.{CBL,SUB}"))) {
   } else {
     $num_progs++;
     $copy = ($exe =~ /^SM/) ? "-I ../copy" : "";
-    print "$compile_module $copy $in && $cmd\n";
+    print "$compile $copy $in && $cmd\n";
     if ($in eq "SM206A.CBL") {
-      $ret = system ("$compile_module -fdebugging-line $copy $in");
+      $ret = system ("$compile -fdebugging-line $copy $in");
     } else {
-      $ret = system ("$compile_module $copy $in");
+      $ret = system ("$compile $copy $in");
     }
     if ($ret != 0) {
       $compile_error++;
@@ -97,8 +97,7 @@ foreach $in (sort (glob("*.{CBL,SUB}"))) {
 		system ("rm -f XXXXX*");
 	}
       }
-      ## if (system ("java $cmd > $exe.out") != 0) {
-      if (system ("java $exe > $exe.out") != 0) {
+      if (system ("$cmd > $exe.out") != 0) {
 	$execute_error++;
 	print LOG "  ***** execute error *****\n";
       } else {
