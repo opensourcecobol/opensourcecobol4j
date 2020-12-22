@@ -546,7 +546,6 @@ public class CobolDataStorage {
 	private static short BSWAP16(short val) {
 		return (short)((val << 8) | (0x0f & (val >> 8)));
 	}
-	
 
 	/**
 	 * libcob/codegen.hのcob_setswp_u24_binaryの実装

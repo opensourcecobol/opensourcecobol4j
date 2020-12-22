@@ -9,6 +9,9 @@ Basic Installation
 The simplest way to use this package is:
 
   1. installing `cobc` by `configure` and `make` like opensource COBOL(C ver.).
+     If error on DBLIB checking, try the following options at configure:
+        --without-db
+        --with-vbisam (after install at vbisam in opensource COBOL4J package)
 
   2. build `libcobj` java libraries by `compile_libcobj.sh`
 
