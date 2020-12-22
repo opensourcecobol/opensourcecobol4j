@@ -1,6 +1,12 @@
 				opensource COBOL4j
 		https://github.com/opensourcecobol/opensourcecobol4j
 
+  ***
+     NOTE
+	This package is Developers Edition. So, this documentation is uncompleted.
+	See the INSTALL file for a quick guide to install and run.
+  ***
+
 "opensource COBOL" is open-source COBOL compiler, an extension of the Japan-specific features.
 "opensource COBOL4J" translates COBOL program to java code and compiles it using OpenJDK.
 
@@ -17,9 +23,9 @@ project opensourcecobol4j has been started from 2020.
 
 This package contains the following subdirectories:
 
-    cobj        COBOL compiler for java
+    cobc        COBOL compiler for java
     libcobj     COBOL run-time library for java
-    bin         COBOL driver program (cobjrun)
+    bin         COBOL driver program (cobjrun) (Unimplemented)
     lib         static library and common headers
     config      configuration files
     po          international messages
@@ -45,7 +51,7 @@ Requirements
 	BOTH runtime AND development components are necessary.
   ***
 
-opensource COBOL requires the following external libraries to be installed:
+opensource COBOL4J requires the following external libraries to be installed:
 
   o GNU Libtool (libltdl)
     http://www.gnu.org/software/libtool/libtool.html
@@ -97,10 +103,17 @@ To generate/install opensource COBOL on Linux:
     ./configure
     make
 
+    * NOTE *
+    Test suite is Unimplemented.
+    Now, `make check` is always error.
+-----
  Here you may run
     make check
  to run a series of opensource COBOL test programs (must do!)
  This MUST succeed - If not, please report.
+-----
+
+
 
     make install
 
@@ -117,9 +130,11 @@ To generate/install opensource COBOL on Linux:
    Rerun "ldconfig".
 
     ./compile_libcobj.sh
+    export CLASSPATH="$CLASSPATH":***/opensourcecobol4j/libcobj/bin
 
 ** NOTE **
    libcobj's make is not ready yet, please run the alternative script.
+   And, jar file add to CLASSPATH.
 
 **************************************
 
@@ -153,6 +168,8 @@ There are the following configure options:
   --with-cc=<cc>		Specify C compiler command used by cobc
 				Do not specify this unless you know what
 				you are doing!
+
+  --with-vbisam			Use VBISMA for Index file system. (Our recommendation)
 
   --with-db1			Use Berkeley DB 1.85 (libdb1/libdb-1.85)
 				This overrides --with-db/--without-db
