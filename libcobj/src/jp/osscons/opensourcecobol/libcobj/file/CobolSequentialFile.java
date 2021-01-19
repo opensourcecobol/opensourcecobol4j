@@ -22,6 +22,7 @@ package jp.osscons.opensourcecobol.libcobj.file;
 import java.io.IOException;
 
 import jp.osscons.opensourcecobol.libcobj.data.AbstractCobolField;
+import jp.osscons.opensourcecobol.libcobj.exceptions.CobolStopRunException;
 
 public class CobolSequentialFile extends CobolFile {
 
@@ -83,7 +84,7 @@ public class CobolSequentialFile extends CobolFile {
 	}
 
 	@Override
-	public int write_(int opt) {
+	public int write_(int opt) throws CobolStopRunException {
 		int ret;
 
 		byte[] sbuff = new byte[4];

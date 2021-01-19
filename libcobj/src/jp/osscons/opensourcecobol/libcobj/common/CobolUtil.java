@@ -56,6 +56,7 @@ public class CobolUtil {
 	public static int cobSaveCallParams = 0;
 	
 	public static boolean verbose = false;
+	public static boolean cobErrorOnExitFlag = false;
 
 	abstract class handlerlist {
 		public handlerlist next = null;

@@ -22,6 +22,7 @@ package jp.osscons.opensourcecobol.libcobj.file;
 import jp.osscons.opensourcecobol.libcobj.data.AbstractCobolField;
 import jp.osscons.opensourcecobol.libcobj.data.CobolDataStorage;
 import jp.osscons.opensourcecobol.libcobj.exceptions.CobolRuntimeException;
+import jp.osscons.opensourcecobol.libcobj.exceptions.CobolStopRunException;
 
 public class CobolLineSequentialFile extends CobolFile {
 
@@ -96,7 +97,7 @@ public class CobolLineSequentialFile extends CobolFile {
 	}
 
 	@Override
-	public int write_(int opt) {
+	public int write_(int opt) throws CobolStopRunException {
 		int size;
 		int i;
 

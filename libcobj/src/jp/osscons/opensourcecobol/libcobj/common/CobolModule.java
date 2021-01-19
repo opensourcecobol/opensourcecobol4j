@@ -66,6 +66,14 @@ public class CobolModule {
 		currentModule = moduleQueue.pollLast();
 	}
 
+	/**
+	 * モジュールキューが空かどうか
+	 * @return
+	 */
+	static public boolean isQueueEmpty() {
+		return moduleQueue.isEmpty();
+	}
+
 
 	public CobolModule	next;
 	public CobolDataStorage		collating_sequence;

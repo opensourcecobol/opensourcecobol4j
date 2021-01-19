@@ -182,7 +182,7 @@ public class CobolDataStorage {
 	}
 
 	public void memcpy(byte[] buf) {
-		this.memcmp(buf, buf.length);
+		this.memcpy(buf, buf.length);
 	}
 
 	/**
@@ -434,7 +434,7 @@ public class CobolDataStorage {
 	 * @param bytes 書き込むバイト配列
 	 */
 	public void set(byte[] bytes) {
-		for(int i=0; i < bytes.length; ++i) {
+		for(int i=0; i < bytes.length && this.index + i < this.data.length; ++i) {
 			this.setByte(i, bytes[i]);
 		}
 	}
@@ -455,6 +455,10 @@ public class CobolDataStorage {
 	public void set(int value) {
 		byte bytes[] = ByteBuffer.allocate(Integer.BYTES).putInt(value).array();
 		set(bytes);
+	}
+	
+	public void set(CobolDataStorage other) {
+		this.set(other.intValue());
 	}
 
 	/**
@@ -515,150 +519,278 @@ public class CobolDataStorage {
 	}
 	
 	
-	private long toLong(int numOfBytes, boolean isBigEndian) {
-		byte[] bytes = new byte[8];
-		
+	private long toLong(int numOfBytes, boolean signed, boolean isBigEndian) {
 		int start, d;
 		if(isBigEndian) {
-			start = 0; d = 1;
-		} else {
 			start = 7; d = -1;
+		} else {
+			start = 0; d = 1;
 		}
 
 		long ret = 0;
-		for(int i = 0; i < numOfBytes; ++i) {
-			ret = (ret << 8) | this.getByte(start + i * d);
+		int i;
+		byte highestByte = 0;
+		for(i = 0; i < numOfBytes; ++i) {
+			highestByte = this.getByte(start + i * d);
+			ret |= this.getByte(start + i * d) << (8 * i);
+		}
+		
+		if(signed && highestByte < 0) {
+			for(; i<8; ++i) {
+				ret |= 0xFF << (8 * i);
+			}
 		}
 		
 		return ret;
 	}
 	
+	private interface Cmpr {
+		public int run(long a, long b);
+	}
+	
+	private static final Cmpr compareS = new Cmpr() {
+		public int run(long a, long b) {
+			if (a < b) {
+				return -1;
+			} else if (a > b) {
+				return 1;
+			} else {
+				return 0;
+			}
+		}
+	};
+	
+	private static final Cmpr compareU = new Cmpr() {
+		public int run(long a, long b) {
+			return Long.compareUnsigned(a, b);
+		}
+	};
+	
+	public int compareToBinary(int n, int numOfBytes, boolean signed, boolean isBigEndian) {
+		long val = this.toLong(numOfBytes, signed, isBigEndian);
+		Cmpr comparator = signed ? compareS : compareU;
+		return comparator.run(val, n);
+	}
+	
 	private void fromLong(int numOfBytes, boolean isBigEndian, long n) {
-		
-	}
-	
-	
-	/**
-	 * COB_BSWAP_16マクロの実装
-	 * @param val
-	 * @return
-	 */
-	private static short BSWAP16(short val) {
-		return (short)((val << 8) | (0x0f & (val >> 8)));
-	}
-	
-
-	/**
-	 * libcob/codegen.hのcob_setswp_u24_binaryの実装
-	 */
-	public void setSwpU24Binary(int n) {
-		for(int i=2; i>=0; --i) {
-			byte x = (byte) (((n >>> (8 * i)) & 0xFF));
-			this.setByte(2-i, x);
-		}
-	}
-
-	/**
-	 * libcob/codegen.hのcob_setswp_s24_binaryの実装
-	 * @param n
-	 */
-	public void setSwpS24Binary(int n) {
-		this.setSwpU24Binary(n);
-	}
-
-	//以下NumericBinaryのためのメソッド
-	/**
-	 * libcob/codegen.hのcob_setswp_u32_binaryの実装
-	 * @param n
-	 */
-	public void setSwpU32Binary(int n) {
-
-		byte x = (byte) (((n >> 24) & 0x000000FF));
-		this.setByte(0, x);
-
-		x = (byte) ((n >> 16) & 0x000000FF);
-		this.setByte(1, x);
-
-		x = (byte) ((n >> 8) & 0x000000FF) ;
-		this.setByte(2, x);
-
-		x = (byte) (n & 0x000000FF);
-		this.setByte(3, x);
-	}
-
-	/**
-	 * libcob/codegen.hのcob_setswp_s32_binaryの実装
-	 * @param n
-	 */
-	public void setSwpS32Binary(int n) {
-		this.setSwpU32Binary(n);
-	}
-
-	/**
-	 * libcob/codegen.hのcob_setswp_u64_binaryの実装
-	 */
-	public void setSwpU64Binary(long n) {
-		for(int i=7; i>=0; --i) {
-			byte x = (byte) (((n >>> (8 * i)) & 0xFF));
-			this.setByte(7-i, x);
-		}
-	}
-
-	/**
-	 * libcob/codegen.hのcob_setswp_u64_binaryの実装
-	 */
-	public void setSwpS64Binary(long n) {
-		this.setSwpU64Binary(n);
-	}
-
-	/**
-	 * libcob/codegen.hのcob_setswp_u16_binaryの実装
-	 * @param n
-	 */
-	public void setSwpU16Binary(int n) {
-		byte x = (byte) (((n >> 8) & 0x000000FF));
-		this.setByte(0, x);
-
-		x = (byte) (n & 0x000000FF);
-		this.setByte(1, x);
-	}
-
-	/**
-	 * libcob/codegen.hのcob_setswp_s16_binaryの実装
-	 * @param n
-	 */
-	public void setSwpS16Binary(int n) {
-		this.setSwpU16Binary(n);
-	}
-
-	/**
-	 * libcob/codegen.hのcob_addswp_s16_binaryの実装
-	 * @param val
-	 */
-	public void addSwpS16Binary(int val) {
-		short n = (short)(this.getByte(0) << 8 | this.getByte(1));
-		n += val;
-		this.setByte(0, (byte)(n >> 8));
-		this.setByte(1, (byte)(n));
-	}
-
-	/**
-	 * libcob/codegen.hのcob_cmpswp_s16_binaryの実装
-	 * @param n
-	 * @return
-	 */
-	public int cmpSwpS16Binary(int n) {
-		ByteBuffer bb = ByteBuffer.wrap(this.getData());
-		short val = bb.getShort();
-		val = BSWAP16(val);
-		if (val < n) {
-			return -1;
-		} else if(val == n) {
-			return 0;
+		int start, d;
+		if(isBigEndian) {
+			start = numOfBytes - 1; d = -1;
 		} else {
-			return 1;
+			start = 0; d = 1;
+		}
+		
+		for(int i=0; i<numOfBytes; ++i) {
+			byte b = (byte)((n >> (8 * i)) & 0xFF);
+			int index = start + i * d;
+			this.setByte(index, b);
 		}
 	}
+	
+	private interface Calc {
+		public long run(long a, long b);
+	}
+	private final static Calc AddS = new Calc() {
+		public long run(long a, long b) {
+			return a + b;
+		}
+	};
+	
+	private final static Calc SubS = new Calc() {
+		public long run(long a, long b) {
+			return a - b;
+		}
+	};
+	
+	public void addBinary(int n, int numOfBytes, boolean signed, boolean isBigEndian) {
+		long x = this.toLong(numOfBytes, signed, isBigEndian);
+		x += n;
+		this.fromLong(numOfBytes, isBigEndian, x);
+	}
+	
+	public void subBinary(int n, int numOfBytes, boolean signed, boolean isBigEndian) {
+		long x = this.toLong(numOfBytes, signed, isBigEndian);
+		x -= n;
+		this.fromLong(numOfBytes, isBigEndian, x);
+	}
+	
+	//                                                     n  numofBytes signed  isBigEndian
+	public int cmpU8Binary (int n) { return compareToBinary(n, 1,         false, true); }
+	public int cmpS8Binary (int n) { return compareToBinary(n, 1,         true,  true); }
+	public int cmpU16Binary(int n) { return compareToBinary(n, 2,         false, true); }
+	public int cmpS16Binary(int n) { return compareToBinary(n, 2,         true,  true); }
+	public int cmpU24Binary(int n) { return compareToBinary(n, 3,         false, true); }
+	public int cmpS24Binary(int n) { return compareToBinary(n, 3,         true,  true); }
+	public int cmpU32Binary(int n) { return compareToBinary(n, 4,         false, true); }
+	public int cmpS32Binary(int n) { return compareToBinary(n, 4,         true,  true); }
+	public int cmpU40Binary(int n) { return compareToBinary(n, 5,         false, true); }
+	public int cmpS40Binary(int n) { return compareToBinary(n, 5,         true,  true); }
+	public int cmpU48Binary(int n) { return compareToBinary(n, 6,         false, true); }
+	public int cmpS48Binary(int n) { return compareToBinary(n, 6,         true,  true); }
+	public int cmpU56Binary(int n) { return compareToBinary(n, 7,         false, true); }
+	public int cmpS56Binary(int n) { return compareToBinary(n, 7,         true,  true); }
+	public int cmpU64Binary(int n) { return compareToBinary(n, 8,         false, true); }
+	public int cmpS64Binary(int n) { return compareToBinary(n, 8,         true,  true); }
+	
+	public int cmpAlignU8Binary (int n) { return compareToBinary(n, 1,         false, true); }
+	public int cmpAlignS8Binary (int n) { return compareToBinary(n, 1,         true,  true); }
+	public int cmpAlignU16Binary(int n) { return compareToBinary(n, 2,         false, true); }
+	public int cmpAlignS16Binary(int n) { return compareToBinary(n, 2,         true,  true); }
+	public int cmpAlignU32Binary(int n) { return compareToBinary(n, 4,         false, true); }
+	public int cmpAlignS32Binary(int n) { return compareToBinary(n, 4,         true,  true); }
+	public int cmpAlignU64Binary(int n) { return compareToBinary(n, 8,         false, true); }
+	public int cmpAlignS64Binary(int n) { return compareToBinary(n, 8,         true,  true); }
+
+	//                                          n  numofBytes signed  isBigEndian
+	public void addU8Binary (int n) { addBinary(n, 1,         false, true); }
+	public void addS8Binary (int n) { addBinary(n, 1,         true,  true); }
+	public void addU16Binary(int n) { addBinary(n, 2,         false, true); }
+	public void addS16Binary(int n) { addBinary(n, 2,         true,  true); }
+	public void addU24Binary(int n) { addBinary(n, 3,         false, true); }
+	public void addS24Binary(int n) { addBinary(n, 3,         true,  true); }
+	public void addU32Binary(int n) { addBinary(n, 4,         false, true); }
+	public void addS32Binary(int n) { addBinary(n, 4,         true,  true); }
+	public void addU40Binary(int n) { addBinary(n, 5,         false, true); }
+	public void addS40Binary(int n) { addBinary(n, 5,         true,  true); }
+	public void addU48Binary(int n) { addBinary(n, 6,         false, true); }
+	public void addS48Binary(int n) { addBinary(n, 6,         true,  true); }
+	public void addU56Binary(int n) { addBinary(n, 7,         false, true); }
+	public void addS56Binary(int n) { addBinary(n, 7,         true,  true); }
+	public void addU64Binary(int n) { addBinary(n, 8,         false, true); }
+	public void addS64Binary(int n) { addBinary(n, 8,         true,  true); }
+	
+	public void addAlignU8Binary (int n) { addBinary(n, 1,         false, true); }
+	public void addAlignS8Binary (int n) { addBinary(n, 1,         true,  true); }
+	public void addAlignU16Binary(int n) { addBinary(n, 2,         false, true); }
+	public void addAlignS16Binary(int n) { addBinary(n, 2,         true,  true); }
+	public void addAlignU32Binary(int n) { addBinary(n, 4,         false, true); }
+	public void addAlignS32Binary(int n) { addBinary(n, 4,         true,  true); }
+	public void addAlignU64Binary(int n) { addBinary(n, 8,         false, true); }
+	public void addAlignS64Binary(int n) { addBinary(n, 8,         true,  true); }
+	
+	//                                          n  numofBytes signed  isBigEndian
+	public void subU8Binary (int n) { subBinary(n, 1,         false, true); }
+	public void subS8Binary (int n) { subBinary(n, 1,         true,  true); }
+	public void subU16Binary(int n) { subBinary(n, 2,         false, true); }
+	public void subS16Binary(int n) { subBinary(n, 2,         true,  true); }
+	public void subU24Binary(int n) { subBinary(n, 3,         false, true); }
+	public void subS24Binary(int n) { subBinary(n, 3,         true,  true); }
+	public void subU32Binary(int n) { subBinary(n, 4,         false, true); }
+	public void subS32Binary(int n) { subBinary(n, 4,         true,  true); }
+	public void subU40Binary(int n) { subBinary(n, 5,         false, true); }
+	public void subS40Binary(int n) { subBinary(n, 5,         true,  true); }
+	public void subU48Binary(int n) { subBinary(n, 6,         false, true); }
+	public void subS48Binary(int n) { subBinary(n, 6,         true,  true); }
+	public void subU56Binary(int n) { subBinary(n, 7,         false, true); }
+	public void subS56Binary(int n) { subBinary(n, 7,         true,  true); }
+	public void subU64Binary(int n) { subBinary(n, 8,         false, true); }
+	public void subS64Binary(int n) { subBinary(n, 8,         true,  true); }
+	
+	public void subAlignU8Binary (int n) { subBinary(n, 1,         false, true); }
+	public void subAlignS8Binary (int n) { subBinary(n, 1,         true,  true); }
+	public void subAlignU16Binary(int n) { subBinary(n, 2,         false, true); }
+	public void subAlignS16Binary(int n) { subBinary(n, 2,         true,  true); }
+	public void subAlignU32Binary(int n) { subBinary(n, 4,         false, true); }
+	public void subAlignS32Binary(int n) { subBinary(n, 4,         true,  true); }
+	public void subAlignU64Binary(int n) { subBinary(n, 8,         false, true); }
+	public void subAlignS64Binary(int n) { subBinary(n, 8,         true,  true); }
+	
+	//                                                     n  numofBytes signed  isBigEndian
+	public int cmpSwpU8Binary (int n) { return compareToBinary(n, 1,         false, false); }
+	public int cmpSwpS8Binary (int n) { return compareToBinary(n, 1,         true,  false); }
+	public int cmpSwpU16Binary(int n) { return compareToBinary(n, 2,         false, false); }
+	public int cmpSwpS16Binary(int n) { return compareToBinary(n, 2,         true,  false); }
+	public int cmpSwpU24Binary(int n) { return compareToBinary(n, 3,         false, false); }
+	public int cmpSwpS24Binary(int n) { return compareToBinary(n, 3,         true,  false); }
+	public int cmpSwpU32Binary(int n) { return compareToBinary(n, 4,         false, false); }
+	public int cmpSwpS32Binary(int n) { return compareToBinary(n, 4,         true,  false); }
+	public int cmpSwpU40Binary(int n) { return compareToBinary(n, 5,         false, false); }
+	public int cmpSwpS40Binary(int n) { return compareToBinary(n, 5,         true,  false); }
+	public int cmpSwpU48Binary(int n) { return compareToBinary(n, 6,         false, false); }
+	public int cmpSwpS48Binary(int n) { return compareToBinary(n, 6,         true,  false); }
+	public int cmpSwpU56Binary(int n) { return compareToBinary(n, 7,         false, false); }
+	public int cmpSwpS56Binary(int n) { return compareToBinary(n, 7,         true,  false); }
+	public int cmpSwpU64Binary(int n) { return compareToBinary(n, 8,         false, false); }
+	public int cmpSwpS64Binary(int n) { return compareToBinary(n, 8,         true,  false); }
+	
+	public int cmpSwpAlignU8Binary (int n) { return compareToBinary(n, 1,         false, false); }
+	public int cmpSwpAlignS8Binary (int n) { return compareToBinary(n, 1,         true,  false); }
+	public int cmpSwpAlignU16Binary(int n) { return compareToBinary(n, 2,         false, false); }
+	public int cmpSwpAlignS16Binary(int n) { return compareToBinary(n, 2,         true,  false); }
+	public int cmpSwpAlignU32Binary(int n) { return compareToBinary(n, 4,         false, false); }
+	public int cmpSwpAlignS32Binary(int n) { return compareToBinary(n, 4,         true,  false); }
+	public int cmpSwpAlignU64Binary(int n) { return compareToBinary(n, 8,         false, false); }
+	public int cmpSwpAlignS64Binary(int n) { return compareToBinary(n, 8,         true,  false); }
+
+	//                                          n  numofBytes signed  isBigEndian
+	public void addSwpU8Binary (int n) { addBinary(n, 1,         false, false); }
+	public void addSwpS8Binary (int n) { addBinary(n, 1,         true,  false); }
+	public void addSwpU16Binary(int n) { addBinary(n, 2,         false, false); }
+	public void addSwpS16Binary(int n) { addBinary(n, 2,         true,  false); }
+	public void addSwpU24Binary(int n) { addBinary(n, 3,         false, false); }
+	public void addSwpS24Binary(int n) { addBinary(n, 3,         true,  false); }
+	public void addSwpU32Binary(int n) { addBinary(n, 4,         false, false); }
+	public void addSwpS32Binary(int n) { addBinary(n, 4,         true,  false); }
+	public void addSwpU40Binary(int n) { addBinary(n, 5,         false, false); }
+	public void addSwpS40Binary(int n) { addBinary(n, 5,         true,  false); }
+	public void addSwpU48Binary(int n) { addBinary(n, 6,         false, false); }
+	public void addSwpS48Binary(int n) { addBinary(n, 6,         true,  false); }
+	public void addSwpU56Binary(int n) { addBinary(n, 7,         false, false); }
+	public void addSwpS56Binary(int n) { addBinary(n, 7,         true,  false); }
+	public void addSwpU64Binary(int n) { addBinary(n, 8,         false, false); }
+	public void addSwpS64Binary(int n) { addBinary(n, 8,         true,  false); }
+	
+	public void addSwpAlignU8Binary (int n) { addBinary(n, 1,         false, false); }
+	public void addSwpAlignS8Binary (int n) { addBinary(n, 1,         true,  false); }
+	public void addSwpAlignU16Binary(int n) { addBinary(n, 2,         false, false); }
+	public void addSwpAlignS16Binary(int n) { addBinary(n, 2,         true,  false); }
+	public void addSwpAlignU32Binary(int n) { addBinary(n, 4,         false, false); }
+	public void addSwpAlignS32Binary(int n) { addBinary(n, 4,         true,  false); }
+	public void addSwpAlignU64Binary(int n) { addBinary(n, 8,         false, false); }
+	public void addSwpAlignS64Binary(int n) { addBinary(n, 8,         true,  false); }
+	
+	//                                          n  numofBytes signed  isBigEndian
+	public void subSwpU8Binary (int n) { subBinary(n, 1,         false, false); }
+	public void subSwpS8Binary (int n) { subBinary(n, 1,         true,  false); }
+	public void subSwpU16Binary(int n) { subBinary(n, 2,         false, false); }
+	public void subSwpS16Binary(int n) { subBinary(n, 2,         true,  false); }
+	public void subSwpU24Binary(int n) { subBinary(n, 3,         false, false); }
+	public void subSwpS24Binary(int n) { subBinary(n, 3,         true,  false); }
+	public void subSwpU32Binary(int n) { subBinary(n, 4,         false, false); }
+	public void subSwpS32Binary(int n) { subBinary(n, 4,         true,  false); }
+	public void subSwpU40Binary(int n) { subBinary(n, 5,         false, false); }
+	public void subSwpS40Binary(int n) { subBinary(n, 5,         true,  false); }
+	public void subSwpU48Binary(int n) { subBinary(n, 6,         false, false); }
+	public void subSwpS48Binary(int n) { subBinary(n, 6,         true,  false); }
+	public void subSwpU56Binary(int n) { subBinary(n, 7,         false, false); }
+	public void subSwpS56Binary(int n) { subBinary(n, 7,         true,  false); }
+	public void subSwpU64Binary(int n) { subBinary(n, 8,         false, false); }
+	public void subSwpS64Binary(int n) { subBinary(n, 8,         true,  false); }
+	
+	public void subSwpAlignU8Binary (int n) { subBinary(n, 1,         false, false); }
+	public void subSwpAlignS8Binary (int n) { subBinary(n, 1,         true,  false); }
+	public void subSwpAlignU16Binary(int n) { subBinary(n, 2,         false, false); }
+	public void subSwpAlignS16Binary(int n) { subBinary(n, 2,         true,  false); }
+	public void subSwpAlignU32Binary(int n) { subBinary(n, 4,         false, false); }
+	public void subSwpAlignS32Binary(int n) { subBinary(n, 4,         true,  false); }
+	public void subSwpAlignU64Binary(int n) { subBinary(n, 8,         false, false); }
+	public void subSwpAlignS64Binary(int n) { subBinary(n, 8,         true,  false); }
+	
+	public void setSwpU16Binary(int n) { this.fromLong(2, true, n); }
+	public void setSwpS16Binary(int n) { this.fromLong(2, true, n); }
+	public void setSwpU24Binary(int n) { this.fromLong(3, true, n); }
+	public void setSwpS24Binary(int n) { this.fromLong(3, true, n); }
+	public void setSwpU32Binary(int n) { this.fromLong(4, true, n); }
+	public void setSwpS32Binary(int n) { this.fromLong(4, true, n); }
+	public void setSwpU40Binary(int n) { this.fromLong(5, true, n); }
+	public void setSwpS40Binary(int n) { this.fromLong(5, true, n); }
+	public void setSwpU48Binary(int n) { this.fromLong(6, true, n); }
+	public void setSwpS48Binary(int n) { this.fromLong(6, true, n); }
+	public void setSwpU56Binary(int n) { this.fromLong(7, true, n); }
+	public void setSwpS56Binary(int n) { this.fromLong(7, true, n); }
+	public void setSwpU64Binary(int n) { this.fromLong(8, true, n); }
+	public void setSwpS64Binary(int n) { this.fromLong(8, true, n); }
+
 
 	/**
 	 * libcob/numeric.cのcob_cmp_numdispの実装
@@ -666,7 +798,7 @@ public class CobolDataStorage {
 	 * @param n
 	 * @return
 	 */
-	public int cmpNumdisp(int size, int n) {
+	public int cmpNumdisp(int size, long n) {
 		int p=0;
 		int val = 0;
 		for(int inc=0; inc<size; ++inc, ++p) {

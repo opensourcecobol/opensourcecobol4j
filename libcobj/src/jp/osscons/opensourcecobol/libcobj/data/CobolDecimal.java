@@ -24,7 +24,10 @@ import java.math.RoundingMode;
 import java.nio.ByteBuffer;
 
 import jp.osscons.opensourcecobol.libcobj.common.CobolModule;
+import jp.osscons.opensourcecobol.libcobj.common.CobolUtil;
+import jp.osscons.opensourcecobol.libcobj.exceptions.CobolExceptionId;
 import jp.osscons.opensourcecobol.libcobj.exceptions.CobolRuntimeException;
+import jp.osscons.opensourcecobol.libcobj.exceptions.CobolStopRunException;
 
 /**
  * BigDecimalを扱うクラス
@@ -349,14 +352,19 @@ public class CobolDecimal {
 	 * this.valueの値をthis.valueでotherを割った値にする
 	 * @param other this.valueを割る数
 	 */
-	public void div(CobolDecimal decimal) {
-		//this.value = this.value.divide(other.getValue(), BigDecimal.ROUND_DOWN);
+	public void div(CobolDecimal decimal) throws CobolStopRunException {
 		if(DECIMAL_CHECK(this, decimal)) {
 			return;
 		}
+		//System.out.println("decimal: " + decimal.getValue());
 		if (decimal.getValue().signum() == 0) {
 			this.setScale(DECIMAL_NAN);
-			throw new CobolRuntimeException(0, "未実装, 0除算エラー");
+			if(CobolUtil.cobErrorOnExitFlag) {
+				//TODO より正確な実装に変更
+				System.err.println("Detected division by zero");
+				CobolStopRunException.throwException(1);
+			}
+			return;
 		}
 		if(this.getValue().signum() == 0) {
 			this.setScale(0);
@@ -366,7 +374,7 @@ public class CobolDecimal {
 		int shift = 37 + ((this.getScale() < 0) ? -this.getScale() : 0);
 		this.shiftDecimal(shift);
 		this.setValue(this.getValue().divide(decimal.getValue(), RoundingMode.DOWN));
-		this.shiftDecimal(-shift);
+		//System.out.println(">>> value: " + this.value + ", scale: " + this.scale);
 	}
 
 	/**
@@ -429,15 +437,10 @@ public class CobolDecimal {
 	 * @param opt
 	 * @return
 	 */
-	public int getField(AbstractCobolField f, int opt) {
+	public int getField(AbstractCobolField f, int opt) throws CobolStopRunException {
 		if(this.getScale() == CobolDecimal.DECIMAL_NAN) {
 			throw new CobolRuntimeException(0, "getFieldのエラー");
 		}
-
-		/* work copy */
-		//TODO 実装
-		//if() {
-		//}
 
 		/* rounding */
 		if((opt & CobolDecimal.COB_STORE_ROUND) > 0) {
@@ -515,24 +518,32 @@ public class CobolDecimal {
 	 * @param opt
 	 * @return
 	 */
-	public int getDisplayField(AbstractCobolField f, int opt) {
+	public int getDisplayField(AbstractCobolField f, int opt) throws CobolStopRunException {
 		int sign = this.value.signum();
 		this.value = this.value.abs();
-		String numBuffPtr = this.value.toPlainString();
-		int size = numBuffPtr.length();
+		byte[] numBuffPtr = this.value.toPlainString().getBytes();
+		int size = numBuffPtr.length;
 
 		CobolDataStorage data = f.getDataStorage();
 		int firstDataIndex = f.getFirstDataIndex();
 		int diff = f.getFieldSize() - size;
 		if(diff < 0) {
 			//TODO  実装
-			throw new CobolRuntimeException(0, "未実装のエラー");
+			//throw new CobolRuntimeException(0, "This case is not implmented");
+			//TODO より正確な実装に修正
+			CobolRuntimeException.setException(CobolExceptionId.COB_EC_SIZE_OVERFLOW);
+			if((opt & CobolDecimal.COB_STORE_KEEP_ON_OVERFLOW) > 0) {
+				CobolStopRunException.throwException(CobolExceptionId.COB_EC_SIZE_OVERFLOW);
+			}
+			for(int i=0; i<f.getFieldSize(); ++i) {
+				data.setByte(i, numBuffPtr[i - diff]);
+			}
 		} else {
 			for(int i=0; i<diff; ++i) {
 				data.setByte(firstDataIndex + i, (byte)'0');
 			}
 			for(int i=0; i<size; ++i) {
-				data.setByte(firstDataIndex + i + diff,  (byte)numBuffPtr.charAt(i));
+				data.setByte(firstDataIndex + i + diff,  numBuffPtr[i]);
 			}
 		}
 		f.putSign(sign);

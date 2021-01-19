@@ -92,9 +92,9 @@ foreach $in (sort (glob("*.{CBL,SUB}"))) {
     } else {
       if ($in =~ /\.CBL/) {
 	if ($ENV{'DB_HOME'}) {
-		system ("rm -f XXXXX*; rm -f $ENV{'DB_HOME'}/XXXXX*");
+		system ("rm -rf XXXXX*; rm -rf $ENV{'DB_HOME'}/XXXXX*");
 	} else {
-		system ("rm -f XXXXX*");
+		system ("rm -rf XXXXX*");
 	}
       }
       ## if (system ("java $cmd > $exe.out") != 0) {

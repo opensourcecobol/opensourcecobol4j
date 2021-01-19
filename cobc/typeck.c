@@ -3600,7 +3600,7 @@ cb_emit_cancel (cb_tree prog)
 	if (cb_validate_one (prog)) {
 		return;
 	}
-	cb_emit (cb_build_funcall_1 ("cob_field_cancel", prog));
+	cb_emit (cb_build_funcall_1 ("CobolResolve.fieldCancel", prog));
 }
 
 void
