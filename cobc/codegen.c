@@ -3078,13 +3078,13 @@ joutput_perform_exit (struct cb_label *l)
 {
 	if (l->is_global) {
 		joutput_newline ();
-		joutput_line ("if (entry == %d) {", l->id);
+		joutput_line ("if (this.entry == %d) {", l->id);
 		if (cb_flag_traceall) {
 			joutput_line ("  cob_reset_trace ();");
 		}
 		/* Fixme - Check module push/pop */
-		joutput_line ("  cob_current_module = cob_current_module->next;");
-		joutput_line ("  return 0;");
+		joutput_line ("  CobolModule.pollLast();");
+		joutput_line ("  return false;");
 		joutput_line ("}");
 	}
 	if (!cb_perform_osvs) {
@@ -3718,7 +3718,6 @@ joutput_stmt (cb_tree x)
 
 		joutput_integer (ap->var);
 		joutput (".set(");
-        joutput ("/*yyyyyy*/");
 		++index_read_flag;
 		joutput_integer (ap->val);
 		--index_read_flag;
@@ -4155,11 +4154,10 @@ joutput_internal_function (struct cb_program *prog, cb_tree parameter_list)
 	//output (")\n");
 	//output_indent ("{");
 
-	joutput_prefix();
 	joutput_line ("int %s_ (int entry, CobolDataStorage ...argStorages) {", prog->program_id);
-	//joutput (", CobolDataStorage... fields )\n");
 	joutput_indent_level += 2;
 
+    joutput_line("this.entry = entry;");
 	if (!prog->flag_chained) {
         int k;
 		for (k =0, l = parameter_list; l; l = CB_CHAIN (l), ++k) {
@@ -5450,6 +5448,7 @@ codegen (struct cb_program *prog, const int nested)
 	joutput_line("private CobolCallParams cobolCallParams = null;");
 	joutput_line("private boolean cobolErrorOnExitFlag;");
 	joutput_line("private int i0;");
+	joutput_line("private int entry;");
 	joutput("\n");
 
 	//output_storage ("union cob_call_union\tcob_unifunc;\n\n");
