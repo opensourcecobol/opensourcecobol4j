@@ -5098,6 +5098,12 @@ void joutput_init_method(struct cb_program *prog) {
 		joutput_newline();
 	}
 
+    if(gen_native) {
+	    int index = lookup_attr (COB_TYPE_ALPHANUMERIC, 0, 0, 0, NULL, 0);
+	    joutput_line("f_native = CobolFieldFactory.makeCobolField(256, new CobolDataStorage(cob_native), %s%d);\n",
+		     CB_PREFIX_ATTR, index);
+    }
+
 	joutput_indent_level -= 2;
 	joutput_line("} catch(Exception e) {");
 	joutput_line("  e.printStackTrace();");
@@ -5180,7 +5186,7 @@ void joutput_declare_member_variables(struct cb_program *prog, cb_tree parameter
 	/* Local indexes */
 	for (i = 0; i < COB_MAX_SUBSCRIPTS; i++) {
 		if (i_counters[i]) {
-			output_local ("private int\t\ti%d;\n", i);
+			joutput_local ("private int\t\ti%d;\n", i);
 		}
 	}
 
@@ -5254,6 +5260,7 @@ void joutput_declare_member_variables(struct cb_program *prog, cb_tree parameter
 		joutput_line ("/* End of fields */\n\n");
 	}
 
+	joutput_line ("private static AbstractCobolField f_native;\n");
 
 	/* AbstractCobolField型変数の宣言(定数) */
 	if (literal_cache) {
@@ -5447,7 +5454,6 @@ codegen (struct cb_program *prog, const int nested)
 	joutput_line("private CobolCallParams cobolSaveCallParams = null;");
 	joutput_line("private CobolCallParams cobolCallParams = null;");
 	joutput_line("private boolean cobolErrorOnExitFlag;");
-	joutput_line("private int i0;");
 	joutput_line("private int entry;");
 	joutput("\n");
 
@@ -5829,12 +5835,12 @@ codegen (struct cb_program *prog, const int nested)
 	    joutput_indent_level -= 2;
 		joutput_indent ("};\n");
 
-		i = lookup_attr (COB_TYPE_ALPHANUMERIC, 0, 0, 0, NULL, 0);
-        joutput("  ");
-		joutput
-		    ("private static AbstractCobolField f_native = CobolFieldFactory.makeField(256, new CobolDataStorage(cob_native), %s%d);\n",
-		     CB_PREFIX_ATTR, i);
-		joutput ("\n");
+		//i = lookup_attr (COB_TYPE_ALPHANUMERIC, 0, 0, 0, NULL, 0);
+        //joutput("  ");
+		//joutput
+		//    ("private static AbstractCobolField f_native = CobolFieldFactory.makeField(256, new CobolDataStorage(cob_native), %s%d);\n",
+		//     CB_PREFIX_ATTR, i);
+		//joutput ("\n");
 	}
 
 	joutput_indent_level -= 2;
