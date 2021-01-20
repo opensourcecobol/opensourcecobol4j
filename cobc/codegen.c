@@ -866,14 +866,13 @@ lookup_literal (cb_tree x)
 /*
  * Integer
  */
-static int joutput_integer_reference_flag = 0;
+static int integer_reference_flag = 0;
 static void
 joutput_integer (cb_tree x)
 {
 	struct cb_binary_op	*p;
 	struct cb_cast		*cp;
 	struct cb_field		*f;
-    int temp_reference_flag;
 
 	switch (CB_TREE_TAG (x)) {
 	case CB_TAG_CONST:
@@ -904,19 +903,13 @@ joutput_integer (cb_tree x)
 			if (need_double) {
 				joutput ("(double)");
 			}
-            temp_reference_flag = joutput_integer_reference_flag;
-            joutput_integer_reference_flag = 1;
 			joutput_integer (p->x);
-            joutput_integer_reference_flag = temp_reference_flag;
 
 			joutput (" %c ", p->op);
 			if (need_double) {
 				joutput ("(double)");
 			}
-            temp_reference_flag = joutput_integer_reference_flag;
-            joutput_integer_reference_flag = 1;
 			joutput_integer (p->y);
-            joutput_integer_reference_flag = temp_reference_flag;
 			joutput (")");
 		}
 		break;
@@ -942,10 +935,9 @@ joutput_integer (cb_tree x)
 		case CB_USAGE_INDEX:
 		case CB_USAGE_LENGTH:
 			joutput_data (x);
-			/* 読み取りが指定されているとき*/
-			if(index_read_flag) {
-				joutput(".intValue()");
-			}
+            if(!integer_reference_flag) {
+                joutput(".intValue()");
+            }
 			return;
 
 		case CB_USAGE_POINTER:
@@ -996,8 +988,8 @@ joutput_integer (cb_tree x)
 		case CB_USAGE_COMP_X:
 			if (f->size == 1) {
 				joutput_data (x);
-                if(joutput_integer_reference_flag) {
-                    joutput(".intValue()");
+                if(!integer_reference_flag) {
+                    joutput(".getByte(0)");
                 }
 				return;
 			}
@@ -1013,72 +1005,37 @@ joutput_integer (cb_tree x)
 #else
 			if (f->size == 2 || f->size == 4 || f->size == 8) {
 #endif
-				//TODO 以下コードは編集中
 				if (f->flag_binary_swap) {
-					//joutput ("((");
-					//if (!f->pic->have_sign) {
-					//	joutput ("unsigned ");
-					//}
-					//switch (f->size) {
-					//case 2:
-					//	joutput ("short)COB_BSWAP_16(");
-					//	break;
-					//case 4:
-					//	joutput ("int)COB_BSWAP_32(");
-					//	break;
-					//case 8:
-					//	joutput ("long long)COB_BSWAP_64(");
-					//	break;
-					//}
-					//joutput ("*(");
-					//switch (f->size) {
-					//case 2:
-					//	joutput ("short *)(");
-					//	break;
-					//case 4:
-					//	joutput ("int *)(");
-					//	break;
-					//case 8:
-					//	joutput ("long long *)(");
-					//	break;
-					//}
-					//joutput_data (x);
-					//joutput (")))");
 					joutput_data (x);
-					switch (f->size) {
-					case 2:
-						joutput (".getBinaryShort()");
-						break;
-					case 4:
-						joutput (".getBinaryInt()");
-						break;
-					case 8:
-						joutput (".getBinaryLong()");
-						break;
-					}
+                    if(!integer_reference_flag) {
+					    switch (f->size) {
+					    case 2:
+					    	joutput (".bswap_16()");
+					    	break;
+					    case 4:
+					    	joutput (".bswap_32()");
+					    	break;
+					    case 8:
+					    	joutput (".bswap_64()");
+					    	break;
+					    }
+                    }
 					return;
 				} else {
-					//TODO 以下コードは編集中
-					//joutput ("(*(");
-					//if (!f->pic->have_sign) {
-					//	joutput ("unsigned ");
-					//}
-					//switch (f->size) {
-					//case 2:
-					//	joutput ("short *)(");
-					//	break;
-					//case 4:
-					//	joutput ("int *)(");
-					//	break;
-					//case 8:
-					//	joutput ("long long *)(");
-					//	break;
-					//}
-					//joutput_data (x);
-					//joutput ("))");
 					joutput_data (x);
-					//TODO 以下の行はLINAGE実装時にコメントアウトしたが正しい処置か要検証
-					//joutput(".getBinaryInt(%d)", f->size);
+                    if(!integer_reference_flag) {
+					    switch (f->size) {
+					    case 2:
+					    	joutput (".shortValue()");
+					    	break;
+					    case 4:
+					    	joutput (".intValue()");
+					    	break;
+					    case 8:
+					    	joutput (".longValue()");
+					    	break;
+					    }
+                    }
 					return;
 				}
 			}
@@ -1115,12 +1072,7 @@ joutput_index (cb_tree x)
 		joutput ("(");
 
 		++index_read_flag;
-
-        int tmp_flag = joutput_integer_reference_flag;
-        joutput_integer_reference_flag = 1;
 		joutput_integer (x);
-        joutput_integer_reference_flag = tmp_flag;
-
 		--index_read_flag;
 
 		joutput (" - 1)");
@@ -2370,7 +2322,7 @@ joutput_search_whens (cb_tree table, cb_tree var, cb_tree stmt, cb_tree whens)
 	struct cb_field *f = cb_field(idx);
 	if(CB_TREE_TAG(idx) == CB_TAG_REFERENCE &&
 	(f->usage == CB_USAGE_INDEX || f->usage == CB_USAGE_LENGTH)) {
-		joutput(".intValue()");
+		//joutput(".intValue()");
 	}
 
 	joutput (" > ");
@@ -2389,10 +2341,14 @@ joutput_search_whens (cb_tree table, cb_tree var, cb_tree stmt, cb_tree whens)
 	joutput_indent ("  {");
 	joutput_prefix ();
 
+    int tmp_flag = integer_reference_flag;
+    integer_reference_flag = 1;
 	joutput_integer (idx);
+    integer_reference_flag = tmp_flag;
+
 	joutput(".set(");
 	joutput_integer(idx);
-	joutput_line(".intValue() + 1);");
+    joutput_line(" + 1);");
 
 	if (var && var != idx) {
 		joutput_move (idx, var);
@@ -2435,7 +2391,10 @@ joutput_search_all (cb_tree table, cb_tree stmt, cb_tree cond, cb_tree when)
 
 	/* Next index */
 	joutput_prefix ();
+    int tmp_flag = integer_reference_flag;
+    integer_reference_flag = 1;
 	joutput_integer (idx);
+    integer_reference_flag = tmp_flag;
 	joutput (".set((head + tail) / 2);\n");
 
 	/* WHEN test */
@@ -2452,12 +2411,12 @@ joutput_search_all (cb_tree table, cb_tree stmt, cb_tree cond, cb_tree when)
 	joutput_prefix ();
 	joutput ("  head = ");
 	joutput_integer (idx);
-	joutput (".intValue();\n");
+    joutput(";\n");
 	joutput_line ("else");
 	joutput_prefix ();
 	joutput ("  tail = ");
 	joutput_integer (idx);
-	joutput (".intValue();\n");
+    joutput(";\n");
 	joutput_line ("continue;");
 	joutput_indent ("  }");
 	joutput_line ("break;");
@@ -3326,7 +3285,7 @@ joutput_sort_proc_escape (struct cb_sort_proc *p)
 {
 	joutput_indent ("if (");
 	joutput_param (p->sort_return, 0);
-	joutput (".intValue() != 0)\n");
+	joutput (" != 0)\n");
 	joutput ("{\n");
 	joutput_indent ("  while (frame_ptr->current_sort_merge_file != ");
 	joutput_param (p->sort_file, 0);
@@ -3696,9 +3655,13 @@ joutput_stmt (cb_tree x)
 		} else {
 			/* Numeric assignment */
 			joutput_prefix ();
+
+            int tmp_flag = integer_reference_flag;
+            integer_reference_flag = 1;
 			joutput_integer (ap->var);
+            integer_reference_flag = tmp_flag;
+
 			joutput (".set(");
-            joutput ("/*xxxxxx*/");
 			++index_read_flag;
 			joutput_integer (ap->val);
 			--index_read_flag;
@@ -3716,7 +3679,11 @@ joutput_stmt (cb_tree x)
 #else	/* Nonaligned */
 		joutput_prefix ();
 
+        int tmp_flag = integer_reference_flag;
+        integer_reference_flag = 1;
 		joutput_integer (ap->var);
+        integer_reference_flag = tmp_flag;
+
 		joutput (".set(");
 		++index_read_flag;
 		joutput_integer (ap->val);
@@ -4116,7 +4083,10 @@ joutput_initial_values (struct cb_field *p)
 		if (p->flag_no_init && !p->count) {
 			continue;
 		}
+        int tmp_flag = integer_reference_flag;
+        integer_reference_flag = 1;
 		joutput_stmt (cb_build_initialize (x, cb_true, NULL, def, 0));
+        integer_reference_flag = tmp_flag;
 	}
 }
 
@@ -4894,7 +4864,7 @@ joutput_internal_function (struct cb_program *prog, cb_tree parameter_list)
 	joutput_prefix ();
 	joutput ("return ");
 	joutput_integer (current_prog->cb_return_code);
-	joutput (".intValue ();\n");
+	joutput (";\n");
 
 	joutput_indent_level -= 2;
 	joutput_line ("}");

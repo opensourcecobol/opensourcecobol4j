@@ -935,21 +935,46 @@ public class CobolDataStorage {
 		return new PairInt(val, 0);
 	}
 
+	private final static int i_0x000000ff = Integer.parseUnsignedInt("000000ff", 16);
+	private final static int i_0x0000ff00 = Integer.parseUnsignedInt("0000ff00", 16);
+	private final static int i_0x00ff0000 = Integer.parseUnsignedInt("00ff0000", 16);
+	private final static int i_0xff000000 = Integer.parseUnsignedInt("ff000000", 16);
+	
+	private final static long l_0x00000000000000ff = Long.parseUnsignedLong("00000000000000ff", 16);
+	private final static long l_0x000000000000ff00 = Long.parseUnsignedLong("000000000000ff00", 16);
+	private final static long l_0x0000000000ff0000 = Long.parseUnsignedLong("0000000000ff0000", 16);
+	private final static long l_0x00000000ff000000 = Long.parseUnsignedLong("00000000ff000000", 16);
+	private final static long l_0x000000ff00000000 = Long.parseUnsignedLong("000000ff00000000", 16);
+	private final static long l_0x0000ff0000000000 = Long.parseUnsignedLong("0000ff0000000000", 16);
+	private final static long l_0x00ff000000000000 = Long.parseUnsignedLong("00ff000000000000", 16);
+	private final static long l_0xff00000000000000 = Long.parseUnsignedLong("ff00000000000000", 16);
+
 	//TODO 修正
 	//opensource COBOLにはない実装 COB_BSWAP_32などの代替
 	//本家opensource COBOLのcobc/codegen.cの894行目付近を参照
-	public long getBinaryShort() {
-		byte[] bytes = this.getByteArray(0, 2);
-		return ByteBuffer.wrap(bytes).getShort();
+	public long bswap_16() {
+		short v = this.shortValue();
+		return (v >>> 8) | (v << 8);
 	}
 
-	public long getBinaryInt() {
-		byte[] bytes = this.getByteArray(0, 4);
-		return ByteBuffer.wrap(bytes).getInt();
+	public long bswap_32() {
+		int v = this.intValue();
+		return  ((v & i_0x000000ff) << 24) |
+				((v & i_0x0000ff00) << 8 ) |
+				((v & i_0x00ff0000) >> 8 ) |
+				((v & i_0xff000000) >> 24);
 	}
 
-	public long getBinaryLong() {
-		byte[] bytes = this.getByteArray(0, 8);
-		return ByteBuffer.wrap(bytes).getLong();
+	public long bswap_64() {
+		long v = this.longValue();
+		return  ((v & l_0x00000000000000ff) <<  56) |
+				((v & l_0x000000000000ff00) <<  40) |
+				((v & l_0x0000000000ff0000) <<  24) |
+				((v & l_0x00000000ff000000) <<  8 ) |
+				((v & l_0x000000ff00000000) >>> 8 ) |
+				((v & l_0x0000ff0000000000) >>> 24) |
+				((v & l_0x00ff000000000000) >>> 40) |
+				((v & l_0xff00000000000000) >>> 56);
 	}
+	
 }
