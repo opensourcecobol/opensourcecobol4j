@@ -403,6 +403,7 @@ joutput_indent (const char *str)
 	}
 }
 
+int param_wrap_string_flag = 0;
 static void
 joutput_string (const unsigned char *s, int size)
 {
@@ -417,6 +418,9 @@ joutput_string (const unsigned char *s, int size)
 	}
 
 	if(printable) {
+        if(param_wrap_string_flag) {
+            joutput("new CobolDataStorage(");
+        }
 		joutput ("\"");
 		for(i = 0; i < size; i++) {
 			c = s[i];
@@ -427,6 +431,9 @@ joutput_string (const unsigned char *s, int size)
 			}
 		}
 		joutput ("\"");
+        if(param_wrap_string_flag) {
+            joutput(")");
+        }
 	} else {
 		joutput("makeCobolDataStorage(");
 		for(i = 0; i < size; i++) {
@@ -1083,7 +1090,6 @@ joutput_index (cb_tree x)
 /*
  * Parameter
  */
-
 static void
 joutput_param (cb_tree x, int id)
 {
@@ -1479,7 +1485,12 @@ joutput_funcall (cb_tree x)
 
 	if(CB_CALL_METHOD_P(p)) {
 		screenptr = p->screenptr;
+
+        int tmp_flag = param_wrap_string_flag;
+        param_wrap_string_flag = 1;
 		joutput_param(p->argv[0], 0);
+        param_wrap_string_flag = tmp_flag;
+
 		joutput (".%s (", p->name);
 		for (i = 1; i < p->argc; i++) {
 			if (p->varcnt && i + 1 == p->argc) {
