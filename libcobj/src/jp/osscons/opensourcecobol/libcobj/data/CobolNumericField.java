@@ -729,36 +729,33 @@ public class CobolNumericField extends AbstractCobolField {
 			throw new CobolRuntimeException(0, "未実装");
 		}
 
-		int sign = this.getSign();
-		int i=0;
-		/* skip leading zeros */
-		for(; size > 1 && data.getByte(firstDataIndex + i) == '0'; --size, ++i) {
-			;
+		char[] buf = new char[size];
+		for(int i=0; i<size; ++i) {
+			buf[i] = (char)data.getByte(firstDataIndex + i);
+		}
+		
+		CobolFieldAttribute attr = this.getAttribute();
+		int sign = 1;
+		if(attr.isFlagHaveSign()) {
+			if(attr.isFlagSignSeparate()) {
+				int signIndex = attr.isFlagSignLeading() ? 0 : this.getSize() - 1;
+				if(data.getByte(signIndex) == '-') {
+					sign = -1;
+				}
+			} else {
+				int signIndex = attr.isFlagSignLeading() ? 0 : size - 1;
+				if(buf[signIndex] >= 0x70) {
+					buf[signIndex] -= 0x40;
+					sign = -1;
+				}
+			}
 		}
 
-		/* set value */
-		BigDecimal value;
-		if(size < 10) {
-			int n = 0;
-			while(size-- >0) {
-				n = n * 10 + data.getByte(firstDataIndex + (i++)) - 0x30;
-			}
-			value = new BigDecimal(n);
-		} else {
-			char[] numBuffPtr = new char[size];
-			for(int k=0; k<size; ++k) {
-				numBuffPtr[k] = (char)data.getByte(firstDataIndex + k);
-			}
-			value = new BigDecimal(numBuffPtr);
-		}
-
+		BigDecimal decimal = new BigDecimal(buf);
 		if(sign < 0) {
-			value = value.negate();
+			decimal = decimal.negate();
 		}
-		value.setScale(this.getAttribute().getScale());
-		this.putSign(sign);
-
-		return new CobolDecimal(value);
+		return new CobolDecimal(decimal);
 	}
 
 	//addInt内のgotoの代替として使用する

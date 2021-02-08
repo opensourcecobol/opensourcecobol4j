@@ -545,7 +545,9 @@ public class CobolDataStorage {
 		return ret;*/
 		ByteBuffer buffer = ByteBuffer.wrap(this.data, this.index, numOfBytes);
 		buffer.order(isBigEndian ? ByteOrder.BIG_ENDIAN : ByteOrder.LITTLE_ENDIAN);
-		if(numOfBytes == 2) {
+		if(numOfBytes == 1) {
+			return buffer.get();
+		} else if(numOfBytes == 2) {
 			return buffer.getChar();
 		} else if(numOfBytes == 4) {
 			return buffer.getInt();

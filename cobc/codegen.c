@@ -3987,9 +3987,6 @@ joutput_file_initialization (struct cb_file *f)
 	joutput_line ("/* flag_needs_top = */ false,");
 	joutput_line ("/* file_version = */ (char)%d", COB_FILE_VERSION);
 	joutput_line(");");
-	if (f->external) {
-		joutput_indent ("}");
-	}
 
 	if (f->external) {
 		joutput_line ("%s%s = (cob_file *)cob_external_addr (\"%s\", sizeof(cob_file));",
@@ -4048,6 +4045,9 @@ joutput_file_initialization (struct cb_file *f)
 		joutput_line ("lingptr.setLinFoot(0);");
 		joutput_line ("lingptr.setLinTop(0);");
 		joutput_line ("lingptr.setLinBot(0);");
+	}
+    if (f->external) {
+		joutput_indent ("}");
 	}
 
 }
@@ -4577,32 +4577,32 @@ joutput_internal_function (struct cb_program *prog, cb_tree parameter_list)
 	//	output_newline ();
 	//}
 
-	//if (prog->flag_initial) {
-	//	for (l = prog->file_list; l; l = CB_CHAIN (l)) {
-	//		f = CB_FILE (CB_VALUE (l))->record;
-	//		if (f->flag_external) {
-	//			strcpy (name, f->name);
-	//			for (p = name; *p; p++) {
-	//				if (*p == '-') {
-	//					*p = '_';
-	//				}
-	//			}
-	//			output_line ("%s%s = cob_external_addr (\"%s\", %d);",
-	//				     CB_PREFIX_BASE, name, name,
-	//				     CB_FILE (CB_VALUE (l))->record_max);
-	//		}
-	//	}
-	//	output_initial_values (prog->working_storage);
-	//	if (has_external) {
-	//		output_line ("goto L_initextern;");
-	//		output_line ("LRET_initextern: ;");
-	//	}
-	//	output_newline ();
-	//	for (l = prog->file_list; l; l = CB_CHAIN (l)) {
-	//		output_file_initialization (CB_FILE (CB_VALUE (l)));
-	//	}
-	//	output_newline ();
-	//}
+	if (prog->flag_initial) {
+		for (l = prog->file_list; l; l = CB_CHAIN (l)) {
+			f = CB_FILE (CB_VALUE (l))->record;
+			if (f->flag_external) {
+				strcpy (name, f->name);
+				for (p = name; *p; p++) {
+					if (*p == '-') {
+						*p = '_';
+					}
+				}
+				joutput_line ("%s%s = cob_external_addr (\"%s\", %d);",
+					     CB_PREFIX_BASE, name, name,
+					     CB_FILE (CB_VALUE (l))->record_max);
+			}
+		}
+		joutput_initial_values (prog->working_storage);
+		if (has_external) {
+			joutput_line ("goto L_initextern;");
+			joutput_line ("LRET_initextern: ;");
+		}
+		joutput_newline ();
+		for (l = prog->file_list; l; l = CB_CHAIN (l)) {
+			joutput_file_initialization (CB_FILE (CB_VALUE (l)));
+		}
+		joutput_newline ();
+	}
 	//if (prog->local_storage) {
 	//	if (local_cache) {
 	//		output_line ("/* Allocate LOCAL storage */");
@@ -4846,20 +4846,20 @@ joutput_internal_function (struct cb_program *prog, cb_tree parameter_list)
 	//output_newline ();
 #endif
 
-	//if (has_external) {
-	//	output_newline ();
-	//	output_line ("/* EXTERNAL data initialization */");
-	//	output_line ("L_initextern: ;");
-	//	for (k = field_cache; k; k = k->next) {
-	//		if (k->f->flag_item_external) {
-	//			output_prefix ();
-	//			output ("\t%s%d.data = ", CB_PREFIX_FIELD, k->f->id);
-	//			output_data (k->x);
-	//			output (";\n");
-	//		}
-	//	}
-	//	output_line ("\tgoto LRET_initextern;");
-	//}
+	if (has_external) {
+		output_newline ();
+		output_line ("/* EXTERNAL data initialization */");
+		output_line ("L_initextern: ;");
+		for (k = field_cache; k; k = k->next) {
+			if (k->f->flag_item_external) {
+				output_prefix ();
+				output ("\t%s%d.data = ", CB_PREFIX_FIELD, k->f->id);
+				output_data (k->x);
+				output (";\n");
+			}
+		}
+		output_line ("\tgoto LRET_initextern;");
+	}
 
 	//output_indent ("}");
 	//output_newline ();
