@@ -174,6 +174,7 @@ static void joutput_func_1 (const char *name, cb_tree x);
 static void joutput_stmt (cb_tree x);
 static void joutput_figurative (cb_tree x, struct cb_field *f, const int value);
 
+const int L_initextern_addr = 2000000000;
 
 static void
 lookup_call (const char *p)
@@ -1920,7 +1921,7 @@ joutput_initialize_external (cb_tree x, struct cb_field *f)
 	joutput_prefix ();
 	joutput_data (x);
 	if (f->ename) {
-		joutput (" = cob_external_addr (\"%s\", %d);\n", f->ename, f->size);
+		joutput (" = CobolExternal.getrhStorageAddress (\"%s\", %d);\n", f->ename, f->size);
 	} else if (f->storage == CB_STORAGE_FILE) {
 		file = CB_TREE (f->file);
 		strcpy (name, CB_FILE(file)->record->name);
@@ -1929,7 +1930,7 @@ joutput_initialize_external (cb_tree x, struct cb_field *f)
 				*p = '_';
 			}
 		}
-		joutput (" = cob_external_addr (\"%s\", %d);\n", name, f->size);
+		joutput (" = CobolExternal.getrhStorageAddress (\"%s\", %d);\n", name, f->size);
 	} else {
 		strcpy (name, f->name);
 		for (p = (unsigned char *)name; *p; p++) {
@@ -1937,7 +1938,7 @@ joutput_initialize_external (cb_tree x, struct cb_field *f)
 				*p = (unsigned char)toupper (*p);
 			}
 		}
-		joutput (" = cob_external_addr (\"%s\", %d);\n", name, f->size);
+		joutput (" = CobolExternal.getrhStorageAddress (\"%s\", %d);\n", name, f->size);
 	}
 }
 
@@ -3809,22 +3810,22 @@ joutput_file_allocation (struct cb_file *f)
 	/* Output RELATIVE/RECORD KEY's */
 	if (f->organization == COB_ORG_RELATIVE || f->organization == COB_ORG_INDEXED) {
 		if (f->global) {
-			joutput_line ("CobolFileKey[]\t%s%s = null;",
+			joutput_line ("private CobolFileKey[]\t%s%s = null;",
 				CB_PREFIX_KEYS, f->cname);
 		} else {
-			joutput_line ("CobolFileKey[]\t%s%s = null;",
+			joutput_line ("private CobolFileKey[]\t%s%s = null;",
 				CB_PREFIX_KEYS, f->cname);
 		}
 	}
 	if (f->global) {
-		joutput_line ("CobolFile\t\t%s%s = null;",
+		joutput_line ("private CobolFile\t\t%s%s = null;",
 			CB_PREFIX_FILE, f->cname);
-		joutput_line ("byte[]\t%s%s_status = new byte[4];",
+		joutput_line ("private byte[]\t%s%s_status = new byte[4];",
 			CB_PREFIX_FILE, f->cname);
 	} else {
-		joutput_line ("CobolFile\t\t%s%s = null;",
+		joutput_line ("private CobolFile\t\t%s%s = null;",
 			CB_PREFIX_FILE, f->cname);
-		joutput_line ("byte[]\t%s%s_status = new byte[4];",
+		joutput_line ("private byte[]\t%s%s_status = new byte[4];",
 			CB_PREFIX_FILE, f->cname);
 	}
 	if (f->linage) {
@@ -3989,9 +3990,9 @@ joutput_file_initialization (struct cb_file *f)
 	joutput_line(");");
 
 	if (f->external) {
-		joutput_line ("%s%s = (cob_file *)cob_external_addr (\"%s\", sizeof(cob_file));",
-			     CB_PREFIX_FILE, f->cname, f->cname);
-		joutput_line ("if (cob_initial_external)");
+		//joutput_line ("%s%s = CobolExternal.getFileAddress (\"%s\");",
+			     //CB_PREFIX_FILE, f->cname, f->cname);
+		joutput_line ("if (CobolExternal.initialExternal)");
 		joutput_indent ("{");
 		if (f->linage) {
 			joutput_line ("%s%s.setLinorkeyptr(new Linage());", CB_PREFIX_FILE, f->cname);
@@ -4221,33 +4222,7 @@ joutput_internal_function (struct cb_program *prog, cb_tree parameter_list)
 			cb_pretty_display);
 	}
 	joutput_newline ();
-
-	///* External items */
-	//for (f = prog->working_storage; f; f = f->sister) {
-	//	if (f->flag_external) {
-	//		strcpy (name, f->name);
-	//		for (p = name; *p; p++) {
-	//			if (*p == '-') {
-	//				*p = '_';
-	//			}
-	//		}
-	//		output_local ("static unsigned char\t*%s%s = NULL;", CB_PREFIX_BASE, name);
-	//		output_local ("  /* %s */\n", f->name);
-	//	}
-	//}
-	//for (l = prog->file_list; l; l = CB_CHAIN (l)) {
-	//	f = CB_FILE (CB_VALUE (l))->record;
-	//	if (f->flag_external) {
-	//		strcpy (name, f->name);
-	//		for (p = name; *p; p++) {
-	//			if (*p == '-') {
-	//				*p = '_';
-	//			}
-	//		}
-	//		output_local ("static unsigned char\t*%s%s = NULL;", CB_PREFIX_BASE, name);
-	//		output_local ("  /* %s */\n", f->name);
-	//	}
-	//}
+	
 	//if (cb_sticky_linkage && parmnum) {
 	//	output_local ("\n/* Sticky linkage save pointers */\n");
 	//	for (i = 0; i < parmnum; i++) {
@@ -4492,7 +4467,7 @@ joutput_internal_function (struct cb_program *prog, cb_tree parameter_list)
 						*p = '_';
 					}
 				}
-				joutput_line ("%s%s = cob_external_addr (\"%s\", %d);",
+				joutput_line ("%s%s = CobolExternal.getStorageAddress (\"%s\", %d);",
 					     CB_PREFIX_BASE, name, name,
 					     CB_FILE (CB_VALUE (l))->record_max);
 			}
@@ -4500,8 +4475,8 @@ joutput_internal_function (struct cb_program *prog, cb_tree parameter_list)
 	      joutput_initial_values (prog->working_storage);
 
 		if (has_external) {
-			joutput_line ("goto L_initextern;");
-			joutput_line ("LRET_initextern: ;");
+            joutput_line ("/* init_extern */");
+            joutput_line ("LABEL_%d();", L_initextern_addr);
 		}
 		if (prog->file_list) {
 			joutput_newline ();
@@ -4587,14 +4562,14 @@ joutput_internal_function (struct cb_program *prog, cb_tree parameter_list)
 						*p = '_';
 					}
 				}
-				joutput_line ("%s%s = cob_external_addr (\"%s\", %d);",
+				joutput_line ("%s%s = CobolExternal.getStorageAddress (\"%s\", %d);",
 					     CB_PREFIX_BASE, name, name,
 					     CB_FILE (CB_VALUE (l))->record_max);
 			}
 		}
 		joutput_initial_values (prog->working_storage);
 		if (has_external) {
-			joutput_line ("goto L_initextern;");
+			joutput_line ("goto L_initextern;/*3*/");
 			joutput_line ("LRET_initextern: ;");
 		}
 		joutput_newline ();
@@ -4847,18 +4822,21 @@ joutput_internal_function (struct cb_program *prog, cb_tree parameter_list)
 #endif
 
 	if (has_external) {
-		output_newline ();
-		output_line ("/* EXTERNAL data initialization */");
-		output_line ("L_initextern: ;");
+		joutput_newline ();
+		joutput_line ("/* EXTERNAL data initialization */");
+		//joutput_line ("L_initextern: ;");
+        joutput_buffered = 1;
+		joutput_next_buffer(L_initextern_addr);
 		for (k = field_cache; k; k = k->next) {
 			if (k->f->flag_item_external) {
-				output_prefix ();
-				output ("\t%s%d.data = ", CB_PREFIX_FIELD, k->f->id);
-				output_data (k->x);
-				output (";\n");
+				joutput_prefix ();
+				joutput ("\t%s%d.setDataStorage(", CB_PREFIX_FIELD, k->f->id);
+				joutput_data (k->x);
+				joutput (");\n");
 			}
 		}
-		output_line ("\tgoto LRET_initextern;");
+        joutput_buffered = 0;
+		//joutput_line ("\tgoto LRET_initextern;/*1*/");
 	}
 
 	//output_indent ("}");
@@ -5143,6 +5121,9 @@ void joutput_declare_member_variables(struct cb_program *prog, cb_tree parameter
 	struct attr_list	*j;
 	struct base_list	*blp;
 	const char		*prevprog;
+	struct cb_field		*f;
+	char			*p;
+	char			name[COB_MINI_BUFF];
 
 	/* CobolDecimal型変数の宣言 */
 	if (prog->decimal_index_max) {
@@ -5219,6 +5200,33 @@ void joutput_declare_member_variables(struct cb_program *prog, cb_tree parameter
             CB_PREFIX_BASE, cb_field (CB_VALUE (l))->id);
 	}
 
+    /* External items */
+	for (f = prog->working_storage; f; f = f->sister) {
+		if (f->flag_external) {
+			strcpy (name, f->name);
+			for (p = name; *p; p++) {
+				if (*p == '-') {
+					*p = '_';
+				}
+			}
+			joutput ("private CobolDataStorage\t%s%s = null;", CB_PREFIX_BASE, name);
+			joutput ("  /* %s */\n", f->name);
+		}
+	}
+	for (l = prog->file_list; l; l = CB_CHAIN (l)) {
+		f = CB_FILE (CB_VALUE (l))->record;
+		if (f->flag_external) {
+			strcpy (name, f->name);
+			for (p = name; *p; p++) {
+				if (*p == '-') {
+					*p = '_';
+				}
+			}
+			joutput ("private CobolDataStorage\t%s%s = null;", CB_PREFIX_BASE, name);
+			joutput ("  /* %s */\n", f->name);
+		}
+	}
+
 
 	/* AbstractCobolField型変数の宣言(非定数) */
 	if (field_cache) {
@@ -5274,7 +5282,9 @@ joutput_label_function()
 		joutput_buffer buf = joutput_buffer_list[i];
 		if(buf.default_flag) {
 			joutput_line("public boolean LABEL_DEFAULT() throws CobolRuntimeException, CobolGoBackException, CobolStopRunException {");
-		} else {
+		} else if(buf.label == L_initextern_addr) {
+			joutput_line("public boolean LABEL_%d() {", buf.label);
+        } else {
 			joutput_line("public boolean LABEL_%d() throws CobolRuntimeException, CobolGoBackException, CobolStopRunException {", buf.label);
 		}
 
