@@ -1894,6 +1894,11 @@ process_module_direct (struct filename *fn)
 	char	buff[COB_MEDIUM_BUFF];
 	char	name[COB_MEDIUM_BUFF];
 
+    struct stat st;
+    char sub_file[COB_MEDIUM_BUFF];
+    int i;
+    int status_code;
+
 	char	basename[COB_MEDIUM_BUFF];
 	file_basename(fn->source, basename);
 
@@ -1944,6 +1949,19 @@ process_module_direct (struct filename *fn)
 	//	 cob_ldflags, COB_PIC_FLAGS, COB_EXPORT_DYN, name,
 	//	 fn->translate, cob_libs);
 	sprintf (buff, "javac -g -encoding UTF-8 %s.java", basename);
+
+    //同一ソースコード内の複数のプログラムが一括でコンパイルされるように修正する.
+    /*for(i = 1; ;++i) {
+        //check if the sub file exists.
+        sprintf(sub_file, "%s__%d.java", basename, i);
+        status_code = stat(sub_file, &st);
+        if(status_code != 0 || (st.st_mode & S_IFMT) != S_IFREG) {
+            break;
+        }
+
+	    sprintf (buff, "javac -g -encoding UTF-8 %s", sub_file);
+    }*/
+
 	ret = process (buff);
 #ifdef	COB_STRIP_CMD
 	if (strip_output && ret == 0) {

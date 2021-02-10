@@ -22,16 +22,24 @@ my $opt = shift;
 my $compile;
 my $compile_module;
 
+$enable_c = 0;
+
 if ($opt) {
-	#$compile = "ocobc -std=cobol85 -x $opt";
-	#$compile_module = "ocobc -std=cobol85 -m $opt";
-	$compile = "cobc -std=cobol85 -x $opt";
-	$compile_module = "cobc -std=cobol85 -m $opt";
+    if($enable_c == 1) {
+	    $compile = "ocobc -std=cobol85 -x $opt";
+	    $compile_module = "ocobc -std=cobol85 -m $opt";
+    } else {
+	    $compile = "cobc -std=cobol85 -x $opt";
+	    $compile_module = "cobc -std=cobol85 -m $opt";
+    }
 } else {
-	#$compile = "ocobc -std=cobol85 -x";
-	#$compile_module = "ocobc -std=cobol85 -m";
-	$compile = "cobc -std=cobol85 -x";
-	$compile_module = "cobc -std=cobol85 -m";
+    if($enable_c == 1) {
+	    $compile = "ocobc -std=cobol85 -x";
+	    $compile_module = "ocobc -std=cobol85 -m";
+    } else {
+	    $compile = "cobc -std=cobol85 -x";
+	    $compile_module = "cobc -std=cobol85 -m";
+    }
 }
 
 my $num_progs = 0;
@@ -60,6 +68,8 @@ $skip{OBNC1M} = 1;
 $skip{OBNC2M} = 1;
 
 # temp
+
+
 #$skip{SQ101M}=1;
 #$skip{SQ102A}=1;
 #$skip{SQ103A}=1;
@@ -146,6 +156,33 @@ $skip{OBNC2M} = 1;
 #$skip{SQ303M}=1;
 #$skip{SQ401M}=1;
 
+#$skip{IC101A}=1;
+#$skip{IC103A}=1;
+#$skip{IC106A}=1;
+#$skip{IC108A}=1;
+#$skip{IC112A}=1;
+#$skip{IC114A}=1;
+#$skip{IC116M}=1;
+#$skip{IC201A}=1;
+#$skip{IC203A}=1;
+#$skip{IC207A}=1;
+#$skip{IC209A}=1;
+#$skip{IC213A}=1;
+#$skip{IC216A}=1;
+#$skip{IC222A}=1;
+#$skip{IC223A}=1;
+#$skip{IC224A}=1;
+#$skip{IC225A}=1;
+#$skip{IC226A}=1;
+#$skip{IC227A}=1;
+#$skip{IC228A}=1;
+#$skip{IC233A}=1;
+#$skip{IC234A}=1;
+#$skip{IC235A}=1;
+#$skip{IC237A}=1;
+#$skip{IC401M}=1;
+
+
 open (LOG, "> report.txt") or die;
 print LOG "Filename    total pass fail deleted inspect\n";
 print LOG "--------    ----- ---- ---- ------- -------\n";
@@ -189,8 +226,13 @@ foreach $in (sort (glob("*.{CBL,SUB}"))) {
 	}
       }
       ## if (system ("java $cmd > $exe.out") != 0) {
-      if (system ("java $exe > $exe.out") != 0) {
-      #if (system ("ocobcrun $exe > $exe.out.org") != 0) {
+      $exec_result = 0;
+      if($enable_c == 1) {
+          $exec_result = system ("ocobcrun $exe > $exe.out.org");
+      } else {
+          $exec_result = system ("java $exe > $exe.out");
+      }
+      if ($exec_result != 0) {
 	$execute_error++;
 	print LOG "  ***** execute error *****\n";
       } else {

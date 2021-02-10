@@ -755,7 +755,9 @@ public class CobolNumericField extends AbstractCobolField {
 		if(sign < 0) {
 			decimal = decimal.negate();
 		}
-		return new CobolDecimal(decimal);
+		CobolDecimal ret = new CobolDecimal(decimal);
+		ret.setScale(this.getAttribute().getScale());
+		return ret;
 	}
 
 	//addInt内のgotoの代替として使用する
