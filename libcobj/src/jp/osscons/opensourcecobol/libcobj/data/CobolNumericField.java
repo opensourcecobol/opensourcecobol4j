@@ -71,52 +71,25 @@ public class CobolNumericField extends AbstractCobolField {
 	 */
 	@Override
 	public String getString() {
-		//TODO 最終的にはopensource COBOLのlibcob/termio.cのdisplay_numericと同じ実装にする
 		CobolDataStorage data = this.getDataStorage();
 		CobolFieldAttribute attr = this.getAttribute();
 		int scale = attr.getScale();
-		int lastIndex = scale < 0 ? attr.getDigits() + scale - 1 : attr.getDigits() - 1;
-		byte lastChar = data.getByte(lastIndex);
-		String sign;
-
-		//TODO SIGN_LEADING, SIGN_SEPARATEの場合を実装する
+		int pointIndex = scale > 0 ? attr.getDigits() - scale - 1 : attr.getDigits() - 1;
 		StringBuilder sb = new StringBuilder();
-		if(scale <= 0) {
-			for(int i=0; i<lastIndex; ++i) {
-				//sb.append((char)data.getByte(i));
-				sb.append(removeSign(data.getByte(i)));
-			}
-		} else {
-			int counter = attr.getDigits() - scale;
-			for(int i=0; i<lastIndex; ++i, --counter) {
-				//sb.append((char)data.getByte(i));
-				sb.append(removeSign(data.getByte(i)));
-				if(counter == 1) {
-					sb.append('.');
-				}
-			}
-		}
-
 		if(attr.isFlagHaveSign()) {
-			if(lastChar >= 0x70) {
-				sb.append((char)(lastChar - 0x40));
-				sign = "-";
+			if(this.getSign() < 0) {
+				sb.append('-');
 			} else {
-				sb.append(removeSign(lastChar));
-				sign = "+";
-			}
-		} else {
-			sb.append(removeSign(lastChar));
-			sign = "";
-		}
-
-		if(scale < 0) {
-			for(int i=0; i<-scale; ++i) {
-				sb.append('0');
+				sb.append('+');
 			}
 		}
-
-		return sign + sb;
+		for(int i=0; i<attr.getDigits(); ++i) {
+			sb.append((char)data.getByte(this.getFirstDataIndex() + i));
+			if(scale > 0 && i == pointIndex) {
+				sb.append('.');
+			}
+		}
+		return sb.toString();
 	}
 
 	/**
@@ -223,9 +196,9 @@ public class CobolNumericField extends AbstractCobolField {
 	private void moveDisplayToDisplay(AbstractCobolField field) {
 		int sign = field.getSign();
 
-		this.storeCommonRegion(this, field.getDataStorage(), field.size, field.getAttribute().getScale());
+		this.storeCommonRegion(this, field.getDataStorage().getSubDataStorage(field.getFirstDataIndex()), field.getFieldSize(), field.getAttribute().getScale());
 
-		//field.putSign(sign);
+		field.putSign(sign);
 		this.putSign(sign);
 	}
 
