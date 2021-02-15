@@ -83,8 +83,14 @@ public class CobolNumericField extends AbstractCobolField {
 				sb.append('+');
 			}
 		}
+		
+		int signIndex = attr.isFlagSignLeading() ? 0 : this.getSize() - 1;
 		for(int i=0; i<attr.getDigits(); ++i) {
-			sb.append((char)data.getByte(this.getFirstDataIndex() + i));
+			char c = (char)data.getByte(this.getFirstDataIndex() + i);
+			if(attr.isFlagHaveSign() && !attr.isFlagSignSeparate() && i == signIndex && c >= 0x70) {
+				c -= 0x40;
+			}
+			sb.append(c);
 			if(scale > 0 && i == pointIndex) {
 				sb.append('.');
 			}
@@ -547,8 +553,7 @@ public class CobolNumericField extends AbstractCobolField {
 			///this.putSignEbcdic(p, sign);
 		//}
 
-		else if(sign < 0) {
-			//TODO opensource COBOLと同じ実装にしたが,無条件に0x40を足してしまっていいのか?考える
+		else if(sign < 0 && value < 0x70) {
 			this.getDataStorage().setByte(p, (byte) (value + 0x40));
 		}
 	}
