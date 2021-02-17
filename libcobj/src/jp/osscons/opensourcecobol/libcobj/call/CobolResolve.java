@@ -177,7 +177,7 @@ public class CobolResolve {
 	 * @throws CobolCallException
 	 */
 	static public CobolRunnable resolve(AbstractCobolField cobolField) throws CobolCallException {
-		return resolve(cobolField.getString());
+		return resolve(cobolField.fieldToString());
 	}
 
 	/**

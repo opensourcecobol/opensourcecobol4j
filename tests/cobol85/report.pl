@@ -22,12 +22,24 @@ my $opt = shift;
 my $compile;
 my $compile_module;
 
+$enable_c = 0;
+
 if ($opt) {
-	$compile = "cobc -std=cobol85 -x $opt";
-	$compile_module = "cobc -std=cobol85 -m $opt";
+    if($enable_c == 1) {
+	    $compile = "ocobc -std=cobol85 -x $opt";
+	    $compile_module = "ocobc -std=cobol85 -m $opt";
+    } else {
+	    $compile = "cobc -std=cobol85 -x $opt";
+	    $compile_module = "cobc -std=cobol85 -m $opt";
+    }
 } else {
-	$compile = "cobc -std=cobol85 -x";
-	$compile_module = "cobc -std=cobol85 -m";
+    if($enable_c == 1) {
+	    $compile = "ocobc -std=cobol85 -x";
+	    $compile_module = "ocobc -std=cobol85 -m";
+    } else {
+	    $compile = "cobc -std=cobol85 -x";
+	    $compile_module = "cobc -std=cobol85 -m";
+    }
 }
 
 my $num_progs = 0;
@@ -54,6 +66,163 @@ $skip{SG202A} = 1;
 $skip{SG203A} = 1;
 $skip{OBNC1M} = 1;
 $skip{OBNC2M} = 1;
+
+# temp
+
+
+#$skip{SQ101M}=1;
+#$skip{SQ102A}=1;
+#$skip{SQ103A}=1;
+#$skip{SQ104A}=1;
+#$skip{SQ105A}=1;
+#$skip{SQ106A}=1;
+#$skip{SQ107A}=1;
+#$skip{SQ108A}=1;
+#$skip{SQ109M}=1;
+#$skip{SQ110M}=1;
+#$skip{SQ111A}=1;
+#$skip{SQ112A}=1;
+#$skip{SQ113A}=1;
+#$skip{SQ114A}=1;
+#$skip{SQ115A}=1;
+#$skip{SQ116A}=1;
+#$skip{SQ117A}=1;
+#$skip{SQ121A}=1;
+#$skip{SQ122A}=1;
+#$skip{SQ123A}=1;
+#$skip{SQ124A}=1;
+#$skip{SQ125A}=1;
+# $skip{SQ126A}=1;
+#$skip{SQ127A}=1;
+#$skip{SQ128A}=1;
+#$skip{SQ129A}=1;
+#$skip{SQ130A}=1;
+#$skip{SQ131A}=1;
+#$skip{SQ132A}=1;
+#$skip{SQ133A}=1;
+#$skip{SQ134A}=1;
+#$skip{SQ135A}=1;
+#$skip{SQ136A}=1;
+#$skip{SQ137A}=1;
+#$skip{SQ138A}=1;
+#$skip{SQ139A}=1;
+#$skip{SQ140A}=1;
+#$skip{SQ141A}=1;
+#$skip{SQ142A}=1;
+#$skip{SQ143A}=1;
+#$skip{SQ144A}=1;
+#$skip{SQ146A}=1;
+#$skip{SQ147A}=1;
+#$skip{SQ148A}=1;
+#$skip{SQ149A}=1;
+#$skip{SQ150A}=1;
+#$skip{SQ151A}=1;
+#$skip{SQ152A}=1;
+#$skip{SQ153A}=1;
+#$skip{SQ154A}=1;
+#$skip{SQ155A}=1;
+#$skip{SQ156A}=1;
+#$skip{SQ201M}=1;
+#$skip{SQ202A}=1;
+#$skip{SQ203A}=1;
+#$skip{SQ204A}=1;
+#$skip{SQ205A}=1;
+#$skip{SQ206A}=1;
+#$skip{SQ207M}=1;
+#$skip{SQ208M}=1;
+#$skip{SQ209M}=1;
+#$skip{SQ210M}=1;
+#$skip{SQ211A}=1;
+#$skip{SQ212A}=1;
+#$skip{SQ213A}=1;
+#$skip{SQ214A}=1;
+#$skip{SQ215A}=1;
+#$skip{SQ216A}=1;
+#$skip{SQ217A}=1;
+#$skip{SQ218A}=1;
+#$skip{SQ219A}=1;
+#$skip{SQ220A}=1;
+#$skip{SQ221A}=1;
+#$skip{SQ222A}=1;
+#$skip{SQ223A}=1;
+#$skip{SQ224A}=1;
+#$skip{SQ225A}=1;
+#$skip{SQ226A}=1;
+#$skip{SQ227A}=1;
+#$skip{SQ228A}=1;
+#$skip{SQ229A}=1;
+#$skip{SQ230A}=1;
+#$skip{SQ302M}=1;
+#$skip{SQ303M}=1;
+#$skip{SQ401M}=1;
+
+#$skip{IC101A}=1;
+#$skip{IC103A}=1;
+#$skip{IC106A}=1;
+#$skip{IC108A}=1;
+#$skip{IC112A}=1;
+#$skip{IC114A}=1;
+#$skip{IC116M}=1;
+#$skip{IC201A}=1;
+#$skip{IC203A}=1;
+#$skip{IC207A}=1;
+#$skip{IC209A}=1;
+#$skip{IC213A}=1;
+#$skip{IC216A}=1;
+#$skip{IC222A}=1;
+#$skip{IC223A}=1;
+#$skip{IC224A}=1;
+#$skip{IC225A}=1;
+#$skip{IC226A}=1;
+#$skip{IC227A}=1;
+#$skip{IC228A}=1;
+#$skip{IC233A}=1;
+#$skip{IC234A}=1;
+#$skip{IC235A}=1;
+#$skip{IC237A}=1;
+#$skip{IC401M}=1;
+
+#$skip{ST101A}=1;
+#$skip{ST102A}=1;
+#$skip{ST103A}=1;
+#$skip{ST104A}=1;
+#$skip{ST105A}=1;
+#$skip{ST106A}=1;
+#$skip{ST107A}=1;
+#$skip{ST108A}=1;
+#$skip{ST109A}=1;
+#$skip{ST110A}=1;
+#$skip{ST111A}=1;
+#$skip{ST112M}=1;
+#$skip{ST113M}=1;
+#$skip{ST114M}=1;
+#$skip{ST115A}=1;
+#$skip{ST116A}=1;
+#$skip{ST117A}=1;
+#$skip{ST118A}=1;
+#$skip{ST119A}=1;
+#$skip{ST120A}=1;
+#$skip{ST121A}=1;
+#$skip{ST122A}=1;
+#$skip{ST123A}=1;
+#$skip{ST124A}=1;
+#$skip{ST125A}=1;
+#$skip{ST126A}=1;
+#$skip{ST127A}=1;
+#$skip{ST131A}=1;
+#$skip{ST132A}=1;
+#$skip{ST133A}=1;
+#$skip{ST134A}=1;
+#$skip{ST135A}=1;
+#$skip{ST136A}=1;
+#$skip{ST137A}=1;
+#$skip{ST139A}=1;
+#$skip{ST140A}=1;
+#$skip{ST144A}=1;
+#$skip{ST146A}=1;
+#$skip{ST147A}=1;
+#$skip{ST301M}=1;
+
 
 open (LOG, "> report.txt") or die;
 print LOG "Filename    total pass fail deleted inspect\n";
@@ -98,7 +267,13 @@ foreach $in (sort (glob("*.{CBL,SUB}"))) {
 	}
       }
       ## if (system ("java $cmd > $exe.out") != 0) {
-      if (system ("java $exe > $exe.out") != 0) {
+      $exec_result = 0;
+      if($enable_c == 1) {
+          $exec_result = system ("ocobcrun $exe > $exe.out.org");
+      } else {
+          $exec_result = system ("java $exe > $exe.out");
+      }
+      if ($exec_result != 0) {
 	$execute_error++;
 	print LOG "  ***** execute error *****\n";
       } else {

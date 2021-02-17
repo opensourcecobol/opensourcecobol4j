@@ -902,7 +902,7 @@ public abstract class AbstractCobolField {
 	 * libcob/move.cのcob_set_intの実装
 	 */
 	public void setInt(CobolDataStorage data) {
-		this.setInt((int)data.getBinaryInt());
+		this.setInt((int)data.intValue());
 	}
 
 	/**

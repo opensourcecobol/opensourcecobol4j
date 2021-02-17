@@ -171,7 +171,7 @@ public class CobolDecimal {
 	 * @param scale スケール値
 	 */
 	public void setScale(int scale) {
-		//this.value.setScale(scale);
+		this.value.setScale(scale);
 		this.scale = scale;
 	}
 

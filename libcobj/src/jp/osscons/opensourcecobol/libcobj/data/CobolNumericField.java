@@ -71,52 +71,31 @@ public class CobolNumericField extends AbstractCobolField {
 	 */
 	@Override
 	public String getString() {
-		//TODO 最終的にはopensource COBOLのlibcob/termio.cのdisplay_numericと同じ実装にする
 		CobolDataStorage data = this.getDataStorage();
 		CobolFieldAttribute attr = this.getAttribute();
 		int scale = attr.getScale();
-		int lastIndex = scale < 0 ? attr.getDigits() + scale - 1 : attr.getDigits() - 1;
-		byte lastChar = data.getByte(lastIndex);
-		String sign;
-
-		//TODO SIGN_LEADING, SIGN_SEPARATEの場合を実装する
+		int pointIndex = scale > 0 ? attr.getDigits() - scale - 1 : attr.getDigits() - 1;
 		StringBuilder sb = new StringBuilder();
-		if(scale <= 0) {
-			for(int i=0; i<lastIndex; ++i) {
-				//sb.append((char)data.getByte(i));
-				sb.append(removeSign(data.getByte(i)));
-			}
-		} else {
-			int counter = attr.getDigits() - scale;
-			for(int i=0; i<lastIndex; ++i, --counter) {
-				//sb.append((char)data.getByte(i));
-				sb.append(removeSign(data.getByte(i)));
-				if(counter == 1) {
-					sb.append('.');
-				}
-			}
-		}
-
 		if(attr.isFlagHaveSign()) {
-			if(lastChar >= 0x70) {
-				sb.append((char)(lastChar - 0x40));
-				sign = "-";
+			if(this.getSign() < 0) {
+				sb.append('-');
 			} else {
-				sb.append(removeSign(lastChar));
-				sign = "+";
-			}
-		} else {
-			sb.append(removeSign(lastChar));
-			sign = "";
-		}
-
-		if(scale < 0) {
-			for(int i=0; i<-scale; ++i) {
-				sb.append('0');
+				sb.append('+');
 			}
 		}
-
-		return sign + sb;
+		
+		int signIndex = attr.isFlagSignLeading() ? 0 : this.getSize() - 1;
+		for(int i=0; i<attr.getDigits(); ++i) {
+			char c = (char)data.getByte(this.getFirstDataIndex() + i);
+			if(attr.isFlagHaveSign() && !attr.isFlagSignSeparate() && i == signIndex && c >= 0x70) {
+				c -= 0x40;
+			}
+			sb.append(c);
+			if(scale > 0 && i == pointIndex) {
+				sb.append('.');
+			}
+		}
+		return sb.toString();
 	}
 
 	/**
@@ -223,9 +202,9 @@ public class CobolNumericField extends AbstractCobolField {
 	private void moveDisplayToDisplay(AbstractCobolField field) {
 		int sign = field.getSign();
 
-		this.storeCommonRegion(this, field.getDataStorage(), field.size, field.getAttribute().getScale());
+		this.storeCommonRegion(this, field.getDataStorage().getSubDataStorage(field.getFirstDataIndex()), field.getFieldSize(), field.getAttribute().getScale());
 
-		//field.putSign(sign);
+		field.putSign(sign);
 		this.putSign(sign);
 	}
 
@@ -574,8 +553,7 @@ public class CobolNumericField extends AbstractCobolField {
 			///this.putSignEbcdic(p, sign);
 		//}
 
-		else if(sign < 0) {
-			//TODO opensource COBOLと同じ実装にしたが,無条件に0x40を足してしまっていいのか?考える
+		else if(sign < 0 && value < 0x70) {
 			this.getDataStorage().setByte(p, (byte) (value + 0x40));
 		}
 	}
@@ -729,36 +707,35 @@ public class CobolNumericField extends AbstractCobolField {
 			throw new CobolRuntimeException(0, "未実装");
 		}
 
-		int sign = this.getSign();
-		int i=0;
-		/* skip leading zeros */
-		for(; size > 1 && data.getByte(firstDataIndex + i) == '0'; --size, ++i) {
-			;
+		char[] buf = new char[size];
+		for(int i=0; i<size; ++i) {
+			buf[i] = (char)data.getByte(firstDataIndex + i);
+		}
+		
+		CobolFieldAttribute attr = this.getAttribute();
+		int sign = 1;
+		if(attr.isFlagHaveSign()) {
+			if(attr.isFlagSignSeparate()) {
+				int signIndex = attr.isFlagSignLeading() ? 0 : this.getSize() - 1;
+				if(data.getByte(signIndex) == '-') {
+					sign = -1;
+				}
+			} else {
+				int signIndex = attr.isFlagSignLeading() ? 0 : size - 1;
+				if(buf[signIndex] >= 0x70) {
+					buf[signIndex] -= 0x40;
+					sign = -1;
+				}
+			}
 		}
 
-		/* set value */
-		BigDecimal value;
-		if(size < 10) {
-			int n = 0;
-			while(size-- >0) {
-				n = n * 10 + data.getByte(firstDataIndex + (i++)) - 0x30;
-			}
-			value = new BigDecimal(n);
-		} else {
-			char[] numBuffPtr = new char[size];
-			for(int k=0; k<size; ++k) {
-				numBuffPtr[k] = (char)data.getByte(firstDataIndex + k);
-			}
-			value = new BigDecimal(numBuffPtr);
-		}
-
+		BigDecimal decimal = new BigDecimal(buf);
 		if(sign < 0) {
-			value = value.negate();
+			decimal = decimal.negate();
 		}
-		value.setScale(this.getAttribute().getScale());
-		this.putSign(sign);
-
-		return new CobolDecimal(value);
+		CobolDecimal ret = new CobolDecimal(decimal);
+		ret.setScale(this.getAttribute().getScale());
+		return ret;
 	}
 
 	//addInt内のgotoの代替として使用する

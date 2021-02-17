@@ -231,6 +231,9 @@ public class CobolFile {
 	public void setLinorkeyptr(Linage ptr) {
 		this.linorkeyptr = ptr;
 	}
+	
+	public CobolFile() {
+	}
 
 	public CobolFile(
 			String select_name,
