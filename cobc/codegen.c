@@ -5333,7 +5333,7 @@ joutput_main_function (struct cb_program *prog)
 }
 
 void
-codegen (struct cb_program *prog, const int nested)
+codegen (struct cb_program *prog, const int nested, char** program_id_list)
 {
 	int			i;
 	cb_tree			l;
@@ -5373,6 +5373,7 @@ codegen (struct cb_program *prog, const int nested)
 	joutput_target = yyout;
 	char java_file_name[64];
 	sprintf(java_file_name, "%s.java", prog->program_id);
+    *program_id_list = prog->program_id;
 	joutput_target = fopen(java_file_name, "w");
 
 	if (!nested) {
@@ -5611,7 +5612,8 @@ codegen (struct cb_program *prog, const int nested)
 	    joutput_indent_level -= 2;
 	    joutput_line("}");
 	    fclose(joutput_target);
-		codegen (prog->next_program, 1);
+        ++program_id_list;
+		codegen (prog->next_program, 1, program_id_list);
 		return;
 	}
 

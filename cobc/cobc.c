@@ -164,6 +164,9 @@ char			**cb_saveargv;
 
 const char		*cob_config_dir;
 
+#define PROGRAM_ID_LIST_MAX_LEN 1024
+char* program_id_list[PROGRAM_ID_LIST_MAX_LEN];
+
 #ifdef	_MSC_VER 
 #if	_MSC_VER >= 1400
 static const char	*manicmd;
@@ -1818,7 +1821,10 @@ process_translate (struct filename *fn)
 	}
 
 	/* translate to C */
-	codegen (p, 0);
+    for(int i=0; i<PROGRAM_ID_LIST_MAX_LEN; ++i) {
+        program_id_list[i] = NULL;
+    }
+	codegen (p, 0, program_id_list);
 
 	/* close the files */
 	fclose (cb_storage_file);
@@ -1834,6 +1840,8 @@ process_compile (struct filename *fn)
 {
 	char buff[COB_MEDIUM_BUFF];
 	char name[COB_MEDIUM_BUFF];
+    int i;
+    int ret, tmpret;
 
 	if (output_name) {
 		strcpy (name, output_name);
@@ -1856,7 +1864,12 @@ process_compile (struct filename *fn)
 	sprintf (buff, "%s %s -S -o \"%s\" %s %s %s", cob_cc, gccpipe, name,
 			cob_cflags, cob_define_flags, fn->translate);
 #endif
-	return process (buff);
+
+    for(char** program_id = program_id_list; *program_id; ++program_id) {
+        sprintf(buff, "javac -g -encoding UTF8 %s.java", *program_id);
+        ret = process (buff);
+    }
+	return ret;
 }
 
 /* Create single-element assembled object */
@@ -1901,6 +1914,7 @@ process_module_direct (struct filename *fn)
 
 	char	basename[COB_MEDIUM_BUFF];
 	file_basename(fn->source, basename);
+    struct cb_program* p;
 
 	if (output_name) {
 		strcpy (name, output_name);
@@ -1948,7 +1962,11 @@ process_module_direct (struct filename *fn)
 	//	 cob_cc, gccpipe, cob_cflags, cob_define_flags, COB_SHARED_OPT,
 	//	 cob_ldflags, COB_PIC_FLAGS, COB_EXPORT_DYN, name,
 	//	 fn->translate, cob_libs);
-	sprintf (buff, "javac -g -encoding UTF-8 %s.java", basename);
+
+    for(p = current_program; p; p = p->next_program) {
+	    sprintf (buff, "javac -g -encoding UTF8 %s.java", p->program_id);
+	    ret = process (buff);
+    }
 
     //同一ソースコード内の複数のプログラムが一括でコンパイルされるように修正する.
     /*for(i = 1; ;++i) {
@@ -1962,7 +1980,6 @@ process_module_direct (struct filename *fn)
 	    sprintf (buff, "javac -g -encoding UTF-8 %s", sub_file);
     }*/
 
-	ret = process (buff);
 #ifdef	COB_STRIP_CMD
 	if (strip_output && ret == 0) {
 		sprintf (buff, "%s \"%s\"", COB_STRIP_CMD, name);
@@ -2487,7 +2504,7 @@ main (int argc, char *argv[])
 		}
 
 		/* Compile */
-		if (cb_compile_level == CB_LEVEL_COMPILE) {
+		if (cb_compile_level == CB_LEVEL_COMPILE || cb_compile_level == CB_LEVEL_MODULE) {
 			if (process_compile (fn) != 0) {
 				cobc_clean_up (status);
 				return status;
@@ -2495,28 +2512,28 @@ main (int argc, char *argv[])
 		}
 
 		/* Build module */
-		if (cb_compile_level == CB_LEVEL_MODULE && fn->need_assemble) {
-			if (process_module_direct (fn) != 0) {
-				cobc_clean_up (status);
-				return status;
-			}
-		} else {
-			/* Assemble */
-			if (cb_compile_level >= CB_LEVEL_ASSEMBLE && fn->need_assemble) {
-				if (process_assemble (fn) != 0) {
-					cobc_clean_up (status);
-					return status;
-				}
-			}
+		//if (cb_compile_level == CB_LEVEL_MODULE && fn->need_assemble) {
+		//	if (process_module_direct (fn) != 0) {
+		//		cobc_clean_up (status);
+		//		return status;
+		//	}
+		//} else {
+		//	/* Assemble */
+		//	if (cb_compile_level >= CB_LEVEL_ASSEMBLE && fn->need_assemble) {
+		//		if (process_assemble (fn) != 0) {
+		//			cobc_clean_up (status);
+		//			return status;
+		//		}
+		//	}
 
-			/* Build module */
-			if (cb_compile_level == CB_LEVEL_MODULE) {
-				if (process_module (fn) != 0) {
-					cobc_clean_up (status);
-					return status;
-				}
-			}
-		}
+		//	/* Build module */
+		//	if (cb_compile_level == CB_LEVEL_MODULE) {
+		//		if (process_module (fn) != 0) {
+		//			cobc_clean_up (status);
+		//			return status;
+		//		}
+		//	}
+		//}
 	}
 
 	if (!cb_flag_syntax_only) {
