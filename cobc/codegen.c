@@ -4149,7 +4149,6 @@ joutput_internal_function (struct cb_program *prog, cb_tree parameter_list)
 		}
 	}
 
-	joutput_line("this.initialized = false;");
 	joutput("\n");
 
 	//if (!prog->flag_chained) {
@@ -4409,9 +4408,9 @@ joutput_internal_function (struct cb_program *prog, cb_tree parameter_list)
 
 	/* Initialization */
 
-	//joutput_line ("/* Initialize program */");
-	//joutput_line ("if (initialized == 0)");
-	//joutput_indent ("  {");
+	joutput_line ("/* Initialize program */");
+	joutput_line ("if (!this.initialized) {");
+    joutput_indent_level += 2;
 
 	////joutput_initial_values (prog->working_storage);
 
@@ -4487,7 +4486,9 @@ joutput_internal_function (struct cb_program *prog, cb_tree parameter_list)
 		}
 	}
 
-	//output_line ("initialized = 1;");
+	joutput_line ("this.initialized = true;");
+    joutput_indent_level -= 2;
+    joutput_line ("}");
 	//if (prog->flag_chained) {
 	//	joutput ("    } else {\n");
 	//	joutput_line ("  cob_fatal_error (COB_FERROR_CHAINING);");
@@ -5435,7 +5436,7 @@ codegen (struct cb_program *prog, const int nested)
     joutput_indent_level += 2;
 	joutput("\n");
 
-	joutput_line("private boolean initialized;");
+	joutput_line("private boolean initialized = false;");
 	joutput_line("private CobolModule cobolCurrentModule;");
     joutput_line("private int frameIndex;");
     joutput_line("private CobolModule module;");
