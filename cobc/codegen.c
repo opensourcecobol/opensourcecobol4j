@@ -4684,7 +4684,7 @@ joutput_internal_function (struct cb_program *prog, cb_tree parameter_list)
 	joutput_line("entryFunc(0);");
 
 	joutput_indent_level -= 2;
-	joutput_line("  CobolStopRunException.stopRun();");
+	//joutput_line("  CobolStopRunException.stopRun();");
 	joutput_line("} catch(CobolGoBackException e) {");
 	joutput_line("  return e.getReturnCode();");
 	joutput_line("} catch(CobolStopRunException e) {");
@@ -4842,13 +4842,6 @@ joutput_internal_function (struct cb_program *prog, cb_tree parameter_list)
 
 	//output_indent ("}");
 	//output_newline ();
-
-	
-	//cobcrunで呼ばれるcob_stop_run
-	//TODO 適切な場所に移す
-	joutput_line("//cobcrunで呼ばれるcob_stop_run");
-	joutput_line("//TODO 適切な場所に移す");
-	joutput_line("CobolStopRunException.stopRun();");
 
 	joutput_line ("/* Program return */");
 	joutput_prefix ();
@@ -5516,6 +5509,7 @@ codegen (struct cb_program *prog, const int nested, char** program_id_list)
 
 	joutput_line ("CobolDecimal.cobInitNumeric();");
 	joutput_line ("new %s().%s_(0);", prog->program_id, prog->program_id);
+    joutput_line ("CobolStopRunException.stopRun();");
 	joutput_indent_level -= 2;
 	joutput_line ("}\n");
 

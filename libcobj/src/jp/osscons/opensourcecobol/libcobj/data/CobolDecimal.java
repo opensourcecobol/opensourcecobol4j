@@ -171,7 +171,7 @@ public class CobolDecimal {
 	 * @param scale スケール値
 	 */
 	public void setScale(int scale) {
-		this.value.setScale(scale);
+		this.value.setScale(scale, RoundingMode.DOWN);
 		this.scale = scale;
 	}
 
@@ -382,7 +382,7 @@ public class CobolDecimal {
 	 * @param n this.valueを割る数
 	 */
 	public void div(int n) {
-		this.value = this.value.divide(new BigDecimal(n), BigDecimal.ROUND_DOWN);
+		this.value = this.value.divide(new BigDecimal(n), RoundingMode.DOWN);
 	}
 
 		/**
@@ -632,7 +632,7 @@ public class CobolDecimal {
 				if((opt & COB_STORE_TRUNC_ON_OVERFLOW) != 0) {
 					this.setValue(this.getValue().divide(cobMpze10[digits],  RoundingMode.DOWN));
 				} else {
-					this.setValue(this.getValue().divide(new BigDecimal(2).pow(f.getSize()*8)));
+					this.setValue(this.getValue().divide(new BigDecimal(2).pow(f.getSize()*8), RoundingMode.DOWN));
 				}
 			} else if((opt != 0) && CobolModule.getCurrentModule().flag_binary_truncate !=0) {
 				if(this.getValue().abs().compareTo(cobMpze10[digits].abs()) >= 0) {
@@ -643,7 +643,7 @@ public class CobolDecimal {
 					if((opt & COB_STORE_TRUNC_ON_OVERFLOW) != 0) {
 						this.setValue(this.getValue().divide(cobMpze10[digits], RoundingMode.DOWN));
 					} else {
-						this.setValue(this.getValue().divide(new BigDecimal(2).pow(f.getFieldSize() * 8)));
+						this.setValue(this.getValue().divide(new BigDecimal(2).pow(f.getFieldSize() * 8), RoundingMode.DOWN));
 					}
 				}
 			}
