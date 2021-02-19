@@ -1921,7 +1921,7 @@ joutput_initialize_external (cb_tree x, struct cb_field *f)
 	joutput_prefix ();
 	joutput_data (x);
 	if (f->ename) {
-		joutput (" = CobolExternal.getrhStorageAddress (\"%s\", %d);\n", f->ename, f->size);
+		joutput (" = CobolExternal.getStorageAddress (\"%s\", %d);\n", f->ename, f->size);
 	} else if (f->storage == CB_STORAGE_FILE) {
 		file = CB_TREE (f->file);
 		strcpy (name, CB_FILE(file)->record->name);
@@ -1930,7 +1930,7 @@ joutput_initialize_external (cb_tree x, struct cb_field *f)
 				*p = '_';
 			}
 		}
-		joutput (" = CobolExternal.getrhStorageAddress (\"%s\", %d);\n", name, f->size);
+		joutput (" = CobolExternal.getStorageAddress (\"%s\", %d);\n", name, f->size);
 	} else {
 		strcpy (name, f->name);
 		for (p = (unsigned char *)name; *p; p++) {
@@ -1938,7 +1938,7 @@ joutput_initialize_external (cb_tree x, struct cb_field *f)
 				*p = (unsigned char)toupper (*p);
 			}
 		}
-		joutput (" = CobolExternal.getrhStorageAddress (\"%s\", %d);\n", name, f->size);
+		joutput (" = CobolExternal.getStorageAddress (\"%s\", %d);\n", name, f->size);
 	}
 }
 

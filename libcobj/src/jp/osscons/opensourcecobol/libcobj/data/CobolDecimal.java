@@ -180,8 +180,7 @@ public class CobolDecimal {
 	 * @return this.valueのスケール
 	 */
 	public int getScale() {
-		//return this.value.scale();
-		return this.scale;
+		return this.value.scale();
 	}
 
 	/**
