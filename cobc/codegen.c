@@ -4660,7 +4660,7 @@ joutput_internal_function (struct cb_program *prog, cb_tree parameter_list)
 	//	joutput_line ("  }");
 	//	joutput_line ("/* This should never be reached */");
 	//	joutput_line ("cob_fatal_error (COB_FERROR_CHAINING);");
-	//	goutput_newline ();
+	//	joutput_newline ();
 	//} else {
 	//	l = prog->entry_list;
 	//	joutput_line ("goto %s%d;", CB_PREFIX_LABEL, CB_LABEL (CB_PURPOSE (l))->id);
@@ -4712,9 +4712,9 @@ joutput_internal_function (struct cb_program *prog, cb_tree parameter_list)
 	//	}
 	//	output_newline ();
 	//}
-	output_line ("/* Pop module stack */");
-	output_line ("CobolModule.pollLast();");
-	output_newline ();
+	joutput_line ("/* Pop module stack */");
+	joutput_line ("CobolModule.pollLast();");
+	joutput_newline ();
 	//if (cb_flag_traceall) {
 	//	output_line ("cob_reset_trace ();");
 	//	output_newline ();
@@ -4725,86 +4725,86 @@ joutput_internal_function (struct cb_program *prog, cb_tree parameter_list)
 	//output_integer (current_prog->cb_return_code);
 	//output (";\n");
 
-	joutput_next_buffer(1);
+	//joutput_next_buffer(1);
 	joutput_buffered = 1;
 	/* Error handlers */
-	//if (prog->file_list || prog->gen_file_error) {
-	//	joutput_newline ();
-	//	seen = 0;
-	//	for (i = COB_OPEN_INPUT; i <= COB_OPEN_EXTEND; i++) {
-	//		if (prog->global_handler[i].handler_label) {
-	//			seen = 1;
-	//			break;
-	//		}
-	//	}
-	//	joutput_stmt (cb_standard_error_handler);
-	//	joutput_newline ();
-	//	if (seen) {
-	//		joutput_line ("switch (cob_error_file->last_open_mode)");
-	//		joutput_indent ("{");
-	//		for (i = COB_OPEN_INPUT; i <= COB_OPEN_EXTEND; i++) {
-	//			hstr = &prog->global_handler[i];
-	//			if (hstr->handler_label) {
-	//				joutput_line ("case %d:", i);
-	//				joutput_indent ("{");
-	//				if (prog == hstr->handler_prog) {
-	//					joutput_perform_call (hstr->handler_label,
-	//							     hstr->handler_label);
-	//				} else {
-	//					if (cb_flag_traceall) {
-	//						joutput_line ("cob_reset_trace ();");
-	//					}
-	//					joutput_prefix ();
-	//					joutput ("%s_ (%d",
-	//						hstr->handler_prog->program_id,
-	//						hstr->handler_label->id);
-	//					parmnum = cb_list_length (hstr->handler_prog->parameter_list);
-	//					for (n = 0; n < parmnum; n++) {
-	//						joutput (", NULL");
-	//					}
-	//					joutput (");\n");
-	//					if (cb_flag_traceall) {
-	//						joutput_line ("cob_ready_trace ();");
-	//					}
-	//				}
-	//				joutput_line ("break;");
-	//				joutput_indent ("}");
-	//			}
-	//		}
-	//		joutput_line ("default:");
-	//		joutput_indent ("{");
-	//	}
-	//	joutput_line ("if (!(cob_error_file->flag_select_features & COB_SELECT_FILE_STATUS)) {");
-	//	switch (cb_abort_on_io_exception) {
-	//	case CB_ABORT_ON_IO_ANY:
-	//		joutput_line ("	cob_default_error_handle ();");
-	//		joutput_line ("	cob_stop_run (1);");
-	//		break;
-	//	case CB_ABORT_ON_IO_FATAL:
-	//		joutput_line ("	if (cob_error_file->file_status[0] == '3'");
-	//		joutput_line ("	    || cob_error_file->file_status[0] == '4'");
-	//		joutput_line ("	    || cob_error_file->file_status[0] == '9') {");
-	//		joutput_line ("		cob_default_error_handle ();");
-	//		joutput_line ("		cob_stop_run (1);");
-	//		joutput_line ("	}");
-	//		break;
-	//	case CB_ABORT_ON_IO_NEVER:
-	//	default:
-	//		joutput_line ("	/* Do nothing on unchecked file error status. */");
-	//		joutput_line ("	/*  (abort-on-io-exception is set to 'never') */");
-	//		break;
-	//	}
-	//	joutput_line ("}");
-	//	if (seen) {
-	//		joutput_line ("break;");
-	//		joutput_indent ("}");
-	//		joutput_indent ("}");
-	//	}
-	//	joutput_perform_exit (CB_LABEL (cb_standard_error_handler));
-	//	joutput_newline ();
-	//	joutput_line ("cob_fatal_error (COB_FERROR_CODEGEN);");
-	//	joutput_newline ();
-	//}	
+	if (prog->file_list || prog->gen_file_error) {
+		joutput_newline ();
+		seen = 0;
+		for (i = COB_OPEN_INPUT; i <= COB_OPEN_EXTEND; i++) {
+			if (prog->global_handler[i].handler_label) {
+				seen = 1;
+				break;
+			}
+		}
+		joutput_stmt (cb_standard_error_handler);
+		joutput_newline ();
+		if (seen) {
+			joutput_line ("switch (CobolFile.errorFile.last_open_mode)");
+			joutput_indent ("{");
+			for (i = COB_OPEN_INPUT; i <= COB_OPEN_EXTEND; i++) {
+				hstr = &prog->global_handler[i];
+				if (hstr->handler_label) {
+					joutput_line ("case %d:", i);
+					joutput_indent ("{");
+					if (prog == hstr->handler_prog) {
+						joutput_perform_call (hstr->handler_label,
+								     hstr->handler_label);
+					} else {
+						if (cb_flag_traceall) {
+							joutput_line ("CobolUtil.resetTrace ();");
+						}
+						joutput_prefix ();
+						joutput ("%s_ (%d",
+							hstr->handler_prog->program_id,
+							hstr->handler_label->id);
+						parmnum = cb_list_length (hstr->handler_prog->parameter_list);
+						for (n = 0; n < parmnum; n++) {
+							joutput (", null");
+						}
+						joutput (");\n");
+						if (cb_flag_traceall) {
+							joutput_line ("CobolUti.readyTrace ();");
+						}
+					}
+					joutput_line ("break;");
+					joutput_indent ("}");
+				}
+			}
+			joutput_line ("default:");
+			joutput_indent ("{");
+		}
+		joutput_line ("if ((CobolFile.errorFile.flag_select_features & CobolFile.COB_SELECT_FILE_STATUS) == 0) {");
+		switch (cb_abort_on_io_exception) {
+		case CB_ABORT_ON_IO_ANY:
+			joutput_line ("	CobolFile.defaultErrorHandle ();");
+			joutput_line ("	CobolStopRunException.stopRunAndThrow (1);");
+			break;
+		case CB_ABORT_ON_IO_FATAL:
+			joutput_line ("	if (CobolFile.errorFile.file_status[0] == '3'");
+			joutput_line ("	    || CobolFile.errorFile.file_status[0] == '4'");
+			joutput_line ("	    || CobolFile.errorFile.file_status[0] == '9') {");
+			joutput_line ("		CobolFile.defaultErrorHandle ();");
+			joutput_line ("		CobolStopRunException.stopRunAndThrow (1);");
+			joutput_line ("	}");
+			break;
+		case CB_ABORT_ON_IO_NEVER:
+		default:
+			joutput_line ("	/* Do nothing on unchecked file error status. */");
+			joutput_line ("	/*  (abort-on-io-exception is set to 'never') */");
+			break;
+		}
+		joutput_line ("}");
+		if (seen) {
+			joutput_line ("break;");
+			joutput_indent ("}");
+			joutput_indent ("}");
+		}
+		joutput_perform_exit (CB_LABEL (cb_standard_error_handler));
+		joutput_newline ();
+		joutput_line ("CobolUtil.fatalError (CobolUtil.FERROR_CODEGEN);");
+		joutput_newline ();
+	}	
 	joutput_buffered = 0;
 #ifndef	__GNUC__
 	//output_newline ();

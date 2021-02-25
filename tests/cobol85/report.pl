@@ -92,7 +92,7 @@ $skip{OBNC2M} = 1;
 #$skip{SQ123A}=1;
 #$skip{SQ124A}=1;
 #$skip{SQ125A}=1;
-# $skip{SQ126A}=1;
+#$skip{SQ126A}=1;
 #$skip{SQ127A}=1;
 #$skip{SQ128A}=1;
 #$skip{SQ129A}=1;
@@ -271,7 +271,7 @@ foreach $in (sort (glob("*.{CBL,SUB}"))) {
       if($enable_c == 1) {
           $exec_result = system ("ocobcrun $exe > $exe.out.org");
       } else {
-          $exec_result = system ("java $exe > $exe.out");
+          $exec_result = system ("java -Xss4m $exe > $exe.out");
       }
       if ($exec_result != 0) {
 	$execute_error++;

@@ -25,6 +25,7 @@ import java.nio.ByteBuffer;
 
 import jp.osscons.opensourcecobol.libcobj.common.CobolModule;
 import jp.osscons.opensourcecobol.libcobj.common.CobolUtil;
+import jp.osscons.opensourcecobol.libcobj.exceptions.CobolException;
 import jp.osscons.opensourcecobol.libcobj.exceptions.CobolExceptionId;
 import jp.osscons.opensourcecobol.libcobj.exceptions.CobolRuntimeException;
 import jp.osscons.opensourcecobol.libcobj.exceptions.CobolStopRunException;
@@ -439,7 +440,9 @@ public class CobolDecimal {
 	 */
 	public int getField(AbstractCobolField f, int opt) throws CobolStopRunException {
 		if(this.getScale() == CobolDecimal.DECIMAL_NAN) {
-			throw new CobolRuntimeException(0, "getFieldのエラー");
+			//throw new CobolRuntimeException(0, "getFieldのエラー");
+			CobolException.setException(CobolExceptionId.COB_EC_SIZE_OVERFLOW);
+			return CobolException.code;
 		}
 
 		/* rounding */

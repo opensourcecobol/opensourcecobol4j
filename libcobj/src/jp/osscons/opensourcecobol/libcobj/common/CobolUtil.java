@@ -57,11 +57,18 @@ public class CobolUtil {
 	
 	public static boolean verbose = false;
 	public static boolean cobErrorOnExitFlag = false;
+	
+	private static boolean lineTrace = false;
 
 	abstract class handlerlist {
 		public handlerlist next = null;
 		abstract public int proc(String s);
 	}
+	
+	public static final int FERROR_INITIALIZED = 0;
+	public static final int FERROR_CODEGEN = 1;
+	public static final int FERROR_CHAINING = 2;
+	public static final int FERROR_STACK = 3;
 
 	/**
 	 * libcob/common.cのcob_check_envの実装
@@ -581,5 +588,34 @@ public class CobolUtil {
 			ret = ((b11 << 8 | b12) > (b21 << 8 | b22)) ? 1 : 0;
 		}
 		return ret;
+	}
+	
+	public static void readyTrace() {
+		CobolUtil.lineTrace = true;
+	}
+	
+	public static void resetTrace() {		
+		CobolUtil.lineTrace = true;
+	}
+	
+	public static void fatalError(int fatalError) throws CobolStopRunException {
+		switch(fatalError) {
+	    case CobolUtil.FERROR_INITIALIZED:
+	        CobolUtil.runtimeError ("cob_init() has not been called");
+	        break;
+	    case CobolUtil.FERROR_CODEGEN:
+	        CobolUtil.runtimeError ("Codegen error - Please report this");
+	        break;
+	    case CobolUtil.FERROR_CHAINING:
+	        CobolUtil.runtimeError ("ERROR - Recursive call of chained program");
+	        break;
+	    case CobolUtil.FERROR_STACK:
+	        CobolUtil.runtimeError ("Stack overflow, possible PERFORM depth exceeded");
+	        break;
+	    default:
+	        CobolUtil.runtimeError (String.format("Unknown failure : %d", fatalError));
+	        break;
+		}
+		CobolStopRunException.stopRunAndThrow(1);
 	}
 }

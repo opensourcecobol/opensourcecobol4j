@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2020 TOKYO SYSTEM HOUSE Co., Ltd.
+ * Copyright (C) 2020 TOKYO SYSEM HOUSE Co., Ltd.
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -136,10 +136,10 @@ public class CobolFile {
 	protected static final int COB_LINAGE_INVALID = 16384;
 	protected static final int COB_NOT_CONFIGURED = 32768;
 
-	protected static final int COB_SELECT_FILE_STATUS = 0x01;
-	protected static final int COB_SELECT_EXTERNAL = 0x02;
-	protected static final int COB_SELECT_LINAGE = 0x04;
-	protected static final int COB_SELECT_SPLITKEY = 0x08;
+	public static final int COB_SELECT_FILE_STATUS = 0x01;
+	public static final int COB_SELECT_EXTERNAL = 0x02;
+	public static final int COB_SELECT_LINAGE = 0x04;
+	public static final int COB_SELECT_SPLITKEY = 0x08;
 
 	protected static final int FNSTATUSSIZE = 3;
 
@@ -149,7 +149,7 @@ public class CobolFile {
 	protected static final int EISDIR = 21;
 	protected static final int EROFS = 30;
 
-	protected static CobolFile cob_error_file;
+	public static CobolFile errorFile;
 
 	protected static int COB_SMALL_BUFF = 1024;
 	protected static int COB_SMALL_MAX = COB_SMALL_BUFF-1;
@@ -188,7 +188,7 @@ public class CobolFile {
 			CobolExceptionId.COB_EC_I_O_IMP
 	};
 	protected String select_name;
-	protected byte[] file_status;
+	public byte[] file_status;
 	protected AbstractCobolField assign;
 	protected AbstractCobolField record;
 	protected AbstractCobolField record_size;
@@ -208,7 +208,7 @@ public class CobolFile {
 	protected char lock_mode;
 	protected char open_mode;
 	protected boolean flag_optional;
-	protected char last_open_mode;
+	public char last_open_mode;
 	protected char special;
 	protected boolean flag_nonexistent;
 
@@ -216,7 +216,7 @@ public class CobolFile {
 	protected boolean flag_begin_of_file;
 	protected char flag_first_read;
 	protected boolean flag_read_done;
-	protected char flag_select_features;
+	public char flag_select_features;
 	protected boolean flag_needs_nl;
 	protected boolean flag_needs_top;
 	protected char file_version;
@@ -297,7 +297,7 @@ public class CobolFile {
 	 * @return
 	 */
 	protected void saveStatus(int status, AbstractCobolField fnstatus) {
-		cob_error_file = this;
+		CobolFile.errorFile = this;
 		if(status == 0) {
 			this.file_status[0] = '0';
 			this.file_status[1] = '0';
@@ -1320,4 +1320,79 @@ public class CobolFile {
 		file_open_buff = new byte[COB_SMALL_BUFF];
 	}
 
+	public static void defaultErrorHandle() {
+		byte[] file_status = CobolFile.errorFile.file_status;
+		int status = (file_status[0] - '0') * 10 + (file_status[0] - '0');
+		String msg;
+		switch (status) {
+	    case COB_STATUS_10_END_OF_FILE:
+	        msg = "End of file";
+	        break;
+	    case COB_STATUS_14_OUT_OF_KEY_RANGE:
+	        msg = "Key out of range";
+	        break;
+	    case COB_STATUS_21_KEY_INVALID:
+	        msg = "Key order not ascending";
+	        break;
+	    case COB_STATUS_22_KEY_EXISTS:
+	        msg = "Record key already exists";
+	        break;
+	    case COB_STATUS_23_KEY_NOT_EXISTS:
+	        msg = "Record key does not exist";
+	        break;
+	    case COB_STATUS_30_PERMANENT_ERROR:
+	        msg = "Permanent file error";
+	        break;
+	    case COB_STATUS_35_NOT_EXISTS:
+	        msg = "File does not exist";
+	        break;
+	    case COB_STATUS_37_PERMISSION_DENIED:
+	        msg = "Permission denied";
+	        break;
+	    case COB_STATUS_41_ALREADY_OPEN:
+	        msg = "File already open";
+	        break;
+	    case COB_STATUS_42_NOT_OPEN:
+	        msg = "File not open";
+	        break;
+	    case COB_STATUS_43_READ_NOT_DONE:
+	        msg = "READ must be executed first";
+	        break;
+	    case COB_STATUS_44_RECORD_OVERFLOW:
+	        msg = "Record overflow";
+	        break;
+	    case COB_STATUS_46_READ_ERROR:
+	        msg = "Failed to read";
+	        break;
+	    case COB_STATUS_47_INPUT_DENIED:
+	        msg = "READ/START not allowed";
+	        break;
+	    case COB_STATUS_48_OUTPUT_DENIED:
+	        msg = "WRITE not allowed";
+	        break;
+	    case COB_STATUS_49_I_O_DENIED:
+	        msg = "DELETE/REWRITE not allowed";
+	        break;
+	    case COB_STATUS_51_RECORD_LOCKED:
+	        msg = "Record locked by another file connector";
+	        break;
+	    case COB_STATUS_52_EOP:
+	        msg = "A page overflow condition occurred";
+	        break;
+	    case COB_STATUS_57_I_O_LINAGE:
+	        msg = "LINAGE values invalid";
+	        break;
+	    case COB_STATUS_61_FILE_SHARING:
+	        msg = "File sharing conflict";
+	        break;
+	    case COB_STATUS_91_NOT_AVAILABLE:
+	        msg = "Runtime library is not configured for this operation";
+	        break;
+	    default:
+	        msg = "Unknown file error";
+	        break;
+		}
+		String filename = CobolFile.errorFile.assign.fieldToString();
+		CobolUtil.runtimeError(String.format("%s (STATUS = %02d) File : '%s'", msg, status, filename));
+	}
 }
