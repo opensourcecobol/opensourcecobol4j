@@ -4646,27 +4646,6 @@ joutput_internal_function (struct cb_program *prog, cb_tree parameter_list)
 	//	output_newline ();
 	//}
 
-	/* Entry dispatch */
-	//joutput_line ("/* Entry dispatch */");
-	//if (cb_list_length (prog->entry_list) > 1) {
-	//	joutput_newline ();
-	//	joutput_line ("switch (entry)");
-	//	joutput_line ("  {");
-	//	for (i = 0, l = prog->entry_list; l; l = CB_CHAIN (l)) {
-	//		joutput_line ("  case %d:", i++);
-	//		joutput_line ("    goto %s%d;",
-	//			     CB_PREFIX_LABEL, CB_LABEL (CB_PURPOSE (l))->id);
-	//	}
-	//	joutput_line ("  }");
-	//	joutput_line ("/* This should never be reached */");
-	//	joutput_line ("cob_fatal_error (COB_FERROR_CHAINING);");
-	//	joutput_newline ();
-	//} else {
-	//	l = prog->entry_list;
-	//	joutput_line ("goto %s%d;", CB_PREFIX_LABEL, CB_LABEL (CB_PURPOSE (l))->id);
-	//	joutput_newline ();
-	//}
-
 	/* PROCEDURE DIVISION */
 	joutput_line ("/* PROCEDURE DIVISION */");
 	joutput_line("try{");
@@ -4674,17 +4653,35 @@ joutput_internal_function (struct cb_program *prog, cb_tree parameter_list)
 	joutput_line("  CobolGoBackException.dummy();");
 	joutput_indent_level += 2;
 
-	//joutput_line("LABEL_DEFAULT();");
 	joutput_init_buffer_list();
 	joutput_buffered = 1;
 	for (l = prog->exec_list; l; l = CB_CHAIN (l)) {
 		joutput_stmt (CB_VALUE (l));
 	}
 	joutput_buffered = 0;
-	joutput_line("entryFunc(0);");
+
+	/* Entry dispatch */
+	joutput_line ("/* Entry dispatch */");
+	if (cb_list_length (prog->entry_list) > 1) {
+		joutput_newline ();
+		joutput_line ("switch (entry)");
+		joutput_line ("  {");
+		for (i = 0, l = prog->entry_list; l; l = CB_CHAIN (l)) {
+			joutput_line ("  case %d:", i++);
+			joutput_line ("    entryFunc(%d);",
+				     CB_LABEL (CB_PURPOSE (l))->id);
+		}
+		joutput_line ("  }");
+		joutput_line ("/* This should never be reached */");
+		joutput_line ("CobolUtil.fatalError (CobolUtil.FERROR_CHAINING);");
+		joutput_newline ();
+	} else {
+		l = prog->entry_list;
+        joutput_line ("entryFunc(%d);", CB_LABEL (CB_PURPOSE (l))->id);
+		joutput_newline ();
+	}
 
 	joutput_indent_level -= 2;
-	//joutput_line("  CobolStopRunException.stopRun();");
 	joutput_line("} catch(CobolGoBackException e) {");
 	joutput_line("  return e.getReturnCode();");
 	joutput_line("} catch(CobolStopRunException e) {");
@@ -5305,7 +5302,11 @@ joutput_entry_function()
 			joutput_line("case %d:", buf.label);
 			joutput_line("continueFlag = LABEL_%d();", buf.label);
 		}
-		joutput_line("if(!continueFlag) break;", buf.label);
+        if(i < joutput_buffer_list_index && joutput_buffer_list[i + 1].label == 1) {
+            joutput_line("return;");
+        } else {
+		    joutput_line("if(!continueFlag) break;", buf.label);
+        }
 	}
     joutput_line("case -10: break;");
 	joutput_indent_level -= 4;
