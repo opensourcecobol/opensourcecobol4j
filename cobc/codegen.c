@@ -175,6 +175,7 @@ static void joutput_stmt (cb_tree x);
 static void joutput_figurative (cb_tree x, struct cb_field *f, const int value);
 
 const int L_initextern_addr = 2000000000;
+int param_wrap_string_flag = 0;
 
 static void
 lookup_call (const char *p)
@@ -404,7 +405,6 @@ joutput_indent (const char *str)
 	}
 }
 
-int param_wrap_string_flag = 0;
 static void
 joutput_string (const unsigned char *s, int size)
 {
@@ -1438,6 +1438,7 @@ joutput_funcall (cb_tree x)
 	struct cb_funcall	*p;
 	cb_tree			l;
 	int			i;
+    int save_flag;
 
 	p = CB_FUNCALL (x);
 	if (p->name[0] == '$') {
@@ -1452,7 +1453,11 @@ joutput_funcall (cb_tree x)
 			break;
 		case 'F':
 			/* Move of one character */
+            save_flag = param_wrap_string_flag;
+            param_wrap_string_flag = 1;
 			joutput_data (p->argv[0]);
+            param_wrap_string_flag = save_flag;
+
 			joutput (".setByte(");
 			joutput_data (p->argv[1]);
 			joutput (".getByte(0))");
@@ -1460,7 +1465,12 @@ joutput_funcall (cb_tree x)
 		case 'G':
 			/* Test of one character */
             joutput ("(((int)");
+
+            save_flag = param_wrap_string_flag;
+            param_wrap_string_flag = 1;
 			joutput_data (p->argv[0]);
+            param_wrap_string_flag = save_flag;
+
             joutput (".getByte(0))");
 			if (p->argv[1] == cb_space) {
 				joutput (" - (int)' ')");
