@@ -454,8 +454,20 @@ public class CobolDataStorage {
 	 * @param value this.dataに書き込むint型の値
 	 */
 	public void set(int value) {
+		//System.out.println("value(int): " + value);
 		byte bytes[] = ByteBuffer.allocate(Integer.BYTES).putInt(value).array();
 		set(bytes);
+	}
+	
+	/**
+	 * this.dataにlong型のvalueを4バイトで書き込む
+	 * @param value this.dataに書き込むlong型の値
+	 */
+	public void set(long value) {
+		//System.out.println("value(long): " + value);
+		this.set((int)value);
+		//byte bytes[] = ByteBuffer.allocate(Long.BYTES).putLong(value).array();
+		//set(bytes);
 	}
 	
 	public void set(CobolDataStorage other) {
@@ -470,15 +482,6 @@ public class CobolDataStorage {
 	public void set(int value, int index) {
 		ByteBuffer buffer = ByteBuffer.wrap(this.data, this.index + index, 4);
 		buffer.putInt(value);
-	}
-
-	/**
-	 * this.dataにlong型のvalueを8バイトで書き込む
-	 * @param value this.dataに書き込むlong型の値
-	 */
-	public void set(long value) {
-		byte bytes[] = ByteBuffer.allocate(Long.BYTES).putLong(value).array();
-		set(bytes);
 	}
 
 	/**
