@@ -143,6 +143,10 @@ public class CobolAlphanumericField extends AbstractCobolField {
 				//TODO 確認
 				//opensource COBOLには存在しない処理を書き加えた.
 				//なぜopensource COBOLにはこの処理がないのかは不明
+				//System.out.println("data1FirstIndex: " + data1FirstIndex);
+				//System.out.println("size1: " + size1);
+				//System.out.println("size2: " + size2);
+				//System.out.println("i: " + i);
 				byte val = data1.getByte(data1FirstIndex + i);
 				data2.setByte(i, (byte) (val >= 0x70 ? val - 0x40 : val));
 			}

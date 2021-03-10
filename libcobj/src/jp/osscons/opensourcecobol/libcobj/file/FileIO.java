@@ -373,6 +373,28 @@ public class FileIO {
 		}
 	}
 
+	public static final int SEEK_SET = 0;
+	public static final int SEEK_CUR = 1;
+	public boolean seek(long offset, int origin) {
+		if(!useStdOut && !useStdIn) {
+			try {
+				switch(origin) {				
+				case FileIO.SEEK_SET:
+					this.fc.position(offset);
+					break;
+				case FileIO.SEEK_CUR:
+					this.fc.position(this.fc.position() + offset);
+					break;
+				default:
+					return false;
+				}
+			} catch(IOException e) {
+				return false;
+			}
+		}
+		return true;
+	}
+
 	public void seekInit() {
 		if(!useStdOut && !useStdIn) {
 			/*try {

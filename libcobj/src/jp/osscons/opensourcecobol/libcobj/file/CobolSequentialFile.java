@@ -127,8 +127,9 @@ public class CobolSequentialFile extends CobolFile {
 
 	@Override
 	public int rewrite_(int opt) {
-		//if(this.)
-		//TODO SEQの処理を書く
+		if(!this.file.seek(-this.record.getSize(), FileIO.SEEK_CUR)) {
+			return COB_STATUS_30_PERMANENT_ERROR;
+		}
 		if(this.file.write(this.record.getDataStorage(), this.record.getSize(), 1) != 1) {
 			return COB_STATUS_30_PERMANENT_ERROR;
 		}

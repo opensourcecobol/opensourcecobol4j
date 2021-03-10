@@ -825,7 +825,7 @@ public class CobolDataStorage {
 	 * @param n
 	 * @return
 	 */
-	public int cmpLongNumdisp(int size, int n) {
+	public int cmpLongNumdisp(int size, long n) {
 		return this.cmpNumdisp(size, n);
 	}
 
@@ -835,7 +835,7 @@ public class CobolDataStorage {
 	 * @param n
 	 * @return
 	 */
-	public int cmpSignNumdisp(int size, int n) {
+	public int cmpSignNumdisp(int size, long n) {
 		int p = 0;
 		int val = 0;
 		for(int inc=0; inc<size-1; ++inc, ++p) {
@@ -859,7 +859,7 @@ public class CobolDataStorage {
 		return (val < n) ? -1 : (val > n) ? 1 : 0;
 	}
 
-	public int cmpLongSignNumdisp(int size, int n) {
+	public int cmpLongSignNumdisp(int size, long n) {
 		int p = 0;
 		int val = 0;
 		for(int inc=0; inc<size-1; ++inc, ++p) {

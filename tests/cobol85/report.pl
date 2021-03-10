@@ -69,6 +69,13 @@ $skip{OBNC2M} = 1;
 
 # temp
 
+# 短時間で実行が終了しないため一時的にskip
+$skip{NC109M} = 1;
+$skip{NC201A} = 1;
+$skip{NC204M} = 1;
+$skip{ST110A} = 1;
+$skip{ST123A} = 1;
+
 #$skip{NC101A} = 1;
 #$skip{NC102A} = 1;
 #$skip{NC103A} = 1;
