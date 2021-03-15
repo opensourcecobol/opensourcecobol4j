@@ -451,7 +451,7 @@ public class CobolDecimal {
 				int sign = this.value.signum();
 				if(sign != 0) {
 					this.shiftDecimal(f.getAttribute().getScale() - this.getScale() + 1);
-					if(sign < 0) {
+					if(sign > 0) {
 						this.add(5);
 					} else {
 						this.sub(5);
@@ -469,8 +469,26 @@ public class CobolDecimal {
 			return this.getPackedField(f, opt);
 		case CobolFieldAttribute.COB_TYPE_NUMERIC_BINARY:
 			return this.getBinaryField(f, opt);
+		case CobolFieldAttribute.COB_TYPE_NUMERIC_FLOAT:
+			System.out.println("getField: Float not implemented");
+			throw new CobolRuntimeException(0, "getField: Float not implemented");
+		case CobolFieldAttribute.COB_TYPE_NUMERIC_DOUBLE:
+			System.out.println("getField: Double not implemented");
+			throw new CobolRuntimeException(0, "getField: Double not implemented");
 		default:
-			throw new CobolRuntimeException(0, "未実装");
+			int digits = f.getAttribute().getDigits();
+			CobolFieldAttribute attr = f.getAttribute();
+			CobolFieldAttribute newAttr = new CobolFieldAttribute(
+				CobolFieldAttribute.COB_TYPE_NUMERIC_DISPLAY,
+				digits,
+				attr.getScale(),
+				CobolFieldAttribute.COB_FLAG_HAVE_SIGN,
+				null);
+			AbstractCobolField displayField = CobolFieldFactory.makeCobolField(digits, new CobolDataStorage(digits), newAttr);
+			if(this.getField(displayField, opt) == 0) {
+				f.moveFrom(displayField);
+			}
+			return CobolException.code;
 		}
 	}
 
@@ -531,12 +549,9 @@ public class CobolDecimal {
 		int firstDataIndex = f.getFirstDataIndex();
 		int diff = f.getFieldSize() - size;
 		if(diff < 0) {
-			//TODO  実装
-			//throw new CobolRuntimeException(0, "This case is not implmented");
-			//TODO より正確な実装に修正
 			CobolRuntimeException.setException(CobolExceptionId.COB_EC_SIZE_OVERFLOW);
 			if((opt & CobolDecimal.COB_STORE_KEEP_ON_OVERFLOW) > 0) {
-				CobolStopRunException.throwException(CobolExceptionId.COB_EC_SIZE_OVERFLOW);
+				return CobolException.code;
 			}
 			for(int i=0; i<f.getFieldSize(); ++i) {
 				data.setByte(i, numBuffPtr[i - diff]);
