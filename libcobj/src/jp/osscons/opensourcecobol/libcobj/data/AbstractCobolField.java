@@ -1308,6 +1308,11 @@ public abstract class AbstractCobolField {
 		return ByteBuffer.wrap(data).getLong();
 	}
 
+	
+	public long getLongValue() {
+		return 0;
+	}
+
 	/**
 	 * libcob/move.cのcob_hankaku_moveの実装
 	 * @param src

@@ -520,28 +520,6 @@ public class CobolDataStorage {
 	
 	
 	private long toLong(int numOfBytes, boolean signed, boolean isBigEndian) {
-		/*int start, d;
-		if(isBigEndian) {
-			start = numOfBytes - 1; d = -1;
-		} else {
-			start = 0; d = 1;
-		}
-
-		long ret = 0;
-		int i;
-		byte highestByte = 0;
-		for(i = 0; i < numOfBytes; ++i) {
-			highestByte = this.getByte(start + i * d);
-			ret |= this.getByte(start + i * d) << (8 * i);
-		}
-		
-		if(signed && highestByte < 0) {
-			for(; i<8; ++i) {
-				ret |= 0xFF << (8 * i);
-			}
-		}
-		
-		return ret;*/
 		ByteBuffer buffer = ByteBuffer.wrap(this.data, this.index, numOfBytes);
 		buffer.order(isBigEndian ? ByteOrder.BIG_ENDIAN : ByteOrder.LITTLE_ENDIAN);
 		if(numOfBytes == 1) {
@@ -584,17 +562,16 @@ public class CobolDataStorage {
 	}
 	
 	private void fromLong(int numOfBytes, boolean isBigEndian, long n) {
-		int start, d;
-		if(isBigEndian) {
-			start = numOfBytes - 1; d = -1;
-		} else {
-			start = 0; d = 1;
-		}
-		
-		for(int i=0; i<numOfBytes; ++i) {
-			byte b = (byte)((n >> (8 * i)) & 0xFF);
-			int index = start + i * d;
-			this.setByte(index, b);
+		ByteBuffer buffer = ByteBuffer.wrap(this.data, this.index, numOfBytes);
+		buffer.order(isBigEndian ? ByteOrder.BIG_ENDIAN : ByteOrder.LITTLE_ENDIAN);
+		if(numOfBytes <= 1) {
+			buffer.put(0, (byte)n);
+		} else if(numOfBytes <= 2) {
+			buffer.putShort(0, (short)n);
+		} else if(numOfBytes <= 4) {
+			buffer.putInt(0, (int)n);
+		} else if(numOfBytes <= 8) {
+			buffer.putLong(0, n);
 		}
 	}
 	

@@ -86,14 +86,14 @@ public class CobolNumericField extends AbstractCobolField {
 		
 		int signIndex = attr.isFlagSignLeading() ? 0 : this.getSize() - 1;
 		for(int i=0; i<attr.getDigits(); ++i) {
+			if(scale > 0 && i - 1 == pointIndex) {
+				sb.append('.');
+			}
 			char c = (char)data.getByte(this.getFirstDataIndex() + i);
 			if(attr.isFlagHaveSign() && !attr.isFlagSignSeparate() && i == signIndex && c >= 0x70) {
 				c -= 0x40;
 			}
 			sb.append(c);
-			if(scale > 0 && i == pointIndex) {
-				sb.append('.');
-			}
 		}
 		return sb.toString();
 	}
@@ -318,19 +318,7 @@ public class CobolNumericField extends AbstractCobolField {
 	 */
 	private void moveBinaryToDisplay(AbstractCobolField field) {
 		int sign = 1;
-		long val;
-		long val2;
-		if(field.getAttribute().isFlagHaveSign()) {
-			val2 = this.binaryMgetInt64(field);
-			if(val2 < 0) {
-				sign = -1;
-				val = -val2;
-			} else {
-				val = val2;
-			}
-		} else {
-			val = this.binaryMgetInt64(field);
-		}
+		long val = field.getLongValue();
 
 		int i = 20;
 		byte[] buff = new byte[64];
