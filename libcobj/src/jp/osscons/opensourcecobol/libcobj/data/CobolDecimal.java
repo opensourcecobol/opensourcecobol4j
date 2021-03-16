@@ -84,8 +84,8 @@ public class CobolDecimal {
 	/**
 	 * 保持する数値データ
 	 */
-	BigDecimal value;
-	private int scale;
+	public BigDecimal value;
+	public int scale;
 
 	/**
 	 * コンストラクタ
@@ -191,6 +191,7 @@ public class CobolDecimal {
 	 */
 	public void set(int n) {
 		this.value = new BigDecimal(n);
+		this.scale = 0;
 	}
 
 	/**
@@ -199,6 +200,7 @@ public class CobolDecimal {
 	 */
 	public void set(long n) {
 		this.value = new BigDecimal(n);
+		this.scale = 0;
 	}
 
 	/**
