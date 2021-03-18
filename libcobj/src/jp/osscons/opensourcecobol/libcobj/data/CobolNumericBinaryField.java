@@ -83,6 +83,11 @@ public class CobolNumericBinaryField extends AbstractCobolField {
 		return this.getBinaryValue();
 	}
 	
+	@Override
+	public void setLongValue(long n) {
+		this.setBinaryValue(n);
+	}
+	
 	/**
 	 * thisの文字列表現をかえす.(toStringだけで十分か?)
 	 * @return thisの文字列表現

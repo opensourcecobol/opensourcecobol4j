@@ -439,14 +439,19 @@ public class CobolDataStorage {
 			this.setByte(i, bytes[i]);
 		}
 	}
+	
+	public void set(byte value) {
+		this.setByte(0, value);
+	}
 
 	/**
 	 * this.dataにshort型のvalueを2バイトで書き込む
 	 * @param value this.dataに書き込むshort型の値
 	 */
 	public void set(short value) {
-		byte bytes[] = ByteBuffer.allocate(Short.BYTES).putShort(value).array();
-		set(bytes);
+		//byte bytes[] = ByteBuffer.allocate(Short.BYTES).putShort(value).array();
+		//set(bytes);
+		ByteBuffer.wrap(this.data, this.index, 2).putShort(value);
 	}
 
 	/**
@@ -454,8 +459,9 @@ public class CobolDataStorage {
 	 * @param value this.dataに書き込むint型の値
 	 */
 	public void set(int value) {
-		byte bytes[] = ByteBuffer.allocate(Integer.BYTES).putInt(value).array();
-		set(bytes);
+		//byte bytes[] = ByteBuffer.allocate(Integer.BYTES).putInt(value).array();
+		//set(bytes);
+		ByteBuffer.wrap(this.data, this.index, 4).putInt(value);
 	}
 	
 	/**
@@ -463,7 +469,8 @@ public class CobolDataStorage {
 	 * @param value this.dataに書き込むlong型の値
 	 */
 	public void set(long value) {
-		this.set((int)value);
+		//this.set((int)value);
+		ByteBuffer.wrap(this.data, this.index, 8).putLong(value);
 	}
 	
 	public void set(CobolDataStorage other) {

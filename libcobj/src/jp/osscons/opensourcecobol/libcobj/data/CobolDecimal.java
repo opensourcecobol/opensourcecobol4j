@@ -667,20 +667,14 @@ public class CobolDecimal {
 					}
 				}
 			}
-			if(sign == 0 || overflow != 0) {
-				this.binarySetUint64(f, this.getValue().longValue());
-			} else {
-				this.binarySetInt64(f, this.getValue().longValue());
-			}
+			f.setLongValue(this.getValue().longValue());
 			if(overflow == 0) {
 				return 0;
 			}
 		} catch (OverflowException e) {
-
-		} finally {
-			// TODO 例外処理
-			return 0;
 		}
+		CobolRuntimeException.setException(CobolExceptionId.COB_EC_SIZE_OVERFLOW);
+		return CobolException.code;
 	}
 
 	/**

@@ -2065,6 +2065,7 @@ joutput_initialize_one (struct cb_initialize *p, cb_tree x)
 		} else if (CB_CONST_P (value)
 			   || CB_TREE_CLASS (value) == CB_CLASS_NUMERIC) {
 			/* Figurative literal, numeric literal */
+            joutput("/*[dbg]__009*/");
 			joutput_move (value, x);
 		} else {
 			/* Alphanumeric literal */
@@ -3457,6 +3458,7 @@ joutput_stmt (cb_tree x)
 	struct cb_cast		*cp;
 #endif
 	int			code;
+    struct cb_field *f;
 
 	stack_id = 0;
 	if (x == NULL) {
@@ -3682,7 +3684,6 @@ joutput_stmt (cb_tree x)
             integer_reference_flag = 1;
 			joutput_integer (ap->var);
             integer_reference_flag = tmp_flag;
-
 			joutput (".set(");
 			++index_read_flag;
 			joutput_integer (ap->val);
@@ -3707,6 +3708,22 @@ joutput_stmt (cb_tree x)
         integer_reference_flag = tmp_flag;
 
 		joutput (".set(");
+
+        f = cb_field(ap->var);
+        if(f->usage == CB_USAGE_BINARY ||
+            f->usage == CB_USAGE_COMP_5 ||
+            f->usage == CB_USAGE_BINARY) {
+            if(f->size == 1) {
+                joutput("(byte)");
+            } else if (f->size == 2) {
+                joutput("(short)");
+            } else if (f->size == 4) {
+                joutput("(int)");
+            } else if (f->size == 8) {
+                joutput("(long)");
+            }
+        }
+
 		++index_read_flag;
 		joutput_integer (ap->val);
 		--index_read_flag;

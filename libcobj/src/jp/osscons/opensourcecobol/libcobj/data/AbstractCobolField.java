@@ -1312,6 +1312,9 @@ public abstract class AbstractCobolField {
 	public long getLongValue() {
 		return 0;
 	}
+	
+	public void setLongValue(long n) {
+	}
 
 	/**
 	 * libcob/move.cのcob_hankaku_moveの実装
