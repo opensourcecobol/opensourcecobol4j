@@ -2065,7 +2065,6 @@ joutput_initialize_one (struct cb_initialize *p, cb_tree x)
 		} else if (CB_CONST_P (value)
 			   || CB_TREE_CLASS (value) == CB_CLASS_NUMERIC) {
 			/* Figurative literal, numeric literal */
-            joutput("/*[dbg]__009*/");
 			joutput_move (value, x);
 		} else {
 			/* Alphanumeric literal */
