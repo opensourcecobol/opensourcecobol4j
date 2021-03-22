@@ -445,8 +445,8 @@ public class CobolDecimal {
 	public int getField(AbstractCobolField f, int opt) throws CobolStopRunException {
 		if(this.getScale() == CobolDecimal.DECIMAL_NAN) {
 			//throw new CobolRuntimeException(0, "getFieldのエラー");
-			CobolException.setException(CobolExceptionId.COB_EC_SIZE_OVERFLOW);
-			return CobolException.code;
+			CobolRuntimeException.setException(CobolExceptionId.COB_EC_SIZE_OVERFLOW);
+			return CobolRuntimeException.code;
 		}
 		
 		CobolDecimal d = new CobolDecimal(this);
@@ -558,7 +558,7 @@ public class CobolDecimal {
 		if(diff < 0) {
 			CobolRuntimeException.setException(CobolExceptionId.COB_EC_SIZE_OVERFLOW);
 			if((opt & CobolDecimal.COB_STORE_KEEP_ON_OVERFLOW) > 0) {
-				return CobolException.code;
+				return CobolRuntimeException.code;
 			}
 			for(int i=0; i<f.getFieldSize(); ++i) {
 				data.setByte(i, numBuffPtr[i - diff]);

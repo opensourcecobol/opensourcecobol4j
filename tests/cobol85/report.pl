@@ -356,6 +356,7 @@ foreach $in (sort (glob("*.{CBL,SUB}"))) {
     if ($in eq "SM206A.CBL") {
       $ret = system ("$compile_module -fdebugging-line $copy $in");
     } else {
+      system ("cp $in tmp.cbl");
       $ret = system ("$compile_module $copy $in");
     }
     if ($ret != 0) {
