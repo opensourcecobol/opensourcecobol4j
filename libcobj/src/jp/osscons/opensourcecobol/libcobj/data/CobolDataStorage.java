@@ -522,16 +522,16 @@ public class CobolDataStorage {
 	
 	
 	private long toLong(int numOfBytes, boolean signed, boolean isBigEndian) {
-		ByteBuffer buffer = ByteBuffer.wrap(this.data, this.index, numOfBytes);
+		ByteBuffer buffer = ByteBuffer.wrap(this.data);
 		buffer.order(isBigEndian ? ByteOrder.BIG_ENDIAN : ByteOrder.LITTLE_ENDIAN);
 		if(numOfBytes == 1) {
-			return buffer.get();
+			return buffer.get(this.index);
 		} else if(numOfBytes == 2) {
-			return buffer.getChar();
+			return buffer.getChar(this.index);
 		} else if(numOfBytes == 4) {
-			return buffer.getInt();
+			return buffer.getInt(this.index);
 		} else {
-			return buffer.getLong();
+			return buffer.getLong(this.index);
 		}
 	}
 	
@@ -564,16 +564,16 @@ public class CobolDataStorage {
 	}
 	
 	private void fromLong(int numOfBytes, boolean isBigEndian, long n) {
-		ByteBuffer buffer = ByteBuffer.wrap(this.data, this.index, numOfBytes);
+		ByteBuffer buffer = ByteBuffer.wrap(this.data);
 		buffer.order(isBigEndian ? ByteOrder.BIG_ENDIAN : ByteOrder.LITTLE_ENDIAN);
 		if(numOfBytes <= 1) {
-			buffer.put(0, (byte)n);
+			buffer.put(this.index, (byte)n);
 		} else if(numOfBytes <= 2) {
-			buffer.putShort(0, (short)n);
+			buffer.putShort(this.index, (short)n);
 		} else if(numOfBytes <= 4) {
-			buffer.putInt(0, (int)n);
+			buffer.putInt(this.index, (int)n);
 		} else if(numOfBytes <= 8) {
-			buffer.putLong(0, n);
+			buffer.putLong(this.index, n);
 		}
 	}
 	
