@@ -67,14 +67,18 @@ public class CobolAlphanumericEditedField extends AbstractCobolField {
 			int digits = src1.getAttribute().getDigits();
 			if(scale < 0 || scale > digits) {
 				CobolFieldAttribute newAttr = new CobolFieldAttribute(
-					attr.getType(),
+					CobolFieldAttribute.COB_TYPE_ALPHANUMERIC,
 					attr.getDigits(),
-					Math.max(0, attr.getScale()),
-					attr.getFlags(),
-					attr.getPic());
-				src1 = CobolFieldFactory.makeCobolField(Math.max(scale,  digits), src1.getDataStorage(), newAttr);
+					0,
+					0,
+					null);
+				int newSize = scale < 0 ? digits - scale : scale;
+				AbstractCobolField newSrc = CobolFieldFactory.makeCobolField(newSize, new CobolDataStorage(newSize), newAttr);
+				newSrc.moveFrom(src1);
+				this.moveFrom(newSrc);
+			} else {
+				CobolAlphanumericEditedField.moveAlphanumToEdited(this, src1);
 			}
-			CobolAlphanumericEditedField.moveAlphanumToEdited(this, src1);
 			break;
 		case CobolFieldAttribute.COB_TYPE_NUMERIC_PACKED:
 		case CobolFieldAttribute.COB_TYPE_NUMERIC_BINARY:
