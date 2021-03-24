@@ -559,9 +559,6 @@ public abstract class AbstractCobolField {
 	 * @return 保持する数値データの比較を行い,this<fieldなら負の値,this==fieldなら0,this>fieldなら正の値
 	 */
 	public int compareTo(AbstractCobolField other) {
-		//AbstractCobolField f1 = numericFieldToNumericDisplayField(this);
-		//AbstractCobolField f2 = numericFieldToNumericDisplayField(field);
-		//return f1.cmpAlnum(f2);
 		AbstractCobolField f1 = this;
 		AbstractCobolField f2 = other;
 		CobolFieldAttribute attr1 = f1.getAttribute();

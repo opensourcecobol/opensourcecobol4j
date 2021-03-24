@@ -537,7 +537,9 @@ public class CobolDecimal {
 	 */
 	public int compareTo(CobolDecimal decimal) {
 		alignDecimal(this, decimal);
-		return this.value.compareTo(decimal.getValue());
+		BigDecimal v1 = this.getValue().movePointLeft(this.getScale());
+		BigDecimal v2 = decimal.getValue().movePointLeft(decimal.getScale());
+		return v1.compareTo(v2);
 	}
 
 	/**
