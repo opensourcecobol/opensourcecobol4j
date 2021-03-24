@@ -527,7 +527,7 @@ public class CobolDataStorage {
 		if(numOfBytes == 1) {
 			return buffer.get(this.index);
 		} else if(numOfBytes == 2) {
-			return buffer.getChar(this.index);
+			return buffer.getShort(this.index);
 		} else if(numOfBytes == 4) {
 			return buffer.getInt(this.index);
 		} else {

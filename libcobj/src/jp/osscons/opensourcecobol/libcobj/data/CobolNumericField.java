@@ -130,13 +130,17 @@ public class CobolNumericField extends AbstractCobolField {
 		int scale = this.getAttribute().getScale();
 		if(scale < 0) {
 			for(; i<size; ++i) {
-				val = val * 10 + data.getByte(firstDataIndex + i) - 0x30;
+				byte x = data.getByte(firstDataIndex + i);
+				x -= (x >= 0x70) ? 0x70 : 0x30;
+				val = val * 10 +  x;
 			}
 			val *= AbstractCobolField.cobExp10[-scale];
 		} else {
 			size -= scale;
 			for(; i<size; ++i) {
-				val = val * 10 + data.getByte(firstDataIndex + i) - 0x30;
+				byte x = data.getByte(firstDataIndex + i);
+				x -= (x >= 0x70) ? 0x70 : 0x30;
+				val = val * 10 + x;
 			}
 		}
 
@@ -145,6 +149,7 @@ public class CobolNumericField extends AbstractCobolField {
 		}
 
 		this.putSign(sign);
+		System.out.println("val: " + val);
 		return val;
 	}
 
