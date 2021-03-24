@@ -128,7 +128,7 @@ public class CobolAlphanumericField extends AbstractCobolField {
 		int size2 = this.getSize();
 
 		if(size1 >= size2) {
-			for(int i=0; i<size2; ++i) {
+			for(int i=0; i<size2 && data1FirstIndex + i < size1; ++i) {
 				byte val = data1.getByte(data1FirstIndex + i);
 				data2.setByte(i, (byte) (val >= 0x70 ? val - 0x40 : val));
 			}
