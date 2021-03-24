@@ -176,7 +176,8 @@ public class CobolNumericEditedField extends AbstractCobolField {
 				
 				case '9':
 					if(min <= srcp && srcp < max) {
-						dstBytes[dstp] = srcBytes[srcp++];
+						byte val = srcBytes[srcp++];						
+						dstBytes[dstp] =  (byte)(val >= 0x70 ? val - 0x40 : val);
 					} else {
 						srcp++;
 						dstBytes[dstp] = '0';
