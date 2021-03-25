@@ -149,7 +149,6 @@ public class CobolNumericField extends AbstractCobolField {
 		}
 
 		this.putSign(sign);
-		System.out.println("val: " + val);
 		return val;
 	}
 
@@ -216,6 +215,7 @@ public class CobolNumericField extends AbstractCobolField {
 	 */
 	private void moveDisplayToDisplay(AbstractCobolField field) {
 		int sign = field.getSign();
+		field.putSign(1);
 
 		this.storeCommonRegion(this, field.getDataStorage().getSubDataStorage(field.getFirstDataIndex()), field.getFieldSize(), field.getAttribute().getScale());
 
@@ -556,8 +556,9 @@ public class CobolNumericField extends AbstractCobolField {
 			///this.putSignEbcdic(p, sign);
 		//}
 
-		else if(sign < 0 && value < 0x70) {
-			this.getDataStorage().setByte(p, (byte) (value + 0x40));
+		else {
+			value = (byte) (value >= 0x70 ? value - 0x40 : value);
+			this.getDataStorage().setByte(p, (byte) (sign < 0 ? value + 0x40 : value));
 		}
 	}
 
@@ -712,7 +713,12 @@ public class CobolNumericField extends AbstractCobolField {
 
 		char[] buf = new char[size];
 		for(int i=0; i<size; ++i) {
-			buf[i] = (char)data.getByte(firstDataIndex + i);
+			byte val = data.getByte(firstDataIndex + i);
+			if(val >= 0x70) {
+				buf[i] = (char)(val - 0x40);
+			} else {
+				buf[i] = (char)val;
+			}
 		}
 		
 		CobolFieldAttribute attr = this.getAttribute();
