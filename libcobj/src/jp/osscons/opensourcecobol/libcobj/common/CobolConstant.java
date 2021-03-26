@@ -29,7 +29,7 @@ public class CobolConstant {
 	public static final AbstractCobolField space = CobolFieldFactory.makeCobolField(1, " ", allAttr);
 	public static final AbstractCobolField blank = CobolFieldFactory.makeCobolField(1, " ", allAttr);
 	public static final AbstractCobolField high  = CobolFieldFactory.makeCobolField(1, "¥xff", allAttr);
-	public static final AbstractCobolField low   = CobolFieldFactory.makeCobolField(1, "¥0", allAttr);
+	public static final AbstractCobolField low   = CobolFieldFactory.makeCobolField(1, "\0", allAttr);
 	public static final AbstractCobolField quote = CobolFieldFactory.makeCobolField(1, "\"", allAttr);
 	public static final AbstractCobolField one   = CobolFieldFactory.makeCobolField(1, "1", oneAttr);
 	

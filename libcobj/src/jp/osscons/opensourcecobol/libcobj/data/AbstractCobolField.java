@@ -1181,13 +1181,21 @@ public abstract class AbstractCobolField {
 	public int cmpAlnum(AbstractCobolField other) {
 		int sign1 = this.getSign();
 		int sign2 = other.getSign();
+		
+		if(this.getAttribute().isTypeNumericDisplay()) {
+			this.putSign(1);
+		}
+		if(other.getAttribute().isTypeNumericDisplay()) {
+			other.putSign(1);
+		}
+
 		int ret = this.cmpSimpleStr(other);
 		
 		if(this.getAttribute().getType() != CobolFieldAttribute.COB_TYPE_NUMERIC_PACKED) {
 			this.putSign(sign1);
 		}
 		if(other.getAttribute().getType() != CobolFieldAttribute.COB_TYPE_NUMERIC_PACKED) {
-			other.putSign(sign1);
+			other.putSign(sign2);
 		}
 		return ret;
 	}
