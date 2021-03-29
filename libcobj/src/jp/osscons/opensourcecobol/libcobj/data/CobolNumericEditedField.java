@@ -206,6 +206,7 @@ public class CobolNumericEditedField extends AbstractCobolField {
 					break;
 					
 				case 'C':
+				case 'D':
 					end = dstp;
 					if(neg) {
 						if(c == 'C') {
@@ -242,7 +243,7 @@ public class CobolNumericEditedField extends AbstractCobolField {
 						isZero = suppressZero = false;
 					}
 					if(trailingSign) {
-						dstBytes[dstp] = (byte)(neg ? '-' : (c == '+') ? '+' : '-');
+						dstBytes[dstp] = (byte)(neg ? '-' : (c == '+') ? '+' : ' ');
 						--end;
 					} else if(dstp ==  dst.getDataStorage().getIndex() || suppressZero){
 						dstBytes[dstp] = pad;
