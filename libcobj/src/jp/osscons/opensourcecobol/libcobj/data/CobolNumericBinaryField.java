@@ -72,11 +72,11 @@ public class CobolNumericBinaryField extends AbstractCobolField {
 		if(this.size == 1) {
 			storage.setByte(0, (byte)n);
 		} else if(this.size == 2) {
-			storage.set((short)n);;
+			storage.set((short)n);
 		} else if(this.size == 4) {
-			storage.set((int)n);;
+			storage.set((int)n);
 		} else {
-			storage.set((long)n);;
+			storage.set((long)n);
 		}
 	}
 	
@@ -215,7 +215,7 @@ public class CobolNumericBinaryField extends AbstractCobolField {
 				val = val * 10;
 			}
 		}
-
+		
 		if(sign < 0 && this.getAttribute().isFlagHaveSign()) {
 			val = -val;
 		}
@@ -223,7 +223,7 @@ public class CobolNumericBinaryField extends AbstractCobolField {
 		if(CobolModule.getCurrentModule().flag_binary_truncate != 0 && !this.getAttribute().isFlagRealBinary()) {
 			val %= CobolConstant.exp10LL[this.getAttribute().getDigits()];
 		}
-
+		
 		this.setBinaryValue(val);
 		field.putSign(sign);
 	}

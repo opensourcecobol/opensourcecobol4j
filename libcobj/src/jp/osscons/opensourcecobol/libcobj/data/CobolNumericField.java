@@ -335,6 +335,11 @@ public class CobolNumericField extends AbstractCobolField {
 		int sign = 1;
 		long val = field.getLongValue();
 
+		if(this.getAttribute().isFlagHaveSign() && val < 0) {
+			sign = -1;
+			val = -val;
+		}
+
 		int i = 20;
 		byte[] buff = new byte[64];
 		while(val > 0) {
