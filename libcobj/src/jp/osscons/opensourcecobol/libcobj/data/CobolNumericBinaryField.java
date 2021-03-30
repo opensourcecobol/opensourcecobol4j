@@ -22,6 +22,8 @@ package jp.osscons.opensourcecobol.libcobj.data;
 import java.math.BigDecimal;
 import java.nio.ByteBuffer;
 
+import jp.osscons.opensourcecobol.libcobj.common.CobolConstant;
+import jp.osscons.opensourcecobol.libcobj.common.CobolModule;
 import jp.osscons.opensourcecobol.libcobj.exceptions.CobolRuntimeException;
 
 public class CobolNumericBinaryField extends AbstractCobolField {
@@ -218,9 +220,10 @@ public class CobolNumericBinaryField extends AbstractCobolField {
 			val = -val;
 		}
 
-		//TODO moduleに関する処理を追加
-		// libcob/move.c 636
-		//this.binaryMsetInt64(val);
+		if(CobolModule.getCurrentModule().flag_binary_truncate != 0 && !this.getAttribute().isFlagRealBinary()) {
+			val %= CobolConstant.exp10LL[this.getAttribute().getDigits()];
+		}
+
 		this.setBinaryValue(val);
 		field.putSign(sign);
 	}

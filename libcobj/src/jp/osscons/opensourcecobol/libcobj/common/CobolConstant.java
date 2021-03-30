@@ -28,7 +28,9 @@ public class CobolConstant {
 	public static final AbstractCobolField zero  = CobolFieldFactory.makeCobolField(1, "0", allAttr);
 	public static final AbstractCobolField space = CobolFieldFactory.makeCobolField(1, " ", allAttr);
 	public static final AbstractCobolField blank = CobolFieldFactory.makeCobolField(1, " ", allAttr);
-	public static final AbstractCobolField high  = CobolFieldFactory.makeCobolField(1, "¥xff", allAttr);
+	
+	public static final AbstractCobolField high  = CobolFieldFactory.makeCobolField(1, CobolConstant.get0xFFStorage(), allAttr);
+	
 	public static final AbstractCobolField low   = CobolFieldFactory.makeCobolField(1, "\0", allAttr);
 	public static final AbstractCobolField quote = CobolFieldFactory.makeCobolField(1, "\"", allAttr);
 	public static final AbstractCobolField one   = CobolFieldFactory.makeCobolField(1, "1", oneAttr);
@@ -37,6 +39,12 @@ public class CobolConstant {
 	public static final AbstractCobolField zenSpace = CobolFieldFactory.makeCobolField(ZENCSIZ, new CobolDataStorage(ZENSPC), allAttr);
 	public static final AbstractCobolField zenBlank = CobolFieldFactory.makeCobolField(ZENCSIZ, new CobolDataStorage(ZENBLK), allAttr);
 	public static final AbstractCobolField zenQuote = CobolFieldFactory.makeCobolField(ZENCSIZ, new CobolDataStorage(ZENQUOT), allAttr);
+	
+	private static CobolDataStorage get0xFFStorage() {
+		byte[] bytes = new byte[1];
+		bytes[0] = (byte)0xff;
+		return new CobolDataStorage(bytes);
+	}
 	
 	public static final long[] exp10LL = {
 		1L,

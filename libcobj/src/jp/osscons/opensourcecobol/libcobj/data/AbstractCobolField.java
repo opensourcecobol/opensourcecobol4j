@@ -593,7 +593,7 @@ public abstract class AbstractCobolField {
 		if(attr2.isTypeAlphanumAll()) {
 			if(f2 == CobolConstant.zero && attr1.isTypeNumeric()) {
 				return f1.cmpInt(0);
-			} else if(f2.getSize() == 1) {				
+			} else if(f2.getSize() == 1) {
 				return f1.cmpChar(f2.getDataStorage().getByte(0));
 			} else {
 				return f1.cmpAll(f2);
