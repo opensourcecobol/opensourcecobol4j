@@ -498,17 +498,20 @@ public class CobolUtil {
 	 * @param size
 	 * @return
 	 */
-	public static int commonCmpc(CobolDataStorage s1, int c, int size) {
+	public static int commonCmpc(CobolDataStorage s1, byte c, int size) {
 		CobolDataStorage s = CobolModule.getCurrentModule().collating_sequence;
+		int uc = c & 0xFF;
 		if(s != null) {
 			for(int i=0; i<size; ++i) {
-				int ret = s.getByte(s1.getByte(i) - s.getByte(c));
+				
+				int ret = s.getByte((s1.getByte(i) & 0xFF) - (s.getByte(uc) & 0xFF));
 				if(ret != 0) {
 					return ret;
-				} }
+				}
+			}
 		} else {
 			for(int i=0; i<size; ++i) {
-				int ret = s1.getByte(i) - c;
+				int ret = (s1.getByte(i) & 0xFF) - uc;
 				if(ret != 0) {
 					return ret;
 				}
@@ -554,14 +557,14 @@ public class CobolUtil {
 	public static int alnumCmps(CobolDataStorage s1, CobolDataStorage s2, int size, CobolDataStorage col) {
 		if(col != null) {
 			for(int i=0; i<size; ++i) {
-				int ret = col.getByte(s1.getByte(i)) - col.getByte(s2.getByte(i));
+				int ret = col.getByte(s1.getByte(i) & 0xFF) - col.getByte(s2.getByte(i) & 0xFF);
 				if(ret != 0) {
 					return ret;
 				}
 			}
 		} else {
 			for(int i=0; i<size; ++i) {
-				int ret = s1.getByte(i) - s2.getByte(i);
+				int ret = (s1.getByte(i) & 0xFF) - (s2.getByte(i) & 0xFF);
 				if(ret != 0) {
 					return ret;
 				}

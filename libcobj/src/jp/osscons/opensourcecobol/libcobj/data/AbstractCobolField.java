@@ -1056,7 +1056,7 @@ public abstract class AbstractCobolField {
 	 * @param c
 	 * @return
 	 */
-	public int cmpChar(int c) {
+	public int cmpChar(byte c) {
 		int sign = this.getSign();
 		int ret = CobolUtil.commonCmpc(this.getDataStorage(), c, this.getSize());
 		if(this.getAttribute().getType() != CobolFieldAttribute.COB_TYPE_NUMERIC_PACKED) {
@@ -1163,7 +1163,7 @@ public abstract class AbstractCobolField {
 				if((lf.getAttribute().getType() & CobolFieldAttribute.COB_TYPE_NATIONAL) != 0) {
 					ret = CobolUtil.isNationalPadding(lf.getDataStorage().getSubDataStorage(sf.getSize()), lf.getSize() - sf.getSize());
 				} else {
-					ret = CobolUtil.commonCmpc(lf.getDataStorage().getSubDataStorage(sf.getSize()), ' ', lf.getSize() - sf.getSize());
+					ret = CobolUtil.commonCmpc(lf.getDataStorage().getSubDataStorage(sf.getSize()), (byte)' ', lf.getSize() - sf.getSize());
 				}
 				if(this.getSize() < other.getSize()) {
 					ret = -ret;
