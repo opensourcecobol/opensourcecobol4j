@@ -86,8 +86,11 @@ public class CobolNumericField extends AbstractCobolField {
 		
 		int signIndex = attr.isFlagSignLeading() ? 0 : this.getSize() - 1;
 		int i=0;
+		int dataLastIndex = attr.isFlagHaveSign() && !attr.isFlagSignLeading() && attr.isFlagSignSeparate()
+			? this.getSize() - 2
+			: this.getSize() - 1;
 		
-		for(; i + getFirstDataIndex()<this.getSize(); ++i) {
+		for(; i + getFirstDataIndex()<=dataLastIndex; ++i) {
 			if(scale > 0 && i - 1 == pointIndex) {
 				sb.append('.');
 			}

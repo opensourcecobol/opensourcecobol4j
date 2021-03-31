@@ -122,7 +122,7 @@ public class CobolAlphanumericField extends AbstractCobolField {
 	public void moveDisplayToAlnum(AbstractCobolField field) {
 		CobolDataStorage data1 = field.getDataStorage();
 		int data1FirstIndex = field.getFirstDataIndex();
-		int size1 = field.getSize();
+		int size1 = field.getFieldSize();
 		int sign = field.getSign();
 		CobolDataStorage data2 = this.getDataStorage();
 		int size2 = this.getSize();
@@ -136,7 +136,7 @@ public class CobolAlphanumericField extends AbstractCobolField {
 			int diff = size2 - size1;
 			int zeroSize = 0;
 			int i = 0;
-			for(; data1FirstIndex + i<size1; ++i) {
+			for(; i<size1; ++i) {
 				byte val = data1.getByte(data1FirstIndex + i);
 				data2.setByte(i, (byte) (val >= 0x70 ? val - 0x40 : val));
 			}
