@@ -854,7 +854,7 @@ public class CobolDataStorage {
 					val = -val;
 				}
 			} else {
-				val += (this.getByte(p) - '0');
+				val += (this.getByte(p) - ('0' + 0x40));
 				val = -val;
 			}
 		}

@@ -735,9 +735,8 @@ public class CobolNumericField extends AbstractCobolField {
 					sign = -1;
 				}
 			} else {
-				int signIndex = attr.isFlagSignLeading() ? 0 : size - 1;
-				if(buf[signIndex] >= 0x70) {
-					buf[signIndex] -= 0x40;
+				int signIndex = attr.isFlagSignLeading() ? 0 : this.getSize() - 1;
+				if(data.getByte(signIndex) >= 0x70) {
 					sign = -1;
 				}
 			}

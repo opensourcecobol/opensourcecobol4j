@@ -523,8 +523,8 @@ public class CobolDecimal {
 	 */
 	public void  alignDecimal(CobolDecimal d1, CobolDecimal d2) {
 		if(d1.getScale() < d2.getScale()) {
-			this.shiftDecimal(d2.getScale() - d1.getScale());
-		} else if(d1.getScale() < d2.getScale()) {
+			d1.shiftDecimal(d2.getScale() - d1.getScale());
+		} else if(d1.getScale() > d2.getScale()) {
 			d2.shiftDecimal(d1.getScale() - d2.getScale());
 		}
 	}
