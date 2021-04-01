@@ -1,7 +1,6 @@
 name: Run Cobol85 test
 
-on:
-  workflow_displatch:
+on: [push]
 
 jobs:
   run_test_job:
