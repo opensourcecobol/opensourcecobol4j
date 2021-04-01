@@ -1,0 +1,11 @@
+name: Run Cobol85 test
+
+on:
+  workflow_displatch:
+
+jobs:
+  run_test_job:
+    runs-on: ubuntu-latest
+    name: Run Cobol85 test
+    steps:
+      - run: echo "hello world"
