@@ -975,9 +975,8 @@ joutput_integer (cb_tree x)
 			    && f->size - f->pic->scale > 0
 			    && f->size - f->pic->scale <= 9
 			    && f->pic->have_sign == 0) {
-				//TODO param_idを使っていいか確認
-				joutput_param(f, param_id);
-				joutput (".getInt(%d)", f->size - f->pic->scale);
+				joutput_data (x);
+				joutput (".getNumdisp(%d)", f->size - f->pic->scale);
 
 				return;
 			}

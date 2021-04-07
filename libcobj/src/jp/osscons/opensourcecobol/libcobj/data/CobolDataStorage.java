@@ -860,6 +860,20 @@ public class CobolDataStorage {
 		}
 		return (val < n) ? -1 : (val > n) ? 1 : 0;
 	}
+	
+	public int getNumdisp(int size) {
+		int retval = 0;
+		for(int n=0; n<size; ++n) {
+			retval *= 10;
+			byte b = this.getByte(n);
+			if(b > '9') {
+				retval += 10;
+			} else {
+				retval += b - '0';
+			}
+		}
+		return retval;
+	}
 
 	/**
 	 *
