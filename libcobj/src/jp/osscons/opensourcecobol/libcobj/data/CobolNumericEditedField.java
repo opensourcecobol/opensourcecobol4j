@@ -84,6 +84,7 @@ public class CobolNumericEditedField extends AbstractCobolField {
 	private static void moveDisplayToEdited(AbstractCobolField dst, AbstractCobolField src) {
 		int decimalPoint = 0;
 		int sign = src.getSign();
+		src.putSign(+1);
 		boolean neg = sign < 0;
 		byte[] picBytes = dst.getAttribute().getPic().getBytes();
 		int count = 0;
