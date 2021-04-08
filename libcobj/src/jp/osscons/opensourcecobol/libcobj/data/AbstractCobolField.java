@@ -648,7 +648,7 @@ public abstract class AbstractCobolField {
 				return f1.cmpAll(f2);
 			}
 		} else if(attr1.isTypeAlphanumAll()) {
-			if(f1 == CobolConstant.zenZero && attr2.isTypeNumeric()) {
+			if(f1 == CobolConstant.zero && attr2.isTypeNumeric()) {
 				return -f2.cmpInt(0);
 			} else if(f1.getSize() == 1) {
 				return -f2.cmpChar(f1.getDataStorage().getByte(0));
@@ -656,7 +656,7 @@ public abstract class AbstractCobolField {
 				return -f2.cmpAll(f1);
 			}
 		} else if(attr2.isTypeNationalAll()) {
-			if(f2 == CobolConstant.zenZero && attr1.isTypeNumeric()) {
+			if(f2 == CobolConstant.zero && attr1.isTypeNumeric()) {
 				return f1.cmpInt(0);
 			} else if(f2.getSize() == 1) {
 				return f1.cmpChar(f2.getDataStorage().getByte(0));
@@ -664,7 +664,7 @@ public abstract class AbstractCobolField {
 				return f1.cmpAll(f2);
 			}
 		} else if(attr1.isTypeNationalAll()) {
-			if(f1 == CobolConstant.zenZero && attr2.isTypeNumeric()) {
+			if(f1 == CobolConstant.zero && attr2.isTypeNumeric()) {
 				return -f2.cmpInt(0);
 			} else if(f1.getSize() == 1) {
 				return -f2.cmpChar(f1.getDataStorage().getByte(0));

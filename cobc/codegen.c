@@ -173,7 +173,7 @@ static void joutput_param (cb_tree x, int id);
 static void joutput_func_1 (const char *name, cb_tree x);
 static void joutput_stmt (cb_tree x);
 static void joutput_figurative (cb_tree x, struct cb_field *f, const int value);
-
+static void joutput_alphabet_name_initialization(struct cb_alphabet_name *p);
 const int L_initextern_addr = 2000000000;
 int param_wrap_string_flag = 0;
 
@@ -4196,15 +4196,6 @@ joutput_internal_function (struct cb_program *prog, cb_tree parameter_list)
 	//output_line ("#include \"%s\"", prog->local_storage_name);
 	//output_newline ();
 
-	/* Alphabet-names */
-	//if (prog->alphabet_name_list) {
-	//	output_local ("/* Alphabet names */\n");
-	//	for (l = prog->alphabet_name_list; l; l = CB_CHAIN (l)) {
-	//		output_alphabet_name_definition (CB_ALPHABET_NAME (CB_VALUE (l)));
-	//	}
-	//	output_local ("\n");
-	//}
-
 	//output_line ("static int initialized = 0;");
 	//if (prog->decimal_index_max) {
 	//	output_local ("/* Decimal structures */\n");
@@ -4984,6 +4975,7 @@ void joutput_init_method(struct cb_program *prog) {
 	struct attr_list	*j;
 	struct base_list	*blp;
 	const char		*prevprog;
+	cb_tree			l;
 
 	joutput_line("public void init()");
 	joutput_line("{");
@@ -5074,6 +5066,16 @@ void joutput_init_method(struct cb_program *prog) {
 		joutput_newline();
 	}
 
+	/* Alphabet-names */
+	if (prog->alphabet_name_list) {
+		joutput ("/* Alphabet names */\n");
+		for (l = prog->alphabet_name_list; l; l = CB_CHAIN (l)) {
+			joutput_alphabet_name_initialization (CB_ALPHABET_NAME (CB_VALUE (l)));
+		}
+		joutput ("\n");
+	}
+
+
     if(gen_native) {
 	    int index = lookup_attr (COB_TYPE_ALPHANUMERIC, 0, 0, 0, NULL, 0);
 	    joutput_line("f_native = CobolFieldFactory.makeCobolField(256, new CobolDataStorage(cob_native), %s%d);\n",
@@ -5123,6 +5125,163 @@ void joutput_init_method(struct cb_program *prog) {
 	joutput("\n");
 	joutput_indent_level -= 2;
 	joutput_line("}");
+}
+
+static void
+joutput_alphabet_name_initialization(struct cb_alphabet_name *p)
+{
+	cb_tree		l;
+	cb_tree		ls;
+	cb_tree		x;
+	unsigned char	*data;
+	int		i;
+	int		n = 0;
+	int		size;
+	int		upper;
+	int		lower;
+	int		table[256];
+
+	/* Reset to -1 */
+	for (i = 0; i < 256; i++) {
+		table[i] = -1;
+	}
+
+	for (l = p->custom_list; l; l = CB_CHAIN (l)) {
+		x = CB_VALUE (l);
+		if (CB_PAIR_P (x)) {
+			/* X THRU Y */
+			lower = literal_value (CB_PAIR_X (x));
+			upper = literal_value (CB_PAIR_Y (x));
+			if (lower <= upper) {
+				for (i = lower; i <= upper; i++) {
+					table[i] = n++;
+				}
+			} else {
+				for (i = upper; i >= lower; i--) {
+					table[i] = n++;
+				}
+			}
+		} else if (CB_LIST_P (x)) {
+			/* X ALSO Y ... */
+			for (ls = x; ls; ls = CB_CHAIN (ls)) {
+				table[literal_value (CB_VALUE (ls))] = n;
+			}
+			n++;
+		} else {
+			/* Literal */
+			if (CB_TREE_CLASS (x) == CB_CLASS_NUMERIC) {
+				table[literal_value (x)] = n++;
+			} else if (CB_LITERAL_P (x)) {
+				size = (int)CB_LITERAL (x)->size;
+				data = CB_LITERAL (x)->data;
+				for (i = 0; i < size; i++) {
+					table[data[i]] = n++;
+				}
+			} else {
+				table[literal_value (x)] = n++;
+			}
+		}
+	}
+
+	/* Fill the rest of characters */
+	for (i = 0; i < 256; i++) {
+		if (table[i] == -1) {
+			table[i] = n++;
+		}
+	}
+
+	/* Output the table */
+
+	joutput("%s%s = new CobolDataStorage(%s_byte_array_%s);"
+		, CB_PREFIX_SEQUENCE, p->cname, CB_PREFIX_SEQUENCE, p->cname);
+	i = lookup_attr (COB_TYPE_ALPHANUMERIC, 0, 0, 0, NULL, 0);
+	joutput ("f_%s = CobolFieldFactory.makeCobolField(256, %s%s, %s%d);\n",
+		p->cname, CB_PREFIX_SEQUENCE, p->cname, CB_PREFIX_ATTR, i);
+	joutput ("\n");
+
+}
+
+static void
+joutput_alphabet_name_definition (struct cb_alphabet_name *p)
+{
+	cb_tree		l;
+	cb_tree		ls;
+	cb_tree		x;
+	unsigned char	*data;
+	int		i;
+	int		n = 0;
+	int		size;
+	int		upper;
+	int		lower;
+	int		table[256];
+
+	/* Reset to -1 */
+	for (i = 0; i < 256; i++) {
+		table[i] = -1;
+	}
+
+	for (l = p->custom_list; l; l = CB_CHAIN (l)) {
+		x = CB_VALUE (l);
+		if (CB_PAIR_P (x)) {
+			/* X THRU Y */
+			lower = literal_value (CB_PAIR_X (x));
+			upper = literal_value (CB_PAIR_Y (x));
+			if (lower <= upper) {
+				for (i = lower; i <= upper; i++) {
+					table[i] = n++;
+				}
+			} else {
+				for (i = upper; i >= lower; i--) {
+					table[i] = n++;
+				}
+			}
+		} else if (CB_LIST_P (x)) {
+			/* X ALSO Y ... */
+			for (ls = x; ls; ls = CB_CHAIN (ls)) {
+				table[literal_value (CB_VALUE (ls))] = n;
+			}
+			n++;
+		} else {
+			/* Literal */
+			if (CB_TREE_CLASS (x) == CB_CLASS_NUMERIC) {
+				table[literal_value (x)] = n++;
+			} else if (CB_LITERAL_P (x)) {
+				size = (int)CB_LITERAL (x)->size;
+				data = CB_LITERAL (x)->data;
+				for (i = 0; i < size; i++) {
+					table[data[i]] = n++;
+				}
+			} else {
+				table[literal_value (x)] = n++;
+			}
+		}
+	}
+
+	/* Fill the rest of characters */
+	for (i = 0; i < 256; i++) {
+		if (table[i] == -1) {
+			table[i] = n++;
+		}
+	}
+
+	/* Output the table */
+	joutput ("static byte[] %s_byte_array_%s = {\n", CB_PREFIX_SEQUENCE, p->cname);
+	for (i = 0; i < 256; i++) {
+		if (i == 255) {
+			joutput (" (byte)%d", table[i]);
+		} else {
+			joutput (" (byte)%d,", table[i]);
+		}
+		if (i % 16 == 15) {
+			joutput ("\n");
+		}
+	}
+	joutput ("};\n");
+	joutput("CobolDataStorage %s%s;", CB_PREFIX_SEQUENCE, p->cname);
+	i = lookup_attr (COB_TYPE_ALPHANUMERIC, 0, 0, 0, NULL, 0);
+	joutput ("AbstractCobolField f_%s;\n",
+		p->cname, CB_PREFIX_SEQUENCE, p->cname, CB_PREFIX_ATTR, i);
+	joutput ("\n");
 }
 
 
@@ -5184,6 +5343,15 @@ void joutput_declare_member_variables(struct cb_program *prog, cb_tree parameter
 	//	codegen (prog->next_program, 1);
 	//	return;
 	//}
+	
+	/* Alphabet-names */
+	if (prog->alphabet_name_list) {
+		joutput ("/* Alphabet names */\n");
+		for (l = prog->alphabet_name_list; l; l = CB_CHAIN (l)) {
+			joutput_alphabet_name_definition (CB_ALPHABET_NAME (CB_VALUE (l)));
+		}
+		joutput ("\n");
+	}
 
 	/* CobolDataStorge型変数の宣言 */
 	if (base_cache) {
@@ -5211,7 +5379,7 @@ void joutput_declare_member_variables(struct cb_program *prog, cb_tree parameter
 		joutput_line ("/* End of data storage */\n\n");
 	}
 
-    joutput_line("/* Call parameters */");
+	joutput_line("/* Call parameters */");
 	for (l = parameter_list; l; l = CB_CHAIN (l)) {
         joutput_line("private CobolDataStorage %s%d;",
             CB_PREFIX_BASE, cb_field (CB_VALUE (l))->id);
