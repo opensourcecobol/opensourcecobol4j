@@ -70,8 +70,6 @@ $skip{OBNC2M} = 1;
 # temp
 
 # 短時間で実行が終了しないため一時的にskip
-$skip{NC109M} = 1;
-$skip{NC204M} = 1;
 $skip{ST110A} = 1;
 $skip{ST123A} = 1;
 
@@ -291,7 +289,6 @@ $skip{ST123A} = 1;
 #$skip{ST107A}=1;
 #$skip{ST108A}=1;
 #$skip{ST109A}=1;
-#$skip{ST110A}=1;
 #$skip{ST111A}=1;
 #$skip{ST112M}=1;
 #$skip{ST113M}=1;
@@ -304,7 +301,6 @@ $skip{ST123A} = 1;
 #$skip{ST120A}=1;
 #$skip{ST121A}=1;
 #$skip{ST122A}=1;
-#$skip{ST123A}=1;
 #$skip{ST124A}=1;
 #$skip{ST125A}=1;
 #$skip{ST126A}=1;
@@ -338,9 +334,14 @@ foreach $in (sort (glob("*.{CBL,SUB}"))) {
   my $cmd;
   $exe =~ s/\.CBL//;
   $exe =~ s/\.SUB//;
-  $cmd = "./$exe";
+  $cmd = "";
+  if($enable_c == 1) {
+    $cmd = "./$exe";
+  } else {
+    $cmd = "java -Xss4m $exe";
+  }
   if (-e "./$exe.DAT") {
-    $cmd = "./$exe < $exe.DAT";
+    $cmd = "$cmd < $exe.DAT";
   }
   printf LOG "%-12s", $in;
   if ($skip{$exe} || $exe =~ /^..[34]0/) {
@@ -370,9 +371,9 @@ foreach $in (sort (glob("*.{CBL,SUB}"))) {
       ## if (system ("java $cmd > $exe.out") != 0) {
       $exec_result = 0;
       if($enable_c == 1) {
-          $exec_result = system ("ocobcrun $exe > $exe.out.org");
+          $exec_result = system ("$cmd > $exe.out.org");
       } else {
-          $exec_result = system ("java -Xss4m $exe > $exe.out");
+          $exec_result = system ("$cmd > $exe.out");
       }
       if ($exec_result != 0) {
 	$execute_error++;

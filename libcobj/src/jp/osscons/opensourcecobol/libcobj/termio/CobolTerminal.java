@@ -96,21 +96,23 @@ public class CobolTerminal {
 		}
 	}
 
+	private static Scanner scan = null;
 	/**
 	 * cob_acceptの実装(暫定)
 	 * @param f
 	 */
 	public static void accept(AbstractCobolField f) {
 		try {
-			Scanner scan = new Scanner(System.in);
+			if(scan == null) {				
+				scan = new Scanner(System.in);
+			}
 			String input = scan.nextLine();
-			
 			//PIC X(n)型のデータに変換
 			AbstractCobolField field = CobolFieldFactory.makeCobolField(input);
 			
 			f.moveFrom(field);
 		} catch(Exception e) {
-
+			e.printStackTrace();
 		}
 	}
 
