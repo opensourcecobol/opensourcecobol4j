@@ -484,7 +484,7 @@ public abstract class AbstractCobolField {
 
 		if(xToN && tmpSrcSize > 1) {
 			for(int i=0; i<digcount; ++i) {
-				lastdata.set(i, tmpSrcStorage.getByte(i % tmpSrcSize));
+				lastdata.setByte(i, tmpSrcStorage.getByte(i % tmpSrcSize));
 			}
 		} else {
 			if(src.getSize() == 1) {
@@ -492,12 +492,12 @@ public abstract class AbstractCobolField {
 			} else {
 				int i;
 				for(i=0; i<digcount; ++i) {
-					lastdata.set(i, src.getDataStorage().getByte(i % src.getSize()));
+					lastdata.setByte(i, src.getDataStorage().getByte(i % src.getSize()));
 				}
 				
 				if((0x81 <= lastdata.getByte(i  - 1) && lastdata.getByte(i - 1) <= 0x9F) ||
 				   (0xE0 <= lastdata.getByte(i  - 1) && lastdata.getByte(i - 1) <= 0xFC)) {
-					lastdata.set(i - 1, ' ');
+					lastdata.setByte(i - 1, (byte)' ');
 				}
 			}	
 		}
