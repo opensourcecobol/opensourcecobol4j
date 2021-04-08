@@ -173,12 +173,61 @@ public abstract class AbstractCobolField {
 	 * @return
 	 */
 	abstract public double getDouble();
+	
 	/**
 	 * 数値を表すデータが実装すべきメソッド.
 	 * 保持する数値データをCobolDecimal型に変換する.
 	 * @return 保持する数値データをCobolDecimal型に変換した値
 	 */
-	abstract public CobolDecimal getDecimal();
+	public CobolDecimal getDecimal() {
+		CobolDataStorage data = this.getDataStorage();
+		int firstDataIndex = this.getFirstDataIndex();
+		int size = this.getFieldSize();
+
+		if(data.getByte(firstDataIndex) == 255) {
+			//TODO 実装
+			throw new CobolRuntimeException(0, "未実装");
+		}
+
+		if(data.getByte(firstDataIndex) == 0) {
+			//TODO  実装
+			throw new CobolRuntimeException(0, "未実装");
+		}
+
+		char[] buf = new char[size];
+		for(int i=0; i<size; ++i) {
+			byte val = data.getByte(firstDataIndex + i);
+			if(val >= 0x70) {
+				buf[i] = (char)(val - 0x40);
+			} else {
+				buf[i] = (char)val;
+			}
+		}
+		
+		CobolFieldAttribute attr = this.getAttribute();
+		int sign = 1;
+		if(attr.isFlagHaveSign()) {
+			if(attr.isFlagSignSeparate()) {
+				int signIndex = attr.isFlagSignLeading() ? 0 : this.getSize() - 1;
+				if(data.getByte(signIndex) == '-') {
+					sign = -1;
+				}
+			} else {
+				int signIndex = attr.isFlagSignLeading() ? 0 : this.getSize() - 1;
+				if(data.getByte(signIndex) >= 0x70) {
+					sign = -1;
+				}
+			}
+		}
+
+		BigDecimal decimal = new BigDecimal(buf);
+		if(sign < 0) {
+			decimal = decimal.negate();
+		}
+		CobolDecimal ret = new CobolDecimal(decimal);
+		ret.setScale(this.getAttribute().getScale());
+		return ret;
+	}
 	/**
 	 * TODO 確認 未使用?
 	 * @param decimal

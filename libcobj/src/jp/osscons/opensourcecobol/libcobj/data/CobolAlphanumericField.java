@@ -73,11 +73,6 @@ public class CobolAlphanumericField extends AbstractCobolField {
 	}
 
 	@Override
-	public CobolDecimal getDecimal() {
-		throw new CobolRuntimeException(CobolRuntimeException.COBOL_FITAL_ERROR, "未対応");
-	}
-
-	@Override
 	public void setDecimal(BigDecimal decimal) {
 		// TODO 自動生成されたメソッド・スタブ
 
