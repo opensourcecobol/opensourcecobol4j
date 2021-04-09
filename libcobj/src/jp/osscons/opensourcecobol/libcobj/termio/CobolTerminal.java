@@ -106,9 +106,15 @@ public class CobolTerminal {
 			if(scan == null) {				
 				scan = new Scanner(System.in);
 			}
+
 			String input = scan.nextLine();
+
 			//PIC X(n)型のデータに変換
 			AbstractCobolField field = CobolFieldFactory.makeCobolField(input);
+
+			if(f.getAttribute().isTypeNumericDisplay() && field.getSize() > f.getSize()) {
+				field.setSize(f.getSize());
+			}
 			
 			f.moveFrom(field);
 		} catch(Exception e) {
