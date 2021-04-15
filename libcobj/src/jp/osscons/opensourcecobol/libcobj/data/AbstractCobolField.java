@@ -183,17 +183,19 @@ public abstract class AbstractCobolField {
 		CobolDataStorage data = this.getDataStorage();
 		int firstDataIndex = this.getFirstDataIndex();
 		int size = this.getFieldSize();
-
+		
 		if(data.getByte(firstDataIndex) == 255) {
-			//TODO 実装
-			throw new CobolRuntimeException(0, "未実装");
+			CobolDecimal decimal = new CobolDecimal(BigDecimal.TEN.pow(size));
+			decimal.setScale(this.getAttribute().getScale());
+			return decimal;
 		}
 
 		if(data.getByte(firstDataIndex) == 0) {
-			//TODO  実装
-			throw new CobolRuntimeException(0, "未実装");
+			CobolDecimal decimal = new CobolDecimal(BigDecimal.TEN.pow(size).negate());
+			decimal.setScale(this.getAttribute().getScale());
+			return decimal;
 		}
-
+		
 		char[] buf = new char[size];
 		for(int i=0; i<size; ++i) {
 			byte val = data.getByte(firstDataIndex + i);
