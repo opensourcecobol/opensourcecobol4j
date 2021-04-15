@@ -3063,7 +3063,7 @@ joutput_perform_exit (struct cb_label *l)
 			joutput_line ("  cob_reset_trace ();");
 		}
 		/* Fixme - Check module push/pop */
-		joutput_line ("  CobolModule.pollLast();");
+		joutput_line ("  CobolModule.pop();");
 		joutput_line ("  return false;");
 		joutput_line ("}");
 	}
@@ -4727,7 +4727,7 @@ joutput_internal_function (struct cb_program *prog, cb_tree parameter_list)
 	//	output_newline ();
 	//}
 	joutput_line ("/* Pop module stack */");
-	joutput_line ("CobolModule.pollLast();");
+	joutput_line ("CobolModule.pop();");
 	joutput_newline ();
 	//if (cb_flag_traceall) {
 	//	output_line ("cob_reset_trace ();");
