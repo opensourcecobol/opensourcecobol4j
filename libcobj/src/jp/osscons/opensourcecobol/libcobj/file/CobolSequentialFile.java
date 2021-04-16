@@ -20,6 +20,7 @@
 package jp.osscons.opensourcecobol.libcobj.file;
 
 import java.io.IOException;
+import java.nio.ByteBuffer;
 
 import jp.osscons.opensourcecobol.libcobj.data.AbstractCobolField;
 import jp.osscons.opensourcecobol.libcobj.exceptions.CobolStopRunException;
@@ -56,16 +57,18 @@ public class CobolSequentialFile extends CobolFile {
 	@Override
 	public int readNext(int readOpts) {
 		byte[] sbuff = new byte[4];
-		short[] sshort = new short[2];
-
 		this.file.seekInit();
 
 		if(this.record_min != this.record_max) {
 			if(this.file.read(sbuff, 4) != 1) {
-				//TODO 条件分岐
-				return COB_STATUS_10_END_OF_FILE;
+				if(this.file.isAtEnd()) {
+					return COB_STATUS_10_END_OF_FILE;
+				} else {
+					return COB_STATUS_30_PERMANENT_ERROR;
+				}
 			}
-			this.record.setSize(sshort[0]);
+			int size = ByteBuffer.wrap(sbuff).getInt();
+			this.record.setSize(size);
 		}
 
 		try {
@@ -86,10 +89,7 @@ public class CobolSequentialFile extends CobolFile {
 	@Override
 	public int write_(int opt) throws CobolStopRunException {
 		int ret;
-
 		byte[] sbuff = new byte[4];
-		short[] sshort = new short[2];
-		int sint;
 
 		this.file.seekInit();
 
@@ -102,8 +102,7 @@ public class CobolSequentialFile extends CobolFile {
 		}
 
 		if(this.record_min != this.record_max) {
-			sint = 0;
-			sshort[0] = (short) this.record.getSize();
+			ByteBuffer.wrap(sbuff).putInt(this.record.getSize());
 			if(this.file.write(sbuff, 4, 1) != 1) {
 				return COB_STATUS_30_PERMANENT_ERROR;
 			}

@@ -44,6 +44,7 @@ public class FileIO {
 	private boolean useStdIn = true;
 	private BufferedInputStream bis;
 	private BufferedOutputStream bos;
+	private boolean atEnd = false;
 
 	private final static boolean USE_STD_BUFFER = true;
 	private final static int STD_DEFAULT_BUFFER_SIZE = 1024;
@@ -63,6 +64,10 @@ public class FileIO {
 		this.readBufferIndex = READ_BUFFER_SIZE;
 		this.readBuffer = new byte[READ_BUFFER_SIZE];
 		this.readBufferEndIndex = READ_BUFFER_SIZE;
+	}
+	
+	public boolean isAtEnd() {
+		return this.atEnd;
 	}
 
 	public void setChannel(FileChannel fc, FileLock fl) {
@@ -92,9 +97,10 @@ public class FileIO {
 			System.err.println("read stdin not implmented");
 			return 0;
 		} else {
+			int readSize;
 			if(USE_STD_BUFFER) {
 				try {
-					this.bis.read(bytes, 0, size);
+					readSize = this.bis.read(bytes, 0, size);					
 				} catch(ClosedChannelException e) {
 					return 0;
 				} catch (IOException e) {
@@ -105,7 +111,7 @@ public class FileIO {
 			} else {
 				ByteBuffer data = ByteBuffer.wrap(bytes);
 				try {
-					this.fc.read(data);
+					readSize = this.fc.read(data);
 				} catch(ClosedChannelException e) {
 					return 0;
 				} catch (IOException e) {
@@ -113,6 +119,11 @@ public class FileIO {
 				} catch(NonReadableChannelException e) {
 					return 0;
 				}
+			}
+			
+			this.atEnd = readSize == -1;
+			if(readSize == -1) {
+				return 0;
 			}
 		}
 		return 1;
