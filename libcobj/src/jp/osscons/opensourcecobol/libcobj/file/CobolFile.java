@@ -449,6 +449,7 @@ public class CobolFile {
 			for(i=0; i< lingptr.getLinTop(); i++) {
 				this.file.putc((byte) '\n');
 			}
+			lingptr.getLinageCtr().setInt(1);
 		} else if((opt & COB_WRITE_LINES) != 0){
 			n = lingptr.getLinageCtr().getInt();
 			if(n == 0) {
