@@ -46,7 +46,7 @@ public class FileIO {
 	private BufferedOutputStream bos;
 	private boolean atEnd = false;
 
-	private final static boolean USE_STD_BUFFER = true;
+	private final static boolean USE_STD_BUFFER = false;
 	private final static int STD_DEFAULT_BUFFER_SIZE = 1024;
 
 	private final static boolean USE_READ_BUFFER = false;
@@ -242,13 +242,10 @@ public class FileIO {
 						this.bos.write(data, 0, size);
 					}
 				} catch(ClosedChannelException e) {
-					System.out.println("ClosedChannel");
 					return i;
 				} catch (IOException e) {
-					System.out.println("IO");
 					return i;
 				} catch(NonWritableChannelException e) {
-					System.out.println("NonWritableChannel");
 					return i;
 				}
 				return i;
@@ -431,5 +428,5 @@ public class FileIO {
 			} catch (IOException e) {
 			}
 		}
-	}
+	}	
 }

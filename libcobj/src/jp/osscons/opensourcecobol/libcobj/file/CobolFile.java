@@ -193,7 +193,7 @@ public class CobolFile {
 	protected AbstractCobolField record;
 	protected AbstractCobolField record_size;
 	protected CobolFileKey[] keys;
-	protected FileIO file;
+	public FileIO file;
 	protected CobolSort filex;
 	protected IndexedFile filei;
 	protected Linage linorkeyptr;
