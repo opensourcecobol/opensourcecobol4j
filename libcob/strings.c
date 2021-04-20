@@ -412,7 +412,9 @@ cob_inspect_converting (const cob_field *f1, const cob_field *f2)
 
 	len = (size_t)(inspect_end - inspect_start);
 
+	puts("[dbg] call inspect_converting");
 #ifdef	I18N_UTF8
+	puts("[dbg] call inspect_converting 1");
 	if (f2 == &cob_quote) {
 		fig_const  = &cob_quote;
 		fig_constw = &cob_zen_quote;
@@ -476,6 +478,7 @@ cob_inspect_converting (const cob_field *f1, const cob_field *f2)
 		}
 	}
 #else /*!I18N_UTF8*/
+	puts("[dbg] call inspect_converting 2");
 	if (COB_FIELD_TYPE (f1) == COB_TYPE_NATIONAL ||
 	    COB_FIELD_TYPE (f1) == COB_TYPE_NATIONAL_EDITED) {
 		if (f2 == &cob_quote) {
