@@ -140,11 +140,11 @@ public class CobolInspect {
 	public static void init(AbstractCobolField var, int replacing) {
 		CobolInspect.inspectVarCopy = var;
 		CobolInspect.inspectVar = CobolInspect.inspectVarCopy;
-		CobolInspect.inspectReplacing = replacing;
-		CobolInspect.inspectSign = var.getSign();
 		if(inspectVar.getAttribute().isTypeNumericDisplay()) {
 			inspectVar.putSign(1);
 		}
+		CobolInspect.inspectReplacing = replacing;
+		CobolInspect.inspectSign = var.getSign();
 		CobolInspect.inspectSize = var.getFieldSize();
 		CobolInspect.inspectData = var.getDataStorage();
 		CobolInspect.inspectStart = -1;
@@ -178,15 +178,16 @@ public class CobolInspect {
 		switch(str.getAttribute().getType()) {
 		case CobolFieldAttribute.COB_TYPE_NUMERIC_DISPLAY:
 			CobolDataStorage data = str.getDataStorage();
+			int firstIndex = str.getFirstDataIndex();
 			int size = str.getFieldSize();
 			int n = 0;
 			int i = 0;
-			while(size > 1 && data.getByte(i) == (byte)'0') {
+			while(size > 1 && (data.getByte(firstIndex + i) == (byte)'0' || data.getByte(firstIndex + i) == (byte)0x70)) {
 				size--;
 				i++;
 			}
 			while(size-- > 0) {
-				int b = data.getByte(i++);
+				int b = data.getByte(firstIndex + i++);
 				n = n * 10 + (b >= 0x70 ? b - 0x70 : b - 0x30);
 				fig++;
 			}
@@ -324,12 +325,14 @@ public class CobolInspect {
 		} else {
 			for(int j=0; j<f1.getSize(); ++j) {
 				for(int i=0; i<len; ++i) {
-					if(f2 == CobolConstant.quote || f2 == CobolConstant.space || f2 == CobolConstant.zero) {
-						inspectData.setByte(inspectStart + i, data.getByte(0));
-					} else {						
-						inspectData.setByte(inspectStart + i, data.getByte(j));
+					if(inspectMark[i] == -1 && inspectData.getByte(inspectStart + i) == f1.getDataStorage().getByte(j)) {
+						if(f2 == CobolConstant.quote || f2 == CobolConstant.space || f2 == CobolConstant.zero) {
+							inspectData.setByte(inspectStart + i, data.getByte(0));
+						} else {						
+							inspectData.setByte(inspectStart + i, data.getByte(j));
+						}
+						inspectMark[i] = 1;
 					}
-					inspectMark[i] = 1;
 				}
 			}
 		}
