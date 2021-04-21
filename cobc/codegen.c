@@ -649,7 +649,6 @@ again:
 			if (p && (r->type == CB_SENDING_OPERAND
 			    || !cb_field_subordinate (cb_field (p->occurs_depending), q))) {
 				if (p->offset - q->offset > 0) {
-                    joutput("/*2222*/");
 					joutput ("%d + ", p->offset - q->offset);
 				}
 				if (p->size != 1) {

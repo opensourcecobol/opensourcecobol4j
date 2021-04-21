@@ -347,4 +347,10 @@ public class CobolInspect {
 		}
 		inspectVar.putSign(inspectSign);
 	}
+	
+		
+	public static void initString() {
+		CobolInspect.inspectMark = new int[CobolConstant.COB_MEDIUM_BUFF];
+		lastsize = CobolConstant.COB_MEDIUM_BUFF;
+	}
 }

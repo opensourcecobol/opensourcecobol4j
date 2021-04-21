@@ -67,4 +67,24 @@ public class CobolConstant {
 		100000000000000000L,
 		1000000000000000000L
 	};
+	
+	public static final int COB_MINI_BUFF = 2056;
+	public static final int COB_SMALL_BUFF = 1024;
+	public static final int COB_NORMAL_BUFF = 2048;
+	public static final int COB_MEDIUM_BUFF = 8192;
+	public static final int COB_LARGE_BUFF = 16384;
+	
+	public static final int COB_MINI_MAX = COB_MINI_BUFF - 1;
+	public static final int COB_SMALL_MAX = COB_SMALL_BUFF - 1;
+	public static final int COB_NORMAL_MAX = COB_NORMAL_BUFF - 1;
+	public static final int COB_MEDIUM_MAX = COB_MEDIUM_BUFF - 1;
+	public static final int COB_LARGE_MAX = COB_LARGE_BUFF - 1;
+	
+	public static final int COB_MAX_FIELD_PARAMS = 64;
+	public static final int COB_FERROR_INITIALIZED = 0;
+	public static final String COB_SOURCE_FILE = null;
+	public static final int COB_PACKAGE_VERSION = 0;
+	public static final int COB_PATCH_LEVEL = 0;
+	//TODO 標準パスの設定
+	public static final String COB_LIBRARY_PATH = "";
 }

@@ -20,6 +20,7 @@
 package jp.osscons.opensourcecobol.libcobj.call;
 
 import java.lang.reflect.Constructor;
+
 import java.lang.reflect.InvocationTargetException;
 import java.nio.ByteBuffer;
 import java.util.ArrayList;
@@ -30,7 +31,7 @@ import java.util.Map;
 import java.util.Map.Entry;
 import java.util.UUID;
 
-import jp.osscons.opensourcecobol.libcobj.Const;
+import jp.osscons.opensourcecobol.libcobj.common.CobolConstant;
 import jp.osscons.opensourcecobol.libcobj.data.AbstractCobolField;
 import jp.osscons.opensourcecobol.libcobj.data.CobolDataStorage;
 import jp.osscons.opensourcecobol.libcobj.exceptions.CobolCallException;
@@ -105,10 +106,10 @@ public class CobolResolve {
 
 		s = System.getenv("COB_LIBRARY_PATH");
 		if (s == null || s.equals("")) {
-			buf = "." + System.getProperty("path.separator") + Const.COB_LIBRARY_PATH;
+			buf = "." + System.getProperty("path.separator") + CobolConstant.COB_LIBRARY_PATH;
 		} else {
 			buf = s + System.getProperty("path.separator") +
-					"." + System.getProperty("path.separator") + Const.COB_LIBRARY_PATH;
+					"." + System.getProperty("path.separator") + CobolConstant.COB_LIBRARY_PATH;
 		}
 		setLibraryPath(buf);
 

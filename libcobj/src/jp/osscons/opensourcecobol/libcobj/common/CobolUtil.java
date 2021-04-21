@@ -101,6 +101,7 @@ public class CobolUtil {
 	public static void cob_init(String[] argv, boolean cob_initialized) {
 		if(!cob_initialized) {
 			CobolUtil.commandLineArgs = argv;
+			CobolInspect.initString();
 			CobolFile.cob_init_fileio();
 			
 			for(int i=0; i<8; ++i) {

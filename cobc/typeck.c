@@ -7338,7 +7338,7 @@ cb_emit_string (cb_tree items, cb_tree into, cb_tree pointer)
 	}
 	cb_validate_string (items, into);
 	start = items;
-	cb_emit (cb_build_funcall_2 ("cob_string_init", into, pointer));
+	cb_emit (cb_build_funcall_2 ("CobolString.stringInit", into, pointer));
 	while (start) {
 
 		/* find DELIMITED item */
@@ -7350,16 +7350,16 @@ cb_emit_string (cb_tree items, cb_tree into, cb_tree pointer)
 
 		/* cob_string_delimited */
 		dlm = end ? CB_PAIR_X (CB_VALUE (end)) : cb_int0;
-		cb_emit (cb_build_funcall_1 ("cob_string_delimited", dlm));
+		cb_emit (cb_build_funcall_1 ("CobolString.stringDelimited", dlm));
 
 		/* cob_string_append */
 		for (l = start; l != end; l = CB_CHAIN (l)) {
-			cb_emit (cb_build_funcall_1 ("cob_string_append", CB_VALUE (l)));
+			cb_emit (cb_build_funcall_1 ("CobolString.stringAppend", CB_VALUE (l)));
 		}
 
 		start = end ? CB_CHAIN (end) : NULL;
 	}
-	cb_emit (cb_build_funcall_0 ("cob_string_finish"));
+	cb_emit (cb_build_funcall_0 ("CobolString.stringFinish"));
 }
 
 /*
@@ -7696,14 +7696,14 @@ cb_emit_unstring (cb_tree name, cb_tree delimited, cb_tree into, cb_tree pointer
 		return;
 	}
 	cb_validate_unstring (name, delimited, into);
-	cb_emit (cb_build_funcall_3 ("cob_unstring_init", name, pointer,
+	cb_emit (cb_build_funcall_3 ("CobolString.unstringInit", name, pointer,
 		cb_int (cb_list_length (delimited))));
 	cb_emit_list (delimited);
 	cb_emit_list (into);
 	if (tallying) {
-		cb_emit (cb_build_funcall_1 ("cob_unstring_tallying", tallying));
+		cb_emit (cb_build_funcall_1 ("CobolString.unstringTallying", tallying));
 	}
-	cb_emit (cb_build_funcall_0 ("cob_unstring_finish"));
+	cb_emit (cb_build_funcall_0 ("CobolString.unstringFinish"));
 }
 
 cb_tree
@@ -7712,7 +7712,7 @@ cb_build_unstring_delimited (cb_tree all, cb_tree value)
 	if (cb_validate_one (value)) {
 		return cb_error_node;
 	}
-	return cb_build_funcall_2 ("cob_unstring_delimited", value, all);
+	return cb_build_funcall_2 ("CobolString.unstringDelimited", value, all);
 }
 
 cb_tree
@@ -7727,7 +7727,7 @@ cb_build_unstring_into (cb_tree name, cb_tree delimiter, cb_tree count)
 	if (count == NULL) {
 		count = cb_int0;
 	}
-	return cb_build_funcall_3 ("cob_unstring_into", name, delimiter, count);
+	return cb_build_funcall_3 ("CobolString.unstringInto", name, delimiter, count);
 }
 
 /*
