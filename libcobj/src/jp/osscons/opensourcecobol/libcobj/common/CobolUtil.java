@@ -504,8 +504,8 @@ public class CobolUtil {
 		int uc = c & 0xFF;
 		if(s != null) {
 			for(int i=0; i<size; ++i) {
-				
-				int ret = s.getByte((s1.getByte(i) & 0xFF) - (s.getByte(uc) & 0xFF));
+				//int ret = s.getByte((s1.getByte(i) & 0xFF) - (s.getByte(uc) & 0xFF));
+				int ret = (s.getByte(s1.getByte(i) & 0xFF) & 0xFF) - (s.getByte(uc) & 0xFF);
 				if(ret != 0) {
 					return ret;
 				}
