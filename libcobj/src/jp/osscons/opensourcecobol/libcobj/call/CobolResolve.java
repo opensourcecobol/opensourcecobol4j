@@ -191,17 +191,17 @@ public class CobolResolve {
 		String fullName;
 		CobolRunnable runnable = null;
 
-		/* search the cache */
-		if(callTable.containsKey(name)) {
-			return callTable.get(name);
-		}
-
 		/* encode program name */
 		char c1 = name.charAt(0);
 		if(c1 >= '0' && c1 <= '9') {
 			name = "_" + name;
 		}
 		name = name.replaceAll("-", "__");
+
+		/* search the cache */
+		if(callTable.containsKey(name)) {
+			return callTable.get(name);
+		}
 
 		if(name_convert == 1) {
 			name = name.toLowerCase();
