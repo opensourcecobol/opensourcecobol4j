@@ -190,31 +190,37 @@ public class CobolResolve {
 	static public CobolRunnable resolve(String name) throws CobolCallException {
 		String fullName;
 		CobolRunnable runnable = null;
+		System.out.println("[dbg in lib] 0");
 
 		/* encode program name */
 		char c1 = name.charAt(0);
 		if(c1 >= '0' && c1 <= '9') {
 			name = "_" + name;
 		}
+		System.out.println("[dbg in lib] 1");
 		name = name.replaceAll("-", "__");
+		System.out.println("[dbg in lib] 2");
 
 		/* search the cache */
 		if(callTable.containsKey(name)) {
 			return callTable.get(name);
 		}
 
+		System.out.println("[dbg in lib] 3");
 		if(name_convert == 1) {
 			name = name.toLowerCase();
 		}else if(name_convert == 2) {
 			name = name.toUpperCase();
 		}
 
+		System.out.println("[dbg in lib] 4");
 		if(defaultPackageName != null) {
 			fullName = defaultPackageName + "." + name;
 		}else {
 			fullName = name;
 		}
 
+		System.out.println("[dbg in lib] 5");
 		/* search the main program */
 		runnable = getInstance(fullName);
 		if(runnable != null) {
@@ -222,6 +228,7 @@ public class CobolResolve {
 			return runnable;
 		}
 
+		System.out.println("[dbg in lib] 6");
 		/* search external modules */
 		for (String package_path : package_paths) {
 			fullName = package_path + "." + name;
@@ -232,8 +239,9 @@ public class CobolResolve {
 			}
 		}
 
+		System.out.println("[dbg in lib] 7");
 		//Not found
-		throw CobolCallException.ex;
+		throw new CobolCallException();
 	}
 
 	/**
@@ -275,7 +283,7 @@ public class CobolResolve {
 			}
 		} catch (ClassNotFoundException  e) {
 			//TODO
-			e.printStackTrace();
+			//e.printStackTrace();
 			//Continue
 		}
 
