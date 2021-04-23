@@ -1040,6 +1040,7 @@ public abstract class AbstractCobolField {
 			int size = this.getFieldSize();
 			int firstIndex = this.getFirstDataIndex();
 			sign = this.getSign();
+			this.putSign(1);
 			for(i=0; i < size; ++i) {
 				c = (char)this.getDataStorage().getByte(i + firstIndex);
 				if(!Character.isDigit(c)) {

@@ -5519,6 +5519,72 @@ joutput_main_function (struct cb_program *prog)
 	joutput_indent ("}\n");
 }
 
+/*
+ * Class definition
+ */
+
+static void
+joutput_class_name_definition (struct cb_class_name *p)
+{
+	cb_tree		l;
+	cb_tree		x;
+	unsigned char	*data;
+	size_t		i;
+	size_t		size;
+	int		lower;
+	int		upper;
+
+	joutput_line ("static boolean");
+	joutput_line ("%s (AbstractCobolField f)", p->cname);
+	joutput_indent ("{");
+	joutput_line ("for (int i = 0; i < f.getSize(); i++)");
+	joutput_prefix ();
+	joutput ("  if (!(    ");
+	for (l = p->list; l; l = CB_CHAIN (l)) {
+		x = CB_VALUE (l);
+		if (CB_PAIR_P (x)) {
+			lower = literal_value (CB_PAIR_X (x));
+			upper = literal_value (CB_PAIR_Y (x));
+			if (!lower) {
+				joutput ("f.getDataStorage().getByte(i) <= %d", upper);
+			} else {
+				joutput ("(%d <= f.getDataStorage().getByte(i) && f.getDataStorage().getByte(i) <= %d)", lower, upper);
+			}
+		} else {
+			if (CB_TREE_CLASS (x) == CB_CLASS_NUMERIC) {
+				joutput ("f.getDataStorage().getByte(i) == %d", literal_value(x));
+			} else if (x == cb_space) {
+				joutput ("f.getDataStorage().getByte(i) == %d", ' ');
+			} else if (x == cb_zero) {
+				joutput ("f.getDataStorage().getByte(i) == %d", '0');
+			} else if (x == cb_quote) {
+				joutput ("f.getDataStorage().getByte(i) == %d", '"');
+			} else if (x == cb_null) {
+				joutput ("f.getDataStorage().getByte(i) == 0");
+			} else {
+				size = CB_LITERAL (x)->size;
+				data = CB_LITERAL (x)->data;
+				for (i = 0; i < size; i++) {
+					joutput ("f.getDataStorage().getByte(i) == %d", data[i]);
+					if (i + 1 < size) {
+						joutput (" || ");
+					}
+				}
+			}
+		}
+		if (CB_CHAIN (l)) {
+			joutput ("\n");
+			joutput_prefix ();
+			joutput ("         || ");
+		}
+	}
+	joutput (" ))\n");
+	joutput_line ("    return false;");
+	joutput_line ("return true;");
+	joutput_indent ("}");
+	joutput_newline ();
+}
+
 void
 codegen (struct cb_program *prog, const int nested, char** program_id_list)
 {
@@ -5621,13 +5687,13 @@ codegen (struct cb_program *prog, const int nested, char** program_id_list)
 	joutput("\n");
 
 	joutput_line("public class %s implements CobolRunnable {", prog->program_id);
-    joutput_indent_level += 2;
+	joutput_indent_level += 2;
 	joutput("\n");
 
 	joutput_line("private boolean initialized = false;");
 	joutput_line("private CobolModule cobolCurrentModule;");
-    joutput_line("private int frameIndex;");
-    joutput_line("private CobolModule module;");
+	joutput_line("private int frameIndex;");
+	joutput_line("private CobolModule module;");
 	joutput_line("private CobolFrame frame;");
 	joutput_line("private CobolFrame[] frameStack;");
 	joutput_line("private static boolean cobolInitialized = false;");
@@ -5657,9 +5723,9 @@ codegen (struct cb_program *prog, const int nested, char** program_id_list)
 
 	/* Class-names */
 	if (!prog->nested_level && prog->class_name_list) {
-		//output ("/* Class names */\n");
+		joutput ("/* Class names */\n");
 		for (l = prog->class_name_list; l; l = CB_CHAIN (l)) {
-			//output_class_name_definition (CB_CLASS_NAME (CB_VALUE (l)));
+			joutput_class_name_definition (CB_CLASS_NAME (CB_VALUE (l)));
 		}
 	}
 
