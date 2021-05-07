@@ -186,8 +186,11 @@ public class CobolIndexedFile extends CobolFile {
 			} else {
 				dbConf.setAllowCreate(true);
 			}
-
-			dbConf.setSortedDuplicates(this.keys[i].getFlag() != 0);
+			/*if(this.keys[i].getFlag() != 0) {
+				dbConf.setSortedDuplicates(true);
+			}*/
+			//dbConf.setSortedDuplicates(this.keys[i].getFlag() != 0);
+			dbConf.setSortedDuplicates(true);
 
 			if (mode == COB_OPEN_OUTPUT) {
 				try {
@@ -586,11 +589,7 @@ public class CobolIndexedFile extends CobolFile {
 			}
 			if (read_nextprev) {
 				try {
-					//output_data("22222 p.key", p.key);
-					//System.out.println("<<<Log>>> p.key_index = " + p.key_index);
 					result = p.cursor[p.key_index].get(p.key, p.data, nextprev, readOptions);
-					//output_data("33333 p.key", p.key);
-					//output_data("33333 p.data", p.data);
 				} catch(LockConflictException e) {
 					this.discardCursors(p);
 					return COB_STATUS_51_RECORD_LOCKED;
@@ -628,7 +627,6 @@ public class CobolIndexedFile extends CobolFile {
 			}
 			if (p.key_index == 0) {
 				p.last_readkey[0].memcpy(p.key.getData(), p.key.getSize());
-				//output_data("xxxxxx p.key", p.key);
 			} else {
 				p.last_readkey[p.key_index].memcpy(p.temp_key, this.keys[p.key_index].getField().getSize());
 				p.last_readkey[p.key_index + this.nkeys].memcpy(p.key.getData(),
@@ -703,8 +701,6 @@ public class CobolIndexedFile extends CobolFile {
 		}
 
 		p.data = new DatabaseEntry(this.record.getDataStorage().getByteArray(0, this.record.getSize()));
-		//output_data("write 0 p.key", p.key);
-		//output_data("write 0 p.data", p.data);
 		try {
 			p.cursor[0].put(p.key, p.data);
 		} catch (LockConflictException e) {
@@ -728,8 +724,6 @@ public class CobolIndexedFile extends CobolFile {
 			}
 
 			p.key = DBT_SET(this.keys[i].getField());
-			//output_data("write " + i + " p.key", p.key);
-			//output_data("write " + i + " p.data", p.data);
 			try {
 				if(p.db[i].put(null, p.key, p.data, flags, null) == null) {
 					if (close_cursor) {
@@ -799,9 +793,9 @@ public class CobolIndexedFile extends CobolFile {
 	private boolean check_alt_keys(boolean rewrite) {
 		IndexedFile p = this.filei;
 		for (int i = 1; i < this.nkeys; ++i) {
-			if (this.keys[i].getFlag() != 0) {
+			if (this.keys[i].getFlag() == 0) {
 				p.key = DBT_SET(this.keys[i].getField());
-				if (p.db[i].get(null, p.key, p.data, Get.SEARCH, null) == null) {
+				if (p.db[i].get(null, p.key, p.data, Get.SEARCH, null) != null) {
 					if (rewrite) {
 						byte[] dataBytes = p.data.getData();
 						if (this.keys[0].getField().getDataStorage().memcmp(dataBytes,
@@ -849,10 +843,10 @@ public class CobolIndexedFile extends CobolFile {
 		//berkley dbの重複スキーに対するデータは新しいものほど先頭に格納されるが
 		//java editionでは挿入位置が自動で設定されるため,以下の実装を変えた.
 		int dupno = 0;
-		while (ret != null) {
-			int tempDupno = ByteBuffer.wrap(p.key.getData(), this.keys[0].getField().getSize(), 4).getInt();
-			if (tempDupno > dupno) {
-				dupno = tempDupno;
+		while (ret != null && p.temp_key.memcmp(p.key.getData(), p.key.getSize()) == 0) {
+			int tempdupno = ByteBuffer.wrap(p.data.getData(), this.keys[0].getField().getSize(), 4).getInt();
+			if(dupno < tempdupno) {
+				dupno = tempdupno;
 			}
 			ret = p.cursor[i].get(p.key, p.data, Get.NEXT_DUP, null);
 		}
@@ -861,7 +855,7 @@ public class CobolIndexedFile extends CobolFile {
 		p.cursor[i] = null;
 
 		return ++dupno;
-	}
+	}	
 
 	@Override
 	/**

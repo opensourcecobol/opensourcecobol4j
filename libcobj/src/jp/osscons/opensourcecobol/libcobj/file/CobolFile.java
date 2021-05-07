@@ -1084,7 +1084,6 @@ public class CobolFile {
 				|| this.open_mode == COB_OPEN_INPUT
 				|| this.open_mode == COB_OPEN_EXTEND) {
 				saveStatus(COB_STATUS_48_OUTPUT_DENIED, fnstatus);
-				System.err.println("write called 03-2");
 				return;
 			}
 		}
