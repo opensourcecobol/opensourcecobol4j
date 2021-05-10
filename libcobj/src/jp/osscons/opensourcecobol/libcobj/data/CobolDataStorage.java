@@ -481,6 +481,10 @@ public class CobolDataStorage {
 		ByteBuffer buffer = ByteBuffer.wrap(this.data, this.index + index, 4);
 		buffer.putInt(value);
 	}
+	
+	public boolean isSame(CobolDataStorage other) {
+		return this.data == other.data && this.index == other.index;
+	}
 
 	/**
 	 * this.dataから2バイトを読み込んでshort型として返す

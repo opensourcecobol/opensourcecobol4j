@@ -286,7 +286,7 @@ public class CobolIndexedFile extends CobolFile {
 		for (p.key_index = 0; p.key_index < this.nkeys; p.key_index++) {
 			int size = this.keys[p.key_index].getField().getSize();
 			//TODO 検討, 比較方法を変えた
-			if (this.keys[p.key_index].getField().getDataStorage().memcmp(key.getDataStorage(), size) == 0) {
+			if (this.keys[p.key_index].getField().getDataStorage().isSame(key.getDataStorage())) {
 				break;
 			}
 		}
