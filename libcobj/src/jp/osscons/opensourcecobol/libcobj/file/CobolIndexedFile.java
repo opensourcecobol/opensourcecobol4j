@@ -202,7 +202,7 @@ public class CobolIndexedFile extends CobolFile {
 			}
 
 			try {
-				p.db[i] = env.openDatabase(null, filename, dbConf);
+				p.db[i] = env.openDatabase(null, runtime_buffer, dbConf);
 			} catch (OperationFailureException | EnvironmentFailureException | IllegalStateException
 					| IllegalArgumentException e) {
 				e.printStackTrace();
@@ -644,10 +644,7 @@ public class CobolIndexedFile extends CobolFile {
 		return COB_STATUS_00_SUCCESS;
 	}
 
-	//TODO  削除
-	public static void output_data(String msg, DatabaseEntry data) {
-		System.out.println("<<<Log>>> "+ msg + " = " + new String(new ByteArrayBinding().entryToObject(data)));
-	}
+
 	/**
 	 * libcob/fileio.cにはない関数
 	 * 複数回出現するカーソルを閉じる処理をまとめた
@@ -678,7 +675,6 @@ public class CobolIndexedFile extends CobolFile {
 			p.write_cursor_open = true;
 			close_cursor = true;
 		}
-
 		if (this.nkeys > 1 && !rewrite) {
 			if (this.check_alt_keys(false)) {
 				if (close_cursor) {
@@ -702,10 +698,10 @@ public class CobolIndexedFile extends CobolFile {
 
 		p.data = new DatabaseEntry(this.record.getDataStorage().getByteArray(0, this.record.getSize()));
 		try {
-			p.cursor[0].put(p.key, p.data);
+			p.cursor[0].put(p.key, p.data);			
 		} catch (LockConflictException e) {
 			return COB_STATUS_51_RECORD_LOCKED;
-		}
+		}		
 
 		p.data = p.key;
 		Put flags;

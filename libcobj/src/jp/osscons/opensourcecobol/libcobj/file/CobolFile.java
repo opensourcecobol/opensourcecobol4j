@@ -1013,7 +1013,13 @@ public class CobolFile {
 		}
 
 		if(this.organization == COB_ORG_INDEXED /* && bdb_env != null*/) {
-			//TODO INDEXED実装時
+			if(this.open_mode != COB_OPEN_I_O ||
+				(this.lock_mode & COB_LOCK_EXCLUSIVE) != 0) {
+				read_opts &= ~COB_READ_LOCK;
+			} else if((this.lock_mode & COB_LOCK_AUTOMATIC) != 0 &&
+					(read_opts & COB_READ_NO_LOCK) == 0) {
+				read_opts |= COB_READ_LOCK;
+			}
 		} else {
 			read_opts &= ~COB_READ_LOCK;
 		}
@@ -1331,7 +1337,7 @@ public class CobolFile {
 
 	public static void defaultErrorHandle() {
 		byte[] file_status = CobolFile.errorFile.file_status;
-		int status = (file_status[0] - '0') * 10 + (file_status[0] - '0');
+		int status = (file_status[0] - '0') * 10 + (file_status[1] - '0');
 		String msg;
 		switch (status) {
 	    case COB_STATUS_10_END_OF_FILE:
