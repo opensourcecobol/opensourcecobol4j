@@ -57,11 +57,18 @@ public class CobolUtil {
 	
 	public static boolean verbose = false;
 	public static boolean cobErrorOnExitFlag = false;
+	
+	private static boolean lineTrace = false;
 
 	abstract class handlerlist {
 		public handlerlist next = null;
 		abstract public int proc(String s);
 	}
+	
+	public static final int FERROR_INITIALIZED = 0;
+	public static final int FERROR_CODEGEN = 1;
+	public static final int FERROR_CHAINING = 2;
+	public static final int FERROR_STACK = 3;
 
 	/**
 	 * libcob/common.cのcob_check_envの実装
@@ -94,6 +101,7 @@ public class CobolUtil {
 	public static void cob_init(String[] argv, boolean cob_initialized) {
 		if(!cob_initialized) {
 			CobolUtil.commandLineArgs = argv;
+			CobolInspect.initString();
 			CobolFile.cob_init_fileio();
 			
 			for(int i=0; i<8; ++i) {
@@ -491,17 +499,20 @@ public class CobolUtil {
 	 * @param size
 	 * @return
 	 */
-	public static int commonCmpc(CobolDataStorage s1, int c, int size) {
+	public static int commonCmpc(CobolDataStorage s1, byte c, int size) {
 		CobolDataStorage s = CobolModule.getCurrentModule().collating_sequence;
+		int uc = c & 0xFF;
 		if(s != null) {
 			for(int i=0; i<size; ++i) {
-				int ret = s.getByte(s1.getByte(i) - s.getByte(c));
+				//int ret = s.getByte((s1.getByte(i) & 0xFF) - (s.getByte(uc) & 0xFF));
+				int ret = (s.getByte(s1.getByte(i) & 0xFF) & 0xFF) - (s.getByte(uc) & 0xFF);
 				if(ret != 0) {
 					return ret;
-				} }
+				}
+			}
 		} else {
 			for(int i=0; i<size; ++i) {
-				int ret = s1.getByte(i) - c;
+				int ret = (s1.getByte(i) & 0xFF) - uc;
 				if(ret != 0) {
 					return ret;
 				}
@@ -547,14 +558,14 @@ public class CobolUtil {
 	public static int alnumCmps(CobolDataStorage s1, CobolDataStorage s2, int size, CobolDataStorage col) {
 		if(col != null) {
 			for(int i=0; i<size; ++i) {
-				int ret = col.getByte(s1.getByte(i)) - col.getByte(s2.getByte(i));
+				int ret = col.getByte(s1.getByte(i) & 0xFF) - col.getByte(s2.getByte(i) & 0xFF);
 				if(ret != 0) {
 					return ret;
 				}
 			}
 		} else {
 			for(int i=0; i<size; ++i) {
-				int ret = s1.getByte(i) - s2.getByte(i);
+				int ret = (s1.getByte(i) & 0xFF) - (s2.getByte(i) & 0xFF);
 				if(ret != 0) {
 					return ret;
 				}
@@ -581,5 +592,34 @@ public class CobolUtil {
 			ret = ((b11 << 8 | b12) > (b21 << 8 | b22)) ? 1 : 0;
 		}
 		return ret;
+	}
+	
+	public static void readyTrace() {
+		CobolUtil.lineTrace = true;
+	}
+	
+	public static void resetTrace() {		
+		CobolUtil.lineTrace = true;
+	}
+	
+	public static void fatalError(int fatalError) throws CobolStopRunException {
+		switch(fatalError) {
+	    case CobolUtil.FERROR_INITIALIZED:
+	        CobolUtil.runtimeError ("cob_init() has not been called");
+	        break;
+	    case CobolUtil.FERROR_CODEGEN:
+	        CobolUtil.runtimeError ("Codegen error - Please report this");
+	        break;
+	    case CobolUtil.FERROR_CHAINING:
+	        CobolUtil.runtimeError ("ERROR - Recursive call of chained program");
+	        break;
+	    case CobolUtil.FERROR_STACK:
+	        CobolUtil.runtimeError ("Stack overflow, possible PERFORM depth exceeded");
+	        break;
+	    default:
+	        CobolUtil.runtimeError (String.format("Unknown failure : %d", fatalError));
+	        break;
+		}
+		CobolStopRunException.stopRunAndThrow(1);
 	}
 }

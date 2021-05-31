@@ -84,6 +84,7 @@ public class CobolNumericEditedField extends AbstractCobolField {
 	private static void moveDisplayToEdited(AbstractCobolField dst, AbstractCobolField src) {
 		int decimalPoint = 0;
 		int sign = src.getSign();
+		src.putSign(+1);
 		boolean neg = sign < 0;
 		byte[] picBytes = dst.getAttribute().getPic().getBytes();
 		int count = 0;
@@ -176,7 +177,8 @@ public class CobolNumericEditedField extends AbstractCobolField {
 				
 				case '9':
 					if(min <= srcp && srcp < max) {
-						dstBytes[dstp] = srcBytes[srcp++];
+						byte val = srcBytes[srcp++];						
+						dstBytes[dstp] =  (byte)(val >= 0x70 ? val - 0x40 : val);
 					} else {
 						srcp++;
 						dstBytes[dstp] = '0';
@@ -205,6 +207,7 @@ public class CobolNumericEditedField extends AbstractCobolField {
 					break;
 					
 				case 'C':
+				case 'D':
 					end = dstp;
 					if(neg) {
 						if(c == 'C') {
@@ -241,7 +244,7 @@ public class CobolNumericEditedField extends AbstractCobolField {
 						isZero = suppressZero = false;
 					}
 					if(trailingSign) {
-						dstBytes[dstp] = (byte)(neg ? '-' : (c == '+') ? '+' : '-');
+						dstBytes[dstp] = (byte)(neg ? '-' : (c == '+') ? '+' : ' ');
 						--end;
 					} else if(dstp ==  dst.getDataStorage().getIndex() || suppressZero){
 						dstBytes[dstp] = pad;

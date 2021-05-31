@@ -22,6 +22,8 @@ package jp.osscons.opensourcecobol.libcobj.data;
 import java.math.BigDecimal;
 import java.nio.ByteBuffer;
 
+import jp.osscons.opensourcecobol.libcobj.common.CobolConstant;
+import jp.osscons.opensourcecobol.libcobj.common.CobolModule;
 import jp.osscons.opensourcecobol.libcobj.exceptions.CobolRuntimeException;
 
 public class CobolNumericBinaryField extends AbstractCobolField {
@@ -51,45 +53,49 @@ public class CobolNumericBinaryField extends AbstractCobolField {
 	public int addPackedInt(int n) {
 		throw new CobolRuntimeException(0, "実装しないコード");
 	}
+	
+	private long getBinaryValue() {
+		CobolDataStorage storage = this.getDataStorage();
+		if(this.size == 1) {
+			return storage.getByte(0);
+		} else if(this.size == 2) {
+			return storage.shortValue();
+		} else if(this.size == 4) {
+			return storage.intValue();
+		} else {
+			return storage.longValue();
+		}
+	}
 
+	private void setBinaryValue(long n) {
+		CobolDataStorage storage = this.getDataStorage();
+		if(this.size == 1) {
+			storage.setByte(0, (byte)n);
+		} else if(this.size == 2) {
+			storage.set((short)n);
+		} else if(this.size == 4) {
+			storage.set((int)n);
+		} else {
+			storage.set((long)n);
+		}
+	}
+	
+	@Override
+	public long getLongValue() {
+		return this.getBinaryValue();
+	}
+	
+	@Override
+	public void setLongValue(long n) {
+		this.setBinaryValue(n);
+	}
+	
 	/**
 	 * thisの文字列表現をかえす.(toStringだけで十分か?)
 	 * @return thisの文字列表現
 	 */
 	@Override
 	public String getString() {
-		//TODO 以下のコメントアウトしたコードを消去する.
-		/*int n = 0;
-		for(int i=0; i<this.getSize(); ++i) {
-			System.out.println(String.format("%02x", this.getDataStorage().getByte(i)));
-		}
-		for(int i=0; i<4; ++i) {
-			if(i < this.getSize()) {
-				n = ((n << 8) & -255) | (this.getDataStorage().getByte(i) & 0xFF);
-			} else {
-				n <<= 8;
-			}
-		}
-
-		CobolFieldAttribute attr = this.getAttribute();
-		String format = String.format("%%0%dd", attr.getDigits());
-		String body = String.format(format, Math.abs(n));
-		//System.out.println("n: " + n);
-		int scale = this.getAttribute().getScale();
-		if(scale > 0) {
-			int len = body.length();
-			body = body.substring(0, len - scale) + "." + body.substring(len-scale, len);
-		}
-
-		if(this.getAttribute().isFlagHaveSign()) {
-			if(this.getSign() < 0) {
-				return "-" + body;
-			} else {
-				return "+" + body;
-			}
-		} else {
-			return body;
-		}*/
 		CobolFieldAttribute thisAttr = this.getAttribute();
 		int flag = thisAttr.isFlagHaveSign() ? CobolFieldAttribute.COB_FLAG_HAVE_SIGN : 0;
 		CobolFieldAttribute attr = new CobolFieldAttribute(
@@ -97,7 +103,7 @@ public class CobolNumericBinaryField extends AbstractCobolField {
 				thisAttr.getDigits(),
 				thisAttr.getScale(),
 				flag,
-				"");
+				thisAttr.getPic());
 		CobolDataStorage storage = new CobolDataStorage(thisAttr.getDigits());
 		CobolNumericField numericField = new CobolNumericField(thisAttr.getDigits(), storage, attr);
 		numericField.moveFrom(this);
@@ -110,14 +116,7 @@ public class CobolNumericBinaryField extends AbstractCobolField {
 	 */
 	@Override
 	public int getSign() {
-		int n = 0;
-		for(int i=0; i<4; ++i) {
-			if(i < this.getSize()) {
-				n = ((n << 8) & -255) | (this.getDataStorage().getByte(i) & 0xFF);
-			} else {
-				n <<= 8;
-			}
-		}
+		long n = this.getBinaryValue();
 
 		if(n < 0) {
 			return -1;
@@ -203,7 +202,7 @@ public class CobolNumericBinaryField extends AbstractCobolField {
 		}
 
 		int size = size1 - field.getAttribute().getScale() + this.getAttribute().getScale();
-		int val = 0;
+		long val = 0;
 		for(int i=0; i < size; ++i) {
 			if(i < size1) {
 				//TODO 確認
@@ -216,14 +215,16 @@ public class CobolNumericBinaryField extends AbstractCobolField {
 				val = val * 10;
 			}
 		}
-
+		
 		if(sign < 0 && this.getAttribute().isFlagHaveSign()) {
 			val = -val;
 		}
 
-		//TODO moduleに関する処理を追加
-		// libcob/move.c 636
-		this.binaryMsetInt64(val);
+		if(CobolModule.getCurrentModule().flag_binary_truncate != 0 && !this.getAttribute().isFlagRealBinary()) {
+			val %= CobolConstant.exp10LL[this.getAttribute().getDigits()];
+		}
+		
+		this.setBinaryValue(val);
 		field.putSign(sign);
 	}
 
@@ -329,11 +330,7 @@ public class CobolNumericBinaryField extends AbstractCobolField {
 	@Override
 	public CobolDecimal getDecimal() {
 		CobolDecimal decimal = new CobolDecimal();
-		if(this.getAttribute().isFlagHaveSign()) {
-			decimal.setValue(new BigDecimal(this.binaryGetInt64()));
-		} else {
-			decimal.setValue(new BigDecimal(this.binaryGetUint64()));
-		}
+		decimal.setValue(new BigDecimal(this.getBinaryValue()));
 		decimal.setScale(this.getAttribute().getScale());
 		return decimal;
 	}

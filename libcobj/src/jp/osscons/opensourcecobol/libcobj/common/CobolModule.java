@@ -22,6 +22,7 @@ import java.util.ArrayList;
 import java.util.Deque;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Stack;
 
 import jp.osscons.opensourcecobol.libcobj.data.AbstractCobolField;
 import jp.osscons.opensourcecobol.libcobj.data.CobolDataStorage;
@@ -31,19 +32,8 @@ import jp.osscons.opensourcecobol.libcobj.data.CobolDataStorage;
  */
 public class CobolModule {
 
-	static private Deque<CobolModule> moduleQueue;
+	static private Stack<CobolModule> moduleStack = new Stack<CobolModule>();
 	static private CobolModule currentModule;
-
-	{
-		CobolModule.init();
-	}
-
-	/**
-	 * 初期化
-	 */
-	static public void init() {
-		moduleQueue = new LinkedList<>();
-	}
 
 	static public CobolModule getCurrentModule ()
 	{
@@ -51,19 +41,19 @@ public class CobolModule {
 	}
 
 	/**
-	 * モジュールキューに追加する
+	 * モジュールスタックに追加する
 	 * @param module キューに追加するモジュール
 	 */
 	static public void push(CobolModule module) {
 		currentModule = module;
-		moduleQueue.add(module);
+		moduleStack.push(module);
 	}
 
 	/**
-	 * モジュールキューの最後の要素を削除する
+	 * モジュールスタックからモジュールを取り除く
 	 */
-	static public void pollLast() {
-		currentModule = moduleQueue.pollLast();
+	static public void pop() {
+		currentModule = moduleStack.pop();
 	}
 
 	/**
@@ -71,7 +61,7 @@ public class CobolModule {
 	 * @return
 	 */
 	static public boolean isQueueEmpty() {
-		return moduleQueue.isEmpty();
+		return moduleStack.isEmpty();
 	}
 
 

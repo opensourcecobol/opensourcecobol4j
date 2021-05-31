@@ -173,12 +173,63 @@ public abstract class AbstractCobolField {
 	 * @return
 	 */
 	abstract public double getDouble();
+	
 	/**
 	 * 数値を表すデータが実装すべきメソッド.
 	 * 保持する数値データをCobolDecimal型に変換する.
 	 * @return 保持する数値データをCobolDecimal型に変換した値
 	 */
-	abstract public CobolDecimal getDecimal();
+	public CobolDecimal getDecimal() {
+		CobolDataStorage data = this.getDataStorage();
+		int firstDataIndex = this.getFirstDataIndex();
+		int size = this.getFieldSize();
+		
+		if(data.getByte(firstDataIndex) == 255) {
+			CobolDecimal decimal = new CobolDecimal(BigDecimal.TEN.pow(size));
+			decimal.setScale(this.getAttribute().getScale());
+			return decimal;
+		}
+
+		if(data.getByte(firstDataIndex) == 0) {
+			CobolDecimal decimal = new CobolDecimal(BigDecimal.TEN.pow(size).negate());
+			decimal.setScale(this.getAttribute().getScale());
+			return decimal;
+		}
+		
+		char[] buf = new char[size];
+		for(int i=0; i<size; ++i) {
+			byte val = data.getByte(firstDataIndex + i);
+			if(val >= 0x70) {
+				buf[i] = (char)(val - 0x40);
+			} else {
+				buf[i] = (char)val;
+			}
+		}
+		
+		CobolFieldAttribute attr = this.getAttribute();
+		int sign = 1;
+		if(attr.isFlagHaveSign()) {
+			if(attr.isFlagSignSeparate()) {
+				int signIndex = attr.isFlagSignLeading() ? 0 : this.getSize() - 1;
+				if(data.getByte(signIndex) == '-') {
+					sign = -1;
+				}
+			} else {
+				int signIndex = attr.isFlagSignLeading() ? 0 : this.getSize() - 1;
+				if(data.getByte(signIndex) >= 0x70) {
+					sign = -1;
+				}
+			}
+		}
+
+		BigDecimal decimal = new BigDecimal(buf);
+		if(sign < 0) {
+			decimal = decimal.negate();
+		}
+		CobolDecimal ret = new CobolDecimal(decimal);
+		ret.setScale(this.getAttribute().getScale());
+		return ret;
+	}
 	/**
 	 * TODO 確認 未使用?
 	 * @param decimal
@@ -484,7 +535,7 @@ public abstract class AbstractCobolField {
 
 		if(xToN && tmpSrcSize > 1) {
 			for(int i=0; i<digcount; ++i) {
-				lastdata.set(i, tmpSrcStorage.getByte(i % tmpSrcSize));
+				lastdata.setByte(i, tmpSrcStorage.getByte(i % tmpSrcSize));
 			}
 		} else {
 			if(src.getSize() == 1) {
@@ -492,12 +543,12 @@ public abstract class AbstractCobolField {
 			} else {
 				int i;
 				for(i=0; i<digcount; ++i) {
-					lastdata.set(i, src.getDataStorage().getByte(i % src.getSize()));
+					lastdata.setByte(i, src.getDataStorage().getByte(i % src.getSize()));
 				}
 				
 				if((0x81 <= lastdata.getByte(i  - 1) && lastdata.getByte(i - 1) <= 0x9F) ||
 				   (0xE0 <= lastdata.getByte(i  - 1) && lastdata.getByte(i - 1) <= 0xFC)) {
-					lastdata.set(i - 1, ' ');
+					lastdata.setByte(i - 1, (byte)' ');
 				}
 			}	
 		}
@@ -559,9 +610,6 @@ public abstract class AbstractCobolField {
 	 * @return 保持する数値データの比較を行い,this<fieldなら負の値,this==fieldなら0,this>fieldなら正の値
 	 */
 	public int compareTo(AbstractCobolField other) {
-		//AbstractCobolField f1 = numericFieldToNumericDisplayField(this);
-		//AbstractCobolField f2 = numericFieldToNumericDisplayField(field);
-		//return f1.cmpAlnum(f2);
 		AbstractCobolField f1 = this;
 		AbstractCobolField f2 = other;
 		CobolFieldAttribute attr1 = f1.getAttribute();
@@ -596,13 +644,13 @@ public abstract class AbstractCobolField {
 		if(attr2.isTypeAlphanumAll()) {
 			if(f2 == CobolConstant.zero && attr1.isTypeNumeric()) {
 				return f1.cmpInt(0);
-			} else if(f2.getSize() == 1) {				
+			} else if(f2.getSize() == 1) {
 				return f1.cmpChar(f2.getDataStorage().getByte(0));
 			} else {
 				return f1.cmpAll(f2);
 			}
 		} else if(attr1.isTypeAlphanumAll()) {
-			if(f1 == CobolConstant.zenZero && attr2.isTypeNumeric()) {
+			if(f1 == CobolConstant.zero && attr2.isTypeNumeric()) {
 				return -f2.cmpInt(0);
 			} else if(f1.getSize() == 1) {
 				return -f2.cmpChar(f1.getDataStorage().getByte(0));
@@ -610,7 +658,7 @@ public abstract class AbstractCobolField {
 				return -f2.cmpAll(f1);
 			}
 		} else if(attr2.isTypeNationalAll()) {
-			if(f2 == CobolConstant.zenZero && attr1.isTypeNumeric()) {
+			if(f2 == CobolConstant.zero && attr1.isTypeNumeric()) {
 				return f1.cmpInt(0);
 			} else if(f2.getSize() == 1) {
 				return f1.cmpChar(f2.getDataStorage().getByte(0));
@@ -618,7 +666,7 @@ public abstract class AbstractCobolField {
 				return f1.cmpAll(f2);
 			}
 		} else if(attr1.isTypeNationalAll()) {
-			if(f1 == CobolConstant.zenZero && attr2.isTypeNumeric()) {
+			if(f1 == CobolConstant.zero && attr2.isTypeNumeric()) {
 				return -f2.cmpInt(0);
 			} else if(f1.getSize() == 1) {
 				return -f2.cmpChar(f1.getDataStorage().getByte(0));
@@ -707,22 +755,6 @@ public abstract class AbstractCobolField {
 		}
 		return field;
 	}
-
-	/*public int compareInt(int n) {
-		CobolDecimal cobD1 = this.getDecimal();
-		CobolDecimal cobD2 = new CobolDecimal(n);
-		cobD2.setScale(0);
-		return cobD1.compareTo(cobD2);
-	}
-
-	protected int compareChar(int c) {
-		int sign = this.getSign();
-		int ret = commonCmpc(this.getDataStorage(), c, this.getSize());
-		if(this.getAttribute().isTypeNumericPacked()) {
-			this.putSign(sign);
-		}
-		return ret;
-	}*/
 
 	/**
 	 * libcob/common.cのcommon_cmpcの実装
@@ -992,6 +1024,7 @@ public abstract class AbstractCobolField {
 			int size = this.getFieldSize();
 			int firstIndex = this.getFirstDataIndex();
 			sign = this.getSign();
+			this.putSign(1);
 			for(i=0; i < size; ++i) {
 				c = (char)this.getDataStorage().getByte(i + firstIndex);
 				if(!Character.isDigit(c)) {
@@ -1059,7 +1092,7 @@ public abstract class AbstractCobolField {
 	 * @param c
 	 * @return
 	 */
-	public int cmpChar(int c) {
+	public int cmpChar(byte c) {
 		int sign = this.getSign();
 		int ret = CobolUtil.commonCmpc(this.getDataStorage(), c, this.getSize());
 		if(this.getAttribute().getType() != CobolFieldAttribute.COB_TYPE_NUMERIC_PACKED) {
@@ -1166,7 +1199,7 @@ public abstract class AbstractCobolField {
 				if((lf.getAttribute().getType() & CobolFieldAttribute.COB_TYPE_NATIONAL) != 0) {
 					ret = CobolUtil.isNationalPadding(lf.getDataStorage().getSubDataStorage(sf.getSize()), lf.getSize() - sf.getSize());
 				} else {
-					ret = CobolUtil.commonCmpc(lf.getDataStorage().getSubDataStorage(sf.getSize()), ' ', lf.getSize() - sf.getSize());
+					ret = CobolUtil.commonCmpc(lf.getDataStorage().getSubDataStorage(sf.getSize()), (byte)' ', lf.getSize() - sf.getSize());
 				}
 				if(this.getSize() < other.getSize()) {
 					ret = -ret;
@@ -1184,13 +1217,21 @@ public abstract class AbstractCobolField {
 	public int cmpAlnum(AbstractCobolField other) {
 		int sign1 = this.getSign();
 		int sign2 = other.getSign();
+		
+		if(this.getAttribute().isTypeNumericDisplay()) {
+			this.putSign(1);
+		}
+		if(other.getAttribute().isTypeNumericDisplay()) {
+			other.putSign(1);
+		}
+
 		int ret = this.cmpSimpleStr(other);
 		
 		if(this.getAttribute().getType() != CobolFieldAttribute.COB_TYPE_NUMERIC_PACKED) {
 			this.putSign(sign1);
 		}
 		if(other.getAttribute().getType() != CobolFieldAttribute.COB_TYPE_NUMERIC_PACKED) {
-			other.putSign(sign1);
+			other.putSign(sign2);
 		}
 		return ret;
 	}
@@ -1306,6 +1347,14 @@ public abstract class AbstractCobolField {
 		AbstractCobolField field = CobolFieldFactory.makeCobolField(8, storage, attr);
 		field.moveFrom(this);
 		return ByteBuffer.wrap(data).getLong();
+	}
+
+	
+	public long getLongValue() {
+		return 0;
+	}
+	
+	public void setLongValue(long n) {
 	}
 
 	/**

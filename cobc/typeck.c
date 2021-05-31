@@ -4294,9 +4294,9 @@ cb_emit_inspect (cb_tree var, cb_tree body, cb_tree replacing, int replconv)
 	if (replconv && sending_id) {
 		cb_error (_("Invalid target for REPLACING/CONVERTING"));
 	}
-	cb_emit (cb_build_funcall_2 ("cob_inspect_init", var, replacing));
+	cb_emit (cb_build_funcall_2 ("CobolInspect.init", var, replacing));
 	cb_emit_list (body);
-	cb_emit (cb_build_funcall_0 ("cob_inspect_finish"));
+	cb_emit (cb_build_funcall_0 ("CobolInspect.finish"));
 }
 
 void
@@ -4320,7 +4320,7 @@ cb_build_tarrying_characters (cb_tree l)
 		cb_error (_("Data name expected before CHARACTERS"));
 	}
 	inspect_func = NULL;
-	return cb_list_add (l, cb_build_funcall_1 ("cob_inspect_characters", inspect_data));
+	return cb_list_add (l, cb_build_funcall_1 ("CobolInspect.characters", inspect_data));
 }
 
 cb_tree
@@ -4329,7 +4329,7 @@ cb_build_tarrying_all (void)
 	if (inspect_data == NULL) {
 		cb_error (_("Data name expected before ALL"));
 	}
-	inspect_func = "cob_inspect_all";
+	inspect_func = "CobolInspect.all";
 	return NULL;
 }
 
@@ -4339,7 +4339,7 @@ cb_build_tarrying_leading (void)
 	if (inspect_data == NULL) {
 		cb_error (_("Data name expected before LEADING"));
 	}
-	inspect_func = "cob_inspect_leading";
+	inspect_func = "CobolInspect.leading";
 	return NULL;
 }
 
@@ -4349,7 +4349,7 @@ cb_build_tarrying_trailing (void)
 	if (inspect_data == NULL) {
 		cb_error (_("Data name expected before TRAILING"));
 	}
-	inspect_func = "cob_inspect_trailing";
+	inspect_func = "CobolInspect.trailing";
 	return NULL;
 }
 
@@ -4636,7 +4636,7 @@ cb_build_replacing_characters (cb_tree x, cb_tree l, cb_tree var)
 		return cb_error_node;
 	}
 #endif /*I18N_UTF8*/
-	return cb_list_add (l, cb_build_funcall_1 ("cob_inspect_characters", x));
+	return cb_list_add (l, cb_build_funcall_1 ("CobolInspect.characters", x));
 }
 
 cb_tree
@@ -4652,46 +4652,46 @@ cb_build_replacing_all (cb_tree x, cb_tree y, cb_tree l, cb_tree var)
 		return cb_error_node;
 	}
 #endif /*I18N_UTF8*/
-	return cb_list_add (l, cb_build_funcall_2 ("cob_inspect_all", y, x));
+	return cb_list_add (l, cb_build_funcall_2 ("CobolInspect.all", y, x));
 }
 
 cb_tree
 cb_build_replacing_leading (cb_tree x, cb_tree y, cb_tree l)
 {
-	return cb_list_add (l, cb_build_funcall_2 ("cob_inspect_leading", y, x));
+	return cb_list_add (l, cb_build_funcall_2 ("CobolInspect.leading", y, x));
 }
 
 cb_tree
 cb_build_replacing_first (cb_tree x, cb_tree y, cb_tree l)
 {
-	return cb_list_add (l, cb_build_funcall_2 ("cob_inspect_first", y, x));
+	return cb_list_add (l, cb_build_funcall_2 ("CobolInspect.first", y, x));
 }
 
 cb_tree
 cb_build_replacing_trailing (cb_tree x, cb_tree y, cb_tree l)
 {
-	return cb_list_add (l, cb_build_funcall_2 ("cob_inspect_trailing", y, x));
+	return cb_list_add (l, cb_build_funcall_2 ("CobolInspect.trailing", y, x));
 }
 
 cb_tree
 cb_build_converting (cb_tree x, cb_tree y, cb_tree l)
 {
-	return cb_list_add (l, cb_build_funcall_2 ("cob_inspect_converting", x, y));
+	return cb_list_add (l, cb_build_funcall_2 ("CobolInspect.converting", x, y));
 }
 
 cb_tree
 cb_build_inspect_region_start (void)
 {
-	return cb_list_init (cb_build_funcall_0 ("cob_inspect_start"));
+	return cb_list_init (cb_build_funcall_0 ("CobolInspect.start"));
 }
 
 cb_tree
 cb_build_inspect_region (cb_tree l, cb_tree pos, cb_tree x)
 {
 	if (pos == CB_BEFORE) {
-		return cb_list_add (l, cb_build_funcall_1 ("cob_inspect_before", x));
+		return cb_list_add (l, cb_build_funcall_1 ("CobolInspect.before", x));
 	} else {
-		return cb_list_add (l, cb_build_funcall_1 ("cob_inspect_after", x));
+		return cb_list_add (l, cb_build_funcall_1 ("CobolInspect.after", x));
 	}
 }
 
@@ -7338,7 +7338,7 @@ cb_emit_string (cb_tree items, cb_tree into, cb_tree pointer)
 	}
 	cb_validate_string (items, into);
 	start = items;
-	cb_emit (cb_build_funcall_2 ("cob_string_init", into, pointer));
+	cb_emit (cb_build_funcall_2 ("CobolString.stringInit", into, pointer));
 	while (start) {
 
 		/* find DELIMITED item */
@@ -7350,16 +7350,16 @@ cb_emit_string (cb_tree items, cb_tree into, cb_tree pointer)
 
 		/* cob_string_delimited */
 		dlm = end ? CB_PAIR_X (CB_VALUE (end)) : cb_int0;
-		cb_emit (cb_build_funcall_1 ("cob_string_delimited", dlm));
+		cb_emit (cb_build_funcall_1 ("CobolString.stringDelimited", dlm));
 
 		/* cob_string_append */
 		for (l = start; l != end; l = CB_CHAIN (l)) {
-			cb_emit (cb_build_funcall_1 ("cob_string_append", CB_VALUE (l)));
+			cb_emit (cb_build_funcall_1 ("CobolString.stringAppend", CB_VALUE (l)));
 		}
 
 		start = end ? CB_CHAIN (end) : NULL;
 	}
-	cb_emit (cb_build_funcall_0 ("cob_string_finish"));
+	cb_emit (cb_build_funcall_0 ("CobolString.stringFinish"));
 }
 
 /*
@@ -7696,14 +7696,14 @@ cb_emit_unstring (cb_tree name, cb_tree delimited, cb_tree into, cb_tree pointer
 		return;
 	}
 	cb_validate_unstring (name, delimited, into);
-	cb_emit (cb_build_funcall_3 ("cob_unstring_init", name, pointer,
+	cb_emit (cb_build_funcall_3 ("CobolString.unstringInit", name, pointer,
 		cb_int (cb_list_length (delimited))));
 	cb_emit_list (delimited);
 	cb_emit_list (into);
 	if (tallying) {
-		cb_emit (cb_build_funcall_1 ("cob_unstring_tallying", tallying));
+		cb_emit (cb_build_funcall_1 ("CobolString.unstringTallying", tallying));
 	}
-	cb_emit (cb_build_funcall_0 ("cob_unstring_finish"));
+	cb_emit (cb_build_funcall_0 ("CobolString.unstringFinish"));
 }
 
 cb_tree
@@ -7712,7 +7712,7 @@ cb_build_unstring_delimited (cb_tree all, cb_tree value)
 	if (cb_validate_one (value)) {
 		return cb_error_node;
 	}
-	return cb_build_funcall_2 ("cob_unstring_delimited", value, all);
+	return cb_build_funcall_2 ("CobolString.unstringDelimited", value, all);
 }
 
 cb_tree
@@ -7727,7 +7727,7 @@ cb_build_unstring_into (cb_tree name, cb_tree delimiter, cb_tree count)
 	if (count == NULL) {
 		count = cb_int0;
 	}
-	return cb_build_funcall_3 ("cob_unstring_into", name, delimiter, count);
+	return cb_build_funcall_3 ("CobolString.unstringInto", name, delimiter, count);
 }
 
 /*

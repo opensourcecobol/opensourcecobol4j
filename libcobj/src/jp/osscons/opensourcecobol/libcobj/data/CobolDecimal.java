@@ -25,6 +25,7 @@ import java.nio.ByteBuffer;
 
 import jp.osscons.opensourcecobol.libcobj.common.CobolModule;
 import jp.osscons.opensourcecobol.libcobj.common.CobolUtil;
+import jp.osscons.opensourcecobol.libcobj.exceptions.CobolException;
 import jp.osscons.opensourcecobol.libcobj.exceptions.CobolExceptionId;
 import jp.osscons.opensourcecobol.libcobj.exceptions.CobolRuntimeException;
 import jp.osscons.opensourcecobol.libcobj.exceptions.CobolStopRunException;
@@ -83,8 +84,8 @@ public class CobolDecimal {
 	/**
 	 * 保持する数値データ
 	 */
-	BigDecimal value;
-	private int scale;
+	public BigDecimal value;
+	public int scale;
 
 	/**
 	 * コンストラクタ
@@ -136,6 +137,15 @@ public class CobolDecimal {
 	}
 
 	/**
+	 * コピーコンストラクタ
+	 * @param other
+	 */
+	public CobolDecimal(CobolDecimal other) {
+		this.setValue(other.getValue());
+		this.setScale(other.getScale());
+	}
+
+	/**
 	 * this.valueのgetter
 	 * @return this.value
 	 */
@@ -171,7 +181,6 @@ public class CobolDecimal {
 	 * @param scale スケール値
 	 */
 	public void setScale(int scale) {
-		this.value.setScale(scale);
 		this.scale = scale;
 	}
 
@@ -180,7 +189,6 @@ public class CobolDecimal {
 	 * @return this.valueのスケール
 	 */
 	public int getScale() {
-		//return this.value.scale();
 		return this.scale;
 	}
 
@@ -190,6 +198,7 @@ public class CobolDecimal {
 	 */
 	public void set(int n) {
 		this.value = new BigDecimal(n);
+		this.scale = 0;
 	}
 
 	/**
@@ -198,6 +207,7 @@ public class CobolDecimal {
 	 */
 	public void set(long n) {
 		this.value = new BigDecimal(n);
+		this.scale = 0;
 	}
 
 	/**
@@ -298,7 +308,6 @@ public class CobolDecimal {
 	 * @param other this.valueに加算される値
 	 */
 	public void add(CobolDecimal decimal) {
-		//this.value = this.value.add(other.getValue());
 		if(DECIMAL_CHECK(this, decimal)) {
 			return;
 		}
@@ -311,7 +320,6 @@ public class CobolDecimal {
 	 * @param other this.valueから減算される値
 	 */
 	public void sub(CobolDecimal decimal) {
-		//this.value = this.value.subtract(other.getValue());
 		if(DECIMAL_CHECK(this, decimal)) {
 			return;
 		}
@@ -332,7 +340,6 @@ public class CobolDecimal {
 	 * @param other this.valueに乗算される値
 	 */
 	public void mul(CobolDecimal decimal) {
-		//this.value = this.value.multiply(other.getValue());
 		if(DECIMAL_CHECK(this, decimal)) {
 			return;
 		}
@@ -356,7 +363,6 @@ public class CobolDecimal {
 		if(DECIMAL_CHECK(this, decimal)) {
 			return;
 		}
-		//System.out.println("decimal: " + decimal.getValue());
 		if (decimal.getValue().signum() == 0) {
 			this.setScale(DECIMAL_NAN);
 			if(CobolUtil.cobErrorOnExitFlag) {
@@ -374,7 +380,6 @@ public class CobolDecimal {
 		int shift = 37 + ((this.getScale() < 0) ? -this.getScale() : 0);
 		this.shiftDecimal(shift);
 		this.setValue(this.getValue().divide(decimal.getValue(), RoundingMode.DOWN));
-		//System.out.println(">>> value: " + this.value + ", scale: " + this.scale);
 	}
 
 	/**
@@ -382,7 +387,7 @@ public class CobolDecimal {
 	 * @param n this.valueを割る数
 	 */
 	public void div(int n) {
-		this.value = this.value.divide(new BigDecimal(n), BigDecimal.ROUND_DOWN);
+		this.value = this.value.divide(new BigDecimal(n), RoundingMode.DOWN);
 	}
 
 		/**
@@ -439,35 +444,58 @@ public class CobolDecimal {
 	 */
 	public int getField(AbstractCobolField f, int opt) throws CobolStopRunException {
 		if(this.getScale() == CobolDecimal.DECIMAL_NAN) {
-			throw new CobolRuntimeException(0, "getFieldのエラー");
+			//throw new CobolRuntimeException(0, "getFieldのエラー");
+			CobolRuntimeException.setException(CobolExceptionId.COB_EC_SIZE_OVERFLOW);
+			return CobolRuntimeException.code;
 		}
+		
+		CobolDecimal d = new CobolDecimal(this);
 
 		/* rounding */
 		if((opt & CobolDecimal.COB_STORE_ROUND) > 0) {
-			if(f.getAttribute().getScale() < this.getScale()) {
-				int sign = this.value.signum();
+			if(f.getAttribute().getScale() < d.getScale()) {
+				int sign = d.value.signum();
 				if(sign != 0) {
-					this.shiftDecimal(f.getAttribute().getScale() - this.getScale() + 1);
-					if(sign < 0) {
-						this.add(5);
+					d.shiftDecimal(f.getAttribute().getScale() - d.getScale() + 1);
+					if(sign > 0) {
+						d.add(5);
 					} else {
-						this.sub(5);
+						d.sub(5);
 					}
 				}
 			}
 		}
 
-		this.shiftDecimal(f.getAttribute().getScale() - this.getScale());
+		d.shiftDecimal(f.getAttribute().getScale() - d.getScale());
+
 		//TODO 残りのパターンも実装
 		switch(f.getAttribute().getType()) {
 		case CobolFieldAttribute.COB_TYPE_NUMERIC_DISPLAY:
-			return this.getDisplayField(f, opt);
+			return d.getDisplayField(f, opt);
 		case CobolFieldAttribute.COB_TYPE_NUMERIC_PACKED:
-			return this.getPackedField(f, opt);
+			return d.getPackedField(f, opt);
 		case CobolFieldAttribute.COB_TYPE_NUMERIC_BINARY:
-			return this.getBinaryField(f, opt);
+			return d.getBinaryField(f, opt);
+		case CobolFieldAttribute.COB_TYPE_NUMERIC_FLOAT:
+			System.out.println("getField: Float not implemented");
+			throw new CobolRuntimeException(0, "getField: Float not implemented");
+		case CobolFieldAttribute.COB_TYPE_NUMERIC_DOUBLE:
+			System.out.println("getField: Double not implemented");
+			throw new CobolRuntimeException(0, "getField: Double not implemented");
 		default:
-			throw new CobolRuntimeException(0, "未実装");
+			int digits = f.getAttribute().getDigits();
+			CobolFieldAttribute attr = f.getAttribute();
+			CobolFieldAttribute newAttr = new CobolFieldAttribute(
+				CobolFieldAttribute.COB_TYPE_NUMERIC_DISPLAY,
+				digits,
+				attr.getScale(),
+				CobolFieldAttribute.COB_FLAG_HAVE_SIGN,
+				null);
+			AbstractCobolField displayField = CobolFieldFactory.makeCobolField(digits, new CobolDataStorage(digits), newAttr);
+			if(d.getField(displayField, opt) == 0) {
+				f.moveFrom(displayField);
+			}
+			return CobolException.code;
 		}
 	}
 
@@ -495,8 +523,8 @@ public class CobolDecimal {
 	 */
 	public void  alignDecimal(CobolDecimal d1, CobolDecimal d2) {
 		if(d1.getScale() < d2.getScale()) {
-			this.shiftDecimal(d2.getScale() - d1.getScale());
-		} else if(d1.getScale() < d2.getScale()) {
+			d1.shiftDecimal(d2.getScale() - d1.getScale());
+		} else if(d1.getScale() > d2.getScale()) {
 			d2.shiftDecimal(d1.getScale() - d2.getScale());
 		}
 	}
@@ -509,7 +537,9 @@ public class CobolDecimal {
 	 */
 	public int compareTo(CobolDecimal decimal) {
 		alignDecimal(this, decimal);
-		return this.value.compareTo(decimal.getValue());
+		BigDecimal v1 = this.getValue().movePointLeft(this.getScale());
+		BigDecimal v2 = decimal.getValue().movePointLeft(decimal.getScale());
+		return v1.compareTo(v2);
 	}
 
 	/**
@@ -528,12 +558,9 @@ public class CobolDecimal {
 		int firstDataIndex = f.getFirstDataIndex();
 		int diff = f.getFieldSize() - size;
 		if(diff < 0) {
-			//TODO  実装
-			//throw new CobolRuntimeException(0, "This case is not implmented");
-			//TODO より正確な実装に修正
 			CobolRuntimeException.setException(CobolExceptionId.COB_EC_SIZE_OVERFLOW);
 			if((opt & CobolDecimal.COB_STORE_KEEP_ON_OVERFLOW) > 0) {
-				CobolStopRunException.throwException(CobolExceptionId.COB_EC_SIZE_OVERFLOW);
+				return CobolRuntimeException.code;
 			}
 			for(int i=0; i<f.getFieldSize(); ++i) {
 				data.setByte(i, numBuffPtr[i - diff]);
@@ -632,7 +659,7 @@ public class CobolDecimal {
 				if((opt & COB_STORE_TRUNC_ON_OVERFLOW) != 0) {
 					this.setValue(this.getValue().divide(cobMpze10[digits],  RoundingMode.DOWN));
 				} else {
-					this.setValue(this.getValue().divide(new BigDecimal(2).pow(f.getSize()*8)));
+					this.setValue(this.getValue().divide(new BigDecimal(2).pow(f.getSize()*8), RoundingMode.DOWN));
 				}
 			} else if((opt != 0) && CobolModule.getCurrentModule().flag_binary_truncate !=0) {
 				if(this.getValue().abs().compareTo(cobMpze10[digits].abs()) >= 0) {
@@ -643,24 +670,18 @@ public class CobolDecimal {
 					if((opt & COB_STORE_TRUNC_ON_OVERFLOW) != 0) {
 						this.setValue(this.getValue().divide(cobMpze10[digits], RoundingMode.DOWN));
 					} else {
-						this.setValue(this.getValue().divide(new BigDecimal(2).pow(f.getFieldSize() * 8)));
+						this.setValue(this.getValue().divide(new BigDecimal(2).pow(f.getFieldSize() * 8), RoundingMode.DOWN));
 					}
 				}
 			}
-			if(sign == 0 || overflow != 0) {
-				this.binarySetUint64(f, this.getValue().longValue());
-			} else {
-				this.binarySetInt64(f, this.getValue().longValue());
-			}
+			f.setLongValue(this.getValue().longValue());
 			if(overflow == 0) {
 				return 0;
 			}
 		} catch (OverflowException e) {
-
-		} finally {
-			// TODO 例外処理
-			return 0;
 		}
+		CobolRuntimeException.setException(CobolExceptionId.COB_EC_SIZE_OVERFLOW);
+		return CobolException.code;
 	}
 
 	/**
@@ -700,30 +721,4 @@ public class CobolDecimal {
 			s1.setByte(i1++, s2.getByte(i2++));
 		} while(--size != 0);
 	}
-
-	/*
-		CobolDataStorage data = f.getDataStorage();
-		int firstDataIndex = f.getFirstDataIndex();
-		int size = f.getFieldSize();
-
-		if(data.getByte(firstDataIndex) == 255) {
-			this.value = BigDecimal.TEN.pow(size);
-			this.setScale(f.getAttribute().getScale());
-			return;
-		}
-
-		if(data.getByte(firstDataIndex) == 255) {
-			this.value = BigDecimal.TEN.pow(size);
-			this.value = this.value.negate();
-			this.setScale(f.getAttribute().getScale());
-			return;
-		}
-
-		int sign = f.getSign();
-		int i = 0;
-		while(size > 1 && data.getByte(firstDataIndex + i) == '0') {
-			size--;
-			i++;
-		}
-	 */
 }

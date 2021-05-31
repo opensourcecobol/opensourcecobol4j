@@ -6,7 +6,7 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
 
-import jp.osscons.opensourcecobol.libcobj.Const;
+import jp.osscons.opensourcecobol.libcobj.common.CobolConstant;
 import jp.osscons.opensourcecobol.libcobj.common.CobolModule;
 import jp.osscons.opensourcecobol.libcobj.common.CobolUtil;
 import jp.osscons.opensourcecobol.libcobj.data.AbstractCobolField;
@@ -38,7 +38,7 @@ public class CobolSystemRoutine {
 		if(!paramaters.isEmpty() && paramaters.get(0) != null) {
 			AbstractCobolField paramater = paramaters.get(0);
 			int i = paramater.getSize();
-			if(i > Const.COB_MEDIUM_MAX) {
+			if(i > CobolConstant.COB_MEDIUM_MAX) {
 				CobolRuntimeException.displayRuntimeError("Paramater to SYSTEM call is larger than 8192 characters");
 				CobolStopRunException.stopRunAndThrow(1);
 			}

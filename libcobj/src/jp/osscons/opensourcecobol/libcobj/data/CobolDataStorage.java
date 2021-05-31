@@ -439,14 +439,17 @@ public class CobolDataStorage {
 			this.setByte(i, bytes[i]);
 		}
 	}
+	
+	public void set(byte value) {
+		this.setByte(0, value);
+	}
 
 	/**
 	 * this.dataにshort型のvalueを2バイトで書き込む
 	 * @param value this.dataに書き込むshort型の値
 	 */
 	public void set(short value) {
-		byte bytes[] = ByteBuffer.allocate(Short.BYTES).putShort(value).array();
-		set(bytes);
+		ByteBuffer.wrap(this.data, this.index, 2).putShort(value);
 	}
 
 	/**
@@ -454,8 +457,15 @@ public class CobolDataStorage {
 	 * @param value this.dataに書き込むint型の値
 	 */
 	public void set(int value) {
-		byte bytes[] = ByteBuffer.allocate(Integer.BYTES).putInt(value).array();
-		set(bytes);
+		ByteBuffer.wrap(this.data, this.index, 4).putInt(value);
+	}
+	
+	/**
+	 * this.dataにlong型のvalueを4バイトで書き込む
+	 * @param value this.dataに書き込むlong型の値
+	 */
+	public void set(long value) {
+		ByteBuffer.wrap(this.data, this.index, 8).putLong(value);
 	}
 	
 	public void set(CobolDataStorage other) {
@@ -471,14 +481,9 @@ public class CobolDataStorage {
 		ByteBuffer buffer = ByteBuffer.wrap(this.data, this.index + index, 4);
 		buffer.putInt(value);
 	}
-
-	/**
-	 * this.dataにlong型のvalueを8バイトで書き込む
-	 * @param value this.dataに書き込むlong型の値
-	 */
-	public void set(long value) {
-		byte bytes[] = ByteBuffer.allocate(Long.BYTES).putLong(value).array();
-		set(bytes);
+	
+	public boolean isSame(CobolDataStorage other) {
+		return this.data == other.data && this.index == other.index;
 	}
 
 	/**
@@ -521,38 +526,16 @@ public class CobolDataStorage {
 	
 	
 	private long toLong(int numOfBytes, boolean signed, boolean isBigEndian) {
-		/*int start, d;
-		if(isBigEndian) {
-			start = numOfBytes - 1; d = -1;
-		} else {
-			start = 0; d = 1;
-		}
-
-		long ret = 0;
-		int i;
-		byte highestByte = 0;
-		for(i = 0; i < numOfBytes; ++i) {
-			highestByte = this.getByte(start + i * d);
-			ret |= this.getByte(start + i * d) << (8 * i);
-		}
-		
-		if(signed && highestByte < 0) {
-			for(; i<8; ++i) {
-				ret |= 0xFF << (8 * i);
-			}
-		}
-		
-		return ret;*/
-		ByteBuffer buffer = ByteBuffer.wrap(this.data, this.index, numOfBytes);
+		ByteBuffer buffer = ByteBuffer.wrap(this.data);
 		buffer.order(isBigEndian ? ByteOrder.BIG_ENDIAN : ByteOrder.LITTLE_ENDIAN);
 		if(numOfBytes == 1) {
-			return buffer.get();
+			return buffer.get(this.index);
 		} else if(numOfBytes == 2) {
-			return buffer.getChar();
+			return buffer.getShort(this.index);
 		} else if(numOfBytes == 4) {
-			return buffer.getInt();
+			return buffer.getInt(this.index);
 		} else {
-			return buffer.getLong();
+			return buffer.getLong(this.index);
 		}
 	}
 	
@@ -585,17 +568,16 @@ public class CobolDataStorage {
 	}
 	
 	private void fromLong(int numOfBytes, boolean isBigEndian, long n) {
-		int start, d;
-		if(isBigEndian) {
-			start = numOfBytes - 1; d = -1;
-		} else {
-			start = 0; d = 1;
-		}
-		
-		for(int i=0; i<numOfBytes; ++i) {
-			byte b = (byte)((n >> (8 * i)) & 0xFF);
-			int index = start + i * d;
-			this.setByte(index, b);
+		ByteBuffer buffer = ByteBuffer.wrap(this.data);
+		buffer.order(isBigEndian ? ByteOrder.BIG_ENDIAN : ByteOrder.LITTLE_ENDIAN);
+		if(numOfBytes <= 1) {
+			buffer.put(this.index, (byte)n);
+		} else if(numOfBytes <= 2) {
+			buffer.putShort(this.index, (short)n);
+		} else if(numOfBytes <= 4) {
+			buffer.putInt(this.index, (int)n);
+		} else if(numOfBytes <= 8) {
+			buffer.putLong(this.index, n);
 		}
 	}
 	
@@ -825,7 +807,7 @@ public class CobolDataStorage {
 	 * @param n
 	 * @return
 	 */
-	public int cmpLongNumdisp(int size, int n) {
+	public int cmpLongNumdisp(int size, long n) {
 		return this.cmpNumdisp(size, n);
 	}
 
@@ -835,7 +817,7 @@ public class CobolDataStorage {
 	 * @param n
 	 * @return
 	 */
-	public int cmpSignNumdisp(int size, int n) {
+	public int cmpSignNumdisp(int size, long n) {
 		int p = 0;
 		int val = 0;
 		for(int inc=0; inc<size-1; ++inc, ++p) {
@@ -852,14 +834,14 @@ public class CobolDataStorage {
 					val = -val;
 				}
 			} else {
-				val += (this.getByte(p) - '0');
+				val += (this.getByte(p) - 'p');
 				val = -val;
 			}
 		}
 		return (val < n) ? -1 : (val > n) ? 1 : 0;
 	}
 
-	public int cmpLongSignNumdisp(int size, int n) {
+	public int cmpLongSignNumdisp(int size, long n) {
 		int p = 0;
 		int val = 0;
 		for(int inc=0; inc<size-1; ++inc, ++p) {
@@ -876,11 +858,25 @@ public class CobolDataStorage {
 					val = -val;
 				}
 			} else {
-				val += (this.getByte(p) - '0');
+				val += (this.getByte(p) - ('0' + 0x40));
 				val = -val;
 			}
 		}
 		return (val < n) ? -1 : (val > n) ? 1 : 0;
+	}
+	
+	public int getNumdisp(int size) {
+		int retval = 0;
+		for(int n=0; n<size; ++n) {
+			retval *= 10;
+			byte b = this.getByte(n);
+			if(b > '9') {
+				retval += 10;
+			} else {
+				retval += b - '0';
+			}
+		}
+		return retval;
 	}
 
 	/**

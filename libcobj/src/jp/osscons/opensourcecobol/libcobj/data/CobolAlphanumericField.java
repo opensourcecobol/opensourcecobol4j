@@ -73,11 +73,6 @@ public class CobolAlphanumericField extends AbstractCobolField {
 	}
 
 	@Override
-	public CobolDecimal getDecimal() {
-		throw new CobolRuntimeException(CobolRuntimeException.COBOL_FITAL_ERROR, "未対応");
-	}
-
-	@Override
 	public void setDecimal(BigDecimal decimal) {
 		// TODO 自動生成されたメソッド・スタブ
 
@@ -120,41 +115,34 @@ public class CobolAlphanumericField extends AbstractCobolField {
 	 * @param field 転記元のCobolNumericDisplay型のフィールド
 	 */
 	public void moveDisplayToAlnum(AbstractCobolField field) {
-		//TODO SIGN_SEPARATEやSIGN_LEADINGを考慮した実装をする
 		CobolDataStorage data1 = field.getDataStorage();
 		int data1FirstIndex = field.getFirstDataIndex();
-		int size1 = field.getSize();
+		int size1 = field.getFieldSize();
 		int sign = field.getSign();
 		CobolDataStorage data2 = this.getDataStorage();
 		int size2 = this.getSize();
 
 		if(size1 >= size2) {
-			for(int i=0; i<size2; ++i) {
-				//TODO 確認
-				//opensource COBOLには存在しない処理を書き加えた.
-				//なぜopensource COBOLにはこの処理がないのかは不明
+			for(int i=0; i<size2 && data1FirstIndex + i < size1; ++i) {
 				byte val = data1.getByte(data1FirstIndex + i);
 				data2.setByte(i, (byte) (val >= 0x70 ? val - 0x40 : val));
 			}
 		} else {
 			int diff = size2 - size1;
 			int zeroSize = 0;
-			for(int i=0; i<size1; ++i) {
-				//TODO 確認
-				//opensource COBOLには存在しない処理を書き加えた.
-				//なぜopensource COBOLにはこの処理がないのかは不明
+			int i = 0;
+			for(; i<size1; ++i) {
 				byte val = data1.getByte(data1FirstIndex + i);
 				data2.setByte(i, (byte) (val >= 0x70 ? val - 0x40 : val));
 			}
 			if(field.getAttribute().getScale() < 0) {
-				zeroSize = Math.min(-field.getAttribute().getScale(), diff);
-				for(int i=0; i<zeroSize; ++i) {
-					data2.setByte(size1 + i, (byte)0x30);
+				for(; i<field.getAttribute().getDigits(); ++i) {
+					data2.setByte(i, (byte)'0');
 				}
 			}
 			if(diff - zeroSize > 0) {
-				for(int i=0; i<diff-zeroSize; ++i) {
-					data2.setByte(size1 + zeroSize + i, (byte)0x20);
+				for(; i<size2; ++i) {
+					data2.setByte(i, (byte)' ');
 				}
 			}
 		}

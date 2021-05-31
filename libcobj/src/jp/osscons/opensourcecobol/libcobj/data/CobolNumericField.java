@@ -85,16 +85,29 @@ public class CobolNumericField extends AbstractCobolField {
 		}
 		
 		int signIndex = attr.isFlagSignLeading() ? 0 : this.getSize() - 1;
-		for(int i=0; i<attr.getDigits(); ++i) {
+		int i=0;
+		int dataLastIndex = attr.isFlagHaveSign() && !attr.isFlagSignLeading() && attr.isFlagSignSeparate()
+			? this.getSize() - 2
+			: this.getSize() - 1;
+		
+		for(; i + getFirstDataIndex()<=dataLastIndex; ++i) {
+			if(scale > 0 && i - 1 == pointIndex) {
+				sb.append('.');
+			}
 			char c = (char)data.getByte(this.getFirstDataIndex() + i);
 			if(attr.isFlagHaveSign() && !attr.isFlagSignSeparate() && i == signIndex && c >= 0x70) {
 				c -= 0x40;
 			}
 			sb.append(c);
-			if(scale > 0 && i == pointIndex) {
+		}
+		
+		for(;i < attr.getDigits(); ++i) {
+			if(scale > 0 && i - 1 == pointIndex) {
 				sb.append('.');
 			}
+			sb.append('0');
 		}
+		
 		return sb.toString();
 	}
 
@@ -120,13 +133,17 @@ public class CobolNumericField extends AbstractCobolField {
 		int scale = this.getAttribute().getScale();
 		if(scale < 0) {
 			for(; i<size; ++i) {
-				val = val * 10 + data.getByte(firstDataIndex + i) - 0x30;
+				byte x = data.getByte(firstDataIndex + i);
+				x -= (x >= 0x70) ? 0x70 : 0x30;
+				val = val * 10 +  x;
 			}
 			val *= AbstractCobolField.cobExp10[-scale];
 		} else {
 			size -= scale;
 			for(; i<size; ++i) {
-				val = val * 10 + data.getByte(firstDataIndex + i) - 0x30;
+				byte x = data.getByte(firstDataIndex + i);
+				x -= (x >= 0x70) ? 0x70 : 0x30;
+				val = val * 10 + x;
 			}
 		}
 
@@ -201,6 +218,7 @@ public class CobolNumericField extends AbstractCobolField {
 	 */
 	private void moveDisplayToDisplay(AbstractCobolField field) {
 		int sign = field.getSign();
+		field.putSign(1);
 
 		this.storeCommonRegion(this, field.getDataStorage().getSubDataStorage(field.getFirstDataIndex()), field.getFieldSize(), field.getAttribute().getScale());
 
@@ -318,18 +336,11 @@ public class CobolNumericField extends AbstractCobolField {
 	 */
 	private void moveBinaryToDisplay(AbstractCobolField field) {
 		int sign = 1;
-		long val;
-		long val2;
-		if(field.getAttribute().isFlagHaveSign()) {
-			val2 = this.binaryMgetInt64(field);
-			if(val2 < 0) {
-				sign = -1;
-				val = -val2;
-			} else {
-				val = val2;
-			}
-		} else {
-			val = this.binaryMgetInt64(field);
+		long val = field.getLongValue();
+
+		if(this.getAttribute().isFlagHaveSign() && val < 0) {
+			sign = -1;
+			val = -val;
 		}
 
 		int i = 20;
@@ -553,8 +564,9 @@ public class CobolNumericField extends AbstractCobolField {
 			///this.putSignEbcdic(p, sign);
 		//}
 
-		else if(sign < 0 && value < 0x70) {
-			this.getDataStorage().setByte(p, (byte) (value + 0x40));
+		else {
+			value = (byte) (value >= 0x70 ? value - 0x40 : value);
+			this.getDataStorage().setByte(p, (byte) (sign < 0 ? value + 0x40 : value));
 		}
 	}
 
@@ -685,57 +697,6 @@ public class CobolNumericField extends AbstractCobolField {
 		CobolDecimal d1 = this.getDecimal();
 		CobolDecimal d2 = field.getDecimal();
 		return d1.compareTo(d2);
-	}
-
-	/**
-	 * CobolDecimalに変換する
-	 * @return thisの保持する数値データをCobolDecimalに変換した値
-	 */
-	@Override
-	public CobolDecimal getDecimal() {
-		CobolDataStorage data = this.getDataStorage();
-		int firstDataIndex = this.getFirstDataIndex();
-		int size = this.getFieldSize();
-
-		if(data.getByte(firstDataIndex) == 255) {
-			//TODO 実装
-			throw new CobolRuntimeException(0, "未実装");
-		}
-
-		if(data.getByte(firstDataIndex) == 0) {
-			//TODO  実装
-			throw new CobolRuntimeException(0, "未実装");
-		}
-
-		char[] buf = new char[size];
-		for(int i=0; i<size; ++i) {
-			buf[i] = (char)data.getByte(firstDataIndex + i);
-		}
-		
-		CobolFieldAttribute attr = this.getAttribute();
-		int sign = 1;
-		if(attr.isFlagHaveSign()) {
-			if(attr.isFlagSignSeparate()) {
-				int signIndex = attr.isFlagSignLeading() ? 0 : this.getSize() - 1;
-				if(data.getByte(signIndex) == '-') {
-					sign = -1;
-				}
-			} else {
-				int signIndex = attr.isFlagSignLeading() ? 0 : size - 1;
-				if(buf[signIndex] >= 0x70) {
-					buf[signIndex] -= 0x40;
-					sign = -1;
-				}
-			}
-		}
-
-		BigDecimal decimal = new BigDecimal(buf);
-		if(sign < 0) {
-			decimal = decimal.negate();
-		}
-		CobolDecimal ret = new CobolDecimal(decimal);
-		ret.setScale(this.getAttribute().getScale());
-		return ret;
 	}
 
 	//addInt内のgotoの代替として使用する

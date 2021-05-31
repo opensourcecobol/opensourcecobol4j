@@ -40,16 +40,6 @@ public class CobolNumericPackedField extends AbstractCobolField {
 			 (byte)0x90, (byte)0x91,(byte) 0x92, (byte)0x93, (byte)0x94, (byte)0x95, (byte)0x96, (byte)0x97, (byte)0x98, (byte)0x99
 	};
 
-	/*private static final byte[] packed_bytes = new byte[100];
-	static {
-		 byte b = 0;
-		 for(int i=0; i<10; ++i, b+=0x10) {
-			 for(int j=0; j<10; ++j, b+=0x01) {
-				 packed_bytes[10 * i + j] = b;
-			 }
-		 }
-	}*/
-
 	/**
 	 * コンストラクタ
 	 * @param size データを格納するバイト配列の長さ
@@ -219,10 +209,6 @@ public class CobolNumericPackedField extends AbstractCobolField {
 				data2.setByte(i / 2, (byte) (value | n));
 			}
 		}
-		//TODO 確認
-		//バグ修正のために以下のコードを消した
-		//opensource COBOLに存在する処理だが,なぜ必要なのか不明
-		//field.putSign(sign);
 
 		p = this.size - 1;
 		byte value = this.getDataStorage().getByte(p);
@@ -266,19 +252,6 @@ public class CobolNumericPackedField extends AbstractCobolField {
 	 */
 	@Override
 	public void moveFrom(int val) {
-		/*int n = Math.abs(val);
-		int sign = val < 0 ? -1 : 1;
-
-		for(int i=0; i<this.getAttribute().getDigits(); ++i) {
-			this.setDigit(i, 0);
-		}
-
-		for(int i=this.getAttribute().getDigits()-1; i>=0; --i) {
-			this.setDigit(i, (byte)(n % 10));
-			n /= 10;
-		}
-
-		this.putSign(sign);*/
 		int n;
 		int sign = 0;
 		CobolDataStorage data = this.getDataStorage();

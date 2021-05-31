@@ -28,8 +28,10 @@ public class CobolConstant {
 	public static final AbstractCobolField zero  = CobolFieldFactory.makeCobolField(1, "0", allAttr);
 	public static final AbstractCobolField space = CobolFieldFactory.makeCobolField(1, " ", allAttr);
 	public static final AbstractCobolField blank = CobolFieldFactory.makeCobolField(1, " ", allAttr);
-	public static final AbstractCobolField high  = CobolFieldFactory.makeCobolField(1, "¥xff", allAttr);
-	public static final AbstractCobolField low   = CobolFieldFactory.makeCobolField(1, "¥0", allAttr);
+	
+	public static final AbstractCobolField high  = CobolFieldFactory.makeCobolField(1, CobolConstant.get0xFFStorage(), allAttr);
+	
+	public static final AbstractCobolField low   = CobolFieldFactory.makeCobolField(1, "\0", allAttr);
 	public static final AbstractCobolField quote = CobolFieldFactory.makeCobolField(1, "\"", allAttr);
 	public static final AbstractCobolField one   = CobolFieldFactory.makeCobolField(1, "1", oneAttr);
 	
@@ -37,6 +39,12 @@ public class CobolConstant {
 	public static final AbstractCobolField zenSpace = CobolFieldFactory.makeCobolField(ZENCSIZ, new CobolDataStorage(ZENSPC), allAttr);
 	public static final AbstractCobolField zenBlank = CobolFieldFactory.makeCobolField(ZENCSIZ, new CobolDataStorage(ZENBLK), allAttr);
 	public static final AbstractCobolField zenQuote = CobolFieldFactory.makeCobolField(ZENCSIZ, new CobolDataStorage(ZENQUOT), allAttr);
+	
+	private static CobolDataStorage get0xFFStorage() {
+		byte[] bytes = new byte[1];
+		bytes[0] = (byte)0xff;
+		return new CobolDataStorage(bytes);
+	}
 	
 	public static final long[] exp10LL = {
 		1L,
@@ -59,4 +67,24 @@ public class CobolConstant {
 		100000000000000000L,
 		1000000000000000000L
 	};
+	
+	public static final int COB_MINI_BUFF = 2056;
+	public static final int COB_SMALL_BUFF = 1024;
+	public static final int COB_NORMAL_BUFF = 2048;
+	public static final int COB_MEDIUM_BUFF = 8192;
+	public static final int COB_LARGE_BUFF = 16384;
+	
+	public static final int COB_MINI_MAX = COB_MINI_BUFF - 1;
+	public static final int COB_SMALL_MAX = COB_SMALL_BUFF - 1;
+	public static final int COB_NORMAL_MAX = COB_NORMAL_BUFF - 1;
+	public static final int COB_MEDIUM_MAX = COB_MEDIUM_BUFF - 1;
+	public static final int COB_LARGE_MAX = COB_LARGE_BUFF - 1;
+	
+	public static final int COB_MAX_FIELD_PARAMS = 64;
+	public static final int COB_FERROR_INITIALIZED = 0;
+	public static final String COB_SOURCE_FILE = null;
+	public static final int COB_PACKAGE_VERSION = 0;
+	public static final int COB_PATCH_LEVEL = 0;
+	//TODO 標準パスの設定
+	public static final String COB_LIBRARY_PATH = "";
 }

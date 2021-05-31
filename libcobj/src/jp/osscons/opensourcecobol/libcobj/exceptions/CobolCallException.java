@@ -26,10 +26,6 @@ public class CobolCallException extends Exception {
 
 	public static CobolCallException ex;
 
-	{
-		ex = new CobolCallException();
-	}
-
 	/**
 	 * コンストラクタ
 	 */
