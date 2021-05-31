@@ -15,7 +15,7 @@ See [Installation page](https://github.com/opensourcecobol/opensourcecobol4j/wik
 
 # The progress of the development
 
-The functions of the following "implemented" list is tested using [NIST COBOL85 test suite](https://www.itl.nist.gov/div897/ctg/cobol_form.htm)
+The functions in the following "implemented" list are tested using [NIST COBOL85 test suite](https://www.itl.nist.gov/div897/ctg/cobol_form.htm)
 and **95%** of the test cases are passed.
 
 Implemented.
