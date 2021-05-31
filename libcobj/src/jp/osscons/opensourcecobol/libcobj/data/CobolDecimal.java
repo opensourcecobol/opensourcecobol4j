@@ -721,30 +721,4 @@ public class CobolDecimal {
 			s1.setByte(i1++, s2.getByte(i2++));
 		} while(--size != 0);
 	}
-
-	/*
-		CobolDataStorage data = f.getDataStorage();
-		int firstDataIndex = f.getFirstDataIndex();
-		int size = f.getFieldSize();
-
-		if(data.getByte(firstDataIndex) == 255) {
-			this.value = BigDecimal.TEN.pow(size);
-			this.setScale(f.getAttribute().getScale());
-			return;
-		}
-
-		if(data.getByte(firstDataIndex) == 255) {
-			this.value = BigDecimal.TEN.pow(size);
-			this.value = this.value.negate();
-			this.setScale(f.getAttribute().getScale());
-			return;
-		}
-
-		int sign = f.getSign();
-		int i = 0;
-		while(size > 1 && data.getByte(firstDataIndex + i) == '0') {
-			size--;
-			i++;
-		}
-	 */
 }

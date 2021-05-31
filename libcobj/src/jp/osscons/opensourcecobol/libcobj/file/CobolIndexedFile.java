@@ -285,7 +285,6 @@ public class CobolIndexedFile extends CobolFile {
 		IndexedFile p = this.filei;
 		for (p.key_index = 0; p.key_index < this.nkeys; p.key_index++) {
 			int size = this.keys[p.key_index].getField().getSize();
-			//TODO 検討, 比較方法を変えた
 			if (this.keys[p.key_index].getField().getDataStorage().isSame(key.getDataStorage())) {
 				break;
 			}
@@ -462,7 +461,7 @@ public class CobolIndexedFile extends CobolFile {
 		p.cursor[p.key_index] = p.db[p.key_index].openCursor(null, cursorConfig);
 
 		if (this.flag_first_read != 0) {
-			if (p.data.getSize() == 0 || (this.flag_first_read == 2 && nextprev == Get.PREV)) {
+			if (p.data == null || p.data.getSize() == 0 || (this.flag_first_read == 2 && nextprev == Get.PREV)) {
 				this.discardCursors(p);
 				return COB_STATUS_10_END_OF_FILE;
 			}
@@ -713,7 +712,7 @@ public class CobolIndexedFile extends CobolFile {
 				flags = Put.OVERWRITE;
 				int dupno = this.get_dupno(i);
 				p.temp_key.memcpy(this.keys[0].getField().getDataStorage(), this.keys[0].getField().getFieldSize());
-				p.temp_key.set(dupno, this.keys[0].getField().getSize());
+				p.temp_key.getSubDataStorage(this.keys[0].getField().getSize()).set(dupno);
 				p.data = new DatabaseEntry(p.temp_key.getByteArray(0, this.keys[0].getField().getSize() + 4));
 			} else {
 				flags = Put.NO_OVERWRITE;
@@ -831,11 +830,11 @@ public class CobolIndexedFile extends CobolFile {
 		p.key = DBT_SET(this.keys[i].getField());
 		p.temp_key.memcpy(p.key.getData());
 		p.cursor[i] = p.db[i].openCursor(null, null);
-		//TODO 元々はこう書いてあったが修正した。要検討。
+		//TODO! 元々はこう書いてあったが修正した。要検討。
 		//OperationResult ret = p.cursor[i].get(p.key, p.data, Get.FIRST, null);
-		OperationResult ret = p.cursor[i].get(p.key, p.data, Get.SEARCH_GTE, null);
+		OperationResult ret = p.cursor[i].get(p.key, p.data, Get.SEARCH, null);
 
-		//TODO 検討
+		//TODO! 検討
 		//berkley dbの重複スキーに対するデータは新しいものほど先頭に格納されるが
 		//java editionでは挿入位置が自動で設定されるため,以下の実装を変えた.
 		int dupno = 0;
@@ -930,7 +929,7 @@ public class CobolIndexedFile extends CobolFile {
 
 		DatabaseEntry prim_key = p.key;
 
-		//TODO offset
+		//TODO! offset
 		for (int i = 1; i < this.nkeys; ++i) {
 			p.key = DBT_SET(this.keys[i].getField());
 			//TODO offset
@@ -949,8 +948,8 @@ public class CobolIndexedFile extends CobolFile {
 					p.cursor[i] = p.db[i].openCursor(null, null);
 					if (p.cursor[i].get(p.key, p.data, Get.SEARCH_GTE, null) == null) {
 						while (sec_key.getSize() == p.key.getSize()
-								&& Arrays.equals(p.key.getData(), sec_key.getData())) {
-							if (Arrays.equals(p.data.getData(), p.key.getData())) {
+								&& arrayEquals(p.key.getData(), sec_key.getData(), sec_key.getSize())) {
+							if (arrayEquals(p.data.getData(), p.key.getData(), prim_key.getSize())) {
 								p.cursor[i].delete();
 							}
 							if (p.cursor[i].get(p.key, p.data, Get.NEXT, null) == null) {
@@ -986,6 +985,15 @@ public class CobolIndexedFile extends CobolFile {
 			p.write_cursor_open = false;
 		}
 		return COB_STATUS_00_SUCCESS;
+	}
+	
+	private static boolean arrayEquals(byte[] a, byte[] b, int size) {
+		for(int i=0; i<size; ++i) {
+			if(a[i] != b[i]) {
+				return false;
+			}
+		}
+		return true;
 	}
 
 	@Override

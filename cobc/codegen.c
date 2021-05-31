@@ -354,12 +354,7 @@ joutput_line (const char *fmt, ...)
 	if(joutput_target) {
 		if(joutput_buffered) {
 			joutput_prefix ();
-			//本当は以下のように書きたいがうまく行かないので
-			//va_start (ap, fmt);
-			//joutput (fmt, ap);
-			//va_end (ap);
 
-			// joutputのコードを直接引っ張ってきた
 			va_start (ap, fmt);
 			size = vsprintf (joutput_temp_buffer, fmt, ap);
 			va_end (ap);
@@ -1849,36 +1844,18 @@ joutput_initialize_literal (cb_tree x, struct cb_field *f, struct cb_literal *l)
 		return;
 	}
 	if (l->size >= f->size) {
-        //TODO 要テスト
-		//joutput_prefix ();
-		//joutput ("LIBCOB.memcpy (");
-		//joutput_data (x);
-		//joutput (", ");
-		//joutput_string (l->data, f->size);
-		//joutput (", %d);\n", f->size);
-        joutput_prefix ();
+		joutput_prefix ();
 		joutput_data (x);
 		joutput ("memcpy (");
 		joutput_string (l->data, f->size);
 		joutput (".getBytes(), %d);\n", f->size);
-
 		return;
 	}
 	i = f->size / l->size;
 	i_counters[0] = 1;
 
-    //TODO 要テスト
-	//joutput_line ("for (i0 = 0; i0 < %u; i0++)", (unsigned int)i);
-	//joutput_indent ("  {");
-	//joutput_prefix ();
-	//joutput ("LIBCOB.memcpy (");
-	//joutput_data (x);
-	//joutput (" + (i0 * %u), ", (unsigned int)l->size);
-	//joutput_string (l->data, l->size);
-	//joutput (", %u);\n", (unsigned int)l->size);
-	//joutput_indent ("  }");
 
-    joutput_line ("for (i0 = 0; i0 < %u; i0++)", (unsigned int)i);
+	joutput_line ("for (i0 = 0; i0 < %u; i0++)", (unsigned int)i);
 	joutput_indent ("  {");
 	joutput_prefix ();
 	joutput_data (x);
@@ -1891,13 +1868,6 @@ joutput_initialize_literal (cb_tree x, struct cb_field *f, struct cb_literal *l)
 	n = f->size % l->size;
 	if (n) {
 		joutput_prefix ();
-        //TODO 要テスト
-		//joutput ("LIBCOB.memcpy (");
-		//joutput_data (x);
-		//joutput (" + (i0 * %u), ", (unsigned int)l->size);
-		//joutput_string (l->data, n);
-		//joutput (", %u);\n", (unsigned int)n);
-
 		joutput_data (x);
 		joutput (".getSubDataStorage(i0 * %u).memcpy(", (unsigned int)l->size);
 		joutput_string (l->data, n);
@@ -2520,10 +2490,6 @@ joutput_call (struct cb_call *p)
 		case CB_CALL_BY_REFERENCE:
 			if (CB_NUMERIC_LITERAL_P (x) || CB_BINARY_OP_P (x)) {
 				joutput_line ("CobolCallDataContent content_%d = new CobolCallDataContent(8);", (int)n);
-				//joutput_line ("\tpublic CobolDataStorage data = new CobolDataStorage(8);");
-				//joutput_line ("\tpublic long     datall;");
-				//joutput_line ("\tpublic int      dataint;");
-				//joutput_line ("};");
 			} else if (CB_CAST_P (x)) {
 				joutput_line ("void *ptr_%d;", (int)n);
 			}
@@ -2533,9 +2499,8 @@ joutput_call (struct cb_call *p)
 				joutput_line ("void *ptr_%d;", (int)n);
 			} else if (CB_TREE_TAG (x) != CB_TAG_INTRINSIC &&
 			    x != cb_null && !(CB_CAST_P (x))) {
-                joutput_prefix();
+				joutput_prefix();
 				joutput ("CobolCallDataContent content_%d = new CobolCallDataContent (", (int)n);
-				//joutput ("\tpublic CobolDataStorage data = new CobolDataStorage(");
 				if (CB_NUMERIC_LITERAL_P (x) ||
 				    CB_BINARY_OP_P (x) || CB_CAST_P(x)) {
 					joutput ("8");
@@ -2547,9 +2512,6 @@ joutput_call (struct cb_call *p)
 					}
 				}
 				joutput_line (");");
-				//joutput_line ("\tlong     datall;");
-				//joutput_line ("\tint      dataint;");
-				//joutput_line ("};");
 			}
 			break;
 		}
@@ -2977,24 +2939,18 @@ joutput_goto (struct cb_goto *p)
 	} else if (p->target == NULL) {
 		needs_exit_prog = 1;
 		if (cb_flag_implicit_init) {
-			//joutput_line ("goto exit_program;");
-            //joutput_line ("CobolGoBackException.throwException(0);");
-            joutput_line("entryFunc(-10);");
-            joutput_line("if(true) return false;");
+			joutput_line("entryFunc(-10);");
+			joutput_line("if(true) return false;");
 		} else {
 			joutput_line ("if (!CobolModule.isQueueEmpty()) {");
-            joutput_line ("  entryFunc(-10);");
-            joutput_line ("  if(true) return false;");
-            joutput_line ("}");
-			//joutput_line ("  goto exit_program;");
-            //joutput_line ("  CobolGoBackException.throwException(0);");
+			joutput_line ("  entryFunc(-10);");
+			joutput_line ("  if(true) return false;");
+			joutput_line ("}");
 		}
 	} else if (p->target == cb_int1) {
 		needs_exit_prog = 1;
-		//joutput_line ("goto exit_program;");
-        //joutput_line ("CobolGoBackException.throwException(0);");
-        joutput_line("entryFunc(-10);");
-        joutput_line("if(true) return false;");
+		joutput_line("entryFunc(-10);");
+		joutput_line("if(true) return false;");
 	} else {
 		joutput_goto_1 (p->target);
 	}
@@ -3168,11 +3124,7 @@ joutput_perform (struct cb_perform *p)
 		}
 		break;
 	case CB_PERFORM_ONCE:
-		//joutput_line("do {");
-		//joutput_indent_level += 2;
 		joutput_perform_once (p);
-		//joutput_indent_level -= 2;
-		//joutput_line("} while(false);");
 		break;
 	case CB_PERFORM_TIMES:
 		joutput_prefix ();
@@ -3576,17 +3528,8 @@ joutput_stmt (cb_tree x)
 			}
 		}
 
-		//ggggg
 		if (lp->need_begin) {
 			joutput_next_buffer(lp->id);
-			//int tmp = joutput_buffered;
-			//joutput_buffered = 0;
-			//joutput_line ("LABEL_%d();", lp->id);
-			//joutput_buffered = tmp;
-
-			//JavaではLabelを使用しないので削除した
-			//joutput_newline ();
-			//joutput_line ("%s%d:;", CB_PREFIX_LABEL, lp->id);
 		}
 		if (cb_flag_trace) {
 			if (lp->is_section) {
@@ -3677,10 +3620,10 @@ joutput_stmt (cb_tree x)
 			/* Numeric assignment */
 			joutput_prefix ();
 
-            int tmp_flag = integer_reference_flag;
-            integer_reference_flag = 1;
+			int tmp_flag = integer_reference_flag;
+			integer_reference_flag = 1;
 			joutput_integer (ap->var);
-            integer_reference_flag = tmp_flag;
+			integer_reference_flag = tmp_flag;
 			joutput (".set(");
 			++index_read_flag;
 			joutput_integer (ap->val);
@@ -3701,10 +3644,10 @@ joutput_stmt (cb_tree x)
 
         int tmp_flag = integer_reference_flag;
         integer_reference_flag = 1;
-		joutput_integer (ap->var);
+	joutput_integer (ap->var);
         integer_reference_flag = tmp_flag;
 
-		joutput (".set(");
+	joutput (".set(");
 
         f = cb_field(ap->var);
         if(f->usage == CB_USAGE_BINARY ||
@@ -3875,8 +3818,6 @@ joutput_file_initialization (struct cb_file *f)
 		}
 		joutput_line ("if (%s%s == null)", CB_PREFIX_KEYS, f->cname);
 		joutput_indent ("{");
-		/*joutput_line ("%s%s = cob_malloc (sizeof (struct cob_file_key) * %d);",
-			     CB_PREFIX_KEYS, f->cname, nkeys);*/
 		joutput_line ("%s%s = new CobolFileKey[%d];",
 			     CB_PREFIX_KEYS, f->cname, nkeys);
         joutput_line ("for (int i=0; i<%d; ++i)", nkeys);
@@ -4503,8 +4444,8 @@ joutput_internal_function (struct cb_program *prog, cb_tree parameter_list)
 	}
 
 	joutput_line ("this.initialized = true;");
-    joutput_indent_level -= 2;
-    joutput_line ("}");
+	joutput_indent_level -= 2;
+	joutput_line ("}");
 	//if (prog->flag_chained) {
 	//	joutput ("    } else {\n");
 	//	joutput_line ("  cob_fatal_error (COB_FERROR_CHAINING);");
@@ -4852,9 +4793,6 @@ joutput_internal_function (struct cb_program *prog, cb_tree parameter_list)
         joutput_buffered = 0;
 		//joutput_line ("\tgoto LRET_initextern;/*1*/");
 	}
-
-	//output_indent ("}");
-	//output_newline ();
 
 	joutput_line ("/* Program return */");
 	joutput_prefix ();
@@ -5384,7 +5322,7 @@ void joutput_declare_member_variables(struct cb_program *prog, cb_tree parameter
             CB_PREFIX_BASE, cb_field (CB_VALUE (l))->id);
 	}
 
-    /* External items */
+	/* External items */
 	for (f = prog->working_storage; f; f = f->sister) {
 		if (f->flag_external) {
 			strcpy (name, f->name);
@@ -5468,7 +5406,7 @@ joutput_label_function()
 			joutput_line("public boolean LABEL_DEFAULT() throws CobolRuntimeException, CobolGoBackException, CobolStopRunException {");
 		} else if(buf.label == L_initextern_addr) {
 			joutput_line("public boolean LABEL_%d() {", buf.label);
-        } else {
+		} else {
 			joutput_line("public boolean LABEL_%d() throws CobolRuntimeException, CobolGoBackException, CobolStopRunException {", buf.label);
 		}
 
@@ -5495,13 +5433,13 @@ joutput_entry_function()
 			joutput_line("case %d:", buf.label);
 			joutput_line("continueFlag = LABEL_%d();", buf.label);
 		}
-        if(i < joutput_buffer_list_index && joutput_buffer_list[i + 1].label == 1) {
-            joutput_line("return;");
-        } else {
-		    joutput_line("if(!continueFlag) break;", buf.label);
-        }
+		if(i < joutput_buffer_list_index && joutput_buffer_list[i + 1].label == 1) {
+			joutput_line("return;");
+		} else {
+			joutput_line("if(!continueFlag) break;", buf.label);
+		}
 	}
-    joutput_line("case -10: break;");
+	joutput_line("case -10: break;");
 	joutput_indent_level -= 4;
 	joutput_line("  }");
 	joutput_line("}");
@@ -5626,7 +5564,7 @@ codegen (struct cb_program *prog, const int nested, char** program_id_list)
 	joutput_target = yyout;
 	char java_file_name[64];
 	sprintf(java_file_name, "%s.java", prog->program_id);
-    *program_id_list = prog->program_id;
+	*program_id_list = prog->program_id;
 	joutput_target = fopen(java_file_name, "w");
 
 	if (!nested) {
@@ -5986,11 +5924,11 @@ codegen (struct cb_program *prog, const int nested, char** program_id_list)
 		joutput_indent ("(byte)0xE1, (byte)0x8F, (byte)0x46, (byte)0x75, (byte)0xFD, (byte)0xEB, (byte)0xEE, (byte)0xED,");
 		joutput_indent ("(byte)0x90, (byte)0xEF, (byte)0xB3, (byte)0xFB, (byte)0xB9, (byte)0xEA, (byte)0xBB, (byte)0xFF");
 
-	    joutput_indent_level -= 2;
+		joutput_indent_level -= 2;
 		joutput_indent ("};\n");
 
 		i = lookup_attr (COB_TYPE_ALPHANUMERIC, 0, 0, 0, NULL, 0);
-        joutput("  ");
+		joutput("  ");
 		joutput
 		    ("private static AbstractCobolField f_ebcdic = CobolFieldFactori.makeField(256, new CobolDataStorage(cob_ebcdic), %s%d);\n",
 		     CB_PREFIX_ATTR, i);
@@ -6033,11 +5971,11 @@ codegen (struct cb_program *prog, const int nested, char** program_id_list)
 		joutput_indent ("(byte)0x30, (byte)0x31, (byte)0x32, (byte)0x33, (byte)0x34, (byte)0x35, (byte)0x36, (byte)0x37,");
 		joutput_indent ("(byte)0x38, (byte)0x39, (byte)0xDB, (byte)0xFB, (byte)0x9A, (byte)0xF4, (byte)0xEA, (byte)0xFF");
 
-	    joutput_indent_level -= 2;
+		joutput_indent_level -= 2;
 		joutput_indent ("};\n");
 
 		i = lookup_attr (COB_TYPE_ALPHANUMERIC, 0, 0, 0, NULL, 0);
-        joutput("  ");
+		joutput("  ");
 		joutput
 		      ("private static AbstractCobolField f_ebcdic_ascii = CobolFieldFactory.makeField(256, new CobolDataStorage(cob_ebcdic_ascii), %s%d);\n",
 		       CB_PREFIX_ATTR, i);
@@ -6046,7 +5984,7 @@ codegen (struct cb_program *prog, const int nested, char** program_id_list)
 	if (gen_native) {
 		joutput_indent ("\n/* NATIVE table */\n");
 		joutput_indent ("private static final byte[] cob_native = {");
-	    joutput_indent_level += 2;
+		joutput_indent_level += 2;
 		joutput_indent ("(byte)0, (byte)1, (byte)2, (byte)3, (byte)4, (byte)5, (byte)6, (byte)7,");
 		joutput_indent ("(byte)8, (byte)9, (byte)10, (byte)11, (byte)12, (byte)13, (byte)14, (byte)15,");
 		joutput_indent ("(byte)16, (byte)17, (byte)18, (byte)19, (byte)20, (byte)21, (byte)22, (byte)23,");

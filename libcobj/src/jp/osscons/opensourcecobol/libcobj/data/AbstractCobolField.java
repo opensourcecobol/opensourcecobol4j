@@ -756,22 +756,6 @@ public abstract class AbstractCobolField {
 		return field;
 	}
 
-	/*public int compareInt(int n) {
-		CobolDecimal cobD1 = this.getDecimal();
-		CobolDecimal cobD2 = new CobolDecimal(n);
-		cobD2.setScale(0);
-		return cobD1.compareTo(cobD2);
-	}
-
-	protected int compareChar(int c) {
-		int sign = this.getSign();
-		int ret = commonCmpc(this.getDataStorage(), c, this.getSize());
-		if(this.getAttribute().isTypeNumericPacked()) {
-			this.putSign(sign);
-		}
-		return ret;
-	}*/
-
 	/**
 	 * libcob/common.cのcommon_cmpcの実装
 	 * @param s1
