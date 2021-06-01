@@ -8,15 +8,27 @@ This compiler is deeply inspired by ["opensource COBOL"](https://github.com/open
 
 **NOTE**: This package is the Developers Edition.
 
-# Requirements and Installation
+## Requirements and Installation
 
 See [Installation page](https://github.com/opensourcecobol/opensourcecobol4j/wiki/Installation).
 
+## Usage
 
-# The progress of the development
+Compile.
+```bash
+cobc -m [COBOL source file]
+```
+("cobc" command produces [PROGRAM-ID].java and [PROGRAM-ID].class in the current directory.)
+
+Run.
+```bash
+java [PROGRAM-ID]
+```
+
+## The progress of the development
 
 The functions in the following "implemented" list are tested using [NIST COBOL85 test suite](https://www.itl.nist.gov/div897/ctg/cobol_form.htm)
-and **95%** of the test cases are passed.
+gnd **95%** of the test cases are passed.
 
 Implemented.
 
