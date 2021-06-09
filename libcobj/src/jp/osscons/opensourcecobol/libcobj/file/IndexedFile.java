@@ -31,6 +31,7 @@ public class IndexedFile {
 	public CobolDataStorage last_key;
 	public CobolDataStorage temp_key;
 	public Database[] db;
+	public Database[] sub_db;
 	public DatabaseEntry key;
 	public DatabaseEntry data;
 	public CobolDataStorage[] last_readkey;

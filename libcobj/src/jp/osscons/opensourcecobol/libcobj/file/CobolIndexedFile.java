@@ -145,6 +145,7 @@ public class CobolIndexedFile extends CobolFile {
 		}
 
 		p.db = new Database[this.nkeys];
+		p.sub_db = new Database[this.nkeys - 1];
 		p.cursor = new Cursor[this.nkeys];
 		p.filenamelen = filename.length();
 		p.last_readkey = new CobolDataStorage[2 * this.nkeys];
@@ -180,6 +181,7 @@ public class CobolIndexedFile extends CobolFile {
 			} else {
 				runtime_buffer = String.format("%s.%d", filename, i);
 			}
+			String subDbName = String.format("%s.sub.%d", filename, i);
 
 			DatabaseConfig dbConf = new DatabaseConfig();
 			if (mode == COB_OPEN_INPUT) {
@@ -196,6 +198,9 @@ public class CobolIndexedFile extends CobolFile {
 			if (mode == COB_OPEN_OUTPUT) {
 				try {
 					env.removeDatabase(null, runtime_buffer);
+					if(i > 0) {
+						env.removeDatabase(null, subDbName);
+					}
 				} catch (DatabaseNotFoundException e) {
 					//存在しないDBを削除しようとしたときの例外
 					//これはエラーとして扱わない
@@ -204,6 +209,9 @@ public class CobolIndexedFile extends CobolFile {
 
 			try {
 				p.db[i] = env.openDatabase(null, runtime_buffer, dbConf);
+				if(i > 0) {
+					p.sub_db[i-1] = env.openDatabase(null, subDbName, dbConf);
+				}
 			} catch (OperationFailureException | EnvironmentFailureException | IllegalStateException
 					| IllegalArgumentException e) {
 				e.printStackTrace();
@@ -267,6 +275,12 @@ public class CobolIndexedFile extends CobolFile {
 		for (int i = this.nkeys - 1; i >= 0; i--) {
 			if (p.db[i] != null) {
 				p.db[i].close();
+			}
+		}
+		
+		for(int i=0; i<this.nkeys - 1; ++i) {
+			if(p.sub_db[i] != null) {
+				p.sub_db[i].close();
 			}
 		}
 
@@ -704,23 +718,22 @@ public class CobolIndexedFile extends CobolFile {
 
 		p.data = p.key;
 		Put flags;
+		DatabaseEntry subKey = DBT_SET(this.keys[0].getField());
 		for (int i = 1; i < this.nkeys; i++) {
-			/*if (rewrite && p.rewrite_sec_key[i] == 0) {
-				continue;
-			}*/
+
+			flags = Put.OVERWRITE;
 			if (this.keys[i].getFlag() != 0) {
-				flags = Put.OVERWRITE;
 				int dupno = this.get_dupno(i);
 				p.temp_key.memcpy(this.keys[0].getField().getDataStorage(), this.keys[0].getField().getFieldSize());
 				p.temp_key.getSubDataStorage(this.keys[0].getField().getSize()).set(dupno);
 				p.data = new DatabaseEntry(p.temp_key.getByteArray(0, this.keys[0].getField().getSize() + 4));
-			} else {
-				flags = Put.OVERWRITE;	
 			}
 
 			p.key = DBT_SET(this.keys[i].getField());
 			try {
-				if(p.db[i].put(null, p.key, p.data, flags, null) == null) {
+				DatabaseEntry subData = DBT_SET(this.keys[i].getField());
+				if(p.db[i].put(null, p.key, p.data, flags, null) == null ||
+					p.sub_db[i-1].put(null, subKey, subData, Put.NO_OVERWRITE, null) == null) {
 					if (close_cursor) {
 						p.cursor[0].close();
 						p.cursor[0] = null;
@@ -930,42 +943,28 @@ public class CobolIndexedFile extends CobolFile {
 
 		DatabaseEntry prim_key = p.key;
 
-		//TODO! offset
 		for (int i = 1; i < this.nkeys; ++i) {
 			p.key = DBT_SET(this.keys[i].getField());
-			//TODO offset
-			if (rewrite) {
-				//continue;
-				/*p.rewrite_sec_key[i] = -1
-						* this.keys[i].getField().getDataStorage().memcmp(p.key.getData(), p.key.getSize());
-				if (p.rewrite_sec_key[i] == 0) {
-					continue;
-				}*/
-			}
 			try {				
-				if (this.keys[i].getFlag() == 0) {
-					if(p.db[i].delete(null, p.key) == OperationStatus.SUCCESS) {
-						System.out.println("[dbg j] delete success");
-					} else {
-						System.out.println("[dbg j] delete fail");						
-					}
-				} else {
-					DatabaseEntry sec_key = p.key;
-					p.cursor[i] = p.db[i].openCursor(null, null);
-					if (p.cursor[i].get(p.key, p.data, Get.SEARCH_GTE, null) == null) {
-						while (sec_key.getSize() == p.key.getSize()
-								&& arrayEquals(p.key.getData(), sec_key.getData(), sec_key.getSize())) {
-							if (arrayEquals(p.data.getData(), prim_key.getData(), prim_key.getSize())) {
-								p.cursor[i].delete();
-							}
-							if (p.cursor[i].get(p.key, p.data, Get.NEXT, null) == null) {
-								break;
-							}
+				DatabaseEntry subKey = DBT_SET(this.keys[0].getField());
+				DatabaseEntry subData = new DatabaseEntry();
+				Cursor subCursor = p.sub_db[i-1].openCursor(null, null);
+				if(subCursor.get(subKey, subData, Get.SEARCH, null) != null) {
+					do {
+						p.cursor[i] = p.db[i].openCursor(null, null);
+						if(p.cursor[i].get(subData, p.data, Get.SEARCH_GTE, null) != null) {
+							do {
+								if(this.keys[0].getField().getDataStorage().memcmp(p.data.getData(), prim_key.getSize()) == 0) {
+									p.cursor[i].delete();
+								}
+							} while(p.cursor[i].get(subData, p.data, Get.NEXT, null) != null);
 						}
-					}
-					p.cursor[i].close();
-					p.cursor[i] = null;
+						p.cursor[i].close();
+						p.cursor[i] = null;
+						subCursor.delete();
+					} while(subCursor.get(subKey, subData, Get.NEXT, null) != null);
 				}
+				subCursor.close();
 			} catch (LockConflictException e) {
 				if(p.cursor[i] != null) {
 					p.cursor[i].close();
@@ -976,7 +975,6 @@ public class CobolIndexedFile extends CobolFile {
 		}
 
 		try {
-			System.out.println("[dbg j] delete primary key");
 			p.cursor[0].delete();
 		} catch(LockConflictException e) {
 			if(close_cursor) {
