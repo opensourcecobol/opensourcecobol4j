@@ -40,6 +40,7 @@ import com.sleepycat.je.LockConflictException;
 import com.sleepycat.je.LockMode;
 import com.sleepycat.je.OperationFailureException;
 import com.sleepycat.je.OperationResult;
+import com.sleepycat.je.OperationStatus;
 import com.sleepycat.je.Put;
 import com.sleepycat.je.ReadOptions;
 
@@ -524,7 +525,6 @@ public class CobolIndexedFile extends CobolFile {
 			} else {
 				p.key = new DatabaseEntry(
 						p.last_readkey[p.key_index].getByteArray(0, this.keys[p.key_index].getField().getSize()));
-
 				try {
 					result = p.cursor[p.key_index].get(p.key, p.data, Get.SEARCH_GTE, readOptions);
 				} catch(LockConflictException e) {
@@ -697,7 +697,7 @@ public class CobolIndexedFile extends CobolFile {
 
 		p.data = new DatabaseEntry(this.record.getDataStorage().getByteArray(0, this.record.getSize()));
 		try {
-			p.cursor[0].put(p.key, p.data);			
+			p.cursor[0].put(p.key, p.data);
 		} catch (LockConflictException e) {
 			return COB_STATUS_51_RECORD_LOCKED;
 		}		
@@ -705,9 +705,9 @@ public class CobolIndexedFile extends CobolFile {
 		p.data = p.key;
 		Put flags;
 		for (int i = 1; i < this.nkeys; i++) {
-			if (rewrite && p.rewrite_sec_key[i] == 0) {
+			/*if (rewrite && p.rewrite_sec_key[i] == 0) {
 				continue;
-			}
+			}*/
 			if (this.keys[i].getFlag() != 0) {
 				flags = Put.OVERWRITE;
 				int dupno = this.get_dupno(i);
@@ -715,7 +715,7 @@ public class CobolIndexedFile extends CobolFile {
 				p.temp_key.getSubDataStorage(this.keys[0].getField().getSize()).set(dupno);
 				p.data = new DatabaseEntry(p.temp_key.getByteArray(0, this.keys[0].getField().getSize() + 4));
 			} else {
-				flags = Put.NO_OVERWRITE;
+				flags = Put.OVERWRITE;	
 			}
 
 			p.key = DBT_SET(this.keys[i].getField());
@@ -871,6 +871,7 @@ public class CobolIndexedFile extends CobolFile {
 			p.write_cursor_open = false;
 			return COB_STATUS_22_KEY_EXISTS;
 		}
+		
 		int ret = this.indexed_delete_internal(true);
 
 		if (ret != COB_STATUS_00_SUCCESS) {
@@ -934,22 +935,27 @@ public class CobolIndexedFile extends CobolFile {
 			p.key = DBT_SET(this.keys[i].getField());
 			//TODO offset
 			if (rewrite) {
-				p.rewrite_sec_key[i] = -1
+				//continue;
+				/*p.rewrite_sec_key[i] = -1
 						* this.keys[i].getField().getDataStorage().memcmp(p.key.getData(), p.key.getSize());
 				if (p.rewrite_sec_key[i] == 0) {
 					continue;
-				}
+				}*/
 			}
-			try {
+			try {				
 				if (this.keys[i].getFlag() == 0) {
-					p.db[i].delete(null, p.key);
+					if(p.db[i].delete(null, p.key) == OperationStatus.SUCCESS) {
+						System.out.println("[dbg j] delete success");
+					} else {
+						System.out.println("[dbg j] delete fail");						
+					}
 				} else {
 					DatabaseEntry sec_key = p.key;
 					p.cursor[i] = p.db[i].openCursor(null, null);
 					if (p.cursor[i].get(p.key, p.data, Get.SEARCH_GTE, null) == null) {
 						while (sec_key.getSize() == p.key.getSize()
 								&& arrayEquals(p.key.getData(), sec_key.getData(), sec_key.getSize())) {
-							if (arrayEquals(p.data.getData(), p.key.getData(), prim_key.getSize())) {
+							if (arrayEquals(p.data.getData(), prim_key.getData(), prim_key.getSize())) {
 								p.cursor[i].delete();
 							}
 							if (p.cursor[i].get(p.key, p.data, Get.NEXT, null) == null) {
@@ -970,6 +976,7 @@ public class CobolIndexedFile extends CobolFile {
 		}
 
 		try {
+			System.out.println("[dbg j] delete primary key");
 			p.cursor[0].delete();
 		} catch(LockConflictException e) {
 			if(close_cursor) {
