@@ -95,6 +95,8 @@ public class CobolAlphanumericField extends AbstractCobolField {
 			return;
 		case CobolFieldAttribute.COB_TYPE_NUMERIC_PACKED:
 		case CobolFieldAttribute.COB_TYPE_NUMERIC_BINARY:
+		case CobolFieldAttribute.COB_TYPE_NUMERIC_DOUBLE:
+		case CobolFieldAttribute.COB_TYPE_NUMERIC_FLOAT:
 			this.moveFrom(src1.getNumericField());
 			return;
 		case CobolFieldAttribute.COB_TYPE_ALPHANUMERIC:

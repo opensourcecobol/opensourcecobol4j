@@ -164,6 +164,8 @@ public class CobolNumericBinaryField extends AbstractCobolField {
 		case CobolFieldAttribute.COB_TYPE_ALPHANUMERIC:
 		case CobolFieldAttribute.COB_TYPE_ALPHANUMERIC_EDITED:
 		case CobolFieldAttribute.COB_TYPE_NUMERIC_BINARY:
+		case CobolFieldAttribute.COB_TYPE_NUMERIC_DOUBLE:
+		case CobolFieldAttribute.COB_TYPE_NUMERIC_FLOAT:
 		case CobolFieldAttribute.COB_TYPE_NATIONAL:
 		case CobolFieldAttribute.COB_TYPE_NUMERIC_EDITED:
 		case CobolFieldAttribute.COB_TYPE_NATIONAL_EDITED:

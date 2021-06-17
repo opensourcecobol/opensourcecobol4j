@@ -103,6 +103,7 @@ public class CobolUtil {
 			CobolUtil.commandLineArgs = argv;
 			CobolInspect.initString();
 			CobolFile.cob_init_fileio();
+			CobolIntrinsic.init();
 			
 			for(int i=0; i<8; ++i) {
 				String envVariableName = String.format("COB_SWITCH_%d", i + 1);

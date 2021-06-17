@@ -452,7 +452,7 @@ public class CobolDecimal {
 		CobolDecimal d = new CobolDecimal(this);
 
 		/* rounding */
-		if((opt & CobolDecimal.COB_STORE_ROUND) > 0) {
+		if((opt & CobolDecimal.COB_STORE_ROUND) != 0) {
 			if(f.getAttribute().getScale() < d.getScale()) {
 				int sign = d.value.signum();
 				if(sign != 0) {
@@ -480,8 +480,7 @@ public class CobolDecimal {
 			System.out.println("getField: Float not implemented");
 			throw new CobolRuntimeException(0, "getField: Float not implemented");
 		case CobolFieldAttribute.COB_TYPE_NUMERIC_DOUBLE:
-			System.out.println("getField: Double not implemented");
-			throw new CobolRuntimeException(0, "getField: Double not implemented");
+			return d.getDoubleField(f, opt);
 		default:
 			int digits = f.getAttribute().getDigits();
 			CobolFieldAttribute attr = f.getAttribute();
@@ -497,6 +496,23 @@ public class CobolDecimal {
 			}
 			return CobolException.code;
 		}
+	}
+	
+	public int getDoubleField(AbstractCobolField f, int opt) {
+		CobolDataStorage storage = new CobolDataStorage(8);
+		double val = this.value.doubleValue();
+		int scale = this.scale;
+		for(int i=0; i<Math.abs(scale); ++i) {
+			if(scale > 0) {
+				val /= 10;
+			} else {
+				val *= 10;
+			}
+		}
+		storage.set(val);
+		f.setDataStorage(storage);
+		return 0;
+
 	}
 
 	/**
@@ -551,7 +567,8 @@ public class CobolDecimal {
 	public int getDisplayField(AbstractCobolField f, int opt) throws CobolStopRunException {
 		int sign = this.value.signum();
 		this.value = this.value.abs();
-		byte[] numBuffPtr = this.value.toPlainString().getBytes();
+		String numString = this.value.toPlainString();
+		byte[] numBuffPtr = numString.getBytes();
 		int size = numBuffPtr.length;
 
 		CobolDataStorage data = f.getDataStorage();
@@ -562,8 +579,27 @@ public class CobolDecimal {
 			if((opt & CobolDecimal.COB_STORE_KEEP_ON_OVERFLOW) > 0) {
 				return CobolRuntimeException.code;
 			}
+
+			//TODO else でもこのような処理に書き変えなくていいのか考える
+			BigDecimal val = this.value;
+			for(int i=0; i<Math.abs(this.scale); ++i) {
+				if(this.scale < 0) {
+					val = val.multiply(BigDecimal.TEN);
+				} else {
+					val = val.divide(BigDecimal.TEN);
+				}
+			}
+			numString = val.toPlainString();
+			int pointIndex = numString.indexOf('.');
+			byte[] numBuff = numString.replace(".", "").getBytes();
+			int d = f.getFieldSize() - f.getAttribute().getScale() - pointIndex;
 			for(int i=0; i<f.getFieldSize(); ++i) {
-				data.setByte(i, numBuffPtr[i - diff]);
+				char c;
+				if(0 <= i - d && i - d < numBuff.length) {
+					data.setByte(i + firstDataIndex, numBuff[i - d]);
+				} else {
+					data.setByte(i + firstDataIndex, (byte)'0');
+				}
 			}
 		} else {
 			for(int i=0; i<diff; ++i) {

@@ -461,11 +461,19 @@ public class CobolDataStorage {
 	}
 	
 	/**
-	 * this.dataにlong型のvalueを4バイトで書き込む
+	 * this.dataにlong型のvalueを8バイトで書き込む
 	 * @param value this.dataに書き込むlong型の値
 	 */
 	public void set(long value) {
 		ByteBuffer.wrap(this.data, this.index, 8).putLong(value);
+	}
+	
+	/**
+	 * this.dataにdouble型のvalueを4バイトで書き込む
+	 * @param value this.dataに書き込むlong型の値
+	 */
+	public void set(double value) {
+		ByteBuffer.wrap(this.data, this.index, 8).putDouble(value);
 	}
 	
 	public void set(CobolDataStorage other) {
@@ -508,6 +516,10 @@ public class CobolDataStorage {
 	 */
 	public long longValue() {
 		return ByteBuffer.wrap(this.data, this.index, Long.BYTES).getLong();
+	}
+	
+	public double doubleValue() {
+		return ByteBuffer.wrap(this.data, this.index, Double.BYTES).getDouble();
 	}
 
 	/**

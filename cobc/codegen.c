@@ -1361,7 +1361,7 @@ joutput_param (cb_tree x, int id)
 		break;
 	case CB_TAG_BINARY_OP:
 		bp = CB_BINARY_OP (x);
-		joutput ("cob_intr_binop (");
+		joutput ("CobolIntrinsic.intrBinop (");
 		joutput_param (bp->x, id);
 		joutput (", ");
 		joutput ("%d", bp->op);
