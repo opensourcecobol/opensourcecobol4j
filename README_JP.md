@@ -26,7 +26,7 @@ java [PROGRAM-ID]
 
 ## The progress of the development
 
-下記の実装済みリストにある機能は[NIST COBOL85 test suite](https://www.itl.nist.gov/div897/ctg/cobol_form.htm)でテストされており,**95%** のテストケースをパスしています.
+下記の実装済みリストにある機能は[NIST COBOL85 test suite](https://www.itl.nist.gov/div897/ctg/cobol_form.htm)でテストされており,**96%** のテストケースをパスしています.
 
 実装済み
 
@@ -37,11 +37,11 @@ java [PROGRAM-ID]
 * SEQUENTIALファイルの入出力機能
 * INDEXEDファイルの入出力機能
 * SORT文
+* 組み込み関数 (ACOS, LENGTH, MAX, ...)
 
 実装予定
 
 * RELATIVEファイルの入出力機能
-* 組み込み関数 (ACOS, LENGTH, MAX, ...)
 
 既知の不具合
 
