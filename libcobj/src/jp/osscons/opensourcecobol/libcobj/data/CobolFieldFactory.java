@@ -72,6 +72,8 @@ public class CobolFieldFactory {
 			return new CobolAlphanumericAllField(size, data, attr);
 		case CobolFieldAttribute.COB_TYPE_NATIONAL_ALL:
 			return new CobolNationalAllField(size, data, attr);
+		case CobolFieldAttribute.COB_TYPE_NUMERIC_DOUBLE:
+			return new CobolNumericDoubleField(size, data, attr);
 		default:
 			throw new CobolRuntimeException(0, "This data type is not implemented.");
 		}

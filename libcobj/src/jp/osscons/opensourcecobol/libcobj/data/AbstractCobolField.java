@@ -89,12 +89,19 @@ public abstract class AbstractCobolField {
 	public CobolDataStorage getDataStorage() {
 		return dataStorage;
 	}
+	
 	/**
 	 * メンバ変数dataStorageのsetter
-	 * @return  this.dataStorage
 	 */
 	public void setDataStorage(CobolDataStorage dataStorage) {
 		this.dataStorage = dataStorage;
+	}
+
+	/**
+	 * メンバ変数attirbuteのsetter
+	 */
+	public void setAttribute(CobolFieldAttribute attribute) {
+		this.attribute = attribute;
 	}
 
 	/**

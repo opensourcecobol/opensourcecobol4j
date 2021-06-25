@@ -28,7 +28,7 @@ java [PROGRAM-ID]
 ## The progress of the development
 
 The functions in the following "implemented" list are tested using [NIST COBOL85 test suite](https://www.itl.nist.gov/div897/ctg/cobol_form.htm)
-and **95%** of the test cases are passed.
+and **96%** of the test cases are passed.
 
 Implemented.
 
@@ -39,11 +39,11 @@ Implemented.
 * Sequential files
 * Indexed files
 * Sort statements
+* Embedded functions (ACOS, LENGTH, MAX, ...)
 
 Not Implemented.
 
 * Relative files
-* Embedded functions (ACOS, LENGTH, MAX, ...)
 
 Known bugs
 

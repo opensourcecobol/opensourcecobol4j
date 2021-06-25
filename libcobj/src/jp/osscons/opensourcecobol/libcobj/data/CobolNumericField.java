@@ -201,6 +201,10 @@ public class CobolNumericField extends AbstractCobolField {
 		case CobolFieldAttribute.COB_TYPE_NUMERIC_BINARY:
 			this.moveBinaryToDisplay(src1);
 			break;
+		case CobolFieldAttribute.COB_TYPE_NUMERIC_DOUBLE:
+		case CobolFieldAttribute.COB_TYPE_NUMERIC_FLOAT:
+			this.moveDoubleToDisplay(src1);
+			break;
 		case CobolFieldAttribute.COB_TYPE_NUMERIC_EDITED:
 			this.moveEditedToDisplay(src1);
 			break;
@@ -352,6 +356,20 @@ public class CobolNumericField extends AbstractCobolField {
 
 		this.storeCommonRegion(this, new CobolDataStorage(buff, 0), i, (20 - i), field.getAttribute().getScale());
 		this.putSign(sign);
+	}
+	
+	private void moveDoubleToDisplay(AbstractCobolField field) {
+		CobolFieldAttribute thisAttr = this.getAttribute();
+		double val = Math.abs(field.getDouble() * thisAttr.getScale());
+		String formatter = "%0" + thisAttr.getDigits() + "." + thisAttr.getScale() + "f";
+		String valString = String.format(formatter, val).replace(".", "");
+		int startIndex = 0;
+		if(thisAttr.isFlagHaveSign() && thisAttr.isFlagSignLeading() && thisAttr.isFlagSignSeparate()) {
+			startIndex = 1;
+		}
+		CobolDataStorage dstStorage = this.getDataStorage().getSubDataStorage(startIndex);
+		dstStorage.memcpy(valString, thisAttr.getDigits());
+		this.putSign(field.getSign() >= 0 ? 1 : -1);
 	}
 	
 	private void moveEditedToDisplay(AbstractCobolField field) {
