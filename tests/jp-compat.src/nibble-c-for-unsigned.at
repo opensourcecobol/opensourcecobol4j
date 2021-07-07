@@ -22,8 +22,8 @@ AT_DATA([prog.cob], [
 ])
 
 AT_CHECK([${COMPILE} prog.cob], [0])
-AT_CHECK([./prog], [0], [S])
-AT_CHECK([COB_NIBBLE_C_UNSIGNED=Y ./prog], [0], [SU])
+AT_CHECK([java prog], [0], [S])
+AT_CHECK([COB_NIBBLE_C_UNSIGNED=Y java prog], [0], [SU])
 
 AT_CLEANUP
 

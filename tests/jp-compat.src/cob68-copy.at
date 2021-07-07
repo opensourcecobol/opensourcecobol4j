@@ -19,7 +19,7 @@ AT_DATA([inc1.cpy], [
 ])
 
 AT_CHECK([${COMPILE_JP_COMPAT} prog.cob], [0])
-AT_CHECK([./prog], [0], [ABC])
+AT_CHECK([java prog], [0], [ABC])
 AT_CLEANUP
 
 AT_SETUP([COBOL68 COPY nested])
@@ -47,7 +47,7 @@ AT_DATA([inc2.cpy], [
 ])
 
 AT_CHECK([${COMPILE_JP_COMPAT} prog.cob], [0])
-AT_CHECK([./prog], [0], [ABC])
+AT_CHECK([java prog], [0], [ABC])
 AT_CLEANUP
 
 AT_SETUP([COBOL68 COPY nested fragments])
@@ -75,7 +75,7 @@ AT_DATA([inc2.cpy], [
 ])
 
 AT_CHECK([${COMPILE_JP_COMPAT} prog.cob], [0])
-AT_CHECK([./prog], [0], [ABC])
+AT_CHECK([java prog], [0], [ABC])
 AT_CLEANUP
 
 AT_SETUP([COBOL68 COPY nested w/ normal])
@@ -103,7 +103,7 @@ AT_DATA([inc2.cpy], [
 ])
 
 AT_CHECK([${COMPILE_JP_COMPAT} prog.cob], [0])
-AT_CHECK([./prog], [0], [ABC])
+AT_CHECK([java prog], [0], [ABC])
 AT_CLEANUP
 
 AT_SETUP([COBOL68 COPY nested w/ normal 2])
@@ -131,5 +131,5 @@ AT_DATA([inc2.cpy], [
 ])
 
 AT_CHECK([${COMPILE_JP_COMPAT} prog.cob], [0])
-AT_CHECK([./prog], [0], [ABC])
+AT_CHECK([java prog], [0], [ABC])
 AT_CLEANUP

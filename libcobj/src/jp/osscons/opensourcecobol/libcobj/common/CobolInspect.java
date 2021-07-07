@@ -52,7 +52,7 @@ public class CobolInspect {
 		int type1 = f1.getAttribute().getType();
 		int type2 = f2.getAttribute().getType();
 		
-		if(type2 == CobolFieldAttribute.COB_TYPE_NATIONAL || type2 == CobolFieldAttribute.COB_TYPE_NATIONAL_ALL) {
+		if(type2 == CobolFieldAttribute.COB_TYPE_NATIONAL || type2 == CobolFieldAttribute.COB_TYPE_NATIONAL_EDITED) {
 			if(f1 == CobolConstant.quote) {
 				f1 = CobolConstant.zenQuote;
 			} else if(f1 == CobolConstant.space) {
@@ -61,7 +61,7 @@ public class CobolInspect {
 				f1 = CobolConstant.zenZero;
 			}
 		}
-		if(type1 == CobolFieldAttribute.COB_TYPE_NATIONAL || type1 == CobolFieldAttribute.COB_TYPE_NATIONAL_ALL) {
+		if(type1 == CobolFieldAttribute.COB_TYPE_NATIONAL || type1 == CobolFieldAttribute.COB_TYPE_NATIONAL_EDITED) {
 			if(f2 == CobolConstant.quote) {
 				f2 = CobolConstant.zenQuote;
 			} else if(f2 == CobolConstant.space) {

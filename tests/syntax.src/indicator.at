@@ -128,7 +128,7 @@ AT_DATA([prog.cob], [
            STOP RUN.
 ])
 
-AT_CHECK([${COMPILE} -x prog.cob], [1], [], 
+AT_CHECK([cobc -m prog.cob], [1], [], 
 [prog.cob:4: Error: Invalid indicator '1' at column 7
 ])
 

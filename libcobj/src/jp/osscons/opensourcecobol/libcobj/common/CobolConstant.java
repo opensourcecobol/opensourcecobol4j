@@ -11,7 +11,7 @@ public class CobolConstant {
 	public static final CobolFieldAttribute oneAttr = new CobolFieldAttribute(
 			CobolFieldAttribute.COB_TYPE_NUMERIC, 1, 0, 0, null);
 		
-	public static final byte[] SJZERO = {(byte)0x81, (byte)0x4f};
+	public static final byte[] SJZERO = {(byte)0x82, (byte)0x4f};
 	public static final byte[] SJSPC  = {(byte)0x81, (byte)0x40};
 	public static final byte[] SJBLK  = {(byte)0x81, (byte)0x40};
 	public static final byte[] SJQUOT = {(byte)0x81, (byte)0x68};

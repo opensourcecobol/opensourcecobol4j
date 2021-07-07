@@ -28,7 +28,7 @@ AT_DATA([prog.cob], [
 ])
 
 AT_CHECK([${COMPILE} prog.cob], [0])
-AT_CHECK([./prog >& /dev/null], [1])
+AT_CHECK([java prog >& /dev/null], [1])
 
 AT_CLEANUP
 
@@ -62,7 +62,7 @@ AT_DATA([prog.cob], [
 ])
 
 AT_CHECK([${COMPILE_JP_COMPAT} prog.cob], [0])
-AT_CHECK([./prog], [0])
+AT_CHECK([java prog], [0])
 
 AT_CLEANUP
 
@@ -91,7 +91,7 @@ AT_DATA([prog.cob], [
 ])
 
 AT_CHECK([${COMPILE} prog.cob], [0])
-AT_CHECK([./prog], [1], [],
+AT_CHECK([java prog], [1], [],
 [prog.cob:18: libcob: File does not exist (STATUS = 35) File : 'nowhere'
 ])
 
@@ -122,7 +122,7 @@ AT_DATA([prog.cob], [
 ])
 
 AT_CHECK([${COMPILE_JP_COMPAT} prog.cob], [0])
-AT_CHECK([./prog], [1], [],
+AT_CHECK([java prog], [1], [],
 [prog.cob:18: libcob: File does not exist (STATUS = 35) File : 'nowhere'
 ])
 

@@ -31,5 +31,5 @@ AT_DATA([prog.cob], [
 ])
 
 AT_CHECK([${COMPILE_JP_COMPAT} prog.cob], [0])
-AT_CHECK([./prog], [0], [VAL3])
+AT_CHECK([java prog], [0], [VAL3])
 AT_CLEANUP

@@ -44,7 +44,7 @@ AT_DATA([prog.cob], [
 ])
 
 AT_CHECK([${COMPILE} -o prog prog.cob])
-AT_CHECK([./prog], [0], [   0])
+AT_CHECK([java prog], [0], [   0])
 
 AT_CLEANUP
 
@@ -67,7 +67,7 @@ AT_DATA([prog.cob], [
 ])
 
 AT_CHECK([${COMPILE} -o prog prog.cob])
-AT_CHECK([./prog], [0], [ 0 0 0 0 0])
+AT_CHECK([java prog], [0], [ 0 0 0 0 0])
 
 AT_CLEANUP
 
@@ -92,7 +92,7 @@ AT_DATA([prog.cob], [
 ])
 
 AT_CHECK([${COMPILE} -o prog prog.cob])
-AT_CHECK([./prog], [0], [ 000])
+AT_CHECK([java prog], [0], [ 000])
 
 AT_CLEANUP
 
@@ -116,7 +116,7 @@ AT_DATA([prog.cob], [
 ])
 
 AT_CHECK([${COMPILE} -o prog prog.cob])
-AT_CHECK([./prog], [0], [0   0   ])
+AT_CHECK([java prog], [0], [0   0   ])
 
 AT_CLEANUP
 
@@ -139,6 +139,6 @@ AT_DATA([prog.cob], [
 ])
 
 AT_CHECK([${COMPILE} -o prog prog.cob])
-AT_CHECK([./prog], [0], [ 0])
+AT_CHECK([java prog], [0], [ 0])
 
 AT_CLEANUP

@@ -14,7 +14,7 @@ AT_DATA([prog.cob], [
 ])
 
 AT_CHECK([${COMPILE_JP_COMPAT} prog.cob], [0])
-AT_CHECK([./prog], [0], [AB])
+AT_CHECK([java prog], [0], [AB])
 AT_CLEANUP
 
 AT_SETUP([Data desc. ambiguous level-num 1])
@@ -33,7 +33,7 @@ AT_DATA([prog.cob], [
 ])
 
 AT_CHECK([${COMPILE_JP_COMPAT} prog.cob], [0])
-AT_CHECK([./prog], [0], [34])
+AT_CHECK([java prog], [0], [34])
 AT_CLEANUP
 
 AT_SETUP([Data desc. ambiguous level-num 2])
@@ -53,7 +53,7 @@ AT_DATA([prog.cob], [
 ])
 
 AT_CHECK([${COMPILE_JP_COMPAT} prog.cob], [0])
-AT_CHECK([./prog], [0], [34])
+AT_CHECK([java prog], [0], [34])
 AT_CLEANUP
 
 AT_SETUP([Data desc. level-num error after 88])

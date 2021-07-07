@@ -23,7 +23,7 @@ AT_CHECK([${COMPILE} prog.cob], [1], [],
 [prog.cob:12: Error: Record size too large 'TEST-REC' (4)
 ])
 AT_CHECK([${COMPILE_JP_COMPAT} prog.cob])
-AT_CHECK([./prog], [0])
+AT_CHECK([java prog], [0])
 AT_CHECK([od -An -tx1 TEST-FILE | sed -e 's/  */ /g' -e 's/ *$//'], [0], [ 41 41 41 41
 ])
 
@@ -51,11 +51,11 @@ AT_DATA([prog.cob], [
 ])
 
 AT_CHECK([${COMPILE} prog.cob])
-AT_CHECK([./prog], [0])
+AT_CHECK([java prog], [0])
 AT_CHECK([od -An -tx1 TEST-FILE | sed -e 's/  */ /g' -e 's/ *$//'], [0], [ 00 04 00 00 41 41 41 41
 ])
 AT_CHECK([${COMPILE_JP_COMPAT} prog.cob])
-AT_CHECK([./prog], [0])
+AT_CHECK([java prog], [0])
 AT_CHECK([od -An -tx1 TEST-FILE | sed -e 's/  */ /g' -e 's/ *$//'], [0], [ 41 41 41 41
 ])
 

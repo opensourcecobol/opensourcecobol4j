@@ -11,8 +11,8 @@ AT_DATA([prog.cob], [
            STOP RUN.
 ])
 
-AT_CHECK([${COMPILE} -x prog.cob])
-AT_CHECK([./prog], [0], [日本語の文字列])
+AT_CHECK([cobc -m prog.cob])
+AT_CHECK([java prog], [0], [日本語の文字列])
 
 AT_CLEANUP
 
@@ -30,8 +30,8 @@ AT_DATA([prog.cob], [
            STOP RUN.
 ])
 
-AT_CHECK([${COMPILE} -x prog.cob])
-AT_CHECK([./prog], [0], [日本語の文字列])
+AT_CHECK([cobc -m prog.cob])
+AT_CHECK([java prog], [0], [日本語の文字列])
 
 AT_CLEANUP
 
@@ -49,11 +49,11 @@ AT_DATA([prog.cob], [
            STOP RUN.
 ])
 
-AT_CHECK([${COMPILE} -x prog.cob], [0], [],
+AT_CHECK([cobc -m prog.cob], [0], [],
 [prog.cob:8: Warning: Value size exceeds data size
 prog.cob:6: Warning: 'F0' defined here as PIC X(9)
 ])
-AT_CHECK([./prog], [0], [日本語])
+AT_CHECK([java prog], [0], [日本語])
 
 AT_CLEANUP
 
@@ -71,8 +71,8 @@ AT_DATA([prog.cob], [
            STOP RUN.
 ])
 
-AT_CHECK([${COMPILE} -x prog.cob], [0])
-AT_CHECK([./prog | od -tx1 -An | sed -e 's/  */ /g' -e 's/ *$//'], [0], [ e5 96 9c e5 96 9c e5 96 9c e5
+AT_CHECK([cobc -m prog.cob], [0])
+AT_CHECK([java prog | od -tx1 -An | sed -e 's/  */ /g' -e 's/ *$//'], [0], [ e5 96 9c e5 96 9c e5 96 9c e5
 ])
 
 AT_CLEANUP
@@ -91,11 +91,11 @@ AT_DATA([prog.cob], [
            STOP RUN.
 ])
 
-AT_CHECK([${COMPILE} -x prog.cob], [0], [],
+AT_CHECK([cobc -m prog.cob], [0], [],
 [prog.cob:8: Warning: Value size exceeds data size
 prog.cob:6: Warning: 'F0' defined here as PIC X(10)
 ])
-AT_CHECK([./prog | od -tx1 -An | sed -e 's/  */ /g' -e 's/ *$//'], [0], [ e6 97 a5 e6 9c ac e8 aa 9e e3
+AT_CHECK([java prog | od -tx1 -An | sed -e 's/  */ /g' -e 's/ *$//'], [0], [ e6 97 a5 e6 9c ac e8 aa 9e e3
 ])
 
 AT_CLEANUP
@@ -114,11 +114,11 @@ AT_DATA([prog.cob], [
            STOP RUN.
 ])
 
-AT_CHECK([${COMPILE} -x prog.cob], [0], [],
+AT_CHECK([cobc -m prog.cob], [0], [],
 [prog.cob:8: Warning: Value size exceeds data size
 prog.cob:6: Warning: 'F0' defined here as PIC X(11)
 ])
-AT_CHECK([./prog | od -tx1 -An | sed -e 's/  */ /g' -e 's/ *$//'], [0], [ e6 97 a5 e6 9c ac e8 aa 9e e3 81
+AT_CHECK([java prog | od -tx1 -An | sed -e 's/  */ /g' -e 's/ *$//'], [0], [ e6 97 a5 e6 9c ac e8 aa 9e e3 81
 ])
 
 AT_CLEANUP
@@ -138,8 +138,8 @@ AT_DATA([prog.cob], [
            STOP RUN.
 ])
 
-AT_CHECK([${COMPILE} -x prog.cob], [0])
-AT_CHECK([./prog | od -tx1 -An | sed -e 's/  */ /g' -e 's/ *$//'], [0], [ e6 97 a5 e6 9c ac e8 aa 9e e3
+AT_CHECK([cobc -m prog.cob], [0])
+AT_CHECK([java prog | od -tx1 -An | sed -e 's/  */ /g' -e 's/ *$//'], [0], [ e6 97 a5 e6 9c ac e8 aa 9e e3
 ])
 
 AT_CLEANUP
@@ -158,8 +158,8 @@ AT_DATA([prog.cob], [
            STOP RUN.
 ])
 
-AT_CHECK([${COMPILE} -x prog.cob], [0])
-AT_CHECK([./prog], [0], [日本語の文字列   ])
+AT_CHECK([cobc -m prog.cob], [0])
+AT_CHECK([java prog], [0], [日本語の文字列   ])
 
 AT_CLEANUP
 
@@ -177,8 +177,8 @@ AT_DATA([prog.cob], [
            STOP RUN.
 ])
 
-AT_CHECK([${COMPILE} -x prog.cob], [0])
-AT_CHECK([./prog], [0], [ 日本語の文字列])
+AT_CHECK([cobc -m prog.cob], [0])
+AT_CHECK([java prog], [0], [ 日本語の文字列])
 
 AT_CLEANUP
 
@@ -196,8 +196,8 @@ AT_DATA([prog.cob], [
            STOP RUN.
 ])
 
-AT_CHECK([${COMPILE} -x prog.cob], [0])
-AT_CHECK([./prog], [0], [日本/中国 文字0])
+AT_CHECK([cobc -m prog.cob], [0])
+AT_CHECK([java prog], [0], [日本/中国 文字0])
 
 AT_CLEANUP
 
@@ -215,11 +215,11 @@ AT_DATA([prog.cob], [
            STOP RUN.
 ])
 
-AT_CHECK([${COMPILE} -x prog.cob], [0], [], 
+AT_CHECK([cobc -m prog.cob], [0], [], 
 [prog.cob:8: Warning: Value size exceeds data size
 prog.cob:6: Warning: 'F0' defined here as PIC XXX/XXXBXXX0
 ])
-AT_CHECK([./prog], [0], [日/本 中0])
+AT_CHECK([java prog], [0], [日/本 中0])
 
 AT_CLEANUP
 
@@ -237,8 +237,8 @@ AT_DATA([prog.cob], [
            STOP RUN.
 ])
 
-AT_CHECK([${COMPILE} -x prog.cob], [0])
-AT_CHECK([./prog], [0], [日/本    0])
+AT_CHECK([cobc -m prog.cob], [0])
+AT_CHECK([java prog], [0], [日/本    0])
 
 AT_CLEANUP
 
@@ -256,8 +256,8 @@ AT_DATA([prog.cob], [
            STOP RUN.
 ])
 
-AT_CHECK([${COMPILE} -x prog.cob], [0])
-AT_CHECK([./prog], [0], [日 本])
+AT_CHECK([cobc -m prog.cob], [0])
+AT_CHECK([java prog], [0], [日 本])
 
 AT_CLEANUP
 
@@ -275,8 +275,8 @@ AT_DATA([prog.cob], [
            STOP RUN.
 ])
 
-AT_CHECK([${COMPILE} -x prog.cob], [0])
-AT_CHECK([./prog | od -tx1 -An | sed -e 's/  */ /g' -e 's/ *$//'], [0], [ e6 97 20 a5 e6 9c ac
+AT_CHECK([cobc -m prog.cob], [0])
+AT_CHECK([java prog | od -tx1 -An | sed -e 's/  */ /g' -e 's/ *$//'], [0], [ e6 97 20 a5 e6 9c ac
 ])
 
 AT_CLEANUP
@@ -300,8 +300,8 @@ AT_DATA([prog.cob], [
            STOP RUN.
 ])
 
-AT_CHECK([${COMPILE} -x prog.cob], [0])
-AT_CHECK([./prog | od -tx1 -An | sed -e 's/  */ /g' -e 's/ *$//'], [0], [ e6 97 a5 e6
+AT_CHECK([cobc -m prog.cob], [0])
+AT_CHECK([java prog | od -tx1 -An | sed -e 's/  */ /g' -e 's/ *$//'], [0], [ e6 97 a5 e6
 ])
 
 AT_CLEANUP
@@ -324,8 +324,8 @@ AT_DATA([prog.cob], [
            STOP RUN.
 ])
 
-AT_CHECK([${COMPILE} -x prog.cob], [0])
-AT_CHECK([./prog | od -tx1 -An | sed -e 's/  */ /g' -e 's/ *$//'], [0], [ e6 97 a5 e6
+AT_CHECK([cobc -m prog.cob], [0])
+AT_CHECK([java prog | od -tx1 -An | sed -e 's/  */ /g' -e 's/ *$//'], [0], [ e6 97 a5 e6
 ])
 
 AT_CLEANUP
@@ -345,8 +345,8 @@ AT_DATA([prog.cob], [
            STOP RUN.
 ])
 
-AT_CHECK([${COMPILE} -x prog.cob], [0])
-AT_CHECK([./prog], [0], [文字列])
+AT_CHECK([cobc -m prog.cob], [0])
+AT_CHECK([java prog], [0], [文字列])
 
 AT_CLEANUP
 
@@ -364,8 +364,8 @@ AT_DATA([prog.cob], [
            STOP RUN.
 ])
 
-AT_CHECK([${COMPILE} -x prog.cob], [0])
-AT_CHECK([./prog], [0], [文字])
+AT_CHECK([cobc -m prog.cob], [0])
+AT_CHECK([java prog], [0], [文字])
 
 AT_CLEANUP
 
@@ -387,8 +387,8 @@ AT_DATA([prog.cob], [
            STOP RUN.
 ])
 
-AT_CHECK([${COMPILE} -x prog.cob], [0])
-AT_CHECK([./prog], [0], [私の名前はありません])
+AT_CHECK([cobc -m prog.cob], [0])
+AT_CHECK([java prog], [0], [私の名前はありません])
 
 AT_CLEANUP
 
@@ -410,8 +410,8 @@ AT_DATA([prog.cob], [
            STOP RUN.
 ])
 
-AT_CHECK([${COMPILE} -x prog.cob], [0])
-AT_CHECK([./prog], [0], [私の名前])
+AT_CHECK([cobc -m prog.cob], [0])
+AT_CHECK([java prog], [0], [私の名前])
 
 AT_CLEANUP
 
@@ -434,8 +434,8 @@ AT_DATA([prog.cob], [
            STOP RUN.
 ])
 
-AT_CHECK([${COMPILE} -x prog.cob], [0])
-AT_CHECK([./prog], [0], [言えません私の名前は])
+AT_CHECK([cobc -m prog.cob], [0])
+AT_CHECK([java prog], [0], [言えません私の名前は])
 
 AT_CLEANUP
 
@@ -453,8 +453,8 @@ AT_DATA([prog.cob], [
            STOP RUN.
 ])
 
-AT_CHECK([${COMPILE} -x prog.cob], [0])
-AT_CHECK([./prog], [0], [１２３４０１２３４０])
+AT_CHECK([cobc -m prog.cob], [0])
+AT_CHECK([java prog], [0], [１２３４０１２３４０])
 
 AT_CLEANUP
 
@@ -472,8 +472,8 @@ AT_DATA([prog.cob], [
            STOP RUN.
 ])
 
-AT_CHECK([${COMPILE} -x prog.cob], [0])
-AT_CHECK([./prog], [0], [１２３４000１２３４000])
+AT_CHECK([cobc -m prog.cob], [0])
+AT_CHECK([java prog], [0], [１２３４000１２３４000])
 
 AT_CLEANUP
 
@@ -492,8 +492,8 @@ AT_DATA([prog.cob], [
            STOP RUN.
 ])
 
-AT_CHECK([${COMPILE} -x prog.cob], [0])
-AT_CHECK([./prog], [0], [02])
+AT_CHECK([cobc -m prog.cob], [0])
+AT_CHECK([java prog], [0], [02])
 
 AT_CLEANUP
 
@@ -512,8 +512,8 @@ AT_DATA([prog.cob], [
            STOP RUN.
 ])
 
-AT_CHECK([${COMPILE} -x prog.cob], [0])
-AT_CHECK([./prog], [0], [　　ＣＤＥ  cde])
+AT_CHECK([cobc -m prog.cob], [0])
+AT_CHECK([java prog], [0], [　　ＣＤＥ  cde])
 
 AT_CLEANUP
 
@@ -532,7 +532,7 @@ AT_DATA([prog.cob], [
            STOP RUN.
 ])
 
-AT_CHECK([${COMPILE} -x prog.cob], [1], [],
+AT_CHECK([cobc -m prog.cob], [1], [],
 [prog.cob:9: Error: Illegal conversion chars.
 ])
 
@@ -553,7 +553,7 @@ AT_DATA([prog.cob], [
            STOP RUN.
 ])
 
-AT_CHECK([${COMPILE} -x prog.cob], [1], [],
+AT_CHECK([cobc -m prog.cob], [1], [],
 [prog.cob:9: Error: Illegal conversion chars.
 ])
 
@@ -574,8 +574,8 @@ AT_DATA([prog.cob], [
            STOP RUN.
 ])
 
-AT_CHECK([${COMPILE} -x prog.cob], [0])
-AT_CHECK([./prog], [1], [],
+AT_CHECK([cobc -m prog.cob], [0])
+AT_CHECK([java prog], [1], [],
 [prog.cob:9: libcob: 'β' char width (2) mismatch
 ])
 
@@ -598,8 +598,8 @@ AT_DATA([prog.cob], [
            STOP RUN.
 ])
 
-AT_CHECK([${COMPILE} -x prog.cob], [0])
-AT_CHECK([./prog], [1], [],
+AT_CHECK([cobc -m prog.cob], [0])
+AT_CHECK([java prog], [1], [],
 [prog.cob:11: libcob: 'Ａ' char width (3) to 'α' char width (2) mismatch
 ])
 

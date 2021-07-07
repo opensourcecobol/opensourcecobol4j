@@ -58,7 +58,7 @@ AT_DATA([prog.cob], [
 ])
 
 AT_CHECK([${COMPILE} -o prog prog.cob])
-AT_CHECK([./prog], [0],
+AT_CHECK([java prog], [0],
 [00001234
 00004660
 ])
@@ -86,7 +86,7 @@ AT_DATA([prog.cob], [
 ])
 
 AT_CHECK([${COMPILE} -o prog prog.cob])
-AT_CHECK([./prog], [0],
+AT_CHECK([java prog], [0],
 [00074565
 16777215
 ])
@@ -110,7 +110,7 @@ AT_DATA([prog.cob], [
 ])
 
 AT_CHECK([${COMPILE} -o prog prog.cob])
-AT_CHECK([./prog], [0], [OK])
+AT_CHECK([java prog], [0], [OK])
 
 AT_CLEANUP
 
@@ -166,7 +166,7 @@ AT_DATA([prog.cob], [
 ])
 
 AT_CHECK([${COMPILE} -o prog prog.cob])
-AT_CHECK([./prog], [0], 
+AT_CHECK([java prog], [0], 
 [X-1
 X-2
 OK
@@ -203,7 +203,7 @@ AT_DATA([prog.cob], [
 ])
 
 AT_CHECK([${COMPILE} -o prog prog.cob])
-AT_CHECK([./prog], [0],
+AT_CHECK([java prog], [0],
 [0002
 0002
 0002
@@ -230,7 +230,7 @@ AT_DATA([prog.cob], [
 ])
 
 AT_CHECK([${COMPILE} -o prog prog.cob])
-AT_CHECK([./prog], [0], [99/99/9999.99.99    ])
+AT_CHECK([java prog], [0], [99/99/9999.99.99    ])
 
 AT_CLEANUP
 
@@ -260,7 +260,7 @@ AT_DATA([prog.cob], [
 ])
 
 AT_CHECK([${COMPILE} -std=mvs -o prog prog.cob])
-AT_CHECK([./prog], [0], [123456:34:56])
+AT_CHECK([java prog], [0], [123456:34:56])
 
 AT_CLEANUP
 
@@ -349,7 +349,7 @@ prog.cob:57: Warning: Move non-integer to alphanumeric
 prog.cob: In paragraph 'S-50':
 prog.cob:62: Warning: Move non-integer to alphanumeric
 ])
-AT_CHECK([./prog], [0], [12891289128912891289128912891289])
+AT_CHECK([java prog], [0], [12891289128912891289128912891289])
 
 AT_CLEANUP
 
@@ -395,7 +395,7 @@ AT_DATA([prog.cob], [
 
 AT_CHECK([${COMPILE_MODULE} setfilename.c])
 AT_CHECK([${COMPILE} -o prog prog.cob])
-AT_CHECK([./prog], [0])
+AT_CHECK([java prog], [0])
 AT_CHECK([test -e TESTFILE], [0])
 
 AT_CLEANUP
@@ -441,7 +441,7 @@ AT_DATA([prog.cob], [
 
 AT_CHECK([${COMPILE_MODULE} setfilename.c])
 AT_CHECK([${COMPILE} -o prog prog.cob])
-AT_CHECK([./prog], [0])
+AT_CHECK([java prog], [0])
 AT_CHECK([test -e TESTFILE], [0])
 
 AT_CLEANUP
@@ -528,7 +528,7 @@ AT_DATA([prog.cob], [
 ])
 
 AT_CHECK([${COMPILE} -o prog prog.cob])
-AT_CHECK([./prog], [0], [OK])
+AT_CHECK([java prog], [0], [OK])
 
 AT_CLEANUP
 
@@ -551,7 +551,7 @@ AT_DATA([prog.cob], [
 ])
 
 AT_CHECK([${COMPILE} -o prog prog.cob])
-AT_CHECK([./prog], [0], [OK])
+AT_CHECK([java prog], [0], [OK])
 
 AT_CLEANUP
 
@@ -574,7 +574,7 @@ AT_DATA([prog.cob], [
 ])
 
 AT_CHECK([${COMPILE} -o prog prog.cob])
-AT_CHECK([./prog], [0], [OK])
+AT_CHECK([java prog], [0], [OK])
 
 AT_CLEANUP
 
@@ -608,7 +608,7 @@ AT_DATA([prog.cob], [
 AT_CHECK([${COMPILE} -conf=test.conf -o prog prog.cob], [0], ,
 [prog.cob:12: Warning: 'FILENAME' will be implicitly defined
 ])
-AT_CHECK([./prog], [0])
+AT_CHECK([java prog], [0])
 
 AT_CLEANUP
 
@@ -637,7 +637,7 @@ AT_DATA([prog.cob], [
 ])
 
 AT_CHECK([${COMPILE} -conf=test.conf -o prog prog.cob])
-AT_CHECK([./prog], [0])
+AT_CHECK([java prog], [0])
 AT_CHECK([test -f FILENAME], [0])
 
 AT_CLEANUP
@@ -667,13 +667,13 @@ AT_DATA([prog.cob], [
 ])
 
 AT_CHECK([${COMPILE} -conf=test.conf -o prog prog.cob])
-AT_CHECK([DD_FILENAME="x" ./prog], [0])
+AT_CHECK([DD_FILENAME="x" java prog], [0])
 AT_CHECK([test -f "x"], [0])
-AT_CHECK([dd_FILENAME="y" ./prog], [0])
+AT_CHECK([dd_FILENAME="y" java prog], [0])
 AT_CHECK([test -f "y"], [0])
-AT_CHECK([FILENAME="z" ./prog], [0])
+AT_CHECK([FILENAME="z" java prog], [0])
 AT_CHECK([test -f "z"], [0])
-AT_CHECK([./prog], [0])
+AT_CHECK([java prog], [0])
 AT_CHECK([test -f "FILENAME"], [0])
 
 AT_CLEANUP
@@ -703,7 +703,7 @@ AT_DATA([prog.cob], [
 ])
 
 AT_CHECK([${COMPILE} -conf=test.conf -o prog prog.cob])
-AT_CHECK([DIR="." ./prog], [0])
+AT_CHECK([DIR="." java prog], [0])
 AT_CHECK([test -f "./FILENAME" && rm -f "./FILENAME"], [0])
 
 AT_CLEANUP
@@ -733,7 +733,7 @@ AT_DATA([prog.cob], [
 ])
 
 AT_CHECK([${COMPILE} -conf=test.conf -o prog prog.cob])
-AT_CHECK([COB_FILE_PATH=".." ./prog], [0])
+AT_CHECK([COB_FILE_PATH=".." java prog], [0])
 AT_CHECK([test -f "../FILENAMEX" && rm -f "../FILENAMEX"], [0])
 
 AT_CLEANUP
@@ -866,7 +866,7 @@ AT_DATA([prog.cob], [
 
 AT_CHECK([${COMPILE} prog.cob])
 
-AT_CHECK([./prog X ABCD], [0],
+AT_CHECK([java prog X ABCD], [0],
 [X
 ABCD
 ])
@@ -884,7 +884,7 @@ AT_DATA([prog.cob], [
 ])
 
 AT_CHECK([${COMPILE} -o prog prog.cob])
-AT_CHECK([./prog], [1])
+AT_CHECK([java prog], [1])
 
 AT_CLEANUP
 
@@ -966,7 +966,7 @@ AT_DATA([prog.cob], [
 ])
 
 AT_CHECK([${COMPILE} -o prog prog.cob])
-AT_CHECK([./prog])
+AT_CHECK([java prog])
 AT_CHECK([cat TEST-FILE], [0], 
 [a
 
@@ -1026,7 +1026,7 @@ AT_DATA([prog.cob], [
 ])
 
 AT_CHECK([${COMPILE} -o prog prog.cob])
-AT_CHECK([./prog], [0],
+AT_CHECK([java prog], [0],
 [(a   )
 (ab  )
 (abc )
@@ -1083,7 +1083,7 @@ AT_DATA([prog.cob], [
 ])
 
 AT_CHECK([${COMPILE} -o prog prog.cob])
-AT_CHECK([cat TEST-FILE | ./prog], [0],
+AT_CHECK([cat TEST-FILE | java prog], [0],
 [a
 ab
 abc
@@ -1130,7 +1130,7 @@ AT_DATA([prog.cob], [
 
 export TEST_ENV=OK
 AT_CHECK([${COMPILE} -o prog prog.cob])
-AT_CHECK([./prog CHECKPAR], [0],
+AT_CHECK([java prog CHECKPAR], [0],
 [(OK  )
 (RXW )
 (CHECKPAR)
@@ -1159,7 +1159,7 @@ AT_DATA([prog.cob], [
 ])
 
 AT_CHECK([${COMPILE} prog.cob])
-AT_CHECK([./prog], [0],
+AT_CHECK([java prog], [0],
 [00,50
 ])
 
@@ -1185,7 +1185,7 @@ AT_DATA([prog.cob], [
 ])
 
 AT_CHECK([${COMPILE} prog.cob])
-AT_CHECK([./prog], [0],
+AT_CHECK([java prog], [0],
 [03,00
 ])
 
@@ -1211,7 +1211,7 @@ AT_DATA([prog.cob], [
 ])
 
 AT_CHECK([${COMPILE} prog.cob])
-AT_CHECK([./prog], [0],
+AT_CHECK([java prog], [0],
 [01,50
 ])
 
@@ -1237,7 +1237,7 @@ AT_DATA([prog.cob], [
 ])
 
 AT_CHECK([${COMPILE} prog.cob])
-AT_CHECK([./prog], [0],
+AT_CHECK([java prog], [0],
 [00,10
 ])
 
@@ -1268,7 +1268,7 @@ AT_DATA([prog.cob], [
 ])
 
 AT_CHECK([${COMPILE} prog.cob])
-AT_CHECK([./prog], [0],
+AT_CHECK([java prog], [0],
 [01,10
 00,10
 ])
@@ -1290,7 +1290,7 @@ AT_DATA([prog.cob], [
 ])
 
 AT_CHECK([${COMPILE} prog.cob])
-AT_CHECK([./prog], [0],
+AT_CHECK([java prog], [0],
 [OK
 ])
 
@@ -1314,7 +1314,7 @@ AT_DATA([prog.cob], [
 ])
 
 AT_CHECK([${COMPILE} prog.cob])
-AT_CHECK([./prog], [0],
+AT_CHECK([java prog], [0],
 [OKOKOK
 ])
 
@@ -1336,7 +1336,7 @@ AT_DATA([prog.cob], [
 ])
 
 AT_CHECK([${COMPILE} prog.cob])
-AT_CHECK([./prog], [0],
+AT_CHECK([java prog], [0],
 [OKOK
 ])
 

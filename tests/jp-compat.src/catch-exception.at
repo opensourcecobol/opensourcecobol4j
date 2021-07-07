@@ -39,7 +39,7 @@ AT_DATA([prog.cob], [
 ])
 
 AT_CHECK([${COMPILE} prog.cob])
-AT_CHECK([./prog], [0],
+AT_CHECK([java prog], [0],
 [1
 ])
 
@@ -65,7 +65,7 @@ AT_DATA([prog.cob], [
 ])
 
 AT_CHECK([${COMPILE_JP_COMPAT} prog.cob])
-AT_CHECK([./prog], [1], ,
+AT_CHECK([java prog], [1], ,
 [prog.cob:11: libcob: Detected division by zero.
 ])
 
@@ -92,7 +92,7 @@ AT_DATA([prog.cob], [
 ])
 
 AT_CHECK([${COMPILE} prog.cob])
-AT_CHECK([./prog], [0],
+AT_CHECK([java prog], [0],
 [1
 ])
 
@@ -139,7 +139,7 @@ AT_DATA([prog.cob], [
 ])
 
 AT_CHECK([${COMPILE} prog.cob])
-AT_CHECK([./prog], [0],
+AT_CHECK([java prog], [0],
 [1
 ])
 
@@ -165,7 +165,7 @@ AT_DATA([prog.cob], [
 ])
 
 AT_CHECK([${COMPILE_JP_COMPAT} prog.cob])
-AT_CHECK([./prog], [1], ,
+AT_CHECK([java prog], [1], ,
 [prog.cob:11: libcob: Detected division by zero.
 ])
 
@@ -192,7 +192,7 @@ AT_DATA([prog.cob], [
 ])
 
 AT_CHECK([${COMPILE} prog.cob])
-AT_CHECK([./prog], [0],
+AT_CHECK([java prog], [0],
 [1
 ])
 
@@ -221,7 +221,7 @@ AT_DATA([prog.cob], [
 ])
 
 AT_CHECK([${COMPILE_JP_COMPAT} prog.cob])
-AT_CHECK([./prog], [0],
+AT_CHECK([java prog], [0],
 [ON SIZE ERROR
 ])
 

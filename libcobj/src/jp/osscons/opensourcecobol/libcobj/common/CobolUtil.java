@@ -623,4 +623,8 @@ public class CobolUtil {
 		}
 		CobolStopRunException.stopRunAndThrow(1);
 	}
+	
+	public static void setLocation(String progid, String sfile, int sline, String csert, String cpara, String cstatement) {
+		//TODO implement
+	}
 }

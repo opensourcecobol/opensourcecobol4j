@@ -13,8 +13,8 @@ AT_DATA([prog.cob], [
            STOP RUN.
 ])
 
-AT_CHECK([${COMPILE} -x prog.cob])
-AT_CHECK([./prog], [0], [日本語   ])
+AT_CHECK([cobc -m prog.cob])
+AT_CHECK([java prog], [0], [日本語   ])
 
 AT_CLEANUP
 
@@ -32,8 +32,8 @@ AT_DATA([prog.cob], [
            STOP RUN.
 ])
 
-AT_CHECK([${COMPILE} -x prog.cob])
-AT_CHECK([./prog], [0], [　日本語])
+AT_CHECK([cobc -m prog.cob])
+AT_CHECK([java prog], [0], [　日本語])
 
 AT_CLEANUP
 
@@ -55,7 +55,7 @@ AT_DATA([prog.cob], [
            STOP RUN.
 ])
 
-AT_CHECK([${COMPILE} -x prog.cob])
-AT_CHECK([./prog], [0], [日本語   ])
+AT_CHECK([cobc -m prog.cob])
+AT_CHECK([java prog], [0], [日本語   ])
 
 AT_CLEANUP

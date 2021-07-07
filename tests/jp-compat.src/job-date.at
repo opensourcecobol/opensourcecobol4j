@@ -16,7 +16,7 @@ AT_DATA([prog.cob], [
 ])
 
 AT_CHECK([${COMPILE_JP_COMPAT} -o prog prog.cob])
-AT_CHECK([COB_DATE=1970/01/02 ./prog], [0], [700102
+AT_CHECK([COB_DATE=1970/01/02 java prog], [0], [700102
 ])
 
 AT_CLEANUP
@@ -40,7 +40,7 @@ AT_DATA([prog.cob], [
 ])
 
 AT_CHECK([${COMPILE_JP_COMPAT} -o prog prog.cob])
-AT_CHECK([COB_DATE=1970/01/02 ./prog], [0], [19700102
+AT_CHECK([COB_DATE=1970/01/02 java prog], [0], [19700102
 ])
 
 AT_CLEANUP
@@ -62,7 +62,7 @@ AT_DATA([prog.cob], [
 ])
 
 AT_CHECK([${COMPILE_JP_COMPAT} -o prog prog.cob])
-AT_CHECK([COB_DATE=1970/02/01 ./prog], [0], [70032
+AT_CHECK([COB_DATE=1970/02/01 java prog], [0], [70032
 ])
 
 AT_CLEANUP
@@ -84,7 +84,7 @@ AT_DATA([prog.cob], [
 ])
 
 AT_CHECK([${COMPILE_JP_COMPAT} -o prog prog.cob])
-AT_CHECK([COB_DATE=1970/02/01 ./prog], [0], [1970032
+AT_CHECK([COB_DATE=1970/02/01 java prog], [0], [1970032
 ])
 
 AT_CLEANUP
@@ -108,7 +108,7 @@ AT_DATA([prog.cob], [
 ])
 
 AT_CHECK([${COMPILE_JP_COMPAT} -o prog prog.cob])
-AT_CHECK([COB_DATE=1970/01/02 ./prog], [0], [19700102
+AT_CHECK([COB_DATE=1970/01/02 java prog], [0], [19700102
 ])
 
 AT_CLEANUP
@@ -161,7 +161,7 @@ AT_DATA([prog.cob], [
 ])
 
 AT_CHECK([${COMPILE_JP_COMPAT} -o prog prog.cob])
-AT_CHECK([COB_DATE=`date +%Y/%m/%d` ./prog], [0], [0
+AT_CHECK([COB_DATE=`date +%Y/%m/%d` java prog], [0], [0
 ])
 
 AT_CLEANUP

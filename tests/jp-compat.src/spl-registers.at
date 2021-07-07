@@ -9,7 +9,7 @@ AT_DATA([prog.cob], [
 ])
 
 AT_CHECK([${COMPILE_JP_COMPAT} -o prog prog.cob])
-AT_CHECK([./prog], [99])
+AT_CHECK([java prog], [99])
 
 AT_CLEANUP
 
@@ -25,7 +25,7 @@ AT_DATA([prog.cob], [
 ])
 
 AT_CHECK([${COMPILE_JP_COMPAT} -o prog prog.cob])
-AT_CHECK([./prog], [0], [+000000016])
+AT_CHECK([java prog], [0], [+000000016])
 
 AT_CLEANUP
 
@@ -86,7 +86,7 @@ AT_DATA([prog.cob], [
 
 AT_CHECK([echo -n 030303020301020302020201010301020101 >input.txt], [0])
 AT_CHECK([${COMPILE_JP_COMPAT} -o prog prog.cob])
-AT_CHECK([./prog], [0], [],
+AT_CHECK([java prog], [0], [],
 [WARNING - Implicit CLOSE of INPUT-FILE1 ("./input.txt")
 ])
 AT_CHECK([if test -f output.txt ; then echo -n NG ; else echo -n OK ; fi], [0], [OK])
@@ -150,7 +150,7 @@ AT_DATA([prog.cob], [
 
 AT_CHECK([echo -n 030303020301020302020201010301020101 >input.txt], [0])
 AT_CHECK([${COMPILE_JP_COMPAT} -o prog prog.cob])
-AT_CHECK([./prog], [0], [],
+AT_CHECK([java prog], [0], [],
 [WARNING - Implicit CLOSE of OUTPUT-FILE1 ("./output.txt")
 ])
 AT_CHECK([cat output.txt], [0], [0103])
@@ -218,7 +218,7 @@ AT_DATA([prog.cob], [
 
 AT_CHECK([echo -n 030303020301020302020201010301020101 >input.txt], [0])
 AT_CHECK([${COMPILE_JP_COMPAT} -o prog prog.cob])
-AT_CHECK([./prog], [0], [],
+AT_CHECK([java prog], [0], [],
 [WARNING - Implicit CLOSE of OUTPUT-FILE1 ("./output.txt")
 ])
 AT_CHECK([cat output.txt], [0], [0103])
@@ -278,7 +278,7 @@ AT_DATA([prog.cob], [
 AT_CHECK([echo -n 030303020301020302020201010301020101 >input.txt], [0])
 AT_CHECK([echo -n 030603040305020502060204010601040104 >input2.txt], [0])
 AT_CHECK([${COMPILE_JP_COMPAT} -o prog prog.cob])
-AT_CHECK([./prog], [0], [],
+AT_CHECK([java prog], [0], [],
 [WARNING - Implicit CLOSE of OUTPUT-FILE1 ("./output.txt")
 ])
 AT_CHECK([cat output.txt], [0], [0103])
@@ -342,7 +342,7 @@ AT_DATA([prog.cob], [
 
 AT_CHECK([echo -n 030303020301020302020201010301020101 >input.txt], [0])
 AT_CHECK([${COMPILE_JP_COMPAT} -o prog prog.cob])
-AT_CHECK([./prog], [1], [],
+AT_CHECK([java prog], [1], [],
 [prog.cob:42: libcob: SORT-STATUS is set to 16.
 WARNING - Implicit CLOSE of OUTPUT-FILE1 ("./output.txt")
 ])

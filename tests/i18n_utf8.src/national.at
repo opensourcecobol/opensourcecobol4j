@@ -15,7 +15,7 @@ AT_DATA([prog.cob], [
 ])
 
 AT_CHECK([${COMPILE_JP_COMPAT} -x prog.cob])
-AT_CHECK([./prog], [0], [ＡＢＣＤＺ])
+AT_CHECK([java prog], [0], [ＡＢＣＤＺ])
 
 AT_CLEANUP
 
@@ -36,7 +36,7 @@ AT_DATA([prog.cob], [
 ])
 
 AT_CHECK([${COMPILE_JP_COMPAT} -x prog.cob])
-AT_CHECK([./prog], [0], [ＡＢＣ１２３])
+AT_CHECK([java prog], [0], [ＡＢＣ１２３])
 
 AT_CLEANUP
 
@@ -57,7 +57,7 @@ AT_DATA([prog.cob], [
 ])
 
 AT_CHECK([${COMPILE_JP_COMPAT} -x prog.cob])
-AT_CHECK([./prog], [0], [！！！！！])
+AT_CHECK([java prog], [0], [！！！！！])
 
 AT_CLEANUP
 
@@ -78,7 +78,7 @@ AT_DATA([prog.cob], [
 ])
 
 AT_CHECK([${COMPILE_JP_COMPAT} -x prog.cob])
-AT_CHECK([./prog], [0], [￥            ])
+AT_CHECK([java prog], [0], [￥            ])
 
 AT_CLEANUP
 
@@ -99,7 +99,7 @@ AT_DATA([prog.cob], [
 ])
 
 AT_CHECK([${COMPILE_JP_COMPAT} -x prog.cob])
-AT_CHECK([./prog], [0], [＋　         ])
+AT_CHECK([java prog], [0], [＋　         ])
 
 AT_CLEANUP
 
@@ -120,7 +120,7 @@ AT_DATA([prog.cob], [
 ])
 
 AT_CHECK([${COMPILE_JP_COMPAT} -x prog.cob])
-AT_CHECK([./prog], [0], [レディガガ         ])
+AT_CHECK([java prog], [0], [レディガガ         ])
 
 AT_CLEANUP
 
@@ -141,7 +141,7 @@ AT_DATA([prog.cob], [
 ])
 
 AT_CHECK([${COMPILE_JP_COMPAT} -x prog.cob])
-AT_CHECK([./prog], [0], [ポピン      ])
+AT_CHECK([java prog], [0], [ポピン      ])
 
 AT_CLEANUP
 
@@ -159,8 +159,8 @@ AT_DATA([prog.cob], [
            STOP RUN.
 ])
 
-AT_CHECK([${COMPILE} -x prog.cob])
-AT_CHECK([./prog], [0],
+AT_CHECK([cobc -m prog.cob])
+AT_CHECK([java prog], [0],
 [いろは
 ｲﾛﾊ
 ﾎﾟﾋﾟﾝ
@@ -184,8 +184,8 @@ AT_DATA([prog.cob], [
            STOP RUN.
 ])
 
-AT_CHECK([${COMPILE} -x prog.cob])
-AT_CHECK([./prog], [0],
+AT_CHECK([cobc -m prog.cob])
+AT_CHECK([java prog], [0],
 [いろは
 ｲﾛﾊ
 ﾎﾟﾋﾟﾝ
@@ -209,8 +209,8 @@ AT_DATA([prog.cob], [
            STOP RUN.
 ])
 
-AT_CHECK([${COMPILE} -x prog.cob])
-AT_CHECK([./prog], [0],
+AT_CHECK([cobc -m prog.cob])
+AT_CHECK([java prog], [0],
 [いろは
 ｲﾛﾊ
 ﾎﾟﾋﾟﾝ
@@ -230,8 +230,8 @@ AT_DATA([prog.cob], [
            STOP RUN.
 ])
 
-AT_CHECK([${COMPILE} -x prog.cob])
-AT_CHECK([./prog], [0],
+AT_CHECK([cobc -m prog.cob])
+AT_CHECK([java prog], [0],
 [いろは
 ])
 

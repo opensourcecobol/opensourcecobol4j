@@ -493,9 +493,13 @@ public abstract class AbstractCobolField {
 		return src;
 	}
 
-	private class TmpTuple {
+	public static class TmpTuple {
 		public CobolDataStorage storage;
 		public int size;
+		TmpTuple(CobolDataStorage storage, int size) {
+			this.storage = storage;
+			this.size = size;
+		}
 	}
 	
 	protected void moveFromAll(AbstractCobolField src) {
@@ -506,12 +510,12 @@ public abstract class AbstractCobolField {
 		CobolFieldAttribute attr;
 		int digcount;
 		
-		if((!src.getAttribute().isTypeNational() || src.getAttribute().isTypeNationalEdited()) &&
+		if(!(src.getAttribute().isTypeNational() || src.getAttribute().isTypeNationalEdited()) &&
 		   (this.attribute.isTypeNational() || this.attribute.isTypeNationalEdited())) {
 			CobolDataStorage pTmp;
-			TmpTuple tuple = this.judgeHankakujpnExist(src, size);
-			pTmp = tuple.storage;
-			size = tuple.size;
+			byte[] pBytes = CobolNationalField.judge_hankakujpn_exist(src);
+			pTmp = new CobolDataStorage(pBytes);
+			size = CobolNationalField.workReturnSize;
 			if(pTmp != null) {
 				tmpSrcStorage = pTmp;
 				tmpSrcSize = size;
@@ -553,18 +557,14 @@ public abstract class AbstractCobolField {
 					lastdata.setByte(i, src.getDataStorage().getByte(i % src.getSize()));
 				}
 				
-				if((0x81 <= lastdata.getByte(i  - 1) && lastdata.getByte(i - 1) <= 0x9F) ||
-				   (0xE0 <= lastdata.getByte(i  - 1) && lastdata.getByte(i - 1) <= 0xFC)) {
+				int b = Byte.toUnsignedInt(lastdata.getByte(i - 1));
+				if((0x81 <= b && b <= 0x9F) ||
+				   (0xE0 <= b && b <= 0xFC)) {
 					lastdata.setByte(i - 1, (byte)' ');
 				}
 			}	
 		}
 		this.moveFrom(temp);
-	}
-	
-	private TmpTuple judgeHankakujpnExist(AbstractCobolField src, int size) {
-		TmpTuple ret = new TmpTuple();
-		return ret;
 	}
 	
 	/**

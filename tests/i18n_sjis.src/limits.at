@@ -10,7 +10,7 @@ AT_DATA([prog.cob], [
            STOP RUN.
 ])
 
-AT_CHECK([${COMPILE_LIMIT_TEST} -o prog prog.cob], [0])
+AT_CHECK([cobc -m prog.cob], [0])
 
 AT_CLEANUP
 
@@ -26,7 +26,7 @@ AT_DATA([prog.cob], [
            STOP RUN.
 ])
 
-AT_CHECK([${COMPILE_LIMIT_TEST} -o prog prog.cob], [1], [],
+AT_CHECK([cobc -m prog.cob], [1], [],
 [prog.cob:6: Error: Alphabetic field cannot be larger than 16777216 digits
 ])
 
@@ -44,7 +44,7 @@ AT_DATA([prog.cob], [
            STOP RUN.
 ])
 
-AT_CHECK([${COMPILE_LIMIT_TEST} -o prog prog.cob], [0])
+AT_CHECK([cobc -m prog.cob], [0])
 
 AT_CLEANUP
 
@@ -60,7 +60,7 @@ AT_DATA([prog.cob], [
            STOP RUN.
 ])
 
-AT_CHECK([${COMPILE_LIMIT_TEST} -o prog prog.cob], [1], [],
+AT_CHECK([cobc -m prog.cob], [1], [],
 [prog.cob:6: Error: AlphaNumeric field cannot be larger than 16777216 digits
 ])
 
@@ -78,7 +78,7 @@ AT_DATA([prog.cob], [
            STOP RUN.
 ])
 
-AT_CHECK([${COMPILE_LIMIT_TEST} -o prog prog.cob], [0])
+AT_CHECK([cobc -m prog.cob], [0])
 
 AT_CLEANUP
 
@@ -94,7 +94,7 @@ AT_DATA([prog.cob], [
            STOP RUN.
 ])
 
-AT_CHECK([${COMPILE_LIMIT_TEST} -o prog prog.cob], [1], [],
+AT_CHECK([cobc -m prog.cob], [1], [],
 [prog.cob:6: Error: NumericEdit field cannot be larger than 160 digits
 ])
 
@@ -112,7 +112,7 @@ AT_DATA([prog.cob], [
            STOP RUN.
 ])
 
-AT_CHECK([${COMPILE_LIMIT_TEST} -o prog prog.cob], [0])
+AT_CHECK([cobc -m prog.cob], [0])
 
 AT_CLEANUP
 
@@ -128,7 +128,7 @@ AT_DATA([prog.cob], [
            STOP RUN.
 ])
 
-AT_CHECK([${COMPILE_LIMIT_TEST} -o prog prog.cob], [1], [],
+AT_CHECK([cobc -m prog.cob], [1], [],
 [prog.cob:6: Error: AlphaNumericEdit field cannot be larger than 16777216 digits
 ])
 
@@ -146,7 +146,7 @@ AT_DATA([prog.cob], [
            STOP RUN.
 ])
 
-AT_CHECK([${COMPILE_LIMIT_TEST} -o prog prog.cob], [0])
+AT_CHECK([cobc -m prog.cob], [0])
 
 AT_CLEANUP
 
@@ -162,7 +162,7 @@ AT_DATA([prog.cob], [
            STOP RUN.
 ])
 
-AT_CHECK([${COMPILE_LIMIT_TEST} -o prog prog.cob], [1], [],
+AT_CHECK([cobc -m prog.cob], [1], [],
 [prog.cob:6: Error: AlphaNumericEdit field cannot be larger than 16777216 digits
 ])
 
@@ -180,7 +180,7 @@ AT_DATA([prog.cob], [
            STOP RUN.
 ])
 
-AT_CHECK([${COMPILE_LIMIT_TEST} -o prog prog.cob], [0])
+AT_CHECK([cobc -m prog.cob], [0])
 
 AT_CLEANUP
 
@@ -196,7 +196,7 @@ AT_DATA([prog.cob], [
            STOP RUN.
 ])
 
-AT_CHECK([${COMPILE_LIMIT_TEST} -o prog prog.cob], [1], [],
+AT_CHECK([cobc -m prog.cob], [1], [],
 [prog.cob:6: Error: AlphaNumericEdit field cannot be larger than 16777216 digits
 ])
 
@@ -214,7 +214,7 @@ AT_DATA([prog.cob], [
            STOP RUN.
 ])
 
-AT_CHECK([${COMPILE_LIMIT_TEST} -o prog prog.cob], [0])
+AT_CHECK([cobc -m prog.cob], [0])
 
 AT_CLEANUP
 
@@ -230,7 +230,7 @@ AT_DATA([prog.cob], [
            STOP RUN.
 ])
 
-AT_CHECK([${COMPILE_LIMIT_TEST} -o prog prog.cob], [1], [],
+AT_CHECK([cobc -m prog.cob], [1], [],
 [prog.cob:6: Error: National field cannot be larger than 8388608 digits
 ])
 
@@ -248,7 +248,7 @@ AT_DATA([prog.cob], [
            STOP RUN.
 ])
 
-AT_CHECK([${COMPILE_LIMIT_TEST} -o prog prog.cob], [0])
+AT_CHECK([cobc -m prog.cob], [0])
 
 AT_CLEANUP
 
@@ -264,7 +264,7 @@ AT_DATA([prog.cob], [
            STOP RUN.
 ])
 
-AT_CHECK([${COMPILE_LIMIT_TEST} -o prog prog.cob], [1], [],
+AT_CHECK([cobc -m prog.cob], [1], [],
 [prog.cob:6: Error: NationalEdit field cannot be larger than 8388608 digits
 ])
 

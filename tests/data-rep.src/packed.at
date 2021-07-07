@@ -42,7 +42,7 @@ AT_CHECK([${CC} ${SHROPT} -o dump.${SHREXT} dump.c])
 sed -e 's/@USAGE@/PACKED-DECIMAL/' ${TEMPLATE}/numeric-dump.cob > prog.cob
 
 AT_CHECK([${COMPILE} prog.cob])
-AT_CHECK([./prog], [0],
+AT_CHECK([java prog], [0],
 [1f202020202020202020
 012f2020202020202020
 123f2020202020202020
@@ -189,7 +189,7 @@ AT_DATA([prog.cob], [
 ])
 
 AT_CHECK([${COMPILE} prog.cob])
-AT_CHECK([./prog], [0],
+AT_CHECK([java prog], [0],
 [00
 99
 +00
@@ -238,7 +238,7 @@ AT_DATA([prog.cob], [
 ])
 
 AT_CHECK([${COMPILE} prog.cob])
-AT_CHECK([./prog], [0],
+AT_CHECK([java prog], [0],
 [34
 +34
 234
@@ -277,7 +277,7 @@ AT_DATA([prog.cob], [
 ])
 
 AT_CHECK([${COMPILE} prog.cob])
-AT_CHECK([./prog], [0],
+AT_CHECK([java prog], [0],
 [00
 +00
 000
@@ -311,7 +311,7 @@ AT_DATA([prog.cob], [
 ])
 
 AT_CHECK([${COMPILE} prog.cob])
-AT_CHECK([./prog], [0],
+AT_CHECK([java prog], [0],
 [01
 09
 18
@@ -442,7 +442,7 @@ AT_DATA([prog.cob], [
 ])
 
 AT_CHECK([${COMPILE} prog.cob])
-AT_CHECK([./prog], [0],
+AT_CHECK([java prog], [0],
 [OK
 OK
 OK
