@@ -14,8 +14,8 @@ AT_DATA([prog.cob], [
            STOP RUN.
 ])
 
-AT_CHECK([${COMPILE_JP_COMPAT} -x prog.cob])
-AT_CHECK([./prog], [0], [Ç`ÇaÇbÇcÇy])
+AT_CHECK([cobc ${FLAGS_JP_COMPAT} prog.cob])
+AT_CHECK([java prog], [0], [Ç`ÇaÇbÇcÇy])
 
 AT_CLEANUP
 
@@ -35,8 +35,8 @@ AT_DATA([prog.cob], [
            STOP RUN.
 ])
 
-AT_CHECK([${COMPILE_JP_COMPAT} -x prog.cob])
-AT_CHECK([./prog], [0], [Ç`ÇaÇbÇPÇQÇR])
+AT_CHECK([cobc ${FLAGS_JP_COMPAT} prog.cob])
+AT_CHECK([java prog], [0], [Ç`ÇaÇbÇPÇQÇR])
 
 AT_CLEANUP
 
@@ -56,8 +56,8 @@ AT_DATA([prog.cob], [
            STOP RUN.
 ])
 
-AT_CHECK([${COMPILE_JP_COMPAT} -x prog.cob])
-AT_CHECK([./prog], [0], [ÅIÅIÅIÅIÅI])
+AT_CHECK([cobc ${FLAGS_JP_COMPAT} prog.cob])
+AT_CHECK([java prog], [0], [ÅIÅIÅIÅIÅI])
 
 AT_CLEANUP
 
@@ -77,8 +77,8 @@ AT_DATA([prog.cob], [
            STOP RUN.
 ])
 
-AT_CHECK([${COMPILE_JP_COMPAT} -x prog.cob])
-AT_CHECK([./prog], [0], [Åè        ])
+AT_CHECK([cobc ${FLAGS_JP_COMPAT} prog.cob])
+AT_CHECK([java prog], [0], [Åè        ])
 
 AT_CLEANUP
 
@@ -98,8 +98,8 @@ AT_DATA([prog.cob], [
            STOP RUN.
 ])
 
-AT_CHECK([${COMPILE_JP_COMPAT} -x prog.cob])
-AT_CHECK([./prog], [0], [Å{Å@      ])
+AT_CHECK([cobc ${FLAGS_JP_COMPAT} prog.cob])
+AT_CHECK([java prog], [0], [Å{Å@      ])
 
 AT_CLEANUP
 
@@ -119,8 +119,8 @@ AT_DATA([prog.cob], [
            STOP RUN.
 ])
 
-AT_CHECK([${COMPILE_JP_COMPAT} -x prog.cob])
-AT_CHECK([./prog], [0], [ÉåÉfÉBÉKÉKÅ@Å@Å@])
+AT_CHECK([cobc ${FLAGS_JP_COMPAT} prog.cob])
+AT_CHECK([java prog], [0], [ÉåÉfÉBÉKÉKÅ@Å@Å@])
 
 AT_CLEANUP
 
@@ -140,8 +140,8 @@ AT_DATA([prog.cob], [
            STOP RUN.
 ])
 
-AT_CHECK([${COMPILE_JP_COMPAT} -x prog.cob])
-AT_CHECK([./prog], [0], [É|ÉsÉìÅ@Å@])
+AT_CHECK([cobc ${FLAGS_JP_COMPAT} prog.cob])
+AT_CHECK([java prog], [0], [É|ÉsÉìÅ@Å@])
 
 AT_CLEANUP
 
@@ -159,8 +159,8 @@ AT_DATA([prog.cob], [
            STOP RUN.
 ])
 
-AT_CHECK([${COMPILE} -x prog.cob])
-AT_CHECK([./prog], [0],
+AT_CHECK([cobc prog.cob])
+AT_CHECK([java prog], [0],
 [Ç¢ÇÎÇÕ
 ≤€ 
 ŒﬂÀﬂ›
@@ -184,8 +184,8 @@ AT_DATA([prog.cob], [
            STOP RUN.
 ])
 
-AT_CHECK([${COMPILE} -x prog.cob])
-AT_CHECK([./prog], [0],
+AT_CHECK([cobc prog.cob])
+AT_CHECK([java prog], [0],
 [Ç¢ÇÎÇÕ
 ≤€ 
 ŒﬂÀﬂ›
@@ -209,8 +209,8 @@ AT_DATA([prog.cob], [
            STOP RUN.
 ])
 
-AT_CHECK([${COMPILE} -x prog.cob])
-AT_CHECK([./prog], [0],
+AT_CHECK([cobc prog.cob])
+AT_CHECK([java prog], [0],
 [Ç¢ÇÎÇÕ
 ≤€ 
 ŒﬂÀﬂ›
@@ -230,8 +230,8 @@ AT_DATA([prog.cob], [
            STOP RUN.
 ])
 
-AT_CHECK([${COMPILE} -x prog.cob])
-AT_CHECK([./prog], [0],
+AT_CHECK([cobc prog.cob])
+AT_CHECK([java prog], [0],
 [Ç¢ÇÎÇÕ
 ])
 

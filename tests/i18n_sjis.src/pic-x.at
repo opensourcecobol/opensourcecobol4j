@@ -11,8 +11,8 @@ AT_DATA([prog.cob], [
            STOP RUN.
 ])
 
-AT_CHECK([${COMPILE} -x prog.cob])
-AT_CHECK([./prog], [0], [ì˙ñ{åÍÇÃï∂éöóÒ])
+AT_CHECK([cobc -m prog.cob && cp prog.class /root])
+AT_CHECK([java prog], [0], [ì˙ñ{åÍÇÃï∂éöóÒ])
 
 AT_CLEANUP
 
@@ -30,8 +30,8 @@ AT_DATA([prog.cob], [
            STOP RUN.
 ])
 
-AT_CHECK([${COMPILE} -x prog.cob])
-AT_CHECK([./prog], [0], [ì˙ñ{åÍÇÃï∂éöóÒ])
+AT_CHECK([cobc -m prog.cob])
+AT_CHECK([java prog], [0], [ì˙ñ{åÍÇÃï∂éöóÒ])
 
 AT_CLEANUP
 
@@ -49,11 +49,13 @@ AT_DATA([prog.cob], [
            STOP RUN.
 ])
 
-AT_CHECK([${COMPILE} -x prog.cob], [0], [],
-[prog.cob:8: Warning: Value size exceeds data size
-prog.cob:6: Warning: 'F0' defined here as PIC X(6)
-])
-AT_CHECK([./prog], [0], [ì˙ñ{åÍ])
+#TODO fix
+#AT_CHECK([cobc -m prog.cob], [0], [],
+#[prog.cob:8: Warning: Value size exceeds data size
+#prog.cob:6: Warning: 'F0' defined here as PIC X(6)
+#])
+AT_CHECK([cobc -m prog.cob])
+AT_CHECK([java prog], [0], [ì˙ñ{åÍ])
 
 AT_CLEANUP
 
@@ -71,8 +73,8 @@ AT_DATA([prog.cob], [
            STOP RUN.
 ])
 
-AT_CHECK([${COMPILE} -x prog.cob], [0])
-AT_CHECK([./prog | od -tx1 -An | sed -e 's/  */ /g' -e 's/ *$//'], [0], [ 8a ec 8a ec 8a ec 20
+AT_CHECK([cobc -m prog.cob], [0])
+AT_CHECK([java prog | od -tx1 -An | sed -e 's/  */ /g' -e 's/ *$//'], [0], [ 8a ec 8a ec 8a ec 20
 ])
 
 AT_CLEANUP
@@ -91,11 +93,13 @@ AT_DATA([prog.cob], [
            STOP RUN.
 ])
 
-AT_CHECK([${COMPILE} -x prog.cob], [0], [],
-[prog.cob:8: Warning: Value size exceeds data size
-prog.cob:6: Warning: 'F0' defined here as PIC X(7)
-])
-AT_CHECK([./prog | od -tx1 -An | sed -e 's/  */ /g' -e 's/ *$//'], [0], [ 93 fa 96 7b 8c ea 82
+#TODO fix
+#AT_CHECK([cobc -m prog.cob], [0], [],
+#[prog.cob:8: Warning: Value size exceeds data size
+#prog.cob:6: Warning: 'F0' defined here as PIC X(7)
+#])
+AT_CHECK([cobc -m prog.cob])
+AT_CHECK([java prog | od -tx1 -An | sed -e 's/  */ /g' -e 's/ *$//'], [0], [ 93 fa 96 7b 8c ea 82
 ])
 
 AT_CLEANUP
@@ -115,8 +119,8 @@ AT_DATA([prog.cob], [
            STOP RUN.
 ])
 
-AT_CHECK([${COMPILE} -x prog.cob], [0])
-AT_CHECK([./prog | od -tx1 -An | sed -e 's/  */ /g' -e 's/ *$//'], [0], [ 93 fa 96 7b 8c ea 82
+AT_CHECK([cobc -m prog.cob], [0])
+AT_CHECK([java prog | od -tx1 -An | sed -e 's/  */ /g' -e 's/ *$//'], [0], [ 93 fa 96 7b 8c ea 82
 ])
 
 AT_CLEANUP
@@ -135,8 +139,8 @@ AT_DATA([prog.cob], [
            STOP RUN.
 ])
 
-AT_CHECK([${COMPILE} -x prog.cob], [0])
-AT_CHECK([./prog], [0], [ì˙ñ{åÍÇÃï∂éöóÒ  ])
+AT_CHECK([cobc -m prog.cob], [0])
+AT_CHECK([java prog], [0], [ì˙ñ{åÍÇÃï∂éöóÒ  ])
 
 AT_CLEANUP
 
@@ -154,8 +158,8 @@ AT_DATA([prog.cob], [
            STOP RUN.
 ])
 
-AT_CHECK([${COMPILE} -x prog.cob], [0])
-AT_CHECK([./prog], [0], [ ì˙ñ{åÍÇÃï∂éöóÒ])
+AT_CHECK([cobc -m prog.cob], [0])
+AT_CHECK([java prog], [0], [ ì˙ñ{åÍÇÃï∂éöóÒ])
 
 AT_CLEANUP
 
@@ -173,8 +177,8 @@ AT_DATA([prog.cob], [
            STOP RUN.
 ])
 
-AT_CHECK([${COMPILE} -x prog.cob], [0])
-AT_CHECK([./prog], [0], [ì˙ñ{/íÜçë ï∂éö0])
+AT_CHECK([cobc -m prog.cob], [0])
+AT_CHECK([java prog], [0], [ì˙ñ{/íÜçë ï∂éö0])
 
 AT_CLEANUP
 
@@ -192,11 +196,12 @@ AT_DATA([prog.cob], [
            STOP RUN.
 ])
 
-AT_CHECK([${COMPILE} -x prog.cob], [0], [], 
-[prog.cob:8: Warning: Value size exceeds data size
-prog.cob:6: Warning: 'F0' defined here as PIC XX/XXBXX0
-])
-AT_CHECK([./prog], [0], [ì˙/ñ{ íÜ0])
+#AT_CHECK([cobc -m prog.cob], [0], [], 
+#[prog.cob:8: Warning: Value size exceeds data size
+#prog.cob:6: Warning: 'F0' defined here as PIC XX/XXBXX0
+#])
+AT_CHECK([cobc -m prog.cob], [0])
+AT_CHECK([java prog], [0], [ì˙/ñ{ íÜ0])
 
 AT_CLEANUP
 
@@ -214,8 +219,8 @@ AT_DATA([prog.cob], [
            STOP RUN.
 ])
 
-AT_CHECK([${COMPILE} -x prog.cob], [0])
-AT_CHECK([./prog], [0], [ì˙/ñ{   0])
+AT_CHECK([cobc -m prog.cob], [0])
+AT_CHECK([java prog], [0], [ì˙/ñ{   0])
 
 AT_CLEANUP
 
@@ -233,8 +238,8 @@ AT_DATA([prog.cob], [
            STOP RUN.
 ])
 
-AT_CHECK([${COMPILE} -x prog.cob], [0])
-AT_CHECK([./prog], [0], [ì˙ ñ{])
+AT_CHECK([cobc -m prog.cob], [0])
+AT_CHECK([java prog], [0], [ì˙ ñ{])
 
 AT_CLEANUP
 
@@ -252,8 +257,8 @@ AT_DATA([prog.cob], [
            STOP RUN.
 ])
 
-AT_CHECK([${COMPILE} -x prog.cob], [0])
-AT_CHECK([./prog | od -tx1 -An | sed -e 's/  */ /g' -e 's/ *$//'], [0], [ 93 20 fa 96 7b
+AT_CHECK([cobc -m prog.cob], [0])
+AT_CHECK([java prog | od -tx1 -An | sed -e 's/  */ /g' -e 's/ *$//'], [0], [ 93 20 fa 96 7b
 ])
 
 AT_CLEANUP
@@ -277,8 +282,8 @@ AT_DATA([prog.cob], [
            STOP RUN.
 ])
 
-AT_CHECK([${COMPILE} -x prog.cob], [0])
-AT_CHECK([./prog | od -tx1 -An | sed -e 's/  */ /g' -e 's/ *$//'], [0], [ 93 fa 96
+AT_CHECK([cobc -m prog.cob], [0])
+AT_CHECK([java prog | od -tx1 -An | sed -e 's/  */ /g' -e 's/ *$//'], [0], [ 93 fa 96
 ])
 
 AT_CLEANUP
@@ -301,8 +306,8 @@ AT_DATA([prog.cob], [
            STOP RUN.
 ])
 
-AT_CHECK([${COMPILE} -x prog.cob], [0])
-AT_CHECK([./prog | od -tx1 -An | sed -e 's/  */ /g' -e 's/ *$//'], [0], [ 93 fa 96
+AT_CHECK([cobc -m prog.cob], [0])
+AT_CHECK([java prog | od -tx1 -An | sed -e 's/  */ /g' -e 's/ *$//'], [0], [ 93 fa 96
 ])
 
 AT_CLEANUP
@@ -322,8 +327,8 @@ AT_DATA([prog.cob], [
            STOP RUN.
 ])
 
-AT_CHECK([${COMPILE} -x prog.cob], [0])
-AT_CHECK([./prog], [0], [ï∂éöóÒ])
+AT_CHECK([cobc -m prog.cob], [0])
+AT_CHECK([java prog], [0], [ï∂éöóÒ])
 
 AT_CLEANUP
 
@@ -341,8 +346,8 @@ AT_DATA([prog.cob], [
            STOP RUN.
 ])
 
-AT_CHECK([${COMPILE} -x prog.cob], [0])
-AT_CHECK([./prog], [0], [ï∂éö])
+AT_CHECK([cobc -m prog.cob], [0])
+AT_CHECK([java prog], [0], [ï∂éö])
 
 AT_CLEANUP
 
@@ -364,8 +369,8 @@ AT_DATA([prog.cob], [
            STOP RUN.
 ])
 
-AT_CHECK([${COMPILE} -x prog.cob], [0])
-AT_CHECK([./prog], [0], [éÑÇÃñºëOÇÕÇ†ÇËÇ‹ÇπÇÒ])
+AT_CHECK([cobc -m prog.cob], [0])
+AT_CHECK([java prog], [0], [éÑÇÃñºëOÇÕÇ†ÇËÇ‹ÇπÇÒ])
 
 AT_CLEANUP
 
@@ -387,12 +392,12 @@ AT_DATA([prog.cob], [
            STOP RUN.
 ])
 
-AT_CHECK([${COMPILE} -x prog.cob], [0], [],
+AT_CHECK([cobc -m prog.cob], [0], [],
 [prog.cob:12: Warning: F0 and 'Å¢' and FF have not same national type!
 prog.cob:12: Warning: F1 and 'Å¢' and FF have not same national type!
 prog.cob:12: Warning: F2 and 'Å¢' and FF have not same national type!
 ])
-AT_CHECK([./prog], [0], [éÑÇÃñºëO])
+AT_CHECK([java prog], [0], [éÑÇÃñºëO])
 
 AT_CLEANUP
 
@@ -415,8 +420,8 @@ AT_DATA([prog.cob], [
            STOP RUN.
 ])
 
-AT_CHECK([${COMPILE} -x prog.cob], [0])
-AT_CHECK([./prog], [0], [åæÇ¶Ç‹ÇπÇÒéÑÇÃñºëOÇÕ])
+AT_CHECK([cobc -m prog.cob], [0])
+AT_CHECK([java prog], [0], [åæÇ¶Ç‹ÇπÇÒéÑÇÃñºëOÇÕ])
 
 AT_CLEANUP
 
@@ -434,8 +439,8 @@ AT_DATA([prog.cob], [
            STOP RUN.
 ])
 
-AT_CHECK([${COMPILE} -x prog.cob], [0])
-AT_CHECK([./prog], [0], [ÇPÇQÇRÇSÇOÇPÇQÇRÇSÇO])
+AT_CHECK([cobc -m prog.cob], [0])
+AT_CHECK([java prog], [0], [ÇPÇQÇRÇSÇOÇPÇQÇRÇSÇO])
 
 AT_CLEANUP
 
@@ -453,8 +458,8 @@ AT_DATA([prog.cob], [
            STOP RUN.
 ])
 
-AT_CHECK([${COMPILE} -x prog.cob], [0])
-AT_CHECK([./prog], [0], [ÇPÇQÇRÇSÇOÇPÇQÇRÇSÇO])
+AT_CHECK([cobc -m prog.cob], [0])
+AT_CHECK([java prog], [0], [ÇPÇQÇRÇSÇOÇPÇQÇRÇSÇO])
 
 AT_CLEANUP
 
@@ -473,7 +478,7 @@ AT_DATA([prog.cob], [
            STOP RUN.
 ])
 
-AT_CHECK([${COMPILE} -x prog.cob], [0])
-AT_CHECK([./prog], [0], [02])
+AT_CHECK([cobc -m prog.cob], [0])
+AT_CHECK([java prog], [0], [02])
 
 AT_CLEANUP

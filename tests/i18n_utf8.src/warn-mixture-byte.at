@@ -13,8 +13,8 @@ AT_DATA([prog.cob], [
            STOP RUN.
 ])
 
-AT_CHECK([${COMPILE} -x prog.cob])
-AT_CHECK([./prog], [0], [procob            ])
+AT_CHECK([cobc -m prog.cob])
+AT_CHECK([java prog], [0], [procob            ])
 
 AT_CLEANUP
 
@@ -33,8 +33,8 @@ AT_DATA([prog.cob], [
            STOP RUN.
 ])
 
-AT_CHECK([${COMPILE} -x prog.cob])
-AT_CHECK([./prog], [0], [ｐｒｏｃｏｂ])
+AT_CHECK([cobc -m prog.cob])
+AT_CHECK([java prog], [0], [ｐｒｏｃｏｂ])
 
 AT_CLEANUP
 

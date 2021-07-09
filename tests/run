@@ -2241,9 +2241,9 @@ $at_failed && at_fn_log_failure
 $at_traceon; }
 
 { set +x
-$as_echo "$at_srcdir/fundamental.at:47: ./prog"
+$as_echo "$at_srcdir/fundamental.at:47: java prog"
 at_fn_check_prepare_trace "fundamental.at:47"
-( $at_check_trace; ./prog
+( $at_check_trace; java prog
 ) >>"$at_stdout" 2>>"$at_stderr" 5>&-
 at_status=$? at_failed=false
 $at_check_filter
@@ -2309,9 +2309,9 @@ $at_failed && at_fn_log_failure
 $at_traceon; }
 
 { set +x
-$as_echo "$at_srcdir/fundamental.at:80: ./prog"
+$as_echo "$at_srcdir/fundamental.at:80: java prog"
 at_fn_check_prepare_trace "fundamental.at:80"
-( $at_check_trace; ./prog
+( $at_check_trace; java prog
 ) >>"$at_stdout" 2>>"$at_stderr" 5>&-
 at_status=$? at_failed=false
 $at_check_filter
@@ -2396,9 +2396,9 @@ $at_failed && at_fn_log_failure
 $at_traceon; }
 
 { set +x
-$as_echo "$at_srcdir/fundamental.at:117: ./prog"
+$as_echo "$at_srcdir/fundamental.at:117: java prog"
 at_fn_check_prepare_trace "fundamental.at:117"
-( $at_check_trace; ./prog
+( $at_check_trace; java prog
 ) >>"$at_stdout" 2>>"$at_stderr" 5>&-
 at_status=$? at_failed=false
 $at_check_filter
@@ -2472,9 +2472,9 @@ $at_failed && at_fn_log_failure
 $at_traceon; }
 
 { set +x
-$as_echo "$at_srcdir/fundamental.at:157: ./prog"
+$as_echo "$at_srcdir/fundamental.at:157: java prog"
 at_fn_check_prepare_trace "fundamental.at:157"
-( $at_check_trace; ./prog
+( $at_check_trace; java prog
 ) >>"$at_stdout" 2>>"$at_stderr" 5>&-
 at_status=$? at_failed=false
 $at_check_filter
@@ -2553,9 +2553,9 @@ $at_failed && at_fn_log_failure
 $at_traceon; }
 
 { set +x
-$as_echo "$at_srcdir/fundamental.at:202: ./prog"
+$as_echo "$at_srcdir/fundamental.at:202: java prog"
 at_fn_check_prepare_trace "fundamental.at:202"
-( $at_check_trace; ./prog
+( $at_check_trace; java prog
 ) >>"$at_stdout" 2>>"$at_stderr" 5>&-
 at_status=$? at_failed=false
 $at_check_filter
@@ -2640,9 +2640,9 @@ $at_failed && at_fn_log_failure
 $at_traceon; }
 
 { set +x
-$as_echo "$at_srcdir/fundamental.at:254: ./prog"
+$as_echo "$at_srcdir/fundamental.at:254: java prog"
 at_fn_check_prepare_trace "fundamental.at:254"
-( $at_check_trace; ./prog
+( $at_check_trace; java prog
 ) >>"$at_stdout" 2>>"$at_stderr" 5>&-
 at_status=$? at_failed=false
 $at_check_filter
@@ -2723,9 +2723,9 @@ $at_failed && at_fn_log_failure
 $at_traceon; }
 
 { set +x
-$as_echo "$at_srcdir/fundamental.at:302: ./prog"
+$as_echo "$at_srcdir/fundamental.at:302: java prog"
 at_fn_check_prepare_trace "fundamental.at:302"
-( $at_check_trace; ./prog
+( $at_check_trace; java prog
 ) >>"$at_stdout" 2>>"$at_stderr" 5>&-
 at_status=$? at_failed=false
 $at_check_filter
@@ -2896,9 +2896,9 @@ $at_failed && at_fn_log_failure
 $at_traceon; }
 
 { set +x
-$as_echo "$at_srcdir/subscripts.at:113: ./prog"
+$as_echo "$at_srcdir/subscripts.at:113: java prog"
 at_fn_check_prepare_trace "subscripts.at:113"
-( $at_check_trace; ./prog
+( $at_check_trace; java prog
 ) >>"$at_stdout" 2>>"$at_stderr" 5>&-
 at_status=$? at_failed=false
 $at_check_filter
@@ -2955,9 +2955,9 @@ $at_failed && at_fn_log_failure
 $at_traceon; }
 
 { set +x
-$as_echo "$at_srcdir/subscripts.at:137: ./prog"
+$as_echo "$at_srcdir/subscripts.at:137: java prog"
 at_fn_check_prepare_trace "subscripts.at:137"
-( $at_check_trace; ./prog
+( $at_check_trace; java prog
 ) >>"$at_stdout" 2>>"$at_stderr" 5>&-
 at_status=$? at_failed=false
 $at_check_filter
@@ -3014,9 +3014,9 @@ $at_failed && at_fn_log_failure
 $at_traceon; }
 
 { set +x
-$as_echo "$at_srcdir/subscripts.at:160: ./prog"
+$as_echo "$at_srcdir/subscripts.at:160: java prog"
 at_fn_check_prepare_trace "subscripts.at:160"
-( $at_check_trace; ./prog
+( $at_check_trace; java prog
 ) >>"$at_stdout" 2>>"$at_stderr" 5>&-
 at_status=$? at_failed=false
 $at_check_filter
@@ -3073,9 +3073,9 @@ $at_failed && at_fn_log_failure
 $at_traceon; }
 
 { set +x
-$as_echo "$at_srcdir/subscripts.at:183: ./prog"
+$as_echo "$at_srcdir/subscripts.at:183: java prog"
 at_fn_check_prepare_trace "subscripts.at:183"
-( $at_check_trace; ./prog
+( $at_check_trace; java prog
 ) >>"$at_stdout" 2>>"$at_stderr" 5>&-
 at_status=$? at_failed=false
 $at_check_filter
@@ -3132,9 +3132,9 @@ $at_failed && at_fn_log_failure
 $at_traceon; }
 
 { set +x
-$as_echo "$at_srcdir/subscripts.at:206: ./prog"
+$as_echo "$at_srcdir/subscripts.at:206: java prog"
 at_fn_check_prepare_trace "subscripts.at:206"
-( $at_check_trace; ./prog
+( $at_check_trace; java prog
 ) >>"$at_stdout" 2>>"$at_stderr" 5>&-
 at_status=$? at_failed=false
 $at_check_filter
@@ -3191,9 +3191,9 @@ $at_failed && at_fn_log_failure
 $at_traceon; }
 
 { set +x
-$as_echo "$at_srcdir/subscripts.at:229: ./prog"
+$as_echo "$at_srcdir/subscripts.at:229: java prog"
 at_fn_check_prepare_trace "subscripts.at:229"
-( $at_check_trace; ./prog
+( $at_check_trace; java prog
 ) >>"$at_stdout" 2>>"$at_stderr" 5>&-
 at_status=$? at_failed=false
 $at_check_filter
@@ -3250,9 +3250,9 @@ $at_failed && at_fn_log_failure
 $at_traceon; }
 
 { set +x
-$as_echo "$at_srcdir/subscripts.at:252: ./prog"
+$as_echo "$at_srcdir/subscripts.at:252: java prog"
 at_fn_check_prepare_trace "subscripts.at:252"
-( $at_check_trace; ./prog
+( $at_check_trace; java prog
 ) >>"$at_stdout" 2>>"$at_stderr" 5>&-
 at_status=$? at_failed=false
 $at_check_filter
@@ -3309,9 +3309,9 @@ $at_failed && at_fn_log_failure
 $at_traceon; }
 
 { set +x
-$as_echo "$at_srcdir/subscripts.at:276: ./prog"
+$as_echo "$at_srcdir/subscripts.at:276: java prog"
 at_fn_check_prepare_trace "subscripts.at:276"
-( $at_check_trace; ./prog
+( $at_check_trace; java prog
 ) >>"$at_stdout" 2>>"$at_stderr" 5>&-
 at_status=$? at_failed=false
 $at_check_filter
@@ -3460,9 +3460,9 @@ $at_failed && at_fn_log_failure
 $at_traceon; }
 
 { set +x
-$as_echo "$at_srcdir/subscripts.at:346: ./prog"
+$as_echo "$at_srcdir/subscripts.at:346: java prog"
 at_fn_check_prepare_trace "subscripts.at:346"
-( $at_check_trace; ./prog
+( $at_check_trace; java prog
 ) >>"$at_stdout" 2>>"$at_stderr" 5>&-
 at_status=$? at_failed=false
 $at_check_filter
@@ -3520,9 +3520,9 @@ $at_failed && at_fn_log_failure
 $at_traceon; }
 
 { set +x
-$as_echo "$at_srcdir/subscripts.at:373: ./prog"
+$as_echo "$at_srcdir/subscripts.at:373: java prog"
 at_fn_check_prepare_trace "subscripts.at:373"
-( $at_check_trace; ./prog
+( $at_check_trace; java prog
 ) >>"$at_stdout" 2>>"$at_stderr" 5>&-
 at_status=$? at_failed=false
 $at_check_filter
@@ -3578,9 +3578,9 @@ $at_failed && at_fn_log_failure
 $at_traceon; }
 
 { set +x
-$as_echo "$at_srcdir/subscripts.at:395: ./prog"
+$as_echo "$at_srcdir/subscripts.at:395: java prog"
 at_fn_check_prepare_trace "subscripts.at:395"
-( $at_check_trace; ./prog
+( $at_check_trace; java prog
 ) >>"$at_stdout" 2>>"$at_stderr" 5>&-
 at_status=$? at_failed=false
 $at_check_filter
@@ -3637,9 +3637,9 @@ $at_failed && at_fn_log_failure
 $at_traceon; }
 
 { set +x
-$as_echo "$at_srcdir/subscripts.at:419: ./prog"
+$as_echo "$at_srcdir/subscripts.at:419: java prog"
 at_fn_check_prepare_trace "subscripts.at:419"
-( $at_check_trace; ./prog
+( $at_check_trace; java prog
 ) >>"$at_stdout" 2>>"$at_stderr" 5>&-
 at_status=$? at_failed=false
 $at_check_filter
@@ -3696,9 +3696,9 @@ $at_failed && at_fn_log_failure
 $at_traceon; }
 
 { set +x
-$as_echo "$at_srcdir/subscripts.at:443: ./prog"
+$as_echo "$at_srcdir/subscripts.at:443: java prog"
 at_fn_check_prepare_trace "subscripts.at:443"
-( $at_check_trace; ./prog
+( $at_check_trace; java prog
 ) >>"$at_stdout" 2>>"$at_stderr" 5>&-
 at_status=$? at_failed=false
 $at_check_filter
@@ -3753,9 +3753,9 @@ $at_failed && at_fn_log_failure
 $at_traceon; }
 
 { set +x
-$as_echo "$at_srcdir/subscripts.at:465: ./prog"
+$as_echo "$at_srcdir/subscripts.at:465: java prog"
 at_fn_check_prepare_trace "subscripts.at:465"
-( $at_check_trace; ./prog
+( $at_check_trace; java prog
 ) >>"$at_stdout" 2>>"$at_stderr" 5>&-
 at_status=$? at_failed=false
 $at_check_filter
@@ -3813,9 +3813,9 @@ $at_failed && at_fn_log_failure
 $at_traceon; }
 
 { set +x
-$as_echo "$at_srcdir/ref-mod.at:53: ./prog"
+$as_echo "$at_srcdir/ref-mod.at:53: java prog"
 at_fn_check_prepare_trace "ref-mod.at:53"
-( $at_check_trace; ./prog
+( $at_check_trace; java prog
 ) >>"$at_stdout" 2>>"$at_stderr" 5>&-
 at_status=$? at_failed=false
 $at_check_filter
@@ -3875,9 +3875,9 @@ $at_failed && at_fn_log_failure
 $at_traceon; }
 
 { set +x
-$as_echo "$at_srcdir/ref-mod.at:81: ./prog"
+$as_echo "$at_srcdir/ref-mod.at:81: java prog"
 at_fn_check_prepare_trace "ref-mod.at:81"
-( $at_check_trace; ./prog
+( $at_check_trace; java prog
 ) >>"$at_stdout" 2>>"$at_stderr" 5>&-
 at_status=$? at_failed=false
 $at_check_filter
@@ -3942,9 +3942,9 @@ $at_failed && at_fn_log_failure
 $at_traceon; }
 
 { set +x
-$as_echo "$at_srcdir/ref-mod.at:112: ./prog"
+$as_echo "$at_srcdir/ref-mod.at:112: java prog"
 at_fn_check_prepare_trace "ref-mod.at:112"
-( $at_check_trace; ./prog
+( $at_check_trace; java prog
 ) >>"$at_stdout" 2>>"$at_stderr" 5>&-
 at_status=$? at_failed=false
 $at_check_filter
@@ -4056,9 +4056,9 @@ $at_failed && at_fn_log_failure
 $at_traceon; }
 
 { set +x
-$as_echo "$at_srcdir/ref-mod.at:166: ./prog"
+$as_echo "$at_srcdir/ref-mod.at:166: java prog"
 at_fn_check_prepare_trace "ref-mod.at:166"
-( $at_check_trace; ./prog
+( $at_check_trace; java prog
 ) >>"$at_stdout" 2>>"$at_stderr" 5>&-
 at_status=$? at_failed=false
 $at_check_filter
@@ -4114,9 +4114,9 @@ $at_failed && at_fn_log_failure
 $at_traceon; }
 
 { set +x
-$as_echo "$at_srcdir/ref-mod.at:188: ./prog"
+$as_echo "$at_srcdir/ref-mod.at:188: java prog"
 at_fn_check_prepare_trace "ref-mod.at:188"
-( $at_check_trace; ./prog
+( $at_check_trace; java prog
 ) >>"$at_stdout" 2>>"$at_stderr" 5>&-
 at_status=$? at_failed=false
 $at_check_filter
@@ -4172,9 +4172,9 @@ $at_failed && at_fn_log_failure
 $at_traceon; }
 
 { set +x
-$as_echo "$at_srcdir/ref-mod.at:210: ./prog"
+$as_echo "$at_srcdir/ref-mod.at:210: java prog"
 at_fn_check_prepare_trace "ref-mod.at:210"
-( $at_check_trace; ./prog
+( $at_check_trace; java prog
 ) >>"$at_stdout" 2>>"$at_stderr" 5>&-
 at_status=$? at_failed=false
 $at_check_filter
@@ -4230,9 +4230,9 @@ $at_failed && at_fn_log_failure
 $at_traceon; }
 
 { set +x
-$as_echo "$at_srcdir/ref-mod.at:232: ./prog"
+$as_echo "$at_srcdir/ref-mod.at:232: java prog"
 at_fn_check_prepare_trace "ref-mod.at:232"
-( $at_check_trace; ./prog
+( $at_check_trace; java prog
 ) >>"$at_stdout" 2>>"$at_stderr" 5>&-
 at_status=$? at_failed=false
 $at_check_filter
@@ -4288,9 +4288,9 @@ $at_failed && at_fn_log_failure
 $at_traceon; }
 
 { set +x
-$as_echo "$at_srcdir/ref-mod.at:257: ./prog"
+$as_echo "$at_srcdir/ref-mod.at:257: java prog"
 at_fn_check_prepare_trace "ref-mod.at:257"
-( $at_check_trace; ./prog
+( $at_check_trace; java prog
 ) >>"$at_stdout" 2>>"$at_stderr" 5>&-
 at_status=$? at_failed=false
 $at_check_filter
@@ -4346,9 +4346,9 @@ $at_failed && at_fn_log_failure
 $at_traceon; }
 
 { set +x
-$as_echo "$at_srcdir/ref-mod.at:280: ./prog"
+$as_echo "$at_srcdir/ref-mod.at:280: java prog"
 at_fn_check_prepare_trace "ref-mod.at:280"
-( $at_check_trace; ./prog
+( $at_check_trace; java prog
 ) >>"$at_stdout" 2>>"$at_stderr" 5>&-
 at_status=$? at_failed=false
 $at_check_filter
@@ -4421,9 +4421,9 @@ $at_failed && at_fn_log_failure
 $at_traceon; }
 
 { set +x
-$as_echo "$at_srcdir/accept.at:56: ./prog"
+$as_echo "$at_srcdir/accept.at:56: java prog"
 at_fn_check_prepare_trace "accept.at:56"
-( $at_check_trace; ./prog
+( $at_check_trace; java prog
 ) >>"$at_stdout" 2>>"$at_stderr" 5>&-
 at_status=$? at_failed=false
 $at_check_filter
@@ -4486,9 +4486,9 @@ $at_failed && at_fn_log_failure
 $at_traceon; }
 
 { set +x
-$as_echo "$at_srcdir/initialize.at:47: ./prog"
+$as_echo "$at_srcdir/initialize.at:47: java prog"
 at_fn_check_prepare_trace "initialize.at:47"
-( $at_check_trace; ./prog
+( $at_check_trace; java prog
 ) >>"$at_stdout" 2>>"$at_stderr" 5>&-
 at_status=$? at_failed=false
 $at_check_filter
@@ -4545,9 +4545,9 @@ $at_failed && at_fn_log_failure
 $at_traceon; }
 
 { set +x
-$as_echo "$at_srcdir/initialize.at:70: ./prog"
+$as_echo "$at_srcdir/initialize.at:70: java prog"
 at_fn_check_prepare_trace "initialize.at:70"
-( $at_check_trace; ./prog
+( $at_check_trace; java prog
 ) >>"$at_stdout" 2>>"$at_stderr" 5>&-
 at_status=$? at_failed=false
 $at_check_filter
@@ -4606,9 +4606,9 @@ $at_failed && at_fn_log_failure
 $at_traceon; }
 
 { set +x
-$as_echo "$at_srcdir/initialize.at:95: ./prog"
+$as_echo "$at_srcdir/initialize.at:95: java prog"
 at_fn_check_prepare_trace "initialize.at:95"
-( $at_check_trace; ./prog
+( $at_check_trace; java prog
 ) >>"$at_stdout" 2>>"$at_stderr" 5>&-
 at_status=$? at_failed=false
 $at_check_filter
@@ -4667,9 +4667,9 @@ $at_failed && at_fn_log_failure
 $at_traceon; }
 
 { set +x
-$as_echo "$at_srcdir/initialize.at:119: ./prog"
+$as_echo "$at_srcdir/initialize.at:119: java prog"
 at_fn_check_prepare_trace "initialize.at:119"
-( $at_check_trace; ./prog
+( $at_check_trace; java prog
 ) >>"$at_stdout" 2>>"$at_stderr" 5>&-
 at_status=$? at_failed=false
 $at_check_filter
@@ -4727,9 +4727,9 @@ $at_failed && at_fn_log_failure
 $at_traceon; }
 
 { set +x
-$as_echo "$at_srcdir/initialize.at:142: ./prog"
+$as_echo "$at_srcdir/initialize.at:142: java prog"
 at_fn_check_prepare_trace "initialize.at:142"
-( $at_check_trace; ./prog
+( $at_check_trace; java prog
 ) >>"$at_stdout" 2>>"$at_stderr" 5>&-
 at_status=$? at_failed=false
 $at_check_filter
@@ -4810,9 +4810,9 @@ $at_failed && at_fn_log_failure
 $at_traceon; }
 
 { set +x
-$as_echo "$at_srcdir/misc.at:42: ./prog"
+$as_echo "$at_srcdir/misc.at:42: java prog"
 at_fn_check_prepare_trace "misc.at:42"
-( $at_check_trace; ./prog
+( $at_check_trace; java prog
 ) >>"$at_stdout" 2>>"$at_stderr" 5>&-
 at_status=$? at_failed=false
 $at_check_filter
@@ -4897,9 +4897,9 @@ $at_failed && at_fn_log_failure
 $at_traceon; }
 
 { set +x
-$as_echo "$at_srcdir/misc.at:79: ./prog"
+$as_echo "$at_srcdir/misc.at:79: java prog"
 at_fn_check_prepare_trace "misc.at:79"
-( $at_check_trace; ./prog
+( $at_check_trace; java prog
 ) >>"$at_stdout" 2>>"$at_stderr" 5>&-
 at_status=$? at_failed=false
 $at_check_filter
@@ -4990,9 +4990,9 @@ $at_failed && at_fn_log_failure
 $at_traceon; }
 
 { set +x
-$as_echo "$at_srcdir/misc.at:123: ./prog"
+$as_echo "$at_srcdir/misc.at:123: java prog"
 at_fn_check_prepare_trace "misc.at:123"
-( $at_check_trace; ./prog
+( $at_check_trace; java prog
 ) >>"$at_stdout" 2>>"$at_stderr" 5>&-
 at_status=$? at_failed=false
 $at_check_filter
@@ -5084,9 +5084,9 @@ $at_failed && at_fn_log_failure
 $at_traceon; }
 
 { set +x
-$as_echo "$at_srcdir/misc.at:168: ./prog"
+$as_echo "$at_srcdir/misc.at:168: java prog"
 at_fn_check_prepare_trace "misc.at:168"
-( $at_check_trace; ./prog
+( $at_check_trace; java prog
 ) >>"$at_stdout" 2>>"$at_stderr" 5>&-
 at_status=$? at_failed=false
 $at_check_filter
@@ -5235,9 +5235,9 @@ $at_failed && at_fn_log_failure
 $at_traceon; }
 
 { set +x
-$as_echo "$at_srcdir/misc.at:237: ./prog"
+$as_echo "$at_srcdir/misc.at:237: java prog"
 at_fn_check_prepare_trace "misc.at:237"
-( $at_check_trace; ./prog
+( $at_check_trace; java prog
 ) >>"$at_stdout" 2>>"$at_stderr" 5>&-
 at_status=$? at_failed=false
 $at_check_filter
@@ -5292,9 +5292,9 @@ $at_failed && at_fn_log_failure
 $at_traceon; }
 
 { set +x
-$as_echo "$at_srcdir/misc.at:257: ./prog"
+$as_echo "$at_srcdir/misc.at:257: java prog"
 at_fn_check_prepare_trace "misc.at:257"
-( $at_check_trace; ./prog
+( $at_check_trace; java prog
 ) >>"$at_stdout" 2>>"$at_stderr" 5>&-
 at_status=$? at_failed=false
 $at_check_filter
@@ -5351,9 +5351,9 @@ $at_failed && at_fn_log_failure
 $at_traceon; }
 
 { set +x
-$as_echo "$at_srcdir/misc.at:279: ./prog"
+$as_echo "$at_srcdir/misc.at:279: java prog"
 at_fn_check_prepare_trace "misc.at:279"
-( $at_check_trace; ./prog
+( $at_check_trace; java prog
 ) >>"$at_stdout" 2>>"$at_stderr" 5>&-
 at_status=$? at_failed=false
 $at_check_filter
@@ -5409,9 +5409,9 @@ $at_failed && at_fn_log_failure
 $at_traceon; }
 
 { set +x
-$as_echo "$at_srcdir/misc.at:300: ./prog"
+$as_echo "$at_srcdir/misc.at:300: java prog"
 at_fn_check_prepare_trace "misc.at:300"
-( $at_check_trace; ./prog
+( $at_check_trace; java prog
 ) >>"$at_stdout" 2>>"$at_stderr" 5>&-
 at_status=$? at_failed=false
 $at_check_filter
@@ -5468,9 +5468,9 @@ $at_failed && at_fn_log_failure
 $at_traceon; }
 
 { set +x
-$as_echo "$at_srcdir/misc.at:322: ./prog"
+$as_echo "$at_srcdir/misc.at:322: java prog"
 at_fn_check_prepare_trace "misc.at:322"
-( $at_check_trace; ./prog
+( $at_check_trace; java prog
 ) >>"$at_stdout" 2>>"$at_stderr" 5>&-
 at_status=$? at_failed=false
 $at_check_filter
@@ -5551,9 +5551,9 @@ $at_failed && at_fn_log_failure
 $at_traceon; }
 
 { set +x
-$as_echo "$at_srcdir/misc.at:354: ./prog"
+$as_echo "$at_srcdir/misc.at:354: java prog"
 at_fn_check_prepare_trace "misc.at:354"
-( $at_check_trace; ./prog
+( $at_check_trace; java prog
 ) >>"$at_stdout" 2>>"$at_stderr" 5>&-
 at_status=$? at_failed=false
 $at_check_filter
@@ -5651,9 +5651,9 @@ $at_failed && at_fn_log_failure
 $at_traceon; }
 
 { set +x
-$as_echo "$at_srcdir/misc.at:399: ./prog"
+$as_echo "$at_srcdir/misc.at:399: java prog"
 at_fn_check_prepare_trace "misc.at:399"
-( $at_check_trace; ./prog
+( $at_check_trace; java prog
 ) >>"$at_stdout" 2>>"$at_stderr" 5>&-
 at_status=$? at_failed=false
 $at_check_filter
@@ -5766,9 +5766,9 @@ $at_failed && at_fn_log_failure
 $at_traceon; }
 
 { set +x
-$as_echo "$at_srcdir/misc.at:453: ./prog"
+$as_echo "$at_srcdir/misc.at:453: java prog"
 at_fn_check_prepare_trace "misc.at:453"
-( $at_check_trace; ./prog
+( $at_check_trace; java prog
 ) >>"$at_stdout" 2>>"$at_stderr" 5>&-
 at_status=$? at_failed=false
 $at_check_filter
@@ -5824,9 +5824,9 @@ $at_failed && at_fn_log_failure
 $at_traceon; }
 
 { set +x
-$as_echo "$at_srcdir/misc.at:474: ./prog"
+$as_echo "$at_srcdir/misc.at:474: java prog"
 at_fn_check_prepare_trace "misc.at:474"
-( $at_check_trace; ./prog
+( $at_check_trace; java prog
 ) >>"$at_stdout" 2>>"$at_stderr" 5>&-
 at_status=$? at_failed=false
 $at_check_filter
@@ -5912,9 +5912,9 @@ $at_failed && at_fn_log_failure
 $at_traceon; }
 
 { set +x
-$as_echo "$at_srcdir/misc.at:502: ./prog"
+$as_echo "$at_srcdir/misc.at:502: java prog"
 at_fn_check_prepare_trace "misc.at:502"
-( $at_check_trace; ./prog
+( $at_check_trace; java prog
 ) >>"$at_stdout" 2>>"$at_stderr" 5>&-
 at_status=$? at_failed=false
 $at_check_filter
@@ -6140,9 +6140,9 @@ $at_failed && at_fn_log_failure
 $at_traceon; }
 
 { set +x
-$as_echo "$at_srcdir/misc.at:601: ./prog"
+$as_echo "$at_srcdir/misc.at:601: java prog"
 at_fn_check_prepare_trace "misc.at:601"
-( $at_check_trace; ./prog
+( $at_check_trace; java prog
 ) >>"$at_stdout" 2>>"$at_stderr" 5>&-
 at_status=$? at_failed=false
 $at_check_filter
@@ -6251,9 +6251,9 @@ $at_failed && at_fn_log_failure
 $at_traceon; }
 
 { set +x
-$as_echo "$at_srcdir/misc.at:648: ./prog"
+$as_echo "$at_srcdir/misc.at:648: java prog"
 at_fn_check_prepare_trace "misc.at:648"
-( $at_check_trace; ./prog
+( $at_check_trace; java prog
 ) >>"$at_stdout" 2>>"$at_stderr" 5>&-
 at_status=$? at_failed=false
 $at_check_filter
@@ -6281,9 +6281,9 @@ $at_failed && at_fn_log_failure
 $at_traceon; }
 
 { set +x
-$as_echo "$at_srcdir/misc.at:654: ./prog"
+$as_echo "$at_srcdir/misc.at:654: java prog"
 at_fn_check_prepare_trace "misc.at:654"
-( $at_check_trace; ./prog
+( $at_check_trace; java prog
 ) >>"$at_stdout" 2>>"$at_stderr" 5>&-
 at_status=$? at_failed=false
 $at_check_filter
@@ -6395,9 +6395,9 @@ $at_failed && at_fn_log_failure
 $at_traceon; }
 
 { set +x
-$as_echo "$at_srcdir/misc.at:704: ./prog"
+$as_echo "$at_srcdir/misc.at:704: java prog"
 at_fn_check_prepare_trace "misc.at:704"
-( $at_check_trace; ./prog
+( $at_check_trace; java prog
 ) >>"$at_stdout" 2>>"$at_stderr" 5>&-
 at_status=$? at_failed=false
 $at_check_filter
@@ -6425,9 +6425,9 @@ $at_failed && at_fn_log_failure
 $at_traceon; }
 
 { set +x
-$as_echo "$at_srcdir/misc.at:710: ./prog"
+$as_echo "$at_srcdir/misc.at:710: java prog"
 at_fn_check_prepare_trace "misc.at:710"
-( $at_check_trace; ./prog
+( $at_check_trace; java prog
 ) >>"$at_stdout" 2>>"$at_stderr" 5>&-
 at_status=$? at_failed=false
 $at_check_filter
@@ -6485,9 +6485,9 @@ $at_failed && at_fn_log_failure
 $at_traceon; }
 
 { set +x
-$as_echo "$at_srcdir/misc.at:737: ./prog"
+$as_echo "$at_srcdir/misc.at:737: java prog"
 at_fn_check_prepare_trace "misc.at:737"
-( $at_check_trace; ./prog
+( $at_check_trace; java prog
 ) >>"$at_stdout" 2>>"$at_stderr" 5>&-
 at_status=$? at_failed=false
 $at_check_filter
@@ -6542,9 +6542,9 @@ $at_failed && at_fn_log_failure
 $at_traceon; }
 
 { set +x
-$as_echo "$at_srcdir/misc.at:757: ./prog"
+$as_echo "$at_srcdir/misc.at:757: java prog"
 at_fn_check_prepare_trace "misc.at:757"
-( $at_check_trace; ./prog
+( $at_check_trace; java prog
 ) >>"$at_stdout" 2>>"$at_stderr" 5>&-
 at_status=$? at_failed=false
 $at_check_filter
@@ -6599,9 +6599,9 @@ $at_failed && at_fn_log_failure
 $at_traceon; }
 
 { set +x
-$as_echo "$at_srcdir/misc.at:778: ./prog"
+$as_echo "$at_srcdir/misc.at:778: java prog"
 at_fn_check_prepare_trace "misc.at:778"
-( $at_check_trace; ./prog
+( $at_check_trace; java prog
 ) >>"$at_stdout" 2>>"$at_stderr" 5>&-
 at_status=$? at_failed=false
 $at_check_filter
@@ -6701,9 +6701,9 @@ $at_failed && at_fn_log_failure
 $at_traceon; }
 
 { set +x
-$as_echo "$at_srcdir/misc.at:821: ./prog"
+$as_echo "$at_srcdir/misc.at:821: java prog"
 at_fn_check_prepare_trace "misc.at:821"
-( $at_check_trace; ./prog
+( $at_check_trace; java prog
 ) >>"$at_stdout" 2>>"$at_stderr" 5>&-
 at_status=$? at_failed=false
 $at_check_filter
@@ -6767,9 +6767,9 @@ $at_failed && at_fn_log_failure
 $at_traceon; }
 
 { set +x
-$as_echo "$at_srcdir/misc.at:851: ./prog"
+$as_echo "$at_srcdir/misc.at:851: java prog"
 at_fn_check_prepare_trace "misc.at:851"
-( $at_check_trace; ./prog
+( $at_check_trace; java prog
 ) >>"$at_stdout" 2>>"$at_stderr" 5>&-
 at_status=$? at_failed=false
 $at_check_filter
@@ -6833,9 +6833,9 @@ $at_failed && at_fn_log_failure
 $at_traceon; }
 
 { set +x
-$as_echo "$at_srcdir/misc.at:881: ./prog"
+$as_echo "$at_srcdir/misc.at:881: java prog"
 at_fn_check_prepare_trace "misc.at:881"
-( $at_check_trace; ./prog
+( $at_check_trace; java prog
 ) >>"$at_stdout" 2>>"$at_stderr" 5>&-
 at_status=$? at_failed=false
 $at_check_filter
@@ -6890,9 +6890,9 @@ $at_failed && at_fn_log_failure
 $at_traceon; }
 
 { set +x
-$as_echo "$at_srcdir/misc.at:901: ./prog"
+$as_echo "$at_srcdir/misc.at:901: java prog"
 at_fn_check_prepare_trace "misc.at:901"
-( $at_check_trace; ./prog
+( $at_check_trace; java prog
 ) >>"$at_stdout" 2>>"$at_stderr" 5>&-
 at_status=$? at_failed=false
 $at_check_filter
@@ -6950,9 +6950,9 @@ $at_failed && at_fn_log_failure
 $at_traceon; }
 
 { set +x
-$as_echo "$at_srcdir/misc.at:924: ./prog"
+$as_echo "$at_srcdir/misc.at:924: java prog"
 at_fn_check_prepare_trace "misc.at:924"
-( $at_check_trace; ./prog
+( $at_check_trace; java prog
 ) >>"$at_stdout" 2>>"$at_stderr" 5>&-
 at_status=$? at_failed=false
 $at_check_filter
@@ -7041,9 +7041,9 @@ $at_failed && at_fn_log_failure
 $at_traceon; }
 
 { set +x
-$as_echo "$at_srcdir/misc.at:978: COB_SWITCH_1=ON COB_SWITCH_2=OFF ./prog"
+$as_echo "$at_srcdir/misc.at:978: COB_SWITCH_1=ON COB_SWITCH_2=OFF java prog"
 at_fn_check_prepare_trace "misc.at:978"
-( $at_check_trace; COB_SWITCH_1=ON COB_SWITCH_2=OFF ./prog
+( $at_check_trace; COB_SWITCH_1=ON COB_SWITCH_2=OFF java prog
 ) >>"$at_stdout" 2>>"$at_stderr" 5>&-
 at_status=$? at_failed=false
 $at_check_filter
@@ -7099,9 +7099,9 @@ $at_failed && at_fn_log_failure
 $at_traceon; }
 
 { set +x
-$as_echo "$at_srcdir/misc.at:1002: ./prog"
+$as_echo "$at_srcdir/misc.at:1002: java prog"
 at_fn_check_prepare_trace "misc.at:1002"
-( $at_check_trace; ./prog
+( $at_check_trace; java prog
 ) >>"$at_stdout" 2>>"$at_stderr" 5>&-
 at_status=$? at_failed=false
 $at_check_filter
@@ -7157,9 +7157,9 @@ $at_failed && at_fn_log_failure
 $at_traceon; }
 
 { set +x
-$as_echo "$at_srcdir/misc.at:1027: ./prog"
+$as_echo "$at_srcdir/misc.at:1027: java prog"
 at_fn_check_prepare_trace "misc.at:1027"
-( $at_check_trace; ./prog
+( $at_check_trace; java prog
 ) >>"$at_stdout" 2>>"$at_stderr" 5>&-
 at_status=$? at_failed=false
 $at_check_filter
@@ -7215,9 +7215,9 @@ $at_failed && at_fn_log_failure
 $at_traceon; }
 
 { set +x
-$as_echo "$at_srcdir/misc.at:1051: ./prog"
+$as_echo "$at_srcdir/misc.at:1051: java prog"
 at_fn_check_prepare_trace "misc.at:1051"
-( $at_check_trace; ./prog
+( $at_check_trace; java prog
 ) >>"$at_stdout" 2>>"$at_stderr" 5>&-
 at_status=$? at_failed=false
 $at_check_filter
@@ -7280,9 +7280,9 @@ $at_failed && at_fn_log_failure
 $at_traceon; }
 
 { set +x
-$as_echo "$at_srcdir/misc.at:1082: ./prog"
+$as_echo "$at_srcdir/misc.at:1082: java prog"
 at_fn_check_prepare_trace "misc.at:1082"
-( $at_check_trace; ./prog
+( $at_check_trace; java prog
 ) >>"$at_stdout" 2>>"$at_stderr" 5>&-
 at_status=$? at_failed=false
 $at_check_filter
@@ -7350,9 +7350,9 @@ $at_failed && at_fn_log_failure
 $at_traceon; }
 
 { set +x
-$as_echo "$at_srcdir/misc.at:1118: ./prog"
+$as_echo "$at_srcdir/misc.at:1118: java prog"
 at_fn_check_prepare_trace "misc.at:1118"
-( $at_check_trace; ./prog
+( $at_check_trace; java prog
 ) >>"$at_stdout" 2>>"$at_stderr" 5>&-
 at_status=$? at_failed=false
 $at_check_filter
@@ -7414,9 +7414,9 @@ $at_failed && at_fn_log_failure
 $at_traceon; }
 
 { set +x
-$as_echo "$at_srcdir/misc.at:1146: ./prog"
+$as_echo "$at_srcdir/misc.at:1146: java prog"
 at_fn_check_prepare_trace "misc.at:1146"
-( $at_check_trace; ./prog
+( $at_check_trace; java prog
 ) >>"$at_stdout" 2>>"$at_stderr" 5>&-
 at_status=$? at_failed=false
 $at_check_filter
@@ -7475,9 +7475,9 @@ $at_failed && at_fn_log_failure
 $at_traceon; }
 
 { set +x
-$as_echo "$at_srcdir/misc.at:1170: ./prog"
+$as_echo "$at_srcdir/misc.at:1170: java prog"
 at_fn_check_prepare_trace "misc.at:1170"
-( $at_check_trace; ./prog
+( $at_check_trace; java prog
 ) >>"$at_stdout" 2>>"$at_stderr" 5>&-
 at_status=$? at_failed=false
 $at_check_filter
@@ -7573,9 +7573,9 @@ $at_failed && at_fn_log_failure
 $at_traceon; }
 
 { set +x
-$as_echo "$at_srcdir/misc.at:1211: ./prog"
+$as_echo "$at_srcdir/misc.at:1211: java prog"
 at_fn_check_prepare_trace "misc.at:1211"
-( $at_check_trace; ./prog
+( $at_check_trace; java prog
 ) >>"$at_stdout" 2>>"$at_stderr" 5>&-
 at_status=$? at_failed=false
 $at_check_filter
@@ -7639,9 +7639,9 @@ $at_failed && at_fn_log_failure
 $at_traceon; }
 
 { set +x
-$as_echo "$at_srcdir/misc.at:1241: ./prog"
+$as_echo "$at_srcdir/misc.at:1241: java prog"
 at_fn_check_prepare_trace "misc.at:1241"
-( $at_check_trace; ./prog
+( $at_check_trace; java prog
 ) >>"$at_stdout" 2>>"$at_stderr" 5>&-
 at_status=$? at_failed=false
 $at_check_filter
@@ -7711,9 +7711,9 @@ $at_failed && at_fn_log_failure
 $at_traceon; }
 
 { set +x
-$as_echo "$at_srcdir/misc.at:1278: ./prog"
+$as_echo "$at_srcdir/misc.at:1278: java prog"
 at_fn_check_prepare_trace "misc.at:1278"
-( $at_check_trace; ./prog
+( $at_check_trace; java prog
 ) >>"$at_stdout" 2>>"$at_stderr" 5>&-
 at_status=$? at_failed=false
 $at_check_filter
@@ -7796,9 +7796,9 @@ $at_failed && at_fn_log_failure
 $at_traceon; }
 
 { set +x
-$as_echo "$at_srcdir/misc.at:1315: ./prog"
+$as_echo "$at_srcdir/misc.at:1315: java prog"
 at_fn_check_prepare_trace "misc.at:1315"
-( $at_check_trace; ./prog
+( $at_check_trace; java prog
 ) >>"$at_stdout" 2>>"$at_stderr" 5>&-
 at_status=$? at_failed=false
 $at_check_filter
@@ -7883,9 +7883,9 @@ $at_failed && at_fn_log_failure
 $at_traceon; }
 
 { set +x
-$as_echo "$at_srcdir/misc.at:1366: ./prog"
+$as_echo "$at_srcdir/misc.at:1366: java prog"
 at_fn_check_prepare_trace "misc.at:1366"
-( $at_check_trace; ./prog
+( $at_check_trace; java prog
 ) >>"$at_stdout" 2>>"$at_stderr" 5>&-
 at_status=$? at_failed=false
 $at_check_filter
@@ -7954,9 +7954,9 @@ $at_failed && at_fn_log_failure
 $at_traceon; }
 
 { set +x
-$as_echo "$at_srcdir/misc.at:1402: ./prog"
+$as_echo "$at_srcdir/misc.at:1402: java prog"
 at_fn_check_prepare_trace "misc.at:1402"
-( $at_check_trace; ./prog
+( $at_check_trace; java prog
 ) >>"$at_stdout" 2>>"$at_stderr" 5>&-
 at_status=$? at_failed=false
 $at_check_filter
@@ -8034,9 +8034,9 @@ $at_failed && at_fn_log_failure
 $at_traceon; }
 
 { set +x
-$as_echo "$at_srcdir/misc.at:1446: ./prog"
+$as_echo "$at_srcdir/misc.at:1446: java prog"
 at_fn_check_prepare_trace "misc.at:1446"
-( $at_check_trace; ./prog
+( $at_check_trace; java prog
 ) >>"$at_stdout" 2>>"$at_stderr" 5>&-
 at_status=$? at_failed=false
 $at_check_filter
@@ -8107,9 +8107,9 @@ $at_failed && at_fn_log_failure
 $at_traceon; }
 
 { set +x
-$as_echo "$at_srcdir/misc.at:1483: ./prog"
+$as_echo "$at_srcdir/misc.at:1483: java prog"
 at_fn_check_prepare_trace "misc.at:1483"
-( $at_check_trace; ./prog
+( $at_check_trace; java prog
 ) >>"$at_stdout" 2>>"$at_stderr" 5>&-
 at_status=$? at_failed=false
 $at_check_filter
@@ -8186,9 +8186,9 @@ $at_failed && at_fn_log_failure
 $at_traceon; }
 
 { set +x
-$as_echo "$at_srcdir/misc.at:1515: ./prog"
+$as_echo "$at_srcdir/misc.at:1515: java prog"
 at_fn_check_prepare_trace "misc.at:1515"
-( $at_check_trace; ./prog
+( $at_check_trace; java prog
 ) >>"$at_stdout" 2>>"$at_stderr" 5>&-
 at_status=$? at_failed=false
 $at_check_filter
@@ -8263,9 +8263,9 @@ $at_failed && at_fn_log_failure
 $at_traceon; }
 
 { set +x
-$as_echo "$at_srcdir/misc.at:1557: ./prog"
+$as_echo "$at_srcdir/misc.at:1557: java prog"
 at_fn_check_prepare_trace "misc.at:1557"
-( $at_check_trace; ./prog
+( $at_check_trace; java prog
 ) >>"$at_stdout" 2>>"$at_stderr" 5>&-
 at_status=$? at_failed=false
 $at_check_filter
@@ -8345,9 +8345,9 @@ $at_failed && at_fn_log_failure
 $at_traceon; }
 
 { set +x
-$as_echo "$at_srcdir/misc.at:1601: ./prog"
+$as_echo "$at_srcdir/misc.at:1601: java prog"
 at_fn_check_prepare_trace "misc.at:1601"
-( $at_check_trace; ./prog
+( $at_check_trace; java prog
 ) >>"$at_stdout" 2>>"$at_stderr" 5>&-
 at_status=$? at_failed=false
 $at_check_filter
@@ -8658,9 +8658,9 @@ $at_failed && at_fn_log_failure
 $at_traceon; }
 
 { set +x
-$as_echo "$at_srcdir/misc.at:1725: ./prog"
+$as_echo "$at_srcdir/misc.at:1725: java prog"
 at_fn_check_prepare_trace "misc.at:1725"
-( $at_check_trace; ./prog
+( $at_check_trace; java prog
 ) >>"$at_stdout" 2>>"$at_stderr" 5>&-
 at_status=$? at_failed=false
 $at_check_filter
@@ -8718,9 +8718,9 @@ $at_failed && at_fn_log_failure
 $at_traceon; }
 
 { set +x
-$as_echo "$at_srcdir/misc.at:1749: ./prog"
+$as_echo "$at_srcdir/misc.at:1749: java prog"
 at_fn_check_prepare_trace "misc.at:1749"
-( $at_check_trace; ./prog
+( $at_check_trace; java prog
 ) >>"$at_stdout" 2>>"$at_stderr" 5>&-
 at_status=$? at_failed=false
 $at_check_filter
@@ -8777,9 +8777,9 @@ $at_failed && at_fn_log_failure
 $at_traceon; }
 
 { set +x
-$as_echo "$at_srcdir/misc.at:1772: ./prog"
+$as_echo "$at_srcdir/misc.at:1772: java prog"
 at_fn_check_prepare_trace "misc.at:1772"
-( $at_check_trace; ./prog
+( $at_check_trace; java prog
 ) >>"$at_stdout" 2>>"$at_stderr" 5>&-
 at_status=$? at_failed=false
 $at_check_filter
@@ -9137,9 +9137,9 @@ $at_failed && at_fn_log_failure
 $at_traceon; }
 
 { set +x
-$as_echo "$at_srcdir/misc.at:1972: ./prog"
+$as_echo "$at_srcdir/misc.at:1972: java prog"
 at_fn_check_prepare_trace "misc.at:1972"
-( $at_check_trace; ./prog
+( $at_check_trace; java prog
 ) >>"$at_stdout" 2>>"$at_stderr" 5>&-
 at_status=$? at_failed=false
 $at_check_filter
@@ -9228,9 +9228,9 @@ $at_failed && at_fn_log_failure
 $at_traceon; }
 
 { set +x
-$as_echo "$at_srcdir/misc.at:2026: ./prog"
+$as_echo "$at_srcdir/misc.at:2026: java prog"
 at_fn_check_prepare_trace "misc.at:2026"
-( $at_check_trace; ./prog
+( $at_check_trace; java prog
 ) >>"$at_stdout" 2>>"$at_stderr" 5>&-
 at_status=$? at_failed=false
 $at_check_filter
@@ -9284,9 +9284,9 @@ $at_failed && at_fn_log_failure
 $at_traceon; }
 
 { set +x
-$as_echo "$at_srcdir/misc.at:2046: ./prog"
+$as_echo "$at_srcdir/misc.at:2046: java prog"
 at_fn_check_prepare_trace "misc.at:2046"
-( $at_check_trace; ./prog
+( $at_check_trace; java prog
 ) >>"$at_stdout" 2>>"$at_stderr" 5>&-
 at_status=$? at_failed=false
 $at_check_filter
@@ -9343,9 +9343,9 @@ $at_failed && at_fn_log_failure
 $at_traceon; }
 
 { set +x
-$as_echo "$at_srcdir/misc.at:2070: ./prog"
+$as_echo "$at_srcdir/misc.at:2070: java prog"
 at_fn_check_prepare_trace "misc.at:2070"
-( $at_check_trace; ./prog
+( $at_check_trace; java prog
 ) >>"$at_stdout" 2>>"$at_stderr" 5>&-
 at_status=$? at_failed=false
 $at_check_filter
@@ -9436,9 +9436,9 @@ $at_failed && at_fn_log_failure
 $at_traceon; }
 
 { set +x
-$as_echo "$at_srcdir/extensions.at:61: ./prog"
+$as_echo "$at_srcdir/extensions.at:61: java prog"
 at_fn_check_prepare_trace "extensions.at:61"
-( $at_check_trace; ./prog
+( $at_check_trace; java prog
 ) >>"$at_stdout" 2>>"$at_stderr" 5>&-
 at_status=$? at_failed=false
 $at_check_filter
@@ -9497,9 +9497,9 @@ $at_failed && at_fn_log_failure
 $at_traceon; }
 
 { set +x
-$as_echo "$at_srcdir/extensions.at:89: ./prog"
+$as_echo "$at_srcdir/extensions.at:89: java prog"
 at_fn_check_prepare_trace "extensions.at:89"
-( $at_check_trace; ./prog
+( $at_check_trace; java prog
 ) >>"$at_stdout" 2>>"$at_stderr" 5>&-
 at_status=$? at_failed=false
 $at_check_filter
@@ -9554,9 +9554,9 @@ $at_failed && at_fn_log_failure
 $at_traceon; }
 
 { set +x
-$as_echo "$at_srcdir/extensions.at:113: ./prog"
+$as_echo "$at_srcdir/extensions.at:113: java prog"
 at_fn_check_prepare_trace "extensions.at:113"
-( $at_check_trace; ./prog
+( $at_check_trace; java prog
 ) >>"$at_stdout" 2>>"$at_stderr" 5>&-
 at_status=$? at_failed=false
 $at_check_filter
@@ -9644,9 +9644,9 @@ $at_failed && at_fn_log_failure
 $at_traceon; }
 
 { set +x
-$as_echo "$at_srcdir/extensions.at:169: ./prog"
+$as_echo "$at_srcdir/extensions.at:169: java prog"
 at_fn_check_prepare_trace "extensions.at:169"
-( $at_check_trace; ./prog
+( $at_check_trace; java prog
 ) >>"$at_stdout" 2>>"$at_stderr" 5>&-
 at_status=$? at_failed=false
 $at_check_filter
@@ -9713,9 +9713,9 @@ $at_failed && at_fn_log_failure
 $at_traceon; }
 
 { set +x
-$as_echo "$at_srcdir/extensions.at:206: ./prog"
+$as_echo "$at_srcdir/extensions.at:206: java prog"
 at_fn_check_prepare_trace "extensions.at:206"
-( $at_check_trace; ./prog
+( $at_check_trace; java prog
 ) >>"$at_stdout" 2>>"$at_stderr" 5>&-
 at_status=$? at_failed=false
 $at_check_filter
@@ -9773,9 +9773,9 @@ $at_failed && at_fn_log_failure
 $at_traceon; }
 
 { set +x
-$as_echo "$at_srcdir/extensions.at:233: ./prog"
+$as_echo "$at_srcdir/extensions.at:233: java prog"
 at_fn_check_prepare_trace "extensions.at:233"
-( $at_check_trace; ./prog
+( $at_check_trace; java prog
 ) >>"$at_stdout" 2>>"$at_stderr" 5>&-
 at_status=$? at_failed=false
 $at_check_filter
@@ -9837,9 +9837,9 @@ $at_failed && at_fn_log_failure
 $at_traceon; }
 
 { set +x
-$as_echo "$at_srcdir/extensions.at:263: ./prog"
+$as_echo "$at_srcdir/extensions.at:263: java prog"
 at_fn_check_prepare_trace "extensions.at:263"
-( $at_check_trace; ./prog
+( $at_check_trace; java prog
 ) >>"$at_stdout" 2>>"$at_stderr" 5>&-
 at_status=$? at_failed=false
 $at_check_filter
@@ -9962,9 +9962,9 @@ $at_failed && at_fn_log_failure
 $at_traceon; }
 
 { set +x
-$as_echo "$at_srcdir/extensions.at:352: ./prog"
+$as_echo "$at_srcdir/extensions.at:352: java prog"
 at_fn_check_prepare_trace "extensions.at:352"
-( $at_check_trace; ./prog
+( $at_check_trace; java prog
 ) >>"$at_stdout" 2>>"$at_stderr" 5>&-
 at_status=$? at_failed=false
 $at_check_filter
@@ -10068,9 +10068,9 @@ $at_failed && at_fn_log_failure
 $at_traceon; }
 
 { set +x
-$as_echo "$at_srcdir/extensions.at:398: ./prog"
+$as_echo "$at_srcdir/extensions.at:398: java prog"
 at_fn_check_prepare_trace "extensions.at:398"
-( $at_check_trace; ./prog
+( $at_check_trace; java prog
 ) >>"$at_stdout" 2>>"$at_stderr" 5>&-
 at_status=$? at_failed=false
 $at_check_filter
@@ -10188,9 +10188,9 @@ $at_failed && at_fn_log_failure
 $at_traceon; }
 
 { set +x
-$as_echo "$at_srcdir/extensions.at:444: ./prog"
+$as_echo "$at_srcdir/extensions.at:444: java prog"
 at_fn_check_prepare_trace "extensions.at:444"
-( $at_check_trace; ./prog
+( $at_check_trace; java prog
 ) >>"$at_stdout" 2>>"$at_stderr" 5>&-
 at_status=$? at_failed=false
 $at_check_filter
@@ -10416,9 +10416,9 @@ $at_failed && at_fn_log_failure
 $at_traceon; }
 
 { set +x
-$as_echo "$at_srcdir/extensions.at:531: ./prog"
+$as_echo "$at_srcdir/extensions.at:531: java prog"
 at_fn_check_prepare_trace "extensions.at:531"
-( $at_check_trace; ./prog
+( $at_check_trace; java prog
 ) >>"$at_stdout" 2>>"$at_stderr" 5>&-
 at_status=$? at_failed=false
 $at_check_filter
@@ -10476,9 +10476,9 @@ $at_failed && at_fn_log_failure
 $at_traceon; }
 
 { set +x
-$as_echo "$at_srcdir/extensions.at:554: ./prog"
+$as_echo "$at_srcdir/extensions.at:554: java prog"
 at_fn_check_prepare_trace "extensions.at:554"
-( $at_check_trace; ./prog
+( $at_check_trace; java prog
 ) >>"$at_stdout" 2>>"$at_stderr" 5>&-
 at_status=$? at_failed=false
 $at_check_filter
@@ -10536,9 +10536,9 @@ $at_failed && at_fn_log_failure
 $at_traceon; }
 
 { set +x
-$as_echo "$at_srcdir/extensions.at:577: ./prog"
+$as_echo "$at_srcdir/extensions.at:577: java prog"
 at_fn_check_prepare_trace "extensions.at:577"
-( $at_check_trace; ./prog
+( $at_check_trace; java prog
 ) >>"$at_stdout" 2>>"$at_stderr" 5>&-
 at_status=$? at_failed=false
 $at_check_filter
@@ -10607,9 +10607,9 @@ $at_failed && at_fn_log_failure
 $at_traceon; }
 
 { set +x
-$as_echo "$at_srcdir/extensions.at:611: ./prog"
+$as_echo "$at_srcdir/extensions.at:611: java prog"
 at_fn_check_prepare_trace "extensions.at:611"
-( $at_check_trace; ./prog
+( $at_check_trace; java prog
 ) >>"$at_stdout" 2>>"$at_stderr" 5>&-
 at_status=$? at_failed=false
 $at_check_filter
@@ -10674,9 +10674,9 @@ $at_failed && at_fn_log_failure
 $at_traceon; }
 
 { set +x
-$as_echo "$at_srcdir/extensions.at:640: ./prog"
+$as_echo "$at_srcdir/extensions.at:640: java prog"
 at_fn_check_prepare_trace "extensions.at:640"
-( $at_check_trace; ./prog
+( $at_check_trace; java prog
 ) >>"$at_stdout" 2>>"$at_stderr" 5>&-
 at_status=$? at_failed=false
 $at_check_filter
@@ -10754,9 +10754,9 @@ $at_failed && at_fn_log_failure
 $at_traceon; }
 
 { set +x
-$as_echo "$at_srcdir/extensions.at:670: DD_FILENAME=\"x\" ./prog"
+$as_echo "$at_srcdir/extensions.at:670: DD_FILENAME=\"x\" java prog"
 at_fn_check_prepare_trace "extensions.at:670"
-( $at_check_trace; DD_FILENAME="x" ./prog
+( $at_check_trace; DD_FILENAME="x" java prog
 ) >>"$at_stdout" 2>>"$at_stderr" 5>&-
 at_status=$? at_failed=false
 $at_check_filter
@@ -10780,9 +10780,9 @@ $at_failed && at_fn_log_failure
 $at_traceon; }
 
 { set +x
-$as_echo "$at_srcdir/extensions.at:672: dd_FILENAME=\"y\" ./prog"
+$as_echo "$at_srcdir/extensions.at:672: dd_FILENAME=\"y\" java prog"
 at_fn_check_prepare_trace "extensions.at:672"
-( $at_check_trace; dd_FILENAME="y" ./prog
+( $at_check_trace; dd_FILENAME="y" java prog
 ) >>"$at_stdout" 2>>"$at_stderr" 5>&-
 at_status=$? at_failed=false
 $at_check_filter
@@ -10806,9 +10806,9 @@ $at_failed && at_fn_log_failure
 $at_traceon; }
 
 { set +x
-$as_echo "$at_srcdir/extensions.at:674: FILENAME=\"z\" ./prog"
+$as_echo "$at_srcdir/extensions.at:674: FILENAME=\"z\" java prog"
 at_fn_check_prepare_trace "extensions.at:674"
-( $at_check_trace; FILENAME="z" ./prog
+( $at_check_trace; FILENAME="z" java prog
 ) >>"$at_stdout" 2>>"$at_stderr" 5>&-
 at_status=$? at_failed=false
 $at_check_filter
@@ -10832,9 +10832,9 @@ $at_failed && at_fn_log_failure
 $at_traceon; }
 
 { set +x
-$as_echo "$at_srcdir/extensions.at:676: ./prog"
+$as_echo "$at_srcdir/extensions.at:676: java prog"
 at_fn_check_prepare_trace "extensions.at:676"
-( $at_check_trace; ./prog
+( $at_check_trace; java prog
 ) >>"$at_stdout" 2>>"$at_stderr" 5>&-
 at_status=$? at_failed=false
 $at_check_filter
@@ -10912,9 +10912,9 @@ $at_failed && at_fn_log_failure
 $at_traceon; }
 
 { set +x
-$as_echo "$at_srcdir/extensions.at:706: DIR=\".\" ./prog"
+$as_echo "$at_srcdir/extensions.at:706: DIR=\".\" java prog"
 at_fn_check_prepare_trace "extensions.at:706"
-( $at_check_trace; DIR="." ./prog
+( $at_check_trace; DIR="." java prog
 ) >>"$at_stdout" 2>>"$at_stderr" 5>&-
 at_status=$? at_failed=false
 $at_check_filter
@@ -10992,9 +10992,9 @@ $at_failed && at_fn_log_failure
 $at_traceon; }
 
 { set +x
-$as_echo "$at_srcdir/extensions.at:736: COB_FILE_PATH=\"..\" ./prog"
+$as_echo "$at_srcdir/extensions.at:736: COB_FILE_PATH=\"..\" java prog"
 at_fn_check_prepare_trace "extensions.at:736"
-( $at_check_trace; COB_FILE_PATH=".." ./prog
+( $at_check_trace; COB_FILE_PATH=".." java prog
 ) >>"$at_stdout" 2>>"$at_stderr" 5>&-
 at_status=$? at_failed=false
 $at_check_filter
@@ -11267,9 +11267,9 @@ $at_traceon; }
 
 
 { set +x
-$as_echo "$at_srcdir/extensions.at:869: ./prog X ABCD"
+$as_echo "$at_srcdir/extensions.at:869: java prog X ABCD"
 at_fn_check_prepare_trace "extensions.at:869"
-( $at_check_trace; ./prog X ABCD
+( $at_check_trace; java prog X ABCD
 ) >>"$at_stdout" 2>>"$at_stderr" 5>&-
 at_status=$? at_failed=false
 $at_check_filter
@@ -11320,9 +11320,9 @@ $at_failed && at_fn_log_failure
 $at_traceon; }
 
 { set +x
-$as_echo "$at_srcdir/extensions.at:887: ./prog"
+$as_echo "$at_srcdir/extensions.at:887: java prog"
 at_fn_check_prepare_trace "extensions.at:887"
-( $at_check_trace; ./prog
+( $at_check_trace; java prog
 ) >>"$at_stdout" 2>>"$at_stderr" 5>&-
 at_status=$? at_failed=false
 $at_check_filter
@@ -11482,9 +11482,9 @@ $at_failed && at_fn_log_failure
 $at_traceon; }
 
 { set +x
-$as_echo "$at_srcdir/extensions.at:969: ./prog"
+$as_echo "$at_srcdir/extensions.at:969: java prog"
 at_fn_check_prepare_trace "extensions.at:969"
-( $at_check_trace; ./prog
+( $at_check_trace; java prog
 ) >>"$at_stdout" 2>>"$at_stderr" 5>&-
 at_status=$? at_failed=false
 $at_check_filter
@@ -11591,9 +11591,9 @@ $at_failed && at_fn_log_failure
 $at_traceon; }
 
 { set +x
-$as_echo "$at_srcdir/extensions.at:1029: ./prog"
+$as_echo "$at_srcdir/extensions.at:1029: java prog"
 at_fn_check_prepare_trace "extensions.at:1029"
-( $at_check_trace; ./prog
+( $at_check_trace; java prog
 ) >>"$at_stdout" 2>>"$at_stderr" 5>&-
 at_status=$? at_failed=false
 $at_check_filter
@@ -11684,9 +11684,9 @@ $at_failed && at_fn_log_failure
 $at_traceon; }
 
 { set +x
-$as_echo "$at_srcdir/extensions.at:1086: cat TEST-FILE | ./prog"
+$as_echo "$at_srcdir/extensions.at:1086: cat TEST-FILE | java prog"
 at_fn_check_prepare_notrace 'a shell pipeline' "extensions.at:1086"
-( $at_check_trace; cat TEST-FILE | ./prog
+( $at_check_trace; cat TEST-FILE | java prog
 ) >>"$at_stdout" 2>>"$at_stderr" 5>&-
 at_status=$? at_failed=false
 $at_check_filter
@@ -11767,9 +11767,9 @@ $at_failed && at_fn_log_failure
 $at_traceon; }
 
 { set +x
-$as_echo "$at_srcdir/extensions.at:1133: ./prog CHECKPAR"
+$as_echo "$at_srcdir/extensions.at:1133: java prog CHECKPAR"
 at_fn_check_prepare_trace "extensions.at:1133"
-( $at_check_trace; ./prog CHECKPAR
+( $at_check_trace; java prog CHECKPAR
 ) >>"$at_stdout" 2>>"$at_stderr" 5>&-
 at_status=$? at_failed=false
 $at_check_filter
@@ -11832,9 +11832,9 @@ $at_failed && at_fn_log_failure
 $at_traceon; }
 
 { set +x
-$as_echo "$at_srcdir/extensions.at:1162: ./prog"
+$as_echo "$at_srcdir/extensions.at:1162: java prog"
 at_fn_check_prepare_trace "extensions.at:1162"
-( $at_check_trace; ./prog
+( $at_check_trace; java prog
 ) >>"$at_stdout" 2>>"$at_stderr" 5>&-
 at_status=$? at_failed=false
 $at_check_filter
@@ -11894,9 +11894,9 @@ $at_failed && at_fn_log_failure
 $at_traceon; }
 
 { set +x
-$as_echo "$at_srcdir/extensions.at:1188: ./prog"
+$as_echo "$at_srcdir/extensions.at:1188: java prog"
 at_fn_check_prepare_trace "extensions.at:1188"
-( $at_check_trace; ./prog
+( $at_check_trace; java prog
 ) >>"$at_stdout" 2>>"$at_stderr" 5>&-
 at_status=$? at_failed=false
 $at_check_filter
@@ -11956,9 +11956,9 @@ $at_failed && at_fn_log_failure
 $at_traceon; }
 
 { set +x
-$as_echo "$at_srcdir/extensions.at:1214: ./prog"
+$as_echo "$at_srcdir/extensions.at:1214: java prog"
 at_fn_check_prepare_trace "extensions.at:1214"
-( $at_check_trace; ./prog
+( $at_check_trace; java prog
 ) >>"$at_stdout" 2>>"$at_stderr" 5>&-
 at_status=$? at_failed=false
 $at_check_filter
@@ -12018,9 +12018,9 @@ $at_failed && at_fn_log_failure
 $at_traceon; }
 
 { set +x
-$as_echo "$at_srcdir/extensions.at:1240: ./prog"
+$as_echo "$at_srcdir/extensions.at:1240: java prog"
 at_fn_check_prepare_trace "extensions.at:1240"
-( $at_check_trace; ./prog
+( $at_check_trace; java prog
 ) >>"$at_stdout" 2>>"$at_stderr" 5>&-
 at_status=$? at_failed=false
 $at_check_filter
@@ -12085,9 +12085,9 @@ $at_failed && at_fn_log_failure
 $at_traceon; }
 
 { set +x
-$as_echo "$at_srcdir/extensions.at:1271: ./prog"
+$as_echo "$at_srcdir/extensions.at:1271: java prog"
 at_fn_check_prepare_trace "extensions.at:1271"
-( $at_check_trace; ./prog
+( $at_check_trace; java prog
 ) >>"$at_stdout" 2>>"$at_stderr" 5>&-
 at_status=$? at_failed=false
 $at_check_filter
@@ -12143,9 +12143,9 @@ $at_failed && at_fn_log_failure
 $at_traceon; }
 
 { set +x
-$as_echo "$at_srcdir/extensions.at:1293: ./prog"
+$as_echo "$at_srcdir/extensions.at:1293: java prog"
 at_fn_check_prepare_trace "extensions.at:1293"
-( $at_check_trace; ./prog
+( $at_check_trace; java prog
 ) >>"$at_stdout" 2>>"$at_stderr" 5>&-
 at_status=$? at_failed=false
 $at_check_filter
@@ -12203,9 +12203,9 @@ $at_failed && at_fn_log_failure
 $at_traceon; }
 
 { set +x
-$as_echo "$at_srcdir/extensions.at:1317: ./prog"
+$as_echo "$at_srcdir/extensions.at:1317: java prog"
 at_fn_check_prepare_trace "extensions.at:1317"
-( $at_check_trace; ./prog
+( $at_check_trace; java prog
 ) >>"$at_stdout" 2>>"$at_stderr" 5>&-
 at_status=$? at_failed=false
 $at_check_filter
@@ -12261,9 +12261,9 @@ $at_failed && at_fn_log_failure
 $at_traceon; }
 
 { set +x
-$as_echo "$at_srcdir/extensions.at:1339: ./prog"
+$as_echo "$at_srcdir/extensions.at:1339: java prog"
 at_fn_check_prepare_trace "extensions.at:1339"
-( $at_check_trace; ./prog
+( $at_check_trace; java prog
 ) >>"$at_stdout" 2>>"$at_stderr" 5>&-
 at_status=$? at_failed=false
 $at_check_filter
@@ -12369,9 +12369,9 @@ $at_failed && at_fn_log_failure
 $at_traceon; }
 
 { set +x
-$as_echo "$at_srcdir/return-code.at:42: ./prog"
+$as_echo "$at_srcdir/return-code.at:42: java prog"
 at_fn_check_prepare_trace "return-code.at:42"
-( $at_check_trace; ./prog
+( $at_check_trace; java prog
 ) >>"$at_stdout" 2>>"$at_stderr" 5>&-
 at_status=$? at_failed=false
 $at_check_filter
@@ -12477,9 +12477,9 @@ $at_failed && at_fn_log_failure
 $at_traceon; }
 
 { set +x
-$as_echo "$at_srcdir/return-code.at:85: ./prog"
+$as_echo "$at_srcdir/return-code.at:85: java prog"
 at_fn_check_prepare_trace "return-code.at:85"
-( $at_check_trace; ./prog
+( $at_check_trace; java prog
 ) >>"$at_stdout" 2>>"$at_stderr" 5>&-
 at_status=$? at_failed=false
 $at_check_filter
@@ -12544,9 +12544,9 @@ $at_failed && at_fn_log_failure
 $at_traceon; }
 
 { set +x
-$as_echo "$at_srcdir/return-code.at:115: ./prog"
+$as_echo "$at_srcdir/return-code.at:115: java prog"
 at_fn_check_prepare_trace "return-code.at:115"
-( $at_check_trace; ./prog
+( $at_check_trace; java prog
 ) >>"$at_stdout" 2>>"$at_stderr" 5>&-
 at_status=$? at_failed=false
 $at_check_filter
@@ -12600,9 +12600,9 @@ $at_failed && at_fn_log_failure
 $at_traceon; }
 
 { set +x
-$as_echo "$at_srcdir/functions.at:37: ./prog"
+$as_echo "$at_srcdir/functions.at:37: java prog"
 at_fn_check_prepare_trace "functions.at:37"
-( $at_check_trace; ./prog
+( $at_check_trace; java prog
 ) >>"$at_stdout" 2>>"$at_stderr" 5>&-
 at_status=$? at_failed=false
 $at_check_filter
@@ -12665,9 +12665,9 @@ $at_failed && at_fn_log_failure
 $at_traceon; }
 
 { set +x
-$as_echo "$at_srcdir/functions.at:66: ./prog"
+$as_echo "$at_srcdir/functions.at:66: java prog"
 at_fn_check_prepare_trace "functions.at:66"
-( $at_check_trace; ./prog
+( $at_check_trace; java prog
 ) >>"$at_stdout" 2>>"$at_stderr" 5>&-
 at_status=$? at_failed=false
 $at_check_filter
@@ -12731,9 +12731,9 @@ $at_failed && at_fn_log_failure
 $at_traceon; }
 
 { set +x
-$as_echo "$at_srcdir/functions.at:96: ./prog"
+$as_echo "$at_srcdir/functions.at:96: java prog"
 at_fn_check_prepare_trace "functions.at:96"
-( $at_check_trace; ./prog
+( $at_check_trace; java prog
 ) >>"$at_stdout" 2>>"$at_stderr" 5>&-
 at_status=$? at_failed=false
 $at_check_filter
@@ -12796,9 +12796,9 @@ $at_failed && at_fn_log_failure
 $at_traceon; }
 
 { set +x
-$as_echo "$at_srcdir/functions.at:125: ./prog"
+$as_echo "$at_srcdir/functions.at:125: java prog"
 at_fn_check_prepare_trace "functions.at:125"
-( $at_check_trace; ./prog
+( $at_check_trace; java prog
 ) >>"$at_stdout" 2>>"$at_stderr" 5>&-
 at_status=$? at_failed=false
 $at_check_filter
@@ -12861,9 +12861,9 @@ $at_failed && at_fn_log_failure
 $at_traceon; }
 
 { set +x
-$as_echo "$at_srcdir/functions.at:154: ./prog"
+$as_echo "$at_srcdir/functions.at:154: java prog"
 at_fn_check_prepare_trace "functions.at:154"
-( $at_check_trace; ./prog
+( $at_check_trace; java prog
 ) >>"$at_stdout" 2>>"$at_stderr" 5>&-
 at_status=$? at_failed=false
 $at_check_filter
@@ -12918,9 +12918,9 @@ $at_failed && at_fn_log_failure
 $at_traceon; }
 
 { set +x
-$as_echo "$at_srcdir/functions.at:175: ./prog"
+$as_echo "$at_srcdir/functions.at:175: java prog"
 at_fn_check_prepare_trace "functions.at:175"
-( $at_check_trace; ./prog
+( $at_check_trace; java prog
 ) >>"$at_stdout" 2>>"$at_stderr" 5>&-
 at_status=$? at_failed=false
 $at_check_filter
@@ -12974,9 +12974,9 @@ $at_failed && at_fn_log_failure
 $at_traceon; }
 
 { set +x
-$as_echo "$at_srcdir/functions.at:195: ./prog"
+$as_echo "$at_srcdir/functions.at:195: java prog"
 at_fn_check_prepare_trace "functions.at:195"
-( $at_check_trace; ./prog
+( $at_check_trace; java prog
 ) >>"$at_stdout" 2>>"$at_stderr" 5>&-
 at_status=$? at_failed=false
 $at_check_filter
@@ -13032,9 +13032,9 @@ $at_failed && at_fn_log_failure
 $at_traceon; }
 
 { set +x
-$as_echo "$at_srcdir/functions.at:217: ./prog"
+$as_echo "$at_srcdir/functions.at:217: java prog"
 at_fn_check_prepare_trace "functions.at:217"
-( $at_check_trace; ./prog
+( $at_check_trace; java prog
 ) >>"$at_stdout" 2>>"$at_stderr" 5>&-
 at_status=$? at_failed=false
 $at_check_filter
@@ -13091,9 +13091,9 @@ $at_failed && at_fn_log_failure
 $at_traceon; }
 
 { set +x
-$as_echo "$at_srcdir/functions.at:240: ./prog"
+$as_echo "$at_srcdir/functions.at:240: java prog"
 at_fn_check_prepare_trace "functions.at:240"
-( $at_check_trace; ./prog
+( $at_check_trace; java prog
 ) >>"$at_stdout" 2>>"$at_stderr" 5>&-
 at_status=$? at_failed=false
 $at_check_filter
@@ -13156,9 +13156,9 @@ $at_failed && at_fn_log_failure
 $at_traceon; }
 
 { set +x
-$as_echo "$at_srcdir/functions.at:269: ./prog"
+$as_echo "$at_srcdir/functions.at:269: java prog"
 at_fn_check_prepare_trace "functions.at:269"
-( $at_check_trace; ./prog
+( $at_check_trace; java prog
 ) >>"$at_stdout" 2>>"$at_stderr" 5>&-
 at_status=$? at_failed=false
 $at_check_filter
@@ -13212,9 +13212,9 @@ $at_failed && at_fn_log_failure
 $at_traceon; }
 
 { set +x
-$as_echo "$at_srcdir/functions.at:289: ./prog"
+$as_echo "$at_srcdir/functions.at:289: java prog"
 at_fn_check_prepare_trace "functions.at:289"
-( $at_check_trace; ./prog
+( $at_check_trace; java prog
 ) >>"$at_stdout" 2>>"$at_stderr" 5>&-
 at_status=$? at_failed=false
 $at_check_filter
@@ -13268,9 +13268,9 @@ $at_failed && at_fn_log_failure
 $at_traceon; }
 
 { set +x
-$as_echo "$at_srcdir/functions.at:309: ./prog"
+$as_echo "$at_srcdir/functions.at:309: java prog"
 at_fn_check_prepare_trace "functions.at:309"
-( $at_check_trace; ./prog
+( $at_check_trace; java prog
 ) >>"$at_stdout" 2>>"$at_stderr" 5>&-
 at_status=$? at_failed=false
 $at_check_filter
@@ -13324,9 +13324,9 @@ $at_failed && at_fn_log_failure
 $at_traceon; }
 
 { set +x
-$as_echo "$at_srcdir/functions.at:329: ./prog"
+$as_echo "$at_srcdir/functions.at:329: java prog"
 at_fn_check_prepare_trace "functions.at:329"
-( $at_check_trace; ./prog
+( $at_check_trace; java prog
 ) >>"$at_stdout" 2>>"$at_stderr" 5>&-
 at_status=$? at_failed=false
 $at_check_filter
@@ -13380,9 +13380,9 @@ $at_failed && at_fn_log_failure
 $at_traceon; }
 
 { set +x
-$as_echo "$at_srcdir/functions.at:349: ./prog"
+$as_echo "$at_srcdir/functions.at:349: java prog"
 at_fn_check_prepare_trace "functions.at:349"
-( $at_check_trace; ./prog
+( $at_check_trace; java prog
 ) >>"$at_stdout" 2>>"$at_stderr" 5>&-
 at_status=$? at_failed=false
 $at_check_filter
@@ -13436,9 +13436,9 @@ $at_failed && at_fn_log_failure
 $at_traceon; }
 
 { set +x
-$as_echo "$at_srcdir/functions.at:369: ./prog"
+$as_echo "$at_srcdir/functions.at:369: java prog"
 at_fn_check_prepare_trace "functions.at:369"
-( $at_check_trace; ./prog
+( $at_check_trace; java prog
 ) >>"$at_stdout" 2>>"$at_stderr" 5>&-
 at_status=$? at_failed=false
 $at_check_filter
@@ -13502,9 +13502,9 @@ $at_failed && at_fn_log_failure
 $at_traceon; }
 
 { set +x
-$as_echo "$at_srcdir/functions.at:399: ./prog"
+$as_echo "$at_srcdir/functions.at:399: java prog"
 at_fn_check_prepare_trace "functions.at:399"
-( $at_check_trace; ./prog
+( $at_check_trace; java prog
 ) >>"$at_stdout" 2>>"$at_stderr" 5>&-
 at_status=$? at_failed=false
 $at_check_filter
@@ -13573,9 +13573,9 @@ $at_failed && at_fn_log_failure
 $at_traceon; }
 
 { set +x
-$as_echo "$at_srcdir/functions.at:434: ./prog"
+$as_echo "$at_srcdir/functions.at:434: java prog"
 at_fn_check_prepare_trace "functions.at:434"
-( $at_check_trace; ./prog
+( $at_check_trace; java prog
 ) >>"$at_stdout" 2>>"$at_stderr" 5>&-
 at_status=$? at_failed=false
 $at_check_filter
@@ -13639,9 +13639,9 @@ $at_failed && at_fn_log_failure
 $at_traceon; }
 
 { set +x
-$as_echo "$at_srcdir/functions.at:464: ./prog"
+$as_echo "$at_srcdir/functions.at:464: java prog"
 at_fn_check_prepare_trace "functions.at:464"
-( $at_check_trace; ./prog
+( $at_check_trace; java prog
 ) >>"$at_stdout" 2>>"$at_stderr" 5>&-
 at_status=$? at_failed=false
 $at_check_filter
@@ -13705,9 +13705,9 @@ $at_failed && at_fn_log_failure
 $at_traceon; }
 
 { set +x
-$as_echo "$at_srcdir/functions.at:494: ./prog"
+$as_echo "$at_srcdir/functions.at:494: java prog"
 at_fn_check_prepare_trace "functions.at:494"
-( $at_check_trace; ./prog
+( $at_check_trace; java prog
 ) >>"$at_stdout" 2>>"$at_stderr" 5>&-
 at_status=$? at_failed=false
 $at_check_filter
@@ -13768,9 +13768,9 @@ $at_failed && at_fn_log_failure
 $at_traceon; }
 
 { set +x
-$as_echo "$at_srcdir/functions.at:521: ./prog"
+$as_echo "$at_srcdir/functions.at:521: java prog"
 at_fn_check_prepare_trace "functions.at:521"
-( $at_check_trace; ./prog
+( $at_check_trace; java prog
 ) >>"$at_stdout" 2>>"$at_stderr" 5>&-
 at_status=$? at_failed=false
 $at_check_filter
@@ -13824,9 +13824,9 @@ $at_failed && at_fn_log_failure
 $at_traceon; }
 
 { set +x
-$as_echo "$at_srcdir/functions.at:541: ./prog"
+$as_echo "$at_srcdir/functions.at:541: java prog"
 at_fn_check_prepare_trace "functions.at:541"
-( $at_check_trace; ./prog
+( $at_check_trace; java prog
 ) >>"$at_stdout" 2>>"$at_stderr" 5>&-
 at_status=$? at_failed=false
 $at_check_filter
@@ -13882,9 +13882,9 @@ $at_failed && at_fn_log_failure
 $at_traceon; }
 
 { set +x
-$as_echo "$at_srcdir/functions.at:563: ./prog"
+$as_echo "$at_srcdir/functions.at:563: java prog"
 at_fn_check_prepare_trace "functions.at:563"
-( $at_check_trace; ./prog
+( $at_check_trace; java prog
 ) >>"$at_stdout" 2>>"$at_stderr" 5>&-
 at_status=$? at_failed=false
 $at_check_filter
@@ -13940,9 +13940,9 @@ $at_failed && at_fn_log_failure
 $at_traceon; }
 
 { set +x
-$as_echo "$at_srcdir/functions.at:585: ./prog"
+$as_echo "$at_srcdir/functions.at:585: java prog"
 at_fn_check_prepare_trace "functions.at:585"
-( $at_check_trace; ./prog
+( $at_check_trace; java prog
 ) >>"$at_stdout" 2>>"$at_stderr" 5>&-
 at_status=$? at_failed=false
 $at_check_filter
@@ -13996,9 +13996,9 @@ $at_failed && at_fn_log_failure
 $at_traceon; }
 
 { set +x
-$as_echo "$at_srcdir/functions.at:605: ./prog"
+$as_echo "$at_srcdir/functions.at:605: java prog"
 at_fn_check_prepare_trace "functions.at:605"
-( $at_check_trace; ./prog
+( $at_check_trace; java prog
 ) >>"$at_stdout" 2>>"$at_stderr" 5>&-
 at_status=$? at_failed=false
 $at_check_filter
@@ -14052,9 +14052,9 @@ $at_failed && at_fn_log_failure
 $at_traceon; }
 
 { set +x
-$as_echo "$at_srcdir/functions.at:625: ./prog"
+$as_echo "$at_srcdir/functions.at:625: java prog"
 at_fn_check_prepare_trace "functions.at:625"
-( $at_check_trace; ./prog
+( $at_check_trace; java prog
 ) >>"$at_stdout" 2>>"$at_stderr" 5>&-
 at_status=$? at_failed=false
 $at_check_filter
@@ -14109,9 +14109,9 @@ $at_failed && at_fn_log_failure
 $at_traceon; }
 
 { set +x
-$as_echo "$at_srcdir/functions.at:646: ./prog"
+$as_echo "$at_srcdir/functions.at:646: java prog"
 at_fn_check_prepare_trace "functions.at:646"
-( $at_check_trace; ./prog
+( $at_check_trace; java prog
 ) >>"$at_stdout" 2>>"$at_stderr" 5>&-
 at_status=$? at_failed=false
 $at_check_filter
@@ -14166,9 +14166,9 @@ $at_failed && at_fn_log_failure
 $at_traceon; }
 
 { set +x
-$as_echo "$at_srcdir/functions.at:667: ./prog"
+$as_echo "$at_srcdir/functions.at:667: java prog"
 at_fn_check_prepare_trace "functions.at:667"
-( $at_check_trace; ./prog
+( $at_check_trace; java prog
 ) >>"$at_stdout" 2>>"$at_stderr" 5>&-
 at_status=$? at_failed=false
 $at_check_filter
@@ -14226,9 +14226,9 @@ $at_failed && at_fn_log_failure
 $at_traceon; }
 
 { set +x
-$as_echo "$at_srcdir/functions.at:691: ./prog"
+$as_echo "$at_srcdir/functions.at:691: java prog"
 at_fn_check_prepare_trace "functions.at:691"
-( $at_check_trace; ./prog
+( $at_check_trace; java prog
 ) >>"$at_stdout" 2>>"$at_stderr" 5>&-
 at_status=$? at_failed=false
 $at_check_filter
@@ -14286,9 +14286,9 @@ $at_failed && at_fn_log_failure
 $at_traceon; }
 
 { set +x
-$as_echo "$at_srcdir/functions.at:715: ./prog"
+$as_echo "$at_srcdir/functions.at:715: java prog"
 at_fn_check_prepare_trace "functions.at:715"
-( $at_check_trace; ./prog
+( $at_check_trace; java prog
 ) >>"$at_stdout" 2>>"$at_stderr" 5>&-
 at_status=$? at_failed=false
 $at_check_filter
@@ -14346,9 +14346,9 @@ $at_failed && at_fn_log_failure
 $at_traceon; }
 
 { set +x
-$as_echo "$at_srcdir/functions.at:739: ./prog"
+$as_echo "$at_srcdir/functions.at:739: java prog"
 at_fn_check_prepare_trace "functions.at:739"
-( $at_check_trace; ./prog
+( $at_check_trace; java prog
 ) >>"$at_stdout" 2>>"$at_stderr" 5>&-
 at_status=$? at_failed=false
 $at_check_filter
@@ -14411,9 +14411,9 @@ $at_failed && at_fn_log_failure
 $at_traceon; }
 
 { set +x
-$as_echo "$at_srcdir/functions.at:768: ./prog"
+$as_echo "$at_srcdir/functions.at:768: java prog"
 at_fn_check_prepare_trace "functions.at:768"
-( $at_check_trace; ./prog
+( $at_check_trace; java prog
 ) >>"$at_stdout" 2>>"$at_stderr" 5>&-
 at_status=$? at_failed=false
 $at_check_filter
@@ -14476,9 +14476,9 @@ $at_failed && at_fn_log_failure
 $at_traceon; }
 
 { set +x
-$as_echo "$at_srcdir/functions.at:797: ./prog"
+$as_echo "$at_srcdir/functions.at:797: java prog"
 at_fn_check_prepare_trace "functions.at:797"
-( $at_check_trace; ./prog
+( $at_check_trace; java prog
 ) >>"$at_stdout" 2>>"$at_stderr" 5>&-
 at_status=$? at_failed=false
 $at_check_filter
@@ -14533,9 +14533,9 @@ $at_failed && at_fn_log_failure
 $at_traceon; }
 
 { set +x
-$as_echo "$at_srcdir/functions.at:818: ./prog"
+$as_echo "$at_srcdir/functions.at:818: java prog"
 at_fn_check_prepare_trace "functions.at:818"
-( $at_check_trace; ./prog
+( $at_check_trace; java prog
 ) >>"$at_stdout" 2>>"$at_stderr" 5>&-
 at_status=$? at_failed=false
 $at_check_filter
@@ -14590,9 +14590,9 @@ $at_failed && at_fn_log_failure
 $at_traceon; }
 
 { set +x
-$as_echo "$at_srcdir/functions.at:839: ./prog"
+$as_echo "$at_srcdir/functions.at:839: java prog"
 at_fn_check_prepare_trace "functions.at:839"
-( $at_check_trace; ./prog
+( $at_check_trace; java prog
 ) >>"$at_stdout" 2>>"$at_stderr" 5>&-
 at_status=$? at_failed=false
 $at_check_filter
@@ -14646,9 +14646,9 @@ $at_failed && at_fn_log_failure
 $at_traceon; }
 
 { set +x
-$as_echo "$at_srcdir/functions.at:859: ./prog"
+$as_echo "$at_srcdir/functions.at:859: java prog"
 at_fn_check_prepare_trace "functions.at:859"
-( $at_check_trace; ./prog
+( $at_check_trace; java prog
 ) >>"$at_stdout" 2>>"$at_stderr" 5>&-
 at_status=$? at_failed=false
 $at_check_filter
@@ -14702,9 +14702,9 @@ $at_failed && at_fn_log_failure
 $at_traceon; }
 
 { set +x
-$as_echo "$at_srcdir/functions.at:879: ./prog"
+$as_echo "$at_srcdir/functions.at:879: java prog"
 at_fn_check_prepare_trace "functions.at:879"
-( $at_check_trace; ./prog
+( $at_check_trace; java prog
 ) >>"$at_stdout" 2>>"$at_stderr" 5>&-
 at_status=$? at_failed=false
 $at_check_filter
@@ -14758,9 +14758,9 @@ $at_failed && at_fn_log_failure
 $at_traceon; }
 
 { set +x
-$as_echo "$at_srcdir/functions.at:899: ./prog"
+$as_echo "$at_srcdir/functions.at:899: java prog"
 at_fn_check_prepare_trace "functions.at:899"
-( $at_check_trace; ./prog
+( $at_check_trace; java prog
 ) >>"$at_stdout" 2>>"$at_stderr" 5>&-
 at_status=$? at_failed=false
 $at_check_filter
@@ -14814,9 +14814,9 @@ $at_failed && at_fn_log_failure
 $at_traceon; }
 
 { set +x
-$as_echo "$at_srcdir/functions.at:919: ./prog"
+$as_echo "$at_srcdir/functions.at:919: java prog"
 at_fn_check_prepare_trace "functions.at:919"
-( $at_check_trace; ./prog
+( $at_check_trace; java prog
 ) >>"$at_stdout" 2>>"$at_stderr" 5>&-
 at_status=$? at_failed=false
 $at_check_filter
@@ -14870,9 +14870,9 @@ $at_failed && at_fn_log_failure
 $at_traceon; }
 
 { set +x
-$as_echo "$at_srcdir/functions.at:939: ./prog"
+$as_echo "$at_srcdir/functions.at:939: java prog"
 at_fn_check_prepare_trace "functions.at:939"
-( $at_check_trace; ./prog
+( $at_check_trace; java prog
 ) >>"$at_stdout" 2>>"$at_stderr" 5>&-
 at_status=$? at_failed=false
 $at_check_filter
@@ -14926,9 +14926,9 @@ $at_failed && at_fn_log_failure
 $at_traceon; }
 
 { set +x
-$as_echo "$at_srcdir/functions.at:959: ./prog"
+$as_echo "$at_srcdir/functions.at:959: java prog"
 at_fn_check_prepare_trace "functions.at:959"
-( $at_check_trace; ./prog
+( $at_check_trace; java prog
 ) >>"$at_stdout" 2>>"$at_stderr" 5>&-
 at_status=$? at_failed=false
 $at_check_filter
@@ -14983,9 +14983,9 @@ $at_failed && at_fn_log_failure
 $at_traceon; }
 
 { set +x
-$as_echo "$at_srcdir/functions.at:980: ./prog"
+$as_echo "$at_srcdir/functions.at:980: java prog"
 at_fn_check_prepare_trace "functions.at:980"
-( $at_check_trace; ./prog
+( $at_check_trace; java prog
 ) >>"$at_stdout" 2>>"$at_stderr" 5>&-
 at_status=$? at_failed=false
 $at_check_filter
@@ -15040,9 +15040,9 @@ $at_failed && at_fn_log_failure
 $at_traceon; }
 
 { set +x
-$as_echo "$at_srcdir/functions.at:1001: ./prog"
+$as_echo "$at_srcdir/functions.at:1001: java prog"
 at_fn_check_prepare_trace "functions.at:1001"
-( $at_check_trace; ./prog
+( $at_check_trace; java prog
 ) >>"$at_stdout" 2>>"$at_stderr" 5>&-
 at_status=$? at_failed=false
 $at_check_filter
@@ -15096,9 +15096,9 @@ $at_failed && at_fn_log_failure
 $at_traceon; }
 
 { set +x
-$as_echo "$at_srcdir/functions.at:1021: ./prog"
+$as_echo "$at_srcdir/functions.at:1021: java prog"
 at_fn_check_prepare_trace "functions.at:1021"
-( $at_check_trace; ./prog
+( $at_check_trace; java prog
 ) >>"$at_stdout" 2>>"$at_stderr" 5>&-
 at_status=$? at_failed=false
 $at_check_filter
@@ -15152,9 +15152,9 @@ $at_failed && at_fn_log_failure
 $at_traceon; }
 
 { set +x
-$as_echo "$at_srcdir/functions.at:1041: ./prog"
+$as_echo "$at_srcdir/functions.at:1041: java prog"
 at_fn_check_prepare_trace "functions.at:1041"
-( $at_check_trace; ./prog
+( $at_check_trace; java prog
 ) >>"$at_stdout" 2>>"$at_stderr" 5>&-
 at_status=$? at_failed=false
 $at_check_filter
@@ -15208,9 +15208,9 @@ $at_failed && at_fn_log_failure
 $at_traceon; }
 
 { set +x
-$as_echo "$at_srcdir/functions.at:1061: ./prog"
+$as_echo "$at_srcdir/functions.at:1061: java prog"
 at_fn_check_prepare_trace "functions.at:1061"
-( $at_check_trace; ./prog
+( $at_check_trace; java prog
 ) >>"$at_stdout" 2>>"$at_stderr" 5>&-
 at_status=$? at_failed=false
 $at_check_filter
@@ -15264,9 +15264,9 @@ $at_failed && at_fn_log_failure
 $at_traceon; }
 
 { set +x
-$as_echo "$at_srcdir/functions.at:1081: ./prog"
+$as_echo "$at_srcdir/functions.at:1081: java prog"
 at_fn_check_prepare_trace "functions.at:1081"
-( $at_check_trace; ./prog
+( $at_check_trace; java prog
 ) >>"$at_stdout" 2>>"$at_stderr" 5>&-
 at_status=$? at_failed=false
 $at_check_filter
@@ -15320,9 +15320,9 @@ $at_failed && at_fn_log_failure
 $at_traceon; }
 
 { set +x
-$as_echo "$at_srcdir/functions.at:1101: ./prog"
+$as_echo "$at_srcdir/functions.at:1101: java prog"
 at_fn_check_prepare_trace "functions.at:1101"
-( $at_check_trace; ./prog
+( $at_check_trace; java prog
 ) >>"$at_stdout" 2>>"$at_stderr" 5>&-
 at_status=$? at_failed=false
 $at_check_filter
@@ -15376,9 +15376,9 @@ $at_failed && at_fn_log_failure
 $at_traceon; }
 
 { set +x
-$as_echo "$at_srcdir/functions.at:1121: ./prog"
+$as_echo "$at_srcdir/functions.at:1121: java prog"
 at_fn_check_prepare_trace "functions.at:1121"
-( $at_check_trace; ./prog
+( $at_check_trace; java prog
 ) >>"$at_stdout" 2>>"$at_stderr" 5>&-
 at_status=$? at_failed=false
 $at_check_filter
@@ -15432,9 +15432,9 @@ $at_failed && at_fn_log_failure
 $at_traceon; }
 
 { set +x
-$as_echo "$at_srcdir/functions.at:1141: ./prog"
+$as_echo "$at_srcdir/functions.at:1141: java prog"
 at_fn_check_prepare_trace "functions.at:1141"
-( $at_check_trace; ./prog
+( $at_check_trace; java prog
 ) >>"$at_stdout" 2>>"$at_stderr" 5>&-
 at_status=$? at_failed=false
 $at_check_filter
@@ -15489,9 +15489,9 @@ $at_failed && at_fn_log_failure
 $at_traceon; }
 
 { set +x
-$as_echo "$at_srcdir/functions.at:1162: ./prog"
+$as_echo "$at_srcdir/functions.at:1162: java prog"
 at_fn_check_prepare_trace "functions.at:1162"
-( $at_check_trace; ./prog
+( $at_check_trace; java prog
 ) >>"$at_stdout" 2>>"$at_stderr" 5>&-
 at_status=$? at_failed=false
 $at_check_filter
@@ -15546,9 +15546,9 @@ $at_failed && at_fn_log_failure
 $at_traceon; }
 
 { set +x
-$as_echo "$at_srcdir/functions.at:1183: ./prog"
+$as_echo "$at_srcdir/functions.at:1183: java prog"
 at_fn_check_prepare_trace "functions.at:1183"
-( $at_check_trace; ./prog
+( $at_check_trace; java prog
 ) >>"$at_stdout" 2>>"$at_stderr" 5>&-
 at_status=$? at_failed=false
 $at_check_filter
@@ -15611,9 +15611,9 @@ $at_failed && at_fn_log_failure
 $at_traceon; }
 
 { set +x
-$as_echo "$at_srcdir/functions.at:1212: ./prog"
+$as_echo "$at_srcdir/functions.at:1212: java prog"
 at_fn_check_prepare_trace "functions.at:1212"
-( $at_check_trace; ./prog
+( $at_check_trace; java prog
 ) >>"$at_stdout" 2>>"$at_stderr" 5>&-
 at_status=$? at_failed=false
 $at_check_filter
@@ -15674,9 +15674,9 @@ $at_failed && at_fn_log_failure
 $at_traceon; }
 
 { set +x
-$as_echo "$at_srcdir/functions.at:1239: ./prog"
+$as_echo "$at_srcdir/functions.at:1239: java prog"
 at_fn_check_prepare_trace "functions.at:1239"
-( $at_check_trace; ./prog
+( $at_check_trace; java prog
 ) >>"$at_stdout" 2>>"$at_stderr" 5>&-
 at_status=$? at_failed=false
 $at_check_filter
@@ -15736,9 +15736,9 @@ $at_failed && at_fn_log_failure
 $at_traceon; }
 
 { set +x
-$as_echo "$at_srcdir/functions.at:1265: ./prog"
+$as_echo "$at_srcdir/functions.at:1265: java prog"
 at_fn_check_prepare_trace "functions.at:1265"
-( $at_check_trace; ./prog
+( $at_check_trace; java prog
 ) >>"$at_stdout" 2>>"$at_stderr" 5>&-
 at_status=$? at_failed=false
 $at_check_filter
@@ -15804,9 +15804,9 @@ $at_failed && at_fn_log_failure
 $at_traceon; }
 
 { set +x
-$as_echo "$at_srcdir/functions.at:1297: ./prog"
+$as_echo "$at_srcdir/functions.at:1297: java prog"
 at_fn_check_prepare_trace "functions.at:1297"
-( $at_check_trace; ./prog
+( $at_check_trace; java prog
 ) >>"$at_stdout" 2>>"$at_stderr" 5>&-
 at_status=$? at_failed=false
 $at_check_filter
@@ -15869,9 +15869,9 @@ $at_failed && at_fn_log_failure
 $at_traceon; }
 
 { set +x
-$as_echo "$at_srcdir/functions.at:1326: ./prog"
+$as_echo "$at_srcdir/functions.at:1326: java prog"
 at_fn_check_prepare_trace "functions.at:1326"
-( $at_check_trace; ./prog
+( $at_check_trace; java prog
 ) >>"$at_stdout" 2>>"$at_stderr" 5>&-
 at_status=$? at_failed=false
 $at_check_filter
@@ -15933,9 +15933,9 @@ $at_failed && at_fn_log_failure
 $at_traceon; }
 
 { set +x
-$as_echo "$at_srcdir/functions.at:1354: ./prog"
+$as_echo "$at_srcdir/functions.at:1354: java prog"
 at_fn_check_prepare_trace "functions.at:1354"
-( $at_check_trace; ./prog
+( $at_check_trace; java prog
 ) >>"$at_stdout" 2>>"$at_stderr" 5>&-
 at_status=$? at_failed=false
 $at_check_filter
@@ -15991,9 +15991,9 @@ $at_failed && at_fn_log_failure
 $at_traceon; }
 
 { set +x
-$as_echo "$at_srcdir/functions.at:1376: ./prog"
+$as_echo "$at_srcdir/functions.at:1376: java prog"
 at_fn_check_prepare_trace "functions.at:1376"
-( $at_check_trace; ./prog
+( $at_check_trace; java prog
 ) >>"$at_stdout" 2>>"$at_stderr" 5>&-
 at_status=$? at_failed=false
 $at_check_filter
@@ -16049,9 +16049,9 @@ $at_failed && at_fn_log_failure
 $at_traceon; }
 
 { set +x
-$as_echo "$at_srcdir/functions.at:1398: ./prog"
+$as_echo "$at_srcdir/functions.at:1398: java prog"
 at_fn_check_prepare_trace "functions.at:1398"
-( $at_check_trace; ./prog
+( $at_check_trace; java prog
 ) >>"$at_stdout" 2>>"$at_stderr" 5>&-
 at_status=$? at_failed=false
 $at_check_filter
@@ -16108,9 +16108,9 @@ $at_failed && at_fn_log_failure
 $at_traceon; }
 
 { set +x
-$as_echo "$at_srcdir/functions.at:1421: ./prog"
+$as_echo "$at_srcdir/functions.at:1421: java prog"
 at_fn_check_prepare_trace "functions.at:1421"
-( $at_check_trace; ./prog
+( $at_check_trace; java prog
 ) >>"$at_stdout" 2>>"$at_stderr" 5>&-
 at_status=$? at_failed=false
 $at_check_filter
@@ -16166,9 +16166,9 @@ $at_failed && at_fn_log_failure
 $at_traceon; }
 
 { set +x
-$as_echo "$at_srcdir/functions.at:1443: ./prog"
+$as_echo "$at_srcdir/functions.at:1443: java prog"
 at_fn_check_prepare_trace "functions.at:1443"
-( $at_check_trace; ./prog
+( $at_check_trace; java prog
 ) >>"$at_stdout" 2>>"$at_stderr" 5>&-
 at_status=$? at_failed=false
 $at_check_filter
@@ -16225,9 +16225,9 @@ $at_failed && at_fn_log_failure
 $at_traceon; }
 
 { set +x
-$as_echo "$at_srcdir/functions.at:1466: ./prog"
+$as_echo "$at_srcdir/functions.at:1466: java prog"
 at_fn_check_prepare_trace "functions.at:1466"
-( $at_check_trace; ./prog
+( $at_check_trace; java prog
 ) >>"$at_stdout" 2>>"$at_stderr" 5>&-
 at_status=$? at_failed=false
 $at_check_filter
@@ -16290,9 +16290,9 @@ $at_failed && at_fn_log_failure
 $at_traceon; }
 
 { set +x
-$as_echo "$at_srcdir/functions.at:1495: ./prog"
+$as_echo "$at_srcdir/functions.at:1495: java prog"
 at_fn_check_prepare_trace "functions.at:1495"
-( $at_check_trace; ./prog
+( $at_check_trace; java prog
 ) >>"$at_stdout" 2>>"$at_stderr" 5>&-
 at_status=$? at_failed=false
 $at_check_filter
@@ -16349,9 +16349,9 @@ $at_failed && at_fn_log_failure
 $at_traceon; }
 
 { set +x
-$as_echo "$at_srcdir/functions.at:1518: ./prog"
+$as_echo "$at_srcdir/functions.at:1518: java prog"
 at_fn_check_prepare_trace "functions.at:1518"
-( $at_check_trace; ./prog
+( $at_check_trace; java prog
 ) >>"$at_stdout" 2>>"$at_stderr" 5>&-
 at_status=$? at_failed=false
 $at_check_filter
@@ -16409,9 +16409,9 @@ $at_failed && at_fn_log_failure
 $at_traceon; }
 
 { set +x
-$as_echo "$at_srcdir/functions.at:1542: ./prog"
+$as_echo "$at_srcdir/functions.at:1542: java prog"
 at_fn_check_prepare_trace "functions.at:1542"
-( $at_check_trace; ./prog
+( $at_check_trace; java prog
 ) >>"$at_stdout" 2>>"$at_stderr" 5>&-
 at_status=$? at_failed=false
 $at_check_filter
@@ -16467,9 +16467,9 @@ $at_failed && at_fn_log_failure
 $at_traceon; }
 
 { set +x
-$as_echo "$at_srcdir/functions.at:1564: ./prog"
+$as_echo "$at_srcdir/functions.at:1564: java prog"
 at_fn_check_prepare_trace "functions.at:1564"
-( $at_check_trace; ./prog
+( $at_check_trace; java prog
 ) >>"$at_stdout" 2>>"$at_stderr" 5>&-
 at_status=$? at_failed=false
 $at_check_filter
@@ -16524,9 +16524,9 @@ $at_failed && at_fn_log_failure
 $at_traceon; }
 
 { set +x
-$as_echo "$at_srcdir/functions.at:1585: ./prog"
+$as_echo "$at_srcdir/functions.at:1585: java prog"
 at_fn_check_prepare_trace "functions.at:1585"
-( $at_check_trace; ./prog
+( $at_check_trace; java prog
 ) >>"$at_stdout" 2>>"$at_stderr" 5>&-
 at_status=$? at_failed=false
 $at_check_filter
@@ -16580,9 +16580,9 @@ $at_failed && at_fn_log_failure
 $at_traceon; }
 
 { set +x
-$as_echo "$at_srcdir/functions.at:1605: ./prog"
+$as_echo "$at_srcdir/functions.at:1605: java prog"
 at_fn_check_prepare_trace "functions.at:1605"
-( $at_check_trace; ./prog
+( $at_check_trace; java prog
 ) >>"$at_stdout" 2>>"$at_stderr" 5>&-
 at_status=$? at_failed=false
 $at_check_filter
@@ -16645,9 +16645,9 @@ $at_failed && at_fn_log_failure
 $at_traceon; }
 
 { set +x
-$as_echo "$at_srcdir/functions.at:1634: ./prog"
+$as_echo "$at_srcdir/functions.at:1634: java prog"
 at_fn_check_prepare_trace "functions.at:1634"
-( $at_check_trace; ./prog
+( $at_check_trace; java prog
 ) >>"$at_stdout" 2>>"$at_stderr" 5>&-
 at_status=$? at_failed=false
 $at_check_filter

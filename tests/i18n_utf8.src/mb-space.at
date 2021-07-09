@@ -11,8 +11,8 @@ AT_DATA([prog.cob], [
            STOP RUN.
 ])
 
-AT_CHECK([${COMPILE} -x prog.cob])
-AT_CHECK([./prog], [0], [OK])
+AT_CHECK([cobc -m prog.cob])
+AT_CHECK([java prog], [0], [OK])
 
 AT_CLEANUP
 
@@ -35,8 +35,8 @@ AT_DATA([prog.cob], [
            STOP RUN.
 ])
 
-AT_CHECK([${COMPILE} -x prog.cob])
-AT_CHECK([./prog], [0], [Zen SPC between item name and PIC clause])
+AT_CHECK([cobc -m prog.cob])
+AT_CHECK([java prog], [0], [Zen SPC between item name and PIC clause])
 
 AT_CLEANUP
 
@@ -62,7 +62,7 @@ AT_DATA([prog.cob], [
            STOP RUN.
 ])
 
-AT_CHECK([${COMPILE} -x prog.cob])
-AT_CHECK([./prog], [0], [OK])
+AT_CHECK([cobc -m prog.cob])
+AT_CHECK([java prog], [0], [OK])
 
 AT_CLEANUP

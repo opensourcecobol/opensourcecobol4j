@@ -40,8 +40,8 @@ AT_DATA([prog.cob], [
 
 AT_CHECK([echo -n 12341234 >input.txt], [0])
 AT_CHECK([${CC} -shared -I${abs_top_srcdir} -o hoge.${SHREXT} hoge.c -fPIC])
-AT_CHECK([${COMPILE} -x prog.cob])
-AT_CHECK([export OC_USERFH=hoge && ./prog], [0], [257])
+AT_CHECK([cobc -m prog.cob])
+AT_CHECK([export OC_USERFH=hoge && java prog], [0], [257])
 
 AT_CLEANUP
 
@@ -87,8 +87,8 @@ AT_DATA([prog.cob], [
 
 AT_CHECK([echo -n 12341234 >input.txt], [0])
 AT_CHECK([${CC} -shared -I${abs_top_srcdir} -o hoge.${SHREXT} hoge.c])
-AT_CHECK([${COMPILE} -x prog.cob])
-AT_CHECK([export OC_USERFH=hoge && ./prog], [0], [257])
+AT_CHECK([cobc -m prog.cob])
+AT_CHECK([export OC_USERFH=hoge && java prog], [0], [257])
 
 AT_CLEANUP
 

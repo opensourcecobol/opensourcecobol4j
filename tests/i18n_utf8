@@ -2127,9 +2127,9 @@ _ATEOF
 
 
 { set +x
-$as_echo "$at_srcdir/user-defined-word.at:10: \${COMPILE} -x prog.cob"
+$as_echo "$at_srcdir/user-defined-word.at:10: \cobc -m prog.cob"
 at_fn_check_prepare_notrace 'a ${...} parameter expansion' "user-defined-word.at:10"
-( $at_check_trace; ${COMPILE} -x prog.cob
+( $at_check_trace; cobc -m prog.cob
 ) >>"$at_stdout" 2>>"$at_stderr" 5>&-
 at_status=$? at_failed=false
 $at_check_filter
@@ -2169,9 +2169,9 @@ _ATEOF
 
 
 { set +x
-$as_echo "$at_srcdir/user-defined-word.at:28: \${COMPILE} -x prog.cob"
+$as_echo "$at_srcdir/user-defined-word.at:28: \cobc -m prog.cob"
 at_fn_check_prepare_notrace 'a ${...} parameter expansion' "user-defined-word.at:28"
-( $at_check_trace; ${COMPILE} -x prog.cob
+( $at_check_trace; cobc -m prog.cob
 ) >>"$at_stdout" 2>>"$at_stderr" 5>&-
 at_status=$? at_failed=false
 $at_check_filter
@@ -2182,9 +2182,9 @@ $at_failed && at_fn_log_failure
 $at_traceon; }
 
 { set +x
-$as_echo "$at_srcdir/user-defined-word.at:29: ./prog"
+$as_echo "$at_srcdir/user-defined-word.at:29: java prog"
 at_fn_check_prepare_trace "user-defined-word.at:29"
-( $at_check_trace; ./prog
+( $at_check_trace; java prog
 ) >>"$at_stdout" 2>>"$at_stderr" 5>&-
 at_status=$? at_failed=false
 $at_check_filter
@@ -2230,9 +2230,9 @@ _ATEOF
 
 
 { set +x
-$as_echo "$at_srcdir/user-defined-word.at:52: \${COMPILE} -x prog.cob"
+$as_echo "$at_srcdir/user-defined-word.at:52: \cobc -m prog.cob"
 at_fn_check_prepare_notrace 'a ${...} parameter expansion' "user-defined-word.at:52"
-( $at_check_trace; ${COMPILE} -x prog.cob
+( $at_check_trace; cobc -m prog.cob
 ) >>"$at_stdout" 2>>"$at_stderr" 5>&-
 at_status=$? at_failed=false
 $at_check_filter
@@ -2243,9 +2243,9 @@ $at_failed && at_fn_log_failure
 $at_traceon; }
 
 { set +x
-$as_echo "$at_srcdir/user-defined-word.at:53: ./prog"
+$as_echo "$at_srcdir/user-defined-word.at:53: java prog"
 at_fn_check_prepare_trace "user-defined-word.at:53"
-( $at_check_trace; ./prog
+( $at_check_trace; java prog
 ) >>"$at_stdout" 2>>"$at_stderr" 5>&-
 at_status=$? at_failed=false
 $at_check_filter
@@ -2286,9 +2286,9 @@ _ATEOF
 
 
 { set +x
-$as_echo "$at_srcdir/user-defined-word.at:72: \${COMPILE} -x prog.cob"
+$as_echo "$at_srcdir/user-defined-word.at:72: \cobc -m prog.cob"
 at_fn_check_prepare_notrace 'a ${...} parameter expansion' "user-defined-word.at:72"
-( $at_check_trace; ${COMPILE} -x prog.cob
+( $at_check_trace; cobc -m prog.cob
 ) >>"$at_stdout" 2>>"$at_stderr" 5>&-
 at_status=$? at_failed=false
 $at_check_filter
@@ -2299,9 +2299,9 @@ $at_failed && at_fn_log_failure
 $at_traceon; }
 
 { set +x
-$as_echo "$at_srcdir/user-defined-word.at:73: ./prog"
+$as_echo "$at_srcdir/user-defined-word.at:73: java prog"
 at_fn_check_prepare_trace "user-defined-word.at:73"
-( $at_check_trace; ./prog
+( $at_check_trace; java prog
 ) >>"$at_stdout" 2>>"$at_stderr" 5>&-
 at_status=$? at_failed=false
 $at_check_filter
@@ -2345,9 +2345,9 @@ _ATEOF
 
 
 { set +x
-$as_echo "$at_srcdir/user-defined-word.at:94: \${COMPILE} -x prog.cob"
+$as_echo "$at_srcdir/user-defined-word.at:94: \cobc -m prog.cob"
 at_fn_check_prepare_notrace 'a ${...} parameter expansion' "user-defined-word.at:94"
-( $at_check_trace; ${COMPILE} -x prog.cob
+( $at_check_trace; cobc -m prog.cob
 ) >>"$at_stdout" 2>>"$at_stderr" 5>&-
 at_status=$? at_failed=false
 $at_check_filter
@@ -2358,9 +2358,9 @@ $at_failed && at_fn_log_failure
 $at_traceon; }
 
 { set +x
-$as_echo "$at_srcdir/user-defined-word.at:95: ./prog"
+$as_echo "$at_srcdir/user-defined-word.at:95: java prog"
 at_fn_check_prepare_trace "user-defined-word.at:95"
-( $at_check_trace; ./prog
+( $at_check_trace; java prog
 ) >>"$at_stdout" 2>>"$at_stderr" 5>&-
 at_status=$? at_failed=false
 $at_check_filter
@@ -2404,9 +2404,9 @@ _ATEOF
 
 
 { set +x
-$as_echo "$at_srcdir/user-defined-word.at:116: \${COMPILE} -x prog.cob"
+$as_echo "$at_srcdir/user-defined-word.at:116: \cobc -m prog.cob"
 at_fn_check_prepare_notrace 'a ${...} parameter expansion' "user-defined-word.at:116"
-( $at_check_trace; ${COMPILE} -x prog.cob
+( $at_check_trace; cobc -m prog.cob
 ) >>"$at_stdout" 2>>"$at_stderr" 5>&-
 at_status=$? at_failed=false
 $at_check_filter
@@ -2417,9 +2417,9 @@ $at_failed && at_fn_log_failure
 $at_traceon; }
 
 { set +x
-$as_echo "$at_srcdir/user-defined-word.at:117: ./prog"
+$as_echo "$at_srcdir/user-defined-word.at:117: java prog"
 at_fn_check_prepare_trace "user-defined-word.at:117"
-( $at_check_trace; ./prog
+( $at_check_trace; java prog
 ) >>"$at_stdout" 2>>"$at_stderr" 5>&-
 at_status=$? at_failed=false
 $at_check_filter
@@ -2463,9 +2463,9 @@ _ATEOF
 
 
 { set +x
-$as_echo "$at_srcdir/user-defined-word.at:138: \${COMPILE} -x prog.cob"
+$as_echo "$at_srcdir/user-defined-word.at:138: \cobc -m prog.cob"
 at_fn_check_prepare_notrace 'a ${...} parameter expansion' "user-defined-word.at:138"
-( $at_check_trace; ${COMPILE} -x prog.cob
+( $at_check_trace; cobc -m prog.cob
 ) >>"$at_stdout" 2>>"$at_stderr" 5>&-
 at_status=$? at_failed=false
 $at_check_filter
@@ -2524,9 +2524,9 @@ _ATEOF
 
 
 { set +x
-$as_echo "$at_srcdir/user-defined-word.at:175: \${COMPILE} -x prog.cob"
+$as_echo "$at_srcdir/user-defined-word.at:175: \cobc -m prog.cob"
 at_fn_check_prepare_notrace 'a ${...} parameter expansion' "user-defined-word.at:175"
-( $at_check_trace; ${COMPILE} -x prog.cob
+( $at_check_trace; cobc -m prog.cob
 ) >>"$at_stdout" 2>>"$at_stderr" 5>&-
 at_status=$? at_failed=false
 $at_check_filter
@@ -2537,9 +2537,9 @@ $at_failed && at_fn_log_failure
 $at_traceon; }
 
 { set +x
-$as_echo "$at_srcdir/user-defined-word.at:176: ./prog"
+$as_echo "$at_srcdir/user-defined-word.at:176: java prog"
 at_fn_check_prepare_trace "user-defined-word.at:176"
-( $at_check_trace; ./prog
+( $at_check_trace; java prog
 ) >>"$at_stdout" 2>>"$at_stderr" 5>&-
 at_status=$? at_failed=false
 $at_check_filter
@@ -2595,9 +2595,9 @@ $at_failed && at_fn_log_failure
 $at_traceon; }
 
 { set +x
-$as_echo "$at_srcdir/user-defined-word.at:197: ./prog"
+$as_echo "$at_srcdir/user-defined-word.at:197: java prog"
 at_fn_check_prepare_trace "user-defined-word.at:197"
-( $at_check_trace; ./prog
+( $at_check_trace; java prog
 ) >>"$at_stdout" 2>>"$at_stderr" 5>&-
 at_status=$? at_failed=false
 $at_check_filter
@@ -2652,9 +2652,9 @@ $at_failed && at_fn_log_failure
 $at_traceon; }
 
 { set +x
-$as_echo "$at_srcdir/user-defined-word.at:218: ./prog"
+$as_echo "$at_srcdir/user-defined-word.at:218: java prog"
 at_fn_check_prepare_trace "user-defined-word.at:218"
-( $at_check_trace; ./prog
+( $at_check_trace; java prog
 ) >>"$at_stdout" 2>>"$at_stderr" 5>&-
 at_status=$? at_failed=false
 $at_check_filter
@@ -2710,9 +2710,9 @@ $at_failed && at_fn_log_failure
 $at_traceon; }
 
 { set +x
-$as_echo "$at_srcdir/user-defined-word.at:240: ./prog"
+$as_echo "$at_srcdir/user-defined-word.at:240: java prog"
 at_fn_check_prepare_trace "user-defined-word.at:240"
-( $at_check_trace; ./prog
+( $at_check_trace; java prog
 ) >>"$at_stdout" 2>>"$at_stderr" 5>&-
 at_status=$? at_failed=false
 $at_check_filter
@@ -2768,9 +2768,9 @@ $at_failed && at_fn_log_failure
 $at_traceon; }
 
 { set +x
-$as_echo "$at_srcdir/user-defined-word.at:262: ./prog"
+$as_echo "$at_srcdir/user-defined-word.at:262: java prog"
 at_fn_check_prepare_trace "user-defined-word.at:262"
-( $at_check_trace; ./prog
+( $at_check_trace; java prog
 ) >>"$at_stdout" 2>>"$at_stderr" 5>&-
 at_status=$? at_failed=false
 $at_check_filter
@@ -2826,9 +2826,9 @@ $at_failed && at_fn_log_failure
 $at_traceon; }
 
 { set +x
-$as_echo "$at_srcdir/user-defined-word.at:284: ./prog"
+$as_echo "$at_srcdir/user-defined-word.at:284: java prog"
 at_fn_check_prepare_trace "user-defined-word.at:284"
-( $at_check_trace; ./prog
+( $at_check_trace; java prog
 ) >>"$at_stdout" 2>>"$at_stderr" 5>&-
 at_status=$? at_failed=false
 $at_check_filter
@@ -2884,9 +2884,9 @@ $at_failed && at_fn_log_failure
 $at_traceon; }
 
 { set +x
-$as_echo "$at_srcdir/user-defined-word.at:306: ./prog"
+$as_echo "$at_srcdir/user-defined-word.at:306: java prog"
 at_fn_check_prepare_trace "user-defined-word.at:306"
-( $at_check_trace; ./prog
+( $at_check_trace; java prog
 ) >>"$at_stdout" 2>>"$at_stderr" 5>&-
 at_status=$? at_failed=false
 $at_check_filter
@@ -2942,9 +2942,9 @@ $at_failed && at_fn_log_failure
 $at_traceon; }
 
 { set +x
-$as_echo "$at_srcdir/user-defined-word.at:328: ./prog"
+$as_echo "$at_srcdir/user-defined-word.at:328: java prog"
 at_fn_check_prepare_trace "user-defined-word.at:328"
-( $at_check_trace; ./prog
+( $at_check_trace; java prog
 ) >>"$at_stdout" 2>>"$at_stderr" 5>&-
 at_status=$? at_failed=false
 $at_check_filter
@@ -3000,9 +3000,9 @@ $at_failed && at_fn_log_failure
 $at_traceon; }
 
 { set +x
-$as_echo "$at_srcdir/user-defined-word.at:350: ./prog"
+$as_echo "$at_srcdir/user-defined-word.at:350: java prog"
 at_fn_check_prepare_trace "user-defined-word.at:350"
-( $at_check_trace; ./prog
+( $at_check_trace; java prog
 ) >>"$at_stdout" 2>>"$at_stderr" 5>&-
 at_status=$? at_failed=false
 $at_check_filter
@@ -3064,9 +3064,9 @@ $at_failed && at_fn_log_failure
 $at_traceon; }
 
 { set +x
-$as_echo "$at_srcdir/user-defined-word.at:378: ./prog"
+$as_echo "$at_srcdir/user-defined-word.at:378: java prog"
 at_fn_check_prepare_trace "user-defined-word.at:378"
-( $at_check_trace; ./prog
+( $at_check_trace; java prog
 ) >>"$at_stdout" 2>>"$at_stderr" 5>&-
 at_status=$? at_failed=false
 $at_check_filter
@@ -3282,9 +3282,9 @@ _ATEOF
 
 
 { set +x
-$as_echo "$at_srcdir/pic-x.at:14: \${COMPILE} -x prog.cob"
+$as_echo "$at_srcdir/pic-x.at:14: \cobc -m prog.cob"
 at_fn_check_prepare_notrace 'a ${...} parameter expansion' "pic-x.at:14"
-( $at_check_trace; ${COMPILE} -x prog.cob
+( $at_check_trace; cobc -m prog.cob
 ) >>"$at_stdout" 2>>"$at_stderr" 5>&-
 at_status=$? at_failed=false
 $at_check_filter
@@ -3295,9 +3295,9 @@ $at_failed && at_fn_log_failure
 $at_traceon; }
 
 { set +x
-$as_echo "$at_srcdir/pic-x.at:15: ./prog"
+$as_echo "$at_srcdir/pic-x.at:15: java prog"
 at_fn_check_prepare_trace "pic-x.at:15"
-( $at_check_trace; ./prog
+( $at_check_trace; java prog
 ) >>"$at_stdout" 2>>"$at_stderr" 5>&-
 at_status=$? at_failed=false
 $at_check_filter
@@ -3338,9 +3338,9 @@ _ATEOF
 
 
 { set +x
-$as_echo "$at_srcdir/pic-x.at:33: \${COMPILE} -x prog.cob"
+$as_echo "$at_srcdir/pic-x.at:33: \cobc -m prog.cob"
 at_fn_check_prepare_notrace 'a ${...} parameter expansion' "pic-x.at:33"
-( $at_check_trace; ${COMPILE} -x prog.cob
+( $at_check_trace; cobc -m prog.cob
 ) >>"$at_stdout" 2>>"$at_stderr" 5>&-
 at_status=$? at_failed=false
 $at_check_filter
@@ -3351,9 +3351,9 @@ $at_failed && at_fn_log_failure
 $at_traceon; }
 
 { set +x
-$as_echo "$at_srcdir/pic-x.at:34: ./prog"
+$as_echo "$at_srcdir/pic-x.at:34: java prog"
 at_fn_check_prepare_trace "pic-x.at:34"
-( $at_check_trace; ./prog
+( $at_check_trace; java prog
 ) >>"$at_stdout" 2>>"$at_stderr" 5>&-
 at_status=$? at_failed=false
 $at_check_filter
@@ -3394,9 +3394,9 @@ _ATEOF
 
 
 { set +x
-$as_echo "$at_srcdir/pic-x.at:52: \${COMPILE} -x prog.cob"
+$as_echo "$at_srcdir/pic-x.at:52: \cobc -m prog.cob"
 at_fn_check_prepare_notrace 'a ${...} parameter expansion' "pic-x.at:52"
-( $at_check_trace; ${COMPILE} -x prog.cob
+( $at_check_trace; cobc -m prog.cob
 ) >>"$at_stdout" 2>>"$at_stderr" 5>&-
 at_status=$? at_failed=false
 $at_check_filter
@@ -3410,9 +3410,9 @@ $at_failed && at_fn_log_failure
 $at_traceon; }
 
 { set +x
-$as_echo "$at_srcdir/pic-x.at:56: ./prog"
+$as_echo "$at_srcdir/pic-x.at:56: java prog"
 at_fn_check_prepare_trace "pic-x.at:56"
-( $at_check_trace; ./prog
+( $at_check_trace; java prog
 ) >>"$at_stdout" 2>>"$at_stderr" 5>&-
 at_status=$? at_failed=false
 $at_check_filter
@@ -3453,9 +3453,9 @@ _ATEOF
 
 
 { set +x
-$as_echo "$at_srcdir/pic-x.at:74: \${COMPILE} -x prog.cob"
+$as_echo "$at_srcdir/pic-x.at:74: \cobc -m prog.cob"
 at_fn_check_prepare_notrace 'a ${...} parameter expansion' "pic-x.at:74"
-( $at_check_trace; ${COMPILE} -x prog.cob
+( $at_check_trace; cobc -m prog.cob
 ) >>"$at_stdout" 2>>"$at_stderr" 5>&-
 at_status=$? at_failed=false
 $at_check_filter
@@ -3466,9 +3466,9 @@ $at_failed && at_fn_log_failure
 $at_traceon; }
 
 { set +x
-$as_echo "$at_srcdir/pic-x.at:75: ./prog | od -tx1 -An | sed -e 's/  */ /g' -e 's/ *\$//'"
+$as_echo "$at_srcdir/pic-x.at:75: java prog | od -tx1 -An | sed -e 's/  */ /g' -e 's/ *\$//'"
 at_fn_check_prepare_notrace 'a shell pipeline' "pic-x.at:75"
-( $at_check_trace; ./prog | od -tx1 -An | sed -e 's/  */ /g' -e 's/ *$//'
+( $at_check_trace; java prog | od -tx1 -An | sed -e 's/  */ /g' -e 's/ *$//'
 ) >>"$at_stdout" 2>>"$at_stderr" 5>&-
 at_status=$? at_failed=false
 $at_check_filter
@@ -3510,9 +3510,9 @@ _ATEOF
 
 
 { set +x
-$as_echo "$at_srcdir/pic-x.at:94: \${COMPILE} -x prog.cob"
+$as_echo "$at_srcdir/pic-x.at:94: \cobc -m prog.cob"
 at_fn_check_prepare_notrace 'a ${...} parameter expansion' "pic-x.at:94"
-( $at_check_trace; ${COMPILE} -x prog.cob
+( $at_check_trace; cobc -m prog.cob
 ) >>"$at_stdout" 2>>"$at_stderr" 5>&-
 at_status=$? at_failed=false
 $at_check_filter
@@ -3526,9 +3526,9 @@ $at_failed && at_fn_log_failure
 $at_traceon; }
 
 { set +x
-$as_echo "$at_srcdir/pic-x.at:98: ./prog | od -tx1 -An | sed -e 's/  */ /g' -e 's/ *\$//'"
+$as_echo "$at_srcdir/pic-x.at:98: java prog | od -tx1 -An | sed -e 's/  */ /g' -e 's/ *\$//'"
 at_fn_check_prepare_notrace 'a shell pipeline' "pic-x.at:98"
-( $at_check_trace; ./prog | od -tx1 -An | sed -e 's/  */ /g' -e 's/ *$//'
+( $at_check_trace; java prog | od -tx1 -An | sed -e 's/  */ /g' -e 's/ *$//'
 ) >>"$at_stdout" 2>>"$at_stderr" 5>&-
 at_status=$? at_failed=false
 $at_check_filter
@@ -3570,9 +3570,9 @@ _ATEOF
 
 
 { set +x
-$as_echo "$at_srcdir/pic-x.at:117: \${COMPILE} -x prog.cob"
+$as_echo "$at_srcdir/pic-x.at:117: \cobc -m prog.cob"
 at_fn_check_prepare_notrace 'a ${...} parameter expansion' "pic-x.at:117"
-( $at_check_trace; ${COMPILE} -x prog.cob
+( $at_check_trace; cobc -m prog.cob
 ) >>"$at_stdout" 2>>"$at_stderr" 5>&-
 at_status=$? at_failed=false
 $at_check_filter
@@ -3586,9 +3586,9 @@ $at_failed && at_fn_log_failure
 $at_traceon; }
 
 { set +x
-$as_echo "$at_srcdir/pic-x.at:121: ./prog | od -tx1 -An | sed -e 's/  */ /g' -e 's/ *\$//'"
+$as_echo "$at_srcdir/pic-x.at:121: java prog | od -tx1 -An | sed -e 's/  */ /g' -e 's/ *\$//'"
 at_fn_check_prepare_notrace 'a shell pipeline' "pic-x.at:121"
-( $at_check_trace; ./prog | od -tx1 -An | sed -e 's/  */ /g' -e 's/ *$//'
+( $at_check_trace; java prog | od -tx1 -An | sed -e 's/  */ /g' -e 's/ *$//'
 ) >>"$at_stdout" 2>>"$at_stderr" 5>&-
 at_status=$? at_failed=false
 $at_check_filter
@@ -3631,9 +3631,9 @@ _ATEOF
 
 
 { set +x
-$as_echo "$at_srcdir/pic-x.at:141: \${COMPILE} -x prog.cob"
+$as_echo "$at_srcdir/pic-x.at:141: \cobc -m prog.cob"
 at_fn_check_prepare_notrace 'a ${...} parameter expansion' "pic-x.at:141"
-( $at_check_trace; ${COMPILE} -x prog.cob
+( $at_check_trace; cobc -m prog.cob
 ) >>"$at_stdout" 2>>"$at_stderr" 5>&-
 at_status=$? at_failed=false
 $at_check_filter
@@ -3644,9 +3644,9 @@ $at_failed && at_fn_log_failure
 $at_traceon; }
 
 { set +x
-$as_echo "$at_srcdir/pic-x.at:142: ./prog | od -tx1 -An | sed -e 's/  */ /g' -e 's/ *\$//'"
+$as_echo "$at_srcdir/pic-x.at:142: java prog | od -tx1 -An | sed -e 's/  */ /g' -e 's/ *\$//'"
 at_fn_check_prepare_notrace 'a shell pipeline' "pic-x.at:142"
-( $at_check_trace; ./prog | od -tx1 -An | sed -e 's/  */ /g' -e 's/ *$//'
+( $at_check_trace; java prog | od -tx1 -An | sed -e 's/  */ /g' -e 's/ *$//'
 ) >>"$at_stdout" 2>>"$at_stderr" 5>&-
 at_status=$? at_failed=false
 $at_check_filter
@@ -3688,9 +3688,9 @@ _ATEOF
 
 
 { set +x
-$as_echo "$at_srcdir/pic-x.at:161: \${COMPILE} -x prog.cob"
+$as_echo "$at_srcdir/pic-x.at:161: \cobc -m prog.cob"
 at_fn_check_prepare_notrace 'a ${...} parameter expansion' "pic-x.at:161"
-( $at_check_trace; ${COMPILE} -x prog.cob
+( $at_check_trace; cobc -m prog.cob
 ) >>"$at_stdout" 2>>"$at_stderr" 5>&-
 at_status=$? at_failed=false
 $at_check_filter
@@ -3701,9 +3701,9 @@ $at_failed && at_fn_log_failure
 $at_traceon; }
 
 { set +x
-$as_echo "$at_srcdir/pic-x.at:162: ./prog"
+$as_echo "$at_srcdir/pic-x.at:162: java prog"
 at_fn_check_prepare_trace "pic-x.at:162"
-( $at_check_trace; ./prog
+( $at_check_trace; java prog
 ) >>"$at_stdout" 2>>"$at_stderr" 5>&-
 at_status=$? at_failed=false
 $at_check_filter
@@ -3744,9 +3744,9 @@ _ATEOF
 
 
 { set +x
-$as_echo "$at_srcdir/pic-x.at:180: \${COMPILE} -x prog.cob"
+$as_echo "$at_srcdir/pic-x.at:180: \cobc -m prog.cob"
 at_fn_check_prepare_notrace 'a ${...} parameter expansion' "pic-x.at:180"
-( $at_check_trace; ${COMPILE} -x prog.cob
+( $at_check_trace; cobc -m prog.cob
 ) >>"$at_stdout" 2>>"$at_stderr" 5>&-
 at_status=$? at_failed=false
 $at_check_filter
@@ -3757,9 +3757,9 @@ $at_failed && at_fn_log_failure
 $at_traceon; }
 
 { set +x
-$as_echo "$at_srcdir/pic-x.at:181: ./prog"
+$as_echo "$at_srcdir/pic-x.at:181: java prog"
 at_fn_check_prepare_trace "pic-x.at:181"
-( $at_check_trace; ./prog
+( $at_check_trace; java prog
 ) >>"$at_stdout" 2>>"$at_stderr" 5>&-
 at_status=$? at_failed=false
 $at_check_filter
@@ -3800,9 +3800,9 @@ _ATEOF
 
 
 { set +x
-$as_echo "$at_srcdir/pic-x.at:199: \${COMPILE} -x prog.cob"
+$as_echo "$at_srcdir/pic-x.at:199: \cobc -m prog.cob"
 at_fn_check_prepare_notrace 'a ${...} parameter expansion' "pic-x.at:199"
-( $at_check_trace; ${COMPILE} -x prog.cob
+( $at_check_trace; cobc -m prog.cob
 ) >>"$at_stdout" 2>>"$at_stderr" 5>&-
 at_status=$? at_failed=false
 $at_check_filter
@@ -3813,9 +3813,9 @@ $at_failed && at_fn_log_failure
 $at_traceon; }
 
 { set +x
-$as_echo "$at_srcdir/pic-x.at:200: ./prog"
+$as_echo "$at_srcdir/pic-x.at:200: java prog"
 at_fn_check_prepare_trace "pic-x.at:200"
-( $at_check_trace; ./prog
+( $at_check_trace; java prog
 ) >>"$at_stdout" 2>>"$at_stderr" 5>&-
 at_status=$? at_failed=false
 $at_check_filter
@@ -3856,9 +3856,9 @@ _ATEOF
 
 
 { set +x
-$as_echo "$at_srcdir/pic-x.at:218: \${COMPILE} -x prog.cob"
+$as_echo "$at_srcdir/pic-x.at:218: \cobc -m prog.cob"
 at_fn_check_prepare_notrace 'a ${...} parameter expansion' "pic-x.at:218"
-( $at_check_trace; ${COMPILE} -x prog.cob
+( $at_check_trace; cobc -m prog.cob
 ) >>"$at_stdout" 2>>"$at_stderr" 5>&-
 at_status=$? at_failed=false
 $at_check_filter
@@ -3872,9 +3872,9 @@ $at_failed && at_fn_log_failure
 $at_traceon; }
 
 { set +x
-$as_echo "$at_srcdir/pic-x.at:222: ./prog"
+$as_echo "$at_srcdir/pic-x.at:222: java prog"
 at_fn_check_prepare_trace "pic-x.at:222"
-( $at_check_trace; ./prog
+( $at_check_trace; java prog
 ) >>"$at_stdout" 2>>"$at_stderr" 5>&-
 at_status=$? at_failed=false
 $at_check_filter
@@ -3915,9 +3915,9 @@ _ATEOF
 
 
 { set +x
-$as_echo "$at_srcdir/pic-x.at:240: \${COMPILE} -x prog.cob"
+$as_echo "$at_srcdir/pic-x.at:240: \cobc -m prog.cob"
 at_fn_check_prepare_notrace 'a ${...} parameter expansion' "pic-x.at:240"
-( $at_check_trace; ${COMPILE} -x prog.cob
+( $at_check_trace; cobc -m prog.cob
 ) >>"$at_stdout" 2>>"$at_stderr" 5>&-
 at_status=$? at_failed=false
 $at_check_filter
@@ -3928,9 +3928,9 @@ $at_failed && at_fn_log_failure
 $at_traceon; }
 
 { set +x
-$as_echo "$at_srcdir/pic-x.at:241: ./prog"
+$as_echo "$at_srcdir/pic-x.at:241: java prog"
 at_fn_check_prepare_trace "pic-x.at:241"
-( $at_check_trace; ./prog
+( $at_check_trace; java prog
 ) >>"$at_stdout" 2>>"$at_stderr" 5>&-
 at_status=$? at_failed=false
 $at_check_filter
@@ -3971,9 +3971,9 @@ _ATEOF
 
 
 { set +x
-$as_echo "$at_srcdir/pic-x.at:259: \${COMPILE} -x prog.cob"
+$as_echo "$at_srcdir/pic-x.at:259: \cobc -m prog.cob"
 at_fn_check_prepare_notrace 'a ${...} parameter expansion' "pic-x.at:259"
-( $at_check_trace; ${COMPILE} -x prog.cob
+( $at_check_trace; cobc -m prog.cob
 ) >>"$at_stdout" 2>>"$at_stderr" 5>&-
 at_status=$? at_failed=false
 $at_check_filter
@@ -3984,9 +3984,9 @@ $at_failed && at_fn_log_failure
 $at_traceon; }
 
 { set +x
-$as_echo "$at_srcdir/pic-x.at:260: ./prog"
+$as_echo "$at_srcdir/pic-x.at:260: java prog"
 at_fn_check_prepare_trace "pic-x.at:260"
-( $at_check_trace; ./prog
+( $at_check_trace; java prog
 ) >>"$at_stdout" 2>>"$at_stderr" 5>&-
 at_status=$? at_failed=false
 $at_check_filter
@@ -4027,9 +4027,9 @@ _ATEOF
 
 
 { set +x
-$as_echo "$at_srcdir/pic-x.at:278: \${COMPILE} -x prog.cob"
+$as_echo "$at_srcdir/pic-x.at:278: \cobc -m prog.cob"
 at_fn_check_prepare_notrace 'a ${...} parameter expansion' "pic-x.at:278"
-( $at_check_trace; ${COMPILE} -x prog.cob
+( $at_check_trace; cobc -m prog.cob
 ) >>"$at_stdout" 2>>"$at_stderr" 5>&-
 at_status=$? at_failed=false
 $at_check_filter
@@ -4040,9 +4040,9 @@ $at_failed && at_fn_log_failure
 $at_traceon; }
 
 { set +x
-$as_echo "$at_srcdir/pic-x.at:279: ./prog | od -tx1 -An | sed -e 's/  */ /g' -e 's/ *\$//'"
+$as_echo "$at_srcdir/pic-x.at:279: java prog | od -tx1 -An | sed -e 's/  */ /g' -e 's/ *\$//'"
 at_fn_check_prepare_notrace 'a shell pipeline' "pic-x.at:279"
-( $at_check_trace; ./prog | od -tx1 -An | sed -e 's/  */ /g' -e 's/ *$//'
+( $at_check_trace; java prog | od -tx1 -An | sed -e 's/  */ /g' -e 's/ *$//'
 ) >>"$at_stdout" 2>>"$at_stderr" 5>&-
 at_status=$? at_failed=false
 $at_check_filter
@@ -4089,9 +4089,9 @@ _ATEOF
 
 
 { set +x
-$as_echo "$at_srcdir/pic-x.at:303: \${COMPILE} -x prog.cob"
+$as_echo "$at_srcdir/pic-x.at:303: \cobc -m prog.cob"
 at_fn_check_prepare_notrace 'a ${...} parameter expansion' "pic-x.at:303"
-( $at_check_trace; ${COMPILE} -x prog.cob
+( $at_check_trace; cobc -m prog.cob
 ) >>"$at_stdout" 2>>"$at_stderr" 5>&-
 at_status=$? at_failed=false
 $at_check_filter
@@ -4102,9 +4102,9 @@ $at_failed && at_fn_log_failure
 $at_traceon; }
 
 { set +x
-$as_echo "$at_srcdir/pic-x.at:304: ./prog | od -tx1 -An | sed -e 's/  */ /g' -e 's/ *\$//'"
+$as_echo "$at_srcdir/pic-x.at:304: java prog | od -tx1 -An | sed -e 's/  */ /g' -e 's/ *\$//'"
 at_fn_check_prepare_notrace 'a shell pipeline' "pic-x.at:304"
-( $at_check_trace; ./prog | od -tx1 -An | sed -e 's/  */ /g' -e 's/ *$//'
+( $at_check_trace; java prog | od -tx1 -An | sed -e 's/  */ /g' -e 's/ *$//'
 ) >>"$at_stdout" 2>>"$at_stderr" 5>&-
 at_status=$? at_failed=false
 $at_check_filter
@@ -4150,9 +4150,9 @@ _ATEOF
 
 
 { set +x
-$as_echo "$at_srcdir/pic-x.at:327: \${COMPILE} -x prog.cob"
+$as_echo "$at_srcdir/pic-x.at:327: \cobc -m prog.cob"
 at_fn_check_prepare_notrace 'a ${...} parameter expansion' "pic-x.at:327"
-( $at_check_trace; ${COMPILE} -x prog.cob
+( $at_check_trace; cobc -m prog.cob
 ) >>"$at_stdout" 2>>"$at_stderr" 5>&-
 at_status=$? at_failed=false
 $at_check_filter
@@ -4163,9 +4163,9 @@ $at_failed && at_fn_log_failure
 $at_traceon; }
 
 { set +x
-$as_echo "$at_srcdir/pic-x.at:328: ./prog | od -tx1 -An | sed -e 's/  */ /g' -e 's/ *\$//'"
+$as_echo "$at_srcdir/pic-x.at:328: java prog | od -tx1 -An | sed -e 's/  */ /g' -e 's/ *\$//'"
 at_fn_check_prepare_notrace 'a shell pipeline' "pic-x.at:328"
-( $at_check_trace; ./prog | od -tx1 -An | sed -e 's/  */ /g' -e 's/ *$//'
+( $at_check_trace; java prog | od -tx1 -An | sed -e 's/  */ /g' -e 's/ *$//'
 ) >>"$at_stdout" 2>>"$at_stderr" 5>&-
 at_status=$? at_failed=false
 $at_check_filter
@@ -4207,9 +4207,9 @@ _ATEOF
 
 
 { set +x
-$as_echo "$at_srcdir/pic-x.at:348: \${COMPILE} -x prog.cob"
+$as_echo "$at_srcdir/pic-x.at:348: \cobc -m prog.cob"
 at_fn_check_prepare_notrace 'a ${...} parameter expansion' "pic-x.at:348"
-( $at_check_trace; ${COMPILE} -x prog.cob
+( $at_check_trace; cobc -m prog.cob
 ) >>"$at_stdout" 2>>"$at_stderr" 5>&-
 at_status=$? at_failed=false
 $at_check_filter
@@ -4220,9 +4220,9 @@ $at_failed && at_fn_log_failure
 $at_traceon; }
 
 { set +x
-$as_echo "$at_srcdir/pic-x.at:349: ./prog"
+$as_echo "$at_srcdir/pic-x.at:349: java prog"
 at_fn_check_prepare_trace "pic-x.at:349"
-( $at_check_trace; ./prog
+( $at_check_trace; java prog
 ) >>"$at_stdout" 2>>"$at_stderr" 5>&-
 at_status=$? at_failed=false
 $at_check_filter
@@ -4263,9 +4263,9 @@ _ATEOF
 
 
 { set +x
-$as_echo "$at_srcdir/pic-x.at:367: \${COMPILE} -x prog.cob"
+$as_echo "$at_srcdir/pic-x.at:367: \cobc -m prog.cob"
 at_fn_check_prepare_notrace 'a ${...} parameter expansion' "pic-x.at:367"
-( $at_check_trace; ${COMPILE} -x prog.cob
+( $at_check_trace; cobc -m prog.cob
 ) >>"$at_stdout" 2>>"$at_stderr" 5>&-
 at_status=$? at_failed=false
 $at_check_filter
@@ -4276,9 +4276,9 @@ $at_failed && at_fn_log_failure
 $at_traceon; }
 
 { set +x
-$as_echo "$at_srcdir/pic-x.at:368: ./prog"
+$as_echo "$at_srcdir/pic-x.at:368: java prog"
 at_fn_check_prepare_trace "pic-x.at:368"
-( $at_check_trace; ./prog
+( $at_check_trace; java prog
 ) >>"$at_stdout" 2>>"$at_stderr" 5>&-
 at_status=$? at_failed=false
 $at_check_filter
@@ -4323,9 +4323,9 @@ _ATEOF
 
 
 { set +x
-$as_echo "$at_srcdir/pic-x.at:390: \${COMPILE} -x prog.cob"
+$as_echo "$at_srcdir/pic-x.at:390: \cobc -m prog.cob"
 at_fn_check_prepare_notrace 'a ${...} parameter expansion' "pic-x.at:390"
-( $at_check_trace; ${COMPILE} -x prog.cob
+( $at_check_trace; cobc -m prog.cob
 ) >>"$at_stdout" 2>>"$at_stderr" 5>&-
 at_status=$? at_failed=false
 $at_check_filter
@@ -4336,9 +4336,9 @@ $at_failed && at_fn_log_failure
 $at_traceon; }
 
 { set +x
-$as_echo "$at_srcdir/pic-x.at:391: ./prog"
+$as_echo "$at_srcdir/pic-x.at:391: java prog"
 at_fn_check_prepare_trace "pic-x.at:391"
-( $at_check_trace; ./prog
+( $at_check_trace; java prog
 ) >>"$at_stdout" 2>>"$at_stderr" 5>&-
 at_status=$? at_failed=false
 $at_check_filter
@@ -4383,9 +4383,9 @@ _ATEOF
 
 
 { set +x
-$as_echo "$at_srcdir/pic-x.at:413: \${COMPILE} -x prog.cob"
+$as_echo "$at_srcdir/pic-x.at:413: \cobc -m prog.cob"
 at_fn_check_prepare_notrace 'a ${...} parameter expansion' "pic-x.at:413"
-( $at_check_trace; ${COMPILE} -x prog.cob
+( $at_check_trace; cobc -m prog.cob
 ) >>"$at_stdout" 2>>"$at_stderr" 5>&-
 at_status=$? at_failed=false
 $at_check_filter
@@ -4396,9 +4396,9 @@ $at_failed && at_fn_log_failure
 $at_traceon; }
 
 { set +x
-$as_echo "$at_srcdir/pic-x.at:414: ./prog"
+$as_echo "$at_srcdir/pic-x.at:414: java prog"
 at_fn_check_prepare_trace "pic-x.at:414"
-( $at_check_trace; ./prog
+( $at_check_trace; java prog
 ) >>"$at_stdout" 2>>"$at_stderr" 5>&-
 at_status=$? at_failed=false
 $at_check_filter
@@ -4444,9 +4444,9 @@ _ATEOF
 
 
 { set +x
-$as_echo "$at_srcdir/pic-x.at:437: \${COMPILE} -x prog.cob"
+$as_echo "$at_srcdir/pic-x.at:437: \cobc -m prog.cob"
 at_fn_check_prepare_notrace 'a ${...} parameter expansion' "pic-x.at:437"
-( $at_check_trace; ${COMPILE} -x prog.cob
+( $at_check_trace; cobc -m prog.cob
 ) >>"$at_stdout" 2>>"$at_stderr" 5>&-
 at_status=$? at_failed=false
 $at_check_filter
@@ -4457,9 +4457,9 @@ $at_failed && at_fn_log_failure
 $at_traceon; }
 
 { set +x
-$as_echo "$at_srcdir/pic-x.at:438: ./prog"
+$as_echo "$at_srcdir/pic-x.at:438: java prog"
 at_fn_check_prepare_trace "pic-x.at:438"
-( $at_check_trace; ./prog
+( $at_check_trace; java prog
 ) >>"$at_stdout" 2>>"$at_stderr" 5>&-
 at_status=$? at_failed=false
 $at_check_filter
@@ -4500,9 +4500,9 @@ _ATEOF
 
 
 { set +x
-$as_echo "$at_srcdir/pic-x.at:456: \${COMPILE} -x prog.cob"
+$as_echo "$at_srcdir/pic-x.at:456: \cobc -m prog.cob"
 at_fn_check_prepare_notrace 'a ${...} parameter expansion' "pic-x.at:456"
-( $at_check_trace; ${COMPILE} -x prog.cob
+( $at_check_trace; cobc -m prog.cob
 ) >>"$at_stdout" 2>>"$at_stderr" 5>&-
 at_status=$? at_failed=false
 $at_check_filter
@@ -4513,9 +4513,9 @@ $at_failed && at_fn_log_failure
 $at_traceon; }
 
 { set +x
-$as_echo "$at_srcdir/pic-x.at:457: ./prog"
+$as_echo "$at_srcdir/pic-x.at:457: java prog"
 at_fn_check_prepare_trace "pic-x.at:457"
-( $at_check_trace; ./prog
+( $at_check_trace; java prog
 ) >>"$at_stdout" 2>>"$at_stderr" 5>&-
 at_status=$? at_failed=false
 $at_check_filter
@@ -4556,9 +4556,9 @@ _ATEOF
 
 
 { set +x
-$as_echo "$at_srcdir/pic-x.at:475: \${COMPILE} -x prog.cob"
+$as_echo "$at_srcdir/pic-x.at:475: \cobc -m prog.cob"
 at_fn_check_prepare_notrace 'a ${...} parameter expansion' "pic-x.at:475"
-( $at_check_trace; ${COMPILE} -x prog.cob
+( $at_check_trace; cobc -m prog.cob
 ) >>"$at_stdout" 2>>"$at_stderr" 5>&-
 at_status=$? at_failed=false
 $at_check_filter
@@ -4569,9 +4569,9 @@ $at_failed && at_fn_log_failure
 $at_traceon; }
 
 { set +x
-$as_echo "$at_srcdir/pic-x.at:476: ./prog"
+$as_echo "$at_srcdir/pic-x.at:476: java prog"
 at_fn_check_prepare_trace "pic-x.at:476"
-( $at_check_trace; ./prog
+( $at_check_trace; java prog
 ) >>"$at_stdout" 2>>"$at_stderr" 5>&-
 at_status=$? at_failed=false
 $at_check_filter
@@ -4613,9 +4613,9 @@ _ATEOF
 
 
 { set +x
-$as_echo "$at_srcdir/pic-x.at:495: \${COMPILE} -x prog.cob"
+$as_echo "$at_srcdir/pic-x.at:495: \cobc -m prog.cob"
 at_fn_check_prepare_notrace 'a ${...} parameter expansion' "pic-x.at:495"
-( $at_check_trace; ${COMPILE} -x prog.cob
+( $at_check_trace; cobc -m prog.cob
 ) >>"$at_stdout" 2>>"$at_stderr" 5>&-
 at_status=$? at_failed=false
 $at_check_filter
@@ -4626,9 +4626,9 @@ $at_failed && at_fn_log_failure
 $at_traceon; }
 
 { set +x
-$as_echo "$at_srcdir/pic-x.at:496: ./prog"
+$as_echo "$at_srcdir/pic-x.at:496: java prog"
 at_fn_check_prepare_trace "pic-x.at:496"
-( $at_check_trace; ./prog
+( $at_check_trace; java prog
 ) >>"$at_stdout" 2>>"$at_stderr" 5>&-
 at_status=$? at_failed=false
 $at_check_filter
@@ -4670,9 +4670,9 @@ _ATEOF
 
 
 { set +x
-$as_echo "$at_srcdir/pic-x.at:515: \${COMPILE} -x prog.cob"
+$as_echo "$at_srcdir/pic-x.at:515: \cobc -m prog.cob"
 at_fn_check_prepare_notrace 'a ${...} parameter expansion' "pic-x.at:515"
-( $at_check_trace; ${COMPILE} -x prog.cob
+( $at_check_trace; cobc -m prog.cob
 ) >>"$at_stdout" 2>>"$at_stderr" 5>&-
 at_status=$? at_failed=false
 $at_check_filter
@@ -4683,9 +4683,9 @@ $at_failed && at_fn_log_failure
 $at_traceon; }
 
 { set +x
-$as_echo "$at_srcdir/pic-x.at:516: ./prog"
+$as_echo "$at_srcdir/pic-x.at:516: java prog"
 at_fn_check_prepare_trace "pic-x.at:516"
-( $at_check_trace; ./prog
+( $at_check_trace; java prog
 ) >>"$at_stdout" 2>>"$at_stderr" 5>&-
 at_status=$? at_failed=false
 $at_check_filter
@@ -4727,9 +4727,9 @@ _ATEOF
 
 
 { set +x
-$as_echo "$at_srcdir/pic-x.at:535: \${COMPILE} -x prog.cob"
+$as_echo "$at_srcdir/pic-x.at:535: \cobc -m prog.cob"
 at_fn_check_prepare_notrace 'a ${...} parameter expansion' "pic-x.at:535"
-( $at_check_trace; ${COMPILE} -x prog.cob
+( $at_check_trace; cobc -m prog.cob
 ) >>"$at_stdout" 2>>"$at_stderr" 5>&-
 at_status=$? at_failed=false
 $at_check_filter
@@ -4772,9 +4772,9 @@ _ATEOF
 
 
 { set +x
-$as_echo "$at_srcdir/pic-x.at:556: \${COMPILE} -x prog.cob"
+$as_echo "$at_srcdir/pic-x.at:556: \cobc -m prog.cob"
 at_fn_check_prepare_notrace 'a ${...} parameter expansion' "pic-x.at:556"
-( $at_check_trace; ${COMPILE} -x prog.cob
+( $at_check_trace; cobc -m prog.cob
 ) >>"$at_stdout" 2>>"$at_stderr" 5>&-
 at_status=$? at_failed=false
 $at_check_filter
@@ -4817,9 +4817,9 @@ _ATEOF
 
 
 { set +x
-$as_echo "$at_srcdir/pic-x.at:577: \${COMPILE} -x prog.cob"
+$as_echo "$at_srcdir/pic-x.at:577: \cobc -m prog.cob"
 at_fn_check_prepare_notrace 'a ${...} parameter expansion' "pic-x.at:577"
-( $at_check_trace; ${COMPILE} -x prog.cob
+( $at_check_trace; cobc -m prog.cob
 ) >>"$at_stdout" 2>>"$at_stderr" 5>&-
 at_status=$? at_failed=false
 $at_check_filter
@@ -4830,9 +4830,9 @@ $at_failed && at_fn_log_failure
 $at_traceon; }
 
 { set +x
-$as_echo "$at_srcdir/pic-x.at:578: ./prog"
+$as_echo "$at_srcdir/pic-x.at:578: java prog"
 at_fn_check_prepare_trace "pic-x.at:578"
-( $at_check_trace; ./prog
+( $at_check_trace; java prog
 ) >>"$at_stdout" 2>>"$at_stderr" 5>&-
 at_status=$? at_failed=false
 $at_check_filter
@@ -4877,9 +4877,9 @@ _ATEOF
 
 
 { set +x
-$as_echo "$at_srcdir/pic-x.at:601: \${COMPILE} -x prog.cob"
+$as_echo "$at_srcdir/pic-x.at:601: \cobc -m prog.cob"
 at_fn_check_prepare_notrace 'a ${...} parameter expansion' "pic-x.at:601"
-( $at_check_trace; ${COMPILE} -x prog.cob
+( $at_check_trace; cobc -m prog.cob
 ) >>"$at_stdout" 2>>"$at_stderr" 5>&-
 at_status=$? at_failed=false
 $at_check_filter
@@ -4890,9 +4890,9 @@ $at_failed && at_fn_log_failure
 $at_traceon; }
 
 { set +x
-$as_echo "$at_srcdir/pic-x.at:602: ./prog"
+$as_echo "$at_srcdir/pic-x.at:602: java prog"
 at_fn_check_prepare_trace "pic-x.at:602"
-( $at_check_trace; ./prog
+( $at_check_trace; java prog
 ) >>"$at_stdout" 2>>"$at_stderr" 5>&-
 at_status=$? at_failed=false
 $at_check_filter
@@ -4933,9 +4933,9 @@ _ATEOF
 
 
 { set +x
-$as_echo "$at_srcdir/pic-n.at:14: \${COMPILE} -x prog.cob"
+$as_echo "$at_srcdir/pic-n.at:14: \cobc -m prog.cob"
 at_fn_check_prepare_notrace 'a ${...} parameter expansion' "pic-n.at:14"
-( $at_check_trace; ${COMPILE} -x prog.cob
+( $at_check_trace; cobc -m prog.cob
 ) >>"$at_stdout" 2>>"$at_stderr" 5>&-
 at_status=$? at_failed=false
 $at_check_filter
@@ -4946,9 +4946,9 @@ $at_failed && at_fn_log_failure
 $at_traceon; }
 
 { set +x
-$as_echo "$at_srcdir/pic-n.at:15: ./prog"
+$as_echo "$at_srcdir/pic-n.at:15: java prog"
 at_fn_check_prepare_trace "pic-n.at:15"
-( $at_check_trace; ./prog
+( $at_check_trace; java prog
 ) >>"$at_stdout" 2>>"$at_stderr" 5>&-
 at_status=$? at_failed=false
 $at_check_filter
@@ -4988,9 +4988,9 @@ _ATEOF
 
 
 { set +x
-$as_echo "$at_srcdir/pic-n.at:32: \${COMPILE} -x prog.cob"
+$as_echo "$at_srcdir/pic-n.at:32: \cobc -m prog.cob"
 at_fn_check_prepare_notrace 'a ${...} parameter expansion' "pic-n.at:32"
-( $at_check_trace; ${COMPILE} -x prog.cob
+( $at_check_trace; cobc -m prog.cob
 ) >>"$at_stdout" 2>>"$at_stderr" 5>&-
 at_status=$? at_failed=false
 $at_check_filter
@@ -5001,9 +5001,9 @@ $at_failed && at_fn_log_failure
 $at_traceon; }
 
 { set +x
-$as_echo "$at_srcdir/pic-n.at:33: ./prog"
+$as_echo "$at_srcdir/pic-n.at:33: java prog"
 at_fn_check_prepare_trace "pic-n.at:33"
-( $at_check_trace; ./prog
+( $at_check_trace; java prog
 ) >>"$at_stdout" 2>>"$at_stderr" 5>&-
 at_status=$? at_failed=false
 $at_check_filter
@@ -5044,9 +5044,9 @@ _ATEOF
 
 
 { set +x
-$as_echo "$at_srcdir/pic-n.at:51: \${COMPILE} -x prog.cob"
+$as_echo "$at_srcdir/pic-n.at:51: \cobc -m prog.cob"
 at_fn_check_prepare_notrace 'a ${...} parameter expansion' "pic-n.at:51"
-( $at_check_trace; ${COMPILE} -x prog.cob
+( $at_check_trace; cobc -m prog.cob
 ) >>"$at_stdout" 2>>"$at_stderr" 5>&-
 at_status=$? at_failed=false
 $at_check_filter
@@ -5057,9 +5057,9 @@ $at_failed && at_fn_log_failure
 $at_traceon; }
 
 { set +x
-$as_echo "$at_srcdir/pic-n.at:52: ./prog"
+$as_echo "$at_srcdir/pic-n.at:52: java prog"
 at_fn_check_prepare_trace "pic-n.at:52"
-( $at_check_trace; ./prog
+( $at_check_trace; java prog
 ) >>"$at_stdout" 2>>"$at_stderr" 5>&-
 at_status=$? at_failed=false
 $at_check_filter
@@ -5100,9 +5100,9 @@ _ATEOF
 
 
 { set +x
-$as_echo "$at_srcdir/pic-n.at:70: \${COMPILE} -x prog.cob"
+$as_echo "$at_srcdir/pic-n.at:70: \cobc -m prog.cob"
 at_fn_check_prepare_notrace 'a ${...} parameter expansion' "pic-n.at:70"
-( $at_check_trace; ${COMPILE} -x prog.cob
+( $at_check_trace; cobc -m prog.cob
 ) >>"$at_stdout" 2>>"$at_stderr" 5>&-
 at_status=$? at_failed=false
 $at_check_filter
@@ -5113,9 +5113,9 @@ $at_failed && at_fn_log_failure
 $at_traceon; }
 
 { set +x
-$as_echo "$at_srcdir/pic-n.at:71: ./prog"
+$as_echo "$at_srcdir/pic-n.at:71: java prog"
 at_fn_check_prepare_trace "pic-n.at:71"
-( $at_check_trace; ./prog
+( $at_check_trace; java prog
 ) >>"$at_stdout" 2>>"$at_stderr" 5>&-
 at_status=$? at_failed=false
 $at_check_filter
@@ -5156,9 +5156,9 @@ _ATEOF
 
 
 { set +x
-$as_echo "$at_srcdir/pic-n.at:90: \${COMPILE} -x prog.cob"
+$as_echo "$at_srcdir/pic-n.at:90: \cobc -m prog.cob"
 at_fn_check_prepare_notrace 'a ${...} parameter expansion' "pic-n.at:90"
-( $at_check_trace; ${COMPILE} -x prog.cob
+( $at_check_trace; cobc -m prog.cob
 ) >>"$at_stdout" 2>>"$at_stderr" 5>&-
 at_status=$? at_failed=false
 $at_check_filter
@@ -5172,9 +5172,9 @@ $at_failed && at_fn_log_failure
 $at_traceon; }
 
 { set +x
-$as_echo "$at_srcdir/pic-n.at:94: ./prog"
+$as_echo "$at_srcdir/pic-n.at:94: java prog"
 at_fn_check_prepare_trace "pic-n.at:94"
-( $at_check_trace; ./prog
+( $at_check_trace; java prog
 ) >>"$at_stdout" 2>>"$at_stderr" 5>&-
 at_status=$? at_failed=false
 $at_check_filter
@@ -5215,9 +5215,9 @@ _ATEOF
 
 
 { set +x
-$as_echo "$at_srcdir/pic-n.at:112: \${COMPILE} -x prog.cob"
+$as_echo "$at_srcdir/pic-n.at:112: \cobc -m prog.cob"
 at_fn_check_prepare_notrace 'a ${...} parameter expansion' "pic-n.at:112"
-( $at_check_trace; ${COMPILE} -x prog.cob
+( $at_check_trace; cobc -m prog.cob
 ) >>"$at_stdout" 2>>"$at_stderr" 5>&-
 at_status=$? at_failed=false
 $at_check_filter
@@ -5228,9 +5228,9 @@ $at_failed && at_fn_log_failure
 $at_traceon; }
 
 { set +x
-$as_echo "$at_srcdir/pic-n.at:113: ./prog"
+$as_echo "$at_srcdir/pic-n.at:113: java prog"
 at_fn_check_prepare_trace "pic-n.at:113"
-( $at_check_trace; ./prog
+( $at_check_trace; java prog
 ) >>"$at_stdout" 2>>"$at_stderr" 5>&-
 at_status=$? at_failed=false
 $at_check_filter
@@ -5271,9 +5271,9 @@ _ATEOF
 
 
 { set +x
-$as_echo "$at_srcdir/pic-n.at:131: \${COMPILE} -x prog.cob"
+$as_echo "$at_srcdir/pic-n.at:131: \cobc -m prog.cob"
 at_fn_check_prepare_notrace 'a ${...} parameter expansion' "pic-n.at:131"
-( $at_check_trace; ${COMPILE} -x prog.cob
+( $at_check_trace; cobc -m prog.cob
 ) >>"$at_stdout" 2>>"$at_stderr" 5>&-
 at_status=$? at_failed=false
 $at_check_filter
@@ -5284,9 +5284,9 @@ $at_failed && at_fn_log_failure
 $at_traceon; }
 
 { set +x
-$as_echo "$at_srcdir/pic-n.at:132: ./prog"
+$as_echo "$at_srcdir/pic-n.at:132: java prog"
 at_fn_check_prepare_trace "pic-n.at:132"
-( $at_check_trace; ./prog
+( $at_check_trace; java prog
 ) >>"$at_stdout" 2>>"$at_stderr" 5>&-
 at_status=$? at_failed=false
 $at_check_filter
@@ -5327,9 +5327,9 @@ _ATEOF
 
 
 { set +x
-$as_echo "$at_srcdir/pic-n.at:151: \${COMPILE} -x prog.cob"
+$as_echo "$at_srcdir/pic-n.at:151: \cobc -m prog.cob"
 at_fn_check_prepare_notrace 'a ${...} parameter expansion' "pic-n.at:151"
-( $at_check_trace; ${COMPILE} -x prog.cob
+( $at_check_trace; cobc -m prog.cob
 ) >>"$at_stdout" 2>>"$at_stderr" 5>&-
 at_status=$? at_failed=false
 $at_check_filter
@@ -5340,9 +5340,9 @@ $at_failed && at_fn_log_failure
 $at_traceon; }
 
 { set +x
-$as_echo "$at_srcdir/pic-n.at:152: ./prog"
+$as_echo "$at_srcdir/pic-n.at:152: java prog"
 at_fn_check_prepare_trace "pic-n.at:152"
-( $at_check_trace; ./prog
+( $at_check_trace; java prog
 ) >>"$at_stdout" 2>>"$at_stderr" 5>&-
 at_status=$? at_failed=false
 $at_check_filter
@@ -5383,9 +5383,9 @@ _ATEOF
 
 
 { set +x
-$as_echo "$at_srcdir/pic-n.at:170: \${COMPILE} -x prog.cob"
+$as_echo "$at_srcdir/pic-n.at:170: \cobc -m prog.cob"
 at_fn_check_prepare_notrace 'a ${...} parameter expansion' "pic-n.at:170"
-( $at_check_trace; ${COMPILE} -x prog.cob
+( $at_check_trace; cobc -m prog.cob
 ) >>"$at_stdout" 2>>"$at_stderr" 5>&-
 at_status=$? at_failed=false
 $at_check_filter
@@ -5396,9 +5396,9 @@ $at_failed && at_fn_log_failure
 $at_traceon; }
 
 { set +x
-$as_echo "$at_srcdir/pic-n.at:171: ./prog"
+$as_echo "$at_srcdir/pic-n.at:171: java prog"
 at_fn_check_prepare_trace "pic-n.at:171"
-( $at_check_trace; ./prog
+( $at_check_trace; java prog
 ) >>"$at_stdout" 2>>"$at_stderr" 5>&-
 at_status=$? at_failed=false
 $at_check_filter
@@ -5438,9 +5438,9 @@ _ATEOF
 
 
 { set +x
-$as_echo "$at_srcdir/pic-n.at:188: \${COMPILE} -x prog.cob"
+$as_echo "$at_srcdir/pic-n.at:188: \cobc -m prog.cob"
 at_fn_check_prepare_notrace 'a ${...} parameter expansion' "pic-n.at:188"
-( $at_check_trace; ${COMPILE} -x prog.cob
+( $at_check_trace; cobc -m prog.cob
 ) >>"$at_stdout" 2>>"$at_stderr" 5>&-
 at_status=$? at_failed=false
 $at_check_filter
@@ -5451,9 +5451,9 @@ $at_failed && at_fn_log_failure
 $at_traceon; }
 
 { set +x
-$as_echo "$at_srcdir/pic-n.at:189: ./prog"
+$as_echo "$at_srcdir/pic-n.at:189: java prog"
 at_fn_check_prepare_trace "pic-n.at:189"
-( $at_check_trace; ./prog
+( $at_check_trace; java prog
 ) >>"$at_stdout" 2>>"$at_stderr" 5>&-
 at_status=$? at_failed=false
 $at_check_filter
@@ -5495,9 +5495,9 @@ _ATEOF
 
 
 { set +x
-$as_echo "$at_srcdir/pic-n.at:208: \${COMPILE} -x prog.cob"
+$as_echo "$at_srcdir/pic-n.at:208: \cobc -m prog.cob"
 at_fn_check_prepare_notrace 'a ${...} parameter expansion' "pic-n.at:208"
-( $at_check_trace; ${COMPILE} -x prog.cob
+( $at_check_trace; cobc -m prog.cob
 ) >>"$at_stdout" 2>>"$at_stderr" 5>&-
 at_status=$? at_failed=false
 $at_check_filter
@@ -5508,9 +5508,9 @@ $at_failed && at_fn_log_failure
 $at_traceon; }
 
 { set +x
-$as_echo "$at_srcdir/pic-n.at:209: ./prog"
+$as_echo "$at_srcdir/pic-n.at:209: java prog"
 at_fn_check_prepare_trace "pic-n.at:209"
-( $at_check_trace; ./prog
+( $at_check_trace; java prog
 ) >>"$at_stdout" 2>>"$at_stderr" 5>&-
 at_status=$? at_failed=false
 $at_check_filter
@@ -5552,9 +5552,9 @@ _ATEOF
 
 
 { set +x
-$as_echo "$at_srcdir/pic-n.at:228: \${COMPILE} -x prog.cob"
+$as_echo "$at_srcdir/pic-n.at:228: \cobc -m prog.cob"
 at_fn_check_prepare_notrace 'a ${...} parameter expansion' "pic-n.at:228"
-( $at_check_trace; ${COMPILE} -x prog.cob
+( $at_check_trace; cobc -m prog.cob
 ) >>"$at_stdout" 2>>"$at_stderr" 5>&-
 at_status=$? at_failed=false
 $at_check_filter
@@ -5565,9 +5565,9 @@ $at_failed && at_fn_log_failure
 $at_traceon; }
 
 { set +x
-$as_echo "$at_srcdir/pic-n.at:229: ./prog"
+$as_echo "$at_srcdir/pic-n.at:229: java prog"
 at_fn_check_prepare_trace "pic-n.at:229"
-( $at_check_trace; ./prog
+( $at_check_trace; java prog
 ) >>"$at_stdout" 2>>"$at_stderr" 5>&-
 at_status=$? at_failed=false
 $at_check_filter
@@ -5608,9 +5608,9 @@ _ATEOF
 
 
 { set +x
-$as_echo "$at_srcdir/pic-n.at:247: \${COMPILE} -x prog.cob"
+$as_echo "$at_srcdir/pic-n.at:247: \cobc -m prog.cob"
 at_fn_check_prepare_notrace 'a ${...} parameter expansion' "pic-n.at:247"
-( $at_check_trace; ${COMPILE} -x prog.cob
+( $at_check_trace; cobc -m prog.cob
 ) >>"$at_stdout" 2>>"$at_stderr" 5>&-
 at_status=$? at_failed=false
 $at_check_filter
@@ -5621,9 +5621,9 @@ $at_failed && at_fn_log_failure
 $at_traceon; }
 
 { set +x
-$as_echo "$at_srcdir/pic-n.at:248: ./prog"
+$as_echo "$at_srcdir/pic-n.at:248: java prog"
 at_fn_check_prepare_trace "pic-n.at:248"
-( $at_check_trace; ./prog
+( $at_check_trace; java prog
 ) >>"$at_stdout" 2>>"$at_stderr" 5>&-
 at_status=$? at_failed=false
 $at_check_filter
@@ -5664,9 +5664,9 @@ _ATEOF
 
 
 { set +x
-$as_echo "$at_srcdir/pic-n.at:266: \${COMPILE} -x prog.cob"
+$as_echo "$at_srcdir/pic-n.at:266: \cobc -m prog.cob"
 at_fn_check_prepare_notrace 'a ${...} parameter expansion' "pic-n.at:266"
-( $at_check_trace; ${COMPILE} -x prog.cob
+( $at_check_trace; cobc -m prog.cob
 ) >>"$at_stdout" 2>>"$at_stderr" 5>&-
 at_status=$? at_failed=false
 $at_check_filter
@@ -5677,9 +5677,9 @@ $at_failed && at_fn_log_failure
 $at_traceon; }
 
 { set +x
-$as_echo "$at_srcdir/pic-n.at:267: ./prog"
+$as_echo "$at_srcdir/pic-n.at:267: java prog"
 at_fn_check_prepare_trace "pic-n.at:267"
-( $at_check_trace; ./prog
+( $at_check_trace; java prog
 ) >>"$at_stdout" 2>>"$at_stderr" 5>&-
 at_status=$? at_failed=false
 $at_check_filter
@@ -5720,9 +5720,9 @@ _ATEOF
 
 
 { set +x
-$as_echo "$at_srcdir/pic-n.at:285: \${COMPILE} -x prog.cob"
+$as_echo "$at_srcdir/pic-n.at:285: \cobc -m prog.cob"
 at_fn_check_prepare_notrace 'a ${...} parameter expansion' "pic-n.at:285"
-( $at_check_trace; ${COMPILE} -x prog.cob
+( $at_check_trace; cobc -m prog.cob
 ) >>"$at_stdout" 2>>"$at_stderr" 5>&-
 at_status=$? at_failed=false
 $at_check_filter
@@ -5733,9 +5733,9 @@ $at_failed && at_fn_log_failure
 $at_traceon; }
 
 { set +x
-$as_echo "$at_srcdir/pic-n.at:286: ./prog"
+$as_echo "$at_srcdir/pic-n.at:286: java prog"
 at_fn_check_prepare_trace "pic-n.at:286"
-( $at_check_trace; ./prog
+( $at_check_trace; java prog
 ) >>"$at_stdout" 2>>"$at_stderr" 5>&-
 at_status=$? at_failed=false
 $at_check_filter
@@ -5776,9 +5776,9 @@ _ATEOF
 
 
 { set +x
-$as_echo "$at_srcdir/pic-n.at:304: \${COMPILE} -x prog.cob"
+$as_echo "$at_srcdir/pic-n.at:304: \cobc -m prog.cob"
 at_fn_check_prepare_notrace 'a ${...} parameter expansion' "pic-n.at:304"
-( $at_check_trace; ${COMPILE} -x prog.cob
+( $at_check_trace; cobc -m prog.cob
 ) >>"$at_stdout" 2>>"$at_stderr" 5>&-
 at_status=$? at_failed=false
 $at_check_filter
@@ -5789,9 +5789,9 @@ $at_failed && at_fn_log_failure
 $at_traceon; }
 
 { set +x
-$as_echo "$at_srcdir/pic-n.at:305: ./prog"
+$as_echo "$at_srcdir/pic-n.at:305: java prog"
 at_fn_check_prepare_trace "pic-n.at:305"
-( $at_check_trace; ./prog
+( $at_check_trace; java prog
 ) >>"$at_stdout" 2>>"$at_stderr" 5>&-
 at_status=$? at_failed=false
 $at_check_filter
@@ -5832,9 +5832,9 @@ _ATEOF
 
 
 { set +x
-$as_echo "$at_srcdir/pic-n.at:323: \${COMPILE} -x prog.cob"
+$as_echo "$at_srcdir/pic-n.at:323: \cobc -m prog.cob"
 at_fn_check_prepare_notrace 'a ${...} parameter expansion' "pic-n.at:323"
-( $at_check_trace; ${COMPILE} -x prog.cob
+( $at_check_trace; cobc -m prog.cob
 ) >>"$at_stdout" 2>>"$at_stderr" 5>&-
 at_status=$? at_failed=false
 $at_check_filter
@@ -5845,9 +5845,9 @@ $at_failed && at_fn_log_failure
 $at_traceon; }
 
 { set +x
-$as_echo "$at_srcdir/pic-n.at:324: ./prog"
+$as_echo "$at_srcdir/pic-n.at:324: java prog"
 at_fn_check_prepare_trace "pic-n.at:324"
-( $at_check_trace; ./prog
+( $at_check_trace; java prog
 ) >>"$at_stdout" 2>>"$at_stderr" 5>&-
 at_status=$? at_failed=false
 $at_check_filter
@@ -5892,9 +5892,9 @@ _ATEOF
 
 
 { set +x
-$as_echo "$at_srcdir/pic-n.at:346: \${COMPILE} -x prog.cob"
+$as_echo "$at_srcdir/pic-n.at:346: \cobc -m prog.cob"
 at_fn_check_prepare_notrace 'a ${...} parameter expansion' "pic-n.at:346"
-( $at_check_trace; ${COMPILE} -x prog.cob
+( $at_check_trace; cobc -m prog.cob
 ) >>"$at_stdout" 2>>"$at_stderr" 5>&-
 at_status=$? at_failed=false
 $at_check_filter
@@ -5905,9 +5905,9 @@ $at_failed && at_fn_log_failure
 $at_traceon; }
 
 { set +x
-$as_echo "$at_srcdir/pic-n.at:347: ./prog"
+$as_echo "$at_srcdir/pic-n.at:347: java prog"
 at_fn_check_prepare_trace "pic-n.at:347"
-( $at_check_trace; ./prog
+( $at_check_trace; java prog
 ) >>"$at_stdout" 2>>"$at_stderr" 5>&-
 at_status=$? at_failed=false
 $at_check_filter
@@ -5952,9 +5952,9 @@ _ATEOF
 
 
 { set +x
-$as_echo "$at_srcdir/pic-n.at:369: \${COMPILE} -x prog.cob"
+$as_echo "$at_srcdir/pic-n.at:369: \cobc -m prog.cob"
 at_fn_check_prepare_notrace 'a ${...} parameter expansion' "pic-n.at:369"
-( $at_check_trace; ${COMPILE} -x prog.cob
+( $at_check_trace; cobc -m prog.cob
 ) >>"$at_stdout" 2>>"$at_stderr" 5>&-
 at_status=$? at_failed=false
 $at_check_filter
@@ -5965,9 +5965,9 @@ $at_failed && at_fn_log_failure
 $at_traceon; }
 
 { set +x
-$as_echo "$at_srcdir/pic-n.at:370: ./prog"
+$as_echo "$at_srcdir/pic-n.at:370: java prog"
 at_fn_check_prepare_trace "pic-n.at:370"
-( $at_check_trace; ./prog
+( $at_check_trace; java prog
 ) >>"$at_stdout" 2>>"$at_stderr" 5>&-
 at_status=$? at_failed=false
 $at_check_filter
@@ -6012,9 +6012,9 @@ _ATEOF
 
 
 { set +x
-$as_echo "$at_srcdir/pic-n.at:392: \${COMPILE} -x prog.cob"
+$as_echo "$at_srcdir/pic-n.at:392: \cobc -m prog.cob"
 at_fn_check_prepare_notrace 'a ${...} parameter expansion' "pic-n.at:392"
-( $at_check_trace; ${COMPILE} -x prog.cob
+( $at_check_trace; cobc -m prog.cob
 ) >>"$at_stdout" 2>>"$at_stderr" 5>&-
 at_status=$? at_failed=false
 $at_check_filter
@@ -6025,9 +6025,9 @@ $at_failed && at_fn_log_failure
 $at_traceon; }
 
 { set +x
-$as_echo "$at_srcdir/pic-n.at:393: ./prog"
+$as_echo "$at_srcdir/pic-n.at:393: java prog"
 at_fn_check_prepare_trace "pic-n.at:393"
-( $at_check_trace; ./prog
+( $at_check_trace; java prog
 ) >>"$at_stdout" 2>>"$at_stderr" 5>&-
 at_status=$? at_failed=false
 $at_check_filter
@@ -6073,9 +6073,9 @@ _ATEOF
 
 
 { set +x
-$as_echo "$at_srcdir/pic-n.at:416: \${COMPILE} -x prog.cob"
+$as_echo "$at_srcdir/pic-n.at:416: \cobc -m prog.cob"
 at_fn_check_prepare_notrace 'a ${...} parameter expansion' "pic-n.at:416"
-( $at_check_trace; ${COMPILE} -x prog.cob
+( $at_check_trace; cobc -m prog.cob
 ) >>"$at_stdout" 2>>"$at_stderr" 5>&-
 at_status=$? at_failed=false
 $at_check_filter
@@ -6086,9 +6086,9 @@ $at_failed && at_fn_log_failure
 $at_traceon; }
 
 { set +x
-$as_echo "$at_srcdir/pic-n.at:417: ./prog"
+$as_echo "$at_srcdir/pic-n.at:417: java prog"
 at_fn_check_prepare_trace "pic-n.at:417"
-( $at_check_trace; ./prog
+( $at_check_trace; java prog
 ) >>"$at_stdout" 2>>"$at_stderr" 5>&-
 at_status=$? at_failed=false
 $at_check_filter
@@ -6129,9 +6129,9 @@ _ATEOF
 
 
 { set +x
-$as_echo "$at_srcdir/pic-n.at:435: \${COMPILE} -x prog.cob"
+$as_echo "$at_srcdir/pic-n.at:435: \cobc -m prog.cob"
 at_fn_check_prepare_notrace 'a ${...} parameter expansion' "pic-n.at:435"
-( $at_check_trace; ${COMPILE} -x prog.cob
+( $at_check_trace; cobc -m prog.cob
 ) >>"$at_stdout" 2>>"$at_stderr" 5>&-
 at_status=$? at_failed=false
 $at_check_filter
@@ -6142,9 +6142,9 @@ $at_failed && at_fn_log_failure
 $at_traceon; }
 
 { set +x
-$as_echo "$at_srcdir/pic-n.at:436: ./prog"
+$as_echo "$at_srcdir/pic-n.at:436: java prog"
 at_fn_check_prepare_trace "pic-n.at:436"
-( $at_check_trace; ./prog
+( $at_check_trace; java prog
 ) >>"$at_stdout" 2>>"$at_stderr" 5>&-
 at_status=$? at_failed=false
 $at_check_filter
@@ -6185,9 +6185,9 @@ _ATEOF
 
 
 { set +x
-$as_echo "$at_srcdir/pic-n.at:454: \${COMPILE} -x prog.cob"
+$as_echo "$at_srcdir/pic-n.at:454: \cobc -m prog.cob"
 at_fn_check_prepare_notrace 'a ${...} parameter expansion' "pic-n.at:454"
-( $at_check_trace; ${COMPILE} -x prog.cob
+( $at_check_trace; cobc -m prog.cob
 ) >>"$at_stdout" 2>>"$at_stderr" 5>&-
 at_status=$? at_failed=false
 $at_check_filter
@@ -6198,9 +6198,9 @@ $at_failed && at_fn_log_failure
 $at_traceon; }
 
 { set +x
-$as_echo "$at_srcdir/pic-n.at:455: ./prog"
+$as_echo "$at_srcdir/pic-n.at:455: java prog"
 at_fn_check_prepare_trace "pic-n.at:455"
-( $at_check_trace; ./prog
+( $at_check_trace; java prog
 ) >>"$at_stdout" 2>>"$at_stderr" 5>&-
 at_status=$? at_failed=false
 $at_check_filter
@@ -6241,9 +6241,9 @@ _ATEOF
 
 
 { set +x
-$as_echo "$at_srcdir/pic-n.at:473: \${COMPILE} -x prog.cob"
+$as_echo "$at_srcdir/pic-n.at:473: \cobc -m prog.cob"
 at_fn_check_prepare_notrace 'a ${...} parameter expansion' "pic-n.at:473"
-( $at_check_trace; ${COMPILE} -x prog.cob
+( $at_check_trace; cobc -m prog.cob
 ) >>"$at_stdout" 2>>"$at_stderr" 5>&-
 at_status=$? at_failed=false
 $at_check_filter
@@ -6254,9 +6254,9 @@ $at_failed && at_fn_log_failure
 $at_traceon; }
 
 { set +x
-$as_echo "$at_srcdir/pic-n.at:474: ./prog"
+$as_echo "$at_srcdir/pic-n.at:474: java prog"
 at_fn_check_prepare_trace "pic-n.at:474"
-( $at_check_trace; ./prog
+( $at_check_trace; java prog
 ) >>"$at_stdout" 2>>"$at_stderr" 5>&-
 at_status=$? at_failed=false
 $at_check_filter
@@ -6298,9 +6298,9 @@ _ATEOF
 
 
 { set +x
-$as_echo "$at_srcdir/pic-n.at:493: \${COMPILE} -x prog.cob"
+$as_echo "$at_srcdir/pic-n.at:493: \cobc -m prog.cob"
 at_fn_check_prepare_notrace 'a ${...} parameter expansion' "pic-n.at:493"
-( $at_check_trace; ${COMPILE} -x prog.cob
+( $at_check_trace; cobc -m prog.cob
 ) >>"$at_stdout" 2>>"$at_stderr" 5>&-
 at_status=$? at_failed=false
 $at_check_filter
@@ -6311,9 +6311,9 @@ $at_failed && at_fn_log_failure
 $at_traceon; }
 
 { set +x
-$as_echo "$at_srcdir/pic-n.at:494: ./prog"
+$as_echo "$at_srcdir/pic-n.at:494: java prog"
 at_fn_check_prepare_trace "pic-n.at:494"
-( $at_check_trace; ./prog
+( $at_check_trace; java prog
 ) >>"$at_stdout" 2>>"$at_stderr" 5>&-
 at_status=$? at_failed=false
 $at_check_filter
@@ -6354,9 +6354,9 @@ _ATEOF
 
 
 { set +x
-$as_echo "$at_srcdir/pic-n.at:512: \${COMPILE} -x prog.cob"
+$as_echo "$at_srcdir/pic-n.at:512: \cobc -m prog.cob"
 at_fn_check_prepare_notrace 'a ${...} parameter expansion' "pic-n.at:512"
-( $at_check_trace; ${COMPILE} -x prog.cob
+( $at_check_trace; cobc -m prog.cob
 ) >>"$at_stdout" 2>>"$at_stderr" 5>&-
 at_status=$? at_failed=false
 $at_check_filter
@@ -6367,9 +6367,9 @@ $at_failed && at_fn_log_failure
 $at_traceon; }
 
 { set +x
-$as_echo "$at_srcdir/pic-n.at:513: ./prog"
+$as_echo "$at_srcdir/pic-n.at:513: java prog"
 at_fn_check_prepare_trace "pic-n.at:513"
-( $at_check_trace; ./prog
+( $at_check_trace; java prog
 ) >>"$at_stdout" 2>>"$at_stderr" 5>&-
 at_status=$? at_failed=false
 $at_check_filter
@@ -6410,9 +6410,9 @@ _ATEOF
 
 
 { set +x
-$as_echo "$at_srcdir/pic-n.at:531: \${COMPILE} -x prog.cob"
+$as_echo "$at_srcdir/pic-n.at:531: \cobc -m prog.cob"
 at_fn_check_prepare_notrace 'a ${...} parameter expansion' "pic-n.at:531"
-( $at_check_trace; ${COMPILE} -x prog.cob
+( $at_check_trace; cobc -m prog.cob
 ) >>"$at_stdout" 2>>"$at_stderr" 5>&-
 at_status=$? at_failed=false
 $at_check_filter
@@ -6423,9 +6423,9 @@ $at_failed && at_fn_log_failure
 $at_traceon; }
 
 { set +x
-$as_echo "$at_srcdir/pic-n.at:532: ./prog"
+$as_echo "$at_srcdir/pic-n.at:532: java prog"
 at_fn_check_prepare_trace "pic-n.at:532"
-( $at_check_trace; ./prog
+( $at_check_trace; java prog
 ) >>"$at_stdout" 2>>"$at_stderr" 5>&-
 at_status=$? at_failed=false
 $at_check_filter
@@ -6467,9 +6467,9 @@ _ATEOF
 
 
 { set +x
-$as_echo "$at_srcdir/pic-bn.at:16: \${COMPILE} -x prog.cob"
+$as_echo "$at_srcdir/pic-bn.at:16: \cobc -m prog.cob"
 at_fn_check_prepare_notrace 'a ${...} parameter expansion' "pic-bn.at:16"
-( $at_check_trace; ${COMPILE} -x prog.cob
+( $at_check_trace; cobc -m prog.cob
 ) >>"$at_stdout" 2>>"$at_stderr" 5>&-
 at_status=$? at_failed=false
 $at_check_filter
@@ -6480,9 +6480,9 @@ $at_failed && at_fn_log_failure
 $at_traceon; }
 
 { set +x
-$as_echo "$at_srcdir/pic-bn.at:17: ./prog"
+$as_echo "$at_srcdir/pic-bn.at:17: java prog"
 at_fn_check_prepare_trace "pic-bn.at:17"
-( $at_check_trace; ./prog
+( $at_check_trace; java prog
 ) >>"$at_stdout" 2>>"$at_stderr" 5>&-
 at_status=$? at_failed=false
 $at_check_filter
@@ -6523,9 +6523,9 @@ _ATEOF
 
 
 { set +x
-$as_echo "$at_srcdir/pic-bn.at:35: \${COMPILE} -x prog.cob"
+$as_echo "$at_srcdir/pic-bn.at:35: \cobc -m prog.cob"
 at_fn_check_prepare_notrace 'a ${...} parameter expansion' "pic-bn.at:35"
-( $at_check_trace; ${COMPILE} -x prog.cob
+( $at_check_trace; cobc -m prog.cob
 ) >>"$at_stdout" 2>>"$at_stderr" 5>&-
 at_status=$? at_failed=false
 $at_check_filter
@@ -6536,9 +6536,9 @@ $at_failed && at_fn_log_failure
 $at_traceon; }
 
 { set +x
-$as_echo "$at_srcdir/pic-bn.at:36: ./prog"
+$as_echo "$at_srcdir/pic-bn.at:36: java prog"
 at_fn_check_prepare_trace "pic-bn.at:36"
-( $at_check_trace; ./prog
+( $at_check_trace; java prog
 ) >>"$at_stdout" 2>>"$at_stderr" 5>&-
 at_status=$? at_failed=false
 $at_check_filter
@@ -6583,9 +6583,9 @@ _ATEOF
 
 
 { set +x
-$as_echo "$at_srcdir/pic-bn.at:58: \${COMPILE} -x prog.cob"
+$as_echo "$at_srcdir/pic-bn.at:58: \cobc -m prog.cob"
 at_fn_check_prepare_notrace 'a ${...} parameter expansion' "pic-bn.at:58"
-( $at_check_trace; ${COMPILE} -x prog.cob
+( $at_check_trace; cobc -m prog.cob
 ) >>"$at_stdout" 2>>"$at_stderr" 5>&-
 at_status=$? at_failed=false
 $at_check_filter
@@ -6596,9 +6596,9 @@ $at_failed && at_fn_log_failure
 $at_traceon; }
 
 { set +x
-$as_echo "$at_srcdir/pic-bn.at:59: ./prog"
+$as_echo "$at_srcdir/pic-bn.at:59: java prog"
 at_fn_check_prepare_trace "pic-bn.at:59"
-( $at_check_trace; ./prog
+( $at_check_trace; java prog
 ) >>"$at_stdout" 2>>"$at_stderr" 5>&-
 at_status=$? at_failed=false
 $at_check_filter
@@ -6728,9 +6728,9 @@ _ATEOF
 
 
 { set +x
-$as_echo "$at_srcdir/program-id.at:52: \${COMPILE} -x prog.cob"
+$as_echo "$at_srcdir/program-id.at:52: \cobc -m prog.cob"
 at_fn_check_prepare_notrace 'a ${...} parameter expansion' "program-id.at:52"
-( $at_check_trace; ${COMPILE} -x prog.cob
+( $at_check_trace; cobc -m prog.cob
 ) >>"$at_stdout" 2>>"$at_stderr" 5>&-
 at_status=$? at_failed=false
 $at_check_filter
@@ -6767,9 +6767,9 @@ _ATEOF
 
 
 { set +x
-$as_echo "$at_srcdir/program-id.at:67: \${COMPILE} -x prog.cob"
+$as_echo "$at_srcdir/program-id.at:67: \cobc -m prog.cob"
 at_fn_check_prepare_notrace 'a ${...} parameter expansion' "program-id.at:67"
-( $at_check_trace; ${COMPILE} -x prog.cob
+( $at_check_trace; cobc -m prog.cob
 ) >>"$at_stdout" 2>>"$at_stderr" 5>&-
 at_status=$? at_failed=false
 $at_check_filter
@@ -6806,9 +6806,9 @@ _ATEOF
 
 
 { set +x
-$as_echo "$at_srcdir/program-id.at:82: \${COMPILE} -x prog.cob"
+$as_echo "$at_srcdir/program-id.at:82: \cobc -m prog.cob"
 at_fn_check_prepare_notrace 'a ${...} parameter expansion' "program-id.at:82"
-( $at_check_trace; ${COMPILE} -x prog.cob
+( $at_check_trace; cobc -m prog.cob
 ) >>"$at_stdout" 2>>"$at_stderr" 5>&-
 at_status=$? at_failed=false
 $at_check_filter
@@ -6853,9 +6853,9 @@ _ATEOF
 
 
 { set +x
-$as_echo "$at_srcdir/error-print.at:18: \${COMPILE} -x prog.cob"
+$as_echo "$at_srcdir/error-print.at:18: \cobc -m prog.cob"
 at_fn_check_prepare_notrace 'a ${...} parameter expansion' "error-print.at:18"
-( $at_check_trace; ${COMPILE} -x prog.cob
+( $at_check_trace; cobc -m prog.cob
 ) >>"$at_stdout" 2>>"$at_stderr" 5>&-
 at_status=$? at_failed=false
 $at_check_filter
@@ -6894,9 +6894,9 @@ _ATEOF
 
 
 { set +x
-$as_echo "$at_srcdir/error-print.at:35: \${COMPILE} -x prog.cob"
+$as_echo "$at_srcdir/error-print.at:35: \cobc -m prog.cob"
 at_fn_check_prepare_notrace 'a ${...} parameter expansion' "error-print.at:35"
-( $at_check_trace; ${COMPILE} -x prog.cob
+( $at_check_trace; cobc -m prog.cob
 ) >>"$at_stdout" 2>>"$at_stderr" 5>&-
 at_status=$? at_failed=false
 $at_check_filter
@@ -6935,9 +6935,9 @@ _ATEOF
 
 
 { set +x
-$as_echo "$at_srcdir/error-print.at:52: \${COMPILE} -x prog.cob"
+$as_echo "$at_srcdir/error-print.at:52: \cobc -m prog.cob"
 at_fn_check_prepare_notrace 'a ${...} parameter expansion' "error-print.at:52"
-( $at_check_trace; ${COMPILE} -x prog.cob
+( $at_check_trace; cobc -m prog.cob
 ) >>"$at_stdout" 2>>"$at_stderr" 5>&-
 at_status=$? at_failed=false
 $at_check_filter
@@ -6978,9 +6978,9 @@ _ATEOF
 
 
 { set +x
-$as_echo "$at_srcdir/error-print.at:71: \${COMPILE} -x prog.cob"
+$as_echo "$at_srcdir/error-print.at:71: \cobc -m prog.cob"
 at_fn_check_prepare_notrace 'a ${...} parameter expansion' "error-print.at:71"
-( $at_check_trace; ${COMPILE} -x prog.cob
+( $at_check_trace; cobc -m prog.cob
 ) >>"$at_stdout" 2>>"$at_stderr" 5>&-
 at_status=$? at_failed=false
 $at_check_filter
@@ -7027,9 +7027,9 @@ _ATEOF
 
 
 { set +x
-$as_echo "$at_srcdir/stored-char-length.at:17: \${COMPILE} -x prog.cob"
+$as_echo "$at_srcdir/stored-char-length.at:17: \cobc -m prog.cob"
 at_fn_check_prepare_notrace 'a ${...} parameter expansion' "stored-char-length.at:17"
-( $at_check_trace; ${COMPILE} -x prog.cob
+( $at_check_trace; cobc -m prog.cob
 ) >>"$at_stdout" 2>>"$at_stderr" 5>&-
 at_status=$? at_failed=false
 $at_check_filter
@@ -7040,9 +7040,9 @@ $at_failed && at_fn_log_failure
 $at_traceon; }
 
 { set +x
-$as_echo "$at_srcdir/stored-char-length.at:18: ./prog"
+$as_echo "$at_srcdir/stored-char-length.at:18: java prog"
 at_fn_check_prepare_trace "stored-char-length.at:18"
-( $at_check_trace; ./prog
+( $at_check_trace; java prog
 ) >>"$at_stdout" 2>>"$at_stderr" 5>&-
 at_status=$? at_failed=false
 $at_check_filter
@@ -7085,9 +7085,9 @@ _ATEOF
 
 
 { set +x
-$as_echo "$at_srcdir/stored-char-length.at:38: \${COMPILE} -x prog.cob"
+$as_echo "$at_srcdir/stored-char-length.at:38: \cobc -m prog.cob"
 at_fn_check_prepare_notrace 'a ${...} parameter expansion' "stored-char-length.at:38"
-( $at_check_trace; ${COMPILE} -x prog.cob
+( $at_check_trace; cobc -m prog.cob
 ) >>"$at_stdout" 2>>"$at_stderr" 5>&-
 at_status=$? at_failed=false
 $at_check_filter
@@ -7098,9 +7098,9 @@ $at_failed && at_fn_log_failure
 $at_traceon; }
 
 { set +x
-$as_echo "$at_srcdir/stored-char-length.at:39: ./prog"
+$as_echo "$at_srcdir/stored-char-length.at:39: java prog"
 at_fn_check_prepare_trace "stored-char-length.at:39"
-( $at_check_trace; ./prog
+( $at_check_trace; java prog
 ) >>"$at_stdout" 2>>"$at_stderr" 5>&-
 at_status=$? at_failed=false
 $at_check_filter
@@ -7143,9 +7143,9 @@ _ATEOF
 
 
 { set +x
-$as_echo "$at_srcdir/stored-char-length.at:59: \${COMPILE} -x prog.cob"
+$as_echo "$at_srcdir/stored-char-length.at:59: \cobc -m prog.cob"
 at_fn_check_prepare_notrace 'a ${...} parameter expansion' "stored-char-length.at:59"
-( $at_check_trace; ${COMPILE} -x prog.cob
+( $at_check_trace; cobc -m prog.cob
 ) >>"$at_stdout" 2>>"$at_stderr" 5>&-
 at_status=$? at_failed=false
 $at_check_filter
@@ -7156,9 +7156,9 @@ $at_failed && at_fn_log_failure
 $at_traceon; }
 
 { set +x
-$as_echo "$at_srcdir/stored-char-length.at:60: ./prog"
+$as_echo "$at_srcdir/stored-char-length.at:60: java prog"
 at_fn_check_prepare_trace "stored-char-length.at:60"
-( $at_check_trace; ./prog
+( $at_check_trace; java prog
 ) >>"$at_stdout" 2>>"$at_stderr" 5>&-
 at_status=$? at_failed=false
 $at_check_filter
@@ -7201,9 +7201,9 @@ _ATEOF
 
 
 { set +x
-$as_echo "$at_srcdir/stored-char-length.at:80: \${COMPILE} -x prog.cob"
+$as_echo "$at_srcdir/stored-char-length.at:80: \cobc -m prog.cob"
 at_fn_check_prepare_notrace 'a ${...} parameter expansion' "stored-char-length.at:80"
-( $at_check_trace; ${COMPILE} -x prog.cob
+( $at_check_trace; cobc -m prog.cob
 ) >>"$at_stdout" 2>>"$at_stderr" 5>&-
 at_status=$? at_failed=false
 $at_check_filter
@@ -7214,9 +7214,9 @@ $at_failed && at_fn_log_failure
 $at_traceon; }
 
 { set +x
-$as_echo "$at_srcdir/stored-char-length.at:81: ./prog"
+$as_echo "$at_srcdir/stored-char-length.at:81: java prog"
 at_fn_check_prepare_trace "stored-char-length.at:81"
-( $at_check_trace; ./prog
+( $at_check_trace; java prog
 ) >>"$at_stdout" 2>>"$at_stderr" 5>&-
 at_status=$? at_failed=false
 $at_check_filter
@@ -7259,9 +7259,9 @@ _ATEOF
 
 
 { set +x
-$as_echo "$at_srcdir/stored-char-length.at:101: \${COMPILE} -x prog.cob"
+$as_echo "$at_srcdir/stored-char-length.at:101: \cobc -m prog.cob"
 at_fn_check_prepare_notrace 'a ${...} parameter expansion' "stored-char-length.at:101"
-( $at_check_trace; ${COMPILE} -x prog.cob
+( $at_check_trace; cobc -m prog.cob
 ) >>"$at_stdout" 2>>"$at_stderr" 5>&-
 at_status=$? at_failed=false
 $at_check_filter
@@ -7272,9 +7272,9 @@ $at_failed && at_fn_log_failure
 $at_traceon; }
 
 { set +x
-$as_echo "$at_srcdir/stored-char-length.at:102: ./prog"
+$as_echo "$at_srcdir/stored-char-length.at:102: java prog"
 at_fn_check_prepare_trace "stored-char-length.at:102"
-( $at_check_trace; ./prog
+( $at_check_trace; java prog
 ) >>"$at_stdout" 2>>"$at_stderr" 5>&-
 at_status=$? at_failed=false
 $at_check_filter
@@ -7329,9 +7329,9 @@ $at_failed && at_fn_log_failure
 $at_traceon; }
 
 { set +x
-$as_echo "$at_srcdir/stored-char-length.at:122: ./prog"
+$as_echo "$at_srcdir/stored-char-length.at:122: java prog"
 at_fn_check_prepare_trace "stored-char-length.at:122"
-( $at_check_trace; ./prog
+( $at_check_trace; java prog
 ) >>"$at_stdout" 2>>"$at_stderr" 5>&-
 at_status=$? at_failed=false
 $at_check_filter
@@ -7387,9 +7387,9 @@ $at_failed && at_fn_log_failure
 $at_traceon; }
 
 { set +x
-$as_echo "$at_srcdir/stored-char-length.at:143: ./prog"
+$as_echo "$at_srcdir/stored-char-length.at:143: java prog"
 at_fn_check_prepare_trace "stored-char-length.at:143"
-( $at_check_trace; ./prog
+( $at_check_trace; java prog
 ) >>"$at_stdout" 2>>"$at_stderr" 5>&-
 at_status=$? at_failed=false
 $at_check_filter
@@ -7432,9 +7432,9 @@ _ATEOF
 
 
 { set +x
-$as_echo "$at_srcdir/warn-mixture-byte.at:16: \${COMPILE} -x prog.cob"
+$as_echo "$at_srcdir/warn-mixture-byte.at:16: \cobc -m prog.cob"
 at_fn_check_prepare_notrace 'a ${...} parameter expansion' "warn-mixture-byte.at:16"
-( $at_check_trace; ${COMPILE} -x prog.cob
+( $at_check_trace; cobc -m prog.cob
 ) >>"$at_stdout" 2>>"$at_stderr" 5>&-
 at_status=$? at_failed=false
 $at_check_filter
@@ -7445,9 +7445,9 @@ $at_failed && at_fn_log_failure
 $at_traceon; }
 
 { set +x
-$as_echo "$at_srcdir/warn-mixture-byte.at:17: ./prog"
+$as_echo "$at_srcdir/warn-mixture-byte.at:17: java prog"
 at_fn_check_prepare_trace "warn-mixture-byte.at:17"
-( $at_check_trace; ./prog
+( $at_check_trace; java prog
 ) >>"$at_stdout" 2>>"$at_stderr" 5>&-
 at_status=$? at_failed=false
 $at_check_filter
@@ -7489,9 +7489,9 @@ _ATEOF
 
 
 { set +x
-$as_echo "$at_srcdir/warn-mixture-byte.at:36: \${COMPILE} -x prog.cob"
+$as_echo "$at_srcdir/warn-mixture-byte.at:36: \cobc -m prog.cob"
 at_fn_check_prepare_notrace 'a ${...} parameter expansion' "warn-mixture-byte.at:36"
-( $at_check_trace; ${COMPILE} -x prog.cob
+( $at_check_trace; cobc -m prog.cob
 ) >>"$at_stdout" 2>>"$at_stderr" 5>&-
 at_status=$? at_failed=false
 $at_check_filter
@@ -7502,9 +7502,9 @@ $at_failed && at_fn_log_failure
 $at_traceon; }
 
 { set +x
-$as_echo "$at_srcdir/warn-mixture-byte.at:37: ./prog"
+$as_echo "$at_srcdir/warn-mixture-byte.at:37: java prog"
 at_fn_check_prepare_trace "warn-mixture-byte.at:37"
-( $at_check_trace; ./prog
+( $at_check_trace; java prog
 ) >>"$at_stdout" 2>>"$at_stderr" 5>&-
 at_status=$? at_failed=false
 $at_check_filter
@@ -8216,9 +8216,9 @@ $at_failed && at_fn_log_failure
 $at_traceon; }
 
 { set +x
-$as_echo "$at_srcdir/national.at:18: ./prog"
+$as_echo "$at_srcdir/national.at:18: java prog"
 at_fn_check_prepare_trace "national.at:18"
-( $at_check_trace; ./prog
+( $at_check_trace; java prog
 ) >>"$at_stdout" 2>>"$at_stderr" 5>&-
 at_status=$? at_failed=false
 $at_check_filter
@@ -8274,9 +8274,9 @@ $at_failed && at_fn_log_failure
 $at_traceon; }
 
 { set +x
-$as_echo "$at_srcdir/national.at:39: ./prog"
+$as_echo "$at_srcdir/national.at:39: java prog"
 at_fn_check_prepare_trace "national.at:39"
-( $at_check_trace; ./prog
+( $at_check_trace; java prog
 ) >>"$at_stdout" 2>>"$at_stderr" 5>&-
 at_status=$? at_failed=false
 $at_check_filter
@@ -8332,9 +8332,9 @@ $at_failed && at_fn_log_failure
 $at_traceon; }
 
 { set +x
-$as_echo "$at_srcdir/national.at:60: ./prog"
+$as_echo "$at_srcdir/national.at:60: java prog"
 at_fn_check_prepare_trace "national.at:60"
-( $at_check_trace; ./prog
+( $at_check_trace; java prog
 ) >>"$at_stdout" 2>>"$at_stderr" 5>&-
 at_status=$? at_failed=false
 $at_check_filter
@@ -8390,9 +8390,9 @@ $at_failed && at_fn_log_failure
 $at_traceon; }
 
 { set +x
-$as_echo "$at_srcdir/national.at:81: ./prog"
+$as_echo "$at_srcdir/national.at:81: java prog"
 at_fn_check_prepare_trace "national.at:81"
-( $at_check_trace; ./prog
+( $at_check_trace; java prog
 ) >>"$at_stdout" 2>>"$at_stderr" 5>&-
 at_status=$? at_failed=false
 $at_check_filter
@@ -8448,9 +8448,9 @@ $at_failed && at_fn_log_failure
 $at_traceon; }
 
 { set +x
-$as_echo "$at_srcdir/national.at:102: ./prog"
+$as_echo "$at_srcdir/national.at:102: java prog"
 at_fn_check_prepare_trace "national.at:102"
-( $at_check_trace; ./prog
+( $at_check_trace; java prog
 ) >>"$at_stdout" 2>>"$at_stderr" 5>&-
 at_status=$? at_failed=false
 $at_check_filter
@@ -8506,9 +8506,9 @@ $at_failed && at_fn_log_failure
 $at_traceon; }
 
 { set +x
-$as_echo "$at_srcdir/national.at:123: ./prog"
+$as_echo "$at_srcdir/national.at:123: java prog"
 at_fn_check_prepare_trace "national.at:123"
-( $at_check_trace; ./prog
+( $at_check_trace; java prog
 ) >>"$at_stdout" 2>>"$at_stderr" 5>&-
 at_status=$? at_failed=false
 $at_check_filter
@@ -8564,9 +8564,9 @@ $at_failed && at_fn_log_failure
 $at_traceon; }
 
 { set +x
-$as_echo "$at_srcdir/national.at:144: ./prog"
+$as_echo "$at_srcdir/national.at:144: java prog"
 at_fn_check_prepare_trace "national.at:144"
-( $at_check_trace; ./prog
+( $at_check_trace; java prog
 ) >>"$at_stdout" 2>>"$at_stderr" 5>&-
 at_status=$? at_failed=false
 $at_check_filter
@@ -8607,9 +8607,9 @@ _ATEOF
 
 
 { set +x
-$as_echo "$at_srcdir/national.at:162: \${COMPILE} -x prog.cob"
+$as_echo "$at_srcdir/national.at:162: \cobc -m prog.cob"
 at_fn_check_prepare_notrace 'a ${...} parameter expansion' "national.at:162"
-( $at_check_trace; ${COMPILE} -x prog.cob
+( $at_check_trace; cobc -m prog.cob
 ) >>"$at_stdout" 2>>"$at_stderr" 5>&-
 at_status=$? at_failed=false
 $at_check_filter
@@ -8620,9 +8620,9 @@ $at_failed && at_fn_log_failure
 $at_traceon; }
 
 { set +x
-$as_echo "$at_srcdir/national.at:163: ./prog"
+$as_echo "$at_srcdir/national.at:163: java prog"
 at_fn_check_prepare_trace "national.at:163"
-( $at_check_trace; ./prog
+( $at_check_trace; java prog
 ) >>"$at_stdout" 2>>"$at_stderr" 5>&-
 at_status=$? at_failed=false
 $at_check_filter
@@ -8668,9 +8668,9 @@ _ATEOF
 
 
 { set +x
-$as_echo "$at_srcdir/national.at:187: \${COMPILE} -x prog.cob"
+$as_echo "$at_srcdir/national.at:187: \cobc -m prog.cob"
 at_fn_check_prepare_notrace 'a ${...} parameter expansion' "national.at:187"
-( $at_check_trace; ${COMPILE} -x prog.cob
+( $at_check_trace; cobc -m prog.cob
 ) >>"$at_stdout" 2>>"$at_stderr" 5>&-
 at_status=$? at_failed=false
 $at_check_filter
@@ -8681,9 +8681,9 @@ $at_failed && at_fn_log_failure
 $at_traceon; }
 
 { set +x
-$as_echo "$at_srcdir/national.at:188: ./prog"
+$as_echo "$at_srcdir/national.at:188: java prog"
 at_fn_check_prepare_trace "national.at:188"
-( $at_check_trace; ./prog
+( $at_check_trace; java prog
 ) >>"$at_stdout" 2>>"$at_stderr" 5>&-
 at_status=$? at_failed=false
 $at_check_filter
@@ -8729,9 +8729,9 @@ _ATEOF
 
 
 { set +x
-$as_echo "$at_srcdir/national.at:212: \${COMPILE} -x prog.cob"
+$as_echo "$at_srcdir/national.at:212: \cobc -m prog.cob"
 at_fn_check_prepare_notrace 'a ${...} parameter expansion' "national.at:212"
-( $at_check_trace; ${COMPILE} -x prog.cob
+( $at_check_trace; cobc -m prog.cob
 ) >>"$at_stdout" 2>>"$at_stderr" 5>&-
 at_status=$? at_failed=false
 $at_check_filter
@@ -8742,9 +8742,9 @@ $at_failed && at_fn_log_failure
 $at_traceon; }
 
 { set +x
-$as_echo "$at_srcdir/national.at:213: ./prog"
+$as_echo "$at_srcdir/national.at:213: java prog"
 at_fn_check_prepare_trace "national.at:213"
-( $at_check_trace; ./prog
+( $at_check_trace; java prog
 ) >>"$at_stdout" 2>>"$at_stderr" 5>&-
 at_status=$? at_failed=false
 $at_check_filter
@@ -8786,9 +8786,9 @@ _ATEOF
 
 
 { set +x
-$as_echo "$at_srcdir/national.at:233: \${COMPILE} -x prog.cob"
+$as_echo "$at_srcdir/national.at:233: \cobc -m prog.cob"
 at_fn_check_prepare_notrace 'a ${...} parameter expansion' "national.at:233"
-( $at_check_trace; ${COMPILE} -x prog.cob
+( $at_check_trace; cobc -m prog.cob
 ) >>"$at_stdout" 2>>"$at_stderr" 5>&-
 at_status=$? at_failed=false
 $at_check_filter
@@ -8799,9 +8799,9 @@ $at_failed && at_fn_log_failure
 $at_traceon; }
 
 { set +x
-$as_echo "$at_srcdir/national.at:234: ./prog"
+$as_echo "$at_srcdir/national.at:234: java prog"
 at_fn_check_prepare_trace "national.at:234"
-( $at_check_trace; ./prog
+( $at_check_trace; java prog
 ) >>"$at_stdout" 2>>"$at_stderr" 5>&-
 at_status=$? at_failed=false
 $at_check_filter
@@ -8842,9 +8842,9 @@ _ATEOF
 
 
 { set +x
-$as_echo "$at_srcdir/mb-space.at:14: \${COMPILE} -x prog.cob"
+$as_echo "$at_srcdir/mb-space.at:14: \cobc -m prog.cob"
 at_fn_check_prepare_notrace 'a ${...} parameter expansion' "mb-space.at:14"
-( $at_check_trace; ${COMPILE} -x prog.cob
+( $at_check_trace; cobc -m prog.cob
 ) >>"$at_stdout" 2>>"$at_stderr" 5>&-
 at_status=$? at_failed=false
 $at_check_filter
@@ -8855,9 +8855,9 @@ $at_failed && at_fn_log_failure
 $at_traceon; }
 
 { set +x
-$as_echo "$at_srcdir/mb-space.at:15: ./prog"
+$as_echo "$at_srcdir/mb-space.at:15: java prog"
 at_fn_check_prepare_trace "mb-space.at:15"
-( $at_check_trace; ./prog
+( $at_check_trace; java prog
 ) >>"$at_stdout" 2>>"$at_stderr" 5>&-
 at_status=$? at_failed=false
 $at_check_filter
@@ -8903,9 +8903,9 @@ _ATEOF
 
 
 { set +x
-$as_echo "$at_srcdir/mb-space.at:38: \${COMPILE} -x prog.cob"
+$as_echo "$at_srcdir/mb-space.at:38: \cobc -m prog.cob"
 at_fn_check_prepare_notrace 'a ${...} parameter expansion' "mb-space.at:38"
-( $at_check_trace; ${COMPILE} -x prog.cob
+( $at_check_trace; cobc -m prog.cob
 ) >>"$at_stdout" 2>>"$at_stderr" 5>&-
 at_status=$? at_failed=false
 $at_check_filter
@@ -8916,9 +8916,9 @@ $at_failed && at_fn_log_failure
 $at_traceon; }
 
 { set +x
-$as_echo "$at_srcdir/mb-space.at:39: ./prog"
+$as_echo "$at_srcdir/mb-space.at:39: java prog"
 at_fn_check_prepare_trace "mb-space.at:39"
-( $at_check_trace; ./prog
+( $at_check_trace; java prog
 ) >>"$at_stdout" 2>>"$at_stderr" 5>&-
 at_status=$? at_failed=false
 $at_check_filter
@@ -8969,9 +8969,9 @@ _ATEOF
 
 
 { set +x
-$as_echo "$at_srcdir/mb-space.at:65: \${COMPILE} -x prog.cob"
+$as_echo "$at_srcdir/mb-space.at:65: \cobc -m prog.cob"
 at_fn_check_prepare_notrace 'a ${...} parameter expansion' "mb-space.at:65"
-( $at_check_trace; ${COMPILE} -x prog.cob
+( $at_check_trace; cobc -m prog.cob
 ) >>"$at_stdout" 2>>"$at_stderr" 5>&-
 at_status=$? at_failed=false
 $at_check_filter
@@ -8982,9 +8982,9 @@ $at_failed && at_fn_log_failure
 $at_traceon; }
 
 { set +x
-$as_echo "$at_srcdir/mb-space.at:66: ./prog"
+$as_echo "$at_srcdir/mb-space.at:66: java prog"
 at_fn_check_prepare_trace "mb-space.at:66"
-( $at_check_trace; ./prog
+( $at_check_trace; java prog
 ) >>"$at_stdout" 2>>"$at_stderr" 5>&-
 at_status=$? at_failed=false
 $at_check_filter

@@ -11,6 +11,7 @@ import jp.osscons.opensourcecobol.libcobj.data.CobolDataStorage;
 import jp.osscons.opensourcecobol.libcobj.data.CobolDecimal;
 import jp.osscons.opensourcecobol.libcobj.data.CobolFieldAttribute;
 import jp.osscons.opensourcecobol.libcobj.data.CobolFieldFactory;
+import jp.osscons.opensourcecobol.libcobj.data.CobolNationalField;
 import jp.osscons.opensourcecobol.libcobj.exceptions.CobolExceptionId;
 import jp.osscons.opensourcecobol.libcobj.exceptions.CobolRuntimeException;
 import jp.osscons.opensourcecobol.libcobj.exceptions.CobolStopRunException;
@@ -1489,6 +1490,24 @@ public class CobolIntrinsic {
 		}
 		
 		d4.getField(currField, 0);
+		return currField;
+	}
+
+	/**
+	 * libcob/intrinsicのcob_intr_present_valueの実装
+	 * @param prams
+	 * @param fields
+	 * @return
+	 * @throws CobolStopRunException
+	 */
+	public static AbstractCobolField funcNational(AbstractCobolField srcfield) {
+		int size = srcfield.getSize();
+		byte[] pdata = CobolNationalField.han2zen(srcfield.getDataStorage().getByteBuffer(size).array(), size);
+		int ndata = CobolNationalField.workReturnSize;
+		CobolFieldAttribute attr = new CobolFieldAttribute(CobolFieldAttribute.COB_TYPE_NATIONAL, 0, 0, 0, null);
+		AbstractCobolField field = CobolFieldFactory.makeCobolField(ndata, (CobolDataStorage)null, attr);
+		makeFieldEntry(field);
+		currField.getDataStorage().memcpy(pdata, ndata);
 		return currField;
 	}
 }

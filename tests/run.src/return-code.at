@@ -39,7 +39,7 @@ AT_DATA([prog.cob], [
 ])
 
 AT_CHECK([${COMPILE} -o prog prog.cob])
-AT_CHECK([./prog], [1], [01])
+AT_CHECK([java prog], [1], [01])
 
 AT_CLEANUP
 
@@ -82,7 +82,7 @@ AT_DATA([prog.cob], [
 AT_CHECK([${COMPILE_MODULE} mod1.cob])
 AT_CHECK([${COMPILE_MODULE} mod2.cob])
 AT_CHECK([${COMPILE} -o prog prog.cob])
-AT_CHECK([./prog], [0], [+000000000+000000001+000000001+000000000])
+AT_CHECK([java prog], [0], [+000000000+000000001+000000001+000000000])
 
 AT_CLEANUP
 
@@ -112,6 +112,6 @@ AT_DATA([prog.cob], [
 ])
 
 AT_CHECK([${COMPILE} -o prog prog.cob])
-AT_CHECK([./prog], [0], [+000000001+000000001+000000002])
+AT_CHECK([java prog], [0], [+000000001+000000001+000000002])
 
 AT_CLEANUP

@@ -99,19 +99,21 @@ public class CobolNationalField extends AbstractCobolField {
 
 		byte[] pTmp;
 		int size;
-		AbstractCobolField src1;
 		AbstractCobolField src2;
 
+		AbstractCobolField src1 = this.preprocessOfMoving(src);
+		if(src1 == null) {
+			return;
+		}
+		
 		// Convert Numeric
-		switch (src.getAttribute().getType()) {
+		switch (src1.getAttribute().getType()) {
 		case CobolFieldAttribute.COB_TYPE_NUMERIC_PACKED:
 		case CobolFieldAttribute.COB_TYPE_NUMERIC_BINARY:
 		case CobolFieldAttribute.COB_TYPE_NUMERIC_DOUBLE:
 		case CobolFieldAttribute.COB_TYPE_NUMERIC_FLOAT:
-			src1 = src.getNumericField();
+			src1 = src1.getNumericField();
 			break;
-		default:
-			src1 = src;
 		}
 
 		// HANKAKU TO ZENKAKU
@@ -161,7 +163,6 @@ public class CobolNationalField extends AbstractCobolField {
 				data2.setBytes(data1, size2);
 			}
 		} else {
-			//data2.fillBytes(' ');
 			data2.fillBytes((byte) 0x20, size2);
 			if (this.getAttribute().isFlagJustified()) {
 				for (int i = 0; i < len; i += COB_ZENCSIZ) {
@@ -169,7 +170,7 @@ public class CobolNationalField extends AbstractCobolField {
 						data2.setBytes(i, COB_ZENBLK, COB_ZENCSIZ);
 					}
 				}
-				data2.setBytes(data1, size1, len, size1 - size2);
+				data2.getSubDataStorage(len).memcpy(data1, size1);
 			} else {
 				for (int i = 0; i < len; i += COB_ZENCSIZ) {
 					if (len-i >= COB_ZENCSIZ) {
@@ -208,7 +209,8 @@ public class CobolNationalField extends AbstractCobolField {
 	public static byte[] han2zen(byte[] str, int size) {
 		byte[] buf;
 
-		byte c, d = (byte) 0x00;
+		int c;
+		int d = (byte) 0x00;
 		int i, buf_index;
 
 		//??
@@ -222,794 +224,794 @@ public class CobolNationalField extends AbstractCobolField {
 		buf = new byte[size * 2 + 1];
 
 		for (i = 0, buf_index = 0; i < size; i++) {
-			c = str[i];
+			c = Byte.toUnsignedInt(str[i]);
 			switch (c) {
-			case (byte) 0x20:
+			case 0x20:
 				buf[buf_index] = (byte) 0x81;
 				buf[buf_index + 1] = (byte) 0x40;
 				buf_index += 2;
 				break;
-			case (byte) 0x21:
+			case 0x21:
 				buf[buf_index] = (byte) 0x81;
 				buf[buf_index + 1] = (byte) 0x49;
 				buf_index += 2;
 				break;
-			case (byte) 0x22:
+			case 0x22:
 				buf[buf_index] = (byte) 0x81;
 				buf[buf_index + 1] = (byte) 0x68;
 				buf_index += 2;
 				break;
-			case (byte) 0x23:
+			case 0x23:
 				buf[buf_index] = (byte) 0x81;
 				buf[buf_index + 1] = (byte) 0x94;
 				buf_index += 2;
 				break;
-			case (byte) 0x24:
+			case 0x24:
 				buf[buf_index] = (byte) 0x81;
 				buf[buf_index + 1] = (byte) 0x90;
 				buf_index += 2;
 				break;
-			case (byte) 0x25:
+			case 0x25:
 				buf[buf_index] = (byte) 0x81;
 				buf[buf_index + 1] = (byte) 0x93;
 				buf_index += 2;
 				break;
-			case (byte) 0x26:
+			case 0x26:
 				buf[buf_index] = (byte) 0x81;
 				buf[buf_index + 1] = (byte) 0x95;
 				buf_index += 2;
 				break;
-			case (byte) 0x27:
+			case 0x27:
 				buf[buf_index] = (byte) 0x81;
 				buf[buf_index + 1] = (byte) 0x66;
 				buf_index += 2;
 				break;
-			case (byte) 0x28:
+			case 0x28:
 				buf[buf_index] = (byte) 0x81;
 				buf[buf_index + 1] = (byte) 0x69;
 				buf_index += 2;
 				break;
-			case (byte) 0x29:
+			case 0x29:
 				buf[buf_index] = (byte) 0x81;
 				buf[buf_index + 1] = (byte) 0x6A;
 				buf_index += 2;
 				break;
-			case (byte) 0x2A:
+			case 0x2A:
 				buf[buf_index] = (byte) 0x81;
 				buf[buf_index + 1] = (byte) 0x96;
 				buf_index += 2;
 				break;
-			case (byte) 0x2B:
+			case 0x2B:
 				buf[buf_index] = (byte) 0x81;
 				buf[buf_index + 1] = (byte) 0x7B;
 				buf_index += 2;
 				break;
-			case (byte) 0x2C:
+			case 0x2C:
 				buf[buf_index] = (byte) 0x81;
 				buf[buf_index + 1] = (byte) 0x43;
 				buf_index += 2;
 				break;
-			case (byte) 0x2D:
+			case 0x2D:
 				buf[buf_index] = (byte) 0x81;
 				buf[buf_index + 1] = (byte) 0x7C;
 				buf_index += 2;
 				break;
-			case (byte) 0x2E:
+			case 0x2E:
 				buf[buf_index] = (byte) 0x81;
 				buf[buf_index + 1] = (byte) 0x44;
 				buf_index += 2;
 				break;
-			case (byte) 0x2F:
+			case 0x2F:
 				buf[buf_index] = (byte) 0x81;
 				buf[buf_index + 1] = (byte) 0x5E;
 				buf_index += 2;
 				break;
-			case (byte) 0x30:
+			case 0x30:
 				buf[buf_index] = (byte) 0x82;
 				buf[buf_index + 1] = (byte) 0x4F;
 				buf_index += 2;
 				break;
-			case (byte) 0x31:
+			case 0x31:
 				buf[buf_index] = (byte) 0x82;
 				buf[buf_index + 1] = (byte) 0x50;
 				buf_index += 2;
 				break;
-			case (byte) 0x32:
+			case 0x32:
 				buf[buf_index] = (byte) 0x82;
 				buf[buf_index + 1] = (byte) 0x51;
 				buf_index += 2;
 				break;
-			case (byte) 0x33:
+			case 0x33:
 				buf[buf_index] = (byte) 0x82;
 				buf[buf_index + 1] = (byte) 0x52;
 				buf_index += 2;
 				break;
-			case (byte) 0x34:
+			case 0x34:
 				buf[buf_index] = (byte) 0x82;
 				buf[buf_index + 1] = (byte) 0x53;
 				buf_index += 2;
 				break;
-			case (byte) 0x35:
+			case 0x35:
 				buf[buf_index] = (byte) 0x82;
 				buf[buf_index + 1] = (byte) 0x54;
 				buf_index += 2;
 				break;
-			case (byte) 0x36:
+			case 0x36:
 				buf[buf_index] = (byte) 0x82;
 				buf[buf_index + 1] = (byte) 0x55;
 				buf_index += 2;
 				break;
-			case (byte) 0x37:
+			case 0x37:
 				buf[buf_index] = (byte) 0x82;
 				buf[buf_index + 1] = (byte) 0x56;
 				buf_index += 2;
 				break;
-			case (byte) 0x38:
+			case 0x38:
 				buf[buf_index] = (byte) 0x82;
 				buf[buf_index + 1] = (byte) 0x57;
 				buf_index += 2;
 				break;
-			case (byte) 0x39:
+			case 0x39:
 				buf[buf_index] = (byte) 0x82;
 				buf[buf_index + 1] = (byte) 0x58;
 				buf_index += 2;
 				break;
-			case (byte) 0x3A:
+			case 0x3A:
 				buf[buf_index] = (byte) 0x81;
 				buf[buf_index + 1] = (byte) 0x46;
 				buf_index += 2;
 				break;
-			case (byte) 0x3B:
+			case 0x3B:
 				buf[buf_index] = (byte) 0x81;
 				buf[buf_index + 1] = (byte) 0x47;
 				buf_index += 2;
 				break;
-			case (byte) 0x3C:
+			case 0x3C:
 				buf[buf_index] = (byte) 0x81;
 				buf[buf_index + 1] = (byte) 0x83;
 				buf_index += 2;
 				break;
-			case (byte) 0x3D:
+			case 0x3D:
 				buf[buf_index] = (byte) 0x81;
 				buf[buf_index + 1] = (byte) 0x81;
 				buf_index += 2;
 				break;
-			case (byte) 0x3E:
+			case 0x3E:
 				buf[buf_index] = (byte) 0x81;
 				buf[buf_index + 1] = (byte) 0x84;
 				buf_index += 2;
 				break;
-			case (byte) 0x3F:
+			case 0x3F:
 				buf[buf_index] = (byte) 0x81;
 				buf[buf_index + 1] = (byte) 0x48;
 				buf_index += 2;
 				break;
-			case (byte) 0x40:
+			case 0x40:
 				buf[buf_index] = (byte) 0x81;
 				buf[buf_index + 1] = (byte) 0x97;
 				buf_index += 2;
 				break;
-			case (byte) 0x41:
+			case 0x41:
 				buf[buf_index] = (byte) 0x82;
 				buf[buf_index + 1] = (byte) 0x60;
 				buf_index += 2;
 				break;
-			case (byte) 0x42:
+			case 0x42:
 				buf[buf_index] = (byte) 0x82;
 				buf[buf_index + 1] = (byte) 0x61;
 				buf_index += 2;
 				break;
-			case (byte) 0x43:
+			case 0x43:
 				buf[buf_index] = (byte) 0x82;
 				buf[buf_index + 1] = (byte) 0x62;
 				buf_index += 2;
 				break;
-			case (byte) 0x44:
+			case 0x44:
 				buf[buf_index] = (byte) 0x82;
 				buf[buf_index + 1] = (byte) 0x63;
 				buf_index += 2;
 				break;
-			case (byte) 0x45:
+			case 0x45:
 				buf[buf_index] = (byte) 0x82;
 				buf[buf_index + 1] = (byte) 0x64;
 				buf_index += 2;
 				break;
-			case (byte) 0x46:
+			case 0x46:
 				buf[buf_index] = (byte) 0x82;
 				buf[buf_index + 1] = (byte) 0x65;
 				buf_index += 2;
 				break;
-			case (byte) 0x47:
+			case 0x47:
 				buf[buf_index] = (byte) 0x82;
 				buf[buf_index + 1] = (byte) 0x66;
 				buf_index += 2;
 				break;
-			case (byte) 0x48:
+			case 0x48:
 				buf[buf_index] = (byte) 0x82;
 				buf[buf_index + 1] = (byte) 0x67;
 				buf_index += 2;
 				break;
-			case (byte) 0x49:
+			case 0x49:
 				buf[buf_index] = (byte) 0x82;
 				buf[buf_index + 1] = (byte) 0x68;
 				buf_index += 2;
 				break;
-			case (byte) 0x4A:
+			case 0x4A:
 				buf[buf_index] = (byte) 0x82;
 				buf[buf_index + 1] = (byte) 0x69;
 				buf_index += 2;
 				break;
-			case (byte) 0x4B:
+			case 0x4B:
 				buf[buf_index] = (byte) 0x82;
 				buf[buf_index + 1] = (byte) 0x6A;
 				buf_index += 2;
 				break;
-			case (byte) 0x4C:
+			case 0x4C:
 				buf[buf_index] = (byte) 0x82;
 				buf[buf_index + 1] = (byte) 0x6B;
 				buf_index += 2;
 				break;
-			case (byte) 0x4D:
+			case 0x4D:
 				buf[buf_index] = (byte) 0x82;
 				buf[buf_index + 1] = (byte) 0x6C;
 				buf_index += 2;
 				break;
-			case (byte) 0x4E:
+			case 0x4E:
 				buf[buf_index] = (byte) 0x82;
 				buf[buf_index + 1] = (byte) 0x6D;
 				buf_index += 2;
 				break;
-			case (byte) 0x4F:
+			case 0x4F:
 				buf[buf_index] = (byte) 0x82;
 				buf[buf_index + 1] = (byte) 0x6E;
 				buf_index += 2;
 				break;
-			case (byte) 0x50:
+			case 0x50:
 				buf[buf_index] = (byte) 0x82;
 				buf[buf_index + 1] = (byte) 0x6F;
 				buf_index += 2;
 				break;
-			case (byte) 0x51:
+			case 0x51:
 				buf[buf_index] = (byte) 0x82;
 				buf[buf_index + 1] = (byte) 0x70;
 				buf_index += 2;
 				break;
-			case (byte) 0x52:
+			case 0x52:
 				buf[buf_index] = (byte) 0x82;
 				buf[buf_index + 1] = (byte) 0x71;
 				buf_index += 2;
 				break;
-			case (byte) 0x53:
+			case 0x53:
 				buf[buf_index] = (byte) 0x82;
 				buf[buf_index + 1] = (byte) 0x72;
 				buf_index += 2;
 				break;
-			case (byte) 0x54:
+			case 0x54:
 				buf[buf_index] = (byte) 0x82;
 				buf[buf_index + 1] = (byte) 0x73;
 				buf_index += 2;
 				break;
-			case (byte) 0x55:
+			case 0x55:
 				buf[buf_index] = (byte) 0x82;
 				buf[buf_index + 1] = (byte) 0x74;
 				buf_index += 2;
 				break;
-			case (byte) 0x56:
+			case 0x56:
 				buf[buf_index] = (byte) 0x82;
 				buf[buf_index + 1] = (byte) 0x75;
 				buf_index += 2;
 				break;
-			case (byte) 0x57:
+			case 0x57:
 				buf[buf_index] = (byte) 0x82;
 				buf[buf_index + 1] = (byte) 0x76;
 				buf_index += 2;
 				break;
-			case (byte) 0x58:
+			case 0x58:
 				buf[buf_index] = (byte) 0x82;
 				buf[buf_index + 1] = (byte) 0x77;
 				buf_index += 2;
 				break;
-			case (byte) 0x59:
+			case 0x59:
 				buf[buf_index] = (byte) 0x82;
 				buf[buf_index + 1] = (byte) 0x78;
 				buf_index += 2;
 				break;
-			case (byte) 0x5A:
+			case 0x5A:
 				buf[buf_index] = (byte) 0x82;
 				buf[buf_index + 1] = (byte) 0x79;
 				buf_index += 2;
 				break;
-			case (byte) 0x5B:
+			case 0x5B:
 				buf[buf_index] = (byte) 0x81;
 				buf[buf_index + 1] = (byte) 0x6D;
 				buf_index += 2;
 				break;
-			case (byte) 0x5C:
+			case 0x5C:
 				buf[buf_index] = (byte) 0x81;
 				buf[buf_index + 1] = (byte) 0x8F;
 				buf_index += 2;
 				break;
-			case (byte) 0x5D:
+			case 0x5D:
 				buf[buf_index] = (byte) 0x81;
 				buf[buf_index + 1] = (byte) 0x6E;
 				buf_index += 2;
 				break;
-			case (byte) 0x5E:
+			case 0x5E:
 				buf[buf_index] = (byte) 0x81;
 				buf[buf_index + 1] = (byte) 0x4F;
 				buf_index += 2;
 				break;
-			case (byte) 0x5F:
+			case 0x5F:
 				buf[buf_index] = (byte) 0x81;
 				buf[buf_index + 1] = (byte) 0x51;
 				buf_index += 2;
 				break;
-			case (byte) 0x60:
+			case 0x60:
 				buf[buf_index] = (byte) 0x81;
 				buf[buf_index + 1] = (byte) 0x65;
 				buf_index += 2;
 				break;
-			case (byte) 0x61:
+			case 0x61:
 				buf[buf_index] = (byte) 0x82;
 				buf[buf_index + 1] = (byte) 0x81;
 				buf_index += 2;
 				break;
-			case (byte) 0x62:
+			case 0x62:
 				buf[buf_index] = (byte) 0x82;
 				buf[buf_index + 1] = (byte) 0x82;
 				buf_index += 2;
 				break;
-			case (byte) 0x63:
+			case 0x63:
 				buf[buf_index] = (byte) 0x82;
 				buf[buf_index + 1] = (byte) 0x83;
 				buf_index += 2;
 				break;
-			case (byte) 0x64:
+			case 0x64:
 				buf[buf_index] = (byte) 0x82;
 				buf[buf_index + 1] = (byte) 0x84;
 				buf_index += 2;
 				break;
-			case (byte) 0x65:
+			case 0x65:
 				buf[buf_index] = (byte) 0x82;
 				buf[buf_index + 1] = (byte) 0x85;
 				buf_index += 2;
 				break;
-			case (byte) 0x66:
+			case 0x66:
 				buf[buf_index] = (byte) 0x82;
 				buf[buf_index + 1] = (byte) 0x86;
 				buf_index += 2;
 				break;
-			case (byte) 0x67:
+			case 0x67:
 				buf[buf_index] = (byte) 0x82;
 				buf[buf_index + 1] = (byte) 0x87;
 				buf_index += 2;
 				break;
-			case (byte) 0x68:
+			case 0x68:
 				buf[buf_index] = (byte) 0x82;
 				buf[buf_index + 1] = (byte) 0x88;
 				buf_index += 2;
 				break;
-			case (byte) 0x69:
+			case 0x69:
 				buf[buf_index] = (byte) 0x82;
 				buf[buf_index + 1] = (byte) 0x89;
 				buf_index += 2;
 				break;
-			case (byte) 0x6A:
+			case 0x6A:
 				buf[buf_index] = (byte) 0x82;
 				buf[buf_index + 1] = (byte) 0x8A;
 				buf_index += 2;
 				break;
-			case (byte) 0x6B:
+			case 0x6B:
 				buf[buf_index] = (byte) 0x82;
 				buf[buf_index + 1] = (byte) 0x8B;
 				buf_index += 2;
 				break;
-			case (byte) 0x6C:
+			case 0x6C:
 				buf[buf_index] = (byte) 0x82;
 				buf[buf_index + 1] = (byte) 0x8C;
 				buf_index += 2;
 				break;
-			case (byte) 0x6D:
+			case 0x6D:
 				buf[buf_index] = (byte) 0x82;
 				buf[buf_index + 1] = (byte) 0x8D;
 				buf_index += 2;
 				break;
-			case (byte) 0x6E:
+			case 0x6E:
 				buf[buf_index] = (byte) 0x82;
 				buf[buf_index + 1] = (byte) 0x8E;
 				buf_index += 2;
 				break;
-			case (byte) 0x6F:
+			case 0x6F:
 				buf[buf_index] = (byte) 0x82;
 				buf[buf_index + 1] = (byte) 0x8F;
 				buf_index += 2;
 				break;
-			case (byte) 0x70:
+			case 0x70:
 				buf[buf_index] = (byte) 0x82;
 				buf[buf_index + 1] = (byte) 0x90;
 				buf_index += 2;
 				break;
-			case (byte) 0x71:
+			case 0x71:
 				buf[buf_index] = (byte) 0x82;
 				buf[buf_index + 1] = (byte) 0x91;
 				buf_index += 2;
 				break;
-			case (byte) 0x72:
+			case 0x72:
 				buf[buf_index] = (byte) 0x82;
 				buf[buf_index + 1] = (byte) 0x92;
 				buf_index += 2;
 				break;
-			case (byte) 0x73:
+			case 0x73:
 				buf[buf_index] = (byte) 0x82;
 				buf[buf_index + 1] = (byte) 0x93;
 				buf_index += 2;
 				break;
-			case (byte) 0x74:
+			case 0x74:
 				buf[buf_index] = (byte) 0x82;
 				buf[buf_index + 1] = (byte) 0x94;
 				buf_index += 2;
 				break;
-			case (byte) 0x75:
+			case 0x75:
 				buf[buf_index] = (byte) 0x82;
 				buf[buf_index + 1] = (byte) 0x95;
 				buf_index += 2;
 				break;
-			case (byte) 0x76:
+			case 0x76:
 				buf[buf_index] = (byte) 0x82;
 				buf[buf_index + 1] = (byte) 0x96;
 				buf_index += 2;
 				break;
-			case (byte) 0x77:
+			case 0x77:
 				buf[buf_index] = (byte) 0x82;
 				buf[buf_index + 1] = (byte) 0x97;
 				buf_index += 2;
 				break;
-			case (byte) 0x78:
+			case 0x78:
 				buf[buf_index] = (byte) 0x82;
 				buf[buf_index + 1] = (byte) 0x98;
 				buf_index += 2;
 				break;
-			case (byte) 0x79:
+			case 0x79:
 				buf[buf_index] = (byte) 0x82;
 				buf[buf_index + 1] = (byte) 0x99;
 				buf_index += 2;
 				break;
-			case (byte) 0x7A:
+			case 0x7A:
 				buf[buf_index] = (byte) 0x82;
 				buf[buf_index + 1] = (byte) 0x9A;
 				buf_index += 2;
 				break;
-			case (byte) 0x7B:
+			case 0x7B:
 				buf[buf_index] = (byte) 0x81;
 				buf[buf_index + 1] = (byte) 0x6F;
 				buf_index += 2;
 				break;
-			case (byte) 0x7C:
+			case 0x7C:
 				buf[buf_index] = (byte) 0x81;
 				buf[buf_index + 1] = (byte) 0x62;
 				buf_index += 2;
 				break;
-			case (byte) 0x7D:
+			case 0x7D:
 				buf[buf_index] = (byte) 0x81;
 				buf[buf_index + 1] = (byte) 0x70;
 				buf_index += 2;
 				break;
-			case (byte) 0x7E:
+			case 0x7E:
 				buf[buf_index] = (byte) 0x81;
 				buf[buf_index + 1] = (byte) 0x60;
 				buf_index += 2;
 				break;
-			case (byte) 0xA1:
+			case 0xA1:
 				buf[buf_index] = (byte) 0x81;
 				buf[buf_index + 1] = (byte) 0x42;
 				buf_index += 2;
 				break;
-			case (byte) 0xA2:
+			case 0xA2:
 				buf[buf_index] = (byte) 0x81;
 				buf[buf_index + 1] = (byte) 0x75;
 				buf_index += 2;
 				break;
-			case (byte) 0xA3:
+			case 0xA3:
 				buf[buf_index] = (byte) 0x81;
 				buf[buf_index + 1] = (byte) 0x76;
 				buf_index += 2;
 				break;
-			case (byte) 0xA4:
+			case 0xA4:
 				buf[buf_index] = (byte) 0x81;
 				buf[buf_index + 1] = (byte) 0x41;
 				buf_index += 2;
 				break;
-			case (byte) 0xA5:
+			case 0xA5:
 				buf[buf_index] = (byte) 0x81;
 				buf[buf_index + 1] = (byte) 0x45;
 				buf_index += 2;
 				break;
-			case (byte) 0xA6:
+			case 0xA6:
 				buf[buf_index] = (byte) 0x83;
 				buf[buf_index + 1] = (byte) 0x92;
 				buf_index += 2;
 				break;
-			case (byte) 0xA7:
+			case 0xA7:
 				buf[buf_index] = (byte) 0x83;
 				buf[buf_index + 1] = (byte) 0x40;
 				buf_index += 2;
 				break;
-			case (byte) 0xA8:
+			case 0xA8:
 				buf[buf_index] = (byte) 0x83;
 				buf[buf_index + 1] = (byte) 0x42;
 				buf_index += 2;
 				break;
-			case (byte) 0xA9:
+			case 0xA9:
 				buf[buf_index] = (byte) 0x83;
 				buf[buf_index + 1] = (byte) 0x44;
 				buf_index += 2;
 				break;
-			case (byte) 0xAA:
+			case 0xAA:
 				buf[buf_index] = (byte) 0x83;
 				buf[buf_index + 1] = (byte) 0x46;
 				buf_index += 2;
 				break;
-			case (byte) 0xAB:
+			case 0xAB:
 				buf[buf_index] = (byte) 0x83;
 				buf[buf_index + 1] = (byte) 0x48;
 				buf_index += 2;
 				break;
-			case (byte) 0xAC:
+			case 0xAC:
 				buf[buf_index] = (byte) 0x83;
 				buf[buf_index + 1] = (byte) 0x83;
 				buf_index += 2;
 				break;
-			case (byte) 0xAD:
+			case 0xAD:
 				buf[buf_index] = (byte) 0x83;
 				buf[buf_index + 1] = (byte) 0x85;
 				buf_index += 2;
 				break;
-			case (byte) 0xAE:
+			case 0xAE:
 				buf[buf_index] = (byte) 0x83;
 				buf[buf_index + 1] = (byte) 0x87;
 				buf_index += 2;
 				break;
-			case (byte) 0xAF:
+			case 0xAF:
 				buf[buf_index] = (byte) 0x83;
 				buf[buf_index + 1] = (byte) 0x62;
 				buf_index += 2;
 				break;
-			case (byte) 0xB0:
+			case 0xB0:
 				buf[buf_index] = (byte) 0x81;
 				buf[buf_index + 1] = (byte) 0x5B;
 				buf_index += 2;
 				break;
-			case (byte) 0xB1:
+			case 0xB1:
 				buf[buf_index] = (byte) 0x83;
 				buf[buf_index + 1] = (byte) 0x41;
 				buf_index += 2;
 				break;
-			case (byte) 0xB2:
+			case 0xB2:
 				buf[buf_index] = (byte) 0x83;
 				buf[buf_index + 1] = (byte) 0x43;
 				buf_index += 2;
 				break;
-			case (byte) 0xB3:
+			case 0xB3:
 				buf[buf_index] = (byte) 0x83;
 				buf[buf_index + 1] = (byte) 0x45;
 				buf_index += 2;
 				break;
-			case (byte) 0xB4:
+			case 0xB4:
 				buf[buf_index] = (byte) 0x83;
 				buf[buf_index + 1] = (byte) 0x47;
 				buf_index += 2;
 				break;
-			case (byte) 0xB5:
+			case 0xB5:
 				buf[buf_index] = (byte) 0x83;
 				buf[buf_index + 1] = (byte) 0x49;
 				buf_index += 2;
 				break;
-			case (byte) 0xB6:
+			case 0xB6:
 				buf[buf_index] = (byte) 0x83;
 				buf[buf_index + 1] = (byte) 0x4A;
 				buf_index += 2;
 				break;
-			case (byte) 0xB7:
+			case 0xB7:
 				buf[buf_index] = (byte) 0x83;
 				buf[buf_index + 1] = (byte) 0x4C;
 				buf_index += 2;
 				break;
-			case (byte) 0xB8:
+			case 0xB8:
 				buf[buf_index] = (byte) 0x83;
 				buf[buf_index + 1] = (byte) 0x4E;
 				buf_index += 2;
 				break;
-			case (byte) 0xB9:
+			case 0xB9:
 				buf[buf_index] = (byte) 0x83;
 				buf[buf_index + 1] = (byte) 0x50;
 				buf_index += 2;
 				break;
-			case (byte) 0xBA:
+			case 0xBA:
 				buf[buf_index] = (byte) 0x83;
 				buf[buf_index + 1] = (byte) 0x52;
 				buf_index += 2;
 				break;
-			case (byte) 0xBB:
+			case 0xBB:
 				buf[buf_index] = (byte) 0x83;
 				buf[buf_index + 1] = (byte) 0x54;
 				buf_index += 2;
 				break;
-			case (byte) 0xBC:
+			case 0xBC:
 				buf[buf_index] = (byte) 0x83;
 				buf[buf_index + 1] = (byte) 0x56;
 				buf_index += 2;
 				break;
-			case (byte) 0xBD:
+			case 0xBD:
 				buf[buf_index] = (byte) 0x83;
 				buf[buf_index + 1] = (byte) 0x58;
 				buf_index += 2;
 				break;
-			case (byte) 0xBE:
+			case 0xBE:
 				buf[buf_index] = (byte) 0x83;
 				buf[buf_index + 1] = (byte) 0x5A;
 				buf_index += 2;
 				break;
-			case (byte) 0xBF:
+			case 0xBF:
 				buf[buf_index] = (byte) 0x83;
 				buf[buf_index + 1] = (byte) 0x5C;
 				buf_index += 2;
 				break;
-			case (byte) 0xC0:
+			case 0xC0:
 				buf[buf_index] = (byte) 0x83;
 				buf[buf_index + 1] = (byte) 0x5E;
 				buf_index += 2;
 				break;
-			case (byte) 0xC1:
+			case 0xC1:
 				buf[buf_index] = (byte) 0x83;
 				buf[buf_index + 1] = (byte) 0x60;
 				buf_index += 2;
 				break;
-			case (byte) 0xC2:
+			case 0xC2:
 				buf[buf_index] = (byte) 0x83;
 				buf[buf_index + 1] = (byte) 0x63;
 				buf_index += 2;
 				break;
-			case (byte) 0xC3:
+			case 0xC3:
 				buf[buf_index] = (byte) 0x83;
 				buf[buf_index + 1] = (byte) 0x65;
 				buf_index += 2;
 				break;
-			case (byte) 0xC4:
+			case 0xC4:
 				buf[buf_index] = (byte) 0x83;
 				buf[buf_index + 1] = (byte) 0x67;
 				buf_index += 2;
 				break;
-			case (byte) 0xC5:
+			case 0xC5:
 				buf[buf_index] = (byte) 0x83;
 				buf[buf_index + 1] = (byte) 0x69;
 				buf_index += 2;
 				break;
-			case (byte) 0xC6:
+			case 0xC6:
 				buf[buf_index] = (byte) 0x83;
 				buf[buf_index + 1] = (byte) 0x6A;
 				buf_index += 2;
 				break;
-			case (byte) 0xC7:
+			case 0xC7:
 				buf[buf_index] = (byte) 0x83;
 				buf[buf_index + 1] = (byte) 0x6B;
 				buf_index += 2;
 				break;
-			case (byte) 0xC8:
+			case 0xC8:
 				buf[buf_index] = (byte) 0x83;
 				buf[buf_index + 1] = (byte) 0x6C;
 				buf_index += 2;
 				break;
-			case (byte) 0xC9:
+			case 0xC9:
 				buf[buf_index] = (byte) 0x83;
 				buf[buf_index + 1] = (byte) 0x6D;
 				buf_index += 2;
 				break;
-			case (byte) 0xCA:
+			case 0xCA:
 				buf[buf_index] = (byte) 0x83;
 				buf[buf_index + 1] = (byte) 0x6E;
 				buf_index += 2;
 				break;
-			case (byte) 0xCB:
+			case 0xCB:
 				buf[buf_index] = (byte) 0x83;
 				buf[buf_index + 1] = (byte) 0x71;
 				buf_index += 2;
 				break;
-			case (byte) 0xCC:
+			case 0xCC:
 				buf[buf_index] = (byte) 0x83;
 				buf[buf_index + 1] = (byte) 0x74;
 				buf_index += 2;
 				break;
-			case (byte) 0xCD:
+			case 0xCD:
 				buf[buf_index] = (byte) 0x83;
 				buf[buf_index + 1] = (byte) 0x77;
 				buf_index += 2;
 				break;
-			case (byte) 0xCE:
+			case 0xCE:
 				buf[buf_index] = (byte) 0x83;
 				buf[buf_index + 1] = (byte) 0x7A;
 				buf_index += 2;
 				break;
-			case (byte) 0xCF:
+			case 0xCF:
 				buf[buf_index] = (byte) 0x83;
 				buf[buf_index + 1] = (byte) 0x7D;
 				buf_index += 2;
 				break;
-			case (byte) 0xD0:
+			case 0xD0:
 				buf[buf_index] = (byte) 0x83;
 				buf[buf_index + 1] = (byte) 0x7E;
 				buf_index += 2;
 				break;
-			case (byte) 0xD1:
+			case 0xD1:
 				buf[buf_index] = (byte) 0x83;
 				buf[buf_index + 1] = (byte) 0x80;
 				buf_index += 2;
 				break;
-			case (byte) 0xD2:
+			case 0xD2:
 				buf[buf_index] = (byte) 0x83;
 				buf[buf_index + 1] = (byte) 0x81;
 				buf_index += 2;
 				break;
-			case (byte) 0xD3:
+			case 0xD3:
 				buf[buf_index] = (byte) 0x83;
 				buf[buf_index + 1] = (byte) 0x82;
 				buf_index += 2;
 				break;
-			case (byte) 0xD4:
+			case 0xD4:
 				buf[buf_index] = (byte) 0x83;
 				buf[buf_index + 1] = (byte) 0x84;
 				buf_index += 2;
 				break;
-			case (byte) 0xD5:
+			case 0xD5:
 				buf[buf_index] = (byte) 0x83;
 				buf[buf_index + 1] = (byte) 0x86;
 				buf_index += 2;
 				break;
-			case (byte) 0xD6:
+			case 0xD6:
 				buf[buf_index] = (byte) 0x83;
 				buf[buf_index + 1] = (byte) 0x88;
 				buf_index += 2;
 				break;
-			case (byte) 0xD7:
+			case 0xD7:
 				buf[buf_index] = (byte) 0x83;
 				buf[buf_index + 1] = (byte) 0x89;
 				buf_index += 2;
 				break;
-			case (byte) 0xD8:
+			case 0xD8:
 				buf[buf_index] = (byte) 0x83;
 				buf[buf_index + 1] = (byte) 0x8A;
 				buf_index += 2;
 				break;
-			case (byte) 0xD9:
+			case 0xD9:
 				buf[buf_index] = (byte) 0x83;
 				buf[buf_index + 1] = (byte) 0x8B;
 				buf_index += 2;
 				break;
-			case (byte) 0xDA:
+			case 0xDA:
 				buf[buf_index] = (byte) 0x83;
 				buf[buf_index + 1] = (byte) 0x8C;
 				buf_index += 2;
 				break;
-			case (byte) 0xDB:
+			case 0xDB:
 				buf[buf_index] = (byte) 0x83;
 				buf[buf_index + 1] = (byte) 0x8D;
 				buf_index += 2;
 				break;
-			case (byte) 0xDC:
+			case 0xDC:
 				buf[buf_index] = (byte) 0x83;
 				buf[buf_index + 1] = (byte) 0x8F;
 				buf_index += 2;
 				break;
-			case (byte) 0xDD:
+			case 0xDD:
 				buf[buf_index] = (byte) 0x83;
 				buf[buf_index + 1] = (byte) 0x93;
 				buf_index += 2;
 				break;
-			case (byte) 0xDE:
+			case 0xDE:
 				/* Dakuten */
-				if ((d >= (byte) 0xB6 && (byte) d <= 0xC4) ||
-						(d >= (byte) 0xCA && d <= (byte) 0xCE)) {
+				if ((d >= 0xB6 &&  d <= 0xC4) ||
+						(d >= 0xCA && d <= 0xCE)) {
 					buf[buf_index - 1]++;
-				} else if (d == (byte) 0xB3) {
+				} else if (d == 0xB3) {
 					buf[buf_index - 1] = (byte) 0x94;
 				} else {
 					buf[buf_index] = (byte) 0x81;
@@ -1017,9 +1019,9 @@ public class CobolNationalField extends AbstractCobolField {
 					buf_index += 2;
 				}
 				break;
-			case (byte) 0xDF:
+			case 0xDF:
 				/* Han-dakuten */
-				if (d >= (byte) 0xCA && d <= (byte) 0xCE) {
+				if (d >= 0xCA && d <= 0xCE) {
 					buf[buf_index - 1] += 2;
 				} else {
 					buf[buf_index] = (byte) 0x81;
@@ -1027,11 +1029,11 @@ public class CobolNationalField extends AbstractCobolField {
 					buf_index += 2;
 				}
 				break;
-			case (byte) 0:
-			case (byte) 255:
-				buf[buf_index] = c;
+			case 0:
+			case 255:
+				buf[buf_index] = (byte)c;
 				buf_index++;
-				buf[buf_index] = c;
+				buf[buf_index] = (byte)c;
 				buf_index++;
 				if (i + 1 < size) {
 					if (str[i + 1] == str[i]) {

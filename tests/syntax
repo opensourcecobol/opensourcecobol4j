@@ -2164,9 +2164,9 @@ $at_failed && at_fn_log_failure
 $at_traceon; }
 
 { set +x
-$as_echo "$at_srcdir/copy.at:64: ./prog"
+$as_echo "$at_srcdir/copy.at:64: java prog"
 at_fn_check_prepare_trace "copy.at:64"
-( $at_check_trace; ./prog
+( $at_check_trace; java prog
 ) >>"$at_stdout" 2>>"$at_stderr" 5>&-
 at_status=$? at_failed=false
 $at_check_filter
@@ -2231,9 +2231,9 @@ $at_failed && at_fn_log_failure
 $at_traceon; }
 
 { set +x
-$as_echo "$at_srcdir/copy.at:93: ./prog"
+$as_echo "$at_srcdir/copy.at:93: java prog"
 at_fn_check_prepare_trace "copy.at:93"
-( $at_check_trace; ./prog
+( $at_check_trace; java prog
 ) >>"$at_stdout" 2>>"$at_stderr" 5>&-
 at_status=$? at_failed=false
 $at_check_filter
@@ -2299,9 +2299,9 @@ $at_failed && at_fn_log_failure
 $at_traceon; }
 
 { set +x
-$as_echo "$at_srcdir/copy.at:123: ./prog"
+$as_echo "$at_srcdir/copy.at:123: java prog"
 at_fn_check_prepare_trace "copy.at:123"
-( $at_check_trace; ./prog
+( $at_check_trace; java prog
 ) >>"$at_stdout" 2>>"$at_stderr" 5>&-
 at_status=$? at_failed=false
 $at_check_filter
@@ -2369,9 +2369,9 @@ $at_failed && at_fn_log_failure
 $at_traceon; }
 
 { set +x
-$as_echo "$at_srcdir/copy.at:153: ./prog"
+$as_echo "$at_srcdir/copy.at:153: java prog"
 at_fn_check_prepare_trace "copy.at:153"
-( $at_check_trace; ./prog
+( $at_check_trace; java prog
 ) >>"$at_stdout" 2>>"$at_stderr" 5>&-
 at_status=$? at_failed=false
 $at_check_filter
@@ -2434,9 +2434,9 @@ $at_failed && at_fn_log_failure
 $at_traceon; }
 
 { set +x
-$as_echo "$at_srcdir/copy.at:180: ./prog"
+$as_echo "$at_srcdir/copy.at:180: java prog"
 at_fn_check_prepare_trace "copy.at:180"
-( $at_check_trace; ./prog
+( $at_check_trace; java prog
 ) >>"$at_stdout" 2>>"$at_stderr" 5>&-
 at_status=$? at_failed=false
 $at_check_filter
@@ -2508,9 +2508,9 @@ $at_failed && at_fn_log_failure
 $at_traceon; }
 
 { set +x
-$as_echo "$at_srcdir/unmatured-copy.at:21: ./prog"
+$as_echo "$at_srcdir/unmatured-copy.at:21: java prog"
 at_fn_check_prepare_trace "unmatured-copy.at:21"
-( $at_check_trace; ./prog
+( $at_check_trace; java prog
 ) >>"$at_stdout" 2>>"$at_stderr" 5>&-
 at_status=$? at_failed=false
 $at_check_filter
@@ -6464,9 +6464,9 @@ _ATEOF
 
 
 { set +x
-$as_echo "$at_srcdir/indicator.at:131: \${COMPILE} -x prog.cob"
+$as_echo "$at_srcdir/indicator.at:131: \cobc -m prog.cob"
 at_fn_check_prepare_notrace 'a ${...} parameter expansion' "indicator.at:131"
-( $at_check_trace; ${COMPILE} -x prog.cob
+( $at_check_trace; cobc -m prog.cob
 ) >>"$at_stdout" 2>>"$at_stderr" 5>&-
 at_status=$? at_failed=false
 $at_check_filter

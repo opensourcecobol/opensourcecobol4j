@@ -46,7 +46,7 @@ AT_CHECK([${CC} ${SHROPT} -o dump.${SHREXT} dump.c])
 sed -e 's/@USAGE@/BINARY/' ${TEMPLATE}/numeric-dump.cob > prog.cob
 
 AT_CHECK([${COMPILE} -conf=test.conf -o prog prog.cob])
-AT_CHECK([./prog], [0],
+AT_CHECK([java prog], [0],
 [0001202020202020
 000c202020202020
 007b202020202020
@@ -160,7 +160,7 @@ fe4964b459cf0cb2
 sed -e 's/@USAGE@/BINARY/' ${TEMPLATE}/numeric-display.cob > prog.cob
 
 AT_CHECK([${COMPILE} -conf=test.conf -o prog prog.cob])
-AT_CHECK([./prog], [0],
+AT_CHECK([java prog], [0],
 [1
 12
 123
@@ -234,7 +234,7 @@ AT_CHECK([${CC} ${SHROPT} -o dump.${SHREXT} dump.c])
 sed -e 's/@USAGE@/BINARY/' ${TEMPLATE}/numeric-dump.cob > prog.cob
 
 AT_CHECK([${COMPILE} -conf=test.conf -o prog prog.cob])
-AT_CHECK([./prog], [0],
+AT_CHECK([java prog], [0],
 [0100202020202020
 0c00202020202020
 7b00202020202020
@@ -348,7 +348,7 @@ b20ccf59b46449fe
 sed -e 's/@USAGE@/BINARY/' ${TEMPLATE}/numeric-display.cob > prog.cob
 
 AT_CHECK([${COMPILE} -conf=test.conf -o prog prog.cob])
-AT_CHECK([./prog], [0],
+AT_CHECK([java prog], [0],
 [1
 12
 123
@@ -419,7 +419,7 @@ AT_CHECK([${CC} ${SHROPT} -o dump.${SHREXT} dump.c])
 sed -e 's/@USAGE@/BINARY/' ${TEMPLATE}/numeric-dump.cob > prog.cob
 
 AT_CHECK([${COMPILE} -conf=test.conf -o prog prog.cob])
-AT_CHECK([./prog], [0],
+AT_CHECK([java prog], [0],
 [0120202020202020
 0c20202020202020
 007b202020202020
@@ -533,7 +533,7 @@ fe4964b459cf0cb2
 sed -e 's/@USAGE@/BINARY/' ${TEMPLATE}/numeric-display.cob > prog.cob
 
 AT_CHECK([${COMPILE} -conf=test.conf -o prog prog.cob])
-AT_CHECK([./prog], [0],
+AT_CHECK([java prog], [0],
 [1
 12
 123
@@ -607,7 +607,7 @@ AT_CHECK([${CC} ${SHROPT} -o dump.${SHREXT} dump.c])
 sed -e 's/@USAGE@/BINARY/' ${TEMPLATE}/numeric-dump.cob > prog.cob
 
 AT_CHECK([${COMPILE} -conf=test.conf -o prog prog.cob])
-AT_CHECK([./prog], [0],
+AT_CHECK([java prog], [0],
 [0120202020202020
 0c20202020202020
 7b00202020202020
@@ -721,7 +721,7 @@ b20ccf59b46449fe
 sed -e 's/@USAGE@/BINARY/' ${TEMPLATE}/numeric-display.cob > prog.cob
 
 AT_CHECK([${COMPILE} -conf=test.conf -o prog prog.cob])
-AT_CHECK([./prog], [0],
+AT_CHECK([java prog], [0],
 [1
 12
 123
@@ -793,7 +793,7 @@ AT_CHECK([${CC} ${SHROPT} -o dump.${SHREXT} dump.c])
 sed -e 's/@USAGE@/BINARY/' ${TEMPLATE}/numeric-dump.cob > prog.cob
 
 AT_CHECK([${COMPILE} -conf=test.conf -o prog prog.cob])
-AT_CHECK([./prog], [0],
+AT_CHECK([java prog], [0],
 [0120202020202020
 0c20202020202020
 007b202020202020
@@ -907,7 +907,7 @@ fe4964b459cf0cb2
 sed -e 's/@USAGE@/BINARY/' ${TEMPLATE}/numeric-display.cob > prog.cob
 
 AT_CHECK([${COMPILE} -conf=test.conf -o prog prog.cob])
-AT_CHECK([./prog], [0],
+AT_CHECK([java prog], [0],
 [1
 12
 123
@@ -981,7 +981,7 @@ AT_CHECK([${CC} ${SHROPT} -o dump.${SHREXT} dump.c])
 sed -e 's/@USAGE@/BINARY/' ${TEMPLATE}/numeric-dump.cob > prog.cob
 
 AT_CHECK([${COMPILE} -conf=test.conf -o prog prog.cob])
-AT_CHECK([./prog], [0],
+AT_CHECK([java prog], [0],
 [0120202020202020
 0c20202020202020
 7b00202020202020
@@ -1095,7 +1095,7 @@ b20ccf59b46449fe
 sed -e 's/@USAGE@/BINARY/' ${TEMPLATE}/numeric-display.cob > prog.cob
 
 AT_CHECK([${COMPILE} -conf=test.conf -o prog prog.cob])
-AT_CHECK([./prog], [0],
+AT_CHECK([java prog], [0],
 [1
 12
 123
@@ -1152,7 +1152,7 @@ pretty-display: no
 sed -e 's/@USAGE@/BINARY/' ${TEMPLATE}/numeric-display.cob > prog.cob
 
 AT_CHECK([${COMPILE} -conf=test.conf -o prog prog.cob])
-AT_CHECK([./prog], [0],
+AT_CHECK([java prog], [0],
 [001
 012
 00123

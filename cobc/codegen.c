@@ -2,7 +2,7 @@
  * Copyright (C) 2002-2009 Keisuke Nishida
  * Copyright (C) 2007-2009 Roger While
  * Copyright (C) 2020 TOKYO SYSTEM HOUSE Co., Ltd.
- *
+ g
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation; either version 2, or (at your option)
@@ -1996,9 +1996,9 @@ joutput_initialize_one (struct cb_initialize *p, cb_tree x)
                         CB_REFERENCE (tmpx)->offset = cb_build_numeric_literal (0, (unsigned char *)"1", 1);
                         CB_REFERENCE (tmpx)->subs = CB_REFERENCE (x)->subs;
 
-                        joutput_param (value, 1);
-                        joutput (".moveFrom(");
                         joutput_param ((cb_tree)tmpx, 2);
+                        joutput (".moveFrom(");
+                        joutput_param (value, 1);
                         joutput (");\n");
 
                         return;
@@ -3434,7 +3434,7 @@ joutput_stmt (cb_tree x)
 		if (x->source_file && last_line != x->source_line) {
 			if (cb_flag_source_location) {
 				joutput_prefix ();
-				joutput ("cob_set_location (\"%s\", \"%s\", %d, ",
+				joutput ("CobolUtil.setLocation (\"%s\", \"%s\", %d, ",
 					excp_current_program_id, x->source_file,
 					x->source_line);
 				if (excp_current_section) {

@@ -7,7 +7,7 @@ AT_DATA([prog.cob], [
            STOP RUN.
 ])
 
-AT_CHECK([${COMPILE} -x prog.cob])
+AT_CHECK([cobc -m prog.cob])
 
 AT_CLEANUP
 
@@ -25,8 +25,8 @@ AT_DATA([prog.cob], [
            STOP RUN.
 ])
 
-AT_CHECK([${COMPILE} -x prog.cob])
-AT_CHECK([./prog], [0], [Unicode])
+AT_CHECK([cobc -m prog.cob])
+AT_CHECK([java prog], [0], [Unicode])
 
 AT_CLEANUP
 
@@ -49,8 +49,8 @@ AT_DATA([prog.cob], [
            STOP RUN.
 ])
 
-AT_CHECK([${COMPILE} -x prog.cob])
-AT_CHECK([./prog], [0], [Unicode])
+AT_CHECK([cobc -m prog.cob])
+AT_CHECK([java prog], [0], [Unicode])
 
 AT_CLEANUP
 
@@ -69,8 +69,8 @@ AT_DATA([prog.cob], [
            STOP RUN.
 ])
 
-AT_CHECK([${COMPILE} -x prog.cob])
-AT_CHECK([./prog], [0], [AB])
+AT_CHECK([cobc -m prog.cob])
+AT_CHECK([java prog], [0], [AB])
 
 AT_CLEANUP
 
@@ -91,8 +91,8 @@ AT_DATA([prog.cob], [
            STOP RUN.
 ])
 
-AT_CHECK([${COMPILE} -x prog.cob])
-AT_CHECK([./prog], [0], [Hello, and good bye.])
+AT_CHECK([cobc -m prog.cob])
+AT_CHECK([java prog], [0], [Hello, and good bye.])
 
 AT_CLEANUP
 
@@ -113,8 +113,8 @@ AT_DATA([prog.cob], [
            STOP RUN.
 ])
 
-AT_CHECK([${COMPILE} -x prog.cob])
-AT_CHECK([./prog], [0], [Hello, and good bye.])
+AT_CHECK([cobc -m prog.cob])
+AT_CHECK([java prog], [0], [Hello, and good bye.])
 
 AT_CLEANUP
 
@@ -135,7 +135,7 @@ AT_DATA([prog.cob], [
            STOP RUN.
 ])
 
-AT_CHECK([${COMPILE} -x prog.cob], [1], [],
+AT_CHECK([cobc -m prog.cob], [1], [],
 [prog.cob:7: Error: User defined name must be less than 32 characters
 prog.cob:9: Error: User defined name must be less than 32 characters
 ])
@@ -172,8 +172,8 @@ AT_DATA([prog.cob], [
            STOP RUN.
 ])
 
-AT_CHECK([${COMPILE} -x prog.cob])
-AT_CHECK([./prog], [0], [OK])
+AT_CHECK([cobc -m prog.cob])
+AT_CHECK([java prog], [0], [OK])
 
 AT_CLEANUP
 
@@ -194,7 +194,7 @@ AT_DATA([prog.cob], [
 ])
 
 AT_CHECK([${COMPILE} -debug -x prog.cob])
-AT_CHECK([./prog], [1], [],
+AT_CHECK([java prog], [1], [],
 [prog.cob:11: libcob: 'U項目' not numeric: 'ABCD'
 ])
 
@@ -215,7 +215,7 @@ AT_DATA([prog.cob], [
 ])
 
 AT_CHECK([${COMPILE} -debug -x prog.cob])
-AT_CHECK([./prog], [1], [],
+AT_CHECK([java prog], [1], [],
 [prog.cob:9: libcob: BASED/LINKAGE item 'Y項目' has NULL address
 ])
 
@@ -237,7 +237,7 @@ AT_DATA([prog.cob], [
 ])
 
 AT_CHECK([${COMPILE} -debug -x prog.cob])
-AT_CHECK([./prog], [1], [],
+AT_CHECK([java prog], [1], [],
 [prog.cob:10: libcob: OCCURS DEPENDING ON 'I項目' out of bounds: 4
 ])
 
@@ -259,7 +259,7 @@ AT_DATA([prog.cob], [
 ])
 
 AT_CHECK([${COMPILE} -debug -x prog.cob])
-AT_CHECK([./prog], [1], [],
+AT_CHECK([java prog], [1], [],
 [prog.cob:10: libcob: Subscript of 'Y項目' out of bounds: 3
 ])
 
@@ -281,7 +281,7 @@ AT_DATA([prog.cob], [
 ])
 
 AT_CHECK([${COMPILE} -debug -x prog.cob])
-AT_CHECK([./prog], [1], [],
+AT_CHECK([java prog], [1], [],
 [prog.cob:10: libcob: Length of 'X項目' out of bounds: 6
 ])
 
@@ -303,7 +303,7 @@ AT_DATA([prog.cob], [
 ])
 
 AT_CHECK([${COMPILE} -debug -x prog.cob])
-AT_CHECK([./prog], [1], [],
+AT_CHECK([java prog], [1], [],
 [prog.cob:10: libcob: Offset of 'X項目' out of bounds: 6
 ])
 
@@ -325,7 +325,7 @@ AT_DATA([prog.cob], [
 ])
 
 AT_CHECK([${COMPILE} -debug -x prog.cob])
-AT_CHECK([./prog], [1], [],
+AT_CHECK([java prog], [1], [],
 [prog.cob:10: libcob: Length of 'X項目' out of bounds: 18
 ])
 
@@ -347,7 +347,7 @@ AT_DATA([prog.cob], [
 ])
 
 AT_CHECK([${COMPILE} -debug -x prog.cob])
-AT_CHECK([./prog], [1], [],
+AT_CHECK([java prog], [1], [],
 [prog.cob:10: libcob: Offset of 'X項目' out of bounds: 18
 ])
 
@@ -375,7 +375,7 @@ AT_DATA([prog.cob], [
 ])
 
 AT_CHECK([${COMPILE} -debug -x prog.cob])
-AT_CHECK([./prog], [1], [],
+AT_CHECK([java prog], [1], [],
 [prog.cob:8: libcob: EXTERNAL item 'X項目' has size > 6
 ])
 

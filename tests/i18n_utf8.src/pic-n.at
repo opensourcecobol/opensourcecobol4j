@@ -11,8 +11,8 @@ AT_DATA([prog.cob], [
            STOP RUN.
 ])
 
-AT_CHECK([${COMPILE} -x prog.cob])
-AT_CHECK([./prog], [0], [日本語の文字列])
+AT_CHECK([cobc -m prog.cob])
+AT_CHECK([java prog], [0], [日本語の文字列])
 
 AT_CLEANUP
 
@@ -29,8 +29,8 @@ AT_DATA([prog.cob], [
            STOP RUN.
 ])
 
-AT_CHECK([${COMPILE} -x prog.cob], [0])
-AT_CHECK([./prog], [0], [αβγ])
+AT_CHECK([cobc -m prog.cob], [0])
+AT_CHECK([java prog], [0], [αβγ])
 
 AT_CLEANUP
 
@@ -48,8 +48,8 @@ AT_DATA([prog.cob], [
            STOP RUN.
 ])
 
-AT_CHECK([${COMPILE} -x prog.cob])
-AT_CHECK([./prog], [0], [日本語の文字列])
+AT_CHECK([cobc -m prog.cob])
+AT_CHECK([java prog], [0], [日本語の文字列])
 
 AT_CLEANUP
 
@@ -67,8 +67,8 @@ AT_DATA([prog.cob], [
            STOP RUN.
 ])
 
-AT_CHECK([${COMPILE} -x prog.cob], [0])
-AT_CHECK([./prog], [0], [αβγ])
+AT_CHECK([cobc -m prog.cob], [0])
+AT_CHECK([java prog], [0], [αβγ])
 
 AT_CLEANUP
 
@@ -87,11 +87,11 @@ AT_DATA([prog.cob], [
            STOP RUN.
 ])
 
-AT_CHECK([${COMPILE} -x prog.cob], [0], [],
+AT_CHECK([cobc -m prog.cob], [0], [],
 [prog.cob:8: Warning: Value size exceeds data size
 prog.cob:6: Warning: 'F0' defined here as PIC N(3)
 ])
-AT_CHECK([./prog], [0], [日本語])
+AT_CHECK([java prog], [0], [日本語])
 
 AT_CLEANUP
 
@@ -109,8 +109,8 @@ AT_DATA([prog.cob], [
            STOP RUN.
 ])
 
-AT_CHECK([${COMPILE} -x prog.cob], [0])
-AT_CHECK([./prog], [0], [日本語の文字列      ])
+AT_CHECK([cobc -m prog.cob], [0])
+AT_CHECK([java prog], [0], [日本語の文字列      ])
 
 AT_CLEANUP
 
@@ -128,8 +128,8 @@ AT_DATA([prog.cob], [
            STOP RUN.
 ])
 
-AT_CHECK([${COMPILE} -x prog.cob], [0])
-AT_CHECK([./prog], [0], [α    ])
+AT_CHECK([cobc -m prog.cob], [0])
+AT_CHECK([java prog], [0], [α    ])
 
 AT_CLEANUP
 
@@ -148,8 +148,8 @@ AT_DATA([prog.cob], [
            STOP RUN.
 ])
 
-AT_CHECK([${COMPILE} -x prog.cob], [0])
-AT_CHECK([./prog], [0], [      日本語の文字列])
+AT_CHECK([cobc -m prog.cob], [0])
+AT_CHECK([java prog], [0], [      日本語の文字列])
 
 AT_CLEANUP
 
@@ -167,8 +167,8 @@ AT_DATA([prog.cob], [
            STOP RUN.
 ])
 
-AT_CHECK([${COMPILE} -x prog.cob], [0])
-AT_CHECK([./prog], [0], [    α])
+AT_CHECK([cobc -m prog.cob], [0])
+AT_CHECK([java prog], [0], [    α])
 
 AT_CLEANUP
 
@@ -185,8 +185,8 @@ AT_DATA([prog.cob], [
            STOP RUN.
 ])
 
-AT_CHECK([${COMPILE} -x prog.cob], [0])
-AT_CHECK([./prog], [0], [日本／中国　文字０])
+AT_CHECK([cobc -m prog.cob], [0])
+AT_CHECK([java prog], [0], [日本／中国　文字０])
 
 AT_CLEANUP
 
@@ -205,8 +205,8 @@ AT_DATA([prog.cob], [
            STOP RUN.
 ])
 
-AT_CHECK([${COMPILE} -x prog.cob], [0])
-AT_CHECK([./prog], [0], [      ／      　      ０])
+AT_CHECK([cobc -m prog.cob], [0])
+AT_CHECK([java prog], [0], [      ／      　      ０])
 
 AT_CLEANUP
 
@@ -225,8 +225,8 @@ AT_DATA([prog.cob], [
            STOP RUN.
 ])
 
-AT_CHECK([${COMPILE} -x prog.cob], [0])
-AT_CHECK([./prog], [0], [日本／中国　文字０])
+AT_CHECK([cobc -m prog.cob], [0])
+AT_CHECK([java prog], [0], [日本／中国　文字０])
 
 AT_CLEANUP
 
@@ -244,8 +244,8 @@ AT_DATA([prog.cob], [
            STOP RUN.
 ])
 
-AT_CHECK([${COMPILE} -x prog.cob], [0])
-AT_CHECK([./prog], [0], [日本／中国　文字０])
+AT_CHECK([cobc -m prog.cob], [0])
+AT_CHECK([java prog], [0], [日本／中国　文字０])
 
 AT_CLEANUP
 
@@ -263,8 +263,8 @@ AT_DATA([prog.cob], [
            STOP RUN.
 ])
 
-AT_CHECK([${COMPILE} -x prog.cob], [0])
-AT_CHECK([./prog], [0], [ＡＢＣ０１２３])
+AT_CHECK([cobc -m prog.cob], [0])
+AT_CHECK([java prog], [0], [ＡＢＣ０１２３])
 
 AT_CLEANUP
 
@@ -282,8 +282,8 @@ AT_DATA([prog.cob], [
            STOP RUN.
 ])
 
-AT_CHECK([${COMPILE} -x prog.cob], [0])
-AT_CHECK([./prog], [0], [コメダコーヒー])
+AT_CHECK([cobc -m prog.cob], [0])
+AT_CHECK([java prog], [0], [コメダコーヒー])
 
 AT_CLEANUP
 
@@ -301,8 +301,8 @@ AT_DATA([prog.cob], [
            STOP RUN.
 ])
 
-AT_CHECK([${COMPILE} -x prog.cob], [0])
-AT_CHECK([./prog], [0], [文字列])
+AT_CHECK([cobc -m prog.cob], [0])
+AT_CHECK([java prog], [0], [文字列])
 
 AT_CLEANUP
 
@@ -320,8 +320,8 @@ AT_DATA([prog.cob], [
            STOP RUN.
 ])
 
-AT_CHECK([${COMPILE} -x prog.cob], [0])
-AT_CHECK([./prog], [0], [文字])
+AT_CHECK([cobc -m prog.cob], [0])
+AT_CHECK([java prog], [0], [文字])
 
 AT_CLEANUP
 
@@ -343,8 +343,8 @@ AT_DATA([prog.cob], [
            STOP RUN.
 ])
 
-AT_CHECK([${COMPILE} -x prog.cob], [0])
-AT_CHECK([./prog], [0], [私の名前はありません])
+AT_CHECK([cobc -m prog.cob], [0])
+AT_CHECK([java prog], [0], [私の名前はありません])
 
 AT_CLEANUP
 
@@ -366,8 +366,8 @@ AT_DATA([prog.cob], [
            STOP RUN.
 ])
 
-AT_CHECK([${COMPILE} -x prog.cob], [0])
-AT_CHECK([./prog], [0], [私の名前])
+AT_CHECK([cobc -m prog.cob], [0])
+AT_CHECK([java prog], [0], [私の名前])
 
 AT_CLEANUP
 
@@ -389,8 +389,8 @@ AT_DATA([prog.cob], [
            STOP RUN.
 ])
 
-AT_CHECK([${COMPILE} -x prog.cob], [0])
-AT_CHECK([./prog], [0], [私の名前])
+AT_CHECK([cobc -m prog.cob], [0])
+AT_CHECK([java prog], [0], [私の名前])
 
 AT_CLEANUP
 
@@ -413,8 +413,8 @@ AT_DATA([prog.cob], [
            STOP RUN.
 ])
 
-AT_CHECK([${COMPILE} -x prog.cob])
-AT_CHECK([./prog], [0], [言えません私の名前は])
+AT_CHECK([cobc -m prog.cob])
+AT_CHECK([java prog], [0], [言えません私の名前は])
 
 AT_CLEANUP
 
@@ -432,8 +432,8 @@ AT_DATA([prog.cob], [
            STOP RUN.
 ])
 
-AT_CHECK([${COMPILE} -x prog.cob], [0])
-AT_CHECK([./prog], [0], [１２３４０１２３４０])
+AT_CHECK([cobc -m prog.cob], [0])
+AT_CHECK([java prog], [0], [１２３４０１２３４０])
 
 AT_CLEANUP
 
@@ -451,8 +451,8 @@ AT_DATA([prog.cob], [
            STOP RUN.
 ])
 
-AT_CHECK([${COMPILE} -x prog.cob], [0])
-AT_CHECK([./prog], [0], [１２３４000１２３４000])
+AT_CHECK([cobc -m prog.cob], [0])
+AT_CHECK([java prog], [0], [１２３４000１２３４000])
 
 AT_CLEANUP
 
@@ -470,8 +470,8 @@ AT_DATA([prog.cob], [
            STOP RUN.
 ])
 
-AT_CHECK([${COMPILE} -x prog.cob], [0])
-AT_CHECK([./prog], [0], [１２３４０１２３４０])
+AT_CHECK([cobc -m prog.cob], [0])
+AT_CHECK([java prog], [0], [１２３４０１２３４０])
 
 AT_CLEANUP
 
@@ -490,8 +490,8 @@ AT_DATA([prog.cob], [
            STOP RUN.
 ])
 
-AT_CHECK([${COMPILE} -x prog.cob], [0])
-AT_CHECK([./prog], [0], [02])
+AT_CHECK([cobc -m prog.cob], [0])
+AT_CHECK([java prog], [0], [02])
 
 AT_CLEANUP
 
@@ -509,8 +509,8 @@ AT_DATA([prog.cob], [
            STOP RUN.
 ])
 
-AT_CHECK([${COMPILE} -x prog.cob], [0])
-AT_CHECK([./prog], [0], [゛ダ・ヴィンチ])
+AT_CHECK([cobc -m prog.cob], [0])
+AT_CHECK([java prog], [0], [゛ダ・ヴィンチ])
 
 AT_CLEANUP
 
@@ -528,8 +528,8 @@ AT_DATA([prog.cob], [
            STOP RUN.
 ])
 
-AT_CHECK([${COMPILE} -x prog.cob], [0])
-AT_CHECK([./prog], [0], [゜ポンデリング])
+AT_CHECK([cobc -m prog.cob], [0])
+AT_CHECK([java prog], [0], [゜ポンデリング])
 
 AT_CLEANUP
 

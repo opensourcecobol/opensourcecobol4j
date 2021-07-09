@@ -17,7 +17,7 @@ AT_DATA([prog.cob], [
 ])
 
 AT_CHECK([${COMPILE_JP_COMPAT} -x prog.cob], [0])
-AT_CHECK([./prog this is arg], [0], [03])
+AT_CHECK([java prog this is arg], [0], [03])
 
 AT_CLEANUP
 
@@ -41,7 +41,7 @@ AT_DATA([prog.cob], [
 ])
 
 AT_CHECK([${COMPILE_JP_COMPAT} -x prog.cob], [0])
-AT_CHECK([./prog this is arg], [0], [arg     ])
+AT_CHECK([java prog this is arg], [0], [arg     ])
 
 AT_CLEANUP
 
@@ -65,7 +65,7 @@ AT_DATA([prog.cob], [
 ])
 
 AT_CHECK([${COMPILE_JP_COMPAT} -x prog.cob], [0])
-AT_CHECK([export TESTENV=envvalue && ./prog], [0], [envvalue])
+AT_CHECK([export TESTENV=envvalue && java prog], [0], [envvalue])
 
 AT_CLEANUP
 
@@ -89,7 +89,7 @@ AT_DATA([prog.cob], [
 ])
 
 AT_CHECK([${COMPILE_JP_COMPAT} -x prog.cob], [0])
-AT_CHECK([./prog this is arg], [0], [arg     ])
+AT_CHECK([java prog this is arg], [0], [arg     ])
 
 AT_CLEANUP
 
@@ -113,7 +113,7 @@ AT_DATA([prog.cob], [
 ])
 
 AT_CHECK([${COMPILE_JP_COMPAT} -x prog.cob], [0])
-AT_CHECK([export TESTENV=envvalue && ./prog], [0], [envvalue])
+AT_CHECK([export TESTENV=envvalue && java prog], [0], [envvalue])
 
 AT_CLEANUP
 
@@ -141,7 +141,7 @@ AT_DATA([prog.cob], [
 ])
 
 AT_CHECK([${COMPILE_JP_COMPAT} -x prog.cob], [0])
-AT_CHECK([export TESTENV=envvalue && ./prog], [0], [envvalue:newvalue])
+AT_CHECK([export TESTENV=envvalue && java prog], [0], [envvalue:newvalue])
 
 AT_CLEANUP
 

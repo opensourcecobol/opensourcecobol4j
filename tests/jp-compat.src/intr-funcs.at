@@ -14,7 +14,7 @@ AT_DATA([prog.cob], [
 ])
 
 AT_CHECK([${COMPILE_JP_COMPAT} -x prog.cob])
-AT_CHECK([./prog], [0], [08])
+AT_CHECK([java prog], [0], [08])
 
 AT_CLEANUP
 
@@ -37,7 +37,7 @@ AT_DATA([prog.cob], [
 ])
 
 AT_CHECK([${COMPILE_JP_COMPAT} -x prog.cob])
-AT_CHECK([./prog], [0], [04])
+AT_CHECK([java prog], [0], [04])
 
 AT_CLEANUP
 
@@ -57,7 +57,7 @@ AT_DATA([prog.cob], [
 ])
 
 AT_CHECK([${COMPILE_JP_COMPAT} -x prog.cob])
-AT_CHECK([./prog], [0], [08])
+AT_CHECK([java prog], [0], [08])
 
 AT_CLEANUP
 
@@ -80,7 +80,7 @@ AT_DATA([prog.cob], [
 ])
 
 AT_CHECK([${COMPILE_JP_COMPAT} -x prog.cob])
-AT_CHECK([./prog], [0], [04])
+AT_CHECK([java prog], [0], [04])
 
 AT_CLEANUP
 

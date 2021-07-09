@@ -33,7 +33,7 @@ AT_DATA([prog.cob], [
 
 AT_CHECK([echo -n 11CC33AA22BB >input.txt])
 AT_CHECK([${COMPILE} prog.cob])
-AT_CHECK([COB_VERBOSE=Y ./prog], [0],
+AT_CHECK([COB_VERBOSE=Y java prog], [0],
 [libcob: END OF SORT/MERGE, RECORD= 3.
 ])
 

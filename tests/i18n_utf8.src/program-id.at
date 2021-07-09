@@ -49,7 +49,7 @@ AT_DATA([prog.cob], [
            END PROGRAM 東京湾岸港湾局.
 ])
 
-AT_CHECK([${COMPILE} -x prog.cob], [0])
+AT_CHECK([cobc -m prog.cob], [0])
 
 AT_CLEANUP
 
@@ -64,7 +64,7 @@ AT_DATA([prog.cob], [
            STOP RUN.
 ])
 
-AT_CHECK([${COMPILE} -x prog.cob], [0])
+AT_CHECK([cobc -m prog.cob], [0])
 
 AT_CLEANUP
 
@@ -79,7 +79,7 @@ AT_DATA([prog.cob], [
            STOP RUN.
 ])
 
-AT_CHECK([${COMPILE} -x prog.cob], [1], [],
+AT_CHECK([cobc -m prog.cob], [1], [],
 [prog.cob:3: Error: User defined name must be less than 32 characters
 ])
 
