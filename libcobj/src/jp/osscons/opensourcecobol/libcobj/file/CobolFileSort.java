@@ -753,7 +753,7 @@ public class CobolFileSort {
 					} else {
 						opt = 0;
 					}
-					sort_file.record.setDataStorage(d);
+					sort_file.record.getDataStorage().memcpy(d, sort_file.record.getSize());
 					copyCheck(fbase[i], sort_file);
 					fbase[i].write(fbase[i].record, opt, null);
 				}
@@ -838,7 +838,6 @@ public class CobolFileSort {
 		if (hp != null) {
 			fnstatus = hp.getFnstatus();
 		}
-
 		int ret = CobolFileSort.sortSubmit(f, f.record.getDataStorage());
 		switch (ret) {
 		case 0:

@@ -836,10 +836,6 @@ public class CobolFile {
 	}
 
 	public void close(int opt, AbstractCobolField fnstatus) {
-		//時間計測
-		//TODO 削除
-		//end = System.currentTimeMillis();
-		//System.out.println("" + (end - start) + "ms");
 		String openMode = String.format("%02d", (int)this.last_open_mode);
 		if(invokeFun(COB_IO_CLOSE, this, null, null, fnstatus, openMode, null, null) != 0) {
 			this.last_open_mode = (char)Integer.parseInt(openMode);

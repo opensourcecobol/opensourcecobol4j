@@ -47,4 +47,3 @@ java [PROGRAM-ID]
 
 * 同一ソースコード内の別プログラムのCALLができない.
 * ALTERNATE KEYが指定されたINDEXEDファイルに対するREWRITE文の不具合.
-* SORT文の結果が少数のケースにおいて不正になること.
