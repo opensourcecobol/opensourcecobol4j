@@ -49,4 +49,3 @@ Known bugs
 
 * Cannot call inline programs.
 * Rewrite wrong data to indexed files with alternate keys in some cases.
-* Under some conditions, SORT statements produce wrong data.
