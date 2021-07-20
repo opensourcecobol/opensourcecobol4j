@@ -135,6 +135,15 @@ public class CobolIndexedFile extends CobolFile {
 	@Override
 	public int open_(String filename, int mode, int sharing) {
 		IndexedFile p = new IndexedFile();
+		
+		File dir = new File(filename);
+		if(!dir.exists()) {
+			if (mode == COB_OPEN_OUTPUT || mode == COB_OPEN_I_O || mode == COB_OPEN_EXTEND) {
+				dir.mkdir();
+			} else {
+				return ENOENT;
+			}
+		}
 
 		Properties prop = new Properties();
 		prop.setProperty("je.freeDisk", "104857600");
@@ -162,12 +171,12 @@ public class CobolIndexedFile extends CobolFile {
 			}
 		}
 
-		if (mode == COB_OPEN_OUTPUT || mode == COB_OPEN_I_O || mode == COB_OPEN_EXTEND) {
+		/*if (mode == COB_OPEN_OUTPUT || mode == COB_OPEN_I_O || mode == COB_OPEN_EXTEND) {
 			File dir = new File(filename);
 			if (!dir.exists()) {
 				dir.mkdir();
 			}
-		}
+		}*/
 
 		try {
 			env = new Environment(new File(filename), envConf);
