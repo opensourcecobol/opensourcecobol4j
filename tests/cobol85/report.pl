@@ -101,12 +101,12 @@ $skip{IX209A}=1;
 $skip{IX210A}=1;
 $skip{IX211A}=1;
 $skip{IX212A}=1;
-#$skip{IX213A}=1;
+$skip{IX213A}=1;
 $skip{IX214A}=1;
-#$skip{IX215A}=1;
-$skip{IX216A}=1;
-$skip{IX217A}=1;
-$skip{IX218A}=1;
+$skip{IX215A}=1;
+#$skip{IX216A}=1;
+#$skip{IX217A}=1;
+#$skip{IX218A}=1;
 
 
 open (LOG, "> report.txt") or die;

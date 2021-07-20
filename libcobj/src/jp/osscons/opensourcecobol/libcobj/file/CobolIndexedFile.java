@@ -162,7 +162,7 @@ public class CobolIndexedFile extends CobolFile {
 			}
 		}
 
-		if (mode == COB_OPEN_OUTPUT || mode == COB_OPEN_I_O) {
+		if (mode == COB_OPEN_OUTPUT || mode == COB_OPEN_I_O || mode == COB_OPEN_EXTEND) {
 			File dir = new File(filename);
 			if (!dir.exists()) {
 				dir.mkdir();
