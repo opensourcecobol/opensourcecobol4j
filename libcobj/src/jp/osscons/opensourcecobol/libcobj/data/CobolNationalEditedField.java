@@ -19,37 +19,31 @@ public class CobolNationalEditedField extends AbstractCobolField {
 	
 	@Override
 	public byte[] getBytes() {
-		// TODO Auto-generated method stub
 		return null;
 	}
 
 	@Override
 	public String getString() {
-		// TODO Auto-generated method stub
 		return null;
 	}
 
 	@Override
 	public double getDouble() {
-		// TODO Auto-generated method stub
 		return 0;
 	}
 
 	@Override
 	public CobolDecimal getDecimal() {
-		// TODO Auto-generated method stub
 		return null;
 	}
 
 	@Override
 	public void setDecimal(BigDecimal decimal) {
-		// TODO Auto-generated method stub
 
 	}
 
 	@Override
 	public int addPackedInt(int n) {
-		// TODO Auto-generated method stub
 		return 0;
 	}
 
@@ -127,37 +121,31 @@ public class CobolNationalEditedField extends AbstractCobolField {
 
 	@Override
 	public void moveFrom(CobolDataStorage dataStrage) {
-		// TODO Auto-generated method stub
 
 	}
 
 	@Override
 	public void moveFrom(byte[] bytes) {
-		// TODO Auto-generated method stub
 
 	}
 
 	@Override
 	public void moveFrom(String string) {
-		// TODO Auto-generated method stub
 
 	}
 
 	@Override
 	public void moveFrom(int number) {
-		// TODO Auto-generated method stub
 
 	}
 
 	@Override
 	public void moveFrom(double number) {
-		// TODO Auto-generated method stub
 
 	}
 
 	@Override
 	public void moveFrom(BigDecimal number) {
-		// TODO Auto-generated method stub
 
 	}
 

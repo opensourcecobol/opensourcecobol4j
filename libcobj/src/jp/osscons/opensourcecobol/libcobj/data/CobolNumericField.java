@@ -1,22 +1,3 @@
-/*
- * Copyright (C) 2020 TOKYO SYSTEM HOUSE Co., Ltd.
- *
- * This program is free software; you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation; either version 2, or (at your option)
- * any later version.
- *
- * This program is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU General Public License for more details.
- *
- * You should have received a copy of the GNU General Public License
- * along with this software; see the file COPYING.  If not, write to
- * the Free Software Foundation, 51 Franklin Street, Fifth Floor
- * Boston, MA 02110-1301 USA
- */
-
 package jp.osscons.opensourcecobol.libcobj.data;
 
 import java.io.UnsupportedEncodingException;
@@ -48,7 +29,6 @@ public class CobolNumericField extends AbstractCobolField {
 	 * TODO実装
 	 */
 	public void checkNumeric(String s) {
-		//TODO 実装
 	}
 
 	/**
@@ -59,7 +39,6 @@ public class CobolNumericField extends AbstractCobolField {
 		return dataStorage.getData();
 	}
 
-	//削除予定
 
 	private char removeSign(byte v) {
 		return (char) (v >= 0x70 ? v - 0x40 : v);
@@ -168,7 +147,6 @@ public class CobolNumericField extends AbstractCobolField {
 		byte[] decimalBytes = decimal.toPlainString().getBytes();
 		int length = Math.min(this.size, decimalBytes.length);
 
-		//末尾からコピー
 		for(int i=0; i<length; ++i) {
 			this.dataStorage.setByte(this.size - 1 - i, decimalBytes[decimalBytes.length - 1 - i]);
 		}
@@ -438,8 +416,6 @@ public class CobolNumericField extends AbstractCobolField {
 		long n = 0;
 		int fsiz = 8 - field.getSize();
 
-		//TODO Javaの内部エンディアンの調査
-		//JavaはBIG ENDIANのためopensource COBOLにある条件分岐は削除した
 		byte bytes[] = new byte[8];
 		for(int i=0; i<8; ++i) {
 			bytes[i] = 0;
@@ -499,7 +475,6 @@ public class CobolNumericField extends AbstractCobolField {
 		}
 		byte value = this.getDataStorage().getByte(p);
 		if(attr.isFlagSignSeparate()) {
-			//0x2b == '+'
 			return value == 0x2b ? 1 : -1;
 		} else {
 			if(0x30 <= value && value <= 0x39) {
@@ -684,7 +659,6 @@ public class CobolNumericField extends AbstractCobolField {
 		try {
 			this.dataStorage.setData(string.getBytes("SJIS"));
 		} catch (UnsupportedEncodingException e) {
-			// TODO ログの対応
 			e.printStackTrace();
 			throw new CobolRuntimeException(CobolRuntimeException.COBOL_FITAL_ERROR, "エンコードエラー");
 		}
@@ -910,7 +884,6 @@ public class CobolNumericField extends AbstractCobolField {
 	 */
 	@Override
 	public void moveFrom(double number) {
-		// TODO 自動生成されたメソッド・スタブ
 		this.moveFrom((int)number);
 	}
 
@@ -920,7 +893,6 @@ public class CobolNumericField extends AbstractCobolField {
 	 */
 	@Override
 	public void moveFrom(BigDecimal number) {
-		// TODO 自動生成されたメソッド・スタブ
 	}
 
 	/**
@@ -929,7 +901,6 @@ public class CobolNumericField extends AbstractCobolField {
 	 */
 	@Override
 	public void moveFrom(CobolDataStorage dataStrage) {
-		// TODO 自動生成されたメソッド・スタブ
 	}
 
 	/**

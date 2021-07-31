@@ -1,22 +1,3 @@
-/*
- * Copyright (C) 2020 TOKYO SYSTEM HOUSE Co., Ltd.
- *
- * This program is free software; you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation; either version 2, or (at your option)
- * any later version.
- *
- * This program is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU General Public License for more details.
- *
- * You should have received a copy of the GNU General Public License
- * along with this software; see the file COPYING.  If not, write to
- * the Free Software Foundation, 51 Franklin Street, Fifth Floor
- * Boston, MA 02110-1301 USA
- */
-
 package jp.osscons.opensourcecobol.libcobj.data;
 
 import java.io.UnsupportedEncodingException;
@@ -54,7 +35,6 @@ public class CobolNumericPackedField extends AbstractCobolField {
 	 * TODO
 	 */
 	public void checkNumeric(String s) {
-		//TODO 実装
 	}
 
 	/**
@@ -78,10 +58,8 @@ public class CobolNumericPackedField extends AbstractCobolField {
 			if(counter == 0) {
 				sb.append('.');
 			}
-			//bytes[i] = (byte) (this.getDigit(i) + 0x30);
 			sb.append((char)(this.getDigit(i) + 0x30));
 		}
-		//String s = new String(bytes);
 
 		if(this.getAttribute().isFlagHaveSign()) {
 			if(this.getSign() < 0) {
@@ -92,19 +70,6 @@ public class CobolNumericPackedField extends AbstractCobolField {
 		} else {
 			return sb.toString();
 		}
-		/*System.out.println("gggggg");
-		CobolFieldAttribute thisAttr = this.getAttribute();
-		int flag = thisAttr.isFlagHaveSign() ? CobolFieldAttribute.COB_FLAG_HAVE_SIGN : 0;
-		CobolFieldAttribute attr = new CobolFieldAttribute(
-				CobolFieldAttribute.COB_TYPE_NUMERIC,
-				thisAttr.getDigits(),
-				thisAttr.getScale(),
-				flag,
-				"");
-		CobolDataStorage storage = new CobolDataStorage(thisAttr.getDigits());
-		CobolNumericField numericField = new CobolNumericField(thisAttr.getDigits(), storage, attr);
-		numericField.moveFrom(this);
-		return numericField.getString();*/
 	}
 
 	/**
@@ -120,7 +85,6 @@ public class CobolNumericPackedField extends AbstractCobolField {
 		byte[] decimalBytes = decimal.toPlainString().getBytes();
 		int length = Math.min(this.size, decimalBytes.length);
 
-		//末尾からコピー
 		for(int i=0; i<length; ++i) {
 			this.dataStorage.setByte(this.size - 1 - i, decimalBytes[decimalBytes.length - 1 - i]);
 		}
@@ -185,7 +149,6 @@ public class CobolNumericPackedField extends AbstractCobolField {
 		}
 
 		/* pack string */
-		//TODO 本家opensourceCOBOLのバグの疑いあり.
 		this.getDataStorage().fillBytes((byte) 0, this.getSize());
 		int offset = 1 - (digits2 % 2);
 		int p = (digits1 - scale1) - (digits2 - scale2);
@@ -198,7 +161,6 @@ public class CobolNumericPackedField extends AbstractCobolField {
 				if(ch == (byte)0x20) {
 					n = 0;
 				} else {
-					//System.out.println(String.format("ch: %02x", ch));
 					n = (data1FirstIndex <= p && p < data1FirstIndex + digits1) ? (byte)(ch - 0x30) : 0;
 				}
 			}
@@ -239,7 +201,6 @@ public class CobolNumericPackedField extends AbstractCobolField {
 		try {
 			this.dataStorage.setData(string.getBytes("SJIS"));
 		} catch (UnsupportedEncodingException e) {
-			// TODO ログの対応
 			e.printStackTrace();
 			throw new CobolRuntimeException(CobolRuntimeException.COBOL_FITAL_ERROR, "エンコードエラー");
 		}

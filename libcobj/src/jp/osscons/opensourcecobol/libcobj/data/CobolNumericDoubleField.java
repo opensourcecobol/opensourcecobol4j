@@ -22,7 +22,6 @@ public class CobolNumericDoubleField extends AbstractCobolField {
 
 	@Override
 	public byte[] getBytes() {
-		// TODO Auto-generated method stub
 		return null;
 	}
 
@@ -150,36 +149,30 @@ public class CobolNumericDoubleField extends AbstractCobolField {
 
 	@Override
 	public void moveFrom(byte[] bytes) {
-		// TODO Auto-generated method stub
 
 	}
 
 	@Override
 	public void moveFrom(String string) {
-		// TODO Auto-generated method stub
 
 	}
 
 	@Override
 	public void moveFrom(int number) {
-		// TODO Auto-generated method stub
 
 	}
 
 	@Override
 	public void moveFrom(double number) {
-		// TODO Auto-generated method stub
 	}
 
 	@Override
 	public void moveFrom(BigDecimal number) {
-		// TODO Auto-generated method stub
 
 	}
 
 	@Override
 	public void moveFrom(CobolDataStorage dataStrage) {
-		// TODO Auto-generated method stub
 		
 	}
 

@@ -1,22 +1,3 @@
-/*
- * Copyright (C) 2020 TOKYO SYSTEM HOUSE Co., Ltd.
- *
- * This program is free software; you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation; either version 2, or (at your option)
- * any later version.
- *
- * This program is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU General Public License for more details.
- *
- * You should have received a copy of the GNU General Public License
- * along with this software; see the file COPYING.  If not, write to
- * the Free Software Foundation, 51 Franklin Street, Fifth Floor
- * Boston, MA 02110-1301 USA
- */
-
 package jp.osscons.opensourcecobol.libcobj.file;
 
 import java.io.File;
@@ -91,20 +72,6 @@ public class CobolIndexedFile extends CobolFile {
 	 * @return
 	 */
 	private int test_record_lock(DatabaseEntry key) {
-		/*IndexedFile p = this.filei;
-		int keylen = key.getSize();
-		int len = keylen + p.filenamelen + 1;
-		if(len > rlo_size) {
-			record_lock_object = new byte[len];
-			rlo_size = len;
-		}
-		//System.arraycopy(p.filename.getBytes(), 0, record_lock_object, 0, p.filenamelen + 1);
-		//System.arraycopy(p.key.getData(), 0, record_lock_object, p.filenamelen + 1,  keylen);
-		DatabaseEntry dbt = new DatabaseEntry(record_lock_object);
-		OperationResult ret = null;/// lock獲得
-		if(ret == null) {
-			// ロック解放
-		}*/
 		return 0;
 	}
 
@@ -114,18 +81,6 @@ public class CobolIndexedFile extends CobolFile {
 	 * @return
 	 */
 	private int lock_record(DatabaseEntry key) {
-		/*IndexedFile p = this.filei;
-		int keylen = key.getSize();
-		int len = keylen + p.filenamelen + 1;
-		if(len > rlo_size) {
-			record_lock_object = new byte[len];
-			rlo_size = len;
-		}
-
-		OperationResult ret = null;//lock獲得
-		if(ret == null) {
-			//ロック解放
-		}*/
 		return 0;
 	}
 
@@ -171,19 +126,11 @@ public class CobolIndexedFile extends CobolFile {
 			}
 		}
 
-		/*if (mode == COB_OPEN_OUTPUT || mode == COB_OPEN_I_O || mode == COB_OPEN_EXTEND) {
-			File dir = new File(filename);
-			if (!dir.exists()) {
-				dir.mkdir();
-			}
-		}*/
-
 		try {
 			env = new Environment(new File(filename), envConf);
 		} catch (EnvironmentLockedException e) {
 			return COB_STATUS_61_FILE_SHARING;
 		} catch (Exception e) {
-			//TODO 一般的なエラーに対してどういう処理にするか考える.
 			return COB_STATUS_30_PERMANENT_ERROR;
 		}
 
@@ -201,10 +148,6 @@ public class CobolIndexedFile extends CobolFile {
 			} else {
 				dbConf.setAllowCreate(true);
 			}
-			/*if(this.keys[i].getFlag() != 0) {
-				dbConf.setSortedDuplicates(true);
-			}*/
-			//dbConf.setSortedDuplicates(this.keys[i].getFlag() != 0);
 			dbConf.setSortedDuplicates(true);
 			dbConf.setTransactional(true);
 
@@ -215,8 +158,6 @@ public class CobolIndexedFile extends CobolFile {
 						env.removeDatabase(null, subDbName);
 					}
 				} catch (DatabaseNotFoundException e) {
-					//存在しないDBを削除しようとしたときの例外
-					//これはエラーとして扱わない
 				}
 			}
 
@@ -335,7 +276,6 @@ public class CobolIndexedFile extends CobolFile {
 		p.cursor[p.key_index] = p.db[p.key_index].openCursor(null, cursorConfig);
 		try {
 			OperationResult result = p.cursor[p.key_index].get(p.key, p.data, Get.SEARCH_GTE, readOptions);
-			//dbg primary key = AAA060
 			int ret = result != null ? 0 : 1;
 
 			switch (cond) {
@@ -545,7 +485,6 @@ public class CobolIndexedFile extends CobolFile {
 				}
 			}
 			file_changed = ret;
-			//TODO ロック処理を削除した
 		}
 		if (this.flag_first_read == 0 || file_changed != 0) {
 			if (nextprev == Get.FIRST || nextprev == Get.LAST) {
@@ -695,14 +634,10 @@ public class CobolIndexedFile extends CobolFile {
 		IndexedFile p = this.filei;
 
 		boolean close_cursor;
-		//if (p.write_cursor_open) {
-			//close_cursor = false;
-		//} else {
-			this.txn = env.beginTransaction(null, null);
-			p.cursor[0] = p.db[0].openCursor(this.txn, null);
-			p.write_cursor_open = true;
-			close_cursor = true;
-		//}
+		this.txn = env.beginTransaction(null, null);
+		p.cursor[0] = p.db[0].openCursor(this.txn, null);
+		p.write_cursor_open = true;
+		close_cursor = true;
 		
 		if (this.nkeys > 1 && !rewrite) {
 			if (this.check_alt_keys(false)) {
@@ -757,11 +692,7 @@ public class CobolIndexedFile extends CobolFile {
 			try {
 				DatabaseEntry subData = DBT_SET(this.keys[i].getField());
 				boolean writeFail = p.db[i].put(this.txn, p.key, p.data, flags, null) == null;
-				//System.out.println("[" + i + "] subkey: " + subKey + ", subData: " + subData);
 				byte[] b = subKey.getData();
-				if(b[0] == 65 && b[1] == 65 && b[2] == 65 && b[3] == 48 && b[4] == 54 && b[5] == 48) {
-					//System.out.println("[" + i + "] subkey: " + new String(subKey.getData()) + ", subData: " + new String(subData.getData()));
-				}
 				OperationResult result = p.sub_db[i-1].put(this.txn, subKey, subData, Put.OVERWRITE, null);
 				writeFail |= result == null;
 				if(writeFail) {
@@ -791,7 +722,6 @@ public class CobolIndexedFile extends CobolFile {
 				return COB_STATUS_22_KEY_EXISTS;
 			}
 		}
-		//TODO 注意ロック処理を削除した
 
 		if (close_cursor) {
 			p.cursor[0].close();
@@ -877,13 +807,8 @@ public class CobolIndexedFile extends CobolFile {
 		p.key = DBT_SET(this.keys[i].getField());
 		p.temp_key.memcpy(p.key.getData());
 		p.cursor[i] = p.db[i].openCursor(null, null);
-		//TODO! 元々はこう書いてあったが修正した。要検討。
-		//OperationResult ret = p.cursor[i].get(p.key, p.data, Get.FIRST, null);
 		OperationResult ret = p.cursor[i].get(p.key, p.data, Get.SEARCH, null);
 
-		//TODO! 検討
-		//berkley dbの重複スキーに対するデータは新しいものほど先頭に格納されるが
-		//java editionでは挿入位置が自動で設定されるため,以下の実装を変えた.
 		int dupno = 0;
 		while (ret != null && p.temp_key.memcmp(p.key.getData(), p.key.getSize()) == 0) {
 			int tempdupno = ByteBuffer.wrap(p.data.getData(), this.keys[0].getField().getSize(), 4).getInt();
@@ -906,15 +831,12 @@ public class CobolIndexedFile extends CobolFile {
 	public int rewrite_(int opt) {
 		IndexedFile p = this.filei;
 
-		//p.cursor[0] = p.db[0].openCursor(null, null);
 		p.write_cursor_open = true;
 		if (env != null) {
 			this.unlock_record();
 		}
 
 		if (this.check_alt_keys(true)) {
-			//p.cursor[0].close();
-			//p.cursor[0] = null;
 			p.write_cursor_open = false;
 			return COB_STATUS_22_KEY_EXISTS;
 		}
@@ -922,18 +844,12 @@ public class CobolIndexedFile extends CobolFile {
 		int ret = this.indexed_delete_internal(true);
 
 		if (ret != COB_STATUS_00_SUCCESS) {
-			//p.cursor[0].close();
-			//p.cursor[0] = null;
 			p.write_cursor_open = false;
 			return ret;
 		}
 
 		p.key = DBT_SET(this.keys[0].getField());
 		ret = this.indexed_write_internal(true, opt);
-
-		//p.cursor[0].close();
-		//p.cursor[0] = null;
-		//p.write_cursor_open = false;
 
 		return ret;
 	}
@@ -947,14 +863,10 @@ public class CobolIndexedFile extends CobolFile {
 		IndexedFile p = this.filei;
 		boolean close_cursor;
 
-		//if (p.write_cursor_open) {
-			//close_cursor = false;
-		//} else {
-			this.txn = this.env.beginTransaction(null, null);
-			p.cursor[0] = p.db[0].openCursor(this.txn, null);
-			p.write_cursor_open = true;
-			close_cursor = true;
-		//}
+		this.txn = this.env.beginTransaction(null, null);
+		p.cursor[0] = p.db[0].openCursor(this.txn, null);
+		p.write_cursor_open = true;
+		close_cursor = true;
 
 		if (env != null) {
 			this.unlock_record();
@@ -975,7 +887,6 @@ public class CobolIndexedFile extends CobolFile {
 			this.txn.abort();
 			return COB_STATUS_23_KEY_NOT_EXISTS;
 		}
-		//TODO 注意ロック処理を削除した
 
 		DatabaseEntry prim_key = p.key;
 
@@ -985,7 +896,6 @@ public class CobolIndexedFile extends CobolFile {
 				DatabaseEntry subKey = DBT_SET(this.keys[0].getField());
 				DatabaseEntry subData = new DatabaseEntry();
 				Cursor subCursor = p.sub_db[i-1].openCursor(this.txn, null);
-				//System.out.println(String.format("[delete %d] subkey %s", i, new String(subKey.getData())));
 				if(subCursor.get(subKey, subData, Get.SEARCH, null) != null) {
 					do {
 						p.cursor[i] = p.db[i].openCursor(this.txn, null);
@@ -1061,7 +971,6 @@ public class CobolIndexedFile extends CobolFile {
 
 		if (env != null) {
 			this.unlock_record();
-			//ロック解放
 		}
 	}
 }
