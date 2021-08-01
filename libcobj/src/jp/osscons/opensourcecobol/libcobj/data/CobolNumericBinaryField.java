@@ -1,22 +1,3 @@
-/*
- * Copyright (C) 2020 TOKYO SYSTEM HOUSE Co., Ltd.
- *
- * This program is free software; you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation; either version 2, or (at your option)
- * any later version.
- *
- * This program is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU General Public License for more details.
- *
- * You should have received a copy of the GNU General Public License
- * along with this software; see the file COPYING.  If not, write to
- * the Free Software Foundation, 51 Franklin Street, Fifth Floor
- * Boston, MA 02110-1301 USA
- */
-
 package jp.osscons.opensourcecobol.libcobj.data;
 
 import java.math.BigDecimal;
@@ -43,7 +24,6 @@ public class CobolNumericBinaryField extends AbstractCobolField {
 	 */
 	@Override
 	public byte[] getBytes() {
-		// TODO 自動生成されたメソッド・スタブ
 		return null;
 	}
 
@@ -132,7 +112,6 @@ public class CobolNumericBinaryField extends AbstractCobolField {
 	 */
 	@Override
 	public double getDouble() {
-		// TODO 自動生成されたメソッド・スタブ
 		return 0;
 	}
 
@@ -141,7 +120,6 @@ public class CobolNumericBinaryField extends AbstractCobolField {
 	 */
 	@Override
 	public void setDecimal(BigDecimal decimal) {
-		// TODO 自動生成されたメソッド・スタブ
 
 	}
 
@@ -207,9 +185,6 @@ public class CobolNumericBinaryField extends AbstractCobolField {
 		long val = 0;
 		for(int i=0; i < size; ++i) {
 			if(i < size1) {
-				//TODO 確認
-				//バグを修正するためにopensource COBOLにはない処理を書き加えた
-				//なぜopensource COBOLはこの処理を書き加えずに正しく動作しているか不明
 				byte x = data1.getByte(data1Index + i);
 				x = (byte) (x >= (byte)0x70 ? x - (byte)0x70 : x - (byte)0x30);
 				val = val * 10 + x;
@@ -235,8 +210,6 @@ public class CobolNumericBinaryField extends AbstractCobolField {
 	 * @param n
 	 */
 	public void binaryMsetInt64(long n) {
-		//TODO Javaの内部エンディアンの調査
-		//JavaはBIG ENDIANのためopensource COBOLにある条件分岐は削除した
 		byte bytes[] = new byte[8];
 		for(int i=0;  i<8; ++i) {
 			bytes[i] = (byte) ((byte) (n >> ((7 - i) * 8)) & 0x00000000000000FFL);
@@ -251,7 +224,6 @@ public class CobolNumericBinaryField extends AbstractCobolField {
 	 */
 	@Override
 	public void moveFrom(CobolDataStorage dataStrage) {
-		// TODO 自動生成されたメソッド・スタブ
 
 	}
 
@@ -261,7 +233,6 @@ public class CobolNumericBinaryField extends AbstractCobolField {
 	 */
 	@Override
 	public void moveFrom(byte[] bytes) {
-		// TODO 自動生成されたメソッド・スタブ
 
 	}
 
@@ -271,7 +242,6 @@ public class CobolNumericBinaryField extends AbstractCobolField {
 	 */
 	@Override
 	public void moveFrom(String string) {
-		// TODO 自動生成されたメソッド・スタブ
 
 	}
 
@@ -290,7 +260,6 @@ public class CobolNumericBinaryField extends AbstractCobolField {
 	 */
 	@Override
 	public void moveFrom(double number) {
-		// TODO 自動生成されたメソッド・スタブ
 
 	}
 
@@ -300,7 +269,6 @@ public class CobolNumericBinaryField extends AbstractCobolField {
 	 */
 	@Override
 	public void moveFrom(BigDecimal number) {
-		// TODO 自動生成されたメソッド・スタブ
 
 	}
 
@@ -349,7 +317,6 @@ public class CobolNumericBinaryField extends AbstractCobolField {
 		if(this.getAttribute().isFlagHaveSign()) {
 			CobolDecimal.numByteMemcpy(nStorage, 0, this.getDataStorage(), 0, this.getSize());
 			n = ByteBuffer.wrap(nStorage.getByteArray(0, 8)).getLong();
-			//TODO ビット演算に誤りがいないか確認
 			n >>>= 8 * fsiz;
 		} else {
 			CobolDecimal.numByteMemcpy(nStorage, fsiz, this.getDataStorage(), 0,  this.getSize());

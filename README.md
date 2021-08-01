@@ -6,8 +6,6 @@
 This compiler is deeply inspired by ["opensource COBOL"](https://github.com/opensourcecobol/opensource-cobol) which translates COBOL programs to C programs.
 (In fact, this repository contains a lot of source files of ["opensource COBOL"](https://github.com/opensourcecobol/opensource-cobol))
 
-**NOTE**: This package is the Developers Edition.
-
 ## Requirements and Installation
 
 See [Installation page](https://github.com/opensourcecobol/opensourcecobol4j/wiki/Installation).
@@ -28,7 +26,7 @@ java [PROGRAM-ID]
 ## The progress of the development
 
 The functions in the following "implemented" list are tested using [NIST COBOL85 test suite](https://www.itl.nist.gov/div897/ctg/cobol_form.htm)
-and **96%** of the test cases are passed.
+and **99%** of the test cases are passed.
 
 Implemented.
 
@@ -48,4 +46,4 @@ Not Implemented.
 Known bugs
 
 * Cannot call inline programs.
-* Rewrite wrong data to indexed files with alternate keys in some cases.
+* Read wrong data from indexed files with alternate duplicate keys in some cases.

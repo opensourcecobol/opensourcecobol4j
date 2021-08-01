@@ -3,6 +3,7 @@
 BASE_DIR=$(pwd)
 
 javac -encoding UTF-8 \
+    -classpath $1 \
     ${BASE_DIR}/libcobj/src/jp/osscons/opensourcecobol/libcobj/*.java \
     ${BASE_DIR}/libcobj/src/jp/osscons/opensourcecobol/libcobj/data/*.java \
     ${BASE_DIR}/libcobj/src/jp/osscons/opensourcecobol/libcobj/common/*.java \

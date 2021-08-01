@@ -1,22 +1,3 @@
-/*
- * Copyright (C) 2020 TOKYO SYSTEM HOUSE Co., Ltd.
- *
- * This program is free software; you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation; either version 2, or (at your option)
- * any later version.
- *
- * This program is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU General Public License for more details.
- *
- * You should have received a copy of the GNU General Public License
- * along with this software; see the file COPYING.  If not, write to
- * the Free Software Foundation, 51 Franklin Street, Fifth Floor
- * Boston, MA 02110-1301 USA
- */
-
 package jp.osscons.opensourcecobol.libcobj.data;
 
 import java.io.UnsupportedEncodingException;
@@ -38,7 +19,6 @@ public class CobolGroupField extends AbstractCobolField {
 	 */
 	public CobolGroupField(int size, CobolDataStorage dataStorage, CobolFieldAttribute attribute) {
 		super(size, dataStorage, attribute);
-		// TODO 自動生成されたコンストラクター・スタブ
 	}
 
 	/**
@@ -55,12 +35,9 @@ public class CobolGroupField extends AbstractCobolField {
 	 */
 	@Override
 	public String getString() {
-		// TODO 自動生成されたメソッ:/ド・スタブ
 		try {
 			return new String (dataStorage.getData(), "SJIS");
 		} catch (UnsupportedEncodingException e) {
-			// TODO 自動生成された catch ブロック
-			// TODO ログの対応
 			e.printStackTrace();
 			throw new CobolRuntimeException(CobolRuntimeException.COBOL_FITAL_ERROR, "エンコードエラー");
 		}
@@ -71,7 +48,6 @@ public class CobolGroupField extends AbstractCobolField {
 	 */
 	@Override
 	public int getInt() {
-		// TODO 自動生成されたメソッド・スタブ
 		return 0;
 	}
 
@@ -80,7 +56,6 @@ public class CobolGroupField extends AbstractCobolField {
 	 */
 	@Override
 	public double getDouble() {
-		// TODO 自動生成されたメソッド・スタブ
 		return 0;
 	}
 
@@ -89,7 +64,6 @@ public class CobolGroupField extends AbstractCobolField {
 	 */
 	@Override
 	public CobolDecimal getDecimal() {
-		// TODO 自動生成されたメソッド・スタブ
 		return null;
 	}
 
@@ -98,7 +72,6 @@ public class CobolGroupField extends AbstractCobolField {
 	 */
 	@Override
 	public void setDecimal(BigDecimal decimal) {
-		// TODO 自動生成されたメソッド・スタブ
 
 	}
 
@@ -122,7 +95,6 @@ public class CobolGroupField extends AbstractCobolField {
 	 */
 	@Override
 	public void moveFrom(CobolDataStorage dataStrage) {
-		// TODO 自動生成されたメソッド・スタブ
 
 	}
 
@@ -146,14 +118,10 @@ public class CobolGroupField extends AbstractCobolField {
 	 */
 	@Override
 	public void moveFrom(String string) {
-		// TODO 自動生成されたメソッド・スタブ
 		byte[] bytes;
-		// TODO 自動生成されたメソッ:/ド・スタブ
 		try {
 			bytes = string.getBytes("SJIS");
 		} catch (UnsupportedEncodingException e) {
-			// TODO 自動生成された catch ブロック
-			// TODO ログの対応
 			e.printStackTrace();
 			throw new CobolRuntimeException(CobolRuntimeException.COBOL_FITAL_ERROR, "エンコードエラー");
 		}
@@ -167,7 +135,6 @@ public class CobolGroupField extends AbstractCobolField {
 	 */
 	@Override
 	public void moveFrom(int number) {
-		// TODO 自動生成されたメソッド・スタブ
 
 	}
 
@@ -177,7 +144,6 @@ public class CobolGroupField extends AbstractCobolField {
 	 */
 	@Override
 	public void moveFrom(double number) {
-		// TODO 自動生成されたメソッド・スタブ
 
 	}
 
@@ -187,7 +153,6 @@ public class CobolGroupField extends AbstractCobolField {
 	 */
 	@Override
 	public void moveFrom(BigDecimal number) {
-		// TODO 自動生成されたメソッド・スタブ
 
 	}
 

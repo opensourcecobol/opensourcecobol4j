@@ -1,22 +1,3 @@
-/*
- * Copyright (C) 2020 TOKYO SYSTEM HOUSE Co., Ltd.
- *
- * This program is free software; you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation; either version 2, or (at your option)
- * any later version.
- *
- * This program is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU General Public License for more details.
- *
- * You should have received a copy of the GNU General Public License
- * along with this software; see the file COPYING.  If not, write to
- * the Free Software Foundation, 51 Franklin Street, Fifth Floor
- * Boston, MA 02110-1301 USA
- */
-
 package jp.osscons.opensourcecobol.libcobj.data;
 
 import java.io.UnsupportedEncodingException;
@@ -58,8 +39,6 @@ public class CobolNationalField extends AbstractCobolField {
 		try {
 			return new String(dataStorage.getData(), "SJIS");
 		} catch (UnsupportedEncodingException e) {
-			// TODO 自動生成された catch ブロック
-			// TODO ログの対応
 			e.printStackTrace();
 			throw new CobolRuntimeException(CobolRuntimeException.COBOL_FITAL_ERROR, "エンコードエラー");
 		}
@@ -67,19 +46,16 @@ public class CobolNationalField extends AbstractCobolField {
 
 	@Override
 	public int getInt() {
-		// TODO 自動生成されたメソッド・スタブ
 		return 0;
 	}
 
 	@Override
 	public double getDouble() {
-		// TODO 自動生成されたメソッド・スタブ
 		return 0;
 	}
 
 	@Override
 	public CobolDecimal getDecimal() {
-		// TODO 自動生成されたメソッド・スタブ
 		return null;
 	}
 
@@ -212,14 +188,6 @@ public class CobolNationalField extends AbstractCobolField {
 		int c;
 		int d = (byte) 0x00;
 		int i, buf_index;
-
-		//??
-//		for (i = size - 1; str[0] != (byte) 0x00 && i >= 0; i--)
-//			;
-//
-//		if (i >= 0) {
-//			size = i;
-//		}
 
 		buf = new byte[size * 2 + 1];
 
@@ -1070,8 +1038,6 @@ public class CobolNationalField extends AbstractCobolField {
 	 */
 	@Override
 	public void moveFrom(CobolDataStorage dataStrage) {
-		// TODO 自動生成されたメソッド・スタブ
-
 	}
 
 	/**
@@ -1096,7 +1062,6 @@ public class CobolNationalField extends AbstractCobolField {
 			CobolAlphanumericField f = new CobolAlphanumericField(bytes.length, data, a);
 			this.moveFrom(f);
 		} catch (UnsupportedEncodingException e) {
-			// TODO ログの対応
 			e.printStackTrace();
 			throw new CobolRuntimeException(CobolRuntimeException.COBOL_FITAL_ERROR, "エンコードエラー");
 		}
@@ -1108,7 +1073,6 @@ public class CobolNationalField extends AbstractCobolField {
 	 */
 	@Override
 	public void moveFrom(int number) {
-		// TODO 自動生成されたメソッド・スタブ
 	}
 
 	/**
@@ -1117,7 +1081,6 @@ public class CobolNationalField extends AbstractCobolField {
 	 */
 	@Override
 	public void moveFrom(double number) {
-		// TODO 自動生成されたメソッド・スタブ
 
 	}
 
@@ -1127,7 +1090,6 @@ public class CobolNationalField extends AbstractCobolField {
 	 */
 	@Override
 	public void moveFrom(BigDecimal number) {
-		// TODO 自動生成されたメソッド・スタブ
 
 	}
 
@@ -1137,7 +1099,6 @@ public class CobolNationalField extends AbstractCobolField {
 	 */
 	@Override
 	public void setDecimal(BigDecimal decimal) {
-		// TODO 自動生成されたメソッド・スタブ
 	}
 
 	/**
@@ -1147,9 +1108,6 @@ public class CobolNationalField extends AbstractCobolField {
 	 */
 	@Override
 	public CobolNumericField getNumericField() {
-		// TODO 自動生成されたメソッド・スタブ
-		//throw new CobolRuntimeException(CobolRuntimeException.COBOL_FITAL_ERROR, "使用不可");
-		//int size = this.getAttribute().getDigits();
 		int size = this.getSize() / 2;
 		int scale = this.getAttribute().getScale();
 		CobolFieldAttribute attr = new CobolFieldAttribute(

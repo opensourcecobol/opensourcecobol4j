@@ -96,8 +96,6 @@ public class CobolIntrinsic {
 	private static double intrGetDouble(CobolDecimal d) {
 		double v = d.getValue().doubleValue();
 		int n = d.getScale();
-		/*for(; n>0; --n) v /= 10;
-		for(; n<0; ++n) v *= 10;*/
 		for(int i=0; i<Math.abs(n); ++i) {
 			if(n > 0) {
 				v /= 10;
@@ -163,7 +161,6 @@ public class CobolIntrinsic {
 			sign = 0;
 		}
 	
-		// BigDecimalに対するlog2を計算することをあきらめたため実装を変えた
 		int size = sizeInBase10(d1.getValue());
 		if(d1.getScale() > size) {
 			size = d1.getScale();

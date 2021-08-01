@@ -444,7 +444,6 @@ public class CobolDecimal {
 	 */
 	public int getField(AbstractCobolField f, int opt) throws CobolStopRunException {
 		if(this.getScale() == CobolDecimal.DECIMAL_NAN) {
-			//throw new CobolRuntimeException(0, "getFieldのエラー");
 			CobolRuntimeException.setException(CobolExceptionId.COB_EC_SIZE_OVERFLOW);
 			return CobolRuntimeException.code;
 		}
