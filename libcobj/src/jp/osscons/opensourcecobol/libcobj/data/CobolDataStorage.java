@@ -89,6 +89,17 @@ public class CobolDataStorage {
 	public void addIndex(int n) {
 		this.index += n;
 	}
+	
+	static public CobolDataStorage primitiveToDataStorage(int n) {
+		byte[] bytes = new byte[4];
+		ByteBuffer buffer = ByteBuffer.wrap(bytes);
+		buffer.putInt(n);
+		return new CobolDataStorage(bytes);
+	}
+	
+	static public CobolDataStorage primitiveToDataStorage(String s) {
+		return new CobolDataStorage(s);
+	}
 
 	/**
 	 * コンストラクタ.文字列からバイト配列を構成する.

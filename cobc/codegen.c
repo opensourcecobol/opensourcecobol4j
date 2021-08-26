@@ -2739,9 +2739,9 @@ joutput_call (struct cb_call *p)
 					break;
 				case CB_TAG_LITERAL:
 					if (CB_TREE_CLASS (x) == CB_CLASS_NUMERIC) {
-						joutput ("%d", cb_get_int (x));
+						joutput ("CobolDataStorage.primitiveToDataStorage(%d)", cb_get_int (x));
 					} else {
-						joutput ("%d", CB_LITERAL (x)->data[0]);
+						joutput ("CobolDataStroage.primitiveToDataStorage(%d)", CB_LITERAL (x)->data[0]);
 					}
 					break;
 				default:
