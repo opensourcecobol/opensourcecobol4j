@@ -3404,6 +3404,7 @@ joutput_stmt (cb_tree x)
 #endif
 	int			code;
 	struct cb_field *f;
+	int putParen = 0;
 
 	stack_id = 0;
 	if (x == NULL) {
@@ -3740,11 +3741,21 @@ joutput_stmt (cb_tree x)
 		joutput (";\n");
 		break;
 	case CB_TAG_LIST:
-		joutput_indent ("{");
+		if(x && CB_TREE_TAG(CB_VALUE(x)) == CB_TAG_PERFORM) {
+			putParen = 0;
+		} else {
+			putParen = 1;
+			joutput_indent ("{");
+		}
+
 		for (; x; x = CB_CHAIN (x)) {
 			joutput_stmt (CB_VALUE (x));
 		}
-		joutput_indent ("}");
+
+		if(putParen) {
+			joutput_indent ("}");
+		}
+
 		break;
 	default:
 		fprintf (stderr, "Unexpected tree tag %d\n", CB_TREE_TAG (x));
