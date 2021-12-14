@@ -295,6 +295,44 @@ public class CobolIndexedFile extends CobolFile {
 		}
 	}
 	
+	private boolean keyExistsInTable(IndexedFile p, int index, byte[] key) {	
+		try {
+			PreparedStatement selectStatement = p.connection.prepareStatement(
+				String.format(
+					"select * from %s where key = ?",
+					getTableName(0)));
+			selectStatement.setBytes(1, key);
+			selectStatement.setFetchSize(0);
+			ResultSet rs = selectStatement.executeQuery();
+			return rs.next();
+		} catch(SQLException e) {
+			return false;
+		}
+	}
+	
+	private boolean isDuplicateColumn(int index) {
+		return this.keys[index].getFlag() != 0;
+	}
+	
+	private int getNextKeyDupNo(Connection conn, int index, byte[] key) {
+		try {
+			PreparedStatement selectStatement = conn.prepareStatement(
+				String.format("select ifnull(max(dupNo), -1) from %s", getTableName(index)));
+			ResultSet rs = selectStatement.executeQuery();
+			return rs.getInt(1) + 1;
+		} catch(SQLException e) {
+			return 0;
+		}
+	}
+	
+	private int returnWith(IndexedFile p, boolean close_cursor, int index, int returnCode) {
+		if (close_cursor) {
+			closeCursor(0);
+			p.write_cursor_open = false;
+		}
+		return returnCode;
+	}
+	
 	/**
 	 * libcob/fileio.cのindexed_write_internalの実装
 	 * @param rewrite
@@ -311,50 +349,57 @@ public class CobolIndexedFile extends CobolFile {
 		
 		if (this.nkeys > 1 && !rewrite) {
 			if (this.check_alt_keys(false)) {
-				if (close_cursor) {
-					closeCursor(0);
-					p.write_cursor_open = false;
-				}
-				return COB_STATUS_22_KEY_EXISTS;
+				return returnWith(p, close_cursor, 0, COB_STATUS_22_KEY_EXISTS);
 			}
 			p.key = DBT_SET(this.keys[0].getField());
 		}
 		
-		try {
-			PreparedStatement selectStatement = p.connection.prepareStatement(
-				String.format(
-					"select * from %s where key = ?",
-					getTableName(0)));
-			selectStatement.setBytes(1, p.key);
-			selectStatement.setFetchSize(0);
-			ResultSet rs = selectStatement.executeQuery();
-			if(rs.next()) {
-				if(close_cursor ) {
-					closeCursor(0);
-					p.write_cursor_open = false;
-				}
-				return COB_STATUS_22_KEY_EXISTS;
-			}
-		} catch (SQLException e){
+		if(keyExistsInTable(p, 0, p.key)) {
 			return COB_STATUS_22_KEY_EXISTS;
 		}
-		
+
 		p.data = DBT_SET(this.record);
-		
 		try {
 			PreparedStatement insertStatement = p.connection.prepareStatement(
 				String.format("insert into %s values (?, ?)", getTableName(0)));
 			insertStatement.setBytes(1, p.key);
 			insertStatement.setBytes(2, p.data);
+			insertStatement.execute();
 		} catch (SQLException e) {
-			if(close_cursor ) {
-				closeCursor(0);
-				p.write_cursor_open = false;
-			}
-			return COB_STATUS_51_RECORD_LOCKED;	
+			return returnWith(p, close_cursor, 0, COB_STATUS_51_RECORD_LOCKED);
 		}
 
-		return COB_STATUS_00_SUCCESS;
+		p.data = p.key;
+
+		for (int i = 1; i < this.nkeys; i++) {
+
+			p.key = DBT_SET(this.keys[i].getField());
+			try {
+				if(!isDuplicateColumn(i) && keyExistsInTable(p, i, p.key)) {
+					return returnWith(p, close_cursor, 0, COB_STATUS_22_KEY_EXISTS);
+				}
+
+				PreparedStatement insertStatement;
+				if(isDuplicateColumn(i)) {
+					int dupNo = getNextKeyDupNo(p.connection, i, p.key);
+					insertStatement = p.connection.prepareStatement(
+							String.format("insert into %s values (?, ?, ?)", getTableName(i)));
+					insertStatement.setBytes(1, p.key);
+					insertStatement.setBytes(2, p.data);
+					insertStatement.setInt(3, dupNo);
+				} else {
+					insertStatement = p.connection.prepareStatement(
+							String.format("insert into %s values (?, ?)", getTableName(i)));
+					insertStatement.setBytes(1, p.key);
+					insertStatement.setBytes(2, p.data);
+				}
+				insertStatement.execute();
+			} catch (SQLException e) {
+				return returnWith(p, close_cursor, 0, COB_STATUS_51_RECORD_LOCKED);
+			}
+		}
+
+		return returnWith(p, close_cursor, 0, COB_STATUS_00_SUCCESS);
 	}
 
 	/**
