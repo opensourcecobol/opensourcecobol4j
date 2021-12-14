@@ -149,7 +149,19 @@ public class CobolIndexedFile extends CobolFile {
 				try {
 					Statement statement = p.connection.createStatement();
 					statement.execute(String.format("drop table if exists %s", tableName));
-					statement.execute(String.format("create table %s (key blob not null primary key, value blob)", tableName));
+					if(i == 0) {
+						statement.execute(String.format("create table %s (key blob not null primary key, value blob not null)", tableName));
+					} else if(this.keys[i].getFlag() == 0) {
+						statement.execute(String.format(
+							"create table %s (key blob not null primary key, value blob not null,"
+							+ " foreign key (value) references %s (key))"
+							, tableName, getTableName(0)));
+					} else {
+						statement.execute(String.format(
+							"create table %s (key blob not null, value blob not null, dupNo integer not null,"
+							+ " foreign key (value) references %s (key))"
+							, tableName, getTableName(0)));
+					}
 					statement.execute(String.format("create index %s on %s(key)", getIndexName(i), tableName));
 				} catch (SQLException e) {
 					return COB_STATUS_30_PERMANENT_ERROR;
