@@ -668,7 +668,7 @@ public class CobolFile {
 		
 		boolean was_not_exist = false;
 		if(this.organization == COB_ORG_INDEXED) {
-			if(!Files.isDirectory(Paths.get(file_open_name))) {
+			if(!Files.exists(Paths.get(file_open_name))) {
 				was_not_exist = true;
 				if(mode != COB_OPEN_OUTPUT && !this.flag_optional &&
 					(mode != COB_OPEN_I_O || System.getenv(COB_IO_CREATES).equals("yes")) &&
