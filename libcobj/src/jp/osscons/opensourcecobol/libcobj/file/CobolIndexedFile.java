@@ -52,12 +52,21 @@ public class CobolIndexedFile extends CobolFile {
 	private static String getIndexName(int index) {
 		return String.format("index%d", index);
 	}
+	
+	private static String getSubIndexName(int index) {
+		return String.format("subindex%d", index);
+	}
+	
 	private static String getTableName(int index) {
 		return String.format("table%d", index);
 	}
 	
 	private static String getCursorName(int index) {
 		return String.format("cursor%d", index);
+	}
+	
+	private static String getConstraintName(int index) {
+		return String.format("constraint%d", index);
 	}
 	
 	private static void memcpy(byte[] dst, byte[] src, int length) {
@@ -114,7 +123,10 @@ public class CobolIndexedFile extends CobolFile {
 		p.connection = null;
 		try {
 			p.connection = DriverManager.getConnection("jdbc:sqlite:"+ filename, config.toProperties());
+			p.connection.setAutoCommit(false);
+			Statement statement = p.connection.createStatement();
 		} catch(SQLException e) {
+			e.printStackTrace();
 			int errorCode = e.getErrorCode();
 			if(errorCode == SQLiteErrorCode.SQLITE_BUSY.code) {
 				return COB_STATUS_61_FILE_SHARING;
@@ -151,16 +163,19 @@ public class CobolIndexedFile extends CobolFile {
 					statement.execute(String.format("drop table if exists %s", tableName));
 					if(i == 0) {
 						statement.execute(String.format("create table %s (key blob not null primary key, value blob not null)", tableName));
-					} else if(this.keys[i].getFlag() == 0) {
-						statement.execute(String.format(
-							"create table %s (key blob not null primary key, value blob not null,"
-							+ " foreign key (value) references %s (key))"
-							, tableName, getTableName(0)));
 					} else {
-						statement.execute(String.format(
-							"create table %s (key blob not null, value blob not null, dupNo integer not null,"
-							+ " foreign key (value) references %s (key))"
-							, tableName, getTableName(0)));
+						if(this.keys[i].getFlag() == 0) {
+							statement.execute(String.format(
+								"create table %s (key blob not null primary key, value blob not null,"
+								+ " constraint %s foreign key (value) references %s (key))"
+								, tableName, getConstraintName(i), getTableName(0)));
+						} else {
+							statement.execute(String.format(
+								"create table %s (key blob not null, value blob not null, dupNo integer not null,"
+								+ " constraint %s foreign key (value) references %s (key))"
+								, tableName, getConstraintName(i), getTableName(0)));
+						}
+						statement.execute(String.format("create index %s on %s(value)", getSubIndexName(i), tableName));
 					}
 					statement.execute(String.format("create index %s on %s(key)", getIndexName(i), tableName));
 				} catch (SQLException e) {
@@ -218,6 +233,13 @@ public class CobolIndexedFile extends CobolFile {
 			} catch(Exception e) {
 			}
 		}
+		
+		try {
+			p.connection.close();
+		} catch (SQLException e){
+			return COB_STATUS_30_PERMANENT_ERROR;
+		}
+
 		return COB_STATUS_00_SUCCESS;
 	}
 
@@ -358,6 +380,7 @@ public class CobolIndexedFile extends CobolFile {
 			return COB_STATUS_22_KEY_EXISTS;
 		}
 
+		// insert into the primary table
 		p.data = DBT_SET(this.record);
 		try {
 			PreparedStatement insertStatement = p.connection.prepareStatement(
@@ -365,12 +388,14 @@ public class CobolIndexedFile extends CobolFile {
 			insertStatement.setBytes(1, p.key);
 			insertStatement.setBytes(2, p.data);
 			insertStatement.execute();
+			p.connection.commit();
 		} catch (SQLException e) {
 			return returnWith(p, close_cursor, 0, COB_STATUS_51_RECORD_LOCKED);
 		}
 
 		p.data = p.key;
 
+		//insert into sub tables
 		for (int i = 1; i < this.nkeys; i++) {
 
 			p.key = DBT_SET(this.keys[i].getField());
@@ -394,6 +419,7 @@ public class CobolIndexedFile extends CobolFile {
 					insertStatement.setBytes(2, p.data);
 				}
 				insertStatement.execute();
+				p.connection.commit();
 			} catch (SQLException e) {
 				return returnWith(p, close_cursor, 0, COB_STATUS_51_RECORD_LOCKED);
 			}
@@ -458,6 +484,50 @@ public class CobolIndexedFile extends CobolFile {
 	 * @return
 	 */
 	private int indexed_delete_internal(boolean rewrite) {
+		System.out.println("indexed delete called");
+		IndexedFile p = this.filei;
+		boolean close_cursor;
+
+		openCursor(0, this.keys[0]);
+		p.write_cursor_open = true;
+		close_cursor = true;
+		
+		if (this.access_mode != COB_ACCESS_SEQUENTIAL) {
+			p.key = DBT_SET(this.keys[0].getField());
+		}
+		
+		if(this.access_mode != COB_ACCESS_SEQUENTIAL && !keyExistsInTable(p, 0, p.key)) {
+			return returnWith(p, close_cursor, 0, COB_STATUS_23_KEY_NOT_EXISTS);
+		}
+
+		// delete data from the primary table
+		try {
+			PreparedStatement statement = p.connection.prepareStatement(
+				String.format("delete from %s where key = ?", getTableName(0)));
+			statement.setBytes(1, p.key);
+			statement.execute();
+		} catch(SQLException e) {
+			return returnWith(p, close_cursor, 0, COB_STATUS_30_PERMANENT_ERROR);
+		}
+
+		// delete data from sub tables
+		for(int i=1; i<this.nkeys; ++i) {
+			try {
+				PreparedStatement statement = p.connection.prepareStatement(
+				String.format("delete from %s where value = ?", getTableName(i)));
+				statement.setBytes(1, p.key);
+				statement.execute();			
+			} catch(SQLException e) {
+				return returnWith(p, close_cursor, 0, COB_STATUS_30_PERMANENT_ERROR);
+			}
+		}
+		
+		try {
+			p.connection.commit();
+		} catch(SQLException e) {
+				return returnWith(p, close_cursor, 0, COB_STATUS_30_PERMANENT_ERROR);
+		}
+
 		return COB_STATUS_00_SUCCESS;
 	}
 	
