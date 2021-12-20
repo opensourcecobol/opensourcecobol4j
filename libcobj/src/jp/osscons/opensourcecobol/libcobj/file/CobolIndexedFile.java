@@ -239,8 +239,42 @@ public class CobolIndexedFile extends CobolFile {
 		} catch (SQLException e){
 			return COB_STATUS_30_PERMANENT_ERROR;
 		}
-
 		return COB_STATUS_00_SUCCESS;
+	}
+		
+	private Optional<ResultSet> createResultSetForSelect(IndexedFile p, int index, String comparator, boolean isDuplicate) {
+		try {
+			PreparedStatement selectStatement;
+			boolean isPrimary = index == 0;
+			
+			String primaryTable = getTableName(0);
+			String subTable = getTableName(index);
+			
+			String columnDupNo = "";
+			if(isDuplicate) {
+				columnDupNo = ", " + subTable + ".dupNo";
+			}
+
+			String query;
+			if(isPrimary) {
+				query = String.format("select key, value %s from %s where key %s ? order by key",
+						columnDupNo, primaryTable, comparator);
+			} else {
+				query = String.format(
+					"select %s.key, %s.key, %s.value %s from %s join %s on %s.key = %s.value " +
+					"where %s.key %s ? order by %s.key",
+					subTable, primaryTable, primaryTable, columnDupNo, primaryTable, subTable, primaryTable, subTable,
+					subTable, comparator, subTable);
+				if(isDuplicate) {
+					query += ", " + subTable + ".dupNo";
+				}
+			}
+			selectStatement = p.connection.prepareStatement(query);
+			selectStatement.setBytes(1, p.key);
+			return Optional.ofNullable(selectStatement.executeQuery());
+		} catch (SQLException e) {
+			return Optional.empty();
+		}
 	}
 
 	/**
@@ -251,8 +285,71 @@ public class CobolIndexedFile extends CobolFile {
 	 * @param test_lock
 	 * @return
 	 */
-	public int indexed_start_internal(int cond, AbstractCobolField key, int read_opts, boolean test_lock) {
-		return 0;
+	public int indexed_start_internal(int cond, AbstractCobolField key, int read_opts, boolean test_lock) {		
+		IndexedFile p = this.filei;
+		for (p.key_index = 0; p.key_index < this.nkeys; p.key_index++) {
+			int size = this.keys[p.key_index].getField().getSize();
+			if (this.keys[p.key_index].getField().getDataStorage().isSame(key.getDataStorage())) {
+				break;
+			}
+		}
+		
+		p.key = DBT_SET(key);
+
+		boolean isDuplicate = this.keys[p.key_index].getFlag() != 0;
+		boolean isPrimary = p.key_index == 0;
+			
+		Optional<ResultSet> ors = Optional.empty();
+		switch(cond) {
+		case COB_EQ:
+			ors = createResultSetForSelect(p, p.key_index, "=", isDuplicate);
+			break;
+		case COB_LT:
+			ors = createResultSetForSelect(p, p.key_index, "<", isDuplicate);
+			break;
+		case COB_LE:
+			ors = createResultSetForSelect(p, p.key_index, "<=", isDuplicate);
+			break;
+		case COB_GT:
+			ors = createResultSetForSelect(p, p.key_index, ">", isDuplicate);
+			break;
+		case COB_GE:
+			ors = createResultSetForSelect(p, p.key_index, ">=", isDuplicate);
+			break;
+		default:
+			break;
+		}
+
+		p.resultSets.set(p.key_index, ors);
+		if(ors.isPresent()) {
+			ResultSet rs = ors.get();
+			try {
+				if(!rs.next()) {
+					return COB_STATUS_23_KEY_NOT_EXISTS;
+				}
+				if(isPrimary) {
+					p.key = rs.getBytes(1);
+					p.data = rs.getBytes(2);
+					p.last_readkey[0] = rs.getBytes(1);
+				} else {
+					p.key = rs.getBytes(1);
+					p.data = rs.getBytes(3);
+					// save the key of the sub table
+					p.last_readkey[p.key_index] = rs.getBytes(1);
+					// save the key of the primary table
+					p.last_readkey[p.key_index + this.nkeys] = rs.getBytes(2);
+					// save dupNo
+					if(isDuplicate) {
+						p.last_dupno[p.key_index] = rs.getInt(4);
+					}
+				}
+
+			} catch (SQLException e) {
+				return COB_STATUS_30_PERMANENT_ERROR;
+			}
+			return COB_STATUS_00_SUCCESS;
+		}
+		return COB_STATUS_23_KEY_NOT_EXISTS;
 	}
 
 	@Override
@@ -268,6 +365,17 @@ public class CobolIndexedFile extends CobolFile {
 	 * libcob/fileio.cのindexed_readの実装
 	 */
 	public int read_(AbstractCobolField key, int readOpts) {
+		IndexedFile p = this.filei;
+		boolean test_lock = false;
+
+		int ret = this.indexed_start_internal(COB_EQ, key, readOpts, test_lock);
+		if (ret != COB_STATUS_00_SUCCESS) {
+			return ret;
+		}
+
+		this.record.setSize(p.data.length);
+		this.record.getDataStorage().memcpy(p.data, p.data.length);
+
 		return COB_STATUS_00_SUCCESS;
 	}
 
@@ -292,7 +400,7 @@ public class CobolIndexedFile extends CobolFile {
 		IndexedFile p = this.filei;
 		try {
 			PreparedStatement declareStatement = p.connection.prepareStatement(
-				String.format("declare %s for select key, value from %s where key = ? order by key", getCursorName(0), getTableName(0)));
+				String.format("declare %s for select key, value from %s where key = ? order by key", getCursorName(index), getTableName(index)));
 			declareStatement.setBytes(1, key);
 			declareStatement.execute();
 			Statement openStatement = p.connection.createStatement();
