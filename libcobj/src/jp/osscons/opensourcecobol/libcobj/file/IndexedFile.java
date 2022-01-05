@@ -12,16 +12,12 @@ public class IndexedFile {
 	public CobolDataStorage last_key;
 	public CobolDataStorage temp_key;
 	public Connection connection;
-	//public Database[] db;
-	//public Database[] sub_db;
 	public byte[] key;
 	public byte[] data;
 	public byte[][] last_readkey;
 	public int[] last_dupno;
 	public int[] rewrite_sec_key;
 
-	public ArrayList<Optional<ResultSet>> resultSets;
-	//public Transaction file_lock;
 	public String filename;
 	public Object record_lock;
 	public boolean write_cursor_open;

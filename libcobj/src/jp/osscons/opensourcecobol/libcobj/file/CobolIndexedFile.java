@@ -1,9 +1,16 @@
+/**
+ * INDEXED File implementation.
+ * The backend storage library is SQLite.
+ */
+
 package jp.osscons.opensourcecobol.libcobj.file;
 
 import java.io.File;
-
-
+import java.io.IOException;
 import java.nio.ByteBuffer;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.PreparedStatement;
@@ -27,13 +34,17 @@ import jp.osscons.opensourcecobol.libcobj.data.CobolDataStorage;
 public class CobolIndexedFile extends CobolFile {
 	private static int rlo_size = 0;
 	private static byte[] record_lock_object;
+	private Optional<IndexedCursor> cursor;
+	private boolean updateWhileReading = false;
+	private boolean indexedFirstRead = true;
+	private boolean callStart = false;
 
-	private final static int COB_EQ = 1;
-	private final static int COB_LT = 2;
-	private final static int COB_LE = 3;
-	private final static int COB_GT = 4;
-	private final static int COB_GE = 5;
-	private final static int COB_NE = 6;
+	public final static int COB_EQ = 1;
+	public final static int COB_LT = 2;
+	public final static int COB_LE = 3;
+	public final static int COB_GT = 4;
+	public final static int COB_GE = 5;
+	public final static int COB_NE = 6;
 
 	public CobolIndexedFile(String select_name, byte[] file_status, AbstractCobolField assign,
 			AbstractCobolField record, AbstractCobolField record_size, int record_min, int record_max, int nkeys,
@@ -57,11 +68,11 @@ public class CobolIndexedFile extends CobolFile {
 		return String.format("subindex%d", index);
 	}
 	
-	private static String getTableName(int index) {
+	public static String getTableName(int index) {
 		return String.format("table%d", index);
 	}
 	
-	private static String getCursorName(int index) {
+	public static String getCursorName(int index) {
 		return String.format("cursor%d", index);
 	}
 	
@@ -69,49 +80,15 @@ public class CobolIndexedFile extends CobolFile {
 		return String.format("constraint%d", index);
 	}
 	
-	private static void memcpy(byte[] dst, byte[] src, int length) {
-		System.arraycopy(src, 0, dst, 0, length);
-	}
-	
-	private static void memcpy(byte[] dst, int dstOffset, byte[] src, int srcOffset, int length) {
-		System.arraycopy(src, srcOffset, dst, dstOffset, length);
-	}
-	
-	private static void memset(byte[] src, byte ch, int length) {
-		memset(src, 0, ch, length);
-	}
-	
-	private static void memset(byte[] src , int offset, byte ch, int length) {
-		for(int i=0; i<length; ++i) {
-			src[i + offset] = ch;
-		}
-	}
-	
-	private static int memcmp(byte[] a, byte[] b, int length) {
-		return memcmp(a, 0, b, 0, length);
-	}
-	
-	private static int memcmp(byte[] a, int offsetA, byte[] b, int offsetB, int length) {
-		for(int i=0; i<length; ++i) {
-			int cmpResult = a[offsetA + i] - b[offsetB + i];
-			if(cmpResult != 0) {
-				return cmpResult;
-			}
-		}
-		return 0;
-	}
-	
 	/**
-	 * DBT_SETマクロの実装
-	 * @param key
-	 * @param field
+	 * Equivalent to DBT_SET in libcob/fileio.c
 	 */
 	private byte[] DBT_SET(AbstractCobolField field) {
 		return field.getDataStorage().getByteArray(0, field.getSize());
 	}
 	
 	/**
-	 * libcob/fileio.cのindexed_openの実装
+	 * Equivalent to indexed_open in libcob/fileio.c
 	 */
 	@Override
 	public int open_(String filename, int mode, int sharing) {
@@ -119,14 +96,23 @@ public class CobolIndexedFile extends CobolFile {
 		
 		SQLiteConfig config = new SQLiteConfig();
 		config.setReadOnly(mode == COB_OPEN_INPUT);
+		
+		if(mode == COB_OPEN_OUTPUT) {
+			Path path = Paths.get(filename);
+			try {
+				Files.deleteIfExists(path);
+			} catch (IOException e) {
+				return COB_STATUS_30_PERMANENT_ERROR;
+			}
+		}
+
+		boolean fileExists = new java.io.File(filename).exists();
 
 		p.connection = null;
 		try {
 			p.connection = DriverManager.getConnection("jdbc:sqlite:"+ filename, config.toProperties());
 			p.connection.setAutoCommit(false);
-			Statement statement = p.connection.createStatement();
 		} catch(SQLException e) {
-			e.printStackTrace();
 			int errorCode = e.getErrorCode();
 			if(errorCode == SQLiteErrorCode.SQLITE_BUSY.code) {
 				return COB_STATUS_61_FILE_SHARING;
@@ -138,14 +124,8 @@ public class CobolIndexedFile extends CobolFile {
 		}
 
 		p.filenamelen = filename.length();
-		p.last_readkey = new byte[2 * this.nkeys][];
 		p.last_dupno = new int[this.nkeys];
 		p.rewrite_sec_key = new int[this.nkeys];
-
-		p.resultSets = new ArrayList<Optional<ResultSet>>(this.nkeys);
-		for(int i=0; i<this.nkeys; ++i) {
-			p.resultSets.add(Optional.empty());
-		}
 
 		int maxsize = 0;
 		for (int i = 0; i < this.nkeys; ++i) {
@@ -157,10 +137,9 @@ public class CobolIndexedFile extends CobolFile {
 		for (int i = 0; i < this.nkeys; ++i) {
 			String tableName = getTableName(i);
 
-			if (mode == COB_OPEN_OUTPUT) {
+			if (mode == COB_OPEN_OUTPUT || (!fileExists && (mode == COB_OPEN_EXTEND || mode == COB_OPEN_I_O))) {
 				try {
 					Statement statement = p.connection.createStatement();
-					statement.execute(String.format("drop table if exists %s", tableName));
 					if(i == 0) {
 						statement.execute(String.format("create table %s (key blob not null primary key, value blob not null)", tableName));
 					} else {
@@ -182,9 +161,6 @@ public class CobolIndexedFile extends CobolFile {
 					return COB_STATUS_30_PERMANENT_ERROR;
 				}
 			}
-
-			p.last_readkey[i] = new byte[maxsize];
-			p.last_readkey[this.nkeys + i] = new byte[maxsize];
 		}
 
 		p.temp_key = new CobolDataStorage(maxsize + 4);
@@ -196,44 +172,23 @@ public class CobolIndexedFile extends CobolFile {
 		p.write_cursor_open = false;
 		p.record_locked = false;
 
-		//read first record
 		p.key = DBT_SET(this.keys[0].getField());
-		try {
-			Statement statement = p.connection.createStatement();
-			statement.execute(String.format("declare %s for select key, value from %s order by key", getCursorName(0), getTableName(0)));
-			statement.execute(String.format("open %s", getCursorName(0)));
-			ResultSet rs = statement.executeQuery(String.format("fetch first %s", getCursorName(0)));
-			p.key = rs.getBytes(1); p.data = rs.getBytes(2);
-			statement.execute(String.format("close %s", getCursorName(0)));
-			memcpy(p.last_readkey[0], p.key, p.key.length);
-		} catch(SQLException e) {
-			p.data = new byte[0];
-		} finally {
-			p.resultSets.set(0, Optional.empty());
-		}
+		this.updateWhileReading = false;
+		this.indexedFirstRead = true;
+		this.callStart = false;
 
 		return 0;
 	}
 
 	/**
-	 * libcob/fileio.cのindexed_closeの実装
+	 * Equivalent to indexed_close in libcob/fileio.c
 	 */
 	@Override
 	public int close_(int opt) {
 		IndexedFile p = this.filei;
-		for(int i=0; i<0; ++i) {
-			try {
-				Statement statement = p.connection.createStatement();
-				statement.execute(String.format("CLOSE %s", getCursorName(i)));
-				statement.execute(String.format("DEALLOCATE %s", getCursorName(i)));
-				Optional<ResultSet> resultSet = p.resultSets.get(i);
-				if(resultSet.isPresent()) {
-					resultSet.get().close();
-				}
-			} catch(Exception e) {
-			}
-		}
 		
+		this.closeCursor();
+
 		try {
 			p.connection.close();
 		} catch (SQLException e){
@@ -241,49 +196,9 @@ public class CobolIndexedFile extends CobolFile {
 		}
 		return COB_STATUS_00_SUCCESS;
 	}
-		
-	private Optional<ResultSet> createResultSetForSelect(IndexedFile p, int index, String comparator, boolean isDuplicate) {
-		try {
-			PreparedStatement selectStatement;
-			boolean isPrimary = index == 0;
-			
-			String primaryTable = getTableName(0);
-			String subTable = getTableName(index);
-			
-			String columnDupNo = "";
-			if(isDuplicate) {
-				columnDupNo = ", " + subTable + ".dupNo";
-			}
-
-			String query;
-			if(isPrimary) {
-				query = String.format("select key, value %s from %s where key %s ? order by key",
-						columnDupNo, primaryTable, comparator);
-			} else {
-				query = String.format(
-					"select %s.key, %s.key, %s.value %s from %s join %s on %s.key = %s.value " +
-					"where %s.key %s ? order by %s.key",
-					subTable, primaryTable, primaryTable, columnDupNo, primaryTable, subTable, primaryTable, subTable,
-					subTable, comparator, subTable);
-				if(isDuplicate) {
-					query += ", " + subTable + ".dupNo";
-				}
-			}
-			selectStatement = p.connection.prepareStatement(query);
-			selectStatement.setBytes(1, p.key);
-			return Optional.ofNullable(selectStatement.executeQuery());
-		} catch (SQLException e) {
-			return Optional.empty();
-		}
-	}
 
 	/**
-	 * libcob/fileio.cのindexed_start_internalの実装
-	 * @param cond
-	 * @param key
-	 * @param read_opts
-	 * @param test_lock
-	 * @return
+	 * Equivalent to indexed_start_internal in libcob/fileio.c
 	 */
 	public int indexed_start_internal(int cond, AbstractCobolField key, int read_opts, boolean test_lock) {		
 		IndexedFile p = this.filei;
@@ -293,81 +208,50 @@ public class CobolIndexedFile extends CobolFile {
 				break;
 			}
 		}
-		
+
 		p.key = DBT_SET(key);
 
 		boolean isDuplicate = this.keys[p.key_index].getFlag() != 0;
 		boolean isPrimary = p.key_index == 0;
-			
-		Optional<ResultSet> ors = Optional.empty();
-		switch(cond) {
-		case COB_EQ:
-			ors = createResultSetForSelect(p, p.key_index, "=", isDuplicate);
-			break;
-		case COB_LT:
-			ors = createResultSetForSelect(p, p.key_index, "<", isDuplicate);
-			break;
-		case COB_LE:
-			ors = createResultSetForSelect(p, p.key_index, "<=", isDuplicate);
-			break;
-		case COB_GT:
-			ors = createResultSetForSelect(p, p.key_index, ">", isDuplicate);
-			break;
-		case COB_GE:
-			ors = createResultSetForSelect(p, p.key_index, ">=", isDuplicate);
-			break;
-		default:
-			break;
+
+		this.cursor = IndexedCursor.createCursor(p.connection, p.key, p.key_index, isDuplicate, cond);
+		if(this.cursor.isEmpty()) {
+			return COB_STATUS_30_PERMANENT_ERROR;
 		}
 
-		p.resultSets.set(p.key_index, ors);
-		if(ors.isPresent()) {
-			ResultSet rs = ors.get();
-			try {
-				if(!rs.next()) {
-					return COB_STATUS_23_KEY_NOT_EXISTS;
-				}
-				if(isPrimary) {
-					p.key = rs.getBytes(1);
-					p.data = rs.getBytes(2);
-					p.last_readkey[0] = rs.getBytes(1);
-				} else {
-					p.key = rs.getBytes(1);
-					p.data = rs.getBytes(3);
-					// save the key of the sub table
-					p.last_readkey[p.key_index] = rs.getBytes(1);
-					// save the key of the primary table
-					p.last_readkey[p.key_index + this.nkeys] = rs.getBytes(2);
-					// save dupNo
-					if(isDuplicate) {
-						p.last_dupno[p.key_index] = rs.getInt(4);
-					}
-				}
-
-			} catch (SQLException e) {
-				return COB_STATUS_30_PERMANENT_ERROR;
-			}
+		IndexedCursor cursor = this.cursor.get();
+		Optional<FetchResult> optionalResult = cursor.next();
+		if(optionalResult.isPresent()) {
+			FetchResult result = optionalResult.get();
+			p.key = result.key;
+			p.data = result.value;
+			this.indexedFirstRead = false;
 			return COB_STATUS_00_SUCCESS;
+		} else {
+			return COB_STATUS_23_KEY_NOT_EXISTS;
 		}
-		return COB_STATUS_23_KEY_NOT_EXISTS;
 	}
 
 	@Override
 	/**
-	 * libcob/fileio.cのindexed_startの実装
+	 * Equivalent to libcob/fileio.c in indexed_start
 	 */
 	public int start_(int cond, AbstractCobolField key) {
-		return indexed_start_internal(cond, key, 0, false);
+		int ret = indexed_start_internal(cond, key, 0, false);
+		if(ret == COB_STATUS_00_SUCCESS) {
+			this.callStart = true;
+		}
+		return ret;
 	}
 
 	@Override
 	/**
-	 * libcob/fileio.cのindexed_readの実装
+	 * Equivalent to indexed_read in libcob/fileio.c
 	 */
 	public int read_(AbstractCobolField key, int readOpts) {
 		IndexedFile p = this.filei;
 		boolean test_lock = false;
-
+		this.callStart = false;
 		int ret = this.indexed_start_internal(COB_EQ, key, readOpts, test_lock);
 		if (ret != COB_STATUS_00_SUCCESS) {
 			return ret;
@@ -380,57 +264,96 @@ public class CobolIndexedFile extends CobolFile {
 	}
 
 	/**
-	 * libcob/fileio.cのindexed_read_nextの実装
+	 * Equivalent to indexed_read_next in libcob/fileio.c
 	 */
 	@Override
 	public int readNext(int readOpts) {
-		return COB_STATUS_00_SUCCESS;
-	}
-
-
-	private void openCursor(int index, CobolFileKey key) {
-		openCursor(index, key.getField());
-	}
-	
-	private void openCursor(int index, AbstractCobolField key) {
-		openCursor(index, key.getDataStorage().getByteArray(0, key.getSize()));
-	}
-	
-	private void openCursor(int index, byte[] key) {
 		IndexedFile p = this.filei;
-		try {
-			PreparedStatement declareStatement = p.connection.prepareStatement(
-				String.format("declare %s for select key, value from %s where key = ? order by key", getCursorName(index), getTableName(index)));
-			declareStatement.setBytes(1, key);
-			declareStatement.execute();
-			Statement openStatement = p.connection.createStatement();
-			openStatement.execute(String.format("open %s", getCursorName(0)));
-		} catch(SQLException e) {
+		if(this.callStart) {
+			this.callStart = false;
+			this.indexedFirstRead = false;
+			this.record.setSize(p.data.length);
+			this.record.getDataStorage().memcpy(p.data, p.data.length);		
+			return COB_STATUS_00_SUCCESS;
+		}
+		
+		boolean isDuplicate = this.keys[p.key_index].getFlag() != 0;
+		if(this.indexedFirstRead || this.flag_begin_of_file) {
+			this.cursor = IndexedCursor.createCursor(p.connection, p.key, p.key_index, isDuplicate, COB_GE);
+			if(this.cursor.isEmpty()) {
+				return COB_STATUS_30_PERMANENT_ERROR;
+			}
+			this.cursor.get().moveToFirst();
+		} else if(this.flag_end_of_file) {
+			this.cursor = IndexedCursor.createCursor(p.connection, p.key, p.key_index, isDuplicate, COB_LE);
+			if(this.cursor.isEmpty()) {
+				return COB_STATUS_30_PERMANENT_ERROR;
+			}
+			this.cursor.get().moveToLast();		
+		} else if(this.updateWhileReading) {
+			this.updateWhileReading = false;
+			if(this.cursor.isEmpty()) {
+				return COB_STATUS_30_PERMANENT_ERROR;
+			}
+			IndexedCursor oldCursor = this.cursor.get();
+			Optional<IndexedCursor> newCursor = oldCursor.reloadCursor();
+			if(newCursor.isEmpty()) {
+				this.cursor = Optional.of(oldCursor);
+			} else {
+				oldCursor.close();
+				this.cursor = newCursor;
+			}
+		}
+		
+		if(this.cursor.isEmpty()) {
+			return COB_STATUS_30_PERMANENT_ERROR;
+		}
+
+		IndexedCursor cursor = this.cursor.get();
+
+		final CursorReadOption cursorOpt;
+		if((readOpts & COB_READ_PREVIOUS) != 0) {
+			cursorOpt = CursorReadOption.PREV;
+			cursor.setComparator(COB_LE);
+		} else {
+			cursorOpt = CursorReadOption.NEXT;
+			cursor.setComparator(COB_GE);
+		}
+
+		Optional<FetchResult> optionalResult = cursor.read(cursorOpt);
+		
+
+		this.indexedFirstRead = false;
+
+		if(optionalResult.isEmpty()) {
+			return COB_STATUS_10_END_OF_FILE;
+		} else {
+			FetchResult result = optionalResult.get();
+			p.key = result.key;
+			p.data = result.value;
+			
+			this.record.setSize(p.data.length);
+			this.record.getDataStorage().memcpy(p.data, p.data.length);
+
+			return COB_STATUS_00_SUCCESS;
 		}
 	}
 	
-	private void closeCursor(int index) {
-		IndexedFile p = this.filei;
-		try {
-			Statement statement = p.connection.createStatement();
-			statement.execute(String.format("close %s", getCursorName(0)));
-			p.resultSets.get(index).ifPresent(rs -> {
-				try {
-					rs.close();
-				} catch (SQLException e) {
-				}
-			});
-		} catch(SQLException e) {
-		} catch (Exception e) {
+	private void closeCursor() {
+		if(this.cursor != null) {
+			if(this.cursor.isPresent()) {
+				this.cursor.get().close();
+			}
 		}
 	}
 	
 	private boolean keyExistsInTable(IndexedFile p, int index, byte[] key) {	
 		try {
-			PreparedStatement selectStatement = p.connection.prepareStatement(
-				String.format(
-					"select * from %s where key = ?",
-					getTableName(0)));
+			String query = String.format(
+				"select * from %s where key = ?",
+				getTableName(index));
+
+			PreparedStatement selectStatement = p.connection.prepareStatement(query);
 			selectStatement.setBytes(1, key);
 			selectStatement.setFetchSize(0);
 			ResultSet rs = selectStatement.executeQuery();
@@ -457,23 +380,19 @@ public class CobolIndexedFile extends CobolFile {
 	
 	private int returnWith(IndexedFile p, boolean close_cursor, int index, int returnCode) {
 		if (close_cursor) {
-			closeCursor(0);
+			this.closeCursor();
 			p.write_cursor_open = false;
 		}
 		return returnCode;
 	}
 	
 	/**
-	 * libcob/fileio.cのindexed_write_internalの実装
-	 * @param rewrite
-	 * @param opt
-	 * @return
+	 * Equivalent to indexed_write_internal in libcob/fileio.c
 	 */
 	private int indexed_write_internal(boolean rewrite, int opt) {
 		IndexedFile p = this.filei;
 
 		boolean close_cursor;
-		openCursor(0, this.keys[0]);
 		p.write_cursor_open = true;
 		close_cursor = true;
 		
@@ -483,7 +402,7 @@ public class CobolIndexedFile extends CobolFile {
 			}
 			p.key = DBT_SET(this.keys[0].getField());
 		}
-		
+
 		if(keyExistsInTable(p, 0, p.key)) {
 			return COB_STATUS_22_KEY_EXISTS;
 		}
@@ -533,70 +452,109 @@ public class CobolIndexedFile extends CobolFile {
 			}
 		}
 
+		this.updateWhileReading = true;
+
 		return returnWith(p, close_cursor, 0, COB_STATUS_00_SUCCESS);
 	}
 
 	/**
-	 * libcob/fileio.cのindexed_writeの実装
+	 * Equivalent to indexed_write in libcob/fileio.c
 	 */
 	@Override
 	public int write_(int opt) {
 		IndexedFile p = this.filei;
+		
+		p.key = DBT_SET(this.keys[0].getField());
+		if (p.last_key == null) {
+			p.last_key = new CobolDataStorage(p.key.length);
+
+		} else if (this.access_mode == COB_ACCESS_SEQUENTIAL) {
+			byte[] keyBytes = p.key;
+			if (p.last_key.memcmp(keyBytes, keyBytes.length) > 0) {
+				return COB_STATUS_21_KEY_INVALID;
+			}
+		}
+
+		byte[] keyBytes = p.key;
+		p.last_key.memcpy(keyBytes, keyBytes.length);
+		
 		return indexed_write_internal(false, opt);
 	}
 
 	/**
-	 * libcob/fileio.cのcheck_alt_keysの実装
-	 * @param rewrite
-	 * @return
+	 * Equivalent to check_alt_keys in libcob/fileio.c
 	 */
 	private boolean check_alt_keys(boolean rewrite) {
 		IndexedFile p = this.filei;
+		
+		byte[] primaryKey = DBT_SET(this.keys[0].getField());
+		for (int i = 1; i < this.nkeys; ++i) {
+			if (this.keys[i].getFlag() == 0) {
+				p.key = DBT_SET(this.keys[i].getField());
+				if(rewrite) {
+					if(checkTable(p, i, p.key, primaryKey)) {
+						return true;
+					}
+				} else {
+					if(keyExistsInTable(p, i, p.key)) {
+						return true;
+					}
+				}
+			}
+		}
 		return false;
 	}
+	
+	private static boolean checkTable(IndexedFile p, int index, byte[] key, byte[] primaryKey) {
+		try {
+			String query = String.format(
+				"select key from %s " +
+				"where key = ? and value = ?",
+				getTableName(index));
 
-	/**
-	 * TODO ロック処理実装
-	 * libcob/fileio.cのunlock_recordの実装
-	 * @return
-	 */
-	private int unlock_record() {
-		IndexedFile p = this.filei;
-		if (!p.record_locked) {
-			return 0;
+			PreparedStatement selectStatement = p.connection.prepareStatement(query);
+			selectStatement.setBytes(1, key);
+			selectStatement.setBytes(2, primaryKey);
+			selectStatement.setFetchSize(0);
+			ResultSet rs = selectStatement.executeQuery();
+			return rs.next();
+		} catch(SQLException e) {
+			return false;
 		}
-		p.record_lock = false;
-		return 0;
-	}
-
-	/**
-	 * libcob/fileio.cのget_dupnoの実装
-	 * @param i
-	 * @return
-	 */
-	private int get_dupno(int i) {
-		return 0;
 	}	
 
 	@Override
 	/**
-	 * libcob/fileio.cのindexed_rewriteの実装
+	 * Equivalent to indexed_rewrite in libcob/fileio.c
 	 */
 	public int rewrite_(int opt) {
-		return 0;
+		IndexedFile p = this.filei;
+		
+		p.write_cursor_open = true;
+		
+		if(this.access_mode == COB_ACCESS_SEQUENTIAL && !IndexedCursor.matchKeyHead(p.key, DBT_SET(this.keys[0].getField()))) {
+			return COB_STATUS_21_KEY_INVALID;
+		}
+
+		p.key = DBT_SET(this.keys[0].getField());
+
+		int ret = this.indexed_delete_internal(true);
+
+		if (ret != COB_STATUS_00_SUCCESS) {
+			p.write_cursor_open = false;
+			return ret;
+		}
+
+		return this.indexed_write_internal(true, opt);
 	}
 
 	/**
-	 * libcob/fileio.cのindexed_delete_internalの実装
-	 * @param rewrite
-	 * @return
+	 * Equivalent to indexed_delete_internal in libcob/fileio.c
 	 */
 	private int indexed_delete_internal(boolean rewrite) {
-		System.out.println("indexed delete called");
 		IndexedFile p = this.filei;
 		boolean close_cursor;
 
-		openCursor(0, this.keys[0]);
 		p.write_cursor_open = true;
 		close_cursor = true;
 		
@@ -610,8 +568,8 @@ public class CobolIndexedFile extends CobolFile {
 
 		// delete data from the primary table
 		try {
-			PreparedStatement statement = p.connection.prepareStatement(
-				String.format("delete from %s where key = ?", getTableName(0)));
+			String query = String.format("delete from %s where key = ?", getTableName(0));
+			PreparedStatement statement = p.connection.prepareStatement(query);
 			statement.setBytes(1, p.key);
 			statement.execute();
 		} catch(SQLException e) {
@@ -635,22 +593,15 @@ public class CobolIndexedFile extends CobolFile {
 		} catch(SQLException e) {
 				return returnWith(p, close_cursor, 0, COB_STATUS_30_PERMANENT_ERROR);
 		}
+		
+		this.updateWhileReading = true;
 
 		return COB_STATUS_00_SUCCESS;
-	}
-	
-	private static boolean arrayEquals(byte[] a, byte[] b, int size) {
-		for(int i=0; i<size; ++i) {
-			if(a[i] != b[i]) {
-				return false;
-			}
-		}
-		return true;
 	}
 
 	@Override
 	/**
-	 * libcob/fileio.cのindexed_deleteの実装
+	 * Equivalent to libcob/fileio.c in indexed_delete
 	 */
 	public int delete_() {
 		return this.indexed_delete_internal(false);
