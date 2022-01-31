@@ -24,7 +24,7 @@ java [PROGRAM-ID]
 
 ## The progress of the development
 
-下記の実装済みリストにある機能は[NIST COBOL85 test suite](https://www.itl.nist.gov/div897/ctg/cobol_form.htm)でテストされており,**969** のテストケースをパスしています.
+下記の実装済みリストにある機能は[NIST COBOL85 test suite](https://www.itl.nist.gov/div897/ctg/cobol_form.htm)でテストされており,**999%** のテストケースをパスしています.
 
 実装済み
 
@@ -44,4 +44,3 @@ java [PROGRAM-ID]
 既知の不具合
 
 * 同一ソースコード内の別プログラムのCALLができない.
-* DUPLICATE指定されたALTERNATE KEY付きのINDEXEDファイルに対するREAD文の不具合.

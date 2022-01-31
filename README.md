@@ -46,4 +46,3 @@ Not Implemented.
 Known bugs
 
 * Cannot call inline programs.
-* Read wrong data from indexed files with alternate duplicate keys in some cases.
