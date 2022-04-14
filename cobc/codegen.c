@@ -181,12 +181,12 @@ static char* get_java_identifier_field(struct cb_field* f);
 static char* get_java_identifier_base(struct cb_field* f);
 static void get_java_identifier_helper(struct cb_field* f, char* buf);
 static void strcpy_identifier_cobol_to_java(char* buf, char* identifier);
-#define ENABLE_EMBED_ORIGINAL_VARIABLE_NAME 1
+//#define ENABLE_EMBED_ORIGINAL_VARIABLE_NAME 1
 
 static char*
 get_java_identifier_field(struct cb_field* f) {
 	char *buf = malloc(COB_SMALL_BUFF);
-	if(ENABLE_EMBED_ORIGINAL_VARIABLE_NAME) {
+	if(cb_flag_embed_var_name) {
 		strcpy(buf, CB_PREFIX_FIELD);
 		get_java_identifier_helper(f, buf + strlen(CB_PREFIX_FIELD));
 	} else {
@@ -198,7 +198,7 @@ get_java_identifier_field(struct cb_field* f) {
 static char*
 get_java_identifier_base(struct cb_field* f) {
 	char *buf = malloc(COB_SMALL_BUFF);
-	if(ENABLE_EMBED_ORIGINAL_VARIABLE_NAME) {
+	if(cb_flag_embed_var_name) {
 		strcpy(buf, CB_PREFIX_BASE);
 		get_java_identifier_helper(f, buf + strlen(CB_PREFIX_BASE));
 	} else {

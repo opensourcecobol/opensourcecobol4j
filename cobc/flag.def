@@ -70,3 +70,6 @@ CB_FLAG (cb_flag_mfcomment, "mfcomment",
 
 CB_FLAG (cb_flag_null_param, "null-param",
 	 N_("Pass extra NULL terminating pointers on CALL statements"))
+
+CB_FLAG (cb_flag_embed_var_name, "embed-var-name",
+	 N_("Embed COBOL variable names into Java variable names. This option is experimental."))
