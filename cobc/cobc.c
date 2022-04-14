@@ -314,6 +314,7 @@ static const struct option long_options[] = {
 	{"assign_external", no_argument, NULL, 'A'},
 	{"reference_check", no_argument, NULL, 'K'},
 	{"constant", optional_argument, NULL, '3'},
+	{"embed-var-name", no_argument, &cb_flag_embed_var_name, 1},
 #undef	CB_FLAG
 #define	CB_FLAG(var,name,doc)			\
 	{"f"name, no_argument, &var, 1},	\

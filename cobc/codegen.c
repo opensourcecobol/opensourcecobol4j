@@ -177,6 +177,60 @@ static void joutput_alphabet_name_initialization(struct cb_alphabet_name *p);
 const int L_initextern_addr = 2000000000;
 int param_wrap_string_flag = 0;
 
+static char* get_java_identifier_field(struct cb_field* f);
+static char* get_java_identifier_base(struct cb_field* f);
+static void get_java_identifier_helper(struct cb_field* f, char* buf);
+static void strcpy_identifier_cobol_to_java(char* buf, char* identifier);
+//#define ENABLE_EMBED_ORIGINAL_VARIABLE_NAME 1
+
+static char*
+get_java_identifier_field(struct cb_field* f) {
+	char *buf = malloc(COB_SMALL_BUFF);
+	if(cb_flag_embed_var_name) {
+		strcpy(buf, CB_PREFIX_FIELD);
+		get_java_identifier_helper(f, buf + strlen(CB_PREFIX_FIELD));
+	} else {
+		sprintf(buf, "%s%d", CB_PREFIX_FIELD, f->id);
+	}
+	return buf;
+}
+
+static char*
+get_java_identifier_base(struct cb_field* f) {
+	char *buf = malloc(COB_SMALL_BUFF);
+	if(cb_flag_embed_var_name) {
+		strcpy(buf, CB_PREFIX_BASE);
+		get_java_identifier_helper(f, buf + strlen(CB_PREFIX_BASE));
+	} else {
+		sprintf(buf, "%s%d", CB_PREFIX_BASE, f->id);
+	}
+	return buf;
+}
+
+static void
+get_java_identifier_helper(struct cb_field* f, char* buf) {
+	static const char* of = "_of_";
+	strcpy_identifier_cobol_to_java(buf, f->name);
+	buf += strlen(f->name);
+	if(f->parent != NULL) {
+		strcpy(buf, of);
+		buf += strlen(of);
+		get_java_identifier_helper(f->parent, buf);
+	}
+}
+
+static void strcpy_identifier_cobol_to_java(char* buf, char* identifier) {
+	for(; *identifier != '\0'; ++identifier, ++buf) {
+		if(*identifier == '-') {
+			*buf = '_';
+		} else {
+			*buf = *identifier;
+		}
+	}
+	*buf = '\0';
+}
+
+
 static void
 lookup_call (const char *p)
 {
@@ -467,7 +521,8 @@ joutput_base (struct cb_field *f)
 	struct cb_field		*v;
 	struct base_list	*bl;
 	char			*nmp;
-	char			name[COB_MINI_BUFF];
+	char			name[COB_SMALL_BUFF];
+	char *base_name;
 
 	f01 = cb_field_founder (f);
 
@@ -480,6 +535,7 @@ joutput_base (struct cb_field *f)
 		f01 = f01->redefines;
 	}
 
+	//EDIT
 	/* Base name */
 	if (f01->flag_external) {
 		strcpy (name, f01->name);
@@ -489,7 +545,9 @@ joutput_base (struct cb_field *f)
 			}
 		}
 	} else {
-		sprintf (name, "%d", f01->id);
+		//sprintf (name, "%d", f01->id);
+		base_name = get_java_identifier_base(f01);
+		strcpy(name, base_name);
 	}
 
 	if (!f01->flag_base) {
@@ -504,6 +562,8 @@ joutput_base (struct cb_field *f)
 				if (current_prog->flag_global_use) {
 					joutput_local ("unsigned char\t\t*%s%s = NULL;",
 							CB_PREFIX_BASE, name);
+					joutput_local ("unsigned char\t\t*%s%s = NULL;",
+							CB_PREFIX_BASE, name);
 					joutput_local ("\t/* %s */\n", f01->name);
 					joutput_local ("static unsigned char\t*save_%s%s;\n",
 							CB_PREFIX_BASE, name);
@@ -516,7 +576,13 @@ joutput_base (struct cb_field *f)
 		}
 		f01->flag_base = 1;
 	}
-	joutput ("%s%s", CB_PREFIX_BASE, name);
+
+	if(f01->flag_external) {
+		joutput ("%s%s", CB_PREFIX_BASE, name);
+	} else {
+		joutput(name);
+		free(base_name);
+	}
 
 	if (cb_field_variable_address (f)) {
 		for (p = f->parent; p; f = f->parent, p = f->parent) {
@@ -1307,22 +1373,26 @@ joutput_param (cb_tree x, int id)
 				joutput_target = savetarget;
 			}
 			if (f->flag_local) {
+				char* field_name = get_java_identifier_field(f);
 				 if (f->flag_any_length && f->flag_anylen_done) {
-				 	joutput ("%s%d", CB_PREFIX_FIELD, f->id);
+					joutput(field_name);
 				 } else {
 				 	joutput ("new GetAbstractCobolField() { ");
-					joutput ("public AbstractCobolField run() { %s%d.setDataStorage(", CB_PREFIX_FIELD, f->id);
+					joutput ("public AbstractCobolField run() { %s.setDataStorage(", field_name);
 				 	joutput_data (x);
-				 	joutput ("); return %s%d; }}.run()", CB_PREFIX_FIELD, f->id);
+				 	joutput ("); return %s; }}.run()", field_name);
 				 	if (f->flag_any_length) {
 				 		f->flag_anylen_done = 1;
 				 	}
 				 }
+				free(field_name);
 			} else {
 				if (screenptr && f->storage == CB_STORAGE_SCREEN) {
 					joutput ("s_%d", f->id);
 				} else {
-					joutput ("%s%d", CB_PREFIX_FIELD, f->id);
+					char* field_name = get_java_identifier_field(f);
+					joutput(field_name);
+					free(field_name);
 				}
 			}
 		} else {
@@ -4111,8 +4181,13 @@ joutput_internal_function (struct cb_program *prog, cb_tree parameter_list)
 	if (!prog->flag_chained) {
 		int k;
 		for (k =0, l = parameter_list; l; l = CB_CHAIN (l), ++k) {
-			joutput_line("this.%s%d = %d < argStorages.length ? argStorages[%d] : null;",
-				CB_PREFIX_BASE, cb_field (CB_VALUE (l))->id, k, k);
+			//EDIT
+			char* base_name = get_java_identifier_base(cb_field (CB_VALUE (l)));
+			//joutput_line("this.%s%d = %d < argStorages.length ? argStorages[%d] : null;",
+				//CB_PREFIX_BASE, cb_field (CB_VALUE (l))->id, k, k);
+			joutput_line("this.%s = %d < argStorages.length ? argStorages[%d] : null;",
+				base_name, k, k);
+			free(base_name);
 			parmnum++;
 		}
 	}
@@ -4787,7 +4862,10 @@ joutput_internal_function (struct cb_program *prog, cb_tree parameter_list)
 		for (k = field_cache; k; k = k->next) {
 			if (k->f->flag_item_external) {
 				joutput_prefix ();
-				joutput ("\t%s%d.setDataStorage(", CB_PREFIX_FIELD, k->f->id);
+				//EDIT
+				char* field_name = get_java_identifier_field(k->f);
+				joutput ("\t%s.setDataStorage(", k->f);
+				free(field_name);
 				joutput_data (k->x);
 				joutput (");\n");
 			}
@@ -4936,21 +5014,28 @@ void joutput_init_method(struct cb_program *prog) {
 		joutput_line ("cob_unifunc = null;\n");
 		base_cache = list_cache_sort (base_cache, &base_cache_cmp);
 		prevprog = NULL;
+		//EDIT
 		for (blp = base_cache; blp; blp = blp->next) {
+			char* base_name = get_java_identifier_base(blp->f);
 			if (blp->curr_prog != prevprog) {
 				prevprog = blp->curr_prog;
 				joutput_prefix();
 				joutput ("/* PROGRAM-ID : %s */\n", prevprog);
 				joutput_prefix();
-				joutput ("%s%d = new CobolDataStorage(%d);",
-					CB_PREFIX_BASE, blp->f->id,
+				//joutput ("%s%d = new CobolDataStorage(%d);",
+					//CB_PREFIX_BASE, blp->f->id,
+				joutput ("%s = new CobolDataStorage(%d);",
+					base_name,
 					blp->f->memory_size);
 			} else {
 				joutput_prefix();
-				joutput ("%s%d = new CobolDataStorage(%d);",
-					CB_PREFIX_BASE, blp->f->id,
+				//joutput ("%s%d = new CobolDataStorage(%d);",
+					//CB_PREFIX_BASE, blp->f->id,
+				joutput ("%s = new CobolDataStorage(%d);",
+					base_name,
 					blp->f->memory_size);
 			}
+			free(base_name);
 			joutput ("\t/* %s */\n", blp->f->name);
 		}
 		joutput("\n");
@@ -4974,8 +5059,9 @@ void joutput_init_method(struct cb_program *prog) {
 			}
 
 			joutput_prefix();
-			joutput ("%s%d\t= ", CB_PREFIX_FIELD,
-						k->f->id);
+			char* field_name = get_java_identifier_field(k->f);
+			joutput ("%s\t= ", field_name);
+			free(field_name);
 			if (!k->f->flag_local && !k->f->flag_item_external) {
 				joutput_field (k->x);
 			} else {
@@ -5298,20 +5384,27 @@ void joutput_declare_member_variables(struct cb_program *prog, cb_tree parameter
 		base_cache = list_cache_sort (base_cache, &base_cache_cmp);
 		prevprog = NULL;
 		for (blp = base_cache; blp; blp = blp->next) {
+			//EDIT
+			char* base_name = get_java_identifier_base(blp->f);
 			if (blp->curr_prog != prevprog) {
 				prevprog = blp->curr_prog;
 				joutput_prefix();
 				joutput ("/* PROGRAM-ID : %s */\n", prevprog);
 				joutput_prefix();
-				joutput ("private CobolDataStorage %s%d;",
-					CB_PREFIX_BASE, blp->f->id,
+				//joutput ("private CobolDataStorage %s%d;",
+					//CB_PREFIX_BASE, blp->f->id,
+				joutput ("private CobolDataStorage %s;",
+					base_name,
 					blp->f->memory_size);
 			} else {
 				joutput_prefix();
-				joutput ("private CobolDataStorage %s%d;",
-					CB_PREFIX_BASE, blp->f->id,
+				//joutput ("private CobolDataStorage %s%d;",
+					//CB_PREFIX_BASE, blp->f->id,
+				joutput ("private CobolDataStorage %s;",
+					base_name,
 					blp->f->memory_size);
 			}
+			free(base_name);
 			joutput ("\t/* %s */\n", blp->f->name);
 		}
 		joutput("\n");
@@ -5320,8 +5413,12 @@ void joutput_declare_member_variables(struct cb_program *prog, cb_tree parameter
 
 	joutput_line("/* Call parameters */");
 	for (l = parameter_list; l; l = CB_CHAIN (l)) {
-		joutput_line("private CobolDataStorage %s%d;",
-			CB_PREFIX_BASE, cb_field (CB_VALUE (l))->id);
+		char* base_name = get_java_identifier_base(cb_field (CB_VALUE (l))->id);
+		//joutput_line("private CobolDataStorage %s%d;",
+			//CB_PREFIX_BASE, cb_field (CB_VALUE (l))->id);
+		joutput_line("private CobolDataStorage %s;",
+			base_name);
+		free(base_name);
 	}
 
 	/* External items */
@@ -5365,8 +5462,9 @@ void joutput_declare_member_variables(struct cb_program *prog, cb_tree parameter
 						prevprog);
 			}
 			joutput_prefix();
-			joutput ("private AbstractCobolField %s%d;", CB_PREFIX_FIELD,
-						k->f->id);
+			char* field_name = get_java_identifier_field(k->f);
+			joutput ("private AbstractCobolField %s;", field_name);
+			free(field_name);
 			joutput ("\t/* %s */\n", k->f->name);
 		}
 		joutput("\n");
