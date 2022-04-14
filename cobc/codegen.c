@@ -535,7 +535,6 @@ joutput_base (struct cb_field *f)
 		f01 = f01->redefines;
 	}
 
-	//EDIT
 	/* Base name */
 	if (f01->flag_external) {
 		strcpy (name, f01->name);
@@ -4181,10 +4180,7 @@ joutput_internal_function (struct cb_program *prog, cb_tree parameter_list)
 	if (!prog->flag_chained) {
 		int k;
 		for (k =0, l = parameter_list; l; l = CB_CHAIN (l), ++k) {
-			//EDIT
 			char* base_name = get_java_identifier_base(cb_field (CB_VALUE (l)));
-			//joutput_line("this.%s%d = %d < argStorages.length ? argStorages[%d] : null;",
-				//CB_PREFIX_BASE, cb_field (CB_VALUE (l))->id, k, k);
 			joutput_line("this.%s = %d < argStorages.length ? argStorages[%d] : null;",
 				base_name, k, k);
 			free(base_name);
@@ -4862,7 +4858,6 @@ joutput_internal_function (struct cb_program *prog, cb_tree parameter_list)
 		for (k = field_cache; k; k = k->next) {
 			if (k->f->flag_item_external) {
 				joutput_prefix ();
-				//EDIT
 				char* field_name = get_java_identifier_field(k->f);
 				joutput ("\t%s.setDataStorage(", k->f);
 				free(field_name);
@@ -5014,7 +5009,6 @@ void joutput_init_method(struct cb_program *prog) {
 		joutput_line ("cob_unifunc = null;\n");
 		base_cache = list_cache_sort (base_cache, &base_cache_cmp);
 		prevprog = NULL;
-		//EDIT
 		for (blp = base_cache; blp; blp = blp->next) {
 			char* base_name = get_java_identifier_base(blp->f);
 			if (blp->curr_prog != prevprog) {
@@ -5022,15 +5016,11 @@ void joutput_init_method(struct cb_program *prog) {
 				joutput_prefix();
 				joutput ("/* PROGRAM-ID : %s */\n", prevprog);
 				joutput_prefix();
-				//joutput ("%s%d = new CobolDataStorage(%d);",
-					//CB_PREFIX_BASE, blp->f->id,
 				joutput ("%s = new CobolDataStorage(%d);",
 					base_name,
 					blp->f->memory_size);
 			} else {
 				joutput_prefix();
-				//joutput ("%s%d = new CobolDataStorage(%d);",
-					//CB_PREFIX_BASE, blp->f->id,
 				joutput ("%s = new CobolDataStorage(%d);",
 					base_name,
 					blp->f->memory_size);
@@ -5384,22 +5374,17 @@ void joutput_declare_member_variables(struct cb_program *prog, cb_tree parameter
 		base_cache = list_cache_sort (base_cache, &base_cache_cmp);
 		prevprog = NULL;
 		for (blp = base_cache; blp; blp = blp->next) {
-			//EDIT
 			char* base_name = get_java_identifier_base(blp->f);
 			if (blp->curr_prog != prevprog) {
 				prevprog = blp->curr_prog;
 				joutput_prefix();
 				joutput ("/* PROGRAM-ID : %s */\n", prevprog);
 				joutput_prefix();
-				//joutput ("private CobolDataStorage %s%d;",
-					//CB_PREFIX_BASE, blp->f->id,
 				joutput ("private CobolDataStorage %s;",
 					base_name,
 					blp->f->memory_size);
 			} else {
 				joutput_prefix();
-				//joutput ("private CobolDataStorage %s%d;",
-					//CB_PREFIX_BASE, blp->f->id,
 				joutput ("private CobolDataStorage %s;",
 					base_name,
 					blp->f->memory_size);
