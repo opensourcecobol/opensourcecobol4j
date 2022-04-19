@@ -2,7 +2,7 @@
  * Copyright (C) 2002-2009 Keisuke Nishida
  * Copyright (C) 2007-2009 Roger While
  * Copyright (C) 2020 TOKYO SYSTEM HOUSE Co., Ltd.
- g
+ *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation; either version 2, or (at your option)
@@ -181,7 +181,8 @@ static char* get_java_identifier_field(struct cb_field* f);
 static char* get_java_identifier_base(struct cb_field* f);
 static void get_java_identifier_helper(struct cb_field* f, char* buf);
 static void strcpy_identifier_cobol_to_java(char* buf, char* identifier);
-//#define ENABLE_EMBED_ORIGINAL_VARIABLE_NAME 1
+void joutput_execution_list(struct cb_program* prog);
+void joutput_execution_entry_func();
 
 static char*
 get_java_identifier_field(struct cb_field* f) {
@@ -230,6 +231,15 @@ static void strcpy_identifier_cobol_to_java(char* buf, char* identifier) {
 	*buf = '\0';
 }
 
+struct cb_label_id_map {
+	int key;
+	int val;
+	struct cb_label_id_map* next;
+};
+struct cb_label_id_map* label_id_map_head = NULL;
+struct cb_label_id_map* label_id_map_last = NULL;
+int label_id_counter = 0;
+int control_counter = 0;
 
 static void
 lookup_call (const char *p)
@@ -2978,8 +2988,7 @@ joutput_call (struct cb_call *p)
 static void
 joutput_goto_1 (cb_tree x)
 {
-	joutput_line ("entryFunc(%d);", CB_LABEL (cb_ref (x))->id);
-	joutput_line("if(true) return false;");
+	joutput_line ("if(true) return Optional.of(contList[%d]);", find_label_id(CB_LABEL (cb_ref (x))));
 }
 
 static void
@@ -3595,7 +3604,16 @@ joutput_stmt (cb_tree x)
 		}
 
 		if (lp->need_begin) {
-			joutput_next_buffer(lp->id);
+			//joutput_next_buffer(lp->id);
+			joutput_line("return Optional.of(contList[%d]);", ++control_counter);
+			joutput_indent_level -=2;
+			joutput_line("}");
+			joutput_indent_level -=2;
+			joutput_line("},");
+			joutput_line("new CobolControl(%d) {", control_counter);
+			joutput_indent_level += 2;
+			joutput_line("public Optional<CobolControl> run() throws CobolRuntimeException, CobolGoBackException, CobolStopRunException {");
+			joutput_indent_level += 2;
 		}
 		if (cb_flag_trace) {
 			if (lp->is_section) {
@@ -4683,31 +4701,36 @@ joutput_internal_function (struct cb_program *prog, cb_tree parameter_list)
 	joutput_line("  CobolGoBackException.dummy();");
 	joutput_indent_level += 2;
 
-	joutput_init_buffer_list();
-	joutput_buffered = 1;
-	for (l = prog->exec_list; l; l = CB_CHAIN (l)) {
-		joutput_stmt (CB_VALUE (l));
-	}
-	joutput_buffered = 0;
+	//EDIT
+	//joutput_init_buffer_list();
+	//joutput_buffered = 1;
+	//for (l = prog->exec_list; l; l = CB_CHAIN (l)) {
+	//	joutput_stmt (CB_VALUE (l));
+	//}
+	//joutput_buffered = 0;
 
 	/* Entry dispatch */
 	joutput_line ("/* Entry dispatch */");
 	if (cb_list_length (prog->entry_list) > 1) {
-		joutput_newline ();
-		joutput_line ("switch (entry)");
-		joutput_line ("  {");
-		for (i = 0, l = prog->entry_list; l; l = CB_CHAIN (l)) {
-			joutput_line ("  case %d:", i++);
-			joutput_line ("    entryFunc(%d);",
-				     CB_LABEL (CB_PURPOSE (l))->id);
-		}
-		joutput_line ("  }");
-		joutput_line ("/* This should never be reached */");
-		joutput_line ("CobolUtil.fatalError (CobolUtil.FERROR_CHAINING);");
-		joutput_newline ();
+		joutput_line("multiple entry dispatch is not implemented");
+		//EDIT
+		//joutput_newline ();
+		//joutput_line ("switch (entry)");
+		//joutput_line ("  {");
+		//for (i = 0,gl = prog->entry_list; l; l = CB_CHAIN (l)) {
+		//	joutput_line ("  case %d:", i++);
+		//	joutput_line ("    entryFunc(%d);",
+		//		     CB_LABEL (CB_PURPOSE (l))->id);
+		//}
+		//joutput_line ("  }");
+		//joutput_line ("/* This should never be reached */");
+		//joutput_line ("CobolUtil.fatalError (CobolUtil.FERROR_CHAINING);");
+		//joutput_newline ();
 	} else {
 		l = prog->entry_list;
-		joutput_line ("entryFunc(%d);", CB_LABEL (CB_PURPOSE (l))->id);
+		//EDIT
+		//joutput_line ("entryFunc(%d);", CB_LABEL (CB_PURPOSE (l))->id);
+		joutput_line("execEntry(0);");
 		joutput_newline ();
 	}
 
@@ -5609,6 +5632,106 @@ joutput_class_name_definition (struct cb_class_name *p)
 }
 
 void
+append_label_id_map(struct cb_label* label) {
+	struct cb_label_id_map* new_entry = malloc(sizeof(struct cb_label_id_map));
+	new_entry->key = label->id;
+	new_entry->val = ++label_id_counter;
+	new_entry->next = gULL;
+	if(label_id_map_last) {
+		label_id_map_last->next = new_entry;
+	} else {
+		label_id_map_head = new_entry;
+	}
+	label_id_map_last = new_entry;
+}
+
+void
+create_label_id_map(struct cb_program* prog)
+{
+	label_id_counter = 0;
+	label_id_map_head = NULL;
+	label_id_map_last = NULL;
+	cb_tree* l;
+	for (l = prog->exec_list; l; l = CB_CHAIN (l)) {
+		if(CB_TREE_TAG(CB_VALUE(l)) == CB_TAG_LABEL) {
+			struct cb_label* label = CB_LABEL(CB_VALUE(l));
+			if(label->need_begin) {
+				append_label_id_map(label);
+			}
+		}
+	}
+}
+
+int
+find_label_id(struct cb_label* label) {
+	if(!label) {
+		fprintf(stderr, "[internal error] label is null\n");
+		return -1;
+	}
+	int id = CB_LABEL(label)->id;
+	struct cb_label_id_map* l;
+	for(l = label_id_map_head; l; l = l->next) {
+		if(l->key == id) {
+			return l->val;
+		}
+	}
+	fprintf(stderr, "[internal error] cannot find label_id: %d\n", label->id);
+	return -1;
+}
+
+void
+destroy_label_id_map() {
+	while(label_id_map_head) {
+		struct cb_label_id_map* next = label_id_map_head->next;
+		free(label_id_map_head);
+		label_id_map_head = next;
+	}
+	label_id_map_head = NULL;
+}
+
+void
+joutput_execution_list(struct cb_program* prog)
+{
+	control_counter = 0;
+
+	create_label_id_map(prog);
+	joutput_line("public CobolControl[] contList = {");
+	joutput_indent_level += 2;
+	joutput_line("new CobolControl(0) {");
+	joutput_indent_level += 2;
+	joutput_line("public Optional<CobolControl> run() throws CobolRuntimeException, CobolGoBackException, CobolStopRunException {");
+	joutput_indent_level += 2;
+	cb_tree* l;
+	for (l = prog->exec_list; l; l = CB_CHAIN (l)) {
+		joutput_stmt (CB_VALUE (l));
+	}
+	joutput_line("return Optional.of(contList[%d]);", control_counter + 1);
+	joutput_indent_level -= 2;
+	joutput_line("}");
+	joutput_indent_level -= 2;
+	joutput_line("},");
+	joutput_line("CobolControl.pure()");
+	joutput_indent_level -= 2;
+	joutput_line("};");
+	destroy_label_id_map();
+}
+
+void joutput_execution_entry_func()
+{
+    joutput_line("public void execEntry(int start) throws CobolRuntimeException, CobolGoBackException, CobolStopRunException {");
+    joutput_indent_level += 2;
+    joutput_line("Optional<CobolControl> nextLabel = Optional.of(contList[0]);");
+    joutput_line("while(nextLabel.isPresent()) {");
+    joutput_indent_level += 2;
+    joutput_line("CobolControl section = nextLabel.get();");
+    joutput_line("nextLabel = section.run();");
+    joutput_indent_level -= 2;
+    joutput_line("}");
+    joutput_indent_level -= 2;
+    joutput_line("}");
+}
+
+void
 codegen (struct cb_program *prog, const int nested, char** program_id_list)
 {
 	int			i;
@@ -5707,6 +5830,7 @@ codegen (struct cb_program *prog, const int nested, char** program_id_list)
 	joutput_line("import jp.osscons.opensourcecobol.libcobj.termio.*;");
 	joutput_line("import jp.osscons.opensourcecobol.libcobj.call.*;");
 	joutput_line("import jp.osscons.opensourcecobol.libcobj.file.*;");
+    joutput_line("import java.util.Optional;");
 	joutput("\n");
 
 	joutput_line("public class %s implements CobolRunnable {", prog->program_id);
@@ -5769,10 +5893,14 @@ codegen (struct cb_program *prog, const int nested, char** program_id_list)
 	joutput_internal_function (prog, prog->parameter_list);
 	joutput("\n");
 
+	joutput_execution_list(prog);
+    joutput_execution_entry_func();
+
 	//output label procedure
-	joutput_label_function();
-	joutput_entry_function();
-	joutput_close_buffer_list();
+    //EDIT
+	//joutput_label_function();
+	//joutput_entry_function();
+	//joutput_close_buffer_list();
 
 	if (!prog->next_program) {
 		//output ("/* End functions */\n\n");

@@ -1,7 +1,9 @@
+package jp.osscons.opensourcecobol.libcobj.common;
+
 import java.util.Optional;
 import jp.osscons.opensourcecobol.libcobj.exceptions.*;
 
-abstract class CobolControl {
+public abstract class CobolControl {
 	abstract public Optional<CobolControl> run() throws CobolRuntimeException, CobolGoBackException, CobolStopRunException;
 	public int contId = -1;
 	public CobolControl() {
@@ -11,7 +13,7 @@ abstract class CobolControl {
 		this.contId = contId;
 	}
 
-	static CobolControl pure() {
+	public static CobolControl pure() {
 		return new CobolControl() {
 			public Optional<CobolControl> run() throws CobolRuntimeException, CobolGoBackException, CobolStopRunException {
 				return Optional.empty();
@@ -19,7 +21,7 @@ abstract class CobolControl {
 		};
 	}
 	
-	static CobolControl goTo(CobolControl cont) {
+	public static CobolControl goTo(CobolControl cont) {
 		return new CobolControl() {
 			public Optional<CobolControl> run() throws CobolRuntimeException, CobolGoBackException, CobolStopRunException {
 				return cont.run();
@@ -27,7 +29,7 @@ abstract class CobolControl {
 		};
 	}
 	
-	static CobolControl performThrough(CobolControl[] contList, int begin, int end) {
+	public static CobolControl performThrough(CobolControl[] contList, int begin, int end) {
 		return new CobolControl() {
 			public Optional<CobolControl> run() throws CobolRuntimeException, CobolGoBackException, CobolStopRunException {
 				Optional<CobolControl> nextCont = Optional.of(contList[begin]);
@@ -42,7 +44,7 @@ abstract class CobolControl {
 		};
 	}
 
-	static CobolControl perform(CobolControl[] contList, int labelId) {
+	public static CobolControl perform(CobolControl[] contList, int labelId) {
 		return CobolControl.performThrough(contList, labelId, labelId);
 	}
 }
