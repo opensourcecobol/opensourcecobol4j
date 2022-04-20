@@ -3043,17 +3043,16 @@ joutput_perform_call (struct cb_label *lb, struct cb_label *le)
 
 	if (lb == le) {
 		joutput_line ("/* PERFORM %s */", lb->name);
+	    joutput_line("CobolControl.perform(contList, %d).run();", find_label_id(lb));
 	} else {
 		joutput_line ("/* PERFORM %s THRU %s */", lb->name, le->name);
+	    joutput_line("CobolControl.performThrough(contList, %d, %d).run();", find_label_id(lb), find_label_id(le));
 	}
-	joutput_line ("this.frameIndex++;");
 
-	if (cb_flag_stack_check) {
-		joutput_line ("if (unlikely(frame_ptr == frame_overflow))");
-		joutput_line ("    cob_fatal_error (COB_FERROR_STACK);");
-	}
-	joutput_line ("this.frameStack[this.frameIndex].setPerformThrough(%d);", le->id);
-	joutput_line("entryFunc(%d);", lb->id);
+	//if (cb_flag_stack_check) {
+	//	joutput_line ("if (unlikely(frame_ptr == frame_overflow))");
+	//	joutput_line ("    cob_fatal_error (COB_FERROR_STACK);");
+	//}
 #ifndef	__GNUC__
 	//l = cobc_malloc (sizeof (struct label_list));
 	//l->next = label_cache;
@@ -3078,7 +3077,6 @@ joutput_perform_call (struct cb_label *lb, struct cb_label *le)
 #endif
 	cb_id++;
 	//joutput_line ("frame_ptr--;");
-	joutput_line ("this.frameIndex--;");
 	//joutput_line ("throw new CobolRuntimeException(0, \"\");");
 }
 
@@ -3194,7 +3192,7 @@ joutput_perform (struct cb_perform *p)
 	switch (p->type) {
 	case CB_PERFORM_EXIT:
 		if (CB_LABEL (p->data)->need_return) {
-			joutput_perform_exit (CB_LABEL (p->data));
+			//joutput_perform_exit (CB_LABEL (p->data));
 		}
 		break;
 	case CB_PERFORM_ONCE:
@@ -4850,7 +4848,7 @@ joutput_internal_function (struct cb_program *prog, cb_tree parameter_list)
 			joutput_indent ("}");
 			joutput_indent ("}");
 		}
-		joutput_perform_exit (CB_LABEL (cb_standard_error_handler));
+		//joutput_perform_exit (CB_LABEL (cb_standard_error_handler));
 		joutput_newline ();
 		joutput_line ("CobolUtil.fatalError (CobolUtil.FERROR_CODEGEN);");
 		joutput_newline ();
@@ -5636,7 +5634,7 @@ append_label_id_map(struct cb_label* label) {
 	struct cb_label_id_map* new_entry = malloc(sizeof(struct cb_label_id_map));
 	new_entry->key = label->id;
 	new_entry->val = ++label_id_counter;
-	new_entry->next = gULL;
+	new_entry->next = NULL;
 	if(label_id_map_last) {
 		label_id_map_last->next = new_entry;
 	} else {
@@ -5720,7 +5718,7 @@ void joutput_execution_entry_func()
 {
     joutput_line("public void execEntry(int start) throws CobolRuntimeException, CobolGoBackException, CobolStopRunException {");
     joutput_indent_level += 2;
-    joutput_line("Optional<CobolControl> nextLabel = Optional.of(contList[0]);");
+    joutput_line("Optional<CobolControl> nextLabel = Optional.of(contList[start]);");
     joutput_line("while(nextLabel.isPresent()) {");
     joutput_indent_level += 2;
     joutput_line("CobolControl section = nextLabel.get();");
