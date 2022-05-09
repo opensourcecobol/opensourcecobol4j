@@ -5735,9 +5735,6 @@ joutput_execution_list(struct cb_program* prog)
 			joutput_indent ("}");
 			joutput_indent ("}");
 		}
-		//joutput_perform_exit (CB_LABEL (cb_standard_error_handler));
-		joutput_newline ();
-		joutput_line ("CobolUtil.fatalError (CobolUtil.FERROR_CODEGEN);");
 		joutput_newline ();
 	}
 
