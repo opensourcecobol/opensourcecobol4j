@@ -3616,17 +3616,26 @@ joutput_stmt (cb_tree x)
 				joutput_line ("/* %s */", lp->name);
 			}
 			excp_current_paragraph = (const char *)lp->name;
-			if (!lp->need_begin) {
-				joutput_newline ();
-			}
+			//if (!lp->need_begin) {
+			//	joutput_newline ();
+			//}
 		}
 
 		// the start of the label
+        joutput_prefix();
 		if(flag_execution_begin == EXECUTION_ERROR_HANDLER) {
-			joutput_line("new CobolControl(%d) {", control_counter + 1);
+			joutput("new CobolControl(%d", control_counter + 1);
 		} else {
-			joutput_line("new CobolControl(%d) {", control_counter);
+			joutput("new CobolControl(%d", control_counter);
 		}
+
+        if(lp->is_section) {
+            joutput(", CobolControl.LabelType.section) {");
+        } else {
+            joutput(", CobolControl.LabelType.label) {");
+        }
+        joutput_newline();
+
 		joutput_indent_level += 2;
 		joutput_line("public Optional<CobolControl> run() throws CobolRuntimeException, CobolGoBackException, CobolStopRunException {");
 		joutput_indent_level += 2;
@@ -5640,7 +5649,7 @@ joutput_execution_list(struct cb_program* prog)
 
 	joutput_line("public CobolControl[] contList = {");
 	joutput_indent_level += 2;
-	joutput_line("new CobolControl(0) {");
+	joutput_line("new CobolControl(0, CobolControl.LabelType.label) {");
 	joutput_indent_level += 2;
 	joutput_line("public Optional<CobolControl> run() throws CobolRuntimeException, CobolGoBackException, CobolStopRunException {");
 	joutput_indent_level += 2;
