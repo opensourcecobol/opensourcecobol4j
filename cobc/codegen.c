@@ -3018,18 +3018,15 @@ joutput_goto (struct cb_goto *p)
 	} else if (p->target == NULL) {
 		needs_exit_prog = 1;
 		if (cb_flag_implicit_init) {
-			joutput_line("entryFunc(-10);");
-			joutput_line("if(true) return false;");
+			joutput_line ("if(true) return Optional.of(contList[contList.length - 1]);");
 		} else {
 			joutput_line ("if (!CobolModule.isQueueEmpty()) {");
-			joutput_line ("  entryFunc(-10);");
-			joutput_line ("  if(true) return false;");
+			joutput_line ("  return Optional.of(contList[contList.length - 1]);");
 			joutput_line ("}");
 		}
 	} else if (p->target == cb_int1) {
 		needs_exit_prog = 1;
-		joutput_line("entryFunc(-10);");
-		joutput_line("if(true) return false;");
+		joutput_line ("if(true) return Optional.of(contList[contList.length - 1]);");
 	} else {
 		joutput_goto_1 (p->target);
 	}
