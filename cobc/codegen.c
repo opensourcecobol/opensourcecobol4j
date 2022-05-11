@@ -246,6 +246,7 @@ int control_counter = 0;
 int flag_execution_begin = EXECUTION_NORMAL;
 int flag_execution_end = EXECUTION_NORMAL;
 
+
 static void
 lookup_call (const char *p)
 {
@@ -550,6 +551,7 @@ joutput_base (struct cb_field *f)
 		f01 = f01->redefines;
 	}
 
+	//EDIT
 	/* Base name */
 	if (f01->flag_external) {
 		strcpy (name, f01->name);
@@ -4974,6 +4976,7 @@ void joutput_init_method(struct cb_program *prog) {
 		joutput_line ("cob_unifunc = null;\n");
 		base_cache = list_cache_sort (base_cache, &base_cache_cmp);
 		prevprog = NULL;
+		//EDIT
 		for (blp = base_cache; blp; blp = blp->next) {
 			char* base_name = get_java_identifier_base(blp->f);
 			if (blp->curr_prog != prevprog) {
