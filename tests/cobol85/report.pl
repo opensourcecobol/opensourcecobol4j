@@ -22,8 +22,6 @@ my $opt = shift;
 my $compile;
 my $compile_module;
 
-$enable_c = 0;
-
 if ($opt) {
 	$compile = "cobc -std=cobol85 -x $opt";
 	$compile_module = "cobc -std=cobol85 -m $opt";
@@ -86,13 +84,12 @@ foreach $in (sort (glob("*.{CBL,SUB}"))) {
   $exe =~ s/\.CBL//;
   $exe =~ s/\.SUB//;
   $cmd = "";
-  if($enable_c == 1) {
-    $cmd = "cobcrun $exe";
-  } else {
-    $cmd = "java $exe";
-  }
+
   if (-e "./$exe.DAT") {
-    $cmd = "$cmd < $exe.DAT";
+      #$cmd = "$cmd < $exe.DAT";
+    $cmd = "java -cp \"\$CLASSPATH:./build\" $exe < $exe.DAT";
+  } else {
+    $cmd = "java -cp \"\$CLASSPATH:./build\" $exe";
   }
   printf LOG "%-12s", $in;
   if ($skip{$exe} || $exe =~ /^..[34]0/) {
@@ -121,11 +118,7 @@ foreach $in (sort (glob("*.{CBL,SUB}"))) {
       }
       ## if (system ("java $cmd > $exe.out") != 0) {
       $exec_result = 0;
-      if($enable_c == 1) {
-          $exec_result = system ("$cmd > $exe.out.org");
-      } else {
-          $exec_result = system ("$cmd > $exe.out");
-      }
+      $exec_result = system ("$cmd > $exe.out");
       if ($exec_result != 0) {
 	$execute_error++;
 	print LOG "  ***** execute error *****\n";
