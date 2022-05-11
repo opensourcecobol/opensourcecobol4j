@@ -1,4 +1,4 @@
-# opensource COBOL 4j
+g opensource COBOL 4j
 
 [English version README](https://github.com/opensourcecobol/opensourcecobol4j/blob/develop/README.md)
 
@@ -13,13 +13,13 @@ opensource COBOL 4jはCOBOLからCに変換するCOBOLコンパイラ["opensourc
 
 コンパイル.
 ```bash
-cobc -m [COBOL source file]
+cobc [COBOL source file]
 ```
 (cobcコマンドにより,カレントディレクトリに[PROGRAM-ID].javaと[PROGRAM-ID].classが生成されます.)
 
 実行.
 ```bash
-java [PROGRAM-ID]
+java -cp "$CLASSPATH:./build" [PROGRAM-ID]
 ```
 
 ## The progress of the development
