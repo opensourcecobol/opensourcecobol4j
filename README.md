@@ -14,13 +14,13 @@ See [Installation page](https://github.com/opensourcecobol/opensourcecobol4j/wik
 
 Compile.
 ```bash
-cobc -m [COBOL source file]
+cobc [COBOL source file]
 ```
 ("cobc" command produces [PROGRAM-ID].java and [PROGRAM-ID].class in the current directory.)
 
 Run.
 ```bash
-java [PROGRAM-ID]
+java -cp "$CLASSPATH:./build" [PROGRAM-ID]
 ```
 
 ## The progress of the development

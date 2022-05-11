@@ -1867,7 +1867,7 @@ process_compile (struct filename *fn)
 #endif
 
     for(char** program_id = program_id_list; *program_id; ++program_id) {
-        sprintf(buff, "javac -g -encoding UTF8 %s.java", *program_id);
+        sprintf(buff, "javac -encoding UTF8 -d ./build %s.java", *program_id);
         ret = process (buff);
     }
 	return ret;
