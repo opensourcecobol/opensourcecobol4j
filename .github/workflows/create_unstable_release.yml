@@ -1,0 +1,43 @@
+on:
+  push:
+    tags:
+      - 'unstable*'
+
+name: Create Unstable Release
+
+jobs:
+  build:
+    name: Create Unstable Release
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
+        
+      - name: Create Release
+        id: create_release
+        uses: actions/create-release@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          tag_name: unstable_version
+          release_name: Release unstable
+          body: |
+            This is an unstable version.
+          draft: false
+          prerelease: false
+          
+      - name: Create libcobj.jar
+        run: |
+          cd libcobj/
+          sh compile.sh
+          cd ../
+          
+      - name: Upload Release Asset
+        id: upload-release-asset
+        uses: actions/upload-release-asset@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          upload_url: ${{ steps.create_release.outputs.upload_url }}
+          asset_path: libcobj/build/libcobj.jar
+          asset_name: my-artifact.zip
