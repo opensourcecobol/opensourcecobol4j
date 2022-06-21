@@ -29,13 +29,13 @@ jobs:
           cd libcobj
           mkdir ~/.java_lib
           curl -L -o ~/.java_lib/sqlite.jar https://github.com/xerial/sqlite-jdbc/releases/download/3.36.0.3/sqlite-jdbc-3.36.0.3.jar
-          export CLASSPATH=:~/.java_lib/sqlite.jar
           sh compile.sh
           cp build/libcobj.jar ~/.java_lib
-          export CLASSPATH="$CLASSPATH:$HOME/.java_lib/libcobj.jar"
           cd ../
+          export CLASSPATH="$CLASSPATH:$HOME/.java_lib/libcobj.jar:$HOME/.java_lib/sqlite.jar"
       
       - name: Run NIST test
         run: |
+          export CLASSPATH="$CLASSPATH:$HOME/.java_lib/libcobj.jar:$HOME/.java_lib/sqlite.jar"
           cd tests/cobol85/
           make test
