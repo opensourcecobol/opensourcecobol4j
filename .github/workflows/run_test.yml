@@ -33,16 +33,9 @@ jobs:
           sh compile.sh
           cp build/libcobj.jar ~/.java_lib
           export CLASSPATH="$CLASSPATH:$HOME/.java_lib/libcobj.jar"
+          cd ../
       
-      - name: run Hello World
+      - name: Run NIST test
         run: |
-          mkdir sample
-          cd sample
-          export CLASSPATH="$HOME/.java_lib/sqlite.jar:$HOME/.java_lib/libcobj.jar"
-          curl -L -o HELLO.cbl https://raw.githubusercontent.com/opensourcecobol/opensourcecobol4j-dockerfile/main/HELLO.cbl
-          cobc HELLO.cbl
-          cat HELLO.java
-          ls
-          echo -----
-          ls build
-          java -cp $CLASSPATH:./build HELLO
+          cd tests/cobol85/
+          make test

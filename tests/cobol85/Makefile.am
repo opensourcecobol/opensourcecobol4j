@@ -37,21 +37,19 @@ diff:
 clean-local:
 	rm -rf copy copyalt $(MODULES)
 
-$(MODULES): newcob.val EXEC85.class $(srcdir)/EXEC85.conf.in
+$(MODULES): newcob.val build/EXEC85.class $(srcdir)/EXEC85.conf.in
 	@echo -n "Building module $@..."
 	@sed 's/@MODULE@/$@/' $(srcdir)/EXEC85.conf.in > EXEC85.conf
-	@. ../atconfig; . ../atlocal; export PATH; java EXEC85
+	@. ../atconfig; . ../atlocal; export PATH; java -cp $$CLASSPATH:./build EXEC85
 	@$(srcdir)/ifedit.sh
 	@perl $(srcdir)/expand.pl newcob.tmp
 	@rm -f newcob.tmp newcob.log EXEC85.conf
 	@echo "test:"               > $@/Makefile
 	@echo "	. ../../atconfig; . ../../atlocal; export PATH; perl $(COB85DIR)/report.pl" >> $@/Makefile
 	@echo "	diff $(COB85DIR)/$@.txt report.txt" >> $@/Makefile
-	@echo "	. ../../atconfig; . ../../atlocal; export PATH; perl $(COB85DIR)/report.pl -O" >> $@/Makefile
-	@echo "	diff $(COB85DIR)/$@.txt report.txt" >> $@/Makefile
 	@echo "done"
 
-EXEC85.class: newcob.val
+build/EXEC85.class: newcob.val
 	@perl -pe 'BEGIN{<>; <>;} exit if /^\*END/;' newcob.val		     \
 	| sed -e 's/XXXXX001.*/"newcob.val" ORGANIZATION LINE SEQUENTIAL./'  \
 	      -e 's/XXXXX002.*/"newcob.tmp" ORGANIZATION LINE SEQUENTIAL./'  \
@@ -60,5 +58,5 @@ EXEC85.class: newcob.val
 	      -e 's/XXXXX058.*/"EXEC85.conf" ORGANIZATION LINE SEQUENTIAL./' \
 	      -e 's/ORGANIZATION SEQUENTIAL.*//'			     \
 	    > EXEC85.cob
-	. ../atconfig; . ../atlocal; export PATH; $(COBOL) -m EXEC85.cob
+	. ../atconfig; . ../atlocal; export PATH; $(COBOL) EXEC85.cob
 	@rm -f EXEC85.cob
