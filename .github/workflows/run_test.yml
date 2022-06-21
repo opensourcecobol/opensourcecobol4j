@@ -32,14 +32,12 @@ jobs:
           export CLASSPATH=:~/.java_lib/sqlite.jar
           sh compile.sh
           cp build/libcobj.jar ~/.java_lib
-          export CLASSPATH="$CLASSPATH:~/.java_lib/libcobj.jar"
+          export CLASSPATH="$CLASSPATH:$HOME/.java_lib/libcobj.jar"
       
       - name: run Hello World
         run: |
           cd
-          export CLASSPATH="~/.java_lib/sqlite.jar:~/.java_lib/libcobj.jar"
-          ls ~/.java_lib
-          echo $HOME
+          export CLASSPATH="$HOME/.java_lib/sqlite.jar:$HOME/.java_lib/libcobj.jar"
           curl -L -o HELLO.cbl https://raw.githubusercontent.com/opensourcecobol/opensourcecobol4j-dockerfile/main/HELLO.cbl
           cobc HELLO.cbl
           cd build && java HELLO
