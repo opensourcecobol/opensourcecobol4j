@@ -4548,7 +4548,7 @@ joutput_internal_function (struct cb_program *prog, cb_tree parameter_list)
 
 		if (has_external) {
 			joutput_line ("/* init_extern */");
-			joutput_line ("LABEL_%d();", L_initextern_addr);
+			joutput_line ("this.initExternProc();", L_initextern_addr);
 		}
 		if (prog->file_list) {
 			joutput_newline ();
@@ -4643,8 +4643,7 @@ joutput_internal_function (struct cb_program *prog, cb_tree parameter_list)
 		}
 		joutput_initial_values (prog->working_storage);
 		if (has_external) {
-			joutput_line ("goto L_initextern;/*3*/");
-			joutput_line ("LRET_initextern: ;");
+			joutput_line ("this.initExternProc();");
 		}
 		joutput_newline ();
 		for (l = prog->file_list; l; l = CB_CHAIN (l)) {
@@ -4815,26 +4814,6 @@ joutput_internal_function (struct cb_program *prog, cb_tree parameter_list)
 	//output_line (" cob_fatal_error (COB_FERROR_CODEGEN);");
 	//output_newline ();
 #endif
-
-	if (has_external) {
-		joutput_newline ();
-		joutput_line ("/* EXTERNAL data initialization */");
-		//joutput_line ("L_initextern: ;");
-		joutput_buffered = 1;
-		joutput_next_buffer(L_initextern_addr);
-		for (k = field_cache; k; k = k->next) {
-			if (k->f->flag_item_external) {
-				joutput_prefix ();
-				char* field_name = get_java_identifier_field(k->f);
-				joutput ("\t%s.setDataStorage(", k->f);
-				free(field_name);
-				joutput_data (k->x);
-				joutput (");\n");
-			}
-		}
-		joutput_buffered = 0;
-		//joutput_line ("\tgoto LRET_initextern;/*1*/");
-	}
 
 	joutput_line ("/* Program return */");
 	joutput_prefix ();
@@ -5447,26 +5426,6 @@ void joutput_declare_member_variables(struct cb_program *prog, cb_tree parameter
 }
 
 static void
-joutput_label_function()
-{
-	int i;
-	for(i = 0; i <= joutput_buffer_list_index; ++i) {
-		joutput_buffer buf = joutput_buffer_list[i];
-		if(buf.default_flag) {
-			joutput_line("public boolean LABEL_DEFAULT() throws CobolRuntimeException, CobolGoBackException, CobolStopRunException {");
-		} else if(buf.label == L_initextern_addr) {
-			joutput_line("public boolean LABEL_%d() {", buf.label);
-		} else {
-			joutput_line("public boolean LABEL_%d() throws CobolRuntimeException, CobolGoBackException, CobolStopRunException {", buf.label);
-		}
-
-		joutput("%s", buf.buffer);
-		joutput_line("    return true;");
-		joutput_line("}");
-	}
-}
-
-static void
 joutput_entry_function()
 {
 	int i;
@@ -5923,10 +5882,29 @@ codegen (struct cb_program *prog, const int nested, char** program_id_list)
 	create_label_id_map(prog);
 	//output_internal_function (prog, prog->parameter_list);
 	joutput_internal_function (prog, prog->parameter_list);
-	joutput("\n");
 
 	joutput_execution_list(prog);
-    joutput_execution_entry_func();
+        joutput_execution_entry_func();
+
+	if (has_external) {
+		joutput_newline ();
+		joutput_line ("/* EXTERNAL data initialization */");
+                joutput_line("private void initExternProc () {");
+                joutput_indent_level += 2;
+		for (k = field_cache; k; k = k->next) {
+			if (k->f->flag_item_external) {
+				joutput_prefix ();
+				char* field_name = get_java_identifier_field(k->f);
+				joutput ("\t%s.setDataStorage(", field_name);
+				free(field_name);
+				joutput_data (k->x);
+				joutput (");\n");
+			}
+		}
+                joutput_indent_level -= 2;
+                joutput_line("};");
+	}
+	joutput("\n");
 
 	//output label procedure
     //EDIT
