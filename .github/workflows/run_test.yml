@@ -40,4 +40,7 @@ jobs:
           export CLASSPATH="$HOME/.java_lib/sqlite.jar:$HOME/.java_lib/libcobj.jar"
           curl -L -o HELLO.cbl https://raw.githubusercontent.com/opensourcecobol/opensourcecobol4j-dockerfile/main/HELLO.cbl
           cobc HELLO.cbl
+          ls
+          echo -----
+          ls build
           cd build && java HELLO
