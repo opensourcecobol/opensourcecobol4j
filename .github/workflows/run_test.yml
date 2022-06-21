@@ -36,7 +36,8 @@ jobs:
       
       - name: run Hello World
         run: |
-          cd
+          mkdir sample
+          cd sample
           export CLASSPATH="$HOME/.java_lib/sqlite.jar:$HOME/.java_lib/libcobj.jar"
           curl -L -o HELLO.cbl https://raw.githubusercontent.com/opensourcecobol/opensourcecobol4j-dockerfile/main/HELLO.cbl
           cobc HELLO.cbl
