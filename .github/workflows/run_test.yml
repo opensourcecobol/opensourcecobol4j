@@ -1,10 +1,43 @@
-name: Run Cobol85 test
-
-on: [push]
-
+name: NIST COBOL85 tests
+on:
+  push:
+  pull_request:
+    types: [opened, reopened, review_requested, synchronize]
+    
 jobs:
-  run_test_job:
+  run-tests:
     runs-on: ubuntu-latest
-    name: Run Cobol85 test
     steps:
-      - run: echo "hello world"
+      # Checkout opensource COBOL
+      - name: Checkout opensource COBOL 4j
+        uses: actions/checkout@v2
+        
+      - name: Install dependencies
+        run: |
+          sudo apt-get update
+          sudo apt-get install default-jdk
+          sudo apt-get install -y build-essential libncurses-dev libgmp-dev bison flex gettext automake autoconf
+      
+      - name: Install opensource COBOL
+        run: |
+          cd vbisam
+          ./configure --prefix=/usr/
+          sudo make install
+          cd ../
+          ./configure --prefix=/usr/ --with-vbisam
+          sudo make install
+          cd libcobj
+          mkdir ~/.java_lib
+          curl -L -o ~/.java_lib/sqlite.jar https://github.com/xerial/sqlite-jdbc/releases/download/3.36.0.3/sqlite-jdbc-3.36.0.3.jar
+          export CLASSPATH=:~/.java_lib/sqlite.jar
+          sh compile.sh
+          cp build/libcobj.jar ~/.java_lib
+          export CLASSPATH="$CLASSPATH:~/.java_lib/libcobj.jar"
+      
+      - name: run Hello World
+        run: |
+          cd
+          export CLASSPATH="~/.java_lib/sqlite.jar:~/.java_lib/libcobj.jar"
+          curl -L -o HELLO.cbl https://raw.githubusercontent.com/opensourcecobol/opensourcecobol4j-dockerfile/main/HELLO.cbl
+          cobc HELLO.cbl
+          cd build && java HELLO
