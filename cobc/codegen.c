@@ -2302,6 +2302,7 @@ joutput_initialize_compound (struct cb_initialize *p, cb_tree x)
 			} else {
 				joutput_initialize_compound (p, c);
 			}
+                        joutput_newline();
 
 			if (f->flag_occurs) {
 				/* Close loop */
