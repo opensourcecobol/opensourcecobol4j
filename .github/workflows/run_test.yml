@@ -39,7 +39,6 @@ jobs:
           export CLASSPATH="$CLASSPATH:$HOME/.java_lib/libcobj.jar:$HOME/.java_lib/sqlite.jar"
           cd tests/cobol85/
           make test
-              name: Slack Notification
 
       - name: Slack Notification
         if: ${{ failure() }}
