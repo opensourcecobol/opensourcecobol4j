@@ -20,7 +20,9 @@ test: $(MODULES)
 	  (cd $$m && make test) \
 	done
 	perl $(srcdir)/summary.pl $(MODULES) > summary.log
-	test -e $(srcdir)/summary.txt && diff $(srcdir)/summary.txt summary.log
+	for MODULE in $(MODULES); do\
+  		cat $$MODULE/report.txt \
+	done
 
 save:
 	@for m in $(MODULES); do \
