@@ -11,9 +11,6 @@ jobs:
       # Checkout opensource COBOL
       - name: Checkout opensource COBOL 4j
         uses: actions/checkout@v2
-      
-      - name: Fail
-        run: exit 1
         
       - name: Install dependencies
         run: |
@@ -23,7 +20,7 @@ jobs:
       
       - name: Install opensource COBOL
         run: |
-          cd vbisam
+          cd vbisam/aaaaaaaaaaa
           ./configure --prefix=/usr/
           sudo make install
           cd ../
