@@ -23,11 +23,11 @@ my $compile;
 my $compile_module;
 
 if ($opt) {
-	$compile = "cobc -std=cobol85 -x $opt";
-	$compile_module = "cobc -std=cobol85 -m $opt";
+	$compile = "cobc -std=cobol85 $opt";
+	$compile_module = "cobc -std=cobol85 $opt";
 } else {
-	$compile = "cobc -std=cobol85 -x";
-	$compile_module = "cobc -std=cobol85 -m";
+	$compile = "cobc -std=cobol85 ";
+	$compile_module = "cobc -std=cobol85 ";
 }
 
 my $num_progs = 0;
@@ -86,7 +86,6 @@ foreach $in (sort (glob("*.{CBL,SUB}"))) {
   $cmd = "";
 
   if (-e "./$exe.DAT") {
-      #$cmd = "$cmd < $exe.DAT";
     $cmd = "java -cp \"\$CLASSPATH:./build\" $exe < $exe.DAT";
   } else {
     $cmd = "java -cp \"\$CLASSPATH:./build\" $exe";
@@ -116,7 +115,6 @@ foreach $in (sort (glob("*.{CBL,SUB}"))) {
 		system ("rm -rf XXXXX*");
 	}
       }
-      ## if (system ("java $cmd > $exe.out") != 0) {
       $exec_result = 0;
       $exec_result = system ("$cmd > $exe.out");
       if ($exec_result != 0) {

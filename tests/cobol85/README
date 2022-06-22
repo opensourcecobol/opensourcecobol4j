@@ -17,32 +17,17 @@ further instructions where to send this.
 *NOTE* This test can take a long time depending
 on your hardware.
 
-1. EITHER -
-a) Download the test archive from -
-	http://www.sim-basis.de/newcob.val.gz
-   Uncompress it -
-	gunzip newcob.val.gz	(alternatively gzip -d newcob.val.gz)
-
-OR
-
-b) Download the test archive `newcob.val.Z' from
-	http://www.itl.nist.gov/div897/ctg/cobol_form.htm
-   Uncompress it:
-	uncompress newcob.val.Z
-
-2. Move the file newcob.val to the tests/cobol85 directory
-
-3. Run the test suite:
+1. Run the test suite:
 
 	cd tests/cobol85
 	make test
 
-4. Test report summary will be put in summary.log.
+2. Test report summary will be put in summary.log.
 
-5. When rerunning test as a result of a change, always
+3. When rerunning test as a result of a change, always
    do a "make clean" before "make test"
 
-6. The default OC configuration tests are NC SM IC SQ RL IX ST SG OB IF
+4. The default OC configuration tests are NC SM IC SQ RL IX ST SG OB IF
 
 Make Options
 ------------
