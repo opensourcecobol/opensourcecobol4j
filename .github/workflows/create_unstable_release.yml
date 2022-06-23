@@ -16,8 +16,8 @@ jobs:
       - name: Create libcobj.jar
         run: |
           cd libcobj/
-          curl -L -o ~/.java_lib/sqlite.jar https://github.com/xerial/sqlite-jdbc/releases/download/3.36.0.3/sqlite-jdbc-3.36.0.3.jar
-          CLASSPATH=":$HOME/.java_lib/sqlite.jar" sh compile.sh
+          curl -L -o sqlite.jar https://github.com/xerial/sqlite-jdbc/releases/download/3.36.0.3/sqlite-jdbc-3.36.0.3.jar
+          CLASSPATH=":$PWD/sqlite.jar" sh compile.sh
           cd ../
           
       - name: Create Release
