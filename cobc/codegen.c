@@ -3419,13 +3419,13 @@ joutput_file_error (struct cb_file *pfile)
 						     fl->handler);
 			} else {
 				if (cb_flag_traceall) {
-					joutput_line ("cob_reset_trace ();");
+					joutput_line ("CobolUtil.resetTrace();");
 				}
 				joutput_line ("%s_ (%d);",
 					fl->handler_prog->program_id,
 					fl->handler->id);
 				if (cb_flag_traceall) {
-					joutput_line ("cob_ready_trace ();");
+					joutput_line ("CobolUtil.readyTrace();");
 				}
 			}
 			return;
@@ -3644,16 +3644,16 @@ joutput_stmt (cb_tree x)
 		if (cb_flag_trace) {
 			if (lp->is_section) {
 				if (strcmp ((const char *)(lp->name) , "MAIN SECTION")) {
-					joutput_line ("fputs (\"PROGRAM-ID: %s: %s SECTION\\n\", stderr);", excp_current_program_id, lp->orig_name);
+					joutput_line ("System.err.println(\"PROGRAM-ID: %s: %s SECTION\");", excp_current_program_id, lp->orig_name);
 				} else {
-					joutput_line ("fputs (\"PROGRAM-ID: %s: %s\\n\", stderr);", excp_current_program_id, lp->orig_name);
+					joutput_line ("System.err.println(\"PROGRAM-ID: %s: %s\");", excp_current_program_id, lp->orig_name);
 				}
 			} else if (lp->is_entry) {
-				joutput_line ("fputs (\"PROGRAM-ID: %s: ENTRY %s\\n\", stderr);", excp_current_program_id, lp->orig_name);
+				joutput_line ("System.err.println(\"PROGRAM-ID: %s: ENTRY %s\");", excp_current_program_id, lp->orig_name);
 			} else {
-				joutput_line ("fputs (\"PROGRAM-ID: %s: %s\\n\", stderr);", excp_current_program_id, lp->orig_name);
+				joutput_line ("System.err.println(\"PROGRAM-ID: %s: %s\");", excp_current_program_id, lp->orig_name);
 			}
-			joutput_line ("fflush (stderr);");
+			joutput_line ("System.err.flush();");
 		}
 		break;
 	case CB_TAG_FUNCALL:
@@ -4679,10 +4679,10 @@ joutput_internal_function (struct cb_program *prog, cb_tree parameter_list)
 	//}
 	//output_line ("cob_save_call_params = cob_call_params;");
 	//output_newline ();
-	//if (cb_flag_traceall) {
-	//	output_line ("cob_ready_trace ();");
-	//	output_newline ();
-	//}
+	if (cb_flag_traceall) {
+		joutput_line ("CobolUtil.readyTrace();");
+		joutput_newline ();
+	}
 
 	//i = 0;
 	//if (anyseen) {
@@ -4787,10 +4787,10 @@ joutput_internal_function (struct cb_program *prog, cb_tree parameter_list)
 	joutput_line ("/* Pop module stack */");
 	joutput_line ("CobolModule.pop();");
 	joutput_newline ();
-	//if (cb_flag_traceall) {
-	//	output_line ("cob_reset_trace ();");
-	//	output_newline ();
-	//}
+	if (cb_flag_traceall) {
+		joutput_line ("CobolUtil.resetTrace();");
+		joutput_newline ();
+	}
 	//output_line ("/* Program return */");
 	//output_prefix ();
 	//output ("return ");

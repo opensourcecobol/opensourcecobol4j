@@ -18,8 +18,6 @@ public class CobolUtil {
 	private static int cob_io_assume_rewrite = 0;
 	private static boolean cob_verbose = false;
 	private static handlerlist hdlrs = null;
-	private static String cob_source_file = null;
-	private static int cob_source_line = 0;
 	private static String runtime_err_str = null;	
 	
 	public static LocalDateTime cobLocalTm = null;
@@ -40,6 +38,13 @@ public class CobolUtil {
 	public static boolean cobErrorOnExitFlag = false;
 	
 	private static boolean lineTrace = false;
+
+	private static String currentProgramId;
+	private static String sourceFile;
+	private static int sourceLine;
+	private static String currentSection;
+	private static String currentParagraph;
+	private static String sourceStatement;
 
 	abstract class handlerlist {
 		public handlerlist next = null;
@@ -165,8 +170,8 @@ public class CobolUtil {
 			handlerlist h = hdlrs;
 			if(runtime_err_str != null) {
 				String p = runtime_err_str;
-				if(cob_source_file != null) {
-					runtime_err_str = String.format("%s:%d: ", cob_source_file, cob_source_line);
+				if(sourceFile != null) {
+					runtime_err_str = String.format("%s:%d: ", sourceFile, sourceLine);
 				}
 				p += s;
 			}
@@ -181,8 +186,8 @@ public class CobolUtil {
 			hdlrs = null;
 		}
 
-		if(cob_source_file != null) {
-			System.err.print(String.format("%s:%d: ", cob_source_file, cob_source_line));
+		if(sourceFile != null) {
+			System.err.print(String.format("%s:%d: ", sourceFile, sourceLine));
 		}
 		System.err.println("libcob: " + s);
 		System.err.flush();
@@ -581,7 +586,7 @@ public class CobolUtil {
 	}
 	
 	public static void resetTrace() {		
-		CobolUtil.lineTrace = true;
+		CobolUtil.lineTrace = false;
 	}
 	
 	public static void fatalError(int fatalError) throws CobolStopRunException {
@@ -605,7 +610,19 @@ public class CobolUtil {
 		CobolStopRunException.stopRunAndThrow(1);
 	}
 	
-	public static void setLocation(String progid, String sfile, int sline, String csert, String cpara, String cstatement) {
-		//TODO implement
+	public static void setLocation(String progId, String sfile, int sline, String csect, String cpara, String cstatement) {
+		CobolUtil.currentProgramId = progId;
+		CobolUtil.sourceFile = sfile;
+		CobolUtil.sourceLine = sline;
+		CobolUtil.currentSection = csect;
+		CobolUtil.currentParagraph = cpara;
+		if(cstatement != null) {
+			CobolUtil.sourceStatement = cstatement;
+		}
+		if(CobolUtil.lineTrace) {
+			System.err.println(String.format("PROGRAM-ID: %s \tLine: %d \tStatement: %s",
+				progId, sline, cstatement == null ? "Unknown" : cstatement));
+			System.err.flush();
+		}
 	}
 }
