@@ -23,11 +23,11 @@ my $compile;
 my $compile_module;
 
 if ($opt) {
-	$compile = "cobc -std=cobol85 $opt";
-	$compile_module = "cobc -std=cobol85 $opt";
+	$compile = "cobj -std=cobol85 $opt";
+	$compile_module = "cobj -std=cobol85 $opt";
 } else {
-	$compile = "cobc -std=cobol85 ";
-	$compile_module = "cobc -std=cobol85 ";
+	$compile = "cobj -std=cobol85 ";
+	$compile_module = "cobj -std=cobol85 ";
 }
 
 my $num_progs = 0;

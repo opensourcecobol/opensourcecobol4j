@@ -30,7 +30,7 @@
 #include <stdlib.h>
 #include <string.h>
 
-#include "cobc.h"
+#include "cobj.h"
 #include "tree.h"
 
 #define yyerror			cb_error

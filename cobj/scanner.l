@@ -34,7 +34,7 @@
 #include <string.h>
 #include <ctype.h>
 
-#include "cobc.h"
+#include "cobj.h"
 #include "tree.h"
 #include "parser.h"
 

@@ -1,5 +1,5 @@
 #
-# Makefile opencobol/cobc
+# Makefile opencobol/cobj
 # Process this file with automake to produce Makefile.in
 #
 # Copyright (C) 2003,2004,2005,2006,2007 Keisuke Nishida
@@ -21,13 +21,13 @@
 # You should have received a copy of the GNU General Public License
 # along with OpenCOBOL.  If not, see <http://www.gnu.org/licenses/>.
 
-bin_PROGRAMS = cobc
-cobc_SOURCES = cobc.c cobc.h config.c tree.c tree.h reserved.c error.c \
+bin_PROGRAMS = cobj
+cobj_SOURCES = cobj.c cobj.h config.c tree.c tree.h reserved.c error.c \
 	parser.c parser.h scanner.c field.c typeck.c codegen.c \
 	ppparse.c ppparse.h pplex.c config.def flag.def warning.def
 
-cobc_CFLAGS = -I$(top_srcdir)
-cobc_LDADD = $(COBC_LIBS) $(top_builddir)/lib/libsupport.a
+cobj_CFLAGS = -I$(top_srcdir)
+cobj_LDADD = $(COBJ_LIBS) $(top_builddir)/lib/libsupport.a
 
 BUILT_SOURCES = parser.c parser.h scanner.c ppparse.c ppparse.h pplex.c
 EXTRA_DIST = ppparse.y pplex.l parser.y scanner.l pplex.l.m4 scanner.l.m4

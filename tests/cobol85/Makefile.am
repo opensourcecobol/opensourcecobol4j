@@ -11,7 +11,7 @@ EXTRA_DIST = EXEC85.conf.in expand.pl report.pl summary.pl summary.txt \
 	NC.txt SM.txt IC.txt SQ.txt RL.txt IX.txt ST.txt SG.txt OB.txt IF.txt ifedit.sh
 CLEANFILES = EXEC85 summary.log
 
-COBOL = cobc -std=cobol85
+COBOL = cobj -std=cobol85
 
 COB85DIR = "`cd $(srcdir) && pwd`"
 

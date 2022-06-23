@@ -16,7 +16,7 @@ jobs:
         run: |
           sudo apt-get update
           sudo apt-get install default-jdk
-          sudo apt-get install -y build-essential libncurses-dev libgmp-dev bison flex gettext automake autoconf
+          sudo apt-get install -y build-essential libncurses-dev libgmp-dev bison flex gettext automake autoconf texinfo
       
       - name: Install opensource COBOL
         run: |

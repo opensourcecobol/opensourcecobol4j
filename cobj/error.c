@@ -27,7 +27,7 @@
 #include <stdarg.h>
 #include <ctype.h>
 
-#include "cobc.h"
+#include "cobj.h"
 #include "tree.h"
 
 #define  max_names  5

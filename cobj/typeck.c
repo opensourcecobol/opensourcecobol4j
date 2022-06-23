@@ -38,7 +38,7 @@
 #include <locale.h>
 #endif 
 
-#include "cobc.h"
+#include "cobj.h"
 #include "tree.h"
 
 struct system_table {

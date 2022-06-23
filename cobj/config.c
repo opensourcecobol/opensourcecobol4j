@@ -27,7 +27,7 @@
 #include <string.h>
 #include <ctype.h>
 
-#include "cobc.h"
+#include "cobj.h"
 
 #undef CB_CONFIG_ANY
 #undef CB_CONFIG_INT
