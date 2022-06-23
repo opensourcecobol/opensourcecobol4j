@@ -1,7 +1,7 @@
 on:
   push:
-    tags:
-      - 'unstable*'
+    branches:
+      - 'unstable'
 
 name: Create Unstable Release
 
