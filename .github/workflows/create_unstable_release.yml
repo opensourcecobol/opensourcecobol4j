@@ -36,7 +36,7 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
           tag_name: unstable_version
-          release_name: Release unstable
+          release_name: Unstable version
           body: |
             This is the Unstable version. 
             Although the stability is not guaranteed, the latest features of opensource COBOL 4j are available.
