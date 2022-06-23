@@ -1,9 +1,10 @@
-on:
-  push:
-    branches:
-      - 'unstable'
-
 name: Create Unstable Release
+
+on:
+  workflow_run:
+    workflows: ["NIST COBOL85 tests"]
+    branches: [unstable]
+    types: [completed]
 
 jobs:
   build:
