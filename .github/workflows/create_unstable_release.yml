@@ -28,7 +28,7 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           
-      - name: Create Release
+      - name: Create the Unstable Release
         id: create_release
         uses: actions/create-release@v1
         env:
@@ -37,7 +37,8 @@ jobs:
           tag_name: unstable_version
           release_name: Release unstable
           body: |
-            This is an unstable version.
+            This is the Unstable version. 
+            Although the stability is not guaranteed, the latest features of opensource COBOL 4j are available.
           draft: false
           prerelease: false
           
