@@ -14,9 +14,9 @@ See [Installation page](https://github.com/opensourcecobol/opensourcecobol4j/wik
 
 Compile.
 ```bash
-cobc [COBOL source file]
+cobj [COBOL source file]
 ```
-("cobc" command produces [PROGRAM-ID].java and [PROGRAM-ID].class in the current directory.)
+("cobj" command produces [PROGRAM-ID].java and [PROGRAM-ID].class in ./build directory.)
 
 Run.
 ```bash

@@ -13,9 +13,9 @@ opensource COBOL 4jはCOBOLからCに変換するCOBOLコンパイラ["opensourc
 
 コンパイル.
 ```bash
-cobc [COBOL source file]
+cobj [COBOL source file]
 ```
-(cobcコマンドにより,カレントディレクトリに[PROGRAM-ID].javaと[PROGRAM-ID].classが生成されます.)
+(cobjコマンドにより,./buildに[PROGRAM-ID].javaと[PROGRAM-ID].classが生成されます.)
 
 実行.
 ```bash
