@@ -30,5 +30,5 @@ EXTRA_DIST = $(config_DATA) \
 	jp-compat.conf \
 	boundary-limit.conf
 
-install-data-hook:
-	$(configDATA_INSTALL) 'default-jp.conf' '$(DESTDIR)$(configdir)/default.conf'
+#install-data-hook:
+#$(configDATA_INSTALL) 'default-jp.conf' '$(DESTDIR)$(configdir)/default.conf'

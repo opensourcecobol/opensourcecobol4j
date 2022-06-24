@@ -59,7 +59,7 @@
 
 #include <tarstamp.h>
 
-#include "cobc.h"
+#include "cobj.h"
 #include "tree.h"
 
 /* Compile level */
@@ -777,7 +777,7 @@ cobc_clean_up (int status)
 static void
 cobc_terminate (const char *str)
 {
-	fprintf (stderr, "cobc: ");
+	fprintf (stderr, "cobj: ");
 	fflush (stderr);
 	perror (str);
 	cobc_clean_up (1);
@@ -822,22 +822,21 @@ cobc_sig_handler (int sig)
 static void
 cobc_print_version (void)
 {
-	puts ("opensource COBOL 1.5.2J");
-	puts ("OSS Consortium's patched version of OpenCOBOL1.1(Feb.06 2009)");
+	puts ("opensource COBOL 4j v1.0.3");
 #ifdef	I18N_UTF8
 	puts ("[unicode/utf-8 support]");
 #endif /*I18N_UTF8*/
 	puts ("----");
-	printf ("cobc (%s) %s.%d\n",
+	printf ("cobj (%s) %s.%d\n",
 		PACKAGE_NAME, PACKAGE_VERSION, PATCH_LEVEL);
-	puts ("Copyright (C) 2001-2009 Keisuke Nishida / Roger While");
+	puts ("Copyright (C) 2001-2022 Yutaro Sakamoto");
 	printf ("Built    %s\nPackaged %s\n", cb_oc_build_stamp, octardate);
 }
 
 static void
 cobc_print_usage (void)
 {
-	puts (_("Usage: cobc [options] file..."));
+	puts (_("Usage: cobj [options] file..."));
 	puts (_("Options:"));
 	puts (_("  --help                Display this message"));
 	puts (_("  --version, -V         Display compiler version"));
@@ -2379,7 +2378,7 @@ main (int argc, char *argv[])
 
 	/* Check the filename */
 	if (iargs == argc) {
-		fprintf (stderr, "cobc: No input files\n");
+		fprintf (stderr, "cobj: No input files\n");
 		exit (1);
 	}
 
@@ -2446,7 +2445,7 @@ main (int argc, char *argv[])
 
 	if (output_name && cb_compile_level < CB_LEVEL_LIBRARY &&
 	    (argc - iargs) > 1) {
-		fprintf (stderr, "cobc: -o option invalid in this combination\n");
+		fprintf (stderr, "cobj: -o option invalid in this combination\n");
 		exit (1);
 	}
 	if (cb_flag_sign_ascii && cb_flag_sign_ebcdic) {

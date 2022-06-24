@@ -42,7 +42,7 @@
 #include <sys/stat.h>
 #include <sys/types.h>
 
-#include "cobc.h"
+#include "cobj.h"
 #include "ppparse.h"
 
 enum {

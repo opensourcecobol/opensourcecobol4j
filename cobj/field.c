@@ -27,7 +27,7 @@
 #include <ctype.h>
 #include <limits.h>
 
-#include "cobc.h"
+#include "cobj.h"
 #include "tree.h"
 
 /* Global variables */

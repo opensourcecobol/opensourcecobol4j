@@ -30,7 +30,7 @@
 
 #include "tarstamp.h"
 
-#include "cobc.h"
+#include "cobj.h"
 #include "tree.h"
 
 #ifdef	HAVE_ATTRIBUTE_ALIGNED

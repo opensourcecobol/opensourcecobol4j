@@ -27,7 +27,7 @@
 #include <ctype.h>
 #include <limits.h>
 
-#include "cobc.h"
+#include "cobj.h"
 #include "tree.h"
 
 #define PIC_ALPHABETIC		0x01

@@ -32,7 +32,7 @@
 #include <string.h>
 #include <ctype.h>
 
-#include "cobc.h"
+#include "cobj.h"
 
 #define YYDEBUG		1
 #define YYERROR_VERBOSE	1
