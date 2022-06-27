@@ -295,8 +295,34 @@ public class CobolDataStorage {
 		this.data[this.index + index]  = value;
 	}
 
+	/**
+	 * 指定のバイト配列中での位置に指定の値を代入する
+	 * @param index 代入先のバイト配列中の位置.this.indexを基準とする.
+	 * @param value 代入する値
+	 */
+	public void setByte(int index, int value) {
+		this.setByte(index, (byte)value);
+	}
+
+	/**
+	 * 指定のバイト配列中での位置に指定の値を代入する
+	 * @param index 代入先のバイト配列中の位置.this.indexを基準とする.
+	 * @param value 代入する値
+	 */
+	public void setByte(int index, char value) {
+		this.setByte(index, (byte)value);
+	}
+
 	public void setByte(byte value) {
 		this.setByte(0, value);
+	}
+
+	public void setByte(int value) {
+		this.setByte((byte)value);
+	}
+
+	public void setByte(char value) {
+		this.setByte((byte)value);
 	}
 
 	/**
@@ -323,7 +349,16 @@ public class CobolDataStorage {
 	 * @param size 代入先のバイト数
 	 */
 	public void fillBytes(int value, int size) {
-		fillBytes(0, (byte)value, size);
+		fillBytes(0, value, size);
+	}
+
+	/**
+	 * バイト配列のthis.indexバイト目からsizeバイトの範囲にvalueを代入する
+	 * @param value 代入する値
+	 * @param size 代入先のバイト数
+	 */
+	public void fillBytes(char value, int size) {
+		fillBytes(0, value, size);
 	}
 
 	/**
@@ -336,6 +371,26 @@ public class CobolDataStorage {
 		for(int i=0; i<size; ++i) {
 			this.setByte(i + index, value);
 		}
+	}
+
+	/**
+	 * バイト配列の0バイト目からsizeバイトの範囲にvalueを代入する
+	 * @param index コピーの開始位置(this.indexが基準)
+	 * @param value 代入する値
+	 * @param size 代入先のバイト数
+	 */
+	public void fillBytes(int index, int value, int size) {
+		this.fillBytes(index, (byte)value, size);
+	}
+
+	/**
+	 * バイト配列の0バイト目からsizeバイトの範囲にvalueを代入する
+	 * @param index コピーの開始位置(this.indexが基準)
+	 * @param value 代入する値
+	 * @param size 代入先のバイト数
+	 */
+	public void fillBytes(int index, char value, int size) {
+		this.fillBytes(index, (byte)value, size);
 	}
 
 	/**

@@ -246,6 +246,22 @@ int control_counter = 0;
 int flag_execution_begin = EXECUTION_NORMAL;
 int flag_execution_end = EXECUTION_NORMAL;
 
+char* convert_byte_value_format(char value) {
+	char *s;
+	if(value == '\'') {
+		s = malloc(5);
+		strcpy(s, "'\\''");
+	} else if(isprint(value)) {
+		s = malloc(4);
+		sprintf(s, "'%c'", value);
+	} else {
+		s = malloc(5);
+		sprintf(s, "%d", value);
+	}
+	return s;
+
+}
+
 
 static void
 lookup_call (const char *p)
@@ -1522,7 +1538,7 @@ joutput_funcall (cb_tree x)
 		case 'E':
 			/* Set of one character */
 			joutput_data (p->argv[0]);
-			joutput (".setByte((byte)");
+			joutput (".setByte(");
 			joutput_param (p->argv[1], 1);
 			joutput (")");
 
@@ -1893,7 +1909,9 @@ joutput_figurative (cb_tree x, struct cb_field *f, const int value)
 	joutput_prefix ();
 	if (f->size == 1) {
 		joutput_data (x);
-		joutput (".setByte(0, (byte)%d);\n", value);
+		char* value_string = convert_byte_value_format(value);
+		joutput (".setByte(0, %s);\n", value_string);
+		free(value_string);
 	} else {
 		joutput_data (x);
 		joutput (".fillBytes (");
@@ -2018,17 +2036,24 @@ joutput_initialize_uniform (cb_tree x, int c, int size)
 	}
 	if (size == 1) {
 		joutput_data (x);
-		joutput (".setByte((byte)%d);\n", c);
+
+		char* value_string = convert_byte_value_format(c);
+		joutput (".setByte(%s);\n", value_string);
+		free(value_string);
 
 	} else {
 		if (CB_REFERENCE_P(x) && CB_REFERENCE(x)->length) {
 			joutput_data (x);
-			joutput (".fillBytes((byte)(%d), ", c);
+			char* value_string = convert_byte_value_format(c);
+			joutput (".fillBytes(%s, ", value_string);
+			free(value_string);
 			joutput_size (x);
 			joutput (");\n");
 		} else {
 			joutput_data (x);
-			joutput (".fillBytes((byte)(%d), %d);\n", c, size);
+			char* value_string = convert_byte_value_format(c);
+			joutput (".fillBytes(%s, %d);\n", value_string, size);
+			free(value_string);
 		}
 	}
 }
@@ -2146,7 +2171,9 @@ joutput_initialize_one (struct cb_initialize *p, cb_tree x)
 			joutput_prefix ();
 			if (f->size == 1) {
 				joutput_data (x);
-				joutput(".setByte(0, (byte)%d);", *(unsigned char *)buff);
+				char* value_string = convert_byte_value_format(*(unsigned char *)buff);
+				joutput(".setByte(0, %s);", value_string);
+				free(value_string);
 			} else {
 				buffchar = *buff;
 				for (i = 0; i < f->size; i++) {
