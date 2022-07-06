@@ -71,5 +71,5 @@ CB_FLAG (cb_flag_mfcomment, "mfcomment",
 CB_FLAG (cb_flag_null_param, "null-param",
 	 N_("Pass extra NULL terminating pointers on CALL statements"))
 
-CB_FLAG (cb_flag_embed_var_name, "embed-var-name",
-	 N_("Embed COBOL variable names into Java variable names. This option is experimental."))
+CB_FLAG (cb_flag_var_name_with_serial_numbers, "var-name-with-serial-numbers",
+	 N_("Instead of embedding COBOL variable names in Java variable names, give them serial numbers."))
