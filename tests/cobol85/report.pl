@@ -86,9 +86,9 @@ foreach $in (sort (glob("*.{CBL,SUB}"))) {
   $cmd = "";
 
   if (-e "./$exe.DAT") {
-    $cmd = "java -cp \"\$CLASSPATH:./build\" $exe < $exe.DAT";
+    $cmd = "java $exe < $exe.DAT";
   } else {
-    $cmd = "java -cp \"\$CLASSPATH:./build\" $exe";
+    $cmd = "java $exe";
   }
   printf LOG "%-12s", $in;
   if ($skip{$exe} || $exe =~ /^..[34]0/) {
