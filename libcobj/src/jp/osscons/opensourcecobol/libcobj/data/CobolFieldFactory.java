@@ -60,6 +60,10 @@ public class CobolFieldFactory {
 		}
 	}
 
+	public static AbstractCobolField makeCobolField(long size, CobolDataStorage data, CobolFieldAttribute attr) {
+		return CobolFieldFactory.makeCobolField((int)size, data, attr);
+	}
+
 	/**
 	 * 文字列型のデータ(CobolAlphanumericField)
 	 * @param str 文字列データ
