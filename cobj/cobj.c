@@ -822,15 +822,15 @@ cobc_sig_handler (int sig)
 static void
 cobc_print_version (void)
 {
-	puts ("opensource COBOL 4j v1.0.3");
+	printf ("%s %s\n", PACKAGE_NAME, PACKAGE_VERSION);
 #ifdef	I18N_UTF8
 	puts ("[unicode/utf-8 support]");
 #endif /*I18N_UTF8*/
 	puts ("----");
-	printf ("cobj (%s) %s.%d\n",
-		PACKAGE_NAME, PACKAGE_VERSION, PATCH_LEVEL);
+	printf ("cobj (%s) %s\n",
+		PACKAGE_NAME, PACKAGE_VERSION);
 	puts ("Copyright (C) 2001-2022 Yutaro Sakamoto");
-	printf ("Built    %s\nPackaged %s\n", cb_oc_build_stamp, octardate);
+	printf ("Built    %s\n", cb_oc_build_stamp);
 }
 
 static void
