@@ -1021,7 +1021,7 @@ fi
 # List of tests.
 if $at_list_p; then
   cat <<_ATEOF || at_write_fail=1
-opensource COBOL 1.5.2J test suite: JP products compatibility test groups:
+opensource COBOL 4j 1.0.3-unstable test suite: JP products compatibility test groups:
 
  NUM: FILE-NAME:LINE     TEST-GROUP-NAME
       KEYWORDS
@@ -1062,7 +1062,7 @@ _ATEOF
   exit $at_write_fail
 fi
 if $at_version_p; then
-  $as_echo "$as_me (opensource COBOL 1.5.2J)" &&
+  $as_echo "$as_me (opensource COBOL 4j 1.0.3-unstable)" &&
   cat <<\_ATEOF || at_write_fail=1
 
 Copyright (C) 2012 Free Software Foundation, Inc.
@@ -1238,13 +1238,13 @@ fi
 exec 5>>"$at_suite_log"
 
 # Banners and logs.
-$as_echo "## -------------------------------------------------------------- ##
-## opensource COBOL 1.5.2J test suite: JP products compatibility. ##
-## -------------------------------------------------------------- ##"
+$as_echo "## ------------------------------------------------------------------------- ##
+## opensource COBOL 4j 1.0.3-unstable test suite: JP products compatibility. ##
+## ------------------------------------------------------------------------- ##"
 {
-  $as_echo "## -------------------------------------------------------------- ##
-## opensource COBOL 1.5.2J test suite: JP products compatibility. ##
-## -------------------------------------------------------------- ##"
+  $as_echo "## ------------------------------------------------------------------------- ##
+## opensource COBOL 4j 1.0.3-unstable test suite: JP products compatibility. ##
+## ------------------------------------------------------------------------- ##"
   echo
 
   $as_echo "$as_me: command line was:"
@@ -2087,7 +2087,7 @@ _ASBOX
   $as_echo "Please send $at_msg and all information you think might help:
 
    To: <ws-opensource-cobol-contact@osscons.jp>
-   Subject: [opensource COBOL 1.5.2J] $as_me: $at_fail_list${at_fail_list:+ failed${at_xpass_list:+, }}$at_xpass_list${at_xpass_list:+ passed unexpectedly}
+   Subject: [opensource COBOL 4j 1.0.3-unstable] $as_me: $at_fail_list${at_fail_list:+ failed${at_xpass_list:+, }}$at_xpass_list${at_xpass_list:+ passed unexpectedly}
 
 You may investigate any problem if you feel able to do so, in which
 case the test suite provides a good starting point.  Its output may
@@ -6801,8 +6801,8 @@ $at_failed && at_fn_log_failure
 $at_traceon; }
 
 { set +x
-$as_echo "$at_srcdir/file-userfh.at:43: \cobc -m prog.cob"
-at_fn_check_prepare_notrace 'a ${...} parameter expansion' "file-userfh.at:43"
+$as_echo "$at_srcdir/file-userfh.at:43: cobc -m prog.cob"
+at_fn_check_prepare_trace "file-userfh.at:43"
 ( $at_check_trace; cobc -m prog.cob
 ) >>"$at_stdout" 2>>"$at_stderr" 5>&-
 at_status=$? at_failed=false
@@ -6923,8 +6923,8 @@ $at_failed && at_fn_log_failure
 $at_traceon; }
 
 { set +x
-$as_echo "$at_srcdir/file-userfh.at:90: \cobc -m prog.cob"
-at_fn_check_prepare_notrace 'a ${...} parameter expansion' "file-userfh.at:90"
+$as_echo "$at_srcdir/file-userfh.at:90: cobc -m prog.cob"
+at_fn_check_prepare_trace "file-userfh.at:90"
 ( $at_check_trace; cobc -m prog.cob
 ) >>"$at_stdout" 2>>"$at_stderr" 5>&-
 at_status=$? at_failed=false

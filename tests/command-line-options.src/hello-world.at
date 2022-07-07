@@ -1,0 +1,5 @@
+AT_SETUP([hello])
+AT_CHECK([echo hello], [0],
+[hello
+])
+AT_CLEANUP

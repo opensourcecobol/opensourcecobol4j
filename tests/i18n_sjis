@@ -590,63 +590,54 @@ at_tested='cobc'
 # numerical order.
 at_format='??'
 # Description of all the test groups.
-at_help_all="1;pic-x.at:1;Value clause;;
-2;pic-x.at:19;Move;;
-3;pic-x.at:38;Move with trunc;;
-4;pic-x.at:62;Move ALL with trunc and trimming;;
-5;pic-x.at:82;Move with trunc and trimming 1;;
-6;pic-x.at:107;Move from field with trunc and trimming 1;;
-7;pic-x.at:128;Move with padding;;
-8;pic-x.at:147;Move with justify;;
-9;pic-x.at:166;Move to alnum EDITED;;
-10;pic-x.at:185;Move to alnum EDITED (pic too short);;
-11;pic-x.at:208;Move to alnum EDITED (pic too long);;
-12;pic-x.at:227;Move to alnum EDITED (No char break);;
-13;pic-x.at:246;Move to alnum EDITED (char break & junk chars);;
-14;pic-x.at:266;Move group to group in bad alignment;;
-15;pic-x.at:291;Redifinition breaking char pos.;;
-16;pic-x.at:316;Ref mod(n:);;
-17;pic-x.at:335;Ref mod(n:m);;
-18;pic-x.at:354;STRING by size;;
-19;pic-x.at:377;STRING with delimiter;;
-20;pic-x.at:404;STRING with pointer;;
-21;pic-x.at:428;INSPECT REPLACING;;
-22;pic-x.at:447;INSPECT REPLACING by ZERO;;
-23;pic-x.at:466;INSPECT TALLYING;;
-24;pic-n.at:1;PIC N Value clause;;
-25;pic-n.at:19;PIC N Move;;
-26;pic-n.at:38;PIC N Move with trunc;;
-27;pic-n.at:62;PIC N Move with padding by full-width SPC;;
-28;pic-n.at:81;PIC N Move with justify;;
-29;pic-n.at:100;PIC N EDITED w/ VALUE;;
-30;pic-n.at:118;INITIALIZE PIC N EDITED;;
-31;pic-n.at:138;INITIALIZE PIC N EDITED TO VALUE;;
-32;pic-n.at:158;PIC N Move to NATIONAL EDITED;;
-33;pic-n.at:177;PIC N Move with half-width alnum conv.;;
-34;pic-n.at:196;PIC N Move with half-width kana conv.;;
-35;pic-n.at:216;PIC N Ref mod(n:);;
-36;pic-n.at:235;PIC N Ref mod(n:m);;
-37;pic-n.at:254;PIC N STRING by size;;
-38;pic-n.at:277;PIC N STRING with delimiter (causes warn);;
-39;pic-n.at:300;PIC N STRING with NATIONAL delimiter;;
-40;pic-n.at:323;PIC N STRING with pointer;;
-41;pic-n.at:347;PIC N INSPECT REPLACING;;
-42;pic-n.at:366;PIC N INSPECT REPLACING by ZERO;;
-43;pic-n.at:385;PIC N INSPECT REPLACING by NATIONAL ZERO;;
-44;pic-n.at:404;PIC N INSPECT TALLYING;;
-45;pic-n.at:424;PIC N Move with half-width dakuten kana.;;
-46;pic-n.at:443;PIC N Move with half-width han-dakuten kana.;;
-47;national.at:1;FUNCTION NATIONAL single-byte;;
-48;national.at:22;FUNCTION NATIONAL multi-byte;;
-49;national.at:43;FUNCTION NATIONAL KIGOU-exclamation;;
-50;national.at:64;FUNCTION NATIONAL KIGOU-yen;;
-51;national.at:85;FUNCTION NATIONAL KIGOU-plus;;
-52;national.at:106;FUNCTION NATIONAL (HanKana w/ Daku-on);;
-53;national.at:127;FUNCTION NATIONAL (HanKana w/ Han-daku-on);;
-54;national.at:148;N Literal (NO zenakaku conversion);;
-55;national.at:173;NC Literal (NO zenakaku conversion);;
-56;national.at:198;ND Literal (NO zenakaku conversion);;
-57;national.at:223;NX Literal;;
+at_help_all="1;user-defined-word.at:1;Program name;;
+2;user-defined-word.at:14;Field name;;
+3;user-defined-word.at:33;Long field name;;
+4;user-defined-word.at:58;Field lookup;;
+5;user-defined-word.at:77;Section name;;
+6;user-defined-word.at:99;Long section name;;
+7;user-defined-word.at:121;Too long section name;;
+8;user-defined-word.at:145;Nihongo Filename;;
+9;user-defined-word.at:180;Nihongo field name in numeric test msg.;;
+10;user-defined-word.at:203;Nihongo field name in BASED test msg.;;
+11;user-defined-word.at:224;Nihongo field name in ODO test msg.;;
+12;user-defined-word.at:246;Nihongo field name in Subscript test msg.;;
+13;user-defined-word.at:268;Nihongo field name in length of ref_mod test msg.;;
+14;user-defined-word.at:290;Nihongo field name in offset of ref_mod test msg.;;
+15;user-defined-word.at:312;Nihongo field name in length of N_refmod test msg.;;
+16;user-defined-word.at:334;Nihongo field name in offset of N_refmod test msg.;;
+17;user-defined-word.at:356;Nihongo field name in extaddr test msg.;;
+18;user-defined-word.at:384;Nihongo field name in undefined error msg.;;
+19;user-defined-word.at:423;Nihongo field name in ambiguous error msg.;;
+20;user-defined-word.at:459;Nihongo label name in ambiguous error msg.;;
+21;program-id.at:1;PROGRAM-ID NATIONAL C89 no warning;;
+22;program-id.at:20;PROGRAM-ID NATIONAL C89 warning;;
+23;program-id.at:42;PROGRAM-ID NATIONAL C89 ignore;;
+24;program-id.at:56;PROGRAM-ID NATIONAL 32 character no over;;
+25;program-id.at:71;PROGRAM-ID NATIONAL 32 character over;;
+26;error-print.at:1;undefined not message;;
+27;error-print.at:24;Encoding alphanumeric name item;;
+28;error-print.at:41;Encoding national name item;;
+29;error-print.at:58;Decoding national section name;;
+30;limits.at:1;Field length limit PIC A/VALID;;
+31;limits.at:17;Field length limit PIC A/TOO LONG;;
+32;limits.at:35;Field length limit PIC X/VALID;;
+33;limits.at:51;Field length limit PIC X/TOO LONG;;
+34;limits.at:69;Field length limit PIC B9/VALID;;
+35;limits.at:85;Field length limit PIC B9/TOO LONG;;
+36;limits.at:103;Field length limit PIC B/VALID;;
+37;limits.at:119;Field length limit PIC B/TOO LONG;;
+38;limits.at:137;Field length limit PIC BA/VALID;;
+39;limits.at:153;Field length limit PIC BA/TOO LONG;;
+40;limits.at:171;Field length limit PIC BX/VALID;;
+41;limits.at:187;Field length limit PIC BX/TOO LONG;;
+42;limits.at:205;Field length limit PIC N/VALID (SJIS);;
+43;limits.at:221;Field length limit PIC N/TOO LONG (SJIS);;
+44;limits.at:239;Field length limit PIC BN/VALID (SJIS);;
+45;limits.at:255;Field length limit PIC BN/TOO LONG (SJIS);;
+46;mb-space.at:1;Zenkaku SPC delims in headings;;
+47;mb-space.at:19;Zenkaku SPC delims in record def;;
+48;mb-space.at:43;Zenkaku SPC delims in COPY stmt;;
 "
 # List of the all the test groups.
 at_groups_all=`$as_echo "$at_help_all" | sed 's/;.*//'`
@@ -660,7 +651,7 @@ at_fn_validate_ranges ()
   for at_grp
   do
     eval at_value=\$$at_grp
-    if test $at_value -lt 1 || test $at_value -gt 57; then
+    if test $at_value -lt 1 || test $at_value -gt 48; then
       $as_echo "invalid test group: $at_value" >&2
       exit 1
     fi
@@ -958,7 +949,7 @@ fi
 # List of tests.
 if $at_list_p; then
   cat <<_ATEOF || at_write_fail=1
-opensource COBOL 1.5.2J test suite: I18n Shift_JIS Tests test groups:
+opensource COBOL 4j 1.0.3-unstable test suite: I18n Shift_JIS Tests test groups:
 
  NUM: FILE-NAME:LINE     TEST-GROUP-NAME
       KEYWORDS
@@ -999,7 +990,7 @@ _ATEOF
   exit $at_write_fail
 fi
 if $at_version_p; then
-  $as_echo "$as_me (opensource COBOL 1.5.2J)" &&
+  $as_echo "$as_me (opensource COBOL 4j 1.0.3-unstable)" &&
   cat <<\_ATEOF || at_write_fail=1
 
 Copyright (C) 2012 Free Software Foundation, Inc.
@@ -1175,13 +1166,13 @@ fi
 exec 5>>"$at_suite_log"
 
 # Banners and logs.
-$as_echo "## --------------------------------------------------------- ##
-## opensource COBOL 1.5.2J test suite: I18n Shift_JIS Tests. ##
-## --------------------------------------------------------- ##"
+$as_echo "## -------------------------------------------------------------------- ##
+## opensource COBOL 4j 1.0.3-unstable test suite: I18n Shift_JIS Tests. ##
+## -------------------------------------------------------------------- ##"
 {
-  $as_echo "## --------------------------------------------------------- ##
-## opensource COBOL 1.5.2J test suite: I18n Shift_JIS Tests. ##
-## --------------------------------------------------------- ##"
+  $as_echo "## -------------------------------------------------------------------- ##
+## opensource COBOL 4j 1.0.3-unstable test suite: I18n Shift_JIS Tests. ##
+## -------------------------------------------------------------------- ##"
   echo
 
   $as_echo "$as_me: command line was:"
@@ -2024,7 +2015,7 @@ _ASBOX
   $as_echo "Please send $at_msg and all information you think might help:
 
    To: <ws-opensource-cobol-contact@osscons.jp>
-   Subject: [opensource COBOL 1.5.2J] $as_me: $at_fail_list${at_fail_list:+ failed${at_xpass_list:+, }}$at_xpass_list${at_xpass_list:+ passed unexpectedly}
+   Subject: [opensource COBOL 4j 1.0.3-unstable] $as_me: $at_fail_list${at_fail_list:+ failed${at_xpass_list:+, }}$at_xpass_list${at_xpass_list:+ passed unexpectedly}
 
 You may investigate any problem if you feel able to do so, in which
 case the test suite provides a good starting point.  Its output may
@@ -2039,8 +2030,8 @@ exit 0
 ## Actual tests. ##
 ## ------------- ##
 #AT_START_1
-at_fn_group_banner 1 'pic-x.at:1' \
-  "Value clause" "                                   "
+at_fn_group_banner 1 'user-defined-word.at:1' \
+  "Program name" "                                   "
 at_xfail=no
 (
   $as_echo "1. $at_setup_line: testing $at_desc ..."
@@ -2050,40 +2041,22 @@ at_xfail=no
 cat >prog.cob <<'_ATEOF'
 
        IDENTIFICATION   DIVISION.
-       PROGRAM-ID.      prog.
-       DATA             DIVISION.
-       WORKING-STORAGE  SECTION.
-       01 F0 PIC X(14) VALUE "“ú–{Œê‚Ì•¶š—ñ".
+       PROGRAM-ID.      “ú–{Œê‚ÌƒvƒƒOƒ‰ƒ€–¼.
        PROCEDURE        DIVISION.
-           DISPLAY F0 WITH NO ADVANCING.
            STOP RUN.
 _ATEOF
 
 
 { set +x
-$as_echo "$at_srcdir/pic-x.at:14: cobc -m prog.cob && cp prog.class /root"
-at_fn_check_prepare_trace "pic-x.at:14"
-( $at_check_trace; cobc -m prog.cob && cp prog.class /root
+$as_echo "$at_srcdir/user-defined-word.at:10: \${COMPILE} -x prog.cob"
+at_fn_check_prepare_notrace 'a ${...} parameter expansion' "user-defined-word.at:10"
+( $at_check_trace; ${COMPILE} -x prog.cob
 ) >>"$at_stdout" 2>>"$at_stderr" 5>&-
 at_status=$? at_failed=false
 $at_check_filter
 at_fn_diff_devnull "$at_stderr" || at_failed=:
 at_fn_diff_devnull "$at_stdout" || at_failed=:
-at_fn_check_status 0 $at_status "$at_srcdir/pic-x.at:14"
-$at_failed && at_fn_log_failure
-$at_traceon; }
-
-{ set +x
-$as_echo "$at_srcdir/pic-x.at:15: java prog"
-at_fn_check_prepare_trace "pic-x.at:15"
-( $at_check_trace; java prog
-) >>"$at_stdout" 2>>"$at_stderr" 5>&-
-at_status=$? at_failed=false
-$at_check_filter
-at_fn_diff_devnull "$at_stderr" || at_failed=:
-echo >>"$at_stdout"; $as_echo "“ú–{Œê‚Ì•¶š—ñ" | \
-  $at_diff - "$at_stdout" || at_failed=:
-at_fn_check_status 0 $at_status "$at_srcdir/pic-x.at:15"
+at_fn_check_status 0 $at_status "$at_srcdir/user-defined-word.at:10"
 $at_failed && at_fn_log_failure
 $at_traceon; }
 
@@ -2094,8 +2067,8 @@ $at_traceon; }
 read at_status <"$at_status_file"
 #AT_STOP_1
 #AT_START_2
-at_fn_group_banner 2 'pic-x.at:19' \
-  "Move" "                                           "
+at_fn_group_banner 2 'user-defined-word.at:14' \
+  "Field name" "                                     "
 at_xfail=no
 (
   $as_echo "2. $at_setup_line: testing $at_desc ..."
@@ -2108,38 +2081,38 @@ cat >prog.cob <<'_ATEOF'
        PROGRAM-ID.      prog.
        DATA             DIVISION.
        WORKING-STORAGE  SECTION.
-       01 F0 PIC X(14).
+       01 ‚n|•¶š—ñ PIC X(7) USAGE DISPLAY.
        PROCEDURE        DIVISION.
-           MOVE "“ú–{Œê‚Ì•¶š—ñ" TO F0.
-           DISPLAY F0 WITH NO ADVANCING.
+           MOVE "Unicode" TO ‚n|•¶š—ñ.
+           DISPLAY ‚n|•¶š—ñ WITH NO ADVANCING.
            STOP RUN.
 _ATEOF
 
 
 { set +x
-$as_echo "$at_srcdir/pic-x.at:33: cobc -m prog.cob"
-at_fn_check_prepare_trace "pic-x.at:33"
-( $at_check_trace; cobc -m prog.cob
+$as_echo "$at_srcdir/user-defined-word.at:28: \${COMPILE} -x prog.cob"
+at_fn_check_prepare_notrace 'a ${...} parameter expansion' "user-defined-word.at:28"
+( $at_check_trace; ${COMPILE} -x prog.cob
 ) >>"$at_stdout" 2>>"$at_stderr" 5>&-
 at_status=$? at_failed=false
 $at_check_filter
 at_fn_diff_devnull "$at_stderr" || at_failed=:
 at_fn_diff_devnull "$at_stdout" || at_failed=:
-at_fn_check_status 0 $at_status "$at_srcdir/pic-x.at:33"
+at_fn_check_status 0 $at_status "$at_srcdir/user-defined-word.at:28"
 $at_failed && at_fn_log_failure
 $at_traceon; }
 
 { set +x
-$as_echo "$at_srcdir/pic-x.at:34: java prog"
-at_fn_check_prepare_trace "pic-x.at:34"
+$as_echo "$at_srcdir/user-defined-word.at:29: java prog"
+at_fn_check_prepare_trace "user-defined-word.at:29"
 ( $at_check_trace; java prog
 ) >>"$at_stdout" 2>>"$at_stderr" 5>&-
 at_status=$? at_failed=false
 $at_check_filter
 at_fn_diff_devnull "$at_stderr" || at_failed=:
-echo >>"$at_stdout"; $as_echo "“ú–{Œê‚Ì•¶š—ñ" | \
+echo >>"$at_stdout"; $as_echo "Unicode" | \
   $at_diff - "$at_stdout" || at_failed=:
-at_fn_check_status 0 $at_status "$at_srcdir/pic-x.at:34"
+at_fn_check_status 0 $at_status "$at_srcdir/user-defined-word.at:29"
 $at_failed && at_fn_log_failure
 $at_traceon; }
 
@@ -2150,8 +2123,8 @@ $at_traceon; }
 read at_status <"$at_status_file"
 #AT_STOP_2
 #AT_START_3
-at_fn_group_banner 3 'pic-x.at:38' \
-  "Move with trunc" "                                "
+at_fn_group_banner 3 'user-defined-word.at:33' \
+  "Long field name" "                                "
 at_xfail=no
 (
   $as_echo "3. $at_setup_line: testing $at_desc ..."
@@ -2164,43 +2137,43 @@ cat >prog.cob <<'_ATEOF'
        PROGRAM-ID.      prog.
        DATA             DIVISION.
        WORKING-STORAGE  SECTION.
-       01 F0 PIC X(6).
+       01   €–Ú‚`‚a‚b‚c‚d‚e‚f‚g‚O‚P‚Q‚R‚S5
+            PIC X(7).
        PROCEDURE        DIVISION.
-           MOVE "“ú–{Œê‚Ì•¶š—ñ" TO F0.
-           DISPLAY F0 WITH NO ADVANCING.
+           MOVE "Unicode"
+             TO
+           €–Ú‚`‚a‚b‚c‚d‚e‚f‚g‚O‚P‚Q‚R‚S5.
+           DISPLAY
+            €–Ú‚`‚a‚b‚c‚d‚e‚f‚g‚O‚P‚Q‚R‚S5
+	     WITH NO ADVANCING.
            STOP RUN.
 _ATEOF
 
 
-#TODO fix
-#AT_CHECK([cobc -m prog.cob], [0], [],
-#[prog.cob:8: Warning: Value size exceeds data size
-#prog.cob:6: Warning: 'F0' defined here as PIC X(6)
-#])
 { set +x
-$as_echo "$at_srcdir/pic-x.at:57: cobc -m prog.cob"
-at_fn_check_prepare_trace "pic-x.at:57"
-( $at_check_trace; cobc -m prog.cob
+$as_echo "$at_srcdir/user-defined-word.at:52: \${COMPILE} -x prog.cob"
+at_fn_check_prepare_notrace 'a ${...} parameter expansion' "user-defined-word.at:52"
+( $at_check_trace; ${COMPILE} -x prog.cob
 ) >>"$at_stdout" 2>>"$at_stderr" 5>&-
 at_status=$? at_failed=false
 $at_check_filter
 at_fn_diff_devnull "$at_stderr" || at_failed=:
 at_fn_diff_devnull "$at_stdout" || at_failed=:
-at_fn_check_status 0 $at_status "$at_srcdir/pic-x.at:57"
+at_fn_check_status 0 $at_status "$at_srcdir/user-defined-word.at:52"
 $at_failed && at_fn_log_failure
 $at_traceon; }
 
 { set +x
-$as_echo "$at_srcdir/pic-x.at:58: java prog"
-at_fn_check_prepare_trace "pic-x.at:58"
+$as_echo "$at_srcdir/user-defined-word.at:53: java prog"
+at_fn_check_prepare_trace "user-defined-word.at:53"
 ( $at_check_trace; java prog
 ) >>"$at_stdout" 2>>"$at_stderr" 5>&-
 at_status=$? at_failed=false
 $at_check_filter
 at_fn_diff_devnull "$at_stderr" || at_failed=:
-echo >>"$at_stdout"; $as_echo "“ú–{Œê" | \
+echo >>"$at_stdout"; $as_echo "Unicode" | \
   $at_diff - "$at_stdout" || at_failed=:
-at_fn_check_status 0 $at_status "$at_srcdir/pic-x.at:58"
+at_fn_check_status 0 $at_status "$at_srcdir/user-defined-word.at:53"
 $at_failed && at_fn_log_failure
 $at_traceon; }
 
@@ -2211,8 +2184,8 @@ $at_traceon; }
 read at_status <"$at_status_file"
 #AT_STOP_3
 #AT_START_4
-at_fn_group_banner 4 'pic-x.at:62' \
-  "Move ALL with trunc and trimming" "               "
+at_fn_group_banner 4 'user-defined-word.at:58' \
+  "Field lookup" "                                   "
 at_xfail=no
 (
   $as_echo "4. $at_setup_line: testing $at_desc ..."
@@ -2225,39 +2198,38 @@ cat >prog.cob <<'_ATEOF'
        PROGRAM-ID.      prog.
        DATA             DIVISION.
        WORKING-STORAGE  SECTION.
-       01 F0 PIC X(7).
+       01 €–Ú‚Q PIC X(1) VALUE "A".
+       01 €–Ú‚q PIC X(1) VALUE "B".
        PROCEDURE        DIVISION.
-           MOVE ALL "Šì" TO F0.
-           DISPLAY F0 WITH NO ADVANCING.
+           DISPLAY €–Ú‚Q €–Ú‚q WITH NO ADVANCING.
            STOP RUN.
 _ATEOF
 
 
 { set +x
-$as_echo "$at_srcdir/pic-x.at:76: cobc -m prog.cob"
-at_fn_check_prepare_trace "pic-x.at:76"
-( $at_check_trace; cobc -m prog.cob
+$as_echo "$at_srcdir/user-defined-word.at:72: \${COMPILE} -x prog.cob"
+at_fn_check_prepare_notrace 'a ${...} parameter expansion' "user-defined-word.at:72"
+( $at_check_trace; ${COMPILE} -x prog.cob
 ) >>"$at_stdout" 2>>"$at_stderr" 5>&-
 at_status=$? at_failed=false
 $at_check_filter
 at_fn_diff_devnull "$at_stderr" || at_failed=:
 at_fn_diff_devnull "$at_stdout" || at_failed=:
-at_fn_check_status 0 $at_status "$at_srcdir/pic-x.at:76"
+at_fn_check_status 0 $at_status "$at_srcdir/user-defined-word.at:72"
 $at_failed && at_fn_log_failure
 $at_traceon; }
 
 { set +x
-$as_echo "$at_srcdir/pic-x.at:77: java prog | od -tx1 -An | sed -e 's/  */ /g' -e 's/ *\$//'"
-at_fn_check_prepare_notrace 'a shell pipeline' "pic-x.at:77"
-( $at_check_trace; java prog | od -tx1 -An | sed -e 's/  */ /g' -e 's/ *$//'
+$as_echo "$at_srcdir/user-defined-word.at:73: java prog"
+at_fn_check_prepare_trace "user-defined-word.at:73"
+( $at_check_trace; java prog
 ) >>"$at_stdout" 2>>"$at_stderr" 5>&-
 at_status=$? at_failed=false
 $at_check_filter
 at_fn_diff_devnull "$at_stderr" || at_failed=:
-echo >>"$at_stdout"; $as_echo " 8a ec 8a ec 8a ec 20
-" | \
+echo >>"$at_stdout"; $as_echo "AB" | \
   $at_diff - "$at_stdout" || at_failed=:
-at_fn_check_status 0 $at_status "$at_srcdir/pic-x.at:77"
+at_fn_check_status 0 $at_status "$at_srcdir/user-defined-word.at:73"
 $at_failed && at_fn_log_failure
 $at_traceon; }
 
@@ -2268,8 +2240,8 @@ $at_traceon; }
 read at_status <"$at_status_file"
 #AT_STOP_4
 #AT_START_5
-at_fn_group_banner 5 'pic-x.at:82' \
-  "Move with trunc and trimming 1" "                 "
+at_fn_group_banner 5 'user-defined-word.at:77' \
+  "Section name" "                                   "
 at_xfail=no
 (
   $as_echo "5. $at_setup_line: testing $at_desc ..."
@@ -2282,44 +2254,41 @@ cat >prog.cob <<'_ATEOF'
        PROGRAM-ID.      prog.
        DATA             DIVISION.
        WORKING-STORAGE  SECTION.
-       01 F0 PIC X(7).
        PROCEDURE        DIVISION.
-           MOVE "“ú–{Œê‚Ì•¶š—ñ" TO F0.
-           DISPLAY F0 WITH NO ADVANCING.
+       PERFORM    ‚r|‰Šú‰».
+       PERFORM    ‚r|I—¹.
+       ‚r|‰Šú‰»       SECTION.
+           DISPLAY "Hello, " WITH NO ADVANCING.
+       ‚r|I—¹         SECTION.
+           DISPLAY "and good bye." WITH NO ADVANCING.
            STOP RUN.
 _ATEOF
 
 
-#TODO fix
-#AT_CHECK([cobc -m prog.cob], [0], [],
-#[prog.cob:8: Warning: Value size exceeds data size
-#prog.cob:6: Warning: 'F0' defined here as PIC X(7)
-#])
 { set +x
-$as_echo "$at_srcdir/pic-x.at:101: cobc -m prog.cob"
-at_fn_check_prepare_trace "pic-x.at:101"
-( $at_check_trace; cobc -m prog.cob
+$as_echo "$at_srcdir/user-defined-word.at:94: \${COMPILE} -x prog.cob"
+at_fn_check_prepare_notrace 'a ${...} parameter expansion' "user-defined-word.at:94"
+( $at_check_trace; ${COMPILE} -x prog.cob
 ) >>"$at_stdout" 2>>"$at_stderr" 5>&-
 at_status=$? at_failed=false
 $at_check_filter
 at_fn_diff_devnull "$at_stderr" || at_failed=:
 at_fn_diff_devnull "$at_stdout" || at_failed=:
-at_fn_check_status 0 $at_status "$at_srcdir/pic-x.at:101"
+at_fn_check_status 0 $at_status "$at_srcdir/user-defined-word.at:94"
 $at_failed && at_fn_log_failure
 $at_traceon; }
 
 { set +x
-$as_echo "$at_srcdir/pic-x.at:102: java prog | od -tx1 -An | sed -e 's/  */ /g' -e 's/ *\$//'"
-at_fn_check_prepare_notrace 'a shell pipeline' "pic-x.at:102"
-( $at_check_trace; java prog | od -tx1 -An | sed -e 's/  */ /g' -e 's/ *$//'
+$as_echo "$at_srcdir/user-defined-word.at:95: java prog"
+at_fn_check_prepare_trace "user-defined-word.at:95"
+( $at_check_trace; java prog
 ) >>"$at_stdout" 2>>"$at_stderr" 5>&-
 at_status=$? at_failed=false
 $at_check_filter
 at_fn_diff_devnull "$at_stderr" || at_failed=:
-echo >>"$at_stdout"; $as_echo " 93 fa 96 7b 8c ea 82
-" | \
+echo >>"$at_stdout"; $as_echo "Hello, and good bye." | \
   $at_diff - "$at_stdout" || at_failed=:
-at_fn_check_status 0 $at_status "$at_srcdir/pic-x.at:102"
+at_fn_check_status 0 $at_status "$at_srcdir/user-defined-word.at:95"
 $at_failed && at_fn_log_failure
 $at_traceon; }
 
@@ -2330,8 +2299,8 @@ $at_traceon; }
 read at_status <"$at_status_file"
 #AT_STOP_5
 #AT_START_6
-at_fn_group_banner 6 'pic-x.at:107' \
-  "Move from field with trunc and trimming 1" "      "
+at_fn_group_banner 6 'user-defined-word.at:99' \
+  "Long section name" "                              "
 at_xfail=no
 (
   $as_echo "6. $at_setup_line: testing $at_desc ..."
@@ -2344,40 +2313,41 @@ cat >prog.cob <<'_ATEOF'
        PROGRAM-ID.      prog.
        DATA             DIVISION.
        WORKING-STORAGE  SECTION.
-       01 FS PIC X(14) VALUE "“ú–{Œê‚Ì•¶š—ñ".
-       01 F0 PIC X(7).
        PROCEDURE        DIVISION.
-           MOVE FS TO F0.
-           DISPLAY F0 WITH NO ADVANCING.
+       PERFORM s‚P‚Q‚R‚S‚T‚U‚V‚W‚X‚O1234567890.
+       PERFORM    ‚r|I—¹.
+       s‚P‚Q‚R‚S‚T‚U‚V‚W‚X‚O1234567890 SECTION.
+           DISPLAY "Hello, " WITH NO ADVANCING.
+       ‚r|I—¹         SECTION.
+           DISPLAY "and good bye." WITH NO ADVANCING.
            STOP RUN.
 _ATEOF
 
 
 { set +x
-$as_echo "$at_srcdir/pic-x.at:122: cobc -m prog.cob"
-at_fn_check_prepare_trace "pic-x.at:122"
-( $at_check_trace; cobc -m prog.cob
+$as_echo "$at_srcdir/user-defined-word.at:116: \${COMPILE} -x prog.cob"
+at_fn_check_prepare_notrace 'a ${...} parameter expansion' "user-defined-word.at:116"
+( $at_check_trace; ${COMPILE} -x prog.cob
 ) >>"$at_stdout" 2>>"$at_stderr" 5>&-
 at_status=$? at_failed=false
 $at_check_filter
 at_fn_diff_devnull "$at_stderr" || at_failed=:
 at_fn_diff_devnull "$at_stdout" || at_failed=:
-at_fn_check_status 0 $at_status "$at_srcdir/pic-x.at:122"
+at_fn_check_status 0 $at_status "$at_srcdir/user-defined-word.at:116"
 $at_failed && at_fn_log_failure
 $at_traceon; }
 
 { set +x
-$as_echo "$at_srcdir/pic-x.at:123: java prog | od -tx1 -An | sed -e 's/  */ /g' -e 's/ *\$//'"
-at_fn_check_prepare_notrace 'a shell pipeline' "pic-x.at:123"
-( $at_check_trace; java prog | od -tx1 -An | sed -e 's/  */ /g' -e 's/ *$//'
+$as_echo "$at_srcdir/user-defined-word.at:117: java prog"
+at_fn_check_prepare_trace "user-defined-word.at:117"
+( $at_check_trace; java prog
 ) >>"$at_stdout" 2>>"$at_stderr" 5>&-
 at_status=$? at_failed=false
 $at_check_filter
 at_fn_diff_devnull "$at_stderr" || at_failed=:
-echo >>"$at_stdout"; $as_echo " 93 fa 96 7b 8c ea 82
-" | \
+echo >>"$at_stdout"; $as_echo "Hello, and good bye." | \
   $at_diff - "$at_stdout" || at_failed=:
-at_fn_check_status 0 $at_status "$at_srcdir/pic-x.at:123"
+at_fn_check_status 0 $at_status "$at_srcdir/user-defined-word.at:117"
 $at_failed && at_fn_log_failure
 $at_traceon; }
 
@@ -2388,8 +2358,8 @@ $at_traceon; }
 read at_status <"$at_status_file"
 #AT_STOP_6
 #AT_START_7
-at_fn_group_banner 7 'pic-x.at:128' \
-  "Move with padding" "                              "
+at_fn_group_banner 7 'user-defined-word.at:121' \
+  "Too long section name" "                          "
 at_xfail=no
 (
   $as_echo "7. $at_setup_line: testing $at_desc ..."
@@ -2402,38 +2372,30 @@ cat >prog.cob <<'_ATEOF'
        PROGRAM-ID.      prog.
        DATA             DIVISION.
        WORKING-STORAGE  SECTION.
-       01 F0 PIC X(16).
        PROCEDURE        DIVISION.
-           MOVE "“ú–{Œê‚Ì•¶š—ñ" TO F0.
-           DISPLAY F0 WITH NO ADVANCING.
+       PERFORM s‚P‚Q‚R‚S‚T‚U‚V‚W‚X‚O123456789012345678901.
+       PERFORM    ‚r|I—¹.
+       s‚P‚Q‚R‚S‚T‚U‚V‚W‚X‚O123456789012345678901 SECTION.
+           DISPLAY "Hello, " WITH NO ADVANCING.
+       ‚r|I—¹         SECTION.
+           DISPLAY "and good bye." WITH NO ADVANCING.
            STOP RUN.
 _ATEOF
 
 
 { set +x
-$as_echo "$at_srcdir/pic-x.at:142: cobc -m prog.cob"
-at_fn_check_prepare_trace "pic-x.at:142"
-( $at_check_trace; cobc -m prog.cob
+$as_echo "$at_srcdir/user-defined-word.at:138: \${COMPILE} -x prog.cob"
+at_fn_check_prepare_notrace 'a ${...} parameter expansion' "user-defined-word.at:138"
+( $at_check_trace; ${COMPILE} -x prog.cob
 ) >>"$at_stdout" 2>>"$at_stderr" 5>&-
 at_status=$? at_failed=false
 $at_check_filter
-at_fn_diff_devnull "$at_stderr" || at_failed=:
+echo >>"$at_stderr"; $as_echo "prog.cob:7: Error: User defined name must be less than 32 characters
+prog.cob:9: Error: User defined name must be less than 32 characters
+" | \
+  $at_diff - "$at_stderr" || at_failed=:
 at_fn_diff_devnull "$at_stdout" || at_failed=:
-at_fn_check_status 0 $at_status "$at_srcdir/pic-x.at:142"
-$at_failed && at_fn_log_failure
-$at_traceon; }
-
-{ set +x
-$as_echo "$at_srcdir/pic-x.at:143: java prog"
-at_fn_check_prepare_trace "pic-x.at:143"
-( $at_check_trace; java prog
-) >>"$at_stdout" 2>>"$at_stderr" 5>&-
-at_status=$? at_failed=false
-$at_check_filter
-at_fn_diff_devnull "$at_stderr" || at_failed=:
-echo >>"$at_stdout"; $as_echo "“ú–{Œê‚Ì•¶š—ñ  " | \
-  $at_diff - "$at_stdout" || at_failed=:
-at_fn_check_status 0 $at_status "$at_srcdir/pic-x.at:143"
+at_fn_check_status 1 $at_status "$at_srcdir/user-defined-word.at:138"
 $at_failed && at_fn_log_failure
 $at_traceon; }
 
@@ -2444,8 +2406,8 @@ $at_traceon; }
 read at_status <"$at_status_file"
 #AT_STOP_7
 #AT_START_8
-at_fn_group_banner 8 'pic-x.at:147' \
-  "Move with justify" "                              "
+at_fn_group_banner 8 'user-defined-word.at:145' \
+  "Nihongo Filename" "                               "
 at_xfail=no
 (
   $as_echo "8. $at_setup_line: testing $at_desc ..."
@@ -2456,40 +2418,56 @@ cat >prog.cob <<'_ATEOF'
 
        IDENTIFICATION   DIVISION.
        PROGRAM-ID.      prog.
+       ENVIRONMENT      DIVISION.
+       INPUT-OUTPUT     SECTION.
+       FILE-CONTROL.
+       SELECT ƒeƒXƒgƒtƒ@ƒCƒ‹ ASSIGN TO "./ƒeƒXƒg_ƒtƒ@ƒCƒ‹"
+                        ORGANIZATION IS  INDEXED
+                        ACCESS MODE  IS  SEQUENTIAL
+                        RECORD KEY   IS  TEST-KEY.
        DATA             DIVISION.
-       WORKING-STORAGE  SECTION.
-       01 F0 PIC X(15) JUSTIFIED RIGHT.
+       FILE             SECTION.
+       FD ƒeƒXƒgƒtƒ@ƒCƒ‹.
+       01 TEST-KEY      PIC X(10).
        PROCEDURE        DIVISION.
-           MOVE "“ú–{Œê‚Ì•¶š—ñ" TO F0.
-           DISPLAY F0 WITH NO ADVANCING.
+           OPEN  OUTPUT ƒeƒXƒgƒtƒ@ƒCƒ‹.
+           MOVE "TEST000000" TO TEST-KEY.
+           WRITE TEST-KEY.
+           CLOSE ƒeƒXƒgƒtƒ@ƒCƒ‹.
+           OPEN  INPUT  ƒeƒXƒgƒtƒ@ƒCƒ‹.
+           READ  ƒeƒXƒgƒtƒ@ƒCƒ‹
+               NOT AT END
+                   DISPLAY "OK" NO ADVANCING
+           END-READ.
+           CLOSE ƒeƒXƒgƒtƒ@ƒCƒ‹.
            STOP RUN.
 _ATEOF
 
 
 { set +x
-$as_echo "$at_srcdir/pic-x.at:161: cobc -m prog.cob"
-at_fn_check_prepare_trace "pic-x.at:161"
-( $at_check_trace; cobc -m prog.cob
+$as_echo "$at_srcdir/user-defined-word.at:175: \${COMPILE} -x prog.cob"
+at_fn_check_prepare_notrace 'a ${...} parameter expansion' "user-defined-word.at:175"
+( $at_check_trace; ${COMPILE} -x prog.cob
 ) >>"$at_stdout" 2>>"$at_stderr" 5>&-
 at_status=$? at_failed=false
 $at_check_filter
 at_fn_diff_devnull "$at_stderr" || at_failed=:
 at_fn_diff_devnull "$at_stdout" || at_failed=:
-at_fn_check_status 0 $at_status "$at_srcdir/pic-x.at:161"
+at_fn_check_status 0 $at_status "$at_srcdir/user-defined-word.at:175"
 $at_failed && at_fn_log_failure
 $at_traceon; }
 
 { set +x
-$as_echo "$at_srcdir/pic-x.at:162: java prog"
-at_fn_check_prepare_trace "pic-x.at:162"
+$as_echo "$at_srcdir/user-defined-word.at:176: java prog"
+at_fn_check_prepare_trace "user-defined-word.at:176"
 ( $at_check_trace; java prog
 ) >>"$at_stdout" 2>>"$at_stderr" 5>&-
 at_status=$? at_failed=false
 $at_check_filter
 at_fn_diff_devnull "$at_stderr" || at_failed=:
-echo >>"$at_stdout"; $as_echo " “ú–{Œê‚Ì•¶š—ñ" | \
+echo >>"$at_stdout"; $as_echo "OK" | \
   $at_diff - "$at_stdout" || at_failed=:
-at_fn_check_status 0 $at_status "$at_srcdir/pic-x.at:162"
+at_fn_check_status 0 $at_status "$at_srcdir/user-defined-word.at:176"
 $at_failed && at_fn_log_failure
 $at_traceon; }
 
@@ -2500,8 +2478,8 @@ $at_traceon; }
 read at_status <"$at_status_file"
 #AT_STOP_8
 #AT_START_9
-at_fn_group_banner 9 'pic-x.at:166' \
-  "Move to alnum EDITED" "                           "
+at_fn_group_banner 9 'user-defined-word.at:180' \
+  "Nihongo field name in numeric test msg." "        "
 at_xfail=no
 (
   $as_echo "9. $at_setup_line: testing $at_desc ..."
@@ -2510,42 +2488,45 @@ at_xfail=no
 
 cat >prog.cob <<'_ATEOF'
 
-       IDENTIFICATION   DIVISION.
-       PROGRAM-ID.      prog.
-       DATA             DIVISION.
-       WORKING-STORAGE  SECTION.
-       01 F0 PIC XXXX/XXXXBXXXX0.
-       PROCEDURE        DIVISION.
-           MOVE "“ú–{’†‘•¶š" TO F0.
-           DISPLAY F0 WITH NO ADVANCING.
-           STOP RUN.
+       IDENTIFICATION    DIVISION.
+       PROGRAM-ID.       numcheck.
+       DATA              DIVISION.
+       WORKING-STORAGE   SECTION.
+       01  TEST-REC.
+         03  U€–Ú  PIC  9(4) VALUE  1000.
+       01  X€–Ú    PIC  X(4) VALUE 'ABCD'.
+       PROCEDURE         DIVISION.
+           MOVE X€–Ú TO TEST-REC.
+           ADD 1 TO U€–Ú.
+           GOBACK.
 _ATEOF
 
 
 { set +x
-$as_echo "$at_srcdir/pic-x.at:180: cobc -m prog.cob"
-at_fn_check_prepare_trace "pic-x.at:180"
-( $at_check_trace; cobc -m prog.cob
+$as_echo "$at_srcdir/user-defined-word.at:196: \${COMPILE} -debug -x prog.cob"
+at_fn_check_prepare_notrace 'a ${...} parameter expansion' "user-defined-word.at:196"
+( $at_check_trace; ${COMPILE} -debug -x prog.cob
 ) >>"$at_stdout" 2>>"$at_stderr" 5>&-
 at_status=$? at_failed=false
 $at_check_filter
 at_fn_diff_devnull "$at_stderr" || at_failed=:
 at_fn_diff_devnull "$at_stdout" || at_failed=:
-at_fn_check_status 0 $at_status "$at_srcdir/pic-x.at:180"
+at_fn_check_status 0 $at_status "$at_srcdir/user-defined-word.at:196"
 $at_failed && at_fn_log_failure
 $at_traceon; }
 
 { set +x
-$as_echo "$at_srcdir/pic-x.at:181: java prog"
-at_fn_check_prepare_trace "pic-x.at:181"
+$as_echo "$at_srcdir/user-defined-word.at:197: java prog"
+at_fn_check_prepare_trace "user-defined-word.at:197"
 ( $at_check_trace; java prog
 ) >>"$at_stdout" 2>>"$at_stderr" 5>&-
 at_status=$? at_failed=false
 $at_check_filter
-at_fn_diff_devnull "$at_stderr" || at_failed=:
-echo >>"$at_stdout"; $as_echo "“ú–{/’†‘ •¶š0" | \
-  $at_diff - "$at_stdout" || at_failed=:
-at_fn_check_status 0 $at_status "$at_srcdir/pic-x.at:181"
+echo >>"$at_stderr"; $as_echo "prog.cob:11: libcob: 'U€–Ú' not numeric: 'ABCD'
+" | \
+  $at_diff - "$at_stderr" || at_failed=:
+at_fn_diff_devnull "$at_stdout" || at_failed=:
+at_fn_check_status 1 $at_status "$at_srcdir/user-defined-word.at:197"
 $at_failed && at_fn_log_failure
 $at_traceon; }
 
@@ -2556,8 +2537,8 @@ $at_traceon; }
 read at_status <"$at_status_file"
 #AT_STOP_9
 #AT_START_10
-at_fn_group_banner 10 'pic-x.at:185' \
-  "Move to alnum EDITED (pic too short)" "           "
+at_fn_group_banner 10 'user-defined-word.at:203' \
+  "Nihongo field name in BASED test msg." "          "
 at_xfail=no
 (
   $as_echo "10. $at_setup_line: testing $at_desc ..."
@@ -2566,46 +2547,43 @@ at_xfail=no
 
 cat >prog.cob <<'_ATEOF'
 
-       IDENTIFICATION   DIVISION.
-       PROGRAM-ID.      prog.
-       DATA             DIVISION.
-       WORKING-STORAGE  SECTION.
-       01 F0 PIC XX/XXBXX0.
-       PROCEDURE        DIVISION.
-           MOVE "“ú–{’†‘•¶š" TO F0.
-           DISPLAY F0 WITH NO ADVANCING.
-           STOP RUN.
+       IDENTIFICATION    DIVISION.
+       PROGRAM-ID.       basedcheck.
+       DATA              DIVISION.
+       WORKING-STORAGE   SECTION.
+       01  X€–Ú    PIC  X(4) VALUE 'ABCD'.
+       01  Y€–Ú    PIC  X(4) BASED.
+       PROCEDURE         DIVISION.
+           MOVE X€–Ú TO Y€–Ú.
+           GOBACK.
 _ATEOF
 
 
-#AT_CHECK([cobc -m prog.cob], [0], [],
-#[prog.cob:8: Warning: Value size exceeds data size
-#prog.cob:6: Warning: 'F0' defined here as PIC XX/XXBXX0
-#])
 { set +x
-$as_echo "$at_srcdir/pic-x.at:203: cobc -m prog.cob"
-at_fn_check_prepare_trace "pic-x.at:203"
-( $at_check_trace; cobc -m prog.cob
+$as_echo "$at_srcdir/user-defined-word.at:217: \${COMPILE} -debug -x prog.cob"
+at_fn_check_prepare_notrace 'a ${...} parameter expansion' "user-defined-word.at:217"
+( $at_check_trace; ${COMPILE} -debug -x prog.cob
 ) >>"$at_stdout" 2>>"$at_stderr" 5>&-
 at_status=$? at_failed=false
 $at_check_filter
 at_fn_diff_devnull "$at_stderr" || at_failed=:
 at_fn_diff_devnull "$at_stdout" || at_failed=:
-at_fn_check_status 0 $at_status "$at_srcdir/pic-x.at:203"
+at_fn_check_status 0 $at_status "$at_srcdir/user-defined-word.at:217"
 $at_failed && at_fn_log_failure
 $at_traceon; }
 
 { set +x
-$as_echo "$at_srcdir/pic-x.at:204: java prog"
-at_fn_check_prepare_trace "pic-x.at:204"
+$as_echo "$at_srcdir/user-defined-word.at:218: java prog"
+at_fn_check_prepare_trace "user-defined-word.at:218"
 ( $at_check_trace; java prog
 ) >>"$at_stdout" 2>>"$at_stderr" 5>&-
 at_status=$? at_failed=false
 $at_check_filter
-at_fn_diff_devnull "$at_stderr" || at_failed=:
-echo >>"$at_stdout"; $as_echo "“ú/–{ ’†0" | \
-  $at_diff - "$at_stdout" || at_failed=:
-at_fn_check_status 0 $at_status "$at_srcdir/pic-x.at:204"
+echo >>"$at_stderr"; $as_echo "prog.cob:9: libcob: BASED/LINKAGE item 'Y€–Ú' has NULL address
+" | \
+  $at_diff - "$at_stderr" || at_failed=:
+at_fn_diff_devnull "$at_stdout" || at_failed=:
+at_fn_check_status 1 $at_status "$at_srcdir/user-defined-word.at:218"
 $at_failed && at_fn_log_failure
 $at_traceon; }
 
@@ -2616,8 +2594,8 @@ $at_traceon; }
 read at_status <"$at_status_file"
 #AT_STOP_10
 #AT_START_11
-at_fn_group_banner 11 'pic-x.at:208' \
-  "Move to alnum EDITED (pic too long)" "            "
+at_fn_group_banner 11 'user-defined-word.at:224' \
+  "Nihongo field name in ODO test msg." "            "
 at_xfail=no
 (
   $as_echo "11. $at_setup_line: testing $at_desc ..."
@@ -2626,42 +2604,44 @@ at_xfail=no
 
 cat >prog.cob <<'_ATEOF'
 
-       IDENTIFICATION   DIVISION.
-       PROGRAM-ID.      prog.
-       DATA             DIVISION.
-       WORKING-STORAGE  SECTION.
-       01 F0 PIC XX/XXBXX0.
-       PROCEDURE        DIVISION.
-           MOVE "“ú–{" TO F0.
-           DISPLAY F0 WITH NO ADVANCING.
-           STOP RUN.
+       IDENTIFICATION    DIVISION.
+       PROGRAM-ID.       odocheck.
+       DATA              DIVISION.
+       WORKING-STORAGE   SECTION.
+       01  I€–Ú         PIC 9 VALUE 4.
+       01  X.
+         03  Y€–Ú       PIC 9 OCCURS 1 TO 3 DEPENDING ON I€–Ú.
+       PROCEDURE         DIVISION.
+           MOVE 1 TO Y€–Ú(3).
+           GOBACK.
 _ATEOF
 
 
 { set +x
-$as_echo "$at_srcdir/pic-x.at:222: cobc -m prog.cob"
-at_fn_check_prepare_trace "pic-x.at:222"
-( $at_check_trace; cobc -m prog.cob
+$as_echo "$at_srcdir/user-defined-word.at:239: \${COMPILE} -debug -x prog.cob"
+at_fn_check_prepare_notrace 'a ${...} parameter expansion' "user-defined-word.at:239"
+( $at_check_trace; ${COMPILE} -debug -x prog.cob
 ) >>"$at_stdout" 2>>"$at_stderr" 5>&-
 at_status=$? at_failed=false
 $at_check_filter
 at_fn_diff_devnull "$at_stderr" || at_failed=:
 at_fn_diff_devnull "$at_stdout" || at_failed=:
-at_fn_check_status 0 $at_status "$at_srcdir/pic-x.at:222"
+at_fn_check_status 0 $at_status "$at_srcdir/user-defined-word.at:239"
 $at_failed && at_fn_log_failure
 $at_traceon; }
 
 { set +x
-$as_echo "$at_srcdir/pic-x.at:223: java prog"
-at_fn_check_prepare_trace "pic-x.at:223"
+$as_echo "$at_srcdir/user-defined-word.at:240: java prog"
+at_fn_check_prepare_trace "user-defined-word.at:240"
 ( $at_check_trace; java prog
 ) >>"$at_stdout" 2>>"$at_stderr" 5>&-
 at_status=$? at_failed=false
 $at_check_filter
-at_fn_diff_devnull "$at_stderr" || at_failed=:
-echo >>"$at_stdout"; $as_echo "“ú/–{   0" | \
-  $at_diff - "$at_stdout" || at_failed=:
-at_fn_check_status 0 $at_status "$at_srcdir/pic-x.at:223"
+echo >>"$at_stderr"; $as_echo "prog.cob:10: libcob: OCCURS DEPENDING ON 'I€–Ú' out of bounds: 4
+" | \
+  $at_diff - "$at_stderr" || at_failed=:
+at_fn_diff_devnull "$at_stdout" || at_failed=:
+at_fn_check_status 1 $at_status "$at_srcdir/user-defined-word.at:240"
 $at_failed && at_fn_log_failure
 $at_traceon; }
 
@@ -2672,8 +2652,8 @@ $at_traceon; }
 read at_status <"$at_status_file"
 #AT_STOP_11
 #AT_START_12
-at_fn_group_banner 12 'pic-x.at:227' \
-  "Move to alnum EDITED (No char break)" "           "
+at_fn_group_banner 12 'user-defined-word.at:246' \
+  "Nihongo field name in Subscript test msg." "      "
 at_xfail=no
 (
   $as_echo "12. $at_setup_line: testing $at_desc ..."
@@ -2682,42 +2662,44 @@ at_xfail=no
 
 cat >prog.cob <<'_ATEOF'
 
-       IDENTIFICATION   DIVISION.
-       PROGRAM-ID.      prog.
-       DATA             DIVISION.
-       WORKING-STORAGE  SECTION.
-       01 F0 PIC X(2)BX(2).
-       PROCEDURE        DIVISION.
-           MOVE "“ú–{" TO F0.
-           DISPLAY F0 WITH NO ADVANCING.
-           STOP RUN.
+       IDENTIFICATION    DIVISION.
+       PROGRAM-ID.       odocheck.
+       DATA              DIVISION.
+       WORKING-STORAGE   SECTION.
+       01  I€–Ú         PIC 9 VALUE 2.
+       01  X.
+         03  Y€–Ú       PIC 9 OCCURS 1 TO 3 DEPENDING ON I€–Ú.
+       PROCEDURE         DIVISION.
+           MOVE 1 TO Y€–Ú(3).
+           GOBACK.
 _ATEOF
 
 
 { set +x
-$as_echo "$at_srcdir/pic-x.at:241: cobc -m prog.cob"
-at_fn_check_prepare_trace "pic-x.at:241"
-( $at_check_trace; cobc -m prog.cob
+$as_echo "$at_srcdir/user-defined-word.at:261: \${COMPILE} -debug -x prog.cob"
+at_fn_check_prepare_notrace 'a ${...} parameter expansion' "user-defined-word.at:261"
+( $at_check_trace; ${COMPILE} -debug -x prog.cob
 ) >>"$at_stdout" 2>>"$at_stderr" 5>&-
 at_status=$? at_failed=false
 $at_check_filter
 at_fn_diff_devnull "$at_stderr" || at_failed=:
 at_fn_diff_devnull "$at_stdout" || at_failed=:
-at_fn_check_status 0 $at_status "$at_srcdir/pic-x.at:241"
+at_fn_check_status 0 $at_status "$at_srcdir/user-defined-word.at:261"
 $at_failed && at_fn_log_failure
 $at_traceon; }
 
 { set +x
-$as_echo "$at_srcdir/pic-x.at:242: java prog"
-at_fn_check_prepare_trace "pic-x.at:242"
+$as_echo "$at_srcdir/user-defined-word.at:262: java prog"
+at_fn_check_prepare_trace "user-defined-word.at:262"
 ( $at_check_trace; java prog
 ) >>"$at_stdout" 2>>"$at_stderr" 5>&-
 at_status=$? at_failed=false
 $at_check_filter
-at_fn_diff_devnull "$at_stderr" || at_failed=:
-echo >>"$at_stdout"; $as_echo "“ú –{" | \
-  $at_diff - "$at_stdout" || at_failed=:
-at_fn_check_status 0 $at_status "$at_srcdir/pic-x.at:242"
+echo >>"$at_stderr"; $as_echo "prog.cob:10: libcob: Subscript of 'Y€–Ú' out of bounds: 3
+" | \
+  $at_diff - "$at_stderr" || at_failed=:
+at_fn_diff_devnull "$at_stdout" || at_failed=:
+at_fn_check_status 1 $at_status "$at_srcdir/user-defined-word.at:262"
 $at_failed && at_fn_log_failure
 $at_traceon; }
 
@@ -2728,8 +2710,8 @@ $at_traceon; }
 read at_status <"$at_status_file"
 #AT_STOP_12
 #AT_START_13
-at_fn_group_banner 13 'pic-x.at:246' \
-  "Move to alnum EDITED (char break & junk chars)" " "
+at_fn_group_banner 13 'user-defined-word.at:268' \
+  "Nihongo field name in length of ref_mod test msg." ""
 at_xfail=no
 (
   $as_echo "13. $at_setup_line: testing $at_desc ..."
@@ -2738,43 +2720,44 @@ at_xfail=no
 
 cat >prog.cob <<'_ATEOF'
 
-       IDENTIFICATION   DIVISION.
-       PROGRAM-ID.      prog.
-       DATA             DIVISION.
-       WORKING-STORAGE  SECTION.
-       01 F0 PIC X(1)BX(3).
-       PROCEDURE        DIVISION.
-           MOVE "“ú–{" TO F0.
-           DISPLAY F0 WITH NO ADVANCING.
-           STOP RUN.
+       IDENTIFICATION    DIVISION.
+       PROGRAM-ID.       refcheck.
+       DATA              DIVISION.
+       WORKING-STORAGE   SECTION.
+       01  I             PIC 9    VALUE 2.
+       01  J             PIC 9    VALUE 6.
+       01  X€–Ú         PIC X(5) VALUE "ABCDE".
+       PROCEDURE         DIVISION.
+           DISPLAY X€–Ú(I:J).
+           GOBACK.
 _ATEOF
 
 
 { set +x
-$as_echo "$at_srcdir/pic-x.at:260: cobc -m prog.cob"
-at_fn_check_prepare_trace "pic-x.at:260"
-( $at_check_trace; cobc -m prog.cob
+$as_echo "$at_srcdir/user-defined-word.at:283: \${COMPILE} -debug -x prog.cob"
+at_fn_check_prepare_notrace 'a ${...} parameter expansion' "user-defined-word.at:283"
+( $at_check_trace; ${COMPILE} -debug -x prog.cob
 ) >>"$at_stdout" 2>>"$at_stderr" 5>&-
 at_status=$? at_failed=false
 $at_check_filter
 at_fn_diff_devnull "$at_stderr" || at_failed=:
 at_fn_diff_devnull "$at_stdout" || at_failed=:
-at_fn_check_status 0 $at_status "$at_srcdir/pic-x.at:260"
+at_fn_check_status 0 $at_status "$at_srcdir/user-defined-word.at:283"
 $at_failed && at_fn_log_failure
 $at_traceon; }
 
 { set +x
-$as_echo "$at_srcdir/pic-x.at:261: java prog | od -tx1 -An | sed -e 's/  */ /g' -e 's/ *\$//'"
-at_fn_check_prepare_notrace 'a shell pipeline' "pic-x.at:261"
-( $at_check_trace; java prog | od -tx1 -An | sed -e 's/  */ /g' -e 's/ *$//'
+$as_echo "$at_srcdir/user-defined-word.at:284: java prog"
+at_fn_check_prepare_trace "user-defined-word.at:284"
+( $at_check_trace; java prog
 ) >>"$at_stdout" 2>>"$at_stderr" 5>&-
 at_status=$? at_failed=false
 $at_check_filter
-at_fn_diff_devnull "$at_stderr" || at_failed=:
-echo >>"$at_stdout"; $as_echo " 93 20 fa 96 7b
+echo >>"$at_stderr"; $as_echo "prog.cob:10: libcob: Length of 'X€–Ú' out of bounds: 6
 " | \
-  $at_diff - "$at_stdout" || at_failed=:
-at_fn_check_status 0 $at_status "$at_srcdir/pic-x.at:261"
+  $at_diff - "$at_stderr" || at_failed=:
+at_fn_diff_devnull "$at_stdout" || at_failed=:
+at_fn_check_status 1 $at_status "$at_srcdir/user-defined-word.at:284"
 $at_failed && at_fn_log_failure
 $at_traceon; }
 
@@ -2785,8 +2768,8 @@ $at_traceon; }
 read at_status <"$at_status_file"
 #AT_STOP_13
 #AT_START_14
-at_fn_group_banner 14 'pic-x.at:266' \
-  "Move group to group in bad alignment" "           "
+at_fn_group_banner 14 'user-defined-word.at:290' \
+  "Nihongo field name in offset of ref_mod test msg." ""
 at_xfail=no
 (
   $as_echo "14. $at_setup_line: testing $at_desc ..."
@@ -2795,48 +2778,44 @@ at_xfail=no
 
 cat >prog.cob <<'_ATEOF'
 
-       IDENTIFICATION   DIVISION.
-       PROGRAM-ID.      prog.
-       DATA             DIVISION.
-       WORKING-STORAGE  SECTION.
-       01 F0.
-       03     XX0    PIC X(4) VALUE "“ú–{".
-       01 F1.
-       03     XX1    PIC X(3).
-       03     FILLER PIC X(1).
-
-       PROCEDURE        DIVISION.
-           MOVE   F0 TO F1.
-           DISPLAY XX1 WITH NO ADVANCING.
-           STOP RUN.
+       IDENTIFICATION    DIVISION.
+       PROGRAM-ID.       refcheck.
+       DATA              DIVISION.
+       WORKING-STORAGE   SECTION.
+       01  I             PIC 9    VALUE 6.
+       01  J             PIC 9    VALUE 2.
+       01  X€–Ú         PIC X(5) VALUE "ABCDE".
+       PROCEDURE         DIVISION.
+           DISPLAY X€–Ú(I:J).
+           GOBACK.
 _ATEOF
 
 
 { set +x
-$as_echo "$at_srcdir/pic-x.at:285: cobc -m prog.cob"
-at_fn_check_prepare_trace "pic-x.at:285"
-( $at_check_trace; cobc -m prog.cob
+$as_echo "$at_srcdir/user-defined-word.at:305: \${COMPILE} -debug -x prog.cob"
+at_fn_check_prepare_notrace 'a ${...} parameter expansion' "user-defined-word.at:305"
+( $at_check_trace; ${COMPILE} -debug -x prog.cob
 ) >>"$at_stdout" 2>>"$at_stderr" 5>&-
 at_status=$? at_failed=false
 $at_check_filter
 at_fn_diff_devnull "$at_stderr" || at_failed=:
 at_fn_diff_devnull "$at_stdout" || at_failed=:
-at_fn_check_status 0 $at_status "$at_srcdir/pic-x.at:285"
+at_fn_check_status 0 $at_status "$at_srcdir/user-defined-word.at:305"
 $at_failed && at_fn_log_failure
 $at_traceon; }
 
 { set +x
-$as_echo "$at_srcdir/pic-x.at:286: java prog | od -tx1 -An | sed -e 's/  */ /g' -e 's/ *\$//'"
-at_fn_check_prepare_notrace 'a shell pipeline' "pic-x.at:286"
-( $at_check_trace; java prog | od -tx1 -An | sed -e 's/  */ /g' -e 's/ *$//'
+$as_echo "$at_srcdir/user-defined-word.at:306: java prog"
+at_fn_check_prepare_trace "user-defined-word.at:306"
+( $at_check_trace; java prog
 ) >>"$at_stdout" 2>>"$at_stderr" 5>&-
 at_status=$? at_failed=false
 $at_check_filter
-at_fn_diff_devnull "$at_stderr" || at_failed=:
-echo >>"$at_stdout"; $as_echo " 93 fa 96
+echo >>"$at_stderr"; $as_echo "prog.cob:10: libcob: Offset of 'X€–Ú' out of bounds: 6
 " | \
-  $at_diff - "$at_stdout" || at_failed=:
-at_fn_check_status 0 $at_status "$at_srcdir/pic-x.at:286"
+  $at_diff - "$at_stderr" || at_failed=:
+at_fn_diff_devnull "$at_stdout" || at_failed=:
+at_fn_check_status 1 $at_status "$at_srcdir/user-defined-word.at:306"
 $at_failed && at_fn_log_failure
 $at_traceon; }
 
@@ -2847,8 +2826,8 @@ $at_traceon; }
 read at_status <"$at_status_file"
 #AT_STOP_14
 #AT_START_15
-at_fn_group_banner 15 'pic-x.at:291' \
-  "Redifinition breaking char pos." "                "
+at_fn_group_banner 15 'user-defined-word.at:312' \
+  "Nihongo field name in length of N_refmod test msg." ""
 at_xfail=no
 (
   $as_echo "15. $at_setup_line: testing $at_desc ..."
@@ -2857,47 +2836,44 @@ at_xfail=no
 
 cat >prog.cob <<'_ATEOF'
 
-       IDENTIFICATION   DIVISION.
-       PROGRAM-ID.      prog.
-       DATA             DIVISION.
-       WORKING-STORAGE  SECTION.
-       01 F0.
-       03     XX0    PIC X(4) VALUE "“ú–{".
-       01 F1 REDEFINES F0.
-       03     XX1    PIC X(3).
-       03     FILLER PIC X(1).
-
-       PROCEDURE        DIVISION.
-           DISPLAY XX1 WITH NO ADVANCING.
-           STOP RUN.
+       IDENTIFICATION    DIVISION.
+       PROGRAM-ID.       refcheck.
+       DATA              DIVISION.
+       WORKING-STORAGE   SECTION.
+       01  I             PIC 9    VALUE 2.
+       01  J             PIC 99   VALUE 18.
+       01  X€–Ú         PIC N(5) VALUE "‚`‚a‚b‚c‚d".
+       PROCEDURE         DIVISION.
+           DISPLAY X€–Ú(I:J).
+           GOBACK.
 _ATEOF
 
 
 { set +x
-$as_echo "$at_srcdir/pic-x.at:309: cobc -m prog.cob"
-at_fn_check_prepare_trace "pic-x.at:309"
-( $at_check_trace; cobc -m prog.cob
+$as_echo "$at_srcdir/user-defined-word.at:327: \${COMPILE} -debug -x prog.cob"
+at_fn_check_prepare_notrace 'a ${...} parameter expansion' "user-defined-word.at:327"
+( $at_check_trace; ${COMPILE} -debug -x prog.cob
 ) >>"$at_stdout" 2>>"$at_stderr" 5>&-
 at_status=$? at_failed=false
 $at_check_filter
 at_fn_diff_devnull "$at_stderr" || at_failed=:
 at_fn_diff_devnull "$at_stdout" || at_failed=:
-at_fn_check_status 0 $at_status "$at_srcdir/pic-x.at:309"
+at_fn_check_status 0 $at_status "$at_srcdir/user-defined-word.at:327"
 $at_failed && at_fn_log_failure
 $at_traceon; }
 
 { set +x
-$as_echo "$at_srcdir/pic-x.at:310: java prog | od -tx1 -An | sed -e 's/  */ /g' -e 's/ *\$//'"
-at_fn_check_prepare_notrace 'a shell pipeline' "pic-x.at:310"
-( $at_check_trace; java prog | od -tx1 -An | sed -e 's/  */ /g' -e 's/ *$//'
+$as_echo "$at_srcdir/user-defined-word.at:328: java prog"
+at_fn_check_prepare_trace "user-defined-word.at:328"
+( $at_check_trace; java prog
 ) >>"$at_stdout" 2>>"$at_stderr" 5>&-
 at_status=$? at_failed=false
 $at_check_filter
-at_fn_diff_devnull "$at_stderr" || at_failed=:
-echo >>"$at_stdout"; $as_echo " 93 fa 96
+echo >>"$at_stderr"; $as_echo "prog.cob:10: libcob: Length of 'X€–Ú' out of bounds: 18
 " | \
-  $at_diff - "$at_stdout" || at_failed=:
-at_fn_check_status 0 $at_status "$at_srcdir/pic-x.at:310"
+  $at_diff - "$at_stderr" || at_failed=:
+at_fn_diff_devnull "$at_stdout" || at_failed=:
+at_fn_check_status 1 $at_status "$at_srcdir/user-defined-word.at:328"
 $at_failed && at_fn_log_failure
 $at_traceon; }
 
@@ -2908,8 +2884,8 @@ $at_traceon; }
 read at_status <"$at_status_file"
 #AT_STOP_15
 #AT_START_16
-at_fn_group_banner 16 'pic-x.at:316' \
-  "Ref mod(n:)" "                                    "
+at_fn_group_banner 16 'user-defined-word.at:334' \
+  "Nihongo field name in offset of N_refmod test msg." ""
 at_xfail=no
 (
   $as_echo "16. $at_setup_line: testing $at_desc ..."
@@ -2918,42 +2894,44 @@ at_xfail=no
 
 cat >prog.cob <<'_ATEOF'
 
-       IDENTIFICATION   DIVISION.
-       PROGRAM-ID.      prog.
-       DATA             DIVISION.
-       WORKING-STORAGE  SECTION.
-       01 F0 PIC X(14).
-       PROCEDURE        DIVISION.
-           MOVE "“ú–{Œê‚Ì•¶š—ñ" TO F0.
-           DISPLAY F0(9:) WITH NO ADVANCING.
-           STOP RUN.
+       IDENTIFICATION    DIVISION.
+       PROGRAM-ID.       refcheck.
+       DATA              DIVISION.
+       WORKING-STORAGE   SECTION.
+       01  I             PIC 99   VALUE 18.
+       01  J             PIC 9    VALUE 2.
+       01  X€–Ú         PIC N(5) VALUE "‚`‚a‚b‚c‚d".
+       PROCEDURE         DIVISION.
+           DISPLAY X€–Ú(I:J).
+           GOBACK.
 _ATEOF
 
 
 { set +x
-$as_echo "$at_srcdir/pic-x.at:330: cobc -m prog.cob"
-at_fn_check_prepare_trace "pic-x.at:330"
-( $at_check_trace; cobc -m prog.cob
+$as_echo "$at_srcdir/user-defined-word.at:349: \${COMPILE} -debug -x prog.cob"
+at_fn_check_prepare_notrace 'a ${...} parameter expansion' "user-defined-word.at:349"
+( $at_check_trace; ${COMPILE} -debug -x prog.cob
 ) >>"$at_stdout" 2>>"$at_stderr" 5>&-
 at_status=$? at_failed=false
 $at_check_filter
 at_fn_diff_devnull "$at_stderr" || at_failed=:
 at_fn_diff_devnull "$at_stdout" || at_failed=:
-at_fn_check_status 0 $at_status "$at_srcdir/pic-x.at:330"
+at_fn_check_status 0 $at_status "$at_srcdir/user-defined-word.at:349"
 $at_failed && at_fn_log_failure
 $at_traceon; }
 
 { set +x
-$as_echo "$at_srcdir/pic-x.at:331: java prog"
-at_fn_check_prepare_trace "pic-x.at:331"
+$as_echo "$at_srcdir/user-defined-word.at:350: java prog"
+at_fn_check_prepare_trace "user-defined-word.at:350"
 ( $at_check_trace; java prog
 ) >>"$at_stdout" 2>>"$at_stderr" 5>&-
 at_status=$? at_failed=false
 $at_check_filter
-at_fn_diff_devnull "$at_stderr" || at_failed=:
-echo >>"$at_stdout"; $as_echo "•¶š—ñ" | \
-  $at_diff - "$at_stdout" || at_failed=:
-at_fn_check_status 0 $at_status "$at_srcdir/pic-x.at:331"
+echo >>"$at_stderr"; $as_echo "prog.cob:10: libcob: Offset of 'X€–Ú' out of bounds: 18
+" | \
+  $at_diff - "$at_stderr" || at_failed=:
+at_fn_diff_devnull "$at_stdout" || at_failed=:
+at_fn_check_status 1 $at_status "$at_srcdir/user-defined-word.at:350"
 $at_failed && at_fn_log_failure
 $at_traceon; }
 
@@ -2964,8 +2942,8 @@ $at_traceon; }
 read at_status <"$at_status_file"
 #AT_STOP_16
 #AT_START_17
-at_fn_group_banner 17 'pic-x.at:335' \
-  "Ref mod(n:m)" "                                   "
+at_fn_group_banner 17 'user-defined-word.at:356' \
+  "Nihongo field name in extaddr test msg." "        "
 at_xfail=no
 (
   $as_echo "17. $at_setup_line: testing $at_desc ..."
@@ -2974,42 +2952,50 @@ at_xfail=no
 
 cat >prog.cob <<'_ATEOF'
 
-       IDENTIFICATION   DIVISION.
-       PROGRAM-ID.      prog.
-       DATA             DIVISION.
-       WORKING-STORAGE  SECTION.
-       01 F0 PIC X(14).
-       PROCEDURE        DIVISION.
-           MOVE "“ú–{Œê‚Ì•¶š—ñ" TO F0.
-           DISPLAY F0(9:4) WITH NO ADVANCING.
-           STOP RUN.
+       IDENTIFICATION    DIVISION.
+       PROGRAM-ID.       check1.
+       DATA              DIVISION.
+       WORKING-STORAGE   SECTION.
+       01  X€–Ú         PIC X(5) EXTERNAL.
+       PROCEDURE         DIVISION.
+           CALL 'check2'.
+
+       IDENTIFICATION    DIVISION.
+       PROGRAM-ID.       check2.
+       DATA              DIVISION.
+       WORKING-STORAGE   SECTION.
+       01  X€–Ú         PIC X(6) EXTERNAL.
+       PROCEDURE         DIVISION.
+           END PROGRAM check2.
+           END PROGRAM check1.
 _ATEOF
 
 
 { set +x
-$as_echo "$at_srcdir/pic-x.at:349: cobc -m prog.cob"
-at_fn_check_prepare_trace "pic-x.at:349"
-( $at_check_trace; cobc -m prog.cob
+$as_echo "$at_srcdir/user-defined-word.at:377: \${COMPILE} -debug -x prog.cob"
+at_fn_check_prepare_notrace 'a ${...} parameter expansion' "user-defined-word.at:377"
+( $at_check_trace; ${COMPILE} -debug -x prog.cob
 ) >>"$at_stdout" 2>>"$at_stderr" 5>&-
 at_status=$? at_failed=false
 $at_check_filter
 at_fn_diff_devnull "$at_stderr" || at_failed=:
 at_fn_diff_devnull "$at_stdout" || at_failed=:
-at_fn_check_status 0 $at_status "$at_srcdir/pic-x.at:349"
+at_fn_check_status 0 $at_status "$at_srcdir/user-defined-word.at:377"
 $at_failed && at_fn_log_failure
 $at_traceon; }
 
 { set +x
-$as_echo "$at_srcdir/pic-x.at:350: java prog"
-at_fn_check_prepare_trace "pic-x.at:350"
+$as_echo "$at_srcdir/user-defined-word.at:378: java prog"
+at_fn_check_prepare_trace "user-defined-word.at:378"
 ( $at_check_trace; java prog
 ) >>"$at_stdout" 2>>"$at_stderr" 5>&-
 at_status=$? at_failed=false
 $at_check_filter
-at_fn_diff_devnull "$at_stderr" || at_failed=:
-echo >>"$at_stdout"; $as_echo "•¶š" | \
-  $at_diff - "$at_stdout" || at_failed=:
-at_fn_check_status 0 $at_status "$at_srcdir/pic-x.at:350"
+echo >>"$at_stderr"; $as_echo "prog.cob:8: libcob: EXTERNAL item 'X€–Ú' has size > 6
+" | \
+  $at_diff - "$at_stderr" || at_failed=:
+at_fn_diff_devnull "$at_stdout" || at_failed=:
+at_fn_check_status 1 $at_status "$at_srcdir/user-defined-word.at:378"
 $at_failed && at_fn_log_failure
 $at_traceon; }
 
@@ -3020,8 +3006,8 @@ $at_traceon; }
 read at_status <"$at_status_file"
 #AT_STOP_17
 #AT_START_18
-at_fn_group_banner 18 'pic-x.at:354' \
-  "STRING by size" "                                 "
+at_fn_group_banner 18 'user-defined-word.at:384' \
+  "Nihongo field name in undefined error msg." "     "
 at_xfail=no
 (
   $as_echo "18. $at_setup_line: testing $at_desc ..."
@@ -3034,42 +3020,45 @@ cat >prog.cob <<'_ATEOF'
        PROGRAM-ID.      prog.
        DATA             DIVISION.
        WORKING-STORAGE  SECTION.
-       01 F0 PIC X(4)  VALUE "„‚Ì".
-       01 F1 PIC X(6)  VALUE "–¼‘O‚Í".
-       01 F2 PIC X(10) VALUE "‚ ‚è‚Ü‚¹‚ñ".
-       01 FF PIC X(20).
+       01 GW’c€–Ú.
+          03 A€–Ú PIC X.
        PROCEDURE        DIVISION.
-           STRING F0 F1 F2 DELIMITED BY SIZE
-             INTO FF.
-           DISPLAY FF WITH NO ADVANCING.
-           STOP RUN.
+001009     DISPLAY NO-FLD.
+001010     DISPLAY NO-FLD IN G-GRP.
+001011     DISPLAY NO-FLD IN NO-GRP.
+001012     DISPLAY NO€–Ú.
+001013     DISPLAY NO€–Ú IN GW’c€–Ú.
+001014     DISPLAY NO€–Ú IN NOW’c€–Ú.
+001015     DISPLAY NO-FLD IN GW’c€–Ú.
+001016     DISPLAY NO-FLD IN NOW’c€–Ú.
+001017     DISPLAY NO€–Ú IN G-GRP.
+001018     DISPLAY NO€–Ú IN NO-GRP.
+001019     DISPLAY NO€–Ú IN GW’c€–Ú IN NOW’c€–Ú.
 _ATEOF
 
 
 { set +x
-$as_echo "$at_srcdir/pic-x.at:372: cobc -m prog.cob"
-at_fn_check_prepare_trace "pic-x.at:372"
-( $at_check_trace; cobc -m prog.cob
+$as_echo "$at_srcdir/user-defined-word.at:407: \${COMPILE} -debug -x prog.cob"
+at_fn_check_prepare_notrace 'a ${...} parameter expansion' "user-defined-word.at:407"
+( $at_check_trace; ${COMPILE} -debug -x prog.cob
 ) >>"$at_stdout" 2>>"$at_stderr" 5>&-
 at_status=$? at_failed=false
 $at_check_filter
-at_fn_diff_devnull "$at_stderr" || at_failed=:
+echo >>"$at_stderr"; $as_echo "prog.cob:9: Error: 'NO-FLD' undefined
+prog.cob:10: Error: 'NO-FLD' in 'G-GRP' undefined
+prog.cob:11: Error: 'NO-FLD' in 'NO-GRP' undefined
+prog.cob:12: Error: 'NO€–Ú' undefined
+prog.cob:13: Error: 'NO€–Ú' in 'GW’c€–Ú' undefined
+prog.cob:14: Error: 'NO€–Ú' in 'NOW’c€–Ú' undefined
+prog.cob:15: Error: 'NO-FLD' in 'GW’c€–Ú' undefined
+prog.cob:16: Error: 'NO-FLD' in 'NOW’c€–Ú' undefined
+prog.cob:17: Error: 'NO€–Ú' in 'G-GRP' undefined
+prog.cob:18: Error: 'NO€–Ú' in 'NO-GRP' undefined
+prog.cob:19: Error: 'NO€–Ú' in 'GW’c€–Ú' in 'NOW’c€–Ú' undefined
+" | \
+  $at_diff - "$at_stderr" || at_failed=:
 at_fn_diff_devnull "$at_stdout" || at_failed=:
-at_fn_check_status 0 $at_status "$at_srcdir/pic-x.at:372"
-$at_failed && at_fn_log_failure
-$at_traceon; }
-
-{ set +x
-$as_echo "$at_srcdir/pic-x.at:373: java prog"
-at_fn_check_prepare_trace "pic-x.at:373"
-( $at_check_trace; java prog
-) >>"$at_stdout" 2>>"$at_stderr" 5>&-
-at_status=$? at_failed=false
-$at_check_filter
-at_fn_diff_devnull "$at_stderr" || at_failed=:
-echo >>"$at_stdout"; $as_echo "„‚Ì–¼‘O‚Í‚ ‚è‚Ü‚¹‚ñ" | \
-  $at_diff - "$at_stdout" || at_failed=:
-at_fn_check_status 0 $at_status "$at_srcdir/pic-x.at:373"
+at_fn_check_status 1 $at_status "$at_srcdir/user-defined-word.at:407"
 $at_failed && at_fn_log_failure
 $at_traceon; }
 
@@ -3080,8 +3069,8 @@ $at_traceon; }
 read at_status <"$at_status_file"
 #AT_STOP_18
 #AT_START_19
-at_fn_group_banner 19 'pic-x.at:377' \
-  "STRING with delimiter" "                          "
+at_fn_group_banner 19 'user-defined-word.at:423' \
+  "Nihongo field name in ambiguous error msg." "     "
 at_xfail=no
 (
   $as_echo "19. $at_setup_line: testing $at_desc ..."
@@ -3094,46 +3083,42 @@ cat >prog.cob <<'_ATEOF'
        PROGRAM-ID.      prog.
        DATA             DIVISION.
        WORKING-STORAGE  SECTION.
-       01 F0 PIC X(4)  VALUE "„‚Ì".
-       01 F1 PIC X(8)  VALUE "–¼‘O¢‚Í".
-       01 F2 PIC X(12) VALUE "¢‚ ‚è‚Ü‚¹‚ñ".
-       01 FF PIC X(8).
+       01 A€–Ú PIC X.
+       01 G1W’c.
+          03 A€–Ú PIC X.
+          03 B€–Ú PIC X.
+          03 G2W’c.
+             05 A€–Ú PIC X.
+             05 B€–Ú PIC X.
        PROCEDURE        DIVISION.
-           STRING F0 F1 F2 DELIMITED BY "¢"
-             INTO FF.
-           DISPLAY FF WITH NO ADVANCING.
-           STOP RUN.
+001014     DISPLAY A€–Ú.
+001015     DISPLAY B€–Ú IN G1W’c.
+           GOBACK.
 _ATEOF
 
 
 { set +x
-$as_echo "$at_srcdir/pic-x.at:395: cobc -m prog.cob"
-at_fn_check_prepare_trace "pic-x.at:395"
-( $at_check_trace; cobc -m prog.cob
+$as_echo "$at_srcdir/user-defined-word.at:443: \${COMPILE_ONLY} prog.cob"
+at_fn_check_prepare_notrace 'a ${...} parameter expansion' "user-defined-word.at:443"
+( $at_check_trace; ${COMPILE_ONLY} prog.cob
 ) >>"$at_stdout" 2>>"$at_stderr" 5>&-
 at_status=$? at_failed=false
 $at_check_filter
-echo >>"$at_stderr"; $as_echo "prog.cob:12: Warning: F0 and '¢' and FF have not same national type!
-prog.cob:12: Warning: F1 and '¢' and FF have not same national type!
-prog.cob:12: Warning: F2 and '¢' and FF have not same national type!
+echo >>"$at_stderr"; $as_echo "prog.cob:8: Warning: Redefinition of 'A€–Ú'
+prog.cob:6: Warning: 'A€–Ú' previously defined here
+prog.cob:11: Warning: Redefinition of 'A€–Ú'
+prog.cob:6: Warning: 'A€–Ú' previously defined here
+prog.cob:14: Error: 'A€–Ú' ambiguous; need qualification
+prog.cob:6: Error: 'A€–Ú' defined here
+prog.cob:8: Error: 'A€–Ú' in 'G1W’c' defined here
+prog.cob:11: Error: 'A€–Ú' in 'G2W’c' in 'G1W’c' defined here
+prog.cob:15: Error: 'B€–Ú' in 'G1W’c' ambiguous; need qualification
+prog.cob:9: Error: 'B€–Ú' in 'G1W’c' defined here
+prog.cob:12: Error: 'B€–Ú' in 'G2W’c' in 'G1W’c' defined here
 " | \
   $at_diff - "$at_stderr" || at_failed=:
 at_fn_diff_devnull "$at_stdout" || at_failed=:
-at_fn_check_status 0 $at_status "$at_srcdir/pic-x.at:395"
-$at_failed && at_fn_log_failure
-$at_traceon; }
-
-{ set +x
-$as_echo "$at_srcdir/pic-x.at:400: java prog"
-at_fn_check_prepare_trace "pic-x.at:400"
-( $at_check_trace; java prog
-) >>"$at_stdout" 2>>"$at_stderr" 5>&-
-at_status=$? at_failed=false
-$at_check_filter
-at_fn_diff_devnull "$at_stderr" || at_failed=:
-echo >>"$at_stdout"; $as_echo "„‚Ì–¼‘O" | \
-  $at_diff - "$at_stdout" || at_failed=:
-at_fn_check_status 0 $at_status "$at_srcdir/pic-x.at:400"
+at_fn_check_status 1 $at_status "$at_srcdir/user-defined-word.at:443"
 $at_failed && at_fn_log_failure
 $at_traceon; }
 
@@ -3144,8 +3129,8 @@ $at_traceon; }
 read at_status <"$at_status_file"
 #AT_STOP_19
 #AT_START_20
-at_fn_group_banner 20 'pic-x.at:404' \
-  "STRING with pointer" "                            "
+at_fn_group_banner 20 'user-defined-word.at:459' \
+  "Nihongo label name in ambiguous error msg." "     "
 at_xfail=no
 (
   $as_echo "20. $at_setup_line: testing $at_desc ..."
@@ -3157,44 +3142,35 @@ cat >prog.cob <<'_ATEOF'
        IDENTIFICATION   DIVISION.
        PROGRAM-ID.      prog.
        DATA             DIVISION.
-       WORKING-STORAGE  SECTION.
-       01 F0 PIC X(4)  VALUE "„‚Ì".
-       01 F1 PIC X(6)  VALUE "–¼‘O‚Í".
-       01 F2 PIC X(10) VALUE "‚ ‚è‚Ü‚¹‚ñ".
-       01 FF PIC X(20) VALUE "Œ¾‚¦‚Ü‚¹‚ñ›¦¢¡~".
-       01 FP PIC 99    VALUE 11.
        PROCEDURE        DIVISION.
-           STRING F0 F1 F2 DELIMITED BY SIZE
-             INTO FF WITH POINTER FP.
-           DISPLAY FF WITH NO ADVANCING.
-           STOP RUN.
+001006   L0Œ©o‚µ.
+001007     GO TO L1Œ©o‚µ.
+001008     GO TO L2Œ©o‚µ IN S1ß.
+001009   L1Œ©o‚µ. GOBACK.
+001010   L1Œ©o‚µ. GOBACK.
+001011 S1ß             SECTION.
+001012   L2Œ©o‚µ. GOBACK.
+001013   L2Œ©o‚µ. GOBACK.
 _ATEOF
 
 
 { set +x
-$as_echo "$at_srcdir/pic-x.at:423: cobc -m prog.cob"
-at_fn_check_prepare_trace "pic-x.at:423"
-( $at_check_trace; cobc -m prog.cob
+$as_echo "$at_srcdir/user-defined-word.at:476: \${COMPILE_ONLY} prog.cob"
+at_fn_check_prepare_notrace 'a ${...} parameter expansion' "user-defined-word.at:476"
+( $at_check_trace; ${COMPILE_ONLY} prog.cob
 ) >>"$at_stdout" 2>>"$at_stderr" 5>&-
 at_status=$? at_failed=false
 $at_check_filter
-at_fn_diff_devnull "$at_stderr" || at_failed=:
+echo >>"$at_stderr"; $as_echo "prog.cob:7: Error: 'L1Œ©o‚µ' ambiguous; need qualification
+prog.cob:9: Error: 'L1Œ©o‚µ' in 'MAIN SECTION' defined here
+prog.cob:10: Error: 'L1Œ©o‚µ' in 'MAIN SECTION' defined here
+prog.cob:8: Error: 'L2Œ©o‚µ' in 'S1ß' ambiguous; need qualification
+prog.cob:12: Error: 'L2Œ©o‚µ' in 'S1ß' defined here
+prog.cob:13: Error: 'L2Œ©o‚µ' in 'S1ß' defined here
+" | \
+  $at_diff - "$at_stderr" || at_failed=:
 at_fn_diff_devnull "$at_stdout" || at_failed=:
-at_fn_check_status 0 $at_status "$at_srcdir/pic-x.at:423"
-$at_failed && at_fn_log_failure
-$at_traceon; }
-
-{ set +x
-$as_echo "$at_srcdir/pic-x.at:424: java prog"
-at_fn_check_prepare_trace "pic-x.at:424"
-( $at_check_trace; java prog
-) >>"$at_stdout" 2>>"$at_stderr" 5>&-
-at_status=$? at_failed=false
-$at_check_filter
-at_fn_diff_devnull "$at_stderr" || at_failed=:
-echo >>"$at_stdout"; $as_echo "Œ¾‚¦‚Ü‚¹‚ñ„‚Ì–¼‘O‚Í" | \
-  $at_diff - "$at_stdout" || at_failed=:
-at_fn_check_status 0 $at_status "$at_srcdir/pic-x.at:424"
+at_fn_check_status 1 $at_status "$at_srcdir/user-defined-word.at:476"
 $at_failed && at_fn_log_failure
 $at_traceon; }
 
@@ -3205,52 +3181,41 @@ $at_traceon; }
 read at_status <"$at_status_file"
 #AT_STOP_20
 #AT_START_21
-at_fn_group_banner 21 'pic-x.at:428' \
-  "INSPECT REPLACING" "                              "
+at_fn_group_banner 21 'program-id.at:1' \
+  "PROGRAM-ID NATIONAL C89 no warning" "             "
 at_xfail=no
 (
   $as_echo "21. $at_setup_line: testing $at_desc ..."
   $at_traceon
 
 
+cat >test.conf <<'_ATEOF'
+
+include "default.conf"
+c89-identifier-length-check: yes
+_ATEOF
+
+
 cat >prog.cob <<'_ATEOF'
 
        IDENTIFICATION   DIVISION.
-       PROGRAM-ID.      prog.
+       PROGRAM-ID.      “Œ‹“s.
        DATA             DIVISION.
-       WORKING-STORAGE  SECTION.
-       01 F0 PIC X(20)  VALUE "‚P‚Q‚R‚S‚T‚P‚Q‚R‚S‚T".
-       PROCEDURE        DIVISION.
-           INSPECT F0 REPLACING ALL "‚T" BY "‚O".
-           DISPLAY F0 WITH NO ADVANCING.
-           STOP RUN.
+       PROCEDURE DIVISION.
+           END PROGRAM “Œ‹“s.
 _ATEOF
 
 
 { set +x
-$as_echo "$at_srcdir/pic-x.at:442: cobc -m prog.cob"
-at_fn_check_prepare_trace "pic-x.at:442"
-( $at_check_trace; cobc -m prog.cob
+$as_echo "$at_srcdir/program-id.at:16: \${COMPILE} -conf=test.conf -x prog.cob"
+at_fn_check_prepare_notrace 'a ${...} parameter expansion' "program-id.at:16"
+( $at_check_trace; ${COMPILE} -conf=test.conf -x prog.cob
 ) >>"$at_stdout" 2>>"$at_stderr" 5>&-
 at_status=$? at_failed=false
 $at_check_filter
 at_fn_diff_devnull "$at_stderr" || at_failed=:
 at_fn_diff_devnull "$at_stdout" || at_failed=:
-at_fn_check_status 0 $at_status "$at_srcdir/pic-x.at:442"
-$at_failed && at_fn_log_failure
-$at_traceon; }
-
-{ set +x
-$as_echo "$at_srcdir/pic-x.at:443: java prog"
-at_fn_check_prepare_trace "pic-x.at:443"
-( $at_check_trace; java prog
-) >>"$at_stdout" 2>>"$at_stderr" 5>&-
-at_status=$? at_failed=false
-$at_check_filter
-at_fn_diff_devnull "$at_stderr" || at_failed=:
-echo >>"$at_stdout"; $as_echo "‚P‚Q‚R‚S‚O‚P‚Q‚R‚S‚O" | \
-  $at_diff - "$at_stdout" || at_failed=:
-at_fn_check_status 0 $at_status "$at_srcdir/pic-x.at:443"
+at_fn_check_status 0 $at_status "$at_srcdir/program-id.at:16"
 $at_failed && at_fn_log_failure
 $at_traceon; }
 
@@ -3261,52 +3226,44 @@ $at_traceon; }
 read at_status <"$at_status_file"
 #AT_STOP_21
 #AT_START_22
-at_fn_group_banner 22 'pic-x.at:447' \
-  "INSPECT REPLACING by ZERO" "                      "
+at_fn_group_banner 22 'program-id.at:20' \
+  "PROGRAM-ID NATIONAL C89 warning" "                "
 at_xfail=no
 (
   $as_echo "22. $at_setup_line: testing $at_desc ..."
   $at_traceon
 
 
+cat >test.conf <<'_ATEOF'
+
+include "default.conf"
+c89-identifier-length-check: yes
+_ATEOF
+
+
 cat >prog.cob <<'_ATEOF'
 
        IDENTIFICATION   DIVISION.
-       PROGRAM-ID.      prog.
+       PROGRAM-ID.      “Œ‹˜pŠİ`˜p‹Ç.
        DATA             DIVISION.
-       WORKING-STORAGE  SECTION.
-       01 F0 PIC X(20)  VALUE "‚P‚Q‚R‚S‚T‚P‚Q‚R‚S‚T".
-       PROCEDURE        DIVISION.
-           INSPECT F0 REPLACING ALL "‚T" BY ZERO.
-           DISPLAY F0 WITH NO ADVANCING.
-           STOP RUN.
+       PROCEDURE DIVISION.
+           END PROGRAM “Œ‹˜pŠİ`˜p‹Ç.
 _ATEOF
 
 
 { set +x
-$as_echo "$at_srcdir/pic-x.at:461: cobc -m prog.cob"
-at_fn_check_prepare_trace "pic-x.at:461"
-( $at_check_trace; cobc -m prog.cob
+$as_echo "$at_srcdir/program-id.at:35: \${COMPILE} -conf=test.conf -x prog.cob"
+at_fn_check_prepare_notrace 'a ${...} parameter expansion' "program-id.at:35"
+( $at_check_trace; ${COMPILE} -conf=test.conf -x prog.cob
 ) >>"$at_stdout" 2>>"$at_stderr" 5>&-
 at_status=$? at_failed=false
 $at_check_filter
-at_fn_diff_devnull "$at_stderr" || at_failed=:
+echo >>"$at_stderr"; $as_echo "prog.cob:3: Warning: PROGRAM-ID length exceeds C89 function name limit
+prog.cob:6: Warning: PROGRAM-ID length exceeds C89 function name limit
+" | \
+  $at_diff - "$at_stderr" || at_failed=:
 at_fn_diff_devnull "$at_stdout" || at_failed=:
-at_fn_check_status 0 $at_status "$at_srcdir/pic-x.at:461"
-$at_failed && at_fn_log_failure
-$at_traceon; }
-
-{ set +x
-$as_echo "$at_srcdir/pic-x.at:462: java prog"
-at_fn_check_prepare_trace "pic-x.at:462"
-( $at_check_trace; java prog
-) >>"$at_stdout" 2>>"$at_stderr" 5>&-
-at_status=$? at_failed=false
-$at_check_filter
-at_fn_diff_devnull "$at_stderr" || at_failed=:
-echo >>"$at_stdout"; $as_echo "‚P‚Q‚R‚S‚O‚P‚Q‚R‚S‚O" | \
-  $at_diff - "$at_stdout" || at_failed=:
-at_fn_check_status 0 $at_status "$at_srcdir/pic-x.at:462"
+at_fn_check_status 0 $at_status "$at_srcdir/program-id.at:35"
 $at_failed && at_fn_log_failure
 $at_traceon; }
 
@@ -3317,8 +3274,8 @@ $at_traceon; }
 read at_status <"$at_status_file"
 #AT_STOP_22
 #AT_START_23
-at_fn_group_banner 23 'pic-x.at:466' \
-  "INSPECT TALLYING" "                               "
+at_fn_group_banner 23 'program-id.at:42' \
+  "PROGRAM-ID NATIONAL C89 ignore" "                 "
 at_xfail=no
 (
   $as_echo "23. $at_setup_line: testing $at_desc ..."
@@ -3328,42 +3285,23 @@ at_xfail=no
 cat >prog.cob <<'_ATEOF'
 
        IDENTIFICATION   DIVISION.
-       PROGRAM-ID.      prog.
+       PROGRAM-ID.      “Œ‹˜pŠİ`˜p‹Ç.
        DATA             DIVISION.
-       WORKING-STORAGE  SECTION.
-       01 F0 PIC X(30)  VALUE "‚P‚Q‚R‚S‚T‚P‚Q‚R‚S‚T".
-       01 CN PIC 99.
-       PROCEDURE        DIVISION.
-           INSPECT F0 TALLYING CN FOR ALL "‚S‚T".
-           DISPLAY CN WITH NO ADVANCING.
-           STOP RUN.
+       PROCEDURE DIVISION.
+           END PROGRAM “Œ‹˜pŠİ`˜p‹Ç.
 _ATEOF
 
 
 { set +x
-$as_echo "$at_srcdir/pic-x.at:481: cobc -m prog.cob"
-at_fn_check_prepare_trace "pic-x.at:481"
-( $at_check_trace; cobc -m prog.cob
+$as_echo "$at_srcdir/program-id.at:52: \${COMPILE} -x prog.cob"
+at_fn_check_prepare_notrace 'a ${...} parameter expansion' "program-id.at:52"
+( $at_check_trace; ${COMPILE} -x prog.cob
 ) >>"$at_stdout" 2>>"$at_stderr" 5>&-
 at_status=$? at_failed=false
 $at_check_filter
 at_fn_diff_devnull "$at_stderr" || at_failed=:
 at_fn_diff_devnull "$at_stdout" || at_failed=:
-at_fn_check_status 0 $at_status "$at_srcdir/pic-x.at:481"
-$at_failed && at_fn_log_failure
-$at_traceon; }
-
-{ set +x
-$as_echo "$at_srcdir/pic-x.at:482: java prog"
-at_fn_check_prepare_trace "pic-x.at:482"
-( $at_check_trace; java prog
-) >>"$at_stdout" 2>>"$at_stderr" 5>&-
-at_status=$? at_failed=false
-$at_check_filter
-at_fn_diff_devnull "$at_stderr" || at_failed=:
-echo >>"$at_stdout"; $as_echo "02" | \
-  $at_diff - "$at_stdout" || at_failed=:
-at_fn_check_status 0 $at_status "$at_srcdir/pic-x.at:482"
+at_fn_check_status 0 $at_status "$at_srcdir/program-id.at:52"
 $at_failed && at_fn_log_failure
 $at_traceon; }
 
@@ -3374,8 +3312,8 @@ $at_traceon; }
 read at_status <"$at_status_file"
 #AT_STOP_23
 #AT_START_24
-at_fn_group_banner 24 'pic-n.at:1' \
-  "PIC N Value clause" "                             "
+at_fn_group_banner 24 'program-id.at:56' \
+  "PROGRAM-ID NATIONAL 32 character no over" "       "
 at_xfail=no
 (
   $as_echo "24. $at_setup_line: testing $at_desc ..."
@@ -3385,40 +3323,24 @@ at_xfail=no
 cat >prog.cob <<'_ATEOF'
 
        IDENTIFICATION   DIVISION.
-       PROGRAM-ID.      prog.
+       PROGRAM-ID.      ‚ ‚¢‚¤‚¦‚¨‚©‚«‚­‚¯‚±‚³‚µ‚·‚¹‚»
+      -‚½‚¿‚Â‚Ä‚Æ‚È‚É‚Ê‚Ë‚Ì‚Í‚Ğ‚Ó‚Ö‚Ù.
        DATA             DIVISION.
-       WORKING-STORAGE  SECTION.
-       01 F0 PIC N(7) VALUE "“ú–{Œê‚Ì•¶š—ñ".
-       PROCEDURE        DIVISION.
-           DISPLAY F0 WITH NO ADVANCING.
+       PROCEDURE DIVISION.
            STOP RUN.
 _ATEOF
 
 
 { set +x
-$as_echo "$at_srcdir/pic-n.at:14: cobc -m prog.cob"
-at_fn_check_prepare_trace "pic-n.at:14"
-( $at_check_trace; cobc -m prog.cob
+$as_echo "$at_srcdir/program-id.at:67: \${COMPILE} -x prog.cob"
+at_fn_check_prepare_notrace 'a ${...} parameter expansion' "program-id.at:67"
+( $at_check_trace; ${COMPILE} -x prog.cob
 ) >>"$at_stdout" 2>>"$at_stderr" 5>&-
 at_status=$? at_failed=false
 $at_check_filter
 at_fn_diff_devnull "$at_stderr" || at_failed=:
 at_fn_diff_devnull "$at_stdout" || at_failed=:
-at_fn_check_status 0 $at_status "$at_srcdir/pic-n.at:14"
-$at_failed && at_fn_log_failure
-$at_traceon; }
-
-{ set +x
-$as_echo "$at_srcdir/pic-n.at:15: java prog"
-at_fn_check_prepare_trace "pic-n.at:15"
-( $at_check_trace; java prog
-) >>"$at_stdout" 2>>"$at_stderr" 5>&-
-at_status=$? at_failed=false
-$at_check_filter
-at_fn_diff_devnull "$at_stderr" || at_failed=:
-echo >>"$at_stdout"; $as_echo "“ú–{Œê‚Ì•¶š—ñ" | \
-  $at_diff - "$at_stdout" || at_failed=:
-at_fn_check_status 0 $at_status "$at_srcdir/pic-n.at:15"
+at_fn_check_status 0 $at_status "$at_srcdir/program-id.at:67"
 $at_failed && at_fn_log_failure
 $at_traceon; }
 
@@ -3429,8 +3351,8 @@ $at_traceon; }
 read at_status <"$at_status_file"
 #AT_STOP_24
 #AT_START_25
-at_fn_group_banner 25 'pic-n.at:19' \
-  "PIC N Move" "                                     "
+at_fn_group_banner 25 'program-id.at:71' \
+  "PROGRAM-ID NATIONAL 32 character over" "          "
 at_xfail=no
 (
   $as_echo "25. $at_setup_line: testing $at_desc ..."
@@ -3440,41 +3362,26 @@ at_xfail=no
 cat >prog.cob <<'_ATEOF'
 
        IDENTIFICATION   DIVISION.
-       PROGRAM-ID.      prog.
+       PROGRAM-ID.      ‚ ‚¢‚¤‚¦‚¨‚©‚«‚­‚¯‚±‚³‚µ‚·‚¹‚»
+      -‚½‚¿‚Â‚Ä‚Æ‚È‚É‚Ê‚Ë‚Ì‚Í‚Ğ‚Ó‚Ö‚Ù‚Ü‚İ.
        DATA             DIVISION.
-       WORKING-STORAGE  SECTION.
-       01 F0 PIC N(7).
-       PROCEDURE        DIVISION.
-           MOVE "“ú–{Œê‚Ì•¶š—ñ" TO F0.
-           DISPLAY F0 WITH NO ADVANCING.
+       PROCEDURE DIVISION.
            STOP RUN.
 _ATEOF
 
 
 { set +x
-$as_echo "$at_srcdir/pic-n.at:33: cobc -m prog.cob"
-at_fn_check_prepare_trace "pic-n.at:33"
-( $at_check_trace; cobc -m prog.cob
+$as_echo "$at_srcdir/program-id.at:82: \${COMPILE} -x prog.cob"
+at_fn_check_prepare_notrace 'a ${...} parameter expansion' "program-id.at:82"
+( $at_check_trace; ${COMPILE} -x prog.cob
 ) >>"$at_stdout" 2>>"$at_stderr" 5>&-
 at_status=$? at_failed=false
 $at_check_filter
-at_fn_diff_devnull "$at_stderr" || at_failed=:
+echo >>"$at_stderr"; $as_echo "prog.cob:3: Error: User defined name must be less than 32 characters
+" | \
+  $at_diff - "$at_stderr" || at_failed=:
 at_fn_diff_devnull "$at_stdout" || at_failed=:
-at_fn_check_status 0 $at_status "$at_srcdir/pic-n.at:33"
-$at_failed && at_fn_log_failure
-$at_traceon; }
-
-{ set +x
-$as_echo "$at_srcdir/pic-n.at:34: java prog"
-at_fn_check_prepare_trace "pic-n.at:34"
-( $at_check_trace; java prog
-) >>"$at_stdout" 2>>"$at_stderr" 5>&-
-at_status=$? at_failed=false
-$at_check_filter
-at_fn_diff_devnull "$at_stderr" || at_failed=:
-echo >>"$at_stdout"; $as_echo "“ú–{Œê‚Ì•¶š—ñ" | \
-  $at_diff - "$at_stdout" || at_failed=:
-at_fn_check_status 0 $at_status "$at_srcdir/pic-n.at:34"
+at_fn_check_status 1 $at_status "$at_srcdir/program-id.at:82"
 $at_failed && at_fn_log_failure
 $at_traceon; }
 
@@ -3485,8 +3392,8 @@ $at_traceon; }
 read at_status <"$at_status_file"
 #AT_STOP_25
 #AT_START_26
-at_fn_group_banner 26 'pic-n.at:38' \
-  "PIC N Move with trunc" "                          "
+at_fn_group_banner 26 'error-print.at:1' \
+  "undefined not message" "                          "
 at_xfail=no
 (
   $as_echo "26. $at_setup_line: testing $at_desc ..."
@@ -3495,47 +3402,33 @@ at_xfail=no
 
 cat >prog.cob <<'_ATEOF'
 
-       IDENTIFICATION   DIVISION.
-       PROGRAM-ID.      prog.
-       DATA             DIVISION.
-       WORKING-STORAGE  SECTION.
-       01 F0 PIC N(3).
-       PROCEDURE        DIVISION.
-           MOVE "“ú–{Œê‚Ì•¶š—ñ" TO F0.
-           DISPLAY F0 WITH NO ADVANCING.
-           STOP RUN.
+       identification division.
+       program-id. prog.
+       data division.
+       working-storage section.
+       01 wk-01.
+         03 wk-02  pic x(2).
+         03 ‚—‚‹|‚O‚R  redefines wk-02 pic n(2).
+       01 cnt  pic 9(1).
+       procedure division.
+          inspect ‚—‚‹|‚O‚R tallying cnt
+            for characters before initial space.
+          stop run.
 _ATEOF
 
 
-#TODO fix
-#AT_CHECK([cobc -m prog.cob], [0], [],
-#[prog.cob:8: Warning: Value size exceeds data size
-#prog.cob:6: Warning: 'F0' defined here as PIC N(3)
-#])
 { set +x
-$as_echo "$at_srcdir/pic-n.at:57: cobc -m prog.cob"
-at_fn_check_prepare_trace "pic-n.at:57"
-( $at_check_trace; cobc -m prog.cob
+$as_echo "$at_srcdir/error-print.at:18: \${COMPILE} -x prog.cob"
+at_fn_check_prepare_notrace 'a ${...} parameter expansion' "error-print.at:18"
+( $at_check_trace; ${COMPILE} -x prog.cob
 ) >>"$at_stdout" 2>>"$at_stderr" 5>&-
 at_status=$? at_failed=false
 $at_check_filter
-at_fn_diff_devnull "$at_stderr" || at_failed=:
+echo >>"$at_stderr"; $as_echo "prog.cob:8: Error: Size of '‚—‚‹|‚O‚R' larger than size of 'wk-02'
+" | \
+  $at_diff - "$at_stderr" || at_failed=:
 at_fn_diff_devnull "$at_stdout" || at_failed=:
-at_fn_check_status 0 $at_status "$at_srcdir/pic-n.at:57"
-$at_failed && at_fn_log_failure
-$at_traceon; }
-
-{ set +x
-$as_echo "$at_srcdir/pic-n.at:58: java prog"
-at_fn_check_prepare_trace "pic-n.at:58"
-( $at_check_trace; java prog
-) >>"$at_stdout" 2>>"$at_stderr" 5>&-
-at_status=$? at_failed=false
-$at_check_filter
-at_fn_diff_devnull "$at_stderr" || at_failed=:
-echo >>"$at_stdout"; $as_echo "“ú–{Œê" | \
-  $at_diff - "$at_stdout" || at_failed=:
-at_fn_check_status 0 $at_status "$at_srcdir/pic-n.at:58"
+at_fn_check_status 1 $at_status "$at_srcdir/error-print.at:18"
 $at_failed && at_fn_log_failure
 $at_traceon; }
 
@@ -3546,8 +3439,8 @@ $at_traceon; }
 read at_status <"$at_status_file"
 #AT_STOP_26
 #AT_START_27
-at_fn_group_banner 27 'pic-n.at:62' \
-  "PIC N Move with padding by full-width SPC" "      "
+at_fn_group_banner 27 'error-print.at:24' \
+  "Encoding alphanumeric name item" "                "
 at_xfail=no
 (
   $as_echo "27. $at_setup_line: testing $at_desc ..."
@@ -3559,39 +3452,24 @@ cat >prog.cob <<'_ATEOF'
        IDENTIFICATION   DIVISION.
        PROGRAM-ID.      prog.
        DATA             DIVISION.
-       WORKING-STORAGE  SECTION.
-       01 F0 PIC N(9).
-       PROCEDURE        DIVISION.
-           MOVE "“ú–{Œê‚Ì•¶š—ñ" TO F0.
-           DISPLAY F0 WITH NO ADVANCING.
+       PROCEDURE DIVISION.
+           DISPLAY A___82A0___A.
            STOP RUN.
 _ATEOF
 
 
 { set +x
-$as_echo "$at_srcdir/pic-n.at:76: cobc -m prog.cob"
-at_fn_check_prepare_trace "pic-n.at:76"
-( $at_check_trace; cobc -m prog.cob
+$as_echo "$at_srcdir/error-print.at:35: \${COMPILE} -x prog.cob"
+at_fn_check_prepare_notrace 'a ${...} parameter expansion' "error-print.at:35"
+( $at_check_trace; ${COMPILE} -x prog.cob
 ) >>"$at_stdout" 2>>"$at_stderr" 5>&-
 at_status=$? at_failed=false
 $at_check_filter
-at_fn_diff_devnull "$at_stderr" || at_failed=:
+echo >>"$at_stderr"; $as_echo "prog.cob:6: Error: 'A___82A0___A' undefined
+" | \
+  $at_diff - "$at_stderr" || at_failed=:
 at_fn_diff_devnull "$at_stdout" || at_failed=:
-at_fn_check_status 0 $at_status "$at_srcdir/pic-n.at:76"
-$at_failed && at_fn_log_failure
-$at_traceon; }
-
-{ set +x
-$as_echo "$at_srcdir/pic-n.at:77: java prog"
-at_fn_check_prepare_trace "pic-n.at:77"
-( $at_check_trace; java prog
-) >>"$at_stdout" 2>>"$at_stderr" 5>&-
-at_status=$? at_failed=false
-$at_check_filter
-at_fn_diff_devnull "$at_stderr" || at_failed=:
-echo >>"$at_stdout"; $as_echo "“ú–{Œê‚Ì•¶š—ñ@@" | \
-  $at_diff - "$at_stdout" || at_failed=:
-at_fn_check_status 0 $at_status "$at_srcdir/pic-n.at:77"
+at_fn_check_status 1 $at_status "$at_srcdir/error-print.at:35"
 $at_failed && at_fn_log_failure
 $at_traceon; }
 
@@ -3602,8 +3480,8 @@ $at_traceon; }
 read at_status <"$at_status_file"
 #AT_STOP_27
 #AT_START_28
-at_fn_group_banner 28 'pic-n.at:81' \
-  "PIC N Move with justify" "                        "
+at_fn_group_banner 28 'error-print.at:41' \
+  "Encoding national name item" "                    "
 at_xfail=no
 (
   $as_echo "28. $at_setup_line: testing $at_desc ..."
@@ -3615,39 +3493,24 @@ cat >prog.cob <<'_ATEOF'
        IDENTIFICATION   DIVISION.
        PROGRAM-ID.      prog.
        DATA             DIVISION.
-       WORKING-STORAGE  SECTION.
-       01 F0 PIC N(9) JUSTIFIED RIGHT.
-       PROCEDURE        DIVISION.
-           MOVE "“ú–{Œê‚Ì•¶š—ñ" TO F0.
-           DISPLAY F0 WITH NO ADVANCING.
+       PROCEDURE DIVISION.
+           DISPLAY A___‚ ___A.
            STOP RUN.
 _ATEOF
 
 
 { set +x
-$as_echo "$at_srcdir/pic-n.at:95: cobc -m prog.cob"
-at_fn_check_prepare_trace "pic-n.at:95"
-( $at_check_trace; cobc -m prog.cob
+$as_echo "$at_srcdir/error-print.at:52: \${COMPILE} -x prog.cob"
+at_fn_check_prepare_notrace 'a ${...} parameter expansion' "error-print.at:52"
+( $at_check_trace; ${COMPILE} -x prog.cob
 ) >>"$at_stdout" 2>>"$at_stderr" 5>&-
 at_status=$? at_failed=false
 $at_check_filter
-at_fn_diff_devnull "$at_stderr" || at_failed=:
+echo >>"$at_stderr"; $as_echo "prog.cob:6: Error: 'A___‚ ___A' undefined
+" | \
+  $at_diff - "$at_stderr" || at_failed=:
 at_fn_diff_devnull "$at_stdout" || at_failed=:
-at_fn_check_status 0 $at_status "$at_srcdir/pic-n.at:95"
-$at_failed && at_fn_log_failure
-$at_traceon; }
-
-{ set +x
-$as_echo "$at_srcdir/pic-n.at:96: java prog"
-at_fn_check_prepare_trace "pic-n.at:96"
-( $at_check_trace; java prog
-) >>"$at_stdout" 2>>"$at_stderr" 5>&-
-at_status=$? at_failed=false
-$at_check_filter
-at_fn_diff_devnull "$at_stderr" || at_failed=:
-echo >>"$at_stdout"; $as_echo "@@“ú–{Œê‚Ì•¶š—ñ" | \
-  $at_diff - "$at_stdout" || at_failed=:
-at_fn_check_status 0 $at_status "$at_srcdir/pic-n.at:96"
+at_fn_check_status 1 $at_status "$at_srcdir/error-print.at:52"
 $at_failed && at_fn_log_failure
 $at_traceon; }
 
@@ -3658,8 +3521,8 @@ $at_traceon; }
 read at_status <"$at_status_file"
 #AT_STOP_28
 #AT_START_29
-at_fn_group_banner 29 'pic-n.at:100' \
-  "PIC N EDITED w/ VALUE" "                          "
+at_fn_group_banner 29 'error-print.at:58' \
+  "Decoding national section name" "                 "
 at_xfail=no
 (
   $as_echo "29. $at_setup_line: testing $at_desc ..."
@@ -3671,38 +3534,29 @@ cat >prog.cob <<'_ATEOF'
        IDENTIFICATION   DIVISION.
        PROGRAM-ID.      prog.
        DATA             DIVISION.
-       WORKING-STORAGE  SECTION.
-       01 F0 PIC NN/NNBNN0 VALUE '“ú–{^’†‘@•¶š‚O'.
        PROCEDURE        DIVISION.
-           DISPLAY F0 WITH NO ADVANCING.
-           STOP RUN.
+       ƒeƒXƒg SECTION.
+           MOVE 1 TO €–Ú1.
+       ƒeƒXƒg’i—.
+           MOVE 1 TO €–Ú2.
 _ATEOF
 
 
 { set +x
-$as_echo "$at_srcdir/pic-n.at:113: cobc -m prog.cob"
-at_fn_check_prepare_trace "pic-n.at:113"
-( $at_check_trace; cobc -m prog.cob
+$as_echo "$at_srcdir/error-print.at:71: \${COMPILE} -x prog.cob"
+at_fn_check_prepare_notrace 'a ${...} parameter expansion' "error-print.at:71"
+( $at_check_trace; ${COMPILE} -x prog.cob
 ) >>"$at_stdout" 2>>"$at_stderr" 5>&-
 at_status=$? at_failed=false
 $at_check_filter
-at_fn_diff_devnull "$at_stderr" || at_failed=:
+echo >>"$at_stderr"; $as_echo "prog.cob: In section 'ƒeƒXƒg':
+prog.cob:7: Error: '€–Ú1' undefined
+prog.cob: In paragraph 'ƒeƒXƒg’i—':
+prog.cob:9: Error: '€–Ú2' undefined
+" | \
+  $at_diff - "$at_stderr" || at_failed=:
 at_fn_diff_devnull "$at_stdout" || at_failed=:
-at_fn_check_status 0 $at_status "$at_srcdir/pic-n.at:113"
-$at_failed && at_fn_log_failure
-$at_traceon; }
-
-{ set +x
-$as_echo "$at_srcdir/pic-n.at:114: java prog"
-at_fn_check_prepare_trace "pic-n.at:114"
-( $at_check_trace; java prog
-) >>"$at_stdout" 2>>"$at_stderr" 5>&-
-at_status=$? at_failed=false
-$at_check_filter
-at_fn_diff_devnull "$at_stderr" || at_failed=:
-echo >>"$at_stdout"; $as_echo "“ú–{^’†‘@•¶š‚O" | \
-  $at_diff - "$at_stdout" || at_failed=:
-at_fn_check_status 0 $at_status "$at_srcdir/pic-n.at:114"
+at_fn_check_status 1 $at_status "$at_srcdir/error-print.at:71"
 $at_failed && at_fn_log_failure
 $at_traceon; }
 
@@ -3713,8 +3567,8 @@ $at_traceon; }
 read at_status <"$at_status_file"
 #AT_STOP_29
 #AT_START_30
-at_fn_group_banner 30 'pic-n.at:118' \
-  "INITIALIZE PIC N EDITED" "                        "
+at_fn_group_banner 30 'limits.at:1' \
+  "Field length limit PIC A/VALID" "                 "
 at_xfail=no
 (
   $as_echo "30. $at_setup_line: testing $at_desc ..."
@@ -3727,39 +3581,22 @@ cat >prog.cob <<'_ATEOF'
        PROGRAM-ID.      prog.
        DATA             DIVISION.
        WORKING-STORAGE  SECTION.
-       01 F0 PIC NN/NNBNN0 VALUE '“ú–{^’†‘@•¶š‚O'.
+       01 VALID-X       PIC A(16777216).
        PROCEDURE        DIVISION.
-           MOVE "t‰ÄH“~Š¦’g" TO F0.
-           INITIALIZE F0.
-           DISPLAY F0 WITH NO ADVANCING.
            STOP RUN.
 _ATEOF
 
 
 { set +x
-$as_echo "$at_srcdir/pic-n.at:133: cobc -m prog.cob"
-at_fn_check_prepare_trace "pic-n.at:133"
+$as_echo "$at_srcdir/limits.at:13: cobc -m prog.cob"
+at_fn_check_prepare_trace "limits.at:13"
 ( $at_check_trace; cobc -m prog.cob
 ) >>"$at_stdout" 2>>"$at_stderr" 5>&-
 at_status=$? at_failed=false
 $at_check_filter
 at_fn_diff_devnull "$at_stderr" || at_failed=:
 at_fn_diff_devnull "$at_stdout" || at_failed=:
-at_fn_check_status 0 $at_status "$at_srcdir/pic-n.at:133"
-$at_failed && at_fn_log_failure
-$at_traceon; }
-
-{ set +x
-$as_echo "$at_srcdir/pic-n.at:134: java prog"
-at_fn_check_prepare_trace "pic-n.at:134"
-( $at_check_trace; java prog
-) >>"$at_stdout" 2>>"$at_stderr" 5>&-
-at_status=$? at_failed=false
-$at_check_filter
-at_fn_diff_devnull "$at_stderr" || at_failed=:
-echo >>"$at_stdout"; $as_echo "@@^@@@@@‚O" | \
-  $at_diff - "$at_stdout" || at_failed=:
-at_fn_check_status 0 $at_status "$at_srcdir/pic-n.at:134"
+at_fn_check_status 0 $at_status "$at_srcdir/limits.at:13"
 $at_failed && at_fn_log_failure
 $at_traceon; }
 
@@ -3770,8 +3607,8 @@ $at_traceon; }
 read at_status <"$at_status_file"
 #AT_STOP_30
 #AT_START_31
-at_fn_group_banner 31 'pic-n.at:138' \
-  "INITIALIZE PIC N EDITED TO VALUE" "               "
+at_fn_group_banner 31 'limits.at:17' \
+  "Field length limit PIC A/TOO LONG" "              "
 at_xfail=no
 (
   $as_echo "31. $at_setup_line: testing $at_desc ..."
@@ -3784,39 +3621,24 @@ cat >prog.cob <<'_ATEOF'
        PROGRAM-ID.      prog.
        DATA             DIVISION.
        WORKING-STORAGE  SECTION.
-       01 F0 PIC NN/NNBNN0 VALUE '“ú–{^’†‘@•¶š‚O'.
+       01 VALID-X       PIC A(16777217).
        PROCEDURE        DIVISION.
-           MOVE "t‰ÄH“~Š¦’g" TO F0.
-           INITIALIZE F0 NATIONAL TO VALUE.
-           DISPLAY F0 WITH NO ADVANCING.
            STOP RUN.
 _ATEOF
 
 
 { set +x
-$as_echo "$at_srcdir/pic-n.at:153: cobc -m prog.cob"
-at_fn_check_prepare_trace "pic-n.at:153"
+$as_echo "$at_srcdir/limits.at:29: cobc -m prog.cob"
+at_fn_check_prepare_trace "limits.at:29"
 ( $at_check_trace; cobc -m prog.cob
 ) >>"$at_stdout" 2>>"$at_stderr" 5>&-
 at_status=$? at_failed=false
 $at_check_filter
-at_fn_diff_devnull "$at_stderr" || at_failed=:
+echo >>"$at_stderr"; $as_echo "prog.cob:6: Error: Alphabetic field cannot be larger than 16777216 digits
+" | \
+  $at_diff - "$at_stderr" || at_failed=:
 at_fn_diff_devnull "$at_stdout" || at_failed=:
-at_fn_check_status 0 $at_status "$at_srcdir/pic-n.at:153"
-$at_failed && at_fn_log_failure
-$at_traceon; }
-
-{ set +x
-$as_echo "$at_srcdir/pic-n.at:154: java prog"
-at_fn_check_prepare_trace "pic-n.at:154"
-( $at_check_trace; java prog
-) >>"$at_stdout" 2>>"$at_stderr" 5>&-
-at_status=$? at_failed=false
-$at_check_filter
-at_fn_diff_devnull "$at_stderr" || at_failed=:
-echo >>"$at_stdout"; $as_echo "“ú–{^’†‘@•¶š‚O" | \
-  $at_diff - "$at_stdout" || at_failed=:
-at_fn_check_status 0 $at_status "$at_srcdir/pic-n.at:154"
+at_fn_check_status 1 $at_status "$at_srcdir/limits.at:29"
 $at_failed && at_fn_log_failure
 $at_traceon; }
 
@@ -3827,8 +3649,8 @@ $at_traceon; }
 read at_status <"$at_status_file"
 #AT_STOP_31
 #AT_START_32
-at_fn_group_banner 32 'pic-n.at:158' \
-  "PIC N Move to NATIONAL EDITED" "                  "
+at_fn_group_banner 32 'limits.at:35' \
+  "Field length limit PIC X/VALID" "                 "
 at_xfail=no
 (
   $as_echo "32. $at_setup_line: testing $at_desc ..."
@@ -3841,38 +3663,22 @@ cat >prog.cob <<'_ATEOF'
        PROGRAM-ID.      prog.
        DATA             DIVISION.
        WORKING-STORAGE  SECTION.
-       01 F0 PIC NN/NNBNN0.
+       01 VALID-X       PIC X(16777216).
        PROCEDURE        DIVISION.
-           MOVE "“ú–{’†‘•¶š" TO F0.
-           DISPLAY F0 WITH NO ADVANCING.
            STOP RUN.
 _ATEOF
 
 
 { set +x
-$as_echo "$at_srcdir/pic-n.at:172: cobc -m prog.cob"
-at_fn_check_prepare_trace "pic-n.at:172"
+$as_echo "$at_srcdir/limits.at:47: cobc -m prog.cob"
+at_fn_check_prepare_trace "limits.at:47"
 ( $at_check_trace; cobc -m prog.cob
 ) >>"$at_stdout" 2>>"$at_stderr" 5>&-
 at_status=$? at_failed=false
 $at_check_filter
 at_fn_diff_devnull "$at_stderr" || at_failed=:
 at_fn_diff_devnull "$at_stdout" || at_failed=:
-at_fn_check_status 0 $at_status "$at_srcdir/pic-n.at:172"
-$at_failed && at_fn_log_failure
-$at_traceon; }
-
-{ set +x
-$as_echo "$at_srcdir/pic-n.at:173: java prog"
-at_fn_check_prepare_trace "pic-n.at:173"
-( $at_check_trace; java prog
-) >>"$at_stdout" 2>>"$at_stderr" 5>&-
-at_status=$? at_failed=false
-$at_check_filter
-at_fn_diff_devnull "$at_stderr" || at_failed=:
-echo >>"$at_stdout"; $as_echo "“ú–{^’†‘@•¶š‚O" | \
-  $at_diff - "$at_stdout" || at_failed=:
-at_fn_check_status 0 $at_status "$at_srcdir/pic-n.at:173"
+at_fn_check_status 0 $at_status "$at_srcdir/limits.at:47"
 $at_failed && at_fn_log_failure
 $at_traceon; }
 
@@ -3883,8 +3689,8 @@ $at_traceon; }
 read at_status <"$at_status_file"
 #AT_STOP_32
 #AT_START_33
-at_fn_group_banner 33 'pic-n.at:177' \
-  "PIC N Move with half-width alnum conv." "         "
+at_fn_group_banner 33 'limits.at:51' \
+  "Field length limit PIC X/TOO LONG" "              "
 at_xfail=no
 (
   $as_echo "33. $at_setup_line: testing $at_desc ..."
@@ -3897,38 +3703,24 @@ cat >prog.cob <<'_ATEOF'
        PROGRAM-ID.      prog.
        DATA             DIVISION.
        WORKING-STORAGE  SECTION.
-       01 F0 PIC N(7).
+       01 VALID-X       PIC X(16777217).
        PROCEDURE        DIVISION.
-           MOVE "ABC0123" TO F0.
-           DISPLAY F0 WITH NO ADVANCING.
            STOP RUN.
 _ATEOF
 
 
 { set +x
-$as_echo "$at_srcdir/pic-n.at:191: cobc -m prog.cob"
-at_fn_check_prepare_trace "pic-n.at:191"
+$as_echo "$at_srcdir/limits.at:63: cobc -m prog.cob"
+at_fn_check_prepare_trace "limits.at:63"
 ( $at_check_trace; cobc -m prog.cob
 ) >>"$at_stdout" 2>>"$at_stderr" 5>&-
 at_status=$? at_failed=false
 $at_check_filter
-at_fn_diff_devnull "$at_stderr" || at_failed=:
+echo >>"$at_stderr"; $as_echo "prog.cob:6: Error: AlphaNumeric field cannot be larger than 16777216 digits
+" | \
+  $at_diff - "$at_stderr" || at_failed=:
 at_fn_diff_devnull "$at_stdout" || at_failed=:
-at_fn_check_status 0 $at_status "$at_srcdir/pic-n.at:191"
-$at_failed && at_fn_log_failure
-$at_traceon; }
-
-{ set +x
-$as_echo "$at_srcdir/pic-n.at:192: java prog"
-at_fn_check_prepare_trace "pic-n.at:192"
-( $at_check_trace; java prog
-) >>"$at_stdout" 2>>"$at_stderr" 5>&-
-at_status=$? at_failed=false
-$at_check_filter
-at_fn_diff_devnull "$at_stderr" || at_failed=:
-echo >>"$at_stdout"; $as_echo "‚\`‚a‚b‚O‚P‚Q‚R" | \
-  $at_diff - "$at_stdout" || at_failed=:
-at_fn_check_status 0 $at_status "$at_srcdir/pic-n.at:192"
+at_fn_check_status 1 $at_status "$at_srcdir/limits.at:63"
 $at_failed && at_fn_log_failure
 $at_traceon; }
 
@@ -3939,8 +3731,8 @@ $at_traceon; }
 read at_status <"$at_status_file"
 #AT_STOP_33
 #AT_START_34
-at_fn_group_banner 34 'pic-n.at:196' \
-  "PIC N Move with half-width kana conv." "          "
+at_fn_group_banner 34 'limits.at:69' \
+  "Field length limit PIC B9/VALID" "                "
 at_xfail=no
 (
   $as_echo "34. $at_setup_line: testing $at_desc ..."
@@ -3953,39 +3745,22 @@ cat >prog.cob <<'_ATEOF'
        PROGRAM-ID.      prog.
        DATA             DIVISION.
        WORKING-STORAGE  SECTION.
-       01 F0 PIC N(7).
+       01 VALID-X       PIC B9(159).
        PROCEDURE        DIVISION.
-           MOVE "ºÒÀŞº°Ë°" TO F0.
-           DISPLAY F0 WITH NO ADVANCING.
            STOP RUN.
 _ATEOF
 
 
 { set +x
-$as_echo "$at_srcdir/pic-n.at:210: cobc -m prog.cob"
-at_fn_check_prepare_trace "pic-n.at:210"
+$as_echo "$at_srcdir/limits.at:81: cobc -m prog.cob"
+at_fn_check_prepare_trace "limits.at:81"
 ( $at_check_trace; cobc -m prog.cob
 ) >>"$at_stdout" 2>>"$at_stderr" 5>&-
 at_status=$? at_failed=false
 $at_check_filter
 at_fn_diff_devnull "$at_stderr" || at_failed=:
 at_fn_diff_devnull "$at_stdout" || at_failed=:
-at_fn_check_status 0 $at_status "$at_srcdir/pic-n.at:210"
-$at_failed && at_fn_log_failure
-$at_traceon; }
-
-{ set +x
-$as_echo "$at_srcdir/pic-n.at:211: java prog | od -tx1 -An | sed -e 's/  */ /g' -e 's/ *\$//'"
-at_fn_check_prepare_notrace 'a shell pipeline' "pic-n.at:211"
-( $at_check_trace; java prog | od -tx1 -An | sed -e 's/  */ /g' -e 's/ *$//'
-) >>"$at_stdout" 2>>"$at_stderr" 5>&-
-at_status=$? at_failed=false
-$at_check_filter
-at_fn_diff_devnull "$at_stderr" || at_failed=:
-echo >>"$at_stdout"; $as_echo " 83 52 83 81 83 5f 83 52 81 5b 83 71 81 5b
-" | \
-  $at_diff - "$at_stdout" || at_failed=:
-at_fn_check_status 0 $at_status "$at_srcdir/pic-n.at:211"
+at_fn_check_status 0 $at_status "$at_srcdir/limits.at:81"
 $at_failed && at_fn_log_failure
 $at_traceon; }
 
@@ -3996,8 +3771,8 @@ $at_traceon; }
 read at_status <"$at_status_file"
 #AT_STOP_34
 #AT_START_35
-at_fn_group_banner 35 'pic-n.at:216' \
-  "PIC N Ref mod(n:)" "                              "
+at_fn_group_banner 35 'limits.at:85' \
+  "Field length limit PIC B9/TOO LONG" "             "
 at_xfail=no
 (
   $as_echo "35. $at_setup_line: testing $at_desc ..."
@@ -4010,38 +3785,24 @@ cat >prog.cob <<'_ATEOF'
        PROGRAM-ID.      prog.
        DATA             DIVISION.
        WORKING-STORAGE  SECTION.
-       01 F0 PIC N(7).
+       01 VALID-X       PIC B9(160).
        PROCEDURE        DIVISION.
-           MOVE "“ú–{Œê‚Ì•¶š—ñ" TO F0.
-           DISPLAY F0(5:) WITH NO ADVANCING.
            STOP RUN.
 _ATEOF
 
 
 { set +x
-$as_echo "$at_srcdir/pic-n.at:230: cobc -m prog.cob"
-at_fn_check_prepare_trace "pic-n.at:230"
+$as_echo "$at_srcdir/limits.at:97: cobc -m prog.cob"
+at_fn_check_prepare_trace "limits.at:97"
 ( $at_check_trace; cobc -m prog.cob
 ) >>"$at_stdout" 2>>"$at_stderr" 5>&-
 at_status=$? at_failed=false
 $at_check_filter
-at_fn_diff_devnull "$at_stderr" || at_failed=:
+echo >>"$at_stderr"; $as_echo "prog.cob:6: Error: NumericEdit field cannot be larger than 160 digits
+" | \
+  $at_diff - "$at_stderr" || at_failed=:
 at_fn_diff_devnull "$at_stdout" || at_failed=:
-at_fn_check_status 0 $at_status "$at_srcdir/pic-n.at:230"
-$at_failed && at_fn_log_failure
-$at_traceon; }
-
-{ set +x
-$as_echo "$at_srcdir/pic-n.at:231: java prog"
-at_fn_check_prepare_trace "pic-n.at:231"
-( $at_check_trace; java prog
-) >>"$at_stdout" 2>>"$at_stderr" 5>&-
-at_status=$? at_failed=false
-$at_check_filter
-at_fn_diff_devnull "$at_stderr" || at_failed=:
-echo >>"$at_stdout"; $as_echo "•¶š—ñ" | \
-  $at_diff - "$at_stdout" || at_failed=:
-at_fn_check_status 0 $at_status "$at_srcdir/pic-n.at:231"
+at_fn_check_status 1 $at_status "$at_srcdir/limits.at:97"
 $at_failed && at_fn_log_failure
 $at_traceon; }
 
@@ -4052,8 +3813,8 @@ $at_traceon; }
 read at_status <"$at_status_file"
 #AT_STOP_35
 #AT_START_36
-at_fn_group_banner 36 'pic-n.at:235' \
-  "PIC N Ref mod(n:m)" "                             "
+at_fn_group_banner 36 'limits.at:103' \
+  "Field length limit PIC B/VALID" "                 "
 at_xfail=no
 (
   $as_echo "36. $at_setup_line: testing $at_desc ..."
@@ -4066,38 +3827,22 @@ cat >prog.cob <<'_ATEOF'
        PROGRAM-ID.      prog.
        DATA             DIVISION.
        WORKING-STORAGE  SECTION.
-       01 F0 PIC N(7).
+       01 VALID-X       PIC B(16777216).
        PROCEDURE        DIVISION.
-           MOVE "“ú–{Œê‚Ì•¶š—ñ" TO F0.
-           DISPLAY F0(5:2) WITH NO ADVANCING.
            STOP RUN.
 _ATEOF
 
 
 { set +x
-$as_echo "$at_srcdir/pic-n.at:249: cobc -m prog.cob"
-at_fn_check_prepare_trace "pic-n.at:249"
+$as_echo "$at_srcdir/limits.at:115: cobc -m prog.cob"
+at_fn_check_prepare_trace "limits.at:115"
 ( $at_check_trace; cobc -m prog.cob
 ) >>"$at_stdout" 2>>"$at_stderr" 5>&-
 at_status=$? at_failed=false
 $at_check_filter
 at_fn_diff_devnull "$at_stderr" || at_failed=:
 at_fn_diff_devnull "$at_stdout" || at_failed=:
-at_fn_check_status 0 $at_status "$at_srcdir/pic-n.at:249"
-$at_failed && at_fn_log_failure
-$at_traceon; }
-
-{ set +x
-$as_echo "$at_srcdir/pic-n.at:250: java prog"
-at_fn_check_prepare_trace "pic-n.at:250"
-( $at_check_trace; java prog
-) >>"$at_stdout" 2>>"$at_stderr" 5>&-
-at_status=$? at_failed=false
-$at_check_filter
-at_fn_diff_devnull "$at_stderr" || at_failed=:
-echo >>"$at_stdout"; $as_echo "•¶š" | \
-  $at_diff - "$at_stdout" || at_failed=:
-at_fn_check_status 0 $at_status "$at_srcdir/pic-n.at:250"
+at_fn_check_status 0 $at_status "$at_srcdir/limits.at:115"
 $at_failed && at_fn_log_failure
 $at_traceon; }
 
@@ -4108,8 +3853,8 @@ $at_traceon; }
 read at_status <"$at_status_file"
 #AT_STOP_36
 #AT_START_37
-at_fn_group_banner 37 'pic-n.at:254' \
-  "PIC N STRING by size" "                           "
+at_fn_group_banner 37 'limits.at:119' \
+  "Field length limit PIC B/TOO LONG" "              "
 at_xfail=no
 (
   $as_echo "37. $at_setup_line: testing $at_desc ..."
@@ -4122,42 +3867,24 @@ cat >prog.cob <<'_ATEOF'
        PROGRAM-ID.      prog.
        DATA             DIVISION.
        WORKING-STORAGE  SECTION.
-       01 F0 PIC N(2)  VALUE "„‚Ì".
-       01 F1 PIC N(3)  VALUE "–¼‘O‚Í".
-       01 F2 PIC N(5) VALUE "‚ ‚è‚Ü‚¹‚ñ".
-       01 FF PIC N(10).
+       01 VALID-X       PIC B(16777217).
        PROCEDURE        DIVISION.
-           STRING F0 F1 F2 DELIMITED BY SIZE
-             INTO FF.
-           DISPLAY FF WITH NO ADVANCING.
            STOP RUN.
 _ATEOF
 
 
 { set +x
-$as_echo "$at_srcdir/pic-n.at:272: cobc -m prog.cob"
-at_fn_check_prepare_trace "pic-n.at:272"
+$as_echo "$at_srcdir/limits.at:131: cobc -m prog.cob"
+at_fn_check_prepare_trace "limits.at:131"
 ( $at_check_trace; cobc -m prog.cob
 ) >>"$at_stdout" 2>>"$at_stderr" 5>&-
 at_status=$? at_failed=false
 $at_check_filter
-at_fn_diff_devnull "$at_stderr" || at_failed=:
+echo >>"$at_stderr"; $as_echo "prog.cob:6: Error: AlphaNumericEdit field cannot be larger than 16777216 digits
+" | \
+  $at_diff - "$at_stderr" || at_failed=:
 at_fn_diff_devnull "$at_stdout" || at_failed=:
-at_fn_check_status 0 $at_status "$at_srcdir/pic-n.at:272"
-$at_failed && at_fn_log_failure
-$at_traceon; }
-
-{ set +x
-$as_echo "$at_srcdir/pic-n.at:273: java prog"
-at_fn_check_prepare_trace "pic-n.at:273"
-( $at_check_trace; java prog
-) >>"$at_stdout" 2>>"$at_stderr" 5>&-
-at_status=$? at_failed=false
-$at_check_filter
-at_fn_diff_devnull "$at_stderr" || at_failed=:
-echo >>"$at_stdout"; $as_echo "„‚Ì–¼‘O‚Í‚ ‚è‚Ü‚¹‚ñ" | \
-  $at_diff - "$at_stdout" || at_failed=:
-at_fn_check_status 0 $at_status "$at_srcdir/pic-n.at:273"
+at_fn_check_status 1 $at_status "$at_srcdir/limits.at:131"
 $at_failed && at_fn_log_failure
 $at_traceon; }
 
@@ -4168,8 +3895,8 @@ $at_traceon; }
 read at_status <"$at_status_file"
 #AT_STOP_37
 #AT_START_38
-at_fn_group_banner 38 'pic-n.at:277' \
-  "PIC N STRING with delimiter (causes warn)" "      "
+at_fn_group_banner 38 'limits.at:137' \
+  "Field length limit PIC BA/VALID" "                "
 at_xfail=no
 (
   $as_echo "38. $at_setup_line: testing $at_desc ..."
@@ -4182,42 +3909,22 @@ cat >prog.cob <<'_ATEOF'
        PROGRAM-ID.      prog.
        DATA             DIVISION.
        WORKING-STORAGE  SECTION.
-       01 F0 PIC N(2)  VALUE "„‚Ì".
-       01 F1 PIC N(4)  VALUE "–¼‘O¢‚Í".
-       01 F2 PIC N(6) VALUE "¢‚ ‚è‚Ü‚¹‚ñ".
-       01 FF PIC N(4).
+       01 VALID-X       PIC BA(16777215).
        PROCEDURE        DIVISION.
-           STRING F0 F1 F2 DELIMITED BY "¢"
-             INTO FF.
-           DISPLAY FF WITH NO ADVANCING.
            STOP RUN.
 _ATEOF
 
 
 { set +x
-$as_echo "$at_srcdir/pic-n.at:295: cobc -m prog.cob"
-at_fn_check_prepare_trace "pic-n.at:295"
+$as_echo "$at_srcdir/limits.at:149: cobc -m prog.cob"
+at_fn_check_prepare_trace "limits.at:149"
 ( $at_check_trace; cobc -m prog.cob
 ) >>"$at_stdout" 2>>"$at_stderr" 5>&-
 at_status=$? at_failed=false
 $at_check_filter
 at_fn_diff_devnull "$at_stderr" || at_failed=:
 at_fn_diff_devnull "$at_stdout" || at_failed=:
-at_fn_check_status 0 $at_status "$at_srcdir/pic-n.at:295"
-$at_failed && at_fn_log_failure
-$at_traceon; }
-
-{ set +x
-$as_echo "$at_srcdir/pic-n.at:296: java prog"
-at_fn_check_prepare_trace "pic-n.at:296"
-( $at_check_trace; java prog
-) >>"$at_stdout" 2>>"$at_stderr" 5>&-
-at_status=$? at_failed=false
-$at_check_filter
-at_fn_diff_devnull "$at_stderr" || at_failed=:
-echo >>"$at_stdout"; $as_echo "„‚Ì–¼‘O" | \
-  $at_diff - "$at_stdout" || at_failed=:
-at_fn_check_status 0 $at_status "$at_srcdir/pic-n.at:296"
+at_fn_check_status 0 $at_status "$at_srcdir/limits.at:149"
 $at_failed && at_fn_log_failure
 $at_traceon; }
 
@@ -4228,8 +3935,8 @@ $at_traceon; }
 read at_status <"$at_status_file"
 #AT_STOP_38
 #AT_START_39
-at_fn_group_banner 39 'pic-n.at:300' \
-  "PIC N STRING with NATIONAL delimiter" "           "
+at_fn_group_banner 39 'limits.at:153' \
+  "Field length limit PIC BA/TOO LONG" "             "
 at_xfail=no
 (
   $as_echo "39. $at_setup_line: testing $at_desc ..."
@@ -4242,42 +3949,24 @@ cat >prog.cob <<'_ATEOF'
        PROGRAM-ID.      prog.
        DATA             DIVISION.
        WORKING-STORAGE  SECTION.
-       01 F0 PIC N(2)  VALUE "„‚Ì".
-       01 F1 PIC N(4)  VALUE "–¼‘O¢‚Í".
-       01 F2 PIC N(6) VALUE "¢‚ ‚è‚Ü‚¹‚ñ".
-       01 FF PIC N(4).
+       01 VALID-X       PIC BA(16777216).
        PROCEDURE        DIVISION.
-           STRING F0 F1 F2 DELIMITED BY N"¢"
-             INTO FF.
-           DISPLAY FF WITH NO ADVANCING.
            STOP RUN.
 _ATEOF
 
 
 { set +x
-$as_echo "$at_srcdir/pic-n.at:318: cobc -m prog.cob"
-at_fn_check_prepare_trace "pic-n.at:318"
+$as_echo "$at_srcdir/limits.at:165: cobc -m prog.cob"
+at_fn_check_prepare_trace "limits.at:165"
 ( $at_check_trace; cobc -m prog.cob
 ) >>"$at_stdout" 2>>"$at_stderr" 5>&-
 at_status=$? at_failed=false
 $at_check_filter
-at_fn_diff_devnull "$at_stderr" || at_failed=:
+echo >>"$at_stderr"; $as_echo "prog.cob:6: Error: AlphaNumericEdit field cannot be larger than 16777216 digits
+" | \
+  $at_diff - "$at_stderr" || at_failed=:
 at_fn_diff_devnull "$at_stdout" || at_failed=:
-at_fn_check_status 0 $at_status "$at_srcdir/pic-n.at:318"
-$at_failed && at_fn_log_failure
-$at_traceon; }
-
-{ set +x
-$as_echo "$at_srcdir/pic-n.at:319: java prog"
-at_fn_check_prepare_trace "pic-n.at:319"
-( $at_check_trace; java prog
-) >>"$at_stdout" 2>>"$at_stderr" 5>&-
-at_status=$? at_failed=false
-$at_check_filter
-at_fn_diff_devnull "$at_stderr" || at_failed=:
-echo >>"$at_stdout"; $as_echo "„‚Ì–¼‘O" | \
-  $at_diff - "$at_stdout" || at_failed=:
-at_fn_check_status 0 $at_status "$at_srcdir/pic-n.at:319"
+at_fn_check_status 1 $at_status "$at_srcdir/limits.at:165"
 $at_failed && at_fn_log_failure
 $at_traceon; }
 
@@ -4288,8 +3977,8 @@ $at_traceon; }
 read at_status <"$at_status_file"
 #AT_STOP_39
 #AT_START_40
-at_fn_group_banner 40 'pic-n.at:323' \
-  "PIC N STRING with pointer" "                      "
+at_fn_group_banner 40 'limits.at:171' \
+  "Field length limit PIC BX/VALID" "                "
 at_xfail=no
 (
   $as_echo "40. $at_setup_line: testing $at_desc ..."
@@ -4302,43 +3991,22 @@ cat >prog.cob <<'_ATEOF'
        PROGRAM-ID.      prog.
        DATA             DIVISION.
        WORKING-STORAGE  SECTION.
-       01 F0 PIC N(2)  VALUE "„‚Ì".
-       01 F1 PIC N(3)  VALUE "–¼‘O‚Í".
-       01 F2 PIC N(5)  VALUE "‚ ‚è‚Ü‚¹‚ñ".
-       01 FF PIC N(10) VALUE "Œ¾‚¦‚Ü‚¹‚ñ›¦¢¡~".
-       01 FP PIC 99    VALUE 6.
+       01 VALID-X       PIC BX(16777215).
        PROCEDURE        DIVISION.
-           STRING F0 F1 F2 DELIMITED BY SIZE
-             INTO FF WITH POINTER FP.
-           DISPLAY FF WITH NO ADVANCING.
            STOP RUN.
 _ATEOF
 
 
 { set +x
-$as_echo "$at_srcdir/pic-n.at:342: cobc -m prog.cob"
-at_fn_check_prepare_trace "pic-n.at:342"
+$as_echo "$at_srcdir/limits.at:183: cobc -m prog.cob"
+at_fn_check_prepare_trace "limits.at:183"
 ( $at_check_trace; cobc -m prog.cob
 ) >>"$at_stdout" 2>>"$at_stderr" 5>&-
 at_status=$? at_failed=false
 $at_check_filter
 at_fn_diff_devnull "$at_stderr" || at_failed=:
 at_fn_diff_devnull "$at_stdout" || at_failed=:
-at_fn_check_status 0 $at_status "$at_srcdir/pic-n.at:342"
-$at_failed && at_fn_log_failure
-$at_traceon; }
-
-{ set +x
-$as_echo "$at_srcdir/pic-n.at:343: java prog"
-at_fn_check_prepare_trace "pic-n.at:343"
-( $at_check_trace; java prog
-) >>"$at_stdout" 2>>"$at_stderr" 5>&-
-at_status=$? at_failed=false
-$at_check_filter
-at_fn_diff_devnull "$at_stderr" || at_failed=:
-echo >>"$at_stdout"; $as_echo "Œ¾‚¦‚Ü‚¹‚ñ„‚Ì–¼‘O‚Í" | \
-  $at_diff - "$at_stdout" || at_failed=:
-at_fn_check_status 0 $at_status "$at_srcdir/pic-n.at:343"
+at_fn_check_status 0 $at_status "$at_srcdir/limits.at:183"
 $at_failed && at_fn_log_failure
 $at_traceon; }
 
@@ -4349,8 +4017,8 @@ $at_traceon; }
 read at_status <"$at_status_file"
 #AT_STOP_40
 #AT_START_41
-at_fn_group_banner 41 'pic-n.at:347' \
-  "PIC N INSPECT REPLACING" "                        "
+at_fn_group_banner 41 'limits.at:187' \
+  "Field length limit PIC BX/TOO LONG" "             "
 at_xfail=no
 (
   $as_echo "41. $at_setup_line: testing $at_desc ..."
@@ -4363,38 +4031,24 @@ cat >prog.cob <<'_ATEOF'
        PROGRAM-ID.      prog.
        DATA             DIVISION.
        WORKING-STORAGE  SECTION.
-       01 F0 PIC N(10)  VALUE "‚P‚Q‚R‚S‚T‚P‚Q‚R‚S‚T".
+       01 VALID-X       PIC BX(16777216).
        PROCEDURE        DIVISION.
-           INSPECT F0 REPLACING ALL "‚T" BY "‚O".
-           DISPLAY F0 WITH NO ADVANCING.
            STOP RUN.
 _ATEOF
 
 
 { set +x
-$as_echo "$at_srcdir/pic-n.at:361: cobc -m prog.cob"
-at_fn_check_prepare_trace "pic-n.at:361"
+$as_echo "$at_srcdir/limits.at:199: cobc -m prog.cob"
+at_fn_check_prepare_trace "limits.at:199"
 ( $at_check_trace; cobc -m prog.cob
 ) >>"$at_stdout" 2>>"$at_stderr" 5>&-
 at_status=$? at_failed=false
 $at_check_filter
-at_fn_diff_devnull "$at_stderr" || at_failed=:
+echo >>"$at_stderr"; $as_echo "prog.cob:6: Error: AlphaNumericEdit field cannot be larger than 16777216 digits
+" | \
+  $at_diff - "$at_stderr" || at_failed=:
 at_fn_diff_devnull "$at_stdout" || at_failed=:
-at_fn_check_status 0 $at_status "$at_srcdir/pic-n.at:361"
-$at_failed && at_fn_log_failure
-$at_traceon; }
-
-{ set +x
-$as_echo "$at_srcdir/pic-n.at:362: java prog"
-at_fn_check_prepare_trace "pic-n.at:362"
-( $at_check_trace; java prog
-) >>"$at_stdout" 2>>"$at_stderr" 5>&-
-at_status=$? at_failed=false
-$at_check_filter
-at_fn_diff_devnull "$at_stderr" || at_failed=:
-echo >>"$at_stdout"; $as_echo "‚P‚Q‚R‚S‚O‚P‚Q‚R‚S‚O" | \
-  $at_diff - "$at_stdout" || at_failed=:
-at_fn_check_status 0 $at_status "$at_srcdir/pic-n.at:362"
+at_fn_check_status 1 $at_status "$at_srcdir/limits.at:199"
 $at_failed && at_fn_log_failure
 $at_traceon; }
 
@@ -4405,8 +4059,8 @@ $at_traceon; }
 read at_status <"$at_status_file"
 #AT_STOP_41
 #AT_START_42
-at_fn_group_banner 42 'pic-n.at:366' \
-  "PIC N INSPECT REPLACING by ZERO" "                "
+at_fn_group_banner 42 'limits.at:205' \
+  "Field length limit PIC N/VALID (SJIS)" "          "
 at_xfail=no
 (
   $as_echo "42. $at_setup_line: testing $at_desc ..."
@@ -4419,38 +4073,22 @@ cat >prog.cob <<'_ATEOF'
        PROGRAM-ID.      prog.
        DATA             DIVISION.
        WORKING-STORAGE  SECTION.
-       01 F0 PIC N(10)  VALUE "‚P‚Q‚R‚S‚T‚P‚Q‚R‚S‚T".
+       01 VALID-N       PIC N(8388608).
        PROCEDURE        DIVISION.
-           INSPECT F0 REPLACING ALL "‚T" BY ZERO.
-           DISPLAY F0 WITH NO ADVANCING.
            STOP RUN.
 _ATEOF
 
 
 { set +x
-$as_echo "$at_srcdir/pic-n.at:380: cobc -m prog.cob"
-at_fn_check_prepare_trace "pic-n.at:380"
+$as_echo "$at_srcdir/limits.at:217: cobc -m prog.cob"
+at_fn_check_prepare_trace "limits.at:217"
 ( $at_check_trace; cobc -m prog.cob
 ) >>"$at_stdout" 2>>"$at_stderr" 5>&-
 at_status=$? at_failed=false
 $at_check_filter
 at_fn_diff_devnull "$at_stderr" || at_failed=:
 at_fn_diff_devnull "$at_stdout" || at_failed=:
-at_fn_check_status 0 $at_status "$at_srcdir/pic-n.at:380"
-$at_failed && at_fn_log_failure
-$at_traceon; }
-
-{ set +x
-$as_echo "$at_srcdir/pic-n.at:381: java prog"
-at_fn_check_prepare_trace "pic-n.at:381"
-( $at_check_trace; java prog
-) >>"$at_stdout" 2>>"$at_stderr" 5>&-
-at_status=$? at_failed=false
-$at_check_filter
-at_fn_diff_devnull "$at_stderr" || at_failed=:
-echo >>"$at_stdout"; $as_echo "‚P‚Q‚R‚S‚O‚P‚Q‚R‚S‚O" | \
-  $at_diff - "$at_stdout" || at_failed=:
-at_fn_check_status 0 $at_status "$at_srcdir/pic-n.at:381"
+at_fn_check_status 0 $at_status "$at_srcdir/limits.at:217"
 $at_failed && at_fn_log_failure
 $at_traceon; }
 
@@ -4461,8 +4099,8 @@ $at_traceon; }
 read at_status <"$at_status_file"
 #AT_STOP_42
 #AT_START_43
-at_fn_group_banner 43 'pic-n.at:385' \
-  "PIC N INSPECT REPLACING by NATIONAL ZERO" "       "
+at_fn_group_banner 43 'limits.at:221' \
+  "Field length limit PIC N/TOO LONG (SJIS)" "       "
 at_xfail=no
 (
   $as_echo "43. $at_setup_line: testing $at_desc ..."
@@ -4475,38 +4113,24 @@ cat >prog.cob <<'_ATEOF'
        PROGRAM-ID.      prog.
        DATA             DIVISION.
        WORKING-STORAGE  SECTION.
-       01 F0 PIC N(10)  VALUE "‚P‚Q‚R‚S‚T‚P‚Q‚R‚S‚T".
+       01 INVALID-N     PIC N(8388609).
        PROCEDURE        DIVISION.
-           INSPECT F0 REPLACING ALL N"‚T" BY ZERO.
-           DISPLAY F0 WITH NO ADVANCING.
            STOP RUN.
 _ATEOF
 
 
 { set +x
-$as_echo "$at_srcdir/pic-n.at:399: cobc -m prog.cob"
-at_fn_check_prepare_trace "pic-n.at:399"
+$as_echo "$at_srcdir/limits.at:233: cobc -m prog.cob"
+at_fn_check_prepare_trace "limits.at:233"
 ( $at_check_trace; cobc -m prog.cob
 ) >>"$at_stdout" 2>>"$at_stderr" 5>&-
 at_status=$? at_failed=false
 $at_check_filter
-at_fn_diff_devnull "$at_stderr" || at_failed=:
+echo >>"$at_stderr"; $as_echo "prog.cob:6: Error: National field cannot be larger than 8388608 digits
+" | \
+  $at_diff - "$at_stderr" || at_failed=:
 at_fn_diff_devnull "$at_stdout" || at_failed=:
-at_fn_check_status 0 $at_status "$at_srcdir/pic-n.at:399"
-$at_failed && at_fn_log_failure
-$at_traceon; }
-
-{ set +x
-$as_echo "$at_srcdir/pic-n.at:400: java prog"
-at_fn_check_prepare_trace "pic-n.at:400"
-( $at_check_trace; java prog
-) >>"$at_stdout" 2>>"$at_stderr" 5>&-
-at_status=$? at_failed=false
-$at_check_filter
-at_fn_diff_devnull "$at_stderr" || at_failed=:
-echo >>"$at_stdout"; $as_echo "‚P‚Q‚R‚S‚O‚P‚Q‚R‚S‚O" | \
-  $at_diff - "$at_stdout" || at_failed=:
-at_fn_check_status 0 $at_status "$at_srcdir/pic-n.at:400"
+at_fn_check_status 1 $at_status "$at_srcdir/limits.at:233"
 $at_failed && at_fn_log_failure
 $at_traceon; }
 
@@ -4517,8 +4141,8 @@ $at_traceon; }
 read at_status <"$at_status_file"
 #AT_STOP_43
 #AT_START_44
-at_fn_group_banner 44 'pic-n.at:404' \
-  "PIC N INSPECT TALLYING" "                         "
+at_fn_group_banner 44 'limits.at:239' \
+  "Field length limit PIC BN/VALID (SJIS)" "         "
 at_xfail=no
 (
   $as_echo "44. $at_setup_line: testing $at_desc ..."
@@ -4531,39 +4155,22 @@ cat >prog.cob <<'_ATEOF'
        PROGRAM-ID.      prog.
        DATA             DIVISION.
        WORKING-STORAGE  SECTION.
-       01 F0 PIC N(10)  VALUE "‚P‚Q‚R‚S‚T‚P‚Q‚R‚S‚T".
-       01 CN PIC 99.
+       01 VALID-BN      PIC BN(8388607).
        PROCEDURE        DIVISION.
-           INSPECT F0 TALLYING CN FOR ALL "‚S‚T".
-           DISPLAY CN WITH NO ADVANCING.
            STOP RUN.
 _ATEOF
 
 
 { set +x
-$as_echo "$at_srcdir/pic-n.at:419: cobc -m prog.cob"
-at_fn_check_prepare_trace "pic-n.at:419"
+$as_echo "$at_srcdir/limits.at:251: cobc -m prog.cob"
+at_fn_check_prepare_trace "limits.at:251"
 ( $at_check_trace; cobc -m prog.cob
 ) >>"$at_stdout" 2>>"$at_stderr" 5>&-
 at_status=$? at_failed=false
 $at_check_filter
 at_fn_diff_devnull "$at_stderr" || at_failed=:
 at_fn_diff_devnull "$at_stdout" || at_failed=:
-at_fn_check_status 0 $at_status "$at_srcdir/pic-n.at:419"
-$at_failed && at_fn_log_failure
-$at_traceon; }
-
-{ set +x
-$as_echo "$at_srcdir/pic-n.at:420: java prog"
-at_fn_check_prepare_trace "pic-n.at:420"
-( $at_check_trace; java prog
-) >>"$at_stdout" 2>>"$at_stderr" 5>&-
-at_status=$? at_failed=false
-$at_check_filter
-at_fn_diff_devnull "$at_stderr" || at_failed=:
-echo >>"$at_stdout"; $as_echo "02" | \
-  $at_diff - "$at_stdout" || at_failed=:
-at_fn_check_status 0 $at_status "$at_srcdir/pic-n.at:420"
+at_fn_check_status 0 $at_status "$at_srcdir/limits.at:251"
 $at_failed && at_fn_log_failure
 $at_traceon; }
 
@@ -4574,8 +4181,8 @@ $at_traceon; }
 read at_status <"$at_status_file"
 #AT_STOP_44
 #AT_START_45
-at_fn_group_banner 45 'pic-n.at:424' \
-  "PIC N Move with half-width dakuten kana." "       "
+at_fn_group_banner 45 'limits.at:255' \
+  "Field length limit PIC BN/TOO LONG (SJIS)" "      "
 at_xfail=no
 (
   $as_echo "45. $at_setup_line: testing $at_desc ..."
@@ -4588,38 +4195,24 @@ cat >prog.cob <<'_ATEOF'
        PROGRAM-ID.      prog.
        DATA             DIVISION.
        WORKING-STORAGE  SECTION.
-       01 F0 PIC N(7).
+       01 INVALID-BN    PIC BN(8388608).
        PROCEDURE        DIVISION.
-           MOVE "ŞÀŞ¥³Ş¨İÁ" TO F0.
-           DISPLAY F0 WITH NO ADVANCING.
            STOP RUN.
 _ATEOF
 
 
 { set +x
-$as_echo "$at_srcdir/pic-n.at:438: cobc -m prog.cob"
-at_fn_check_prepare_trace "pic-n.at:438"
+$as_echo "$at_srcdir/limits.at:267: cobc -m prog.cob"
+at_fn_check_prepare_trace "limits.at:267"
 ( $at_check_trace; cobc -m prog.cob
 ) >>"$at_stdout" 2>>"$at_stderr" 5>&-
 at_status=$? at_failed=false
 $at_check_filter
-at_fn_diff_devnull "$at_stderr" || at_failed=:
+echo >>"$at_stderr"; $as_echo "prog.cob:6: Error: NationalEdit field cannot be larger than 8388608 digits
+" | \
+  $at_diff - "$at_stderr" || at_failed=:
 at_fn_diff_devnull "$at_stdout" || at_failed=:
-at_fn_check_status 0 $at_status "$at_srcdir/pic-n.at:438"
-$at_failed && at_fn_log_failure
-$at_traceon; }
-
-{ set +x
-$as_echo "$at_srcdir/pic-n.at:439: java prog"
-at_fn_check_prepare_trace "pic-n.at:439"
-( $at_check_trace; java prog
-) >>"$at_stdout" 2>>"$at_stderr" 5>&-
-at_status=$? at_failed=false
-$at_check_filter
-at_fn_diff_devnull "$at_stderr" || at_failed=:
-echo >>"$at_stdout"; $as_echo "Jƒ_Eƒ”ƒBƒ“ƒ\`" | \
-  $at_diff - "$at_stdout" || at_failed=:
-at_fn_check_status 0 $at_status "$at_srcdir/pic-n.at:439"
+at_fn_check_status 1 $at_status "$at_srcdir/limits.at:267"
 $at_failed && at_fn_log_failure
 $at_traceon; }
 
@@ -4630,8 +4223,8 @@ $at_traceon; }
 read at_status <"$at_status_file"
 #AT_STOP_45
 #AT_START_46
-at_fn_group_banner 46 'pic-n.at:443' \
-  "PIC N Move with half-width han-dakuten kana." "   "
+at_fn_group_banner 46 'mb-space.at:1' \
+  "Zenkaku SPC delims in headings" "                 "
 at_xfail=no
 (
   $as_echo "46. $at_setup_line: testing $at_desc ..."
@@ -4640,42 +4233,41 @@ at_xfail=no
 
 cat >prog.cob <<'_ATEOF'
 
-       IDENTIFICATION   DIVISION.
+       IDENTIFICATION@DIVISION.
        PROGRAM-ID.      prog.
-       DATA             DIVISION.
-       WORKING-STORAGE  SECTION.
-       01 F0 PIC N(7).
-       PROCEDURE        DIVISION.
-           MOVE "ßÎßİÃŞØİ¸Ş" TO F0.
-           DISPLAY F0 WITH NO ADVANCING.
+       DATA @@@@@ DIVISION.
+       WORKING-STORAGE@ SECTION.
+       01 €–Ú PIC X.
+       PROCEDURE @@DIVISION.
+           DISPLAY "OK" WITH NO ADVANCING.
            STOP RUN.
 _ATEOF
 
 
 { set +x
-$as_echo "$at_srcdir/pic-n.at:457: cobc -m prog.cob"
-at_fn_check_prepare_trace "pic-n.at:457"
-( $at_check_trace; cobc -m prog.cob
+$as_echo "$at_srcdir/mb-space.at:14: \${COMPILE} -x prog.cob"
+at_fn_check_prepare_notrace 'a ${...} parameter expansion' "mb-space.at:14"
+( $at_check_trace; ${COMPILE} -x prog.cob
 ) >>"$at_stdout" 2>>"$at_stderr" 5>&-
 at_status=$? at_failed=false
 $at_check_filter
 at_fn_diff_devnull "$at_stderr" || at_failed=:
 at_fn_diff_devnull "$at_stdout" || at_failed=:
-at_fn_check_status 0 $at_status "$at_srcdir/pic-n.at:457"
+at_fn_check_status 0 $at_status "$at_srcdir/mb-space.at:14"
 $at_failed && at_fn_log_failure
 $at_traceon; }
 
 { set +x
-$as_echo "$at_srcdir/pic-n.at:458: java prog"
-at_fn_check_prepare_trace "pic-n.at:458"
+$as_echo "$at_srcdir/mb-space.at:15: java prog"
+at_fn_check_prepare_trace "mb-space.at:15"
 ( $at_check_trace; java prog
 ) >>"$at_stdout" 2>>"$at_stderr" 5>&-
 at_status=$? at_failed=false
 $at_check_filter
 at_fn_diff_devnull "$at_stderr" || at_failed=:
-echo >>"$at_stdout"; $as_echo "Kƒ|ƒ“ƒfƒŠƒ“ƒO" | \
+echo >>"$at_stdout"; $as_echo "OK" | \
   $at_diff - "$at_stdout" || at_failed=:
-at_fn_check_status 0 $at_status "$at_srcdir/pic-n.at:458"
+at_fn_check_status 0 $at_status "$at_srcdir/mb-space.at:15"
 $at_failed && at_fn_log_failure
 $at_traceon; }
 
@@ -4686,8 +4278,8 @@ $at_traceon; }
 read at_status <"$at_status_file"
 #AT_STOP_46
 #AT_START_47
-at_fn_group_banner 47 'national.at:1' \
-  "FUNCTION NATIONAL single-byte" "                  "
+at_fn_group_banner 47 'mb-space.at:19' \
+  "Zenkaku SPC delims in record def" "               "
 at_xfail=no
 (
   $as_echo "47. $at_setup_line: testing $at_desc ..."
@@ -4700,40 +4292,43 @@ cat >prog.cob <<'_ATEOF'
        PROGRAM-ID.      prog.
        DATA             DIVISION.
        WORKING-STORAGE  SECTION.
-       01 I-STR    PIC X(5).
-       01 O-STR    PIC X(10).
+       01 €–Ú@PIC X(40) VALUE
+          "Zen SPC between item name and PIC clause".
+@     01  F00 PIC X.
+  @   01  F01 PIC X.
+       01@F02 PIC X.
+       01@F03 PIC@X.
+       01@F04 PIC X@.
        PROCEDURE        DIVISION.
-           MOVE "ABCDZ" TO I-STR.
-           MOVE FUNCTION NATIONAL(I-STR) TO O-STR.
-           DISPLAY O-STR WITH NO ADVANCING.
+           DISPLAY €–Ú WITH NO ADVANCING.
            STOP RUN.
 _ATEOF
 
 
 { set +x
-$as_echo "$at_srcdir/national.at:17: cobc \${FLAGS_JP_COMPAT} prog.cob"
-at_fn_check_prepare_notrace 'a ${...} parameter expansion' "national.at:17"
-( $at_check_trace; cobc ${FLAGS_JP_COMPAT} prog.cob
+$as_echo "$at_srcdir/mb-space.at:38: \${COMPILE} -x prog.cob"
+at_fn_check_prepare_notrace 'a ${...} parameter expansion' "mb-space.at:38"
+( $at_check_trace; ${COMPILE} -x prog.cob
 ) >>"$at_stdout" 2>>"$at_stderr" 5>&-
 at_status=$? at_failed=false
 $at_check_filter
 at_fn_diff_devnull "$at_stderr" || at_failed=:
 at_fn_diff_devnull "$at_stdout" || at_failed=:
-at_fn_check_status 0 $at_status "$at_srcdir/national.at:17"
+at_fn_check_status 0 $at_status "$at_srcdir/mb-space.at:38"
 $at_failed && at_fn_log_failure
 $at_traceon; }
 
 { set +x
-$as_echo "$at_srcdir/national.at:18: java prog"
-at_fn_check_prepare_trace "national.at:18"
+$as_echo "$at_srcdir/mb-space.at:39: java prog"
+at_fn_check_prepare_trace "mb-space.at:39"
 ( $at_check_trace; java prog
 ) >>"$at_stdout" 2>>"$at_stderr" 5>&-
 at_status=$? at_failed=false
 $at_check_filter
 at_fn_diff_devnull "$at_stderr" || at_failed=:
-echo >>"$at_stdout"; $as_echo "‚\`‚a‚b‚c‚y" | \
+echo >>"$at_stdout"; $as_echo "Zen SPC between item name and PIC clause" | \
   $at_diff - "$at_stdout" || at_failed=:
-at_fn_check_status 0 $at_status "$at_srcdir/national.at:18"
+at_fn_check_status 0 $at_status "$at_srcdir/mb-space.at:39"
 $at_failed && at_fn_log_failure
 $at_traceon; }
 
@@ -4744,12 +4339,23 @@ $at_traceon; }
 read at_status <"$at_status_file"
 #AT_STOP_47
 #AT_START_48
-at_fn_group_banner 48 'national.at:22' \
-  "FUNCTION NATIONAL multi-byte" "                   "
+at_fn_group_banner 48 'mb-space.at:43' \
+  "Zenkaku SPC delims in COPY stmt" "                "
 at_xfail=no
 (
   $as_echo "48. $at_setup_line: testing $at_desc ..."
   $at_traceon
+
+
+cat >inc.cpy <<'_ATEOF'
+
+       01 €–Ú@PIC X(2) VALUE "OK".
+@     01  F00 PIC X.
+  @   01  F01 PIC X.
+       01@F02 PIC X.
+       01@F03 PIC@X.
+       01@F04 PIC X@.
+_ATEOF
 
 
 cat >prog.cob <<'_ATEOF'
@@ -4758,40 +4364,37 @@ cat >prog.cob <<'_ATEOF'
        PROGRAM-ID.      prog.
        DATA             DIVISION.
        WORKING-STORAGE  SECTION.
-       01 I-STR    PIC X(9).
-       01 O-STR    PIC X(12).
+       COPY @inc.
        PROCEDURE        DIVISION.
-           MOVE "A‚aC‚P2‚R" TO I-STR.
-           MOVE FUNCTION NATIONAL(I-STR) TO O-STR.
-           DISPLAY O-STR WITH NO ADVANCING.
+           DISPLAY €–Ú WITH NO ADVANCING.
            STOP RUN.
 _ATEOF
 
 
 { set +x
-$as_echo "$at_srcdir/national.at:38: cobc \${FLAGS_JP_COMPAT} prog.cob"
-at_fn_check_prepare_notrace 'a ${...} parameter expansion' "national.at:38"
-( $at_check_trace; cobc ${FLAGS_JP_COMPAT} prog.cob
+$as_echo "$at_srcdir/mb-space.at:65: \${COMPILE} -x prog.cob"
+at_fn_check_prepare_notrace 'a ${...} parameter expansion' "mb-space.at:65"
+( $at_check_trace; ${COMPILE} -x prog.cob
 ) >>"$at_stdout" 2>>"$at_stderr" 5>&-
 at_status=$? at_failed=false
 $at_check_filter
 at_fn_diff_devnull "$at_stderr" || at_failed=:
 at_fn_diff_devnull "$at_stdout" || at_failed=:
-at_fn_check_status 0 $at_status "$at_srcdir/national.at:38"
+at_fn_check_status 0 $at_status "$at_srcdir/mb-space.at:65"
 $at_failed && at_fn_log_failure
 $at_traceon; }
 
 { set +x
-$as_echo "$at_srcdir/national.at:39: java prog"
-at_fn_check_prepare_trace "national.at:39"
+$as_echo "$at_srcdir/mb-space.at:66: java prog"
+at_fn_check_prepare_trace "mb-space.at:66"
 ( $at_check_trace; java prog
 ) >>"$at_stdout" 2>>"$at_stderr" 5>&-
 at_status=$? at_failed=false
 $at_check_filter
 at_fn_diff_devnull "$at_stderr" || at_failed=:
-echo >>"$at_stdout"; $as_echo "‚\`‚a‚b‚P‚Q‚R" | \
+echo >>"$at_stdout"; $as_echo "OK" | \
   $at_diff - "$at_stdout" || at_failed=:
-at_fn_check_status 0 $at_status "$at_srcdir/national.at:39"
+at_fn_check_status 0 $at_status "$at_srcdir/mb-space.at:66"
 $at_failed && at_fn_log_failure
 $at_traceon; }
 
@@ -4801,529 +4404,3 @@ $at_traceon; }
 ) 5>&1 2>&1 7>&- | eval $at_tee_pipe
 read at_status <"$at_status_file"
 #AT_STOP_48
-#AT_START_49
-at_fn_group_banner 49 'national.at:43' \
-  "FUNCTION NATIONAL KIGOU-exclamation" "            "
-at_xfail=no
-(
-  $as_echo "49. $at_setup_line: testing $at_desc ..."
-  $at_traceon
-
-
-cat >prog.cob <<'_ATEOF'
-
-       IDENTIFICATION   DIVISION.
-       PROGRAM-ID.      prog.
-       DATA             DIVISION.
-       WORKING-STORAGE  SECTION.
-       01 I-STR    PIC X(5).
-       01 O-STR    PIC X(10).
-       PROCEDURE        DIVISION.
-           MOVE "!!!!!" TO I-STR.
-           MOVE FUNCTION NATIONAL(I-STR) TO O-STR.
-           DISPLAY O-STR WITH NO ADVANCING.
-           STOP RUN.
-_ATEOF
-
-
-{ set +x
-$as_echo "$at_srcdir/national.at:59: cobc \${FLAGS_JP_COMPAT} prog.cob"
-at_fn_check_prepare_notrace 'a ${...} parameter expansion' "national.at:59"
-( $at_check_trace; cobc ${FLAGS_JP_COMPAT} prog.cob
-) >>"$at_stdout" 2>>"$at_stderr" 5>&-
-at_status=$? at_failed=false
-$at_check_filter
-at_fn_diff_devnull "$at_stderr" || at_failed=:
-at_fn_diff_devnull "$at_stdout" || at_failed=:
-at_fn_check_status 0 $at_status "$at_srcdir/national.at:59"
-$at_failed && at_fn_log_failure
-$at_traceon; }
-
-{ set +x
-$as_echo "$at_srcdir/national.at:60: java prog"
-at_fn_check_prepare_trace "national.at:60"
-( $at_check_trace; java prog
-) >>"$at_stdout" 2>>"$at_stderr" 5>&-
-at_status=$? at_failed=false
-$at_check_filter
-at_fn_diff_devnull "$at_stderr" || at_failed=:
-echo >>"$at_stdout"; $as_echo "IIIII" | \
-  $at_diff - "$at_stdout" || at_failed=:
-at_fn_check_status 0 $at_status "$at_srcdir/national.at:60"
-$at_failed && at_fn_log_failure
-$at_traceon; }
-
-
-  set +x
-  $at_times_p && times >"$at_times_file"
-) 5>&1 2>&1 7>&- | eval $at_tee_pipe
-read at_status <"$at_status_file"
-#AT_STOP_49
-#AT_START_50
-at_fn_group_banner 50 'national.at:64' \
-  "FUNCTION NATIONAL KIGOU-yen" "                    "
-at_xfail=no
-(
-  $as_echo "50. $at_setup_line: testing $at_desc ..."
-  $at_traceon
-
-
-cat >prog.cob <<'_ATEOF'
-
-       IDENTIFICATION   DIVISION.
-       PROGRAM-ID.      prog.
-       DATA             DIVISION.
-       WORKING-STORAGE  SECTION.
-       01 I-STR    PIC X(1).
-       01 O-STR    PIC X(10).
-       PROCEDURE        DIVISION.
-           MOVE "\" TO I-STR.
-           MOVE FUNCTION NATIONAL(I-STR) TO O-STR.
-           DISPLAY O-STR WITH NO ADVANCING.
-           STOP RUN.
-_ATEOF
-
-
-{ set +x
-$as_echo "$at_srcdir/national.at:80: cobc \${FLAGS_JP_COMPAT} prog.cob"
-at_fn_check_prepare_notrace 'a ${...} parameter expansion' "national.at:80"
-( $at_check_trace; cobc ${FLAGS_JP_COMPAT} prog.cob
-) >>"$at_stdout" 2>>"$at_stderr" 5>&-
-at_status=$? at_failed=false
-$at_check_filter
-at_fn_diff_devnull "$at_stderr" || at_failed=:
-at_fn_diff_devnull "$at_stdout" || at_failed=:
-at_fn_check_status 0 $at_status "$at_srcdir/national.at:80"
-$at_failed && at_fn_log_failure
-$at_traceon; }
-
-{ set +x
-$as_echo "$at_srcdir/national.at:81: java prog"
-at_fn_check_prepare_trace "national.at:81"
-( $at_check_trace; java prog
-) >>"$at_stdout" 2>>"$at_stderr" 5>&-
-at_status=$? at_failed=false
-$at_check_filter
-at_fn_diff_devnull "$at_stderr" || at_failed=:
-echo >>"$at_stdout"; $as_echo "        " | \
-  $at_diff - "$at_stdout" || at_failed=:
-at_fn_check_status 0 $at_status "$at_srcdir/national.at:81"
-$at_failed && at_fn_log_failure
-$at_traceon; }
-
-
-  set +x
-  $at_times_p && times >"$at_times_file"
-) 5>&1 2>&1 7>&- | eval $at_tee_pipe
-read at_status <"$at_status_file"
-#AT_STOP_50
-#AT_START_51
-at_fn_group_banner 51 'national.at:85' \
-  "FUNCTION NATIONAL KIGOU-plus" "                   "
-at_xfail=no
-(
-  $as_echo "51. $at_setup_line: testing $at_desc ..."
-  $at_traceon
-
-
-cat >prog.cob <<'_ATEOF'
-
-       IDENTIFICATION   DIVISION.
-       PROGRAM-ID.      prog.
-       DATA             DIVISION.
-       WORKING-STORAGE  SECTION.
-       01 I-STR    PIC X(2).
-       01 O-STR    PIC X(10).
-       PROCEDURE        DIVISION.
-           MOVE "+ " TO I-STR.
-           MOVE FUNCTION NATIONAL(I-STR) TO O-STR.
-           DISPLAY O-STR WITH NO ADVANCING.
-           STOP RUN.
-_ATEOF
-
-
-{ set +x
-$as_echo "$at_srcdir/national.at:101: cobc \${FLAGS_JP_COMPAT} prog.cob"
-at_fn_check_prepare_notrace 'a ${...} parameter expansion' "national.at:101"
-( $at_check_trace; cobc ${FLAGS_JP_COMPAT} prog.cob
-) >>"$at_stdout" 2>>"$at_stderr" 5>&-
-at_status=$? at_failed=false
-$at_check_filter
-at_fn_diff_devnull "$at_stderr" || at_failed=:
-at_fn_diff_devnull "$at_stdout" || at_failed=:
-at_fn_check_status 0 $at_status "$at_srcdir/national.at:101"
-$at_failed && at_fn_log_failure
-$at_traceon; }
-
-{ set +x
-$as_echo "$at_srcdir/national.at:102: java prog"
-at_fn_check_prepare_trace "national.at:102"
-( $at_check_trace; java prog
-) >>"$at_stdout" 2>>"$at_stderr" 5>&-
-at_status=$? at_failed=false
-$at_check_filter
-at_fn_diff_devnull "$at_stderr" || at_failed=:
-echo >>"$at_stdout"; $as_echo "{@      " | \
-  $at_diff - "$at_stdout" || at_failed=:
-at_fn_check_status 0 $at_status "$at_srcdir/national.at:102"
-$at_failed && at_fn_log_failure
-$at_traceon; }
-
-
-  set +x
-  $at_times_p && times >"$at_times_file"
-) 5>&1 2>&1 7>&- | eval $at_tee_pipe
-read at_status <"$at_status_file"
-#AT_STOP_51
-#AT_START_52
-at_fn_group_banner 52 'national.at:106' \
-  "FUNCTION NATIONAL (HanKana w/ Daku-on)" "         "
-at_xfail=no
-(
-  $as_echo "52. $at_setup_line: testing $at_desc ..."
-  $at_traceon
-
-
-cat >prog.cob <<'_ATEOF'
-
-       IDENTIFICATION   DIVISION.
-       PROGRAM-ID.      prog.
-       DATA             DIVISION.
-       WORKING-STORAGE  SECTION.
-       01 I-STR    PIC X(16).
-       01 O-STR    PIC X(16).
-       PROCEDURE        DIVISION.
-           MOVE "ÚÃŞ¨¶Ş¶Ş" TO I-STR.
-           MOVE FUNCTION NATIONAL(I-STR) TO O-STR.
-           DISPLAY O-STR WITH NO ADVANCING.
-           STOP RUN.
-_ATEOF
-
-
-{ set +x
-$as_echo "$at_srcdir/national.at:122: cobc \${FLAGS_JP_COMPAT} prog.cob"
-at_fn_check_prepare_notrace 'a ${...} parameter expansion' "national.at:122"
-( $at_check_trace; cobc ${FLAGS_JP_COMPAT} prog.cob
-) >>"$at_stdout" 2>>"$at_stderr" 5>&-
-at_status=$? at_failed=false
-$at_check_filter
-at_fn_diff_devnull "$at_stderr" || at_failed=:
-at_fn_diff_devnull "$at_stdout" || at_failed=:
-at_fn_check_status 0 $at_status "$at_srcdir/national.at:122"
-$at_failed && at_fn_log_failure
-$at_traceon; }
-
-{ set +x
-$as_echo "$at_srcdir/national.at:123: java prog"
-at_fn_check_prepare_trace "national.at:123"
-( $at_check_trace; java prog
-) >>"$at_stdout" 2>>"$at_stderr" 5>&-
-at_status=$? at_failed=false
-$at_check_filter
-at_fn_diff_devnull "$at_stderr" || at_failed=:
-echo >>"$at_stdout"; $as_echo "ƒŒƒfƒBƒKƒK@@@" | \
-  $at_diff - "$at_stdout" || at_failed=:
-at_fn_check_status 0 $at_status "$at_srcdir/national.at:123"
-$at_failed && at_fn_log_failure
-$at_traceon; }
-
-
-  set +x
-  $at_times_p && times >"$at_times_file"
-) 5>&1 2>&1 7>&- | eval $at_tee_pipe
-read at_status <"$at_status_file"
-#AT_STOP_52
-#AT_START_53
-at_fn_group_banner 53 'national.at:127' \
-  "FUNCTION NATIONAL (HanKana w/ Han-daku-on)" "     "
-at_xfail=no
-(
-  $as_echo "53. $at_setup_line: testing $at_desc ..."
-  $at_traceon
-
-
-cat >prog.cob <<'_ATEOF'
-
-       IDENTIFICATION   DIVISION.
-       PROGRAM-ID.      prog.
-       DATA             DIVISION.
-       WORKING-STORAGE  SECTION.
-       01 I-STR    PIC X(10).
-       01 O-STR    PIC X(10).
-       PROCEDURE        DIVISION.
-           MOVE "ÎßËßİ" TO I-STR.
-           MOVE FUNCTION NATIONAL(I-STR) TO O-STR.
-           DISPLAY O-STR WITH NO ADVANCING.
-           STOP RUN.
-_ATEOF
-
-
-{ set +x
-$as_echo "$at_srcdir/national.at:143: cobc \${FLAGS_JP_COMPAT} prog.cob"
-at_fn_check_prepare_notrace 'a ${...} parameter expansion' "national.at:143"
-( $at_check_trace; cobc ${FLAGS_JP_COMPAT} prog.cob
-) >>"$at_stdout" 2>>"$at_stderr" 5>&-
-at_status=$? at_failed=false
-$at_check_filter
-at_fn_diff_devnull "$at_stderr" || at_failed=:
-at_fn_diff_devnull "$at_stdout" || at_failed=:
-at_fn_check_status 0 $at_status "$at_srcdir/national.at:143"
-$at_failed && at_fn_log_failure
-$at_traceon; }
-
-{ set +x
-$as_echo "$at_srcdir/national.at:144: java prog"
-at_fn_check_prepare_trace "national.at:144"
-( $at_check_trace; java prog
-) >>"$at_stdout" 2>>"$at_stderr" 5>&-
-at_status=$? at_failed=false
-$at_check_filter
-at_fn_diff_devnull "$at_stderr" || at_failed=:
-echo >>"$at_stdout"; $as_echo "ƒ|ƒsƒ“@@" | \
-  $at_diff - "$at_stdout" || at_failed=:
-at_fn_check_status 0 $at_status "$at_srcdir/national.at:144"
-$at_failed && at_fn_log_failure
-$at_traceon; }
-
-
-  set +x
-  $at_times_p && times >"$at_times_file"
-) 5>&1 2>&1 7>&- | eval $at_tee_pipe
-read at_status <"$at_status_file"
-#AT_STOP_53
-#AT_START_54
-at_fn_group_banner 54 'national.at:148' \
-  "N Literal (NO zenakaku conversion)" "             "
-at_xfail=no
-(
-  $as_echo "54. $at_setup_line: testing $at_desc ..."
-  $at_traceon
-
-
-cat >prog.cob <<'_ATEOF'
-
-       IDENTIFICATION   DIVISION.
-       PROGRAM-ID.      prog.
-       PROCEDURE        DIVISION.
-           DISPLAY N"‚¢‚ë‚Í".
-           DISPLAY N"²ÛÊ".
-           DISPLAY N"ÎßËßİ".
-           DISPLAY N"ABC".
-           DISPLAY N"#$%".
-           STOP RUN.
-_ATEOF
-
-
-{ set +x
-$as_echo "$at_srcdir/national.at:162: cobc prog.cob"
-at_fn_check_prepare_trace "national.at:162"
-( $at_check_trace; cobc prog.cob
-) >>"$at_stdout" 2>>"$at_stderr" 5>&-
-at_status=$? at_failed=false
-$at_check_filter
-at_fn_diff_devnull "$at_stderr" || at_failed=:
-at_fn_diff_devnull "$at_stdout" || at_failed=:
-at_fn_check_status 0 $at_status "$at_srcdir/national.at:162"
-$at_failed && at_fn_log_failure
-$at_traceon; }
-
-{ set +x
-$as_echo "$at_srcdir/national.at:163: java prog"
-at_fn_check_prepare_trace "national.at:163"
-( $at_check_trace; java prog
-) >>"$at_stdout" 2>>"$at_stderr" 5>&-
-at_status=$? at_failed=false
-$at_check_filter
-at_fn_diff_devnull "$at_stderr" || at_failed=:
-echo >>"$at_stdout"; $as_echo "‚¢‚ë‚Í
-²ÛÊ
-ÎßËßİ
-ABC
-#\$%
-" | \
-  $at_diff - "$at_stdout" || at_failed=:
-at_fn_check_status 0 $at_status "$at_srcdir/national.at:163"
-$at_failed && at_fn_log_failure
-$at_traceon; }
-
-
-  set +x
-  $at_times_p && times >"$at_times_file"
-) 5>&1 2>&1 7>&- | eval $at_tee_pipe
-read at_status <"$at_status_file"
-#AT_STOP_54
-#AT_START_55
-at_fn_group_banner 55 'national.at:173' \
-  "NC Literal (NO zenakaku conversion)" "            "
-at_xfail=no
-(
-  $as_echo "55. $at_setup_line: testing $at_desc ..."
-  $at_traceon
-
-
-cat >prog.cob <<'_ATEOF'
-
-       IDENTIFICATION   DIVISION.
-       PROGRAM-ID.      prog.
-       PROCEDURE        DIVISION.
-           DISPLAY NC"‚¢‚ë‚Í".
-           DISPLAY NC"²ÛÊ".
-           DISPLAY NC"ÎßËßİ".
-           DISPLAY NC"ABC".
-           DISPLAY NC"#$%".
-           STOP RUN.
-_ATEOF
-
-
-{ set +x
-$as_echo "$at_srcdir/national.at:187: cobc prog.cob"
-at_fn_check_prepare_trace "national.at:187"
-( $at_check_trace; cobc prog.cob
-) >>"$at_stdout" 2>>"$at_stderr" 5>&-
-at_status=$? at_failed=false
-$at_check_filter
-at_fn_diff_devnull "$at_stderr" || at_failed=:
-at_fn_diff_devnull "$at_stdout" || at_failed=:
-at_fn_check_status 0 $at_status "$at_srcdir/national.at:187"
-$at_failed && at_fn_log_failure
-$at_traceon; }
-
-{ set +x
-$as_echo "$at_srcdir/national.at:188: java prog"
-at_fn_check_prepare_trace "national.at:188"
-( $at_check_trace; java prog
-) >>"$at_stdout" 2>>"$at_stderr" 5>&-
-at_status=$? at_failed=false
-$at_check_filter
-at_fn_diff_devnull "$at_stderr" || at_failed=:
-echo >>"$at_stdout"; $as_echo "‚¢‚ë‚Í
-²ÛÊ
-ÎßËßİ
-ABC
-#\$%
-" | \
-  $at_diff - "$at_stdout" || at_failed=:
-at_fn_check_status 0 $at_status "$at_srcdir/national.at:188"
-$at_failed && at_fn_log_failure
-$at_traceon; }
-
-
-  set +x
-  $at_times_p && times >"$at_times_file"
-) 5>&1 2>&1 7>&- | eval $at_tee_pipe
-read at_status <"$at_status_file"
-#AT_STOP_55
-#AT_START_56
-at_fn_group_banner 56 'national.at:198' \
-  "ND Literal (NO zenakaku conversion)" "            "
-at_xfail=no
-(
-  $as_echo "56. $at_setup_line: testing $at_desc ..."
-  $at_traceon
-
-
-cat >prog.cob <<'_ATEOF'
-
-       IDENTIFICATION   DIVISION.
-       PROGRAM-ID.      prog.
-       PROCEDURE        DIVISION.
-           DISPLAY ND"‚¢‚ë‚Í".
-           DISPLAY ND"²ÛÊ".
-           DISPLAY ND"ÎßËßİ".
-           DISPLAY ND"ABC".
-           DISPLAY ND"#$%".
-           STOP RUN.
-_ATEOF
-
-
-{ set +x
-$as_echo "$at_srcdir/national.at:212: cobc prog.cob"
-at_fn_check_prepare_trace "national.at:212"
-( $at_check_trace; cobc prog.cob
-) >>"$at_stdout" 2>>"$at_stderr" 5>&-
-at_status=$? at_failed=false
-$at_check_filter
-at_fn_diff_devnull "$at_stderr" || at_failed=:
-at_fn_diff_devnull "$at_stdout" || at_failed=:
-at_fn_check_status 0 $at_status "$at_srcdir/national.at:212"
-$at_failed && at_fn_log_failure
-$at_traceon; }
-
-{ set +x
-$as_echo "$at_srcdir/national.at:213: java prog"
-at_fn_check_prepare_trace "national.at:213"
-( $at_check_trace; java prog
-) >>"$at_stdout" 2>>"$at_stderr" 5>&-
-at_status=$? at_failed=false
-$at_check_filter
-at_fn_diff_devnull "$at_stderr" || at_failed=:
-echo >>"$at_stdout"; $as_echo "‚¢‚ë‚Í
-²ÛÊ
-ÎßËßİ
-ABC
-#\$%
-" | \
-  $at_diff - "$at_stdout" || at_failed=:
-at_fn_check_status 0 $at_status "$at_srcdir/national.at:213"
-$at_failed && at_fn_log_failure
-$at_traceon; }
-
-
-  set +x
-  $at_times_p && times >"$at_times_file"
-) 5>&1 2>&1 7>&- | eval $at_tee_pipe
-read at_status <"$at_status_file"
-#AT_STOP_56
-#AT_START_57
-at_fn_group_banner 57 'national.at:223' \
-  "NX Literal" "                                     "
-at_xfail=no
-(
-  $as_echo "57. $at_setup_line: testing $at_desc ..."
-  $at_traceon
-
-
-cat >prog.cob <<'_ATEOF'
-
-       IDENTIFICATION   DIVISION.
-       PROGRAM-ID.      prog.
-       PROCEDURE        DIVISION.
-           DISPLAY NX"82A282EB82CD".
-           STOP RUN.
-_ATEOF
-
-
-{ set +x
-$as_echo "$at_srcdir/national.at:233: cobc prog.cob"
-at_fn_check_prepare_trace "national.at:233"
-( $at_check_trace; cobc prog.cob
-) >>"$at_stdout" 2>>"$at_stderr" 5>&-
-at_status=$? at_failed=false
-$at_check_filter
-at_fn_diff_devnull "$at_stderr" || at_failed=:
-at_fn_diff_devnull "$at_stdout" || at_failed=:
-at_fn_check_status 0 $at_status "$at_srcdir/national.at:233"
-$at_failed && at_fn_log_failure
-$at_traceon; }
-
-{ set +x
-$as_echo "$at_srcdir/national.at:234: java prog"
-at_fn_check_prepare_trace "national.at:234"
-( $at_check_trace; java prog
-) >>"$at_stdout" 2>>"$at_stderr" 5>&-
-at_status=$? at_failed=false
-$at_check_filter
-at_fn_diff_devnull "$at_stderr" || at_failed=:
-echo >>"$at_stdout"; $as_echo "‚¢‚ë‚Í
-" | \
-  $at_diff - "$at_stdout" || at_failed=:
-at_fn_check_status 0 $at_status "$at_srcdir/national.at:234"
-$at_failed && at_fn_log_failure
-$at_traceon; }
-
-
-  set +x
-  $at_times_p && times >"$at_times_file"
-) 5>&1 2>&1 7>&- | eval $at_tee_pipe
-read at_status <"$at_status_file"
-#AT_STOP_57

@@ -23,21 +23,23 @@
 SUBDIRS = cobol85
 
 if I18N_UTF8
-TESTS = $srcdir/syntax \
-	$srcdir/run \
-	$srcdir/run-O \
-	$srcdir/data-rep \
-	$srcdir/data-rep-O \
-	$srcdir/i18n_utf8 \
-	$srcdir/jp-compat
+TESTS = syntax \
+	run \
+	run-O \
+	data-rep \
+	data-rep-O \
+	i18n_utf8 \
+	jp-compat \
+	command-line-options
 else
-TESTS = $srcdir/syntax \
-	$srcdir/run \
-	$srcdir/run-O \
-	$srcdir/data-rep \
-	$srcdir/data-rep-O \
-	$srcdir/i18n_sjis \
-	$srcdir/jp-compat
+TESTS = syntax \
+	run \
+	run-O \
+	data-rep \
+	data-rep-O \
+	i18n_sjis \
+	jp-compat \
+	command-line-options
 endif
 
 syntax_DEPENDENCIES = \
@@ -136,20 +138,23 @@ jp_compat_DEPENDENCIES = \
 	jp-compat.src/abort-on-file-error.at \
 	jp-compat.src/system-routine.at
 
-EXTRA_DIST = $(srcdir)/package.m4
-#$(TESTS) \
-#$(syntax_DEPENDENCIES) \
-#$(run_DEPENDENCIES) \
-#$(data_rep_DEPENDENCIES) \
-#$(i18n_utf8_DEPENDENCIES) \
-#$(i18n_sjis_DEPENDENCIES) \
-#$(jp_compat_DEPENDENCIES)
+command_line_options_DEPENDENCIES = \
+	command-line-options.src/hello-world.at
+
+EXTRA_DIST = $(srcdir)/package.m4 \
+	$(TESTS) \
+	$(syntax_DEPENDENCIES) \
+	$(data_rep_DEPENDENCIES) \
+	$(i18n_utf8_DEPENDENCIES) \
+	$(i18n_sjis_DEPENDENCIES) \
+	$(jp_compat_DEPENDENCIES) \
+	$(command_line_options_DEPENDENCIES)
 
 
 DISTCLEANFILES = atconfig
 
-#all: $(TESTS)
-all:
+all: $(TESTS)
+#all:
 
 clean-local:
 	rm -rf *.dir *.log
@@ -175,3 +180,4 @@ $(srcdir)/data-rep: $(data_rep_DEPENDENCIES)
 $(srcdir)/i18n_utf8: $(i18n_utf8_DEPENDENCIES)
 $(srcdir)/i18n_sjis: $(i18n_sjis_DEPENDENCIES)
 $(srcdir)/jp-compat: $(jp_compat_DEPENDENCIES)
+$(srcdir)/command-line-options: $(command_line_options_DEPENDENCIES)

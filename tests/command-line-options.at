@@ -1,0 +1,3 @@
+AT_INIT([Tests for cobj command line options])
+
+m4_include([hello-world.at])
