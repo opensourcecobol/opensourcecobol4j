@@ -4376,27 +4376,6 @@ joutput_internal_function (struct cb_program *prog, cb_tree parameter_list)
 	//	output_local ("\n");
 	//}
 
-	///* Dangling linkage section items */
-	//seen = 0;
-	//for (f = prog->linkage_storage; f; f = f->sister) {
-	//	for (l = parameter_list; l; l = CB_CHAIN (l)) {
-	//		if (f == cb_field (CB_VALUE (l))) {
-	//			break;
-	//		}
-	//	}
-	//	if (l == NULL) {
-	//		if (!seen) {
-	//			seen = 1;
-	//			output_local ("\n/* LINKAGE SECTION (Items not referenced by USING clause) */\n");
-	//		}
-	//		output_local ("static unsigned char\t*%s%d = NULL;  /* %s */\n",
-	//			     CB_PREFIX_BASE, f->id, f->name);
-	//	}
-	//}
-	//if (seen) {
-	//	output_local ("\n");
-	//}
-
 	///* Screens */
 	//if (prog->screen_storage) {
 	//	output_target = current_prog->local_storage_file;
@@ -5056,6 +5035,30 @@ void joutput_init_method(struct cb_program *prog) {
 		joutput_newline();
 	}
 
+	/* Dangling linkage section items */
+	int seen = 0;
+	struct cb_field* f;
+	for (f = prog->linkage_storage; f; f = f->sister) {
+		for (l = prog->parameter_list; l; l = CB_CHAIN (l)) {
+			if (f == cb_field (CB_VALUE (l))) {
+				break;
+			}
+		}
+		if (l == NULL) {
+			if (!seen) {
+				seen = 1;
+				joutput ("\n/* LINKAGE SECTION (Items not referenced by USING clause) */\n");
+			}
+			char *base_name = get_java_identifier_base(f);
+			joutput_line ("%s = null;  /* %s */",
+				     base_name, f->name);
+			free(base_name);
+		}
+	}
+	if (seen) {
+		joutput ("\n");
+	}
+
 	/* Alphabet-names */
 	if (prog->alphabet_name_list) {
 		joutput ("/* Alphabet names */\n");
@@ -5376,6 +5379,29 @@ void joutput_declare_member_variables(struct cb_program *prog, cb_tree parameter
 		char* base_name = get_java_identifier_base(cb_field (CB_VALUE (l)));
 		joutput_line("private CobolDataStorage %s;", base_name);
 		free(base_name);
+	}
+
+	/* Dangling linkage section items */
+	int seen = 0;
+	for (f = prog->linkage_storage; f; f = f->sister) {
+		for (l = prog->parameter_list; l; l = CB_CHAIN (l)) {
+			if (f == cb_field (CB_VALUE (l))) {
+				break;
+			}
+		}
+		if (l == NULL) {
+			if (!seen) {
+				seen = 1;
+				joutput ("\n/* LINKAGE SECTION (Items not referenced by USING clause) */\n");
+			}
+			char *base_name = get_java_identifier_base(f);
+			joutput_line ("private CobolDataStorage %s;  /* %s */",
+				     base_name, f->name);
+			free(base_name);
+		}
+	}
+	if (seen) {
+		joutput ("\n");
 	}
 
 	/* External items */
