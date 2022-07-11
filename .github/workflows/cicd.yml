@@ -33,7 +33,13 @@ jobs:
           cp build/libcobj.jar ~/.java_lib
           cd ../
           export CLASSPATH="$CLASSPATH:$HOME/.java_lib/libcobj.jar:$HOME/.java_lib/sqlite.jar"
-          
+  
+      - name: Make test scripts
+        run: |
+          cd tests/
+          make
+          cd ../
+
       - name: Run tests for command-line options
         run: |
           export CLASSPATH="$CLASSPATH:$HOME/.java_lib/libcobj.jar:$HOME/.java_lib/sqlite.jar"
