@@ -1,0 +1,2074 @@
+### OpenCOBOL Test Suite				-*- m4 -*-
+
+## Copyright (C) 2003-2009 Keisuke Nishida
+## Copyright (C) 2007-2009 Roger While
+##
+## This program is free software; you can redistribute it and/or modify
+## it under the terms of the GNU General Public License as published by
+## the Free Software Foundation; either version 2, or (at your option)
+## any later version.
+## 
+## This program is distributed in the hope that it will be useful,
+## but WITHOUT ANY WARRANTY; without even the implied warranty of
+## MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+## GNU General Public License for more details.
+## 
+## You should have received a copy of the GNU General Public License
+## along with this software; see the file COPYING.  If not, write to
+## the Free Software Foundation, 51 Franklin Street, Fifth Floor
+## Boston, MA 02110-1301 USA
+
+AT_SETUP([Source file not found])
+
+AT_CHECK([${COMPILE_ONLY} prog.cob], [1], ,
+[cobc: prog.cob: No such file or directory
+])
+
+AT_CLEANUP
+
+
+AT_SETUP([Comma separator without space])
+
+AT_DATA([prog.cob], [
+       IDENTIFICATION   DIVISION.
+       PROGRAM-ID.      prog.
+       PROCEDURE        DIVISION.
+           DISPLAY 1,1,1 NO ADVANCING
+           END-DISPLAY.
+           STOP RUN.
+])
+
+AT_CHECK([${COMPILE} -o prog prog.cob])
+AT_CHECK([java prog], [0], [111])
+
+AT_CLEANUP
+
+
+AT_SETUP([LOCAL-STORAGE])
+
+AT_DATA([callee.cob], [
+       IDENTIFICATION   DIVISION.
+       PROGRAM-ID.      callee.
+       DATA             DIVISION.
+       WORKING-STORAGE  SECTION.
+       01 WRK-X         PIC XXX VALUE "abc".
+       LOCAL-STORAGE    SECTION.
+       01 LCL-X         PIC XXX VALUE "abc".
+       PROCEDURE        DIVISION.
+           DISPLAY "WRK-X = " WRK-X
+           END-DISPLAY.
+           DISPLAY "LCL-X = " LCL-X
+           END-DISPLAY.
+           MOVE ZERO TO WRK-X LCL-X.
+           EXIT PROGRAM.
+])
+
+AT_DATA([caller.cob], [
+       IDENTIFICATION   DIVISION.
+       PROGRAM-ID.      caller.
+       PROCEDURE        DIVISION.
+           CALL "callee"
+           END-CALL.
+           CALL "callee"
+           END-CALL.
+           STOP RUN.
+])
+
+AT_CHECK([${COMPILE_MODULE} callee.cob])
+AT_CHECK([${COMPILE} -o prog caller.cob])
+AT_CHECK([java prog], [0],
+[WRK-X = abc
+LCL-X = abc
+WRK-X = 000
+LCL-X = abc
+])
+
+AT_CLEANUP
+
+
+AT_SETUP([EXTERNAL data item])
+
+AT_DATA([callee.cob], [
+       IDENTIFICATION   DIVISION.
+       PROGRAM-ID.      callee.
+       DATA             DIVISION.
+       WORKING-STORAGE  SECTION.
+       01 WRK-VAR       PIC X(5).
+       01 EXT-VAR       PIC X(5) EXTERNAL.
+       PROCEDURE        DIVISION.
+           DISPLAY EXT-VAR
+           END-DISPLAY.
+           MOVE "World" TO EXT-VAR.
+           EXIT PROGRAM.
+])
+
+AT_DATA([caller.cob], [
+       IDENTIFICATION   DIVISION.
+       PROGRAM-ID.      caller.
+       DATA             DIVISION.
+       WORKING-STORAGE  SECTION.
+       01 EXT-VAR       PIC X(5) EXTERNAL.
+       01 WRK-VAR       PIC X(5).
+       PROCEDURE        DIVISION.
+           MOVE "Hello" TO EXT-VAR.
+           CALL "callee"
+           END-CALL.
+           DISPLAY EXT-VAR
+           END-DISPLAY.
+           STOP RUN.
+])
+
+AT_CHECK([${COMPILE_MODULE} callee.cob])
+AT_CHECK([${COMPILE} -o prog caller.cob])
+AT_CHECK([java prog], [0],
+[Hello
+World
+])
+
+AT_CLEANUP
+
+
+AT_SETUP([EXTERNAL AS data item])
+
+AT_DATA([callee.cob], [
+       IDENTIFICATION   DIVISION.
+       PROGRAM-ID.      callee.
+       DATA             DIVISION.
+       WORKING-STORAGE  SECTION.
+       01 PRG-VAR       PIC X(5) EXTERNAL AS "WRK-VAR".
+       01 EXT-VAR       PIC X(5) EXTERNAL.
+       PROCEDURE        DIVISION.
+           DISPLAY PRG-VAR
+           END-DISPLAY.
+           DISPLAY EXT-VAR
+           END-DISPLAY.
+           MOVE "World" TO EXT-VAR.
+           EXIT PROGRAM.
+])
+
+AT_DATA([caller.cob], [
+       IDENTIFICATION   DIVISION.
+       PROGRAM-ID.      caller.
+       DATA             DIVISION.
+       WORKING-STORAGE  SECTION.
+       01 MYVAR         PIC X(5) EXTERNAL AS "EXT-VAR".
+       01 WRK-VAR       PIC X(5) EXTERNAL.
+       PROCEDURE        DIVISION.
+           MOVE "Extrn" TO WRK-VAR.
+           MOVE "Hello" TO MYVAR.
+           CALL "callee"
+           END-CALL.
+           DISPLAY MYVAR
+           END-DISPLAY.
+           STOP RUN.
+])
+
+AT_CHECK([${COMPILE_MODULE} callee.cob])
+AT_CHECK([${COMPILE} -o prog caller.cob])
+AT_CHECK([java prog], [0],
+[Extrn
+Hello
+World
+])
+
+AT_CLEANUP
+
+
+AT_SETUP([cobcrun validation])
+
+AT_DATA([callee.cob], [
+       IDENTIFICATION   DIVISION.
+       PROGRAM-ID.      callee.
+       DATA             DIVISION.
+       WORKING-STORAGE  SECTION.
+       01 WRK-VAR       PIC X(5).
+       01 EXT-VAR       PIC X(5) EXTERNAL.
+       PROCEDURE        DIVISION.
+           DISPLAY EXT-VAR
+           END-DISPLAY.
+           MOVE "World" TO EXT-VAR.
+           EXIT PROGRAM.
+])
+
+AT_DATA([caller.cob], [
+       IDENTIFICATION   DIVISION.
+       PROGRAM-ID.      caller.
+       DATA             DIVISION.
+       WORKING-STORAGE  SECTION.
+       01 EXT-VAR       PIC X(5) EXTERNAL.
+       01 WRK-VAR       PIC X(5).
+       PROCEDURE        DIVISION.
+           MOVE "Hello" TO EXT-VAR.
+           CALL "callee"
+           END-CALL.
+           DISPLAY EXT-VAR
+           END-DISPLAY.
+           STOP RUN.
+])
+
+AT_CHECK([${COMPILE_MODULE} callee.cob])
+AT_CHECK([${COMPILE_MODULE} caller.cob])
+AT_CHECK([${COBCRUN} caller], [0],
+[Hello
+World
+])
+
+AT_CLEANUP
+
+
+## MOVE statement
+
+AT_SETUP([MOVE to itself])
+
+AT_DATA([prog.cob], [
+       IDENTIFICATION   DIVISION.
+       PROGRAM-ID.      prog.
+       DATA             DIVISION.
+       WORKING-STORAGE  SECTION.
+       01 X             PIC 99 VALUE 12.
+       PROCEDURE        DIVISION.
+           MOVE X TO X.
+           DISPLAY X NO ADVANCING
+           END-DISPLAY.
+           STOP RUN.
+])
+
+AT_CHECK([${COMPILE} -o prog prog.cob])
+AT_CHECK([java prog], [0], [12])
+
+AT_CLEANUP
+
+AT_SETUP([MOVE with refmod])
+
+AT_DATA([prog.cob], [
+       IDENTIFICATION   DIVISION.
+       PROGRAM-ID.      prog.
+       DATA             DIVISION.
+       WORKING-STORAGE  SECTION.
+       01 X             PIC 9(4) VALUE 0.
+       PROCEDURE        DIVISION.
+           MOVE "1" TO X(1:1).
+           DISPLAY X NO ADVANCING
+           END-DISPLAY.
+           STOP RUN.
+])
+
+AT_CHECK([${COMPILE} -o prog prog.cob])
+AT_CHECK([java prog], [0], [1000])
+
+AT_CLEANUP
+
+AT_SETUP([MOVE with refmod (variable)])
+
+AT_DATA([prog.cob], [
+       IDENTIFICATION   DIVISION.
+       PROGRAM-ID.      prog.
+       DATA             DIVISION.
+       WORKING-STORAGE  SECTION.
+       01 X             PIC X(4) VALUE "1234".
+       01 Y             PIC X(4) VALUE "abcd".
+       01 I             PIC 9 VALUE 1.
+       PROCEDURE        DIVISION.
+           MOVE X(1:I) TO Y.
+           DISPLAY Y NO ADVANCING
+           END-DISPLAY.
+           STOP RUN.
+])
+
+AT_CHECK([${COMPILE} -o prog prog.cob])
+AT_CHECK([java prog], [0], [1   ])
+
+AT_CLEANUP
+
+AT_SETUP([MOVE with group refmod])
+
+AT_DATA([prog.cob], [
+       IDENTIFICATION   DIVISION.
+       PROGRAM-ID.      prog.
+       DATA             DIVISION.
+       WORKING-STORAGE  SECTION.
+       01 G.
+         02 X           PIC 9999 VALUE 1234.
+       PROCEDURE        DIVISION.
+           MOVE "99" TO G(3:2).
+           DISPLAY G NO ADVANCING
+           END-DISPLAY.
+           STOP RUN.
+])
+
+AT_CHECK([${COMPILE} -o prog prog.cob])
+AT_CHECK([java prog], [0], [1299])
+
+AT_CLEANUP
+
+AT_SETUP([MOVE indexes])
+
+AT_DATA([prog.cob], [
+       IDENTIFICATION   DIVISION.
+       PROGRAM-ID.      prog.
+       DATA             DIVISION.
+       WORKING-STORAGE  SECTION.
+       01 G.
+         02 X           PIC X OCCURS 10 INDEXED I.
+       PROCEDURE        DIVISION.
+           SET I TO ZERO.
+           MOVE I TO X(1).
+           DISPLAY X(1) NO ADVANCING
+           END-DISPLAY.
+           STOP RUN.
+])
+
+AT_CHECK([${COMPILE} -o prog prog.cob])
+AT_CHECK([java prog], [0], [0])
+
+AT_CLEANUP
+
+AT_SETUP([MOVE X'00'])
+
+AT_DATA([dump.c], [
+#include <stdio.h>
+int dump (unsigned char *data);
+int dump (unsigned char *data)
+{
+  printf ("%02x%02x%02x", data[[0]], data[[1]], data[[2]]);
+  return 0;
+}
+])
+
+AT_CHECK([${CC} ${SHROPT} -o dump.${SHREXT} dump.c])
+
+AT_DATA([prog.cob], [
+       IDENTIFICATION   DIVISION.
+       PROGRAM-ID.      prog.
+       DATA             DIVISION.
+       WORKING-STORAGE  SECTION.
+       01 X             PIC XXX.
+       PROCEDURE        DIVISION.
+           MOVE X"000102" TO X.
+           CALL "dump" USING X
+           END-CALL.
+           STOP RUN.
+])
+
+AT_CHECK([${COMPILE} -o prog prog.cob])
+AT_CHECK([java prog], [0], [000102])
+
+AT_CLEANUP
+
+
+## OCCURS clause
+
+AT_SETUP([Level 01 subscripts])
+
+AT_DATA([prog.cob], [
+       IDENTIFICATION   DIVISION.
+       PROGRAM-ID.      prog.
+       DATA             DIVISION.
+       WORKING-STORAGE  SECTION.
+       01 X             PIC X OCCURS 10.
+       PROCEDURE        DIVISION.
+           STOP RUN.
+])
+
+AT_CHECK([${COMPILE_ONLY} prog.cob], [1], ,
+[prog.cob:6: Error: Level 01 item 'X' cannot have OCCURS clause
+])
+
+AT_CLEANUP
+
+
+## Expressions
+
+AT_SETUP([Class check with reference modification])
+
+AT_DATA([prog.cob], [
+       IDENTIFICATION   DIVISION.
+       PROGRAM-ID.      prog.
+       DATA             DIVISION.
+       WORKING-STORAGE  SECTION.
+       01 X             PIC X(6) VALUE "123   ".
+       PROCEDURE        DIVISION.
+           IF X(1:3) NUMERIC
+               DISPLAY "OK" NO ADVANCING
+               END-DISPLAY
+           END-IF.
+           STOP RUN.
+])
+
+AT_CHECK([${COMPILE} -o prog prog.cob])
+AT_CHECK([java prog], [0], [OK])
+
+AT_CLEANUP
+
+AT_SETUP([Index and parenthesized expression])
+
+AT_DATA([prog.cob], [
+       IDENTIFICATION   DIVISION.
+       PROGRAM-ID.      prog.
+       DATA             DIVISION.
+       WORKING-STORAGE  SECTION.
+       01 G.
+         02 X           PIC X OCCURS 1 INDEXED BY I.
+       PROCEDURE        DIVISION.
+         IF I < (I + 2)
+           DISPLAY "OK"
+           END-DISPLAY
+         END-IF.
+])
+
+AT_CHECK([${COMPILE_ONLY} -o prog prog.cob])
+
+AT_CLEANUP
+
+AT_SETUP([String concatenation])
+
+AT_DATA([prog.cob], [
+       IDENTIFICATION   DIVISION.
+       PROGRAM-ID.      prog.
+       DATA             DIVISION.
+       WORKING-STORAGE  SECTION.
+       01 X             PIC X(333) VALUE
+           '0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWX
+      -    'YZ0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUV
+      -    'WXYZ0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRST
+      -    'UVWXYZ0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQR
+      -    'STUVWXYZ0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOP
+      -    'QRSTUVWXYZ'.
+       PROCEDURE        DIVISION.
+           DISPLAY X NO ADVANCING
+           END-DISPLAY.
+           MOVE 
+           'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ01234567
+      -    '89abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ012345
+      -    '6789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123
+      -    '456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ01
+      -    '23456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ
+      -    '0123456789' TO X.
+           DISPLAY X NO ADVANCING
+           END-DISPLAY.
+           STOP RUN.
+])
+
+AT_CHECK([${COMPILE} -o prog prog.cob])
+AT_CHECK([java prog], [0], [0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ                       abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789                       ])
+
+AT_CLEANUP
+
+AT_SETUP([Alphanumeric and binary numeric])
+
+AT_DATA([prog.cob], [
+       IDENTIFICATION   DIVISION.
+       PROGRAM-ID.      prog.
+       DATA             DIVISION.
+       WORKING-STORAGE  SECTION.
+       01 X-X           PIC XXXX VALUE "0001".
+       01 X-9           PIC 9999 COMP VALUE 1.
+       PROCEDURE        DIVISION.
+         IF X-X = X-9
+           DISPLAY "OK" NO ADVANCING
+           END-DISPLAY
+         END-IF.
+])
+
+AT_CHECK([${COMPILE} -o prog prog.cob])
+AT_CHECK([java prog], [0], [OK])
+
+AT_CLEANUP
+
+
+## CALL statement
+
+AT_SETUP([Dynamic call with static linking])
+
+AT_DATA([callee.cob], [
+       IDENTIFICATION   DIVISION.
+       PROGRAM-ID.      callee.
+       PROCEDURE        DIVISION.
+           DISPLAY "OK" NO ADVANCING
+           END-DISPLAY.
+])
+
+AT_DATA([caller.cob], [
+       IDENTIFICATION   DIVISION.
+       PROGRAM-ID.      caller.
+       PROCEDURE        DIVISION.
+           CALL "callee"
+           END-CALL.
+])
+
+AT_CHECK([${COMPILE_MODULE} -c callee.cob])
+AT_CHECK([${COMPILE} -c caller.cob])
+AT_CHECK([${COMPILE} -o prog caller.${OBJEXT} callee.${OBJEXT}])
+AT_CHECK([java prog], [0], [OK])
+
+AT_CLEANUP
+
+AT_SETUP([CALL m1. CALL m2. CALL m1.])
+
+AT_DATA([m1.cob], [
+       IDENTIFICATION   DIVISION.
+       PROGRAM-ID.      m1.
+       DATA             DIVISION.
+       WORKING-STORAGE  SECTION.
+       01 X             PIC 9(4).
+       PROCEDURE        DIVISION.
+           COMPUTE X = 1 + 2
+           END-COMPUTE.
+           DISPLAY X
+           END-DISPLAY.
+])
+
+AT_DATA([m2.cob], [
+       IDENTIFICATION   DIVISION.
+       PROGRAM-ID.      m2.
+       DATA             DIVISION.
+       WORKING-STORAGE  SECTION.
+       01 X             PIC 9(4).
+       PROCEDURE        DIVISION.
+           COMPUTE X = 3 + 4
+           END-COMPUTE.
+           DISPLAY X
+           END-DISPLAY.
+])
+
+AT_DATA([caller.cob], [
+       IDENTIFICATION   DIVISION.
+       PROGRAM-ID.      caller.
+       PROCEDURE        DIVISION.
+           CALL "m1"
+           END-CALL.
+           CALL "m2"
+           END-CALL.
+           CALL "m1"
+           END-CALL.
+           STOP RUN.
+])
+
+AT_CHECK([${COMPILE_MODULE} m1.cob])
+AT_CHECK([${COMPILE_MODULE} m2.cob])
+AT_CHECK([${COMPILE} -o caller caller.cob])
+
+AT_CHECK([./caller], [0],
+[0003
+0007
+0003
+])
+
+AT_CLEANUP
+
+AT_SETUP([CANCEL ALL])
+
+AT_DATA([prog.cob], [
+       IDENTIFICATION   DIVISION.
+       PROGRAM-ID.      prog.
+       PROCEDURE        DIVISION.
+           CALL "call01"
+           END-CALL.
+           CANCEL ALL.
+           CALL "call01"
+           END-CALL.
+           STOP RUN.
+])
+
+AT_DATA([call01.cob], [
+       IDENTIFICATION   DIVISION.
+       PROGRAM-ID.      call01.
+       DATA             DIVISION.
+       WORKING-STORAGE  SECTION.
+       PROCEDURE        DIVISION.
+           CALL "call02"
+           END-CALL.
+           GOBACK.
+])
+
+AT_DATA([call02.cob], [
+       IDENTIFICATION   DIVISION.
+       PROGRAM-ID.      call02.
+       DATA             DIVISION.
+       WORKING-STORAGE  SECTION.
+       01 X             PIC 9.
+       PROCEDURE        DIVISION.
+           ADD 1 TO X.
+           DISPLAY X
+           END-DISPLAY.
+           EXIT PROGRAM.
+           GOBACK.
+])
+
+AT_CHECK([${COMPILE} -o prog prog.cob])
+AT_CHECK([${COMPILE_MODULE} call01.cob])
+AT_CHECK([${COMPILE_MODULE} call02.cob])
+AT_CHECK([java prog], [0],
+[1
+1
+])
+
+AT_CLEANUP
+
+AT_SETUP([CALL binary literal parameter/LENGTH OF - so])
+
+AT_CHECK([test $SHREXT != "dll" || exit 77])
+
+AT_DATA([test.conf], [
+include "default.conf"
+binary-byteorder: native
+])
+
+AT_DATA([dump.c], [
+#include <stdio.h>
+int dump (int *p)
+{
+  printf ("%8.8d\n", *p);
+  return 0;
+}
+])
+
+AT_DATA([prog.cob], [
+       IDENTIFICATION   DIVISION.
+       PROGRAM-ID.      prog.
+       DATA             DIVISION.
+       WORKING-STORAGE  SECTION.
+       01  MYOCC        PIC 9(8) COMP.
+       01  MYTAB.
+           03  MYBYTE   PIC X OCCURS 1 TO 20
+                        DEPENDING ON MYOCC.
+       PROCEDURE        DIVISION.
+           MOVE 9 TO MYOCC.
+           CALL "dump" USING BY CONTENT 1
+           END-CALL.
+           CALL "dump" USING BY CONTENT LENGTH OF MYTAB
+           END-CALL.
+           CALL "dump" USING BY CONTENT LENGTH OF MYOCC
+           END-CALL.
+           STOP RUN.
+])
+
+AT_CHECK([${COMPILE_MODULE} dump.c])
+AT_CHECK([${COMPILE} -o prog prog.cob])
+AT_CHECK([java prog], [0],
+[00000001
+00000009
+00000004
+])
+AT_CHECK([${COMPILE} -conf=test.conf -o prog prog.cob])
+AT_CHECK([java prog], [0],
+[00000001
+00000009
+00000004
+])
+
+AT_CLEANUP
+
+AT_SETUP([CALL binary literal parameter/LENGTH OF - DLL])
+
+AT_CHECK([test $SHREXT = "dll" || exit 77])
+
+AT_DATA([test.conf], [
+include "default.conf"
+binary-byteorder: native
+])
+
+AT_DATA([dump.c], [
+#include <stdio.h>
+#define DllExport __declspec (dllexport)
+DllExport int dump ();
+int dump (int *p)
+{
+  printf ("%8.8d\n", *p);
+  return 0;
+}
+])
+
+AT_DATA([prog.cob], [
+       IDENTIFICATION   DIVISION.
+       PROGRAM-ID.      prog.
+       DATA             DIVISION.
+       WORKING-STORAGE  SECTION.
+       01  MYOCC        PIC 9(8) COMP.
+       01  MYTAB.
+           03  MYBYTE   PIC X OCCURS 1 TO 20
+                        DEPENDING ON MYOCC.
+       PROCEDURE        DIVISION.
+           MOVE 9 TO MYOCC.
+           CALL "dump" USING BY CONTENT 1
+           END-CALL.
+           CALL "dump" USING BY CONTENT LENGTH OF MYTAB
+           END-CALL.
+           CALL "dump" USING BY CONTENT LENGTH OF MYOCC
+           END-CALL.
+           STOP RUN.
+])
+
+AT_CHECK([${COMPILE_MODULE} dump.c])
+AT_CHECK([${COMPILE} -o prog prog.cob])
+AT_CHECK([java prog], [0],
+[00000001
+00000009
+00000004
+])
+AT_CHECK([${COMPILE} -conf=test.conf -o prog prog.cob])
+AT_CHECK([java prog], [0],
+[00000001
+00000009
+00000004
+])
+
+AT_CLEANUP
+
+
+## INSPECT
+
+AT_SETUP([INSPECT REPLACING LEADING ZEROS BY SPACES])
+
+AT_DATA([prog.cob], [
+       IDENTIFICATION   DIVISION.
+       PROGRAM-ID.      prog.
+       DATA             DIVISION.
+       WORKING-STORAGE  SECTION.
+       01 X             PIC X(4) VALUE "0001".
+       PROCEDURE        DIVISION.
+           INSPECT X REPLACING LEADING ZEROS BY SPACES.
+           DISPLAY X NO ADVANCING
+           END-DISPLAY.
+           STOP RUN.
+])
+
+AT_CHECK([${COMPILE} prog.cob])
+AT_CHECK([java prog], [0], [   1])
+
+AT_CLEANUP
+
+AT_SETUP([INSPECT: No repeat conversion check])
+
+AT_DATA([prog.cob], [
+       IDENTIFICATION   DIVISION.
+       PROGRAM-ID.      prog.
+       DATA             DIVISION.
+       WORKING-STORAGE  SECTION.
+       01 X             PIC X(3) VALUE "BCA".
+       PROCEDURE        DIVISION.
+           INSPECT X CONVERTING "ABC" TO "BCD".
+           DISPLAY X NO ADVANCING
+           END-DISPLAY.
+           STOP RUN.
+])
+
+AT_CHECK([${COMPILE} prog.cob])
+AT_CHECK([java prog], [0], [CDB])
+
+AT_CLEANUP
+
+
+AT_SETUP([INSPECT CONVERTING spaces])
+
+AT_DATA([prog.cob], [
+       IDENTIFICATION   DIVISION.
+       PROGRAM-ID.      prog.
+       DATA             DIVISION.
+       WORKING-STORAGE  SECTION.
+       01 X             PIC X(10) VALUE X'2020200d0a0d0a'.
+       PROCEDURE        DIVISION.
+           INSPECT X CONVERTING X'0D0A' TO SPACES.
+           DISPLAY X NO ADVANCING
+           END-DISPLAY.
+           STOP RUN.
+])
+
+AT_CHECK([${COMPILE} prog.cob])
+AT_CHECK([java prog], [0], [          ])
+
+AT_CLEANUP
+
+
+AT_SETUP([INSPECT CONVERTING different length])
+
+AT_DATA([prog.cob], [
+       IDENTIFICATION   DIVISION.
+       PROGRAM-ID.      prog.
+       DATA             DIVISION.
+       WORKING-STORAGE  SECTION.
+       01 X             PIC X(8) VALUE 'abcdefgh'.
+       PROCEDURE        DIVISION.
+           INSPECT X CONVERTING 'bc' TO 'Z'.
+           DISPLAY X NO ADVANCING
+           END-DISPLAY.
+           STOP RUN.
+])
+
+AT_CHECK([${COMPILE} prog.cob], [1], [],
+[prog.cob:8: Error: 'bc' and 'Z' have not same size!
+])
+
+AT_CLEANUP
+
+
+AT_SETUP([INSPECT: REPLACING figurative constant])
+
+AT_DATA([prog.cob], [
+       IDENTIFICATION   DIVISION.
+       PROGRAM-ID.      prog.
+       DATA             DIVISION.
+       WORKING-STORAGE  SECTION.
+       01 X             PIC X(3) VALUE "BCA".
+       PROCEDURE        DIVISION.
+           INSPECT X REPLACING ALL "BC" BY SPACE.
+           DISPLAY X NO ADVANCING
+           END-DISPLAY.
+           STOP RUN.
+])
+
+AT_CHECK([${COMPILE} prog.cob])
+AT_CHECK([java prog], [0], [  A])
+
+AT_CLEANUP
+
+
+AT_SETUP([INSPECT: TALLYING BEFORE])
+
+AT_DATA([prog.cob], [
+       IDENTIFICATION   DIVISION.
+       PROGRAM-ID.      prog.
+       DATA             DIVISION.
+       WORKING-STORAGE  SECTION.
+       01 X             PIC X(4) VALUE "ABC ".
+       01 TAL           PIC 999 VALUE 0.
+       PROCEDURE        DIVISION.
+           MOVE 0 TO TAL.
+           INSPECT X TALLYING TAL FOR CHARACTERS
+                     BEFORE INITIAL " ".
+           DISPLAY TAL NO ADVANCING
+           END-DISPLAY.
+           MOVE 0 TO TAL.
+           MOVE " ABC" TO X.
+           INSPECT X TALLYING TAL FOR CHARACTERS
+                     BEFORE INITIAL " ".
+           DISPLAY TAL NO ADVANCING
+           END-DISPLAY.
+           STOP RUN.
+])
+
+AT_CHECK([${COMPILE} prog.cob])
+AT_CHECK([java prog], [0], [003000])
+
+AT_CLEANUP
+
+
+AT_SETUP([INSPECT: TALLYING AFTER])
+
+AT_DATA([prog.cob], [
+       IDENTIFICATION   DIVISION.
+       PROGRAM-ID.      prog.
+       DATA             DIVISION.
+       WORKING-STORAGE  SECTION.
+       01 X             PIC X(4) VALUE "ABC ".
+       01 TAL           PIC 999 VALUE 0.
+       PROCEDURE        DIVISION.
+           MOVE 0 TO TAL.
+           INSPECT X TALLYING TAL FOR CHARACTERS
+                     AFTER INITIAL " ".
+           DISPLAY TAL NO ADVANCING
+           END-DISPLAY.
+           MOVE 0 TO TAL.
+           MOVE " ABC" TO X.
+           INSPECT X TALLYING TAL FOR CHARACTERS
+                     AFTER INITIAL " ".
+           DISPLAY TAL NO ADVANCING
+           END-DISPLAY.
+           STOP RUN.
+])
+
+AT_CHECK([${COMPILE} prog.cob])
+AT_CHECK([java prog], [0], [000003])
+
+AT_CLEANUP
+
+AT_SETUP([INSPECT REPLACING TRAILING ZEROS BY SPACES])
+
+AT_DATA([prog.cob], [
+       IDENTIFICATION   DIVISION.
+       PROGRAM-ID.      prog.
+       DATA             DIVISION.
+       WORKING-STORAGE  SECTION.
+       01 X             PIC X(4) VALUE "1000".
+       PROCEDURE        DIVISION.
+           INSPECT X REPLACING TRAILING ZEROS BY SPACES.
+           DISPLAY X NO ADVANCING
+           END-DISPLAY.
+           STOP RUN.
+])
+
+AT_CHECK([${COMPILE} prog.cob])
+AT_CHECK([java prog], [0], [1   ])
+
+AT_CLEANUP
+
+AT_SETUP([INSPECT REPLACING complex])
+
+AT_DATA([prog.cob], [
+       IDENTIFICATION   DIVISION.
+       PROGRAM-ID.      prog.
+       DATA             DIVISION.
+       WORKING-STORAGE  SECTION.
+       01 X             PIC X(12) VALUE "AAABBCDCCCCC".
+       PROCEDURE        DIVISION.
+           INSPECT X REPLACING 
+             ALL      "A" BY "Z"
+                      "B" BY "Y"
+             TRAILING "C" BY "X".
+           DISPLAY X NO ADVANCING
+           END-DISPLAY.
+           STOP RUN.
+])
+
+AT_CHECK([${COMPILE} prog.cob])
+AT_CHECK([java prog], [0], [ZZZYYCDXXXXX])
+AT_CLEANUP
+
+AT_SETUP([SWITCHES])
+
+AT_DATA([prog.cob], [
+       IDENTIFICATION   DIVISION.
+       PROGRAM-ID.      prog.
+       ENVIRONMENT DIVISION.
+       CONFIGURATION SECTION.
+       SPECIAL-NAMES.
+           SWITCH-1 IS SWIT1
+             ON IS SWIT1-ON
+             OFF IS SWIT1-OFF
+           SWITCH-2 IS SWIT2
+             ON IS SWIT2-ON
+             OFF IS SWIT2-OFF.
+       DATA             DIVISION.
+       WORKING-STORAGE  SECTION.
+       PROCEDURE        DIVISION.
+           IF SWIT1-ON
+              DISPLAY "ON" NO ADVANCING
+              END-DISPLAY
+           ELSE
+              DISPLAY "OFF" NO ADVANCING
+              END-DISPLAY
+           END-IF.
+           IF SWIT2-ON
+              DISPLAY "ON" NO ADVANCING
+              END-DISPLAY
+           ELSE
+              DISPLAY "OFF" NO ADVANCING
+              END-DISPLAY
+           END-IF.
+           SET SWIT1 TO OFF.
+           SET SWIT2 TO ON.
+           IF SWIT1-ON
+              DISPLAY "ON" NO ADVANCING
+              END-DISPLAY
+           ELSE
+              DISPLAY "OFF" NO ADVANCING
+              END-DISPLAY
+           END-IF.
+           IF SWIT2-ON
+              DISPLAY "ON" NO ADVANCING
+              END-DISPLAY
+           ELSE
+              DISPLAY "OFF" NO ADVANCING
+              END-DISPLAY
+           END-IF.
+           STOP RUN.
+])
+
+AT_CHECK([${COMPILE} prog.cob])
+AT_CHECK([COB_SWITCH_1=ON COB_SWITCH_2=OFF java prog], [0], [ONOFFOFFON])
+
+AT_CLEANUP
+
+
+## PERFORM
+
+AT_SETUP([Nested PERFORM])
+
+AT_DATA([prog.cob], [
+       IDENTIFICATION   DIVISION.
+       PROGRAM-ID.      prog.
+       DATA             DIVISION.
+       PROCEDURE        DIVISION.
+           PERFORM 2 TIMES
+             PERFORM 2 TIMES
+               DISPLAY "X" NO ADVANCING
+               END-DISPLAY
+             END-PERFORM
+           END-PERFORM.
+           STOP RUN.
+])
+
+AT_CHECK([${COMPILE} -o prog prog.cob])
+AT_CHECK([java prog], [0], [XXXX])
+
+AT_CLEANUP
+
+
+## EXIT PERFORM  see ISO/IEC 1989:2002(E) 14.8.13 Format 5
+## (= the same as in MF-LRM  "EXIT"  FORMAT 2 ... )
+
+AT_SETUP([EXIT PERFORM])
+
+AT_DATA([prog.cob], [
+       IDENTIFICATION   DIVISION.
+       PROGRAM-ID.      prog.
+       PROCEDURE        DIVISION.
+           PERFORM 2 TIMES
+             DISPLAY "OK" NO ADVANCING
+             END-DISPLAY
+             EXIT PERFORM
+             DISPLAY "NOT REACHED"
+             END-DISPLAY
+           END-PERFORM
+           STOP RUN.
+])
+
+AT_CHECK([${COMPILE} -o prog prog.cob])
+AT_CHECK([java prog], [0], [OK])
+
+AT_CLEANUP
+
+## EXIT PERFORM  see ISO/IEC 1989:2002(E) 14.8.13 Format 5
+## (= the same as in MF-LRM  "EXIT"  FORMAT 2 ... )
+
+AT_SETUP([EXIT PERFORM CYCLE])
+
+AT_DATA([prog.cob], [
+       IDENTIFICATION   DIVISION.
+       PROGRAM-ID.      prog.
+       PROCEDURE        DIVISION.
+           PERFORM 2 TIMES
+             DISPLAY "OK" NO ADVANCING
+             END-DISPLAY
+             EXIT PERFORM CYCLE
+             DISPLAY "NOT REACHED"
+             END-DISPLAY
+           END-PERFORM
+           STOP RUN.
+])
+
+AT_CHECK([${COMPILE} -o prog prog.cob])
+AT_CHECK([java prog], [0], [OKOK])
+
+AT_CLEANUP
+
+
+## EXIT PARAGRAPH  see ISO/IEC 1989:2002(E) 14.8.13 Format 6
+
+AT_SETUP([EXIT PARAGRAPH])
+
+AT_DATA([prog.cob], [
+       IDENTIFICATION   DIVISION.
+       PROGRAM-ID.      prog.
+       DATA             DIVISION.
+       WORKING-STORAGE  SECTION.
+       01 INDVAL        PIC 9(4).
+       PROCEDURE        DIVISION.
+       A01.
+           PERFORM VARYING INDVAL FROM 1 BY 1 UNTIL INDVAL > 10
+            IF INDVAL > 2
+               EXIT PARAGRAPH
+            END-IF
+           END-PERFORM
+           .
+       A02.
+           DISPLAY INDVAL NO ADVANCING
+           END-DISPLAY
+           STOP RUN
+           .
+])
+
+AT_CHECK([${COMPILE} -o prog prog.cob])
+AT_CHECK([java prog], [0], [0003])
+
+AT_CLEANUP
+
+
+## EXIT SECTION  see ISO/IEC 1989:2002(E) 14.8.13 Format 6
+
+AT_SETUP([EXIT SECTION])
+
+AT_DATA([prog.cob], [
+       IDENTIFICATION   DIVISION.
+       PROGRAM-ID.      prog.
+       DATA             DIVISION.
+       WORKING-STORAGE  SECTION.
+       01 INDVAL        PIC 9(4).
+       PROCEDURE        DIVISION.
+       A01 SECTION.
+       A011.
+           PERFORM VARYING INDVAL FROM 1 BY 1 UNTIL INDVAL > 10
+            IF INDVAL > 2
+               EXIT SECTION
+            END-IF
+           END-PERFORM
+           .
+       A012.
+           DISPLAY INDVAL NO ADVANCING
+           END-DISPLAY
+           .
+       A02 SECTION.
+           DISPLAY INDVAL NO ADVANCING
+           END-DISPLAY
+           STOP RUN
+           .
+])
+
+AT_CHECK([${COMPILE} -o prog prog.cob])
+AT_CHECK([java prog], [0], [0003])
+
+AT_CLEANUP
+
+
+AT_SETUP([88 with FILLER])
+
+AT_DATA([prog.cob], [
+       IDENTIFICATION   DIVISION.
+       PROGRAM-ID.      prog.
+       DATA             DIVISION.
+       WORKING-STORAGE  SECTION.
+       01 FILLER        PIC X VALUE SPACE.
+         88 X           VALUE "X".
+       PROCEDURE        DIVISION.
+           IF X
+               DISPLAY "NO" NO ADVANCING
+               END-DISPLAY
+           END-IF.
+           SET X TO TRUE.
+           IF X
+               DISPLAY "OK" NO ADVANCING
+               END-DISPLAY
+           END-IF.
+           STOP RUN.
+])
+
+AT_CHECK([${COMPILE} -o prog prog.cob])
+AT_CHECK([java prog], [0], [OK])
+
+AT_CLEANUP
+
+AT_SETUP([Non-overflow after overflow])
+
+AT_DATA([prog.cob], [
+       IDENTIFICATION   DIVISION.
+       PROGRAM-ID.      prog.
+       DATA             DIVISION.
+       WORKING-STORAGE  SECTION.
+       01 X             PIC 9(2) VALUE 0.
+       01 Y             PIC 9(2) VALUE 0.
+       PROCEDURE        DIVISION.
+           COMPUTE X = 100
+           END-COMPUTE.
+           COMPUTE Y = 99
+           END-COMPUTE.
+           DISPLAY Y NO ADVANCING
+           END-DISPLAY.
+           STOP RUN.
+])
+
+AT_CHECK([${COMPILE} -o prog prog.cob])
+AT_CHECK([java prog], [0], [99])
+
+AT_CLEANUP
+
+
+## PERFORM statement
+
+AT_SETUP([PERFORM ... CONTINUE])
+
+AT_DATA([prog.cob], [
+       IDENTIFICATION   DIVISION.
+       PROGRAM-ID.      prog.
+       PROCEDURE        DIVISION.
+           PERFORM 2 TIMES
+             CONTINUE
+           END-PERFORM.
+])
+
+AT_CHECK([${COMPILE_ONLY} prog.cob], [0])
+
+AT_CLEANUP
+
+
+AT_SETUP([STRING with subscript reference])
+
+AT_DATA([prog.cob], [
+       IDENTIFICATION   DIVISION.
+       PROGRAM-ID.      prog.
+       DATA             DIVISION.
+       WORKING-STORAGE  SECTION.
+       01 G.
+         02 X           PIC X(3) OCCURS 3.
+       PROCEDURE        DIVISION.
+           STRING "abc" INTO X(1)
+           END-STRING.
+           DISPLAY X(1) NO ADVANCING
+           END-DISPLAY.
+           STOP RUN.
+])
+
+AT_CHECK([${COMPILE} -o prog prog.cob])
+AT_CHECK([java prog], [0], [abc])
+
+AT_CLEANUP
+
+
+AT_SETUP([UNSTRING DELIMITED ALL LOW-VALUE])
+
+AT_DATA([prog.cob], [
+       IDENTIFICATION   DIVISION.
+       PROGRAM-ID.      prog.
+       DATA             DIVISION.
+       WORKING-STORAGE  SECTION.
+       01  G.
+           03 FILLER    PIC XXX VALUE "ABC".
+           03 FILLER    PIC XX  VALUE LOW-VALUES.
+           03 FILLER    PIC XXX VALUE "DEF".
+       01  A            PIC XXX.
+       01  B            PIC XXX.
+       PROCEDURE        DIVISION.
+           UNSTRING G DELIMITED BY ALL LOW-VALUES
+                      INTO A B
+           END-UNSTRING.
+           DISPLAY A
+           END-DISPLAY.
+           DISPLAY B
+           END-DISPLAY.
+           STOP RUN.
+])
+
+AT_CHECK([${COMPILE} -o prog prog.cob])
+AT_CHECK([java prog], [0],
+[ABC
+DEF
+])
+
+AT_CLEANUP
+
+
+AT_SETUP([READ INTO AT-END sequence])
+
+AT_DATA([prog.cob], [
+       IDENTIFICATION   DIVISION.
+       PROGRAM-ID.      prog.
+       ENVIRONMENT      DIVISION.
+       INPUT-OUTPUT     SECTION.
+       FILE-CONTROL.
+       SELECT TEST-FILE ASSIGN "./TEST-FILE".
+       DATA             DIVISION.
+       FILE             SECTION.
+       FD TEST-FILE.
+       01 TEST-REC      PIC X(10).
+       WORKING-STORAGE  SECTION.
+       01 X             PIC X(10).
+       PROCEDURE        DIVISION.
+           OPEN  OUTPUT TEST-FILE.
+           CLOSE TEST-FILE.
+           OPEN  INPUT  TEST-FILE.
+           READ  TEST-FILE INTO X
+               AT END MOVE ZERO TO X
+           END-READ.
+           CLOSE TEST-FILE.
+           DISPLAY X NO ADVANCING
+           END-DISPLAY.
+           STOP RUN.
+])
+
+AT_CHECK([${COMPILE} -o prog prog.cob])
+AT_CHECK([java prog], [0], [0000000000])
+
+AT_CLEANUP
+
+
+AT_SETUP([First READ on empty SEQUENTIAL INDEXED file])
+
+AT_CHECK([test "$COB_HAS_ISAM" = "yes" || exit 77])
+
+AT_DATA([prog.cob], [
+       IDENTIFICATION   DIVISION.
+       PROGRAM-ID.      prog.
+       ENVIRONMENT      DIVISION.
+       INPUT-OUTPUT     SECTION.
+       FILE-CONTROL.
+       SELECT TEST-FILE ASSIGN       "./TEST-FILE"
+                        ORGANIZATION IS  INDEXED
+                        ACCESS MODE  IS  SEQUENTIAL
+                        RECORD KEY   IS  TEST-KEY.
+       DATA             DIVISION.
+       FILE             SECTION.
+       FD TEST-FILE.
+       01 TEST-KEY      PIC X(10).
+       PROCEDURE        DIVISION.
+           OPEN  OUTPUT TEST-FILE.
+           CLOSE TEST-FILE.
+           OPEN  INPUT  TEST-FILE.
+           READ  TEST-FILE
+               AT END
+                   DISPLAY "OK" NO ADVANCING
+                   END-DISPLAY
+           END-READ.
+           CLOSE TEST-FILE.
+           STOP RUN.
+])
+
+AT_CHECK([${COMPILE} -o prog prog.cob])
+AT_CHECK([java prog], [0], [OK])
+
+AT_CLEANUP
+
+
+AT_SETUP([REWRITE a RELATIVE file with RANDOM access])
+
+AT_DATA([prog.cob], [
+       IDENTIFICATION   DIVISION.
+       PROGRAM-ID.      prog.
+       ENVIRONMENT      DIVISION.
+       INPUT-OUTPUT     SECTION.
+       FILE-CONTROL.
+       SELECT TEST-FILE ASSIGN       "./TEST-FILE"
+                        ORGANIZATION IS RELATIVE
+                        ACCESS MODE  IS RANDOM
+                        RELATIVE KEY IS TEST-KEY.
+       DATA             DIVISION.
+       FILE             SECTION.
+       FD TEST-FILE.
+       01 TEST-REC      PIC X.
+       WORKING-STORAGE  SECTION.
+       01 TEST-KEY      PIC 9.
+       PROCEDURE        DIVISION.
+      *
+           OPEN OUTPUT TEST-FILE.
+           MOVE 1 TO TEST-KEY. MOVE "A" TO TEST-REC. WRITE TEST-REC
+           END-WRITE.
+           MOVE 2 TO TEST-KEY. MOVE "B" TO TEST-REC. WRITE TEST-REC
+           END-WRITE.
+           CLOSE TEST-FILE.
+      *
+           OPEN I-O TEST-FILE.
+           MOVE 1 TO TEST-KEY. READ TEST-FILE
+           END-READ.
+           MOVE 2 TO TEST-KEY. MOVE "C" TO TEST-REC. REWRITE TEST-REC
+           END-REWRITE.
+           CLOSE TEST-FILE.
+      *
+           OPEN INPUT TEST-FILE.
+           MOVE 1 TO TEST-KEY. READ TEST-FILE
+           END-READ. DISPLAY TEST-REC
+           END-DISPLAY.
+           MOVE 2 TO TEST-KEY. READ TEST-FILE
+           END-READ. DISPLAY TEST-REC
+           END-DISPLAY.
+           CLOSE TEST-FILE.
+           STOP RUN.
+])
+
+AT_CHECK([${COMPILE} -o prog prog.cob])
+AT_CHECK([java prog], [0],
+[A
+C
+])
+
+AT_CLEANUP
+
+
+AT_SETUP([SORT: table sort])
+
+AT_DATA([prog.cob], [
+       IDENTIFICATION   DIVISION.
+       PROGRAM-ID.      prog.
+       DATA             DIVISION.
+       WORKING-STORAGE  SECTION.
+       01 G             VALUE "d4b2e1a3c5".
+         02 TBL         OCCURS 5.
+           03 X         PIC X.
+           03 Y         PIC 9.
+       PROCEDURE        DIVISION.
+           SORT TBL ASCENDING KEY X.
+           DISPLAY G
+           END-DISPLAY.
+           SORT TBL DESCENDING KEY Y.
+           DISPLAY G
+           END-DISPLAY.
+           SORT TBL ASCENDING KEY TBL.
+           DISPLAY G
+           END-DISPLAY.
+           SORT TBL DESCENDING KEY.
+           DISPLAY G
+           END-DISPLAY.
+           STOP RUN.
+])
+
+AT_CHECK([${COMPILE} -o prog prog.cob])
+AT_CHECK([java prog], [0],
+[a3b2c5d4e1
+c5d4a3b2e1
+a3b2c5d4e1
+e1d4c5b2a3
+])
+
+AT_CLEANUP
+
+AT_SETUP([SORT: EBCDIC table sort])
+
+AT_DATA([prog.cob], [
+       IDENTIFICATION   DIVISION.
+       PROGRAM-ID.      prog.
+       ENVIRONMENT DIVISION.
+       CONFIGURATION SECTION.
+       SPECIAL-NAMES.
+           ALPHABET ALPHA IS EBCDIC.
+       DATA             DIVISION.
+       WORKING-STORAGE  SECTION.
+       01 Z  PIC X(10)  VALUE "d4b2e1a3c5".
+       01 G             VALUE "d4b2e1a3c5".
+         02 TBL         OCCURS 10.
+           03 X         PIC X.
+       PROCEDURE        DIVISION.
+           SORT TBL ASCENDING KEY X.
+           DISPLAY G
+           END-DISPLAY.
+           MOVE Z TO G.
+           SORT TBL DESCENDING KEY X.
+           DISPLAY G
+           END-DISPLAY.
+           MOVE Z TO G.
+           SORT TBL ASCENDING KEY X SEQUENCE ALPHA.
+           DISPLAY G
+           END-DISPLAY.
+           MOVE Z TO G.
+           SORT TBL DESCENDING KEY X SEQUENCE ALPHA.
+           DISPLAY G
+           END-DISPLAY.
+           STOP RUN.
+])
+
+AT_CHECK([${COMPILE} -o prog prog.cob])
+AT_CHECK([java prog], [0],
+[12345abcde
+edcba54321
+abcde12345
+54321edcba
+])
+
+AT_CLEANUP
+
+AT_SETUP([SORT nonexistent file])
+
+AT_DATA([prog.cob], [
+       IDENTIFICATION   DIVISION.
+       PROGRAM-ID.      prog.
+       ENVIRONMENT      DIVISION.
+       INPUT-OUTPUT     SECTION.
+       FILE-CONTROL.
+       SELECT SORT-IN   ASSIGN "SORT-IN".
+       SELECT SORT-OUT  ASSIGN "SORT-OUT".
+       SELECT SORT-WRK  ASSIGN "SORT-WRK".
+       DATA             DIVISION.
+       FILE             SECTION.
+       FD SORT-IN.
+       01 IN-REC        PIC X(100).
+       FD SORT-OUT.
+       01 OUT-REC       PIC X(100).
+       SD SORT-WRK.
+       01 WRK-REC       PIC X(100).
+       PROCEDURE        DIVISION.
+           SORT SORT-WRK
+                ASCENDING KEY WRK-REC
+                USING  SORT-IN
+                GIVING SORT-OUT.
+             STOP RUN.
+])
+
+AT_CHECK([${COMPILE} -o prog prog.cob])
+AT_CHECK([java prog])
+AT_CHECK([cat SORT-OUT], [0], [])
+
+AT_CLEANUP
+
+
+AT_SETUP([PIC ZZZ-, ZZZ+])
+
+AT_DATA([prog.cob], [
+       IDENTIFICATION   DIVISION.
+       PROGRAM-ID.      prog.
+       DATA             DIVISION.
+       WORKING-STORAGE  SECTION.
+       01 X-ZZZN        PIC ZZZ-.
+       01 X-ZZZP        PIC ZZZ+.
+       PROCEDURE        DIVISION.
+           MOVE -1 TO X-ZZZN. DISPLAY "(" X-ZZZN ")"
+           END-DISPLAY.
+           MOVE  0 TO X-ZZZN. DISPLAY "(" X-ZZZN ")"
+           END-DISPLAY.
+           MOVE +1 TO X-ZZZN. DISPLAY "(" X-ZZZN ")"
+           END-DISPLAY.
+           MOVE -1 TO X-ZZZP. DISPLAY "(" X-ZZZP ")"
+           END-DISPLAY.
+           MOVE  0 TO X-ZZZP. DISPLAY "(" X-ZZZP ")"
+           END-DISPLAY.
+           MOVE +1 TO X-ZZZP. DISPLAY "(" X-ZZZP ")"
+           END-DISPLAY.
+           STOP RUN.
+])
+
+AT_CHECK([${COMPILE} -o prog prog.cob])
+AT_CHECK([java prog], [0], 
+[(  1-)
+(    )
+(  1 )
+(  1-)
+(    )
+(  1+)
+])
+
+AT_CLEANUP
+
+
+AT_SETUP([Larger REDEFINES lengths])
+
+AT_DATA([prog.cob], [
+       IDENTIFICATION   DIVISION.
+       PROGRAM-ID.      prog.
+       DATA             DIVISION.
+       WORKING-STORAGE  SECTION.
+       01  XMAIN        PIC X(8).
+       01  XMAINRED REDEFINES XMAIN.
+           03  FILLER         PIC X(4).
+           03  XMAIN03.
+               05  XMAIN0501  PIC X(4).
+               05  XMAIN0502 REDEFINES XMAIN0501 PIC X(5).
+       PROCEDURE        DIVISION.
+           DISPLAY LENGTH OF XMAIN
+           END-DISPLAY.
+           DISPLAY LENGTH OF XMAINRED
+           END-DISPLAY.
+           DISPLAY LENGTH OF XMAIN03
+           END-DISPLAY.
+           DISPLAY LENGTH OF XMAIN0501
+           END-DISPLAY.
+           DISPLAY LENGTH OF XMAIN0502
+           END-DISPLAY.
+           STOP RUN.
+])
+
+AT_CHECK([${COMPILE} -std=mf -o prog prog.cob], [0], ,
+[prog.cob:11: Warning: Size of 'XMAIN0502' larger than size of 'XMAIN0501'
+])
+AT_CHECK([java prog], [0], 
+[8
+9
+5
+4
+5
+])
+
+AT_CLEANUP
+
+AT_SETUP([PERFORM type OSVS])
+
+AT_DATA([test.conf], [
+include "default.conf"
+perform-osvs: yes
+])
+
+AT_DATA([prog.cob], [
+       IDENTIFICATION   DIVISION.
+       PROGRAM-ID.      prog.
+       DATA             DIVISION.
+       WORKING-STORAGE  SECTION.
+       01  MYOCC        PIC 9(8) COMP VALUE 0.
+       PROCEDURE        DIVISION.
+       ASTART SECTION.
+       A01.
+           PERFORM BTEST.
+           DISPLAY "OK"
+           END-DISPLAY.
+           STOP RUN.
+       BTEST SECTION.
+       B01.
+           PERFORM B02 VARYING MYOCC FROM 1 BY 1
+                   UNTIL MYOCC > 5.
+           GO TO B99.
+       B02.
+           IF MYOCC > 1
+              GO TO B99
+           END-IF.
+       B99.
+           EXIT.
+])
+
+AT_CHECK([${COMPILE} -conf=test.conf -o prog prog.cob])
+AT_CHECK([java prog], [0],
+[OK
+])
+
+AT_CLEANUP
+
+
+AT_SETUP([Sticky LINKAGE])
+
+AT_DATA([test.conf], [
+include "default.conf"
+sticky-linkage: yes
+])
+
+AT_DATA([callee.cob], [
+       IDENTIFICATION   DIVISION.
+       PROGRAM-ID.      callee.
+       DATA             DIVISION.
+       LINKAGE          SECTION.
+       01 P1            PIC X.
+       01 P2            PIC X(6).
+       01 P3            PIC X(6).
+       PROCEDURE        DIVISION USING P1 P2.
+           IF P1 = "A"
+              SET ADDRESS OF P3 TO ADDRESS OF P2
+           ELSE
+              DISPLAY P3
+              END-DISPLAY
+           END-IF.
+           EXIT PROGRAM.
+])
+
+AT_DATA([caller.cob], [
+       IDENTIFICATION   DIVISION.
+       PROGRAM-ID.      caller.
+       DATA             DIVISION.
+       WORKING-STORAGE  SECTION.
+       01 P1            PIC X    VALUE "A".
+       01 P2            PIC X(6) VALUE "NOT OK".
+       PROCEDURE        DIVISION.
+           CALL "callee" USING P1 P2
+           END-CALL.
+           MOVE "B"      TO P1.
+           MOVE "OKOKOK" TO P2.
+           CALL "callee" USING P1
+           END-CALL.
+           STOP RUN.
+])
+
+AT_CHECK([${COMPILE_MODULE} -conf=test.conf callee.cob])
+AT_CHECK([${COMPILE} -conf=test.conf -o caller caller.cob])
+AT_CHECK([./caller], [0],
+[OKOKOK
+])
+
+AT_CLEANUP
+
+AT_SETUP([COB_PRE_LOAD test])
+
+AT_DATA([callee.cob], [
+       IDENTIFICATION   DIVISION.
+       PROGRAM-ID.      callee2.
+       PROCEDURE        DIVISION.
+           DISPLAY "OK" NO ADVANCING
+           END-DISPLAY.
+])
+
+AT_DATA([caller.cob], [
+       IDENTIFICATION   DIVISION.
+       PROGRAM-ID.      caller.
+       PROCEDURE        DIVISION.
+           CALL "callee2"
+           END-CALL.
+])
+
+AT_CHECK([${COMPILE_MODULE} callee.cob])
+AT_CHECK([${COMPILE} caller.cob])
+AT_CHECK([export COB_PRE_LOAD=callee; ./caller], [0], [OK])
+
+AT_CLEANUP
+
+AT_SETUP([COB_LOAD_CASE=UPPER test])
+
+AT_DATA([CALLEE.cob], [
+       IDENTIFICATION   DIVISION.
+       PROGRAM-ID.      callee.
+       PROCEDURE        DIVISION.
+           DISPLAY "OK" NO ADVANCING
+           END-DISPLAY.
+])
+
+AT_DATA([caller.cob], [
+       IDENTIFICATION   DIVISION.
+       PROGRAM-ID.      caller.
+       PROCEDURE        DIVISION.
+           CALL "callee"
+           END-CALL.
+])
+
+AT_CHECK([${COMPILE_MODULE} CALLEE.cob])
+AT_CHECK([${COMPILE} caller.cob])
+AT_CHECK([export COB_LOAD_CASE=UPPER; ./caller], [0], [OK])
+
+AT_CLEANUP
+
+AT_SETUP([88 level with FALSE IS clause])
+
+AT_DATA([prog.cob], [
+       IDENTIFICATION   DIVISION.
+       PROGRAM-ID.      prog.
+       DATA             DIVISION.
+       WORKING-STORAGE  SECTION.
+       01  MYFLD        PIC X(6) VALUE "ABCDEF".
+           88  MYFLD88  VALUE "ABCDEF"
+               FALSE IS "OKOKOK".
+       PROCEDURE        DIVISION.
+       ASTART SECTION.
+       A01.
+           SET MYFLD88 TO FALSE.
+           DISPLAY MYFLD
+           END-DISPLAY.
+])
+
+AT_CHECK([${COMPILE} prog.cob])
+AT_CHECK([java prog], [0],
+[OKOKOK
+])
+
+AT_CLEANUP
+
+AT_SETUP([ALLOCATE/FREE with BASED item])
+
+AT_DATA([prog.cob], [
+       IDENTIFICATION   DIVISION.
+       PROGRAM-ID.      prog.
+       DATA             DIVISION.
+       LINKAGE          SECTION.
+       01  MYFLD        PIC X(6) BASED VALUE "ABCDEF".
+       PROCEDURE        DIVISION.
+       ASTART SECTION.
+       A01.
+           ALLOCATE MYFLD INITIALIZED.
+           DISPLAY MYFLD
+           END-DISPLAY.
+           FREE ADDRESS OF MYFLD.
+])
+
+AT_CHECK([${COMPILE} prog.cob])
+AT_CHECK([java prog], [0],
+[ABCDEF
+])
+
+AT_CLEANUP
+
+AT_SETUP([INITIZIALIZE with reference modification])
+
+AT_DATA([prog.cob], [
+       IDENTIFICATION   DIVISION.
+       PROGRAM-ID.      prog.
+       DATA             DIVISION.
+       WORKING-STORAGE  SECTION.
+       01  MYFLD        PIC X(6) VALUE "ABCDEF".
+       PROCEDURE        DIVISION.
+       ASTART SECTION.
+       A01.
+           INITIALIZE MYFLD (1:2).
+           DISPLAY MYFLD
+           END-DISPLAY.
+])
+
+AT_CHECK([${COMPILE} prog.cob])
+AT_CHECK([java prog], [0],
+[  CDEF
+])
+
+AT_CLEANUP
+
+AT_SETUP([CALL with OMITTED parameter])
+
+AT_DATA([callee.cob], [
+       IDENTIFICATION   DIVISION.
+       PROGRAM-ID.      callee.
+       DATA             DIVISION.
+       LINKAGE          SECTION.
+       01 P1            PIC X.
+       01 P2            PIC X(6).
+       PROCEDURE        DIVISION USING P1 P2.
+           IF P2 OMITTED
+              DISPLAY "OKOKOK"
+              END-DISPLAY
+           END-IF.
+           EXIT PROGRAM.
+])
+
+AT_DATA([caller.cob], [
+       IDENTIFICATION   DIVISION.
+       PROGRAM-ID.      caller.
+       DATA             DIVISION.
+       WORKING-STORAGE  SECTION.
+       01 P1            PIC X    VALUE "A".
+       01 P2            PIC X(6) VALUE "NOT OK".
+       PROCEDURE        DIVISION.
+           CALL "callee" USING P1 OMITTED
+           END-CALL.
+           STOP RUN.
+])
+
+AT_CHECK([${COMPILE_MODULE} callee.cob])
+AT_CHECK([${COMPILE} -o caller caller.cob])
+AT_CHECK([./caller], [0],
+[OKOKOK
+])
+
+AT_CLEANUP
+
+AT_SETUP([ANY LENGTH])
+
+AT_DATA([callee.cob], [
+       IDENTIFICATION   DIVISION.
+       PROGRAM-ID.      callee.
+       DATA             DIVISION.
+       WORKING-STORAGE  SECTION.
+       01 P2            PIC 99.
+       LINKAGE          SECTION.
+       01 P1            PIC X ANY LENGTH.
+       PROCEDURE        DIVISION USING P1.
+           MOVE LENGTH OF P1 TO P2.
+           DISPLAY P2
+           END-DISPLAY.
+           DISPLAY P1
+           END-DISPLAY.
+           EXIT PROGRAM.
+])
+
+AT_DATA([caller.cob], [
+       IDENTIFICATION   DIVISION.
+       PROGRAM-ID.      caller.
+       DATA             DIVISION.
+       WORKING-STORAGE  SECTION.
+       01 P1            PIC X(6) VALUE "OKOKOK".
+       PROCEDURE        DIVISION.
+           CALL "callee" USING P1
+           END-CALL.
+           STOP RUN.
+])
+
+AT_CHECK([${COMPILE_MODULE} callee.cob])
+AT_CHECK([${COMPILE} -o caller caller.cob])
+AT_CHECK([./caller], [0],
+[06
+OKOKOK
+])
+
+AT_CLEANUP
+
+AT_SETUP([READ - KEY ignored with sequential READ])
+
+AT_DATA([prog.cob], [
+       IDENTIFICATION   DIVISION.
+       PROGRAM-ID.      prog.
+       ENVIRONMENT      DIVISION.
+       INPUT-OUTPUT     SECTION.
+       FILE-CONTROL.
+       SELECT TEST-FILE ASSIGN       "./TEST-FILE"
+                        ORGANIZATION IS  INDEXED
+                        ACCESS MODE  IS  SEQUENTIAL
+                        RECORD KEY   IS  TEST-KEY.
+       DATA             DIVISION.
+       FILE             SECTION.
+       FD TEST-FILE.
+       01 TEST-KEY      PIC X(4).
+       PROCEDURE        DIVISION.
+           OPEN  OUTPUT TEST-FILE.
+           CLOSE TEST-FILE.
+           OPEN  INPUT  TEST-FILE.
+           START TEST-FILE KEY IS EQUAL TO TEST-KEY.
+           READ TEST-FILE KEY IS TEST-KEY.
+           DISPLAY TEST-KEY NO ADVANCING.
+           CLOSE TEST-FILE.
+           STOP RUN.
+])
+
+AT_CHECK([${COMPILE} -o prog prog.cob], [0], [],
+[prog.cob:20: Warning: KEY ignored with sequential READ
+])
+
+AT_CLEANUP
+
+AT_SETUP([SORT - missing fcd in variable-length WRITE])
+
+AT_DATA([prog.cob], [
+       IDENTIFICATION    DIVISION.
+       PROGRAM-ID.       prog.
+       ENVIRONMENT       DIVISION.
+       INPUT-OUTPUT      SECTION.
+       FILE-CONTROL.
+       SELECT MAKE-F     ASSIGN TO "./TEST-FILE"
+                         ORGANIZATION LINE SEQUENTIAL
+                         FILE STATUS M-STATUS.
+       SELECT SIN-F      ASSIGN TO "./TEST-FILE"
+                         ORGANIZATION LINE SEQUENTIAL
+                         FILE STATUS I-STATUS.
+       SELECT SOUT-F     ASSIGN TO DISK
+                         ORGANIZATION SEQUENTIAL
+                         FILE STATUS O-STATUS.
+       DATA              DIVISION.
+       FILE              SECTION.
+       FD MAKE-F
+           RECORD IS VARYING IN SIZE FROM 1 TO 50 CHARACTERS
+           DEPENDING ON M-RECL.
+       01 MAKE-REC       PIC X(50).
+       FD SIN-F
+           RECORD IS VARYING IN SIZE FROM 1 TO 50 CHARACTERS
+           DEPENDING ON I-RECL.
+       01 SIN-REC        PIC X(50).
+       SD SOUT-F
+           RECORD IS VARYING IN SIZE FROM 1 TO 50 CHARACTERS
+           DEPENDING ON O-RECL.
+       01 SOUT-REC.
+          05  SOUT-KEY1  PIC X(5).
+          05  SOUT-KEY2  PIC X(5).
+          05  SOUT-VAL   PIC X(40).
+       WORKING-STORAGE   SECTION.
+       01 M-STATUS       PIC XX.
+       01 I-STATUS       PIC XX.
+       01 O-STATUS       PIC XX.
+       01 M-RECL         PIC 9(3) VALUE 50.
+       01 I-RECL         PIC 9(3) VALUE 50.
+       01 O-RECL         PIC 9(3) VALUE 50.
+       PROCEDURE         DIVISION.
+       MAIN-01.
+           PERFORM MAKE-PROC.
+           SORT SOUT-F ON ASCENDING  KEY SOUT-KEY1
+                      ON DESCENDING KEY SOUT-KEY2
+                      INPUT  PROCEDURE SIN-PROC
+                      OUTPUT PROCEDURE SOT-PROC.
+       MAIN-EXIT.
+           GOBACK.
+       MAKE-PROC.
+           OPEN OUTPUT MAKE-F.
+           MOVE 21 TO M-RECL.
+           MOVE "aaaaa111111aaaaaaaaaa" TO MAKE-REC.
+           WRITE MAKE-REC.
+           MOVE 27 TO M-RECL.
+           MOVE "aaaaa666666xxxxxxxxxxxxxxxx" TO MAKE-REC.
+           WRITE MAKE-REC.
+           MOVE 13 TO M-RECL.
+           MOVE "ccccc555555ll" TO MAKE-REC.
+           write MAKE-REC.
+           CLOSE MAKE-F.
+       SIN-PROC.
+           OPEN INPUT SIN-F.
+           PERFORM FOREVER
+              MOVE 0 TO I-RECL
+              MOVE SPACE TO SIN-REC
+              READ SIN-F AT END EXIT PERFORM END-READ
+              MOVE I-RECL TO O-RECL
+              MOVE SIN-REC TO SOUT-REC
+              RELEASE SOUT-REC
+           END-PERFORM.
+           CLOSE SIN-F.
+       SOT-PROC.
+           PERFORM FOREVER
+              MOVE 0 TO O-RECL
+              MOVE SPACE TO SOUT-REC
+              RETURN SOUT-F AT END EXIT PERFORM END-RETURN
+              DISPLAY O-RECL NO ADVANCING
+           END-PERFORM.
+])
+
+AT_CHECK([${COMPILE} -o prog prog.cob])
+AT_CHECK([java prog], [0], [027021013])
+
+AT_CLEANUP
+
+AT_SETUP([READ - missing fcd in variable-length WRITE])
+
+AT_DATA([prog.cob], [
+       IDENTIFICATION    DIVISION.
+       PROGRAM-ID.       prog.
+       ENVIRONMENT       DIVISION.
+       INPUT-OUTPUT      SECTION.
+       FILE-CONTROL.
+       SELECT SIN-F      ASSIGN TO "./TEST-FILE"
+                         ORGANIZATION LINE SEQUENTIAL
+                         FILE STATUS I-STATUS.
+       DATA              DIVISION.
+       FILE              SECTION.
+       FD SIN-F
+           RECORD IS VARYING IN SIZE FROM 1 TO 50 CHARACTERS
+           DEPENDING ON I-RECL.
+       01 SIN-REC        PIC X(50).
+       WORKING-STORAGE   SECTION.
+       01 I-STATUS       PIC XX.
+       01 I-RECL         PIC 9(3) VALUE 50.
+       PROCEDURE         DIVISION.
+       MAIN-01.
+           PERFORM MAKE-PROC.
+           PERFORM READ-PROC.
+       MAIN-EXIT.
+           GOBACK.
+       MAKE-PROC.
+           OPEN OUTPUT SIN-F.
+           MOVE 21 TO I-RECL.
+           MOVE "aaaaa111111aaaaaaaaaa" TO SIN-REC.
+           WRITE SIN-REC.
+           MOVE 27 TO I-RECL.
+           MOVE "aaaaa666666xxxxxxxxxxxxxxxx" TO SIN-REC.
+           WRITE SIN-REC.
+           MOVE 13 TO I-RECL.
+           MOVE "ccccc555555ll" TO SIN-REC.
+           WRITE SIN-REC.
+           CLOSE SIN-F.
+       READ-PROC.
+           OPEN INPUT SIN-F.
+           PERFORM FOREVER
+              MOVE 0 TO I-RECL
+              MOVE SPACE TO SIN-REC
+              READ SIN-F AT END EXIT PERFORM END-READ
+              DISPLAY I-RECL NO ADVANCING
+           END-PERFORM.
+           CLOSE SIN-F.
+])
+
+AT_CHECK([${COMPILE} -o prog prog.cob])
+AT_CHECK([java prog], [0], [021027013])
+
+AT_CLEANUP
+
+
+AT_SETUP([MOVE x TO numeric])
+
+AT_DATA([prog.cob], [
+       IDENTIFICATION   DIVISION.
+       PROGRAM-ID.      prog.
+       DATA             DIVISION.
+       WORKING-STORAGE  SECTION.
+       01 X-ABC         PIC 999.
+       01 X             PIC XXX VALUE "abc".
+       PROCEDURE        DIVISION.
+           MOVE X TO X-ABC.
+           STOP RUN.
+])
+
+AT_CHECK([${COMPILE_JP_COMPAT} prog.cob], [0])
+AT_CHECK([java prog], [1], [],
+[prog.cob:9: libcob: Numeric value is expected
+])
+
+AT_CLEANUP
+
+
+AT_SETUP([COMPUTE include string])
+
+AT_DATA([prog.cob], [
+       IDENTIFICATION   DIVISION.
+       PROGRAM-ID.      prog.
+       DATA             DIVISION.
+       WORKING-STORAGE  SECTION.
+       01 X.
+          03 X-ABC      PIC 999.
+       01 Y             PIC 999 VALUE 100.
+       PROCEDURE        DIVISION.
+           MOVE "abc" TO X.
+           COMPUTE Y = X-ABC + Y.
+           STOP RUN.
+])
+
+AT_CHECK([${COMPILE_JP_COMPAT_DEFAULT} prog.cob], [0])
+AT_CHECK([java prog], [1], [],
+[libcob: 'X-ABC' not numeric: 'abc'
+])
+
+AT_CLEANUP
