@@ -75,12 +75,12 @@ jobs:
           ./jp-compat || true
           cd ../
 
-      - name: Run tests "run"
-        run: |
-          export CLASSPATH=":$HOME/.java_lib/libcobj.jar:$HOME/.java_lib/sqlite.jar"
-          cd tests/
-          ./run || true
-          cd ../
+      #- name: Run tests "run"
+      #  run: |
+      #    export CLASSPATH=":$HOME/.java_lib/libcobj.jar:$HOME/.java_lib/sqlite.jar"
+      #    cd tests/
+      #    ./run || true
+      #    cd ../
 
       - name: Run tests "syntax"
         run: |
