@@ -1,0 +1,100 @@
+AT_SETUP([ftraceall test 1])
+
+AT_DATA([prog.cbl], [       IDENTIFICATION              DIVISION.
+       PROGRAM-ID.                 prog.
+
+       ENVIRONMENT DIVISION.
+       INPUT-OUTPUT SECTION.
+       FILE-CONTROL.
+           SELECT SF ASSIGN TO 'test.txt'
+                ORGANIZATION IS SEQUENTIAL
+                FILE STATUS IS FILE-STATUS.
+
+       DATA                        DIVISION.
+       FILE SECTION.
+       FD SF.
+         01 REC PIC X(10).
+
+       WORKING-STORAGE             SECTION.
+       01 C PIC 9 VALUE 0.
+       01 FILE-STATUS PIC 99.
+       01 arg pic X(10) VALUE "argument".
+
+       PROCEDURE                   DIVISION.
+       MAIN SECTION.
+
+       DISPLAY-PROC.
+           DISPLAY "hello".
+
+       CALCULATE-PROC.
+           MOVE 0 TO C.
+           ADD 1 TO C.
+           SUBTRACT 1 FROM C.
+           MULTIPLY 1 BY C.
+           DIVIDE 1 INTO C.
+           COMPUTE C = C.
+
+       FILE-TEST SECTION.
+
+       FIRST-IO.
+           OPEN OUTPUT SF.
+           MOVE "file" to REC.
+           WRITE REC.
+           CLOSE SF.
+
+       SECOND-IO.
+           OPEN INPUT SF.
+           INITIALIZE REC.
+           READ SF.
+           display "rec: " rec.
+           CLOSE SF.
+
+       FINALL SECTION.
+           STOP RUN.
+])
+
+
+AT_CHECK([${COMPILE} -ftrace prog.cbl])
+AT_CHECK([${RUN_MODULE} prog 2>/dev/stdout 1>/dev/null], [0],
+[PROGRAM-ID: prog: ENTRY prog
+PROGRAM-ID: prog: MAIN SECTION
+PROGRAM-ID: prog: DISPLAY-PROC
+PROGRAM-ID: prog: CALCULATE-PROC
+PROGRAM-ID: prog: FILE-TEST SECTION
+PROGRAM-ID: prog: FIRST-IO
+PROGRAM-ID: prog: SECOND-IO
+PROGRAM-ID: prog: FINALL SECTION
+PROGRAM-ID: prog: MAIN PARAGRAPH
+])
+
+AT_CHECK([${COMPILE} -ftraceall prog.cbl])
+AT_CHECK([${RUN_MODULE} prog 2>/dev/stdout 1>/dev/null], [0],
+[PROGRAM-ID: prog: ENTRY prog
+PROGRAM-ID: prog: MAIN SECTION
+PROGRAM-ID: prog: DISPLAY-PROC
+PROGRAM-ID: prog 	Line: 25 	Statement: DISPLAY
+PROGRAM-ID: prog: CALCULATE-PROC
+PROGRAM-ID: prog 	Line: 28 	Statement: MOVE
+PROGRAM-ID: prog 	Line: 29 	Statement: ADD
+PROGRAM-ID: prog 	Line: 30 	Statement: SUBTRACT
+PROGRAM-ID: prog 	Line: 31 	Statement: MULTIPLY
+PROGRAM-ID: prog 	Line: 32 	Statement: DIVIDE
+PROGRAM-ID: prog 	Line: 33 	Statement: COMPUTE
+PROGRAM-ID: prog: FILE-TEST SECTION
+PROGRAM-ID: prog: FIRST-IO
+PROGRAM-ID: prog 	Line: 38 	Statement: OPEN
+PROGRAM-ID: prog 	Line: 39 	Statement: MOVE
+PROGRAM-ID: prog 	Line: 40 	Statement: WRITE
+PROGRAM-ID: prog 	Line: 41 	Statement: CLOSE
+PROGRAM-ID: prog: SECOND-IO
+PROGRAM-ID: prog 	Line: 44 	Statement: OPEN
+PROGRAM-ID: prog 	Line: 45 	Statement: INITIALIZE
+PROGRAM-ID: prog 	Line: 46 	Statement: READ
+PROGRAM-ID: prog 	Line: 47 	Statement: DISPLAY
+PROGRAM-ID: prog 	Line: 48 	Statement: CLOSE
+PROGRAM-ID: prog: FINALL SECTION
+PROGRAM-ID: prog: MAIN PARAGRAPH
+PROGRAM-ID: prog 	Line: 51 	Statement: STOP
+])
+
+AT_CLEANUP
