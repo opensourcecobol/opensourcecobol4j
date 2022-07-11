@@ -68,7 +68,7 @@ run_DEPENDENCIES = \
 	run.src/fundamental.at \
 	run.src/accept.at \
 	run.src/initialize.at \
-	run.src/misc.at \
+	run.src/miscellaneous.at \
 	run.src/ref-mod.at \
 	run.src/subscripts.at \
 	run.src/extensions.at \

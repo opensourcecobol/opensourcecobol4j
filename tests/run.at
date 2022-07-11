@@ -28,7 +28,7 @@ m4_include([ref-mod.at])	# 8.4.2.3 Reference-modification
 m4_include([accept.at])		# 14.8.1  ACCEPT statement
 m4_include([initialize.at])	# 14.8.19 INITIALIZE statement
 
-m4_include([misc.at])
+m4_include([miscellaneous.at])
 m4_include([extensions.at])
 m4_include([return-code.at])
 m4_include([functions.at])
