@@ -40,16 +40,58 @@ jobs:
           make
           cd ../
 
-      - name: Run tests for command-line options
+      - name: Run tests "command-line-options"
         run: |
-          export CLASSPATH="$CLASSPATH:$HOME/.java_lib/libcobj.jar:$HOME/.java_lib/sqlite.jar"
+          export CLASSPATH=":$HOME/.java_lib/libcobj.jar:$HOME/.java_lib/sqlite.jar"
           cd tests/
           ./command-line-options
           cd ../
 
+      - name: Run tests "data-rep"
+        run: |
+          export CLASSPATH=":$HOME/.java_lib/libcobj.jar:$HOME/.java_lib/sqlite.jar"
+          cd tests/
+          ./data-rep || true
+          cd ../
+
+      - name: Run tests "i18n_sjis"
+        run: |
+          export CLASSPATH=":$HOME/.java_lib/libcobj.jar:$HOME/.java_lib/sqlite.jar"
+          cd tests/
+          ./i18n_sjis || true
+          cd ../
+
+      - name: Run tests "i18n_utf8"
+        run: |
+          export CLASSPATH=":$HOME/.java_lib/libcobj.jar:$HOME/.java_lib/sqlite.jar"
+          cd tests/
+          ./i18n_utf8 || true
+          cd ../
+
+      - name: Run tests "jp_compat"
+        run: |
+          export CLASSPATH=":$HOME/.java_lib/libcobj.jar:$HOME/.java_lib/sqlite.jar"
+          cd tests/
+          ./jp_compat || true
+          cd ../
+
+      - name: Run tests "run"
+        run: |
+          export CLASSPATH=":$HOME/.java_lib/libcobj.jar:$HOME/.java_lib/sqlite.jar"
+          cd tests/
+          ./run || true
+          cd ../
+
+      - name: Run tests "syntax"
+        run: |
+          export CLASSPATH=":$HOME/.java_lib/libcobj.jar:$HOME/.java_lib/sqlite.jar"
+          cd tests/
+          ./syntax || true
+          cd ../
+
       - name: Run NIST test
         run: |
-          export CLASSPATH="$CLASSPATH:$HOME/.java_lib/libcobj.jar:$HOME/.java_lib/sqlite.jar"
+          export CLASSPATH=":$HOME/.java_lib/libcobj.jar:$HOME/.java_lib/sqlite.jar"
           cd tests/cobol85/
           make test
 
