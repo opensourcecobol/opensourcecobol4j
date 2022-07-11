@@ -1,4 +1,4 @@
- AT_SETUP([signed comp3])
+AT_SETUP([signed comp3])
 
 AT_DATA([prog.cbl], [
        IDENTIFICATION              DIVISION.
