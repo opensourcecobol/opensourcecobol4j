@@ -42,12 +42,14 @@ jobs:
 
       - name: Run tests for command-line options
         run: |
+          export CLASSPATH="$CLASSPATH:$HOME/.java_lib/libcobj.jar:$HOME/.java_lib/sqlite.jar"
           cd tests/
           ./command-line-options
           cd ../
 
       - name: Run NIST test
         run: |
+          export CLASSPATH="$CLASSPATH:$HOME/.java_lib/libcobj.jar:$HOME/.java_lib/sqlite.jar"
           cd tests/cobol85/
           make test
 
