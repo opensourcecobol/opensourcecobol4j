@@ -590,7 +590,7 @@ at_tested=''
 # numerical order.
 at_format='?'
 # Description of all the test groups.
-at_help_all="1;hello-world.at:1;hello;;
+at_help_all="1;ftraceall.at:1;ftraceall test 1;;
 "
 # List of the all the test groups.
 at_groups_all=`$as_echo "$at_help_all" | sed 's/;.*//'`
@@ -1983,27 +1983,94 @@ exit 0
 ## Actual tests. ##
 ## ------------- ##
 #AT_START_1
-at_fn_group_banner 1 'hello-world.at:1' \
-  "hello" "                                          "
+at_fn_group_banner 1 'ftraceall.at:1' \
+  "ftraceall test 1" "                               "
 at_xfail=no
 (
   $as_echo "1. $at_setup_line: testing $at_desc ..."
   $at_traceon
 
+
+cat >prog.cbl <<'_ATEOF'
+       IDENTIFICATION              DIVISION.
+       PROGRAM-ID.                 prog.
+
+       ENVIRONMENT DIVISION.
+       INPUT-OUTPUT SECTION.
+       FILE-CONTROL.
+           SELECT SF ASSIGN TO 'test.txt'
+                ORGANIZATION IS SEQUENTIAL
+                FILE STATUS IS FILE-STATUS.
+
+       DATA                        DIVISION.
+       FILE SECTION.
+       FD SF.
+         01 REC PIC X(10).
+
+       WORKING-STORAGE             SECTION.
+       01 C PIC 9 VALUE 0.
+       01 FILE-STATUS PIC 99.
+       01 arg pic X(10) VALUE "argument".
+
+       PROCEDURE                   DIVISION.
+       MAIN-PROC.
+           DISPLAY "hello".
+           MOVE 0 TO C.
+           ADD 1 TO C.
+           SUBTRACT 1 FROM C.
+           MULTIPLY 1 BY C.
+           DIVIDE 1 INTO C.
+           COMPUTE C = C.
+
+           OPEN OUTPUT SF.
+           MOVE "file" to REC.
+           WRITE REC.
+           CLOSE SF.
+
+           OPEN INPUT SF.
+           INITIALIZE REC.
+           READ SF.
+           display "rec: " rec.
+           CLOSE SF.
+
+           STOP RUN.
+_ATEOF
+
+
 { set +x
-$as_echo "$at_srcdir/hello-world.at:2: echo hello"
-at_fn_check_prepare_trace "hello-world.at:2"
-( $at_check_trace; echo hello
+$as_echo "$at_srcdir/ftraceall.at:47: cobj -ftraceall prog.cbl && java prog 2>/dev/stdout 1>/dev/null"
+at_fn_check_prepare_trace "ftraceall.at:47"
+( $at_check_trace; cobj -ftraceall prog.cbl && java prog 2>/dev/stdout 1>/dev/null
 ) >>"$at_stdout" 2>>"$at_stderr" 5>&-
 at_status=$? at_failed=false
 $at_check_filter
 at_fn_diff_devnull "$at_stderr" || at_failed=:
-echo >>"$at_stdout"; $as_echo "hello
+echo >>"$at_stdout"; $as_echo "PROGRAM-ID: prog: ENTRY prog
+PROGRAM-ID: prog: MAIN SECTION
+PROGRAM-ID: prog: MAIN-PROC
+PROGRAM-ID: prog 	Line: 23 	Statement: DISPLAY
+PROGRAM-ID: prog 	Line: 24 	Statement: MOVE
+PROGRAM-ID: prog 	Line: 25 	Statement: ADD
+PROGRAM-ID: prog 	Line: 26 	Statement: SUBTRACT
+PROGRAM-ID: prog 	Line: 27 	Statement: MULTIPLY
+PROGRAM-ID: prog 	Line: 28 	Statement: DIVIDE
+PROGRAM-ID: prog 	Line: 29 	Statement: COMPUTE
+PROGRAM-ID: prog 	Line: 31 	Statement: OPEN
+PROGRAM-ID: prog 	Line: 32 	Statement: MOVE
+PROGRAM-ID: prog 	Line: 33 	Statement: WRITE
+PROGRAM-ID: prog 	Line: 34 	Statement: CLOSE
+PROGRAM-ID: prog 	Line: 36 	Statement: OPEN
+PROGRAM-ID: prog 	Line: 37 	Statement: INITIALIZE
+PROGRAM-ID: prog 	Line: 38 	Statement: READ
+PROGRAM-ID: prog 	Line: 39 	Statement: DISPLAY
+PROGRAM-ID: prog 	Line: 40 	Statement: CLOSE
+PROGRAM-ID: prog 	Line: 42 	Statement: STOP
 " | \
   $at_diff - "$at_stdout" || at_failed=:
-at_fn_check_status 0 $at_status "$at_srcdir/hello-world.at:2"
+at_fn_check_status 0 $at_status "$at_srcdir/ftraceall.at:47"
 $at_failed && at_fn_log_failure
 $at_traceon; }
+
 
   set +x
   $at_times_p && times >"$at_times_file"

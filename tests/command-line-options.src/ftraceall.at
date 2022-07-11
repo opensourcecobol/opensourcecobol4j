@@ -1,0 +1,70 @@
+AT_SETUP([ftraceall test 1])
+
+AT_DATA([prog.cbl], [       IDENTIFICATION              DIVISION.
+       PROGRAM-ID.                 prog.
+
+       ENVIRONMENT DIVISION.
+       INPUT-OUTPUT SECTION.
+       FILE-CONTROL.
+           SELECT SF ASSIGN TO 'test.txt'
+                ORGANIZATION IS SEQUENTIAL
+                FILE STATUS IS FILE-STATUS.
+
+       DATA                        DIVISION.
+       FILE SECTION.
+       FD SF.
+         01 REC PIC X(10).
+
+       WORKING-STORAGE             SECTION.
+       01 C PIC 9 VALUE 0.
+       01 FILE-STATUS PIC 99.
+       01 arg pic X(10) VALUE "argument".
+
+       PROCEDURE                   DIVISION.
+       MAIN-PROC.
+           DISPLAY "hello".
+           MOVE 0 TO C.
+           ADD 1 TO C.
+           SUBTRACT 1 FROM C.
+           MULTIPLY 1 BY C.
+           DIVIDE 1 INTO C.
+           COMPUTE C = C.
+
+           OPEN OUTPUT SF.
+           MOVE "file" to REC.
+           WRITE REC.
+           CLOSE SF.
+
+           OPEN INPUT SF.
+           INITIALIZE REC.
+           READ SF.
+           display "rec: " rec.
+           CLOSE SF.
+
+           STOP RUN.
+])
+
+AT_CHECK([cobj -ftraceall prog.cbl && java prog 2>/dev/stdout 1>/dev/null], [0],
+[PROGRAM-ID: prog: ENTRY prog
+PROGRAM-ID: prog: MAIN SECTION
+PROGRAM-ID: prog: MAIN-PROC
+PROGRAM-ID: prog 	Line: 23 	Statement: DISPLAY
+PROGRAM-ID: prog 	Line: 24 	Statement: MOVE
+PROGRAM-ID: prog 	Line: 25 	Statement: ADD
+PROGRAM-ID: prog 	Line: 26 	Statement: SUBTRACT
+PROGRAM-ID: prog 	Line: 27 	Statement: MULTIPLY
+PROGRAM-ID: prog 	Line: 28 	Statement: DIVIDE
+PROGRAM-ID: prog 	Line: 29 	Statement: COMPUTE
+PROGRAM-ID: prog 	Line: 31 	Statement: OPEN
+PROGRAM-ID: prog 	Line: 32 	Statement: MOVE
+PROGRAM-ID: prog 	Line: 33 	Statement: WRITE
+PROGRAM-ID: prog 	Line: 34 	Statement: CLOSE
+PROGRAM-ID: prog 	Line: 36 	Statement: OPEN
+PROGRAM-ID: prog 	Line: 37 	Statement: INITIALIZE
+PROGRAM-ID: prog 	Line: 38 	Statement: READ
+PROGRAM-ID: prog 	Line: 39 	Statement: DISPLAY
+PROGRAM-ID: prog 	Line: 40 	Statement: CLOSE
+PROGRAM-ID: prog 	Line: 42 	Statement: STOP
+])
+
+AT_CLEANUP

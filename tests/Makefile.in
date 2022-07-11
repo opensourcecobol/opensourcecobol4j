@@ -681,7 +681,7 @@ jp_compat_DEPENDENCIES = \
 	jp-compat.src/system-routine.at
 
 command_line_options_DEPENDENCIES = \
-	command-line-options.src/hello-world.at
+	command-line-options.src/ftraceall.at
 
 EXTRA_DIST = $(srcdir)/package.m4 \
 	$(TESTS) \
