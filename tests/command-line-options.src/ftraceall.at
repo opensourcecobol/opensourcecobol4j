@@ -44,7 +44,8 @@ AT_DATA([prog.cbl], [       IDENTIFICATION              DIVISION.
            STOP RUN.
 ])
 
-AT_CHECK([cobj -ftraceall prog.cbl && java prog 2>/dev/stdout 1>/dev/null], [0],
+AT_CHECK([${COMPILE} -ftraceall prog.cbl])
+AT_CHECK([${RUN_MODULE} prog 2>/dev/stdout 1>/dev/null], [0],
 [PROGRAM-ID: prog: ENTRY prog
 PROGRAM-ID: prog: MAIN SECTION
 PROGRAM-ID: prog: MAIN-PROC
