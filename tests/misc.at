@@ -1,3 +1,4 @@
 AT_INIT([miscellaneous])
 
 m4_include([signed-comp3.at])
+m4_include([index-comp.at])

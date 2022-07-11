@@ -686,7 +686,8 @@ command_line_options_DEPENDENCIES = \
 	command-line-options.src/ftrace-ftraceall.at
 
 misc_DEPENDENCIES = \
-	misc.src/signed-comp3.at
+	misc.src/signed-comp3.at \
+	misc.src/index-comp.at
 
 EXTRA_DIST = $(srcdir)/package.m4 \
 	$(TESTS) \
