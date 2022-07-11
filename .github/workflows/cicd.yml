@@ -18,7 +18,7 @@ jobs:
           sudo apt-get install default-jdk
           sudo apt-get install -y build-essential libncurses-dev libgmp-dev bison flex gettext automake autoconf texinfo
       
-      - name: Install opensource COBOL
+      - name: Install opensource COBOL 4j
         run: |
           cd vbisam
           ./configure --prefix=/usr/
@@ -61,18 +61,18 @@ jobs:
           ./i18n_sjis || true
           cd ../
 
-      - name: Run tests "i18n_utf8"
-        run: |
-          export CLASSPATH=":$HOME/.java_lib/libcobj.jar:$HOME/.java_lib/sqlite.jar"
-          cd tests/
-          ./i18n_utf8 || true
-          cd ../
+      #- name: Run tests "i18n_utf8"
+      #  run: |
+      #    export CLASSPATH=":$HOME/.java_lib/libcobj.jar:$HOME/.java_lib/sqlite.jar"
+      #    cd tests/
+      #    ./i18n_utf8 || true
+      #    cd ../
 
-      - name: Run tests "jp_compat"
+      - name: Run tests "jp-compat"
         run: |
           export CLASSPATH=":$HOME/.java_lib/libcobj.jar:$HOME/.java_lib/sqlite.jar"
           cd tests/
-          ./jp_compat || true
+          ./jp-compat || true
           cd ../
 
       - name: Run tests "run"
