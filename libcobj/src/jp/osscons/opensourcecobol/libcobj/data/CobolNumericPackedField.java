@@ -226,7 +226,7 @@ public class CobolNumericPackedField extends AbstractCobolField {
 		int p = this.getSize() - 1;
 		byte b = data.getByte(p);
 		b = (byte)((n % 10) << 4);
-		if(this.getAttribute().isFlagHaveSign()) {
+		if(!this.getAttribute().isFlagHaveSign()) {
 			b |= 0x0f;
 		} else if(sign != 0) {
 			b |= 0x0d;

@@ -30,7 +30,8 @@ TESTS = syntax \
 	data-rep-O \
 	i18n_utf8 \
 	jp-compat \
-	command-line-options
+	command-line-options \
+	misc
 else
 TESTS = syntax \
 	run \
@@ -39,7 +40,8 @@ TESTS = syntax \
 	data-rep-O \
 	i18n_sjis \
 	jp-compat \
-	command-line-options
+	command-line-options \
+	misc
 endif
 
 syntax_DEPENDENCIES = \
@@ -141,6 +143,9 @@ jp_compat_DEPENDENCIES = \
 command_line_options_DEPENDENCIES = \
 	command-line-options.src/ftrace-ftraceall.at
 
+misc_DEPENDENCIES = \
+	misc.src/signed-comp3.at
+
 EXTRA_DIST = $(srcdir)/package.m4 \
 	$(TESTS) \
 	$(syntax_DEPENDENCIES) \
@@ -148,13 +153,13 @@ EXTRA_DIST = $(srcdir)/package.m4 \
 	$(i18n_utf8_DEPENDENCIES) \
 	$(i18n_sjis_DEPENDENCIES) \
 	$(jp_compat_DEPENDENCIES) \
-	$(command_line_options_DEPENDENCIES)
+	$(command_line_options_DEPENDENCIES) \
+	$(misc_DEPENDENCIES)
 
 
 DISTCLEANFILES = atconfig
 
 all: $(TESTS)
-#all:
 
 clean-local:
 	rm -rf *.dir *.log
@@ -181,3 +186,4 @@ $(srcdir)/i18n_utf8: $(i18n_utf8_DEPENDENCIES)
 $(srcdir)/i18n_sjis: $(i18n_sjis_DEPENDENCIES)
 $(srcdir)/jp-compat: $(jp_compat_DEPENDENCIES)
 $(srcdir)/command-line-options: $(command_line_options_DEPENDENCIES)
+$(srcdir)/misc: $(misc_DEPENDENCIES)

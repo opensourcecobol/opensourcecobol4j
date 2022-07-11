@@ -1,4 +1,4 @@
-AT_SETUP([ftraceall test 1])
+AT_SETUP([-ftrace and -ftraceall])
 
 AT_DATA([prog.cbl], [       IDENTIFICATION              DIVISION.
        PROGRAM-ID.                 prog.

@@ -573,7 +573,8 @@ SUBDIRS = cobol85
 @I18N_UTF8_FALSE@	data-rep-O \
 @I18N_UTF8_FALSE@	i18n_sjis \
 @I18N_UTF8_FALSE@	jp-compat \
-@I18N_UTF8_FALSE@	command-line-options
+@I18N_UTF8_FALSE@	command-line-options \
+@I18N_UTF8_FALSE@	misc
 
 @I18N_UTF8_TRUE@TESTS = syntax \
 @I18N_UTF8_TRUE@	run \
@@ -582,7 +583,8 @@ SUBDIRS = cobol85
 @I18N_UTF8_TRUE@	data-rep-O \
 @I18N_UTF8_TRUE@	i18n_utf8 \
 @I18N_UTF8_TRUE@	jp-compat \
-@I18N_UTF8_TRUE@	command-line-options
+@I18N_UTF8_TRUE@	command-line-options \
+@I18N_UTF8_TRUE@	misc
 
 syntax_DEPENDENCIES = \
 	syntax.at \
@@ -683,6 +685,9 @@ jp_compat_DEPENDENCIES = \
 command_line_options_DEPENDENCIES = \
 	command-line-options.src/ftrace-ftraceall.at
 
+misc_DEPENDENCIES = \
+	misc.src/signed-comp3.at
+
 EXTRA_DIST = $(srcdir)/package.m4 \
 	$(TESTS) \
 	$(syntax_DEPENDENCIES) \
@@ -690,7 +695,8 @@ EXTRA_DIST = $(srcdir)/package.m4 \
 	$(i18n_utf8_DEPENDENCIES) \
 	$(i18n_sjis_DEPENDENCIES) \
 	$(jp_compat_DEPENDENCIES) \
-	$(command_line_options_DEPENDENCIES)
+	$(command_line_options_DEPENDENCIES) \
+	$(misc_DEPENDENCIES)
 
 DISTCLEANFILES = atconfig
 all: all-recursive
@@ -1031,6 +1037,13 @@ command-line-options.log: command-line-options
 	--log-file $$b.log --trs-file $$b.trs \
 	$(am__common_driver_flags) $(AM_LOG_DRIVER_FLAGS) $(LOG_DRIVER_FLAGS) -- $(LOG_COMPILE) \
 	"$$tst" $(AM_TESTS_FD_REDIRECT)
+misc.log: misc
+	@p='misc'; \
+	b='misc'; \
+	$(am__check_pre) $(LOG_DRIVER) --test-name "$$f" \
+	--log-file $$b.log --trs-file $$b.trs \
+	$(am__common_driver_flags) $(AM_LOG_DRIVER_FLAGS) $(LOG_DRIVER_FLAGS) -- $(LOG_COMPILE) \
+	"$$tst" $(AM_TESTS_FD_REDIRECT)
 i18n_utf8.log: i18n_utf8
 	@p='i18n_utf8'; \
 	b='i18n_utf8'; \
@@ -1237,7 +1250,6 @@ uninstall-am:
 
 
 all: $(TESTS)
-#all:
 
 clean-local:
 	rm -rf *.dir *.log
@@ -1264,6 +1276,7 @@ $(srcdir)/i18n_utf8: $(i18n_utf8_DEPENDENCIES)
 $(srcdir)/i18n_sjis: $(i18n_sjis_DEPENDENCIES)
 $(srcdir)/jp-compat: $(jp_compat_DEPENDENCIES)
 $(srcdir)/command-line-options: $(command_line_options_DEPENDENCIES)
+$(srcdir)/misc: $(misc_DEPENDENCIES)
 
 # Tell versions [3.59,3.63) of GNU make to not export all variables.
 # Otherwise a system limit (for SysV at least) may be exceeded.
