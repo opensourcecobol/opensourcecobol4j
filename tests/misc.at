@@ -1,0 +1,3 @@
+AT_INIT([miscellaneous])
+
+m4_include([signed-comp3.at])
