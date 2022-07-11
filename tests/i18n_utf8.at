@@ -20,8 +20,6 @@
 
 AT_INIT([I18n utf-8 Tests])
 
-AT_TESTED([cobc])
-
 m4_include([user-defined-word.at])
 m4_include([pic-x.at])
 m4_include([pic-n.at])

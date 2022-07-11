@@ -20,8 +20,6 @@
 
 AT_INIT([Data Representation])
 
-AT_TESTED([cobc])
-
 m4_include([binary.at])		# USAGE BINARY
 m4_include([display.at])	# USAGE DISPLAY
 m4_include([packed.at])		# USAGE PACKED-DECIMAL

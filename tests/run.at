@@ -20,8 +20,6 @@
 
 AT_INIT([Run Tests])
 
-AT_TESTED([cobc])
-
 m4_include([fundamental.at])
 
 m4_include([subscripts.at])	# 8.4.1.2 Subscripts
