@@ -6,6 +6,11 @@
 This compiler is deeply inspired by ["opensource COBOL"](https://github.com/opensourcecobol/opensource-cobol) which translates COBOL programs to C programs.
 (In fact, this repository contains a lot of source files of ["opensource COBOL"](https://github.com/opensourcecobol/opensource-cobol))
 
+## LICENSE
+
+libcobj, the runtime libraries, are distributed under the the GNU Lesser General Public License Version 3.
+Other software and libraries are distributed under the GNU GENERAL PUBLIC LICENSE Version 3.
+
 ## Requirements and Installation
 
 See [Installation page](https://github.com/opensourcecobol/opensourcecobol4j/wiki/Installation).
