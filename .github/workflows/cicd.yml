@@ -22,9 +22,11 @@ jobs:
         run: |
           cd vbisam
           ./configure --prefix=/usr/
+          make
           sudo make install
           cd ../
           ./configure --prefix=/usr/ --with-vbisam
+          make
           sudo make install
           cd libcobj
           mkdir ~/.java_lib
@@ -67,13 +69,6 @@ jobs:
           cd tests/
           ./i18n_sjis || true
 
-      #- name: Run tests "i18n_utf8"
-      #  run: |
-      #    export CLASSPATH=":$HOME/.java_lib/libcobj.jar:$HOME/.java_lib/sqlite.jar"
-      #    cd tests/
-      #    ./i18n_utf8 || true
-      #    cd ../
-
       - name: Run tests "jp-compat"
         run: |
           export CLASSPATH=":$HOME/.java_lib/libcobj.jar:$HOME/.java_lib/sqlite.jar"
@@ -100,6 +95,19 @@ jobs:
           export CLASSPATH=":$HOME/.java_lib/libcobj.jar:$HOME/.java_lib/sqlite.jar"
           cd tests/cobol85/
           make test
+
+      - name: Run tests "i18n_utf8"
+        run: |
+          ./configure --prefix=/usr/ --with-vbisam --enable-utf8
+          make
+          sudo make install
+          cd libcobj
+          CLASSPATH=":$HOME/.java_lib/sqlite.jar" sh compile.sh
+          cp build/libcobj.jar ~/.java_lib
+          cd ../tests
+          export CLASSPATH=":$HOME/.java_lib/libcobj.jar:$HOME/.java_lib/sqlite.jar"
+          ./i18n_utf8 || true
+          cd ../
 
       - name: Slack Notification
         if: ${{ failure() }}
