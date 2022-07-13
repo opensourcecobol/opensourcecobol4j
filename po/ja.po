@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: opensource COBOL v1.5.2J\n"
 "Report-Msgid-Bugs-To: ws-opensource-cobol-contact@osscons.jp\n"
-"POT-Creation-Date: 2022-07-06 11:28+0900\n"
+"POT-Creation-Date: 2022-07-13 13:33+0900\n"
 "PO-Revision-Date: 2019-04-10 14:49+0900\n"
 "Last-Translator: Noriyuki Isaka <n-isaka@tsh-world.co.jp>\n"
 "Language-Team:\n"
@@ -17,238 +17,238 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=1; plural=0;\n"
 
-#: cobj/cobj.c:472 cobj/parser.y:40
+#: cobj/cobj.c:471 cobj/parser.y:40
 #, c-format
 msgid "'%s' not implemented"
 msgstr "`%s' は実装されていません"
 
-#: cobj/cobj.c:839
+#: cobj/cobj.c:838
 #, fuzzy
 msgid "Usage: cobj [options] file..."
 msgstr "使い方: cobc [options] file..."
 
-#: cobj/cobj.c:840
+#: cobj/cobj.c:839
 msgid "Options:"
 msgstr "オプション:"
 
-#: cobj/cobj.c:841
+#: cobj/cobj.c:840
 msgid "  --help                Display this message"
 msgstr "  --help                このメッセージを表示します"
 
-#: cobj/cobj.c:842
+#: cobj/cobj.c:841
 msgid "  --version, -V         Display compiler version"
 msgstr "  --version, -V         コンパイラのバージョンを表示します"
 
-#: cobj/cobj.c:843
+#: cobj/cobj.c:842
 msgid "  -v                    Display the commands invoked by the compiler"
 msgstr "  -v                    コンパイラが起動したプログラムを表示します"
 
-#: cobj/cobj.c:844
+#: cobj/cobj.c:843
 msgid "  -x                    Build an executable program"
 msgstr "  -x                    実行可能プログラムをビルドします"
 
-#: cobj/cobj.c:845
+#: cobj/cobj.c:844
 msgid "  -m                    Build a dynamically loadable module (default)"
 msgstr ""
 "  -m                    動的ロード可能モジュールをビルドします (デフォルト)"
 
-#: cobj/cobj.c:846
+#: cobj/cobj.c:845
 msgid "  -std=<dialect>        Warnings/features for a specific dialect :"
 msgstr "  -std=<方言>           指定した方言に基づいて警告/機能します :"
 
-#: cobj/cobj.c:847
+#: cobj/cobj.c:846
 msgid "                          cobol2002   Cobol 2002"
 msgstr "                          cobol2002   Cobol 2002"
 
-#: cobj/cobj.c:848
+#: cobj/cobj.c:847
 msgid "                          cobol85     Cobol 85"
 msgstr "                          cobol85     Cobol 85"
 
-#: cobj/cobj.c:849
+#: cobj/cobj.c:848
 msgid "                          ibm         IBM Compatible"
 msgstr "                          ibm         IBM互換"
 
-#: cobj/cobj.c:850
+#: cobj/cobj.c:849
 msgid "                          mvs         MVS Compatible"
 msgstr "                          mvs         MVS互換"
 
-#: cobj/cobj.c:851
+#: cobj/cobj.c:850
 msgid "                          bs2000      BS2000 Compatible"
 msgstr "                          bs2000      BS2000互換"
 
-#: cobj/cobj.c:852
+#: cobj/cobj.c:851
 msgid "                          mf          Micro Focus Compatible"
 msgstr "                          mf          Micro Focus互換"
 
-#: cobj/cobj.c:853
+#: cobj/cobj.c:852
 msgid "                          default     When not specified"
 msgstr "                          default     指定しない"
 
-#: cobj/cobj.c:854
+#: cobj/cobj.c:853
 msgid "                        See config/default.conf and config/*.conf"
 msgstr ""
 "                        config/default.conf および config/*.conf を参照してく"
 "ださい"
 
-#: cobj/cobj.c:855
+#: cobj/cobj.c:854
 msgid "  -free                 Use free source format"
 msgstr "  -free                 自由形式を使用します"
 
-#: cobj/cobj.c:856
+#: cobj/cobj.c:855
 msgid "  -free_1col_aster      Use free(1col_aster) source format"
 msgstr ""
 "  -free_1col_aster      自由形式(かつ第1カラムの*を注釈行の標識とみなす)を使"
 "用します"
 
-#: cobj/cobj.c:857
+#: cobj/cobj.c:856
 msgid "  -fixed                Use fixed source format (default)"
 msgstr "  -fixed                固定形式を使用します (デフォルト)"
 
-#: cobj/cobj.c:858
+#: cobj/cobj.c:857
 msgid "  -O, -O2, -Os          Enable optimization"
 msgstr "  -O, -O2, -Os          最適化を有功にします"
 
-#: cobj/cobj.c:859
+#: cobj/cobj.c:858
 msgid "  -g                    Enable C compiler debug / stack check / trace"
 msgstr ""
 "  -g                    Cコンパイラのデバッグオプション/スタックチェック/ト"
 "レースを有効にします"
 
-#: cobj/cobj.c:860
+#: cobj/cobj.c:859
 msgid "  -debug                Enable all run-time error checking"
 msgstr "  -debug                すべての実行時エラーチェックを有功にします"
 
-#: cobj/cobj.c:861
+#: cobj/cobj.c:860
 msgid "  -o <file>             Place the output into <file>"
 msgstr "  -o <ファイル>         出力先を <ファイル> にします"
 
-#: cobj/cobj.c:862
+#: cobj/cobj.c:861
 msgid "  -b                    Combine all input files into a single"
 msgstr "  -b                    すべての入力ファイルをひとつに結合します"
 
-#: cobj/cobj.c:863
+#: cobj/cobj.c:862
 msgid "                        dynamically loadable module"
 msgstr "                        動的ロード可能モジュール"
 
-#: cobj/cobj.c:864
+#: cobj/cobj.c:863
 msgid "  -E                    Preprocess only; do not compile or link"
 msgstr "  -E                    前処理のみ; コンパイルやリンクを行いません"
 
-#: cobj/cobj.c:865
+#: cobj/cobj.c:864
 msgid "  -C                    Translation only; convert COBOL to C"
 msgstr "  -C                    トランスレートのみ; COBOL から C へ変換します"
 
-#: cobj/cobj.c:866
+#: cobj/cobj.c:865
 msgid "  -S                    Compile only; output assembly file"
 msgstr "  -S                    コンパイルのみ; アセンブリファイルを出力します"
 
-#: cobj/cobj.c:867
+#: cobj/cobj.c:866
 msgid "  -c                    Compile and assemble, but do not link"
 msgstr ""
 "  -c                    コンパイルとアセンブルを行い、リンクを行いません"
 
-#: cobj/cobj.c:868
+#: cobj/cobj.c:867
 msgid ""
 "  -t <file>             Generate and place a program listing into <file>"
 msgstr "  -t <ファイル>         プログラムリストを <ファイル> に生成します"
 
-#: cobj/cobj.c:869
+#: cobj/cobj.c:868
 msgid "  -I <directory>        Add <directory> to copy/include search path"
 msgstr ""
 "  -I <ディレクトリ>     COPY/INCLUDEの探索パスに <ディレクトリ> を加えます"
 
-#: cobj/cobj.c:870
+#: cobj/cobj.c:869
 msgid "  -L <directory>        Add <directory> to library search path"
 msgstr ""
 "  -L <ディレクトリ>     ライブラリの探索パスに <ディレクトリ> を加えます"
 
-#: cobj/cobj.c:871
+#: cobj/cobj.c:870
 msgid "  -l <lib>              Link the library <lib>"
 msgstr "  -l <lib>              ライブラリ <lib> をリンクします"
 
-#: cobj/cobj.c:872
+#: cobj/cobj.c:871
 msgid "  -B <options>          Add <options> to the C compile phase"
 msgstr "  -B <options>          Cコンパイルフェーズに <options> を追加します"
 
-#: cobj/cobj.c:873
+#: cobj/cobj.c:872
 msgid "  -Q <options>          Add <options> to the C link phase"
 msgstr "  -Q <options>          Cリンクフェーズに <options> を追加します"
 
-#: cobj/cobj.c:874
+#: cobj/cobj.c:873
 msgid "  -D <define>           Pass <define> to the C compiler"
 msgstr "  -D <define>           Cコンパイラに <define> を渡します"
 
-#: cobj/cobj.c:875
+#: cobj/cobj.c:874
 msgid "  -conf=<file>          User defined dialect configuration - See -std="
 msgstr "  -conf=<ファイル>      ユーザ定義の方言設定 - -std=を参照してください"
 
-#: cobj/cobj.c:876
+#: cobj/cobj.c:875
 msgid "  --list-reserved       Display reserved words"
 msgstr "  --list-reserved       予約語の一覧を表示します"
 
-#: cobj/cobj.c:877
+#: cobj/cobj.c:876
 msgid "  --list-intrinsics     Display intrinsic functions"
 msgstr "  --list-intrinsics     組み込み関数の一覧を表示します"
 
-#: cobj/cobj.c:878
+#: cobj/cobj.c:877
 msgid "  --list-mnemonics      Display mnemonic names"
 msgstr "  --list-mnemonics      作成者語の一覧を表示します"
 
-#: cobj/cobj.c:879
+#: cobj/cobj.c:878
 msgid ""
 "  -save-temps(=<dir>)   Save intermediate files (default current directory)"
 msgstr ""
 "  -save-temps(=<dir>)   中間生成ファイルを保存します (デフォルトはカレント"
 "ディレクトリ)"
 
-#: cobj/cobj.c:880
+#: cobj/cobj.c:879
 msgid "  -MT <target>          Set target file used in dependency list"
 msgstr ""
 "  -MT <target>          依存関係リストで使用される対象ファイルを指定します"
 
-#: cobj/cobj.c:881
+#: cobj/cobj.c:880
 msgid "  -MF <file>            Place dependency list into <file>"
 msgstr "  -MF <ファイル>        依存関係リストを <ファイル> に生成します"
 
-#: cobj/cobj.c:882
+#: cobj/cobj.c:881
 msgid "  -ext <extension>      Add default file extension"
 msgstr "  -ext <extension>      既定のファイル拡張子を追加します"
 
-#: cobj/cobj.c:883
+#: cobj/cobj.c:882
 msgid "  -assign_external      Set the file assign to external"
 msgstr ""
 "  -assign_external      すべてのASSIGN句に省略値EXTERNALが指定されたとみなし"
 "ます"
 
-#: cobj/cobj.c:884
+#: cobj/cobj.c:883
 msgid "  -reference_check      Set reference check in runtime"
 msgstr "  -reference_check      実行時の参照チェックを有効にします"
 
-#: cobj/cobj.c:885
+#: cobj/cobj.c:884
 msgid ""
 "  -constant(=<name\"value\">) define <name> to <value> for $IF statement"
 msgstr ""
 "  -constant(=<name\"value\">) $IF 文で評価する定数名 <name> に 値 <value> を"
 "設定します"
 
-#: cobj/cobj.c:889
+#: cobj/cobj.c:888
 msgid "  -W                    Enable ALL warnings"
 msgstr "  -W                    すべての警告を有功にする"
 
-#: cobj/cobj.c:890
+#: cobj/cobj.c:889
 msgid "  -Wall                 Enable all warnings except as noted below"
 msgstr "  -Wall                 以下を除くすべての警告を有功にする"
 
-#: cobj/cobj.c:895
+#: cobj/cobj.c:894
 msgid " (NOT set with -Wall)"
 msgstr " (-Wall指定時は適用されません)"
 
-#: cobj/cobj.c:1091
+#: cobj/cobj.c:1090
 #, c-format
 msgid "Invalid option -std=%s\n"
 msgstr "不当なオプションです -std=%s\n"
 
-#: cobj/cobj.c:1684
+#: cobj/cobj.c:1683
 msgid "-MT must be given to specify target file\n"
 msgstr "ターゲットファイルを -MT で指定して下さい\n"
 
@@ -1738,8 +1738,8 @@ msgstr "CALL文のパラメタにNULL終端ポインタを追加して受け渡す"
 
 #: cobj/flag.def:75
 msgid ""
-"Embed COBOL variable names into Java variable names. This option is "
-"experimental."
+"Instead of embedding COBOL variable names in Java variable names, give them "
+"serial numbers."
 msgstr ""
 
 #: cobj/warning.def:27

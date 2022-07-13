@@ -828,7 +828,7 @@ cobc_print_version (void)
 	puts ("----");
 	printf ("cobj (%s) %s\n",
 		PACKAGE_NAME, PACKAGE_VERSION);
-	puts ("Copyright (C) 2001-2022 TOKYO SYSTEM HOUSE CO.,LTD.");
+	puts ("Copyright (C) 2021-2022 TOKYO SYSTEM HOUSE CO.,LTD.");
 	printf ("Built    %s\n", cb_oc_build_stamp);
 }
 
