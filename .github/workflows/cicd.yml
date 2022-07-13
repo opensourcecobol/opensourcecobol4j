@@ -65,6 +65,7 @@ jobs:
         run: |
           export CLASSPATH=":$HOME/.java_lib/libcobj.jar:$HOME/.java_lib/sqlite.jar"
           cd tests/
+          ./i18n_sjis || true
 
       #- name: Run tests "i18n_utf8"
       #  run: |
