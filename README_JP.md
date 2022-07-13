@@ -22,7 +22,7 @@ cobj [COBOL source file]
 
 実行.
 ```bash
-java -cp "$CLASSPATH:./build" [PROGRAM-ID]
+java [PROGRAM-ID]
 ```
 
 ## The progress of the development
