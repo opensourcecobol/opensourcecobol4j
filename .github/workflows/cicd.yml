@@ -23,12 +23,7 @@ jobs:
           mkdir ~/.java_lib
           curl -L -o ~/.java_lib/sqlite.jar https://github.com/xerial/sqlite-jdbc/releases/download/3.36.0.3/sqlite-jdbc-3.36.0.3.jar
           export CLASSPATH=":$HOME/.java_lib/sqlite.jar"
-          cd vbisam
           ./configure --prefix=/usr/
-          make
-          sudo make install
-          cd ../
-          ./configure --prefix=/usr/ --with-vbisam
           make
           sudo make install
           cp libcobj/build/libcobj.jar ~/.java_lib

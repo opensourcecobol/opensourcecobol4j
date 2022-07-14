@@ -98,9 +98,6 @@
    */
 #undef HAVE_DCGETTEXT
 
-/* Define to 1 if you have the <disam.h> header file. */
-#undef HAVE_DISAM_H
-
 /* Define to 1 if you have the <dlfcn.h> header file. */
 #undef HAVE_DLFCN_H
 
@@ -128,20 +125,11 @@
 /* Define to 1 if you have the <inttypes.h> header file. */
 #undef HAVE_INTTYPES_H
 
-/* Define to 1 if you have the <isam.h> header file. */
-#undef HAVE_ISAM_H
-
 /* Define to 1 if you have the <kpathsea/getopt.h> header file. */
 #undef HAVE_KPATHSEA_GETOPT_H
 
 /* Define if you have <langinfo.h> and nl_langinfo(CODESET). */
 #undef HAVE_LANGINFO_CODESET
-
-/* Define to 1 if you have the `disam' library (-ldisam). */
-#undef HAVE_LIBDISAM
-
-/* Define to 1 if you have the `ifisam' library (-lifisam). */
-#undef HAVE_LIBIFISAM
 
 /* Define to 1 if you have the `ltdl' library (-lltdl). */
 #undef HAVE_LIBLTDL
@@ -151,9 +139,6 @@
 
 /* Define to 1 if you have the `rt' library (-lrt). */
 #undef HAVE_LIBRT
-
-/* Define to 1 if you have the `vbisam' library (-lvbisam). */
-#undef HAVE_LIBVBISAM
 
 /* Define to 1 if you have the <locale.h> header file. */
 #undef HAVE_LOCALE_H
@@ -232,9 +217,6 @@
 
 /* Define to 1 if you have the <unistd.h> header file. */
 #undef HAVE_UNISTD_H
-
-/* Define to 1 if you have the <vbisam.h> header file. */
-#undef HAVE_VBISAM_H
 
 /* Define to 1 if you have the `vprintf' function. */
 #undef HAVE_VPRINTF

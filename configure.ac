@@ -106,89 +106,6 @@ AC_ARG_WITH(seqra-extfh,
 	AC_DEFINE(WITH_SEQRA_EXTFH)
     fi ], [])
 
-AC_ARG_WITH(cisam,
-  [  --with-cisam            (OpenCOBOL) Use CISAM for ISAM I/O],
-  [ if test "$with_cisam" = "yes"
-    then
-	AC_CHECK_HEADERS([isam.h], , AC_MSG_ERROR(isam.h is required for CISAM))
-	AC_CHECK_LIB([ifisam], [isopen], , AC_MSG_ERROR(libifisam is required for CISAM), [ifisamx])
-	AC_DEFINE(WITH_CISAM)
-	LIBCOB_LIBS="$LIBCOB_LIBS -lifisam -lifisamx"
-	WITH_ISAM_DEFINED=yes
-    fi ], [])
-
-if test "$with_cisam" != "yes"
-then
- AC_ARG_WITH(disam,
-  [  --with-disam            (OpenCOBOL) Use DISAM for ISAM I/O],
-  [ if test "$with_disam" = "yes"
-    then
-	AC_CHECK_HEADERS([disam.h], , AC_MSG_ERROR(disam.h is required for DISAM))
-	AC_CHECK_LIB([disam], [isopen], , AC_MSG_ERROR(libdisam is required for DISAM))
-	AC_DEFINE(WITH_DISAM)
-	LIBCOB_LIBS="$LIBCOB_LIBS -ldisam"
-	WITH_ISAM_DEFINED=yes
-    fi ], [])
-fi
-
-if test "$with_cisam" != "yes" -a "$with_disam" != "yes"
-then
-AC_ARG_WITH(vbisam,
-  [  --with-vbisam           (OpenCOBOL) Use VBISAM for ISAM I/O],
-  [ if test "$with_vbisam" = "yes"
-    then
-	AC_CHECK_HEADERS([vbisam.h], , AC_MSG_ERROR(vbisam.h is required for VBISAM))
-	AC_CHECK_LIB([vbisam], [isopen], , AC_MSG_ERROR(libvbisam is required for VBISAM))
-	AC_DEFINE(WITH_VBISAM)
-	LIBCOB_LIBS="$LIBCOB_LIBS -lvbisam"
-	WITH_ISAM_DEFINED=yes
-    fi ], [])
-fi
-
-AM_CONDITIONAL(WITH_ISAM, test x$WITH_ISAM_DEFINED = xyes)
-
-if test "$with_cisam" != "yes" -a "$with_disam" != "yes" -a "$with_vbisam" != "yes"
-then
-	COB_SPLITKEY_FLAGS="no"
-else
-	COB_SPLITKEY_FLAGS="yes"
-fi
-
-LIBDB=""
-
-if test "$with_cisam" != "yes" -a "$with_disam" != "yes" -a "$with_vbisam" != "yes"
-then
- AC_ARG_WITH(index-extfh,
-  [  --with-index-extfh      (OpenCOBOL) Use external ISAM file handler],
-  [ if test "$with_index_extfh" = "yes"
-    then
-	AC_DEFINE(WITH_INDEX_EXTFH)
-    fi ], [])
-fi
-
-if test "$with_cisam" != "yes" -a "$with_disam" != "yes" -a "$with_vbisam" != "yes" -a "$with_index_extfh" != "yes"
-then
-  AC_ARG_WITH(db1,
-   [  --with-db1              (OpenCOBOL) use Berkeley DB 1.85 (libdb-1.85)],
-   [ LIBDB="1"
-     AC_DEFINE(WITH_DB, 1)
-     with_db=yes ],
-	[ AC_ARG_WITH(db,
-		[  --with-db               (OpenCOBOL) use Berkeley DB 3.0 or later (libdb)(default)],
-		[ LIBDB="3"
-		  AC_DEFINE(WITH_DB, 3) 
-        ],
-		[ LIBDB="3"
-		  AC_DEFINE(WITH_DB, 3)
-        with_db=yes ]) ])
-fi
-
-if test "$with_cisam" != "yes" -a "$with_disam" != "yes" -a "$with_vbisam" != "yes" -a "$with_index_extfh" != "yes" -a "$with_db" != "yes"
-then
-	COB_HAS_ISAM="no"
-else
-	COB_HAS_ISAM="yes"
-fi
 
 #AC_ARG_WITH(lfs64,
 #  [  --with-lfs64            (OpenCOBOL) use large file system for file I/O (default)],
@@ -790,25 +707,6 @@ echo "  Use gettext for international messages:      ${USE_NLS}"
 if test "$with_seqra_extfh" = "yes"
 then
   echo "  Use external SEQ/RAN file handler            yes"
-fi
-if test "$with_index_extfh" = "yes"
-then
-  echo "  Use external ISAM file handler               yes"
-elif test "$with_cisam" = "yes"
-then
-  echo "  Use CISAM for ISAM I/O                       yes"
-elif test "$with_disam" = "yes"
-then
-  echo "  Use DISAM for ISAM I/O                       yes"
-elif test "$with_vbisam" = "yes"
-then
-  echo "  Use VBISAM for ISAM I/O                      yes"
-elif test "$with_db" = "yes"
-then
-  echo "  Use Berkeley DB for ISAM I/O:                yes"
-  echo "  Use enhanced Berkeley DB (>= 4.1)            ${HAS_DB41}"
-else
-  echo "  ISAM I/O (no handler configured):            NO"
 fi
 echo "  Use fcntl for file locking:                  ${ac_cv_func_fcntl}"
 echo ""
