@@ -16,7 +16,7 @@ jobs:
         run: |
           sudo apt-get update
           sudo apt-get install default-jdk
-          sudo apt-get install -y build-essential libncurses-dev bison flex gettext texinfo
+          sudo apt-get install -y build-essential bison flex gettext texinfo
       
       - name: Install opensource COBOL 4j
         run: |

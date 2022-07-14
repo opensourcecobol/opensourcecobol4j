@@ -64,9 +64,6 @@
 /* curses has color_set function */
 #undef HAVE_COLOR_SET
 
-/* Define to 1 if you have the <curses.h> header file. */
-#undef HAVE_CURSES_H
-
 /* Define to 1 if you have the <db1/db.h> header file. */
 #undef HAVE_DB1_DB_H
 
@@ -140,9 +137,6 @@
 /* Define if you have <langinfo.h> and nl_langinfo(CODESET). */
 #undef HAVE_LANGINFO_CODESET
 
-/* Define to 1 if you have the `curses' library (-lcurses). */
-#undef HAVE_LIBCURSES
-
 /* Define to 1 if you have the `disam' library (-ldisam). */
 #undef HAVE_LIBDISAM
 
@@ -151,12 +145,6 @@
 
 /* Define to 1 if you have the `ltdl' library (-lltdl). */
 #undef HAVE_LIBLTDL
-
-/* Define to 1 if you have the `ncurses' library (-lncurses). */
-#undef HAVE_LIBNCURSES
-
-/* Define to 1 if you have the `pdcurses' library (-lpdcurses). */
-#undef HAVE_LIBPDCURSES
 
 /* Define to 1 if you have the `posix4' library (-lposix4). */
 #undef HAVE_LIBPOSIX4
@@ -184,15 +172,6 @@
 
 /* Define to 1 if you have the `memset' function. */
 #undef HAVE_MEMSET
-
-/* Define to 1 if you have the <ncurses.h> header file. */
-#undef HAVE_NCURSES_H
-
-/* Define to 1 if you have the <ncurses/ncurses.h> header file. */
-#undef HAVE_NCURSES_NCURSES_H
-
-/* Define to 1 if you have the <pdcurses.h> header file. */
-#undef HAVE_PDCURSES_H
 
 /* Has -Wno-pointer-sign */
 #undef HAVE_PSIGN_OPT

@@ -351,48 +351,6 @@ then
   LIBCOB_LIBS="$LIBCOB_LIBS $LTLIBINTL"
 fi
 
-# Checks for ncurses/pdcurses/curses.
-USE_NCURSES="no"
-AC_CHECK_LIB([ncurses], [initscr])
-if test "x$ac_cv_lib_ncurses_initscr" = "xyes"
-then
-  LIBCOB_LIBS="$LIBCOB_LIBS -lncurses"
-  AC_CHECK_HEADERS([ncurses.h], [USE_NCURSES="yes"],
-    [AC_CHECK_HEADERS([ncurses/ncurses.h], [USE_NCURSES="ncurses"], [], [])], [])
-else
-  AC_CHECK_LIB([pdcurses], [initscr])
-  if test "x$ac_cv_lib_pdcurses_initscr" = "xyes"
-  then
-    LIBCOB_LIBS="$LIBCOB_LIBS -lpdcurses"
-    AC_CHECK_HEADERS([pdcurses.h], [USE_NCURSES="pdcurses"], [], [])
-  else
-    AC_CHECK_LIB([curses], [initscr])
-    if test "x$ac_cv_lib_curses_initscr" = "xyes"
-    then
-      LIBCOB_LIBS="$LIBCOB_LIBS -lcurses"
-      AC_CHECK_HEADERS([curses.h], [USE_NCURSES="curses"], [], [])
-    fi
-  fi
-fi
-
-if test "$USE_NCURSES" != "no"
-then
-  AC_LINK_IFELSE([AC_LANG_PROGRAM([[
-  #ifdef HAVE_NCURSES_H
-  #include <ncurses.h>
-  #elif defined (HAVE_NCURSES_NCURSES_H)
-  #include <ncurses/ncurses.h>
-  #elif defined (HAVE_PDCURSES_H)
-  #include <pdcurses.h>
-  #elif defined (HAVE_CURSES_H)
-  #include <curses.h>
-  #endif]], [[
-  color_set (0, NULL);]])],
-  [AC_DEFINE(HAVE_COLOR_SET)],
-  [],
-  [])
-fi
-
 # Checks for db.
 USE_DB="no"
 HAS_DB41="no"
@@ -853,5 +811,4 @@ else
   echo "  ISAM I/O (no handler configured):            NO"
 fi
 echo "  Use fcntl for file locking:                  ${ac_cv_func_fcntl}"
-echo "  Use ncurses/pdcurses/curses for screen I/O:  ${USE_NCURSES}"
 echo ""
