@@ -26,7 +26,7 @@ bin_SCRIPTS =
 
 include_HEADERS = libcob.h
 
-SUBDIRS = lib cobj config copy po texi tests
+SUBDIRS = lib cobj config copy po texi tests libcobj
 
 ACLOCAL_AMFLAGS = -I m4
 BUILT_SOURCES = defaults.h

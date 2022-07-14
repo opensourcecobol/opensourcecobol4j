@@ -20,6 +20,9 @@ jobs:
       
       - name: Install opensource COBOL 4j
         run: |
+          mkdir ~/.java_lib
+          curl -L -o ~/.java_lib/sqlite.jar https://github.com/xerial/sqlite-jdbc/releases/download/3.36.0.3/sqlite-jdbc-3.36.0.3.jar
+          export CLASSPATH=":$HOME/.java_lib/sqlite.jar"
           cd vbisam
           ./configure --prefix=/usr/
           make
@@ -28,13 +31,8 @@ jobs:
           ./configure --prefix=/usr/ --with-vbisam
           make
           sudo make install
-          cd libcobj
-          mkdir ~/.java_lib
-          curl -L -o ~/.java_lib/sqlite.jar https://github.com/xerial/sqlite-jdbc/releases/download/3.36.0.3/sqlite-jdbc-3.36.0.3.jar
-          CLASSPATH=":$HOME/.java_lib/sqlite.jar" sh compile.sh
-          cp build/libcobj.jar ~/.java_lib
-          cd ../
-          export CLASSPATH="$CLASSPATH:$HOME/.java_lib/libcobj.jar:$HOME/.java_lib/sqlite.jar"
+          cp libcobj/build/libcobj.jar ~/.java_lib
+          export CLASSPATH="$HOME/.java_lib/libcobj.jar:$HOME/.java_lib/sqlite.jar"
   
       - name: Make test scripts
         run: |
@@ -98,13 +96,11 @@ jobs:
 
       - name: Run tests "i18n_utf8"
         run: |
+          export CLASSPATH=":$HOME/.java_lib/sqlite.jar"
           ./configure --prefix=/usr/ --with-vbisam --enable-utf8
           make
           sudo make install
-          cd libcobj
-          CLASSPATH=":$HOME/.java_lib/sqlite.jar" sh compile.sh
-          cp build/libcobj.jar ~/.java_lib
-          cd ../tests
+          cp libcobj/build/libcobj.jar ~/.java_lib
           export CLASSPATH=":$HOME/.java_lib/libcobj.jar:$HOME/.java_lib/sqlite.jar"
           ./i18n_utf8 || true
           cd ../
