@@ -85,7 +85,7 @@ extern int ppdebug;
 #if ! defined YYSTYPE && ! defined YYSTYPE_IS_DECLARED
 union YYSTYPE
 {
-#line 50 "ppparse.y"
+#line 51 "ppparse.y"
 
 	char			*s;
 	struct cb_text_list	*l;

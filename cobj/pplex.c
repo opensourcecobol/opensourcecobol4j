@@ -1739,14 +1739,14 @@ int yy_flex_debug = 0;
 #define YY_RESTORE_YY_MORE_OFFSET
 char *yytext;
 #line 1 "pplex.l"
-/*							-*- c -*-
+/*
  * Copyright (C) 2001-2009 Keisuke Nishida
  * Copyright (C) 2007-2009 Roger While
- * Copyright (C) 2020 TOKYO SYSTEM HOUSE Co., Ltd.
+ * Copyright (C) 2021-2022 TOKYO SYSTEM HOUSE Co., Ltd.
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation; either version 2, or (at your option)
+ * the Free Software Foundation; either version 3, or (at your option)
  * any later version.
  *
  * This program is distributed in the hope that it will be useful,

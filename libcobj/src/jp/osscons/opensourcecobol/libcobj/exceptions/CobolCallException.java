@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2022-2022 TOKYO SYSTEM HOUSE Co., Ltd.
+ * Copyright (C) 2021-2022 TOKYO SYSTEM HOUSE Co., Ltd.
  * 
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public License

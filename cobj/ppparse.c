@@ -73,7 +73,7 @@
 #define yychar          ppchar
 
 /* First part of user prologue.  */
-#line 26 "ppparse.y"
+#line 27 "ppparse.y"
 
 #include "config.h"
 
@@ -181,7 +181,7 @@ extern int ppdebug;
 #if ! defined YYSTYPE && ! defined YYSTYPE_IS_DECLARED
 union YYSTYPE
 {
-#line 50 "ppparse.y"
+#line 51 "ppparse.y"
 
 	char			*s;
 	struct cb_text_list	*l;
@@ -567,15 +567,15 @@ static const yytype_int8 yytranslate[] =
   /* YYRLINE[YYN] -- Source line where rule number YYN was defined.  */
 static const yytype_int16 yyrline[] =
 {
-       0,    77,    77,    78,    82,    83,    87,    96,   105,   112,
-     113,   114,   118,   118,   123,   123,   126,   127,   127,   130,
-     131,   131,   134,   135,   135,   138,   139,   139,   143,   143,
-     146,   147,   147,   153,   153,   154,   154,   154,   156,   156,
-     157,   157,   157,   158,   162,   163,   164,   172,   180,   181,
-     185,   186,   190,   212,   213,   214,   217,   218,   222,   223,
-     227,   228,   232,   233,   237,   238,   243,   251,   252,   259,
-     266,   275,   275,   278,   279,   283,   284,   288,   289,   293,
-     294,   298,   299,   306,   313,   326,   327,   334,   334
+       0,    78,    78,    79,    83,    84,    88,    97,   106,   113,
+     114,   115,   119,   119,   124,   124,   127,   128,   128,   131,
+     132,   132,   135,   136,   136,   139,   140,   140,   144,   144,
+     147,   148,   148,   154,   154,   155,   155,   155,   157,   157,
+     158,   158,   158,   159,   163,   164,   165,   173,   181,   182,
+     186,   187,   191,   213,   214,   215,   218,   219,   223,   224,
+     228,   229,   233,   234,   238,   239,   244,   252,   253,   260,
+     267,   276,   276,   279,   280,   284,   285,   289,   290,   294,
+     295,   299,   300,   307,   314,   327,   328,   335,   335
 };
 #endif
 
@@ -1466,55 +1466,55 @@ yyreduce:
   switch (yyn)
     {
   case 12:
-#line 118 "ppparse.y"
+#line 119 "ppparse.y"
              { pp_set_current_division (PP_IDENTIFICATION_DIVISION); }
 #line 1472 "ppparse.c"
     break;
 
   case 14:
-#line 123 "ppparse.y"
+#line 124 "ppparse.y"
               { pp_set_current_division (PP_FUNCTION_DIVISION); }
 #line 1478 "ppparse.c"
     break;
 
   case 17:
-#line 127 "ppparse.y"
+#line 128 "ppparse.y"
                        { pp_set_current_division (PP_ENVIRONMENT_DIVISION); }
 #line 1484 "ppparse.c"
     break;
 
   case 20:
-#line 131 "ppparse.y"
+#line 132 "ppparse.y"
                 { pp_set_current_division (PP_DATA_DIVISION); }
 #line 1490 "ppparse.c"
     break;
 
   case 23:
-#line 135 "ppparse.y"
+#line 136 "ppparse.y"
                      { pp_set_current_division (PP_PROCEDURE_DIVISION); }
 #line 1496 "ppparse.c"
     break;
 
   case 26:
-#line 139 "ppparse.y"
+#line 140 "ppparse.y"
                { pp_set_current_division (PP_OUT_OF_DIVISION); }
 #line 1502 "ppparse.c"
     break;
 
   case 28:
-#line 143 "ppparse.y"
+#line 144 "ppparse.y"
                { pp_set_current_division (PP_OUT_OF_DIVISION); }
 #line 1508 "ppparse.c"
     break;
 
   case 31:
-#line 147 "ppparse.y"
+#line 148 "ppparse.y"
                { pp_set_current_division (PP_OUT_OF_DIVISION); }
 #line 1514 "ppparse.c"
     break;
 
   case 46:
-#line 165 "ppparse.y"
+#line 166 "ppparse.y"
  {
 	pp_omit_data_entry_name (0);
 	pp_omit_data_redef_name (0);
@@ -1523,7 +1523,7 @@ yyreduce:
     break;
 
   case 47:
-#line 173 "ppparse.y"
+#line 174 "ppparse.y"
   {
 	pp_omit_data_entry_name (1);
 	pp_omit_data_redef_name (((yyvsp[0].s)) ? 1 : 0);
@@ -1532,19 +1532,19 @@ yyreduce:
     break;
 
   case 48:
-#line 180 "ppparse.y"
+#line 181 "ppparse.y"
                                 { (yyval.s) = NULL; }
 #line 1538 "ppparse.c"
     break;
 
   case 49:
-#line 181 "ppparse.y"
+#line 182 "ppparse.y"
                                 { (yyval.s) = (yyvsp[0].s); }
 #line 1544 "ppparse.c"
     break;
 
   case 52:
-#line 191 "ppparse.y"
+#line 192 "ppparse.y"
   {
 	fputc ('\n', ppout);
 	(yyvsp[-4].s) = fix_filename ((yyvsp[-4].s));
@@ -1567,67 +1567,67 @@ yyreduce:
     break;
 
   case 53:
-#line 212 "ppparse.y"
+#line 213 "ppparse.y"
                                 { (yyval.s) = NULL; }
 #line 1573 "ppparse.c"
     break;
 
   case 54:
-#line 213 "ppparse.y"
+#line 214 "ppparse.y"
                                 { (yyval.s) = (yyvsp[0].s); }
 #line 1579 "ppparse.c"
     break;
 
   case 55:
-#line 214 "ppparse.y"
+#line 215 "ppparse.y"
                                 { (yyval.s) = (yyvsp[0].s); }
 #line 1585 "ppparse.c"
     break;
 
   case 58:
-#line 222 "ppparse.y"
+#line 223 "ppparse.y"
                                 { (yyval.r) = NULL; }
 #line 1591 "ppparse.c"
     break;
 
   case 59:
-#line 223 "ppparse.y"
+#line 224 "ppparse.y"
                                 { (yyval.r) = (yyvsp[0].r); }
 #line 1597 "ppparse.c"
     break;
 
   case 60:
-#line 227 "ppparse.y"
+#line 228 "ppparse.y"
                                 { pp_set_replace_list ((yyvsp[-1].r)); }
 #line 1603 "ppparse.c"
     break;
 
   case 61:
-#line 228 "ppparse.y"
+#line 229 "ppparse.y"
                                 { pp_set_replace_list (NULL); }
 #line 1609 "ppparse.c"
     break;
 
   case 62:
-#line 232 "ppparse.y"
+#line 233 "ppparse.y"
                                         { (yyval.r) = cb_replace_list_add_list (NULL, (yyvsp[0].r)); }
 #line 1615 "ppparse.c"
     break;
 
   case 63:
-#line 233 "ppparse.y"
+#line 234 "ppparse.y"
                                         { (yyval.r) = cb_replace_list_add_list ((yyvsp[-1].r), (yyvsp[0].r)); }
 #line 1621 "ppparse.c"
     break;
 
   case 64:
-#line 237 "ppparse.y"
+#line 238 "ppparse.y"
                                 { (yyval.r) = cb_replace_list_add (NULL, (yyvsp[-2].l), (yyvsp[0].l)); }
 #line 1627 "ppparse.c"
     break;
 
   case 65:
-#line 239 "ppparse.y"
+#line 240 "ppparse.y"
   {
 	(yyval.r) = cb_replace_list_add (NULL, (yyvsp[-2].l), (yyvsp[0].l));
 	cb_replace_list_set_type ((yyval.r), CB_REPLACE_LEADING);
@@ -1636,7 +1636,7 @@ yyreduce:
     break;
 
   case 66:
-#line 244 "ppparse.y"
+#line 245 "ppparse.y"
   {
 	(yyval.r) = cb_replace_list_add (NULL, (yyvsp[-2].l), (yyvsp[0].l));
 	cb_replace_list_set_type ((yyval.r), CB_REPLACE_TRAILING);
@@ -1645,13 +1645,13 @@ yyreduce:
     break;
 
   case 67:
-#line 251 "ppparse.y"
+#line 252 "ppparse.y"
                                 { (yyval.jx) = NULL; }
 #line 1651 "ppparse.c"
     break;
 
   case 68:
-#line 253 "ppparse.y"
+#line 254 "ppparse.y"
   {
 	struct cb_joining_ext *p = cobc_malloc (sizeof (struct cb_joining_ext));
 	p->ext = (yyvsp[-2].s);
@@ -1662,7 +1662,7 @@ yyreduce:
     break;
 
   case 69:
-#line 260 "ppparse.y"
+#line 261 "ppparse.y"
   {
 	struct cb_joining_ext *p = cobc_malloc (sizeof (struct cb_joining_ext));
 	p->ext  = (yyvsp[0].s);
@@ -1673,7 +1673,7 @@ yyreduce:
     break;
 
   case 70:
-#line 267 "ppparse.y"
+#line 268 "ppparse.y"
   {
 	struct cb_joining_ext *p = cobc_malloc (sizeof (struct cb_joining_ext));
 	p->ext  = (yyvsp[0].s);
@@ -1684,61 +1684,61 @@ yyreduce:
     break;
 
   case 73:
-#line 278 "ppparse.y"
+#line 279 "ppparse.y"
                                 { (yyval.jt) = joining_as_prefix; }
 #line 1690 "ppparse.c"
     break;
 
   case 74:
-#line 279 "ppparse.y"
+#line 280 "ppparse.y"
                                 { (yyval.jt) = joining_as_suffix; }
 #line 1696 "ppparse.c"
     break;
 
   case 75:
-#line 283 "ppparse.y"
+#line 284 "ppparse.y"
                                 { (yyval.l) = (yyvsp[0].l); }
 #line 1702 "ppparse.c"
     break;
 
   case 76:
-#line 284 "ppparse.y"
+#line 285 "ppparse.y"
                                 { (yyval.l) = (yyvsp[0].l); }
 #line 1708 "ppparse.c"
     break;
 
   case 77:
-#line 288 "ppparse.y"
+#line 289 "ppparse.y"
                                 { (yyval.l) = NULL; }
 #line 1714 "ppparse.c"
     break;
 
   case 78:
-#line 289 "ppparse.y"
+#line 290 "ppparse.y"
                                 { (yyval.l) = (yyvsp[-1].l); }
 #line 1720 "ppparse.c"
     break;
 
   case 79:
-#line 293 "ppparse.y"
+#line 294 "ppparse.y"
                                 { (yyval.l) = cb_text_list_add (NULL, (yyvsp[0].s)); }
 #line 1726 "ppparse.c"
     break;
 
   case 80:
-#line 294 "ppparse.y"
+#line 295 "ppparse.y"
                                 { (yyval.l) = cb_text_list_add ((yyvsp[-1].l), (yyvsp[0].s)); }
 #line 1732 "ppparse.c"
     break;
 
   case 81:
-#line 298 "ppparse.y"
+#line 299 "ppparse.y"
                                 { (yyval.l) = cb_text_list_add (NULL, (yyvsp[0].s)); }
 #line 1738 "ppparse.c"
     break;
 
   case 82:
-#line 300 "ppparse.y"
+#line 301 "ppparse.y"
   {
 	(yyval.l) = cb_text_list_add ((yyvsp[-2].l), " ");
 	(yyval.l) = cb_text_list_add ((yyval.l), "IN");
@@ -1749,7 +1749,7 @@ yyreduce:
     break;
 
   case 83:
-#line 307 "ppparse.y"
+#line 308 "ppparse.y"
   {
 	(yyval.l) = cb_text_list_add ((yyvsp[-2].l), " ");
 	(yyval.l) = cb_text_list_add ((yyval.l), "OF");
@@ -1760,7 +1760,7 @@ yyreduce:
     break;
 
   case 84:
-#line 314 "ppparse.y"
+#line 315 "ppparse.y"
   {
 	struct cb_text_list *l;
 
@@ -1774,13 +1774,13 @@ yyreduce:
     break;
 
   case 85:
-#line 326 "ppparse.y"
+#line 327 "ppparse.y"
                                 { (yyval.l) = cb_text_list_add (NULL, (yyvsp[0].s)); }
 #line 1780 "ppparse.c"
     break;
 
   case 86:
-#line 328 "ppparse.y"
+#line 329 "ppparse.y"
   {
 	(yyval.l) = cb_text_list_add ((yyvsp[-1].l), " ");
 	(yyval.l) = cb_text_list_add ((yyval.l), (yyvsp[0].s));
@@ -2021,7 +2021,7 @@ yyreturn:
 #endif
   return yyresult;
 }
-#line 336 "ppparse.y"
+#line 337 "ppparse.y"
 
 static char *
 fix_filename (char *name)
