@@ -326,11 +326,6 @@ AC_CHECK_FUNC([getopt_long_only],
    AC_LIBOBJ(getopt1)
    AC_LIBSOURCE(getopt.h)])
 
-# Checks for gmp.
-AC_CHECK_HEADERS([gmp.h], , AC_MSG_ERROR(gmp.h is required))
-AC_CHECK_LIB([gmp], [__gmp_randinit], , AC_MSG_ERROR(GMP 3 or later is required))
-LIBCOB_LIBS="$LIBCOB_LIBS -lgmp"
-
 # Solaris has nanosleep in other libraries
 AC_LINK_IFELSE([AC_LANG_PROGRAM([[#include <time.h>]],
   [[nanosleep (NULL, NULL);]])],

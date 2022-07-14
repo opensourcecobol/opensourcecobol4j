@@ -125,9 +125,6 @@
 /* Define to 1 if you have the `gettimeofday' function. */
 #undef HAVE_GETTIMEOFDAY
 
-/* Define to 1 if you have the <gmp.h> header file. */
-#undef HAVE_GMP_H
-
 /* Define if you have the iconv() function. */
 #undef HAVE_ICONV
 
@@ -148,9 +145,6 @@
 
 /* Define to 1 if you have the `disam' library (-ldisam). */
 #undef HAVE_LIBDISAM
-
-/* Define to 1 if you have the `gmp' library (-lgmp). */
-#undef HAVE_LIBGMP
 
 /* Define to 1 if you have the `ifisam' library (-lifisam). */
 #undef HAVE_LIBIFISAM
