@@ -1740,7 +1740,7 @@ msgstr "CALL文のパラメタにNULL終端ポインタを追加して受け渡す"
 msgid ""
 "Instead of embedding COBOL variable names in Java variable names, give them "
 "serial numbers."
-msgstr ""
+msgstr "Java変数名にCOBOL変数名を埋め込むのではなく,連番を付与する形式に変更する"
 
 #: cobj/warning.def:27
 msgid "Warn if obsolete features are used"
