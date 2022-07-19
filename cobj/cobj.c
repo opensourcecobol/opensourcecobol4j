@@ -839,71 +839,15 @@ cobc_print_usage (void)
 	puts (_("Options:"));
 	puts (_("  --help                Display this message"));
 	puts (_("  --version, -V         Display compiler version"));
-	puts (_("  -v                    Display the commands invoked by the compiler"));
-	puts (_("  -x                    Build an executable program"));
-	puts (_("  -m                    Build a dynamically loadable module (default)"));
-	puts (_("  -std=<dialect>        Warnings/features for a specific dialect :"));
-	puts (_("                          cobol2002   Cobol 2002"));
-	puts (_("                          cobol85     Cobol 85"));
-	puts (_("                          ibm         IBM Compatible"));
-	puts (_("                          mvs         MVS Compatible"));
-	puts (_("                          bs2000      BS2000 Compatible"));
-	puts (_("                          mf          Micro Focus Compatible"));
-	puts (_("                          default     When not specified"));
-	puts (_("                        See config/default.conf and config/*.conf"));
-	puts (_("  -free                 Use free source format"));
-	puts (_("  -free_1col_aster      Use free(1col_aster) source format"));
-	puts (_("  -fixed                Use fixed source format (default)"));
-	puts (_("  -O, -O2, -Os          Enable optimization"));
-	puts (_("  -g                    Enable C compiler debug / stack check / trace"));
-	puts (_("  -debug                Enable all run-time error checking"));
-	puts (_("  -o <file>             Place the output into <file>"));
-	puts (_("  -b                    Combine all input files into a single"));
-	puts (_("                        dynamically loadable module"));
-	puts (_("  -E                    Preprocess only; do not compile or link"));
-	puts (_("  -C                    Translation only; convert COBOL to C"));
-	puts (_("  -S                    Compile only; output assembly file"));
-	puts (_("  -c                    Compile and assemble, but do not link"));
-	puts (_("  -t <file>             Generate and place a program listing into <file>"));
 	puts (_("  -I <directory>        Add <directory> to copy/include search path"));
-	puts (_("  -L <directory>        Add <directory> to library search path"));
-	puts (_("  -l <lib>              Link the library <lib>"));
-	puts (_("  -B <options>          Add <options> to the C compile phase"));
-	puts (_("  -Q <options>          Add <options> to the C link phase"));
-	puts (_("  -D <define>           Pass <define> to the C compiler"));
-	puts (_("  -conf=<file>          User defined dialect configuration - See -std="));
-	puts (_("  --list-reserved       Display reserved words"));
-	puts (_("  --list-intrinsics     Display intrinsic functions"));
-	puts (_("  --list-mnemonics      Display mnemonic names"));
-	puts (_("  -save-temps(=<dir>)   Save intermediate files (default current directory)"));
-	puts (_("  -MT <target>          Set target file used in dependency list"));
-	puts (_("  -MF <file>            Place dependency list into <file>"));
-	puts (_("  -ext <extension>      Add default file extension"));
-	puts (_("  -assign_external      Set the file assign to external"));
-	puts (_("  -reference_check      Set reference check in runtime"));
-	puts (_("  -constant(=<name\"value\">) define <name> to <value> for $IF statement"));
 
-	putchar ('\n');
-
-	puts (_("  -W                    Enable ALL warnings"));
-	puts (_("  -Wall                 Enable all warnings except as noted below"));
-#undef	CB_WARNDEF
-#define	CB_WARNDEF(var,name,wall,doc)		\
-	printf ("  -W%-19s %s", name, gettext (doc)); \
-	if (!wall) { \
-		puts (_(" (NOT set with -Wall)")); \
-	} else { \
-		printf ("\n"); \
-	}
-#include "warning.def"
-#undef	CB_WARNDEF
 	putchar ('\n');
 
 #undef	CB_FLAG
 #define	CB_FLAG(var,name,doc)			\
 	if (strcmp (name, "static-call"))	\
 		printf ("  -f%-19s %s\n", name, gettext (doc));
-#include "flag.def"
+#include "flag-help.def"
 #undef	CB_FLAG
 	putchar ('\n');
 }
