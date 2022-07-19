@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: opensource COBOL v1.5.2J\n"
 "Report-Msgid-Bugs-To: ws-opensource-cobol-contact@osscons.jp\n"
-"POT-Creation-Date: 2022-07-13 13:33+0900\n"
+"POT-Creation-Date: 2022-07-19 13:47+0900\n"
 "PO-Revision-Date: 2019-04-10 14:49+0900\n"
 "Last-Translator: Noriyuki Isaka <n-isaka@tsh-world.co.jp>\n"
 "Language-Team:\n"
@@ -1625,122 +1625,123 @@ msgstr "`%s' への参照が重複しています"
 msgid "Integer value expected"
 msgstr "数値が必要です"
 
-#: cobj/scanner.l:185
+#: cobj/scanner.l:183
 msgid "X Binary literal found."
 msgstr "16進数X文字定数が使用されています"
 
-#: cobj/scanner.l:195
+#: cobj/scanner.l:193
 msgid "NX Binary literal found."
 msgstr "16進数NX文字定数が使用されています"
 
-#: cobj/scanner.l:568
+#: cobj/scanner.l:566
 msgid "User defined name must be less than 32 characters"
 msgstr "利用者定義名の長さは32文字以下でなくてはなりません"
 
-#: cobj/scanner.l:631
+#: cobj/scanner.l:629
 #, c-format
 msgid "CONSTANT (78 level) may not be used here - '%s'"
 msgstr "定数(78レベル)は指定できません - `%s'"
 
-#: cobj/scanner.l:644
+#: cobj/scanner.l:642
 msgid "PROGRAM-ID length exceeds C89 function name limit"
 msgstr "PROGRAM-ID の長さがC89標準における関数名の上限を超過します"
 
-#: cobj/scanner.l:818
+#: cobj/scanner.l:816
 msgid "Alphanumeric literal has zero length"
 msgstr "文字列が必要です"
 
-#: cobj/scanner.l:819
+#: cobj/scanner.l:817
 msgid "A SPACE will be assumed"
 msgstr "ひとつのSPACEを仮定します"
 
-#: cobj/scanner.l:908
+#: cobj/scanner.l:906
 #, c-format
 msgid "Invalid X literal: %s"
 msgstr "不当な X 定数です: %s"
 
-#: cobj/scanner.l:944
+#: cobj/scanner.l:942
 #, c-format
 msgid "Invalid H literal: %s"
 msgstr "不当な H 定数です: %s"
 
-#: cobj/scanner.l:969 cobj/scanner.l:972
+#: cobj/scanner.l:967 cobj/scanner.l:970
 msgid "Invalid numeric literal"
 msgstr "不当な数字定数です"
 
-#: cobj/scanner.l:1122
+#: cobj/scanner.l:1120
 msgid "Scanner unget buffer overflow"
 msgstr "字句解析でungetバッファがオーバーフローしました"
 
-#: cobj/flag.def:27
+#: cobj/flag.def:28
 msgid "Generate trace code (Executed SECTION/PARAGRAPH)"
 msgstr "トレースコードの生成 (実行された節/段落の追跡)"
 
-#: cobj/flag.def:30
+#: cobj/flag.def:31
 msgid "Generate trace code (Executed SECTION/PARAGRAPH/STATEMENTS)"
 msgstr "トレースコードの生成 (実行された節/段落/文の追跡)"
 
-#: cobj/flag.def:33
+#: cobj/flag.def:34
 msgid "Syntax error checking only; don't emit any output"
 msgstr "文法チェックのみ。何も出力しない"
 
-#: cobj/flag.def:36
+#: cobj/flag.def:37
 msgid "Output static function calls for the CALL statement"
 msgstr "CALL 文で静的関数呼び出しを行なう"
 
-#: cobj/flag.def:39
+#: cobj/flag.def:40
 msgid "Enable debugging lines ('D' in indicator column)"
 msgstr "デバッグ行(標識領域に'D')を有効にする"
 
-#: cobj/flag.def:42
+#: cobj/flag.def:43
 msgid "Generate source location code (Turned on by -debug or -g)"
 msgstr "ソース行情報の生成 (-debugか-gで有効)"
 
-#: cobj/flag.def:45
+#: cobj/flag.def:46
 msgid "Do automatic initialization of the Cobol runtime system"
 msgstr "Cobolラインタイム初期化の自動実行"
 
-#: cobj/flag.def:48
+#: cobj/flag.def:49
 msgid "Numeric display sign ASCII (Default on ASCII machines)"
 msgstr "ASCII符号で数字を表示 (ASCII機のデフォルト)"
 
-#: cobj/flag.def:51
+#: cobj/flag.def:52
 msgid "Numeric display sign EBCDIC (Default on EBCDIC machines)"
 msgstr "EBCDIC符号で数字を表示 (EBCDIC機のデフォルト)"
 
-#: cobj/flag.def:54
+#: cobj/flag.def:55
 msgid "PERFORM stack checking (Turned on by -debug or -g)"
 msgstr "PERFORM実行スタックのランタイムチェック (-debugまたは-gで有効)"
 
-#: cobj/flag.def:57
+#: cobj/flag.def:58
 msgid "Fold COPY subject to lower case (Default no transformation)"
 msgstr "COPYブック名の小文字化 (デフォルトは変換なし)"
 
-#: cobj/flag.def:60
+#: cobj/flag.def:61
 msgid "Fold COPY subject to upper case (Default no transformation)"
 msgstr "COPYブック名の大文字化 (デフォルトは変換なし)"
 
-#: cobj/flag.def:63
+#: cobj/flag.def:64
 msgid "Do not truncate binary fields according to PICTURE"
 msgstr "2進項目のPICTURE句に合わせた切り詰めを行わない"
 
-#: cobj/flag.def:66
+#: cobj/flag.def:67
 msgid "Allow use of intrinsic functions without FUNCTION keyword"
 msgstr "組み込み関数使用時のFUNCTIONキーワードの省略を許す"
 
-#: cobj/flag.def:69
+#: cobj/flag.def:70
 msgid "'*' or '/' in column 1 treated as comment (FIXED only)"
 msgstr "第1カラムの'*'と'/'をコメント行標識と解釈する(固定形式のみ)"
 
-#: cobj/flag.def:72
+#: cobj/flag.def:73
 msgid "Pass extra NULL terminating pointers on CALL statements"
 msgstr "CALL文のパラメタにNULL終端ポインタを追加して受け渡す"
 
-#: cobj/flag.def:75
+#: cobj/flag.def:76
 msgid ""
 "Instead of embedding COBOL variable names in Java variable names, give them "
 "serial numbers."
-msgstr "Java変数名にCOBOL変数名を埋め込むのではなく,連番を付与する形式に変更する"
+msgstr ""
+"Java変数名にCOBOL変数名を埋め込むのではなく,連番を付与する形式に変更する"
 
 #: cobj/warning.def:27
 msgid "Warn if obsolete features are used"
