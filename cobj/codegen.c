@@ -190,7 +190,7 @@ const int EXECUTION_ERROR_HANDLER = 2;
 static char*
 get_java_identifier_field(struct cb_field* f) {
 	char *buf = malloc(COB_SMALL_BUFF);
-	if(cb_flag_var_number) {
+	if(cb_flag_serial_variable) {
 		sprintf(buf, "%s%d", CB_PREFIX_FIELD, f->id);
 	} else {
 		strcpy(buf, CB_PREFIX_FIELD);
@@ -202,7 +202,7 @@ get_java_identifier_field(struct cb_field* f) {
 static char*
 get_java_identifier_base(struct cb_field* f) {
 	char *buf = malloc(COB_SMALL_BUFF);
-	if(cb_flag_var_number) {
+	if(cb_flag_serial_variable) {
 		sprintf(buf, "%s%d", CB_PREFIX_BASE, f->id);
 	} else {
 		strcpy(buf, CB_PREFIX_BASE);

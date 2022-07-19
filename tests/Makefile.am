@@ -140,7 +140,7 @@ jp_compat_DEPENDENCIES = \
 
 command_line_options_DEPENDENCIES = \
 	command-line-options.src/ftrace-ftraceall.at \
-	command-line-options.src/fvar-number.at
+	command-line-options.src/fserial-variable.at
 
 misc_DEPENDENCIES = \
 	misc.src/signed-comp3.at \

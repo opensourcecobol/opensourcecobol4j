@@ -1,4 +1,4 @@
-AT_SETUP([-fvar-number])
+AT_SETUP([-fserial-variable])
 
 AT_DATA([prog.cbl], [       IDENTIFICATION              DIVISION.
        PROGRAM-ID.                 prog.
@@ -21,7 +21,7 @@ AT_DATA([prog.cbl], [       IDENTIFICATION              DIVISION.
           DISPLAY FFF.
 ])
 
-AT_CHECK([${COMPILE} -fvar-number prog.cbl])
+AT_CHECK([${COMPILE} -fserial-variable prog.cbl])
 AT_CHECK([${RUN_MODULE} prog], [0],
 [0
 1
