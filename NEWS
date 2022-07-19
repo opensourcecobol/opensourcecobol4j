@@ -1,23 +1,66 @@
 NEWS - user visible changes				-*- outline -*-
 
-* release opensource COBOL4J developers edition.
+* opensource cobol 4j 1.0.4
+
+** New Features
+    (1) Rename cobc, the compile command, to cobj.
+    (2) -fserial-variable option
+        (2-1) By default, Java variable names are f_{COBOL variable name} or b_{COBOL variable name}. With -fvar-number option, Java variable names are f_{serial number}.
+    (3) Improve the performance of control statements.
+    (4) In v1.0.3 and earlier, the memory consumption increases the number of GOTO loops increases. In v2.0.0, the memory problem is solved.
+        (4-1) Due to the fix, the number of class files that cobj command genearates increase compared to earlier version in some cases.
+    (6) Implement -ftrace and -ftraceall options.
+    (7) Change the license of libcobj to LGPL3.
+
+** Bug fixes
+
+    (1) Fix the problem of signed comp-3 data.
+    (2) Fix the problem of MOVE statement.
+    (3) Fix the problem of EXTERNAL
+
+** Miscellaneous
+
+    (1) Remove some unnecessary directories(bin/, vbisam/).
+    (2) Remove dependencies on ncurses and gmp.
+    (3) Fix the build system of tests/ directory.
+    (4) Add test cases for new features and bug fixes.
+    (5) When converting COBOL source code with EXTERNAL to Java source code, insert line breaks to make them easier to read.
+
+-----------------------------------------------------------------------
+
+
+* opensource cobol 4j 1.0.3
 
 ** New features
+    (1) Change the storage library for indexed file to SQLite.
 
-*** compilation to java from COBOL.
-    (1) Improved cobc to output Java file.
-        
-    (2) Converted the library `libcob` for using COBOL to Java `libcobj`.
+-----------------------------------------------------------------------
 
-** Unimplemented
+* opensource cobol 4j 1.0.2
 
-*** Features under development
-	(1) Sort.
+** New features
+    (1) Upgrade the license to GPL3.
 
-	(2) Numeric Edited.
+** Bug fixes
+    (1) Fix the problem that cobc translates EXIT PERFORM statements to invalid Java source code.
 
-	(3) Calling an external Java library.
+-----------------------------------------------------------------------
 
-	and more....
+* opensource cobol 4j 1.0.1
+
+** Bug fixes
+    (1) Fix the transformation of call arguments
+
+-----------------------------------------------------------------------
+
+* opensource cobol 4j 1.0.0
+
+** Bug fixes
+    (1) Fix the status code after opening indexed files.
+    (2) Fix the behavior of delete and rewrite indexed files
+
+-----------------------------------------------------------------------
+
+* release opensource COBOL4J developers edition.
 
 -----------------------------------------------------------------------
