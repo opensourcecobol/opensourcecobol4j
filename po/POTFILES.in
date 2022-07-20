@@ -1,17 +1,17 @@
 # List of source files containing translatable strings.
 
 # cobc
-cobc/cobc.c
-cobc/tree.c
-cobc/error.c
-cobc/field.c
-cobc/typeck.c
-cobc/pplex.l
-cobc/ppparse.y
-cobc/parser.y
-cobc/scanner.l
-cobc/flag.def
-cobc/warning.def
+cobj/cobj.c
+cobj/tree.c
+cobj/error.c
+cobj/field.c
+cobj/typeck.c
+cobj/pplex.l
+cobj/ppparse.y
+cobj/parser.y
+cobj/scanner.l
+cobj/flag.def
+cobj/warning.def
 
 # libcob
 libcob/call.c

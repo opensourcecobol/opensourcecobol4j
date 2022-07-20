@@ -1,9 +1,12 @@
 # opensource COBOL 4j
 
-[English version README](https://github.com/opensourcecobol/opensourcecobol4j/blob/develop/README.md)
+[English version README](https://github.com/opensourcecobol/opensourcecobol4j/blob/main/README.md)
 
 opensource COBOL 4jはCOBOLソースコードをJavaソースコードに変換するCOBOLコンパイラです.
 opensource COBOL 4jはCOBOLからCに変換するCOBOLコンパイラ["opensource COBOL"](https://github.com/opensourcecobol/opensource-cobol)をもとに開発されています.
+
+## ライセンス
+ランタイムライブラリであるlibcobjはLGPL 3,それ以外のソフトウェアやライブラリはGPL 3の下で配布されています.
 
 ## インストール
 
@@ -13,9 +16,9 @@ opensource COBOL 4jはCOBOLからCに変換するCOBOLコンパイラ["opensourc
 
 コンパイル.
 ```bash
-cobc -m [COBOL source file]
+cobj [COBOL source file]
 ```
-(cobcコマンドにより,カレントディレクトリに[PROGRAM-ID].javaと[PROGRAM-ID].classが生成されます.)
+(cobjコマンドにより,./buildに[PROGRAM-ID].javaと[PROGRAM-ID].classが生成されます.)
 
 実行.
 ```bash

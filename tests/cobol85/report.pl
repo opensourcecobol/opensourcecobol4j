@@ -22,14 +22,12 @@ my $opt = shift;
 my $compile;
 my $compile_module;
 
-$enable_c = 0;
-
 if ($opt) {
-	$compile = "cobc -std=cobol85 -x $opt";
-	$compile_module = "cobc -std=cobol85 -m $opt";
+	$compile = "cobj -std=cobol85 $opt";
+	$compile_module = "cobj -std=cobol85 $opt";
 } else {
-	$compile = "cobc -std=cobol85 -x";
-	$compile_module = "cobc -std=cobol85 -m";
+	$compile = "cobj -std=cobol85 ";
+	$compile_module = "cobj -std=cobol85 ";
 }
 
 my $num_progs = 0;
@@ -56,7 +54,20 @@ $skip{SG202A} = 1;
 $skip{SG203A} = 1;
 $skip{OBNC1M} = 1;
 $skip{OBNC2M} = 1;
-
+$skip{IX106A} = 1;
+$skip{NC127A} = 1;
+$skip{IC222A} = 1;
+$skip{IC223A} = 1;
+$skip{IC224A} = 1;
+$skip{IC225A} = 1;
+$skip{IC226A} = 1;
+$skip{IC227A} = 1;
+$skip{IC228A} = 1;
+$skip{IC233A} = 1;
+$skip{IC234A} = 1;
+$skip{IC235A} = 1;
+$skip{IC237A} = 1;
+$skip{IC401M} = 1;
 
 open (LOG, "> report.txt") or die;
 print LOG "Filename    total pass fail deleted inspect\n";
@@ -73,13 +84,11 @@ foreach $in (sort (glob("*.{CBL,SUB}"))) {
   $exe =~ s/\.CBL//;
   $exe =~ s/\.SUB//;
   $cmd = "";
-  if($enable_c == 1) {
-    $cmd = "cobcrun $exe";
-  } else {
-    $cmd = "java -Xss4m $exe";
-  }
+
   if (-e "./$exe.DAT") {
-    $cmd = "$cmd < $exe.DAT";
+    $cmd = "java $exe < $exe.DAT";
+  } else {
+    $cmd = "java $exe";
   }
   printf LOG "%-12s", $in;
   if ($skip{$exe} || $exe =~ /^..[34]0/) {
@@ -106,13 +115,8 @@ foreach $in (sort (glob("*.{CBL,SUB}"))) {
 		system ("rm -rf XXXXX*");
 	}
       }
-      ## if (system ("java $cmd > $exe.out") != 0) {
       $exec_result = 0;
-      if($enable_c == 1) {
-          $exec_result = system ("$cmd > $exe.out.org");
-      } else {
-          $exec_result = system ("$cmd > $exe.out");
-      }
+      $exec_result = system ("$cmd > $exe.out");
       if ($exec_result != 0) {
 	$execute_error++;
 	print LOG "  ***** execute error *****\n";

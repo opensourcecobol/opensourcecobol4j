@@ -1,10 +1,15 @@
 # opensource COBOL 4j
 
-[日本語版README](https://github.com/opensourcecobol/opensourcecobol4j/blob/develop/README_JP.md)
+[日本語版README](https://github.com/opensourcecobol/opensourcecobol4j/blob/main/README_JP.md)
 
 "opensource COBOL 4j" is a COBOL compiler that translates COBOL parograms to Java programs.
 This compiler is deeply inspired by ["opensource COBOL"](https://github.com/opensourcecobol/opensource-cobol) which translates COBOL programs to C programs.
 (In fact, this repository contains a lot of source files of ["opensource COBOL"](https://github.com/opensourcecobol/opensource-cobol))
+
+## LICENSE
+
+libcobj, the runtime libraries, are distributed under the the GNU Lesser General Public License Version 3.
+Other software and libraries are distributed under the GNU GENERAL PUBLIC LICENSE Version 3.
 
 ## Requirements and Installation
 
@@ -14,9 +19,9 @@ See [Installation page](https://github.com/opensourcecobol/opensourcecobol4j/wik
 
 Compile.
 ```bash
-cobc -m [COBOL source file]
+cobj [COBOL source file]
 ```
-("cobc" command produces [PROGRAM-ID].java and [PROGRAM-ID].class in the current directory.)
+("cobj" command produces [PROGRAM-ID].java and [PROGRAM-ID].class in ./build directory.)
 
 Run.
 ```bash

@@ -5,13 +5,13 @@
 ##
 
 #MODULES = CM DB IC IF IX NC OB RL RW SG SM SQ ST
-MODULES = NC SM IC SQ RL IX ST SG OB IF
+MODULES = NC SM IC SQ IX ST SG OB IF
 
 EXTRA_DIST = EXEC85.conf.in expand.pl report.pl summary.pl summary.txt \
 	NC.txt SM.txt IC.txt SQ.txt RL.txt IX.txt ST.txt SG.txt OB.txt IF.txt ifedit.sh
 CLEANFILES = EXEC85 summary.log
 
-COBOL = cobc -std=cobol85
+COBOL = cobj -std=cobol85
 
 COB85DIR = "`cd $(srcdir) && pwd`"
 
@@ -20,7 +20,9 @@ test: $(MODULES)
 	  (cd $$m && make test) \
 	done
 	perl $(srcdir)/summary.pl $(MODULES) > summary.log
-	test -e $(srcdir)/summary.txt && diff $(srcdir)/summary.txt summary.log
+	@for MODULE in $(MODULES); do\
+  		(cat $$MODULE/report.txt) \
+	done
 
 save:
 	@for m in $(MODULES); do \
@@ -37,21 +39,19 @@ diff:
 clean-local:
 	rm -rf copy copyalt $(MODULES)
 
-$(MODULES): newcob.val EXEC85.class $(srcdir)/EXEC85.conf.in
+$(MODULES): newcob.val build/EXEC85.class $(srcdir)/EXEC85.conf.in
 	@echo -n "Building module $@..."
 	@sed 's/@MODULE@/$@/' $(srcdir)/EXEC85.conf.in > EXEC85.conf
-	@. ../atconfig; . ../atlocal; export PATH; java EXEC85
+	@. ../atconfig; . ../atlocal; export PATH; java -cp $$CLASSPATH:./build EXEC85
 	@$(srcdir)/ifedit.sh
 	@perl $(srcdir)/expand.pl newcob.tmp
 	@rm -f newcob.tmp newcob.log EXEC85.conf
 	@echo "test:"               > $@/Makefile
 	@echo "	. ../../atconfig; . ../../atlocal; export PATH; perl $(COB85DIR)/report.pl" >> $@/Makefile
 	@echo "	diff $(COB85DIR)/$@.txt report.txt" >> $@/Makefile
-	@echo "	. ../../atconfig; . ../../atlocal; export PATH; perl $(COB85DIR)/report.pl -O" >> $@/Makefile
-	@echo "	diff $(COB85DIR)/$@.txt report.txt" >> $@/Makefile
 	@echo "done"
 
-EXEC85.class: newcob.val
+build/EXEC85.class: newcob.val
 	@perl -pe 'BEGIN{<>; <>;} exit if /^\*END/;' newcob.val		     \
 	| sed -e 's/XXXXX001.*/"newcob.val" ORGANIZATION LINE SEQUENTIAL./'  \
 	      -e 's/XXXXX002.*/"newcob.tmp" ORGANIZATION LINE SEQUENTIAL./'  \
@@ -60,5 +60,5 @@ EXEC85.class: newcob.val
 	      -e 's/XXXXX058.*/"EXEC85.conf" ORGANIZATION LINE SEQUENTIAL./' \
 	      -e 's/ORGANIZATION SEQUENTIAL.*//'			     \
 	    > EXEC85.cob
-	. ../atconfig; . ../atlocal; export PATH; $(COBOL) -m EXEC85.cob
+	. ../atconfig; . ../atlocal; export PATH; $(COBOL) EXEC85.cob
 	@rm -f EXEC85.cob

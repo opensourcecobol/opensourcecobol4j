@@ -1,0 +1,21 @@
+AT_SETUP([signed comp3])
+
+AT_DATA([prog.cbl], [
+       IDENTIFICATION              DIVISION.
+       PROGRAM-ID.                 prog.
+       DATA                        DIVISION.
+       WORKING-STORAGE             SECTION.
+       01 C PIC S9(5) COMP-3 VALUE -3.
+       PROCEDURE                   DIVISION.
+       MAIN-RTN.
+           DISPLAY "C: " C.
+           STOP RUN.
+])
+
+
+AT_CHECK([${COMPILE} prog.cbl])
+AT_CHECK([${RUN_MODULE} prog], [0],
+[C: -00003
+])
+
+AT_CLEANUP

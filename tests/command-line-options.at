@@ -1,0 +1,5 @@
+AT_INIT([Tests for cobj command line options])
+
+m4_include([ftrace-ftraceall.at])
+m4_include([fserial-variable.at])
+m4_include([assign_external.at])

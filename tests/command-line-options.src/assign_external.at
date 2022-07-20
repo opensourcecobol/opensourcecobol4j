@@ -1,0 +1,81 @@
+AT_SETUP([assign_external])
+
+AT_DATA([prog.cbl], [
+       identification              division.
+       program-id.                 prog.
+
+       environment division.
+       input-output section.
+       file-control.
+           select seq-file assign to SEQ_FILE_PATH
+              organization is sequential.
+           select line-seq-file assign to LINE_SEQ_FILE_PATH
+              organization is sequential.
+           select indexed-file assign to INDEXED_FILE_PATH
+              record key is indexed-key
+              organization is indexed.
+
+       data                        division.
+       file section.
+       fd seq-file.
+       01 seq-rec pic x(30).
+       fd line-seq-file.
+       01 line-seq-rec pic x(30).
+       fd indexed-file.
+       01 indexed-rec pic x(30).
+
+       working-storage             section.
+       01 indexed-key pic x(30).
+
+       procedure                   division.
+       main section.
+      * write and read a sequential file
+           open output seq-file.
+           move "seq-file-record" to seq-rec.
+           write seq-rec.
+           close seq-file.
+
+           open input seq-file.
+           initialize seq-rec.
+           read seq-file.
+           display seq-rec.
+           close seq-file.
+
+      * write and read a line sequential file
+           open output line-seq-file.
+           move "line-seq-file-record" to line-seq-rec.
+           write line-seq-rec.
+           close line-seq-file.
+
+           open input line-seq-file.
+           initialize line-seq-rec.
+           read line-seq-file.
+           display line-seq-rec.
+           close line-seq-file.
+
+      * write and read an indexed file
+           open output indexed-file.
+           move "indexed-file-key"    to indexed-key.
+           move "indexed-file-record" to indexed-rec.
+           write indexed-rec.
+           close indexed-file.
+
+           open input indexed-file.
+           move "indexed-file-key"    to indexed-key.
+           initialize indexed-rec.
+           read indexed-file.
+           display indexed-rec.
+           close indexed-file.
+])
+
+AT_CHECK([${COBJ} -assign_external prog.cbl])
+AT_CHECK([SEQ_FILE_PATH=./seq_file LINE_SEQ_FILE_PATH=./line_seq_file INDEXED_FILE_PATH=./indexed_file ${RUN_MODULE} prog], [0],
+[seq-file-record               @&t@
+line-seq-file-record          @&t@
+indexed-file-record           @&t@
+])
+AT_CHECK([test -e seq_file])
+AT_CHECK([test -e line_seq_file])
+AT_CHECK([test -e indexed_file])
+
+AT_CLEANUP

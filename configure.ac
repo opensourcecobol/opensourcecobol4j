@@ -1,29 +1,25 @@
-#              
-# Configure template for OpenCOBOL                                         -*- Autoconf -*-
-# Process this file with autoconf to produce a configure script.
-
 # Copyright (C) 2001-2009 Keisuke Nishida
 # Copyright (C) 2007-2009 Roger While
+# Copyright (C) 2021-2022 TOKYO SYSTEM HOUSE Co., Ltd.
 #
-# This file is part of OpenCOBOL.
+# This program is free software; you can redistribute it and/or modify
+# it under the terms of the GNU General Public License as published by
+# the Free Software Foundation; either version 3, or (at your option)
+# any later version.
 #
-#
-# The OpenCOBOL compiler is free software: you can redistribute it
-# and/or modify it under the terms of the GNU General Public License
-# as published by the Free Software Foundation, either version 2 of the
-# License, or (at your option) any later version.
-#
-# OpenCOBOL is distributed in the hope that it will be useful,
+# This program is distributed in the hope that it will be useful,
 # but WITHOUT ANY WARRANTY; without even the implied warranty of
 # MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 # GNU General Public License for more details.
 #
 # You should have received a copy of the GNU General Public License
-# along with OpenCOBOL.  If not, see <http://www.gnu.org/licenses/>.
+# along with this software; see the file COPYING.  If not, write to
+# the Free Software Foundation, 51 Franklin Street, Fifth Floor
+# Boston, MA 02110-1301 USA
 
 AC_PREREQ(2.59)
 
-AC_INIT([opensource COBOL],[1.5.2],[ws-opensource-cobol-contact@osscons.jp],[opensource-cobol-1.5.2J])
+AC_INIT([opensource COBOL 4j],[1.0.4],[ws-opensource-cobol-contact@osscons.jp],[opensource-cobol-4j-1.0.4])
 AC_CONFIG_SRCDIR([libcob.h])
 AC_CONFIG_HEADERS([config.h])
 AC_CONFIG_TESTDIR([tests])
@@ -110,89 +106,6 @@ AC_ARG_WITH(seqra-extfh,
 	AC_DEFINE(WITH_SEQRA_EXTFH)
     fi ], [])
 
-AC_ARG_WITH(cisam,
-  [  --with-cisam            (OpenCOBOL) Use CISAM for ISAM I/O],
-  [ if test "$with_cisam" = "yes"
-    then
-	AC_CHECK_HEADERS([isam.h], , AC_MSG_ERROR(isam.h is required for CISAM))
-	AC_CHECK_LIB([ifisam], [isopen], , AC_MSG_ERROR(libifisam is required for CISAM), [ifisamx])
-	AC_DEFINE(WITH_CISAM)
-	LIBCOB_LIBS="$LIBCOB_LIBS -lifisam -lifisamx"
-	WITH_ISAM_DEFINED=yes
-    fi ], [])
-
-if test "$with_cisam" != "yes"
-then
- AC_ARG_WITH(disam,
-  [  --with-disam            (OpenCOBOL) Use DISAM for ISAM I/O],
-  [ if test "$with_disam" = "yes"
-    then
-	AC_CHECK_HEADERS([disam.h], , AC_MSG_ERROR(disam.h is required for DISAM))
-	AC_CHECK_LIB([disam], [isopen], , AC_MSG_ERROR(libdisam is required for DISAM))
-	AC_DEFINE(WITH_DISAM)
-	LIBCOB_LIBS="$LIBCOB_LIBS -ldisam"
-	WITH_ISAM_DEFINED=yes
-    fi ], [])
-fi
-
-if test "$with_cisam" != "yes" -a "$with_disam" != "yes"
-then
-AC_ARG_WITH(vbisam,
-  [  --with-vbisam           (OpenCOBOL) Use VBISAM for ISAM I/O],
-  [ if test "$with_vbisam" = "yes"
-    then
-	AC_CHECK_HEADERS([vbisam.h], , AC_MSG_ERROR(vbisam.h is required for VBISAM))
-	AC_CHECK_LIB([vbisam], [isopen], , AC_MSG_ERROR(libvbisam is required for VBISAM))
-	AC_DEFINE(WITH_VBISAM)
-	LIBCOB_LIBS="$LIBCOB_LIBS -lvbisam"
-	WITH_ISAM_DEFINED=yes
-    fi ], [])
-fi
-
-AM_CONDITIONAL(WITH_ISAM, test x$WITH_ISAM_DEFINED = xyes)
-
-if test "$with_cisam" != "yes" -a "$with_disam" != "yes" -a "$with_vbisam" != "yes"
-then
-	COB_SPLITKEY_FLAGS="no"
-else
-	COB_SPLITKEY_FLAGS="yes"
-fi
-
-LIBDB=""
-
-if test "$with_cisam" != "yes" -a "$with_disam" != "yes" -a "$with_vbisam" != "yes"
-then
- AC_ARG_WITH(index-extfh,
-  [  --with-index-extfh      (OpenCOBOL) Use external ISAM file handler],
-  [ if test "$with_index_extfh" = "yes"
-    then
-	AC_DEFINE(WITH_INDEX_EXTFH)
-    fi ], [])
-fi
-
-if test "$with_cisam" != "yes" -a "$with_disam" != "yes" -a "$with_vbisam" != "yes" -a "$with_index_extfh" != "yes"
-then
-  AC_ARG_WITH(db1,
-   [  --with-db1              (OpenCOBOL) use Berkeley DB 1.85 (libdb-1.85)],
-   [ LIBDB="1"
-     AC_DEFINE(WITH_DB, 1)
-     with_db=yes ],
-	[ AC_ARG_WITH(db,
-		[  --with-db               (OpenCOBOL) use Berkeley DB 3.0 or later (libdb)(default)],
-		[ LIBDB="3"
-		  AC_DEFINE(WITH_DB, 3) 
-        ],
-		[ LIBDB="3"
-		  AC_DEFINE(WITH_DB, 3)
-        with_db=yes ]) ])
-fi
-
-if test "$with_cisam" != "yes" -a "$with_disam" != "yes" -a "$with_vbisam" != "yes" -a "$with_index_extfh" != "yes" -a "$with_db" != "yes"
-then
-	COB_HAS_ISAM="no"
-else
-	COB_HAS_ISAM="yes"
-fi
 
 #AC_ARG_WITH(lfs64,
 #  [  --with-lfs64            (OpenCOBOL) use large file system for file I/O (default)],
@@ -330,11 +243,6 @@ AC_CHECK_FUNC([getopt_long_only],
    AC_LIBOBJ(getopt1)
    AC_LIBSOURCE(getopt.h)])
 
-# Checks for gmp.
-AC_CHECK_HEADERS([gmp.h], , AC_MSG_ERROR(gmp.h is required))
-AC_CHECK_LIB([gmp], [__gmp_randinit], , AC_MSG_ERROR(GMP 3 or later is required))
-LIBCOB_LIBS="$LIBCOB_LIBS -lgmp"
-
 # Solaris has nanosleep in other libraries
 AC_LINK_IFELSE([AC_LANG_PROGRAM([[#include <time.h>]],
   [[nanosleep (NULL, NULL);]])],
@@ -358,48 +266,6 @@ if test "x$LTLIBINTL" != "x"
 then
   COBC_LIBS="$COBC_LIBS $LTLIBINTL"
   LIBCOB_LIBS="$LIBCOB_LIBS $LTLIBINTL"
-fi
-
-# Checks for ncurses/pdcurses/curses.
-USE_NCURSES="no"
-AC_CHECK_LIB([ncurses], [initscr])
-if test "x$ac_cv_lib_ncurses_initscr" = "xyes"
-then
-  LIBCOB_LIBS="$LIBCOB_LIBS -lncurses"
-  AC_CHECK_HEADERS([ncurses.h], [USE_NCURSES="yes"],
-    [AC_CHECK_HEADERS([ncurses/ncurses.h], [USE_NCURSES="ncurses"], [], [])], [])
-else
-  AC_CHECK_LIB([pdcurses], [initscr])
-  if test "x$ac_cv_lib_pdcurses_initscr" = "xyes"
-  then
-    LIBCOB_LIBS="$LIBCOB_LIBS -lpdcurses"
-    AC_CHECK_HEADERS([pdcurses.h], [USE_NCURSES="pdcurses"], [], [])
-  else
-    AC_CHECK_LIB([curses], [initscr])
-    if test "x$ac_cv_lib_curses_initscr" = "xyes"
-    then
-      LIBCOB_LIBS="$LIBCOB_LIBS -lcurses"
-      AC_CHECK_HEADERS([curses.h], [USE_NCURSES="curses"], [], [])
-    fi
-  fi
-fi
-
-if test "$USE_NCURSES" != "no"
-then
-  AC_LINK_IFELSE([AC_LANG_PROGRAM([[
-  #ifdef HAVE_NCURSES_H
-  #include <ncurses.h>
-  #elif defined (HAVE_NCURSES_NCURSES_H)
-  #include <ncurses/ncurses.h>
-  #elif defined (HAVE_PDCURSES_H)
-  #include <pdcurses.h>
-  #elif defined (HAVE_CURSES_H)
-  #include <curses.h>
-  #endif]], [[
-  color_set (0, NULL);]])],
-  [AC_DEFINE(HAVE_COLOR_SET)],
-  [],
-  [])
 fi
 
 # Checks for db.
@@ -794,9 +660,8 @@ AC_SUBST(COB_HAS_ISAM)
 AC_SUBST(COB_SPLITKEY_FLAGS)
 AC_SUBST(COB_M4_FLAGS)
 
-AC_CONFIG_FILES([bin/cob-config
-		Makefile lib/Makefile libcob/Makefile
-		cobc/Makefile bin/Makefile po/Makefile.in texi/Makefile config/Makefile
+AC_CONFIG_FILES([Makefile lib/Makefile libcob/Makefile
+		cobj/Makefile po/Makefile.in texi/Makefile config/Makefile
 		copy/Makefile tests/atlocal tests/Makefile tests/cobol85/Makefile])
 
 AC_CONFIG_COMMANDS([chmod1], [chmod +x bin/cob-config])
@@ -843,25 +708,5 @@ if test "$with_seqra_extfh" = "yes"
 then
   echo "  Use external SEQ/RAN file handler            yes"
 fi
-if test "$with_index_extfh" = "yes"
-then
-  echo "  Use external ISAM file handler               yes"
-elif test "$with_cisam" = "yes"
-then
-  echo "  Use CISAM for ISAM I/O                       yes"
-elif test "$with_disam" = "yes"
-then
-  echo "  Use DISAM for ISAM I/O                       yes"
-elif test "$with_vbisam" = "yes"
-then
-  echo "  Use VBISAM for ISAM I/O                      yes"
-elif test "$with_db" = "yes"
-then
-  echo "  Use Berkeley DB for ISAM I/O:                yes"
-  echo "  Use enhanced Berkeley DB (>= 4.1)            ${HAS_DB41}"
-else
-  echo "  ISAM I/O (no handler configured):            NO"
-fi
 echo "  Use fcntl for file locking:                  ${ac_cv_func_fcntl}"
-echo "  Use ncurses/pdcurses/curses for screen I/O:  ${USE_NCURSES}"
 echo ""
