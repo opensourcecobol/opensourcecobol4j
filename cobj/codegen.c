@@ -4428,7 +4428,7 @@ joutput_internal_function (struct cb_program *prog, cb_tree parameter_list)
 	joutput_line ("/* CANCEL callback handling */");
 	joutput_line ("if (entry < 0) {");
 	joutput_line ("	if (!this.initialized) {");
-	joutput_line ("		/* TODO cob_init()に置き換える */");
+	//TODO Replace the follwing line with cob_init()
 	joutput_line ("		CobolDecimal.cobInitNumeric();");
 	joutput_line ("		return 0;");
 	joutput_line ("	}");
@@ -5974,11 +5974,8 @@ codegen (struct cb_program *prog, const int nested, char** program_id_list)
 	joutput_line ("public static void main(String[] args)");
 	joutput_line ("{");
 	joutput_indent_level += 2;
-	joutput_line ("/* TODO cob_init()に変更する */");
 
 	//if (prog->flag_main) {
-		// TODO 暫定的にcob_initを読んでいるだけ
-		joutput_line("/* TODO 暫定的にcob_initを読んでいるだけ */");
 		joutput_line("CobolUtil.cob_init(args, cobolInitialized);");
 	//}
 
