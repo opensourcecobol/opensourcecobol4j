@@ -1,0 +1,83 @@
+/*
+ * Copyright (C) 2003-2009 Keisuke Nishida
+ * Copyright (C) 2007-2009 Roger While
+ * Copyright (C) 2021-2022 TOKYO SYSTEM HOUSE Co., Ltd.
+ *
+ * This program is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation; either version 3, or (at your option)
+ * any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this software; see the file COPYING.  If not, write to
+ * the Free Software Foundation, 51 Franklin Street, Fifth Floor
+ * Boston, MA 02110-1301 USA
+ */
+
+CB_CONFIG_STRING  (cb_config_name, "name")
+CB_CONFIG_CHAR  (cb_default_currency_symbol, "default-currency-symbol")
+CB_CONFIG_INT (cb_tab_width, "tab-width")
+CB_CONFIG_INT (cb_text_column, "text-column")
+CB_CONFIG_ANY (enum cb_default_organization, cb_default_organization, "default-organization")
+CB_CONFIG_INT (cb_max_alpha_character_data_size, "max-alpha-character-data-size")
+CB_CONFIG_INT (cb_max_sjis_character_data_size, "max-sjis-character-data-size")
+CB_CONFIG_INT (cb_max_utf8_character_data_size, "max-utf8-character-data-size")
+CB_CONFIG_ANY (enum cb_assign_clause, cb_assign_clause, "assign-clause")
+CB_CONFIG_ANY (enum cb_binary_size, cb_binary_size, "binary-size")
+CB_CONFIG_ANY (enum cb_binary_byteorder, cb_binary_byteorder, "binary-byteorder")
+CB_CONFIG_ANY (enum cb_abort_on_io_exception, cb_abort_on_io_exception, "abort-on-io-exception")
+CB_CONFIG_BOOLEAN (cb_filename_mapping, "filename-mapping")
+CB_CONFIG_BOOLEAN (cb_pretty_display, "pretty-display")
+CB_CONFIG_BOOLEAN (cb_binary_truncate, "binary-truncate")
+CB_CONFIG_BOOLEAN (cb_auto_initialize, "auto-initialize")
+CB_CONFIG_BOOLEAN (cb_complex_odo, "complex-odo")
+CB_CONFIG_BOOLEAN (cb_indirect_redefines, "indirect-redefines")
+CB_CONFIG_BOOLEAN (cb_larger_redefines_ok, "larger-redefines-ok")
+CB_CONFIG_BOOLEAN (cb_relaxed_syntax_check, "relaxed-syntax-check")
+CB_CONFIG_BOOLEAN (cb_perform_osvs, "perform-osvs")
+CB_CONFIG_BOOLEAN (cb_sticky_linkage, "sticky-linkage")
+CB_CONFIG_BOOLEAN (cb_assign_external, "assign_external")
+CB_CONFIG_BOOLEAN (cb_relax_level_hierarchy, "relax-level-hierarchy")
+CB_CONFIG_BOOLEAN (cb_c89_identifier_length_check, "c89-identifier-length-check")
+CB_CONFIG_BOOLEAN (cb_allow_end_program_with_wrong_name, "allow-end-program-with-wrong-name")
+CB_CONFIG_BOOLEAN (cb_allow_missing_also_clause_in_evaluate, "allow-missing-also-clause-in-evaluate")
+CB_CONFIG_BOOLEAN (cb_allow_empty_imperative_statement, "allow-empty-imperative-statement")
+CB_CONFIG_BOOLEAN (cb_enable_program_status_register, "enable-program-status-register")
+CB_CONFIG_BOOLEAN (cb_enable_sort_status_register, "enable-sort-status-register")
+CB_CONFIG_BOOLEAN (cb_enable_special_names_argument_clause, "enable-special-names-argument-clause")
+CB_CONFIG_BOOLEAN (cb_enable_special_names_environment_clause, "enable-special-names-environment-clause")
+CB_CONFIG_BOOLEAN (cb_enable_leng_intrinsic_function, "enable-leng-intrinsic-function")
+CB_CONFIG_BOOLEAN (cb_enable_length_an_intrinsic_function, "enable-length-an-intrinsic-function")
+CB_CONFIG_BOOLEAN (cb_enable_national_intrinsic_function, "enable-national-intrinsic-function")
+CB_CONFIG_BOOLEAN (cb_use_invalidkey_handler_on_status34, "use-invalidkey-handler-on-status34")
+CB_CONFIG_BOOLEAN (cb_cobol68_copy_in_data_description, "cobol68-copy-in-data-description")
+CB_CONFIG_BOOLEAN (cb_switch_no_mnemonic, "switch-no-mnemonic")
+CB_CONFIG_BOOLEAN (cb_allow_is_in_sort_key_spec, "allow-is-in-sort-key-spec")
+CB_CONFIG_BOOLEAN (cb_allow_search_key_in_rhs, "allow-search-key-in-rhs")
+CB_CONFIG_BOOLEAN (cb_ignore_invalid_record_contains, "ignore-invalid-record-contains")
+CB_CONFIG_BOOLEAN (cb_enable_zero_division_error, "enable-zero-division-error")
+CB_CONFIG_BOOLEAN (cb_enable_check_subscript_out_of_bounds, "enable-check-subscript-out-of-bounds")
+CB_CONFIG_BOOLEAN (cb_enable_expect_numeric_error, "enable-expect-numeric-error")
+CB_CONFIG_BOOLEAN (cb_enable_expect_compute_string_error, "enable-expect-compute-string-error")
+CB_CONFIG_SUPPORT (cb_author_paragraph, "author-paragraph")
+CB_CONFIG_SUPPORT (cb_memory_size_clause, "memory-size-clause")
+CB_CONFIG_SUPPORT (cb_multiple_file_tape_clause, "multiple-file-tape-clause")
+CB_CONFIG_SUPPORT (cb_label_records_clause, "label-records-clause")
+CB_CONFIG_SUPPORT (cb_value_of_clause, "value-of-clause")
+CB_CONFIG_SUPPORT (cb_data_records_clause, "data-records-clause")
+CB_CONFIG_SUPPORT (cb_top_level_occurs_clause, "top-level-occurs-clause")
+CB_CONFIG_SUPPORT (cb_synchronized_clause, "synchronized-clause")
+CB_CONFIG_SUPPORT (cb_goto_statement_without_name, "goto-statement-without-name")
+CB_CONFIG_SUPPORT (cb_stop_literal_statement, "stop-literal-statement")
+CB_CONFIG_SUPPORT (cb_debugging_line, "debugging-line")
+CB_CONFIG_SUPPORT (cb_padding_character_clause, "padding-character-clause")
+CB_CONFIG_SUPPORT (cb_next_sentence_phrase, "next-sentence-phrase")
+CB_CONFIG_SUPPORT (cb_eject_statement, "eject-statement")
+CB_CONFIG_SUPPORT (cb_entry_statement, "entry-statement")
+CB_CONFIG_SUPPORT (cb_move_noninteger_to_alphanumeric, "move-noninteger-to-alphanumeric")
+CB_CONFIG_SUPPORT (cb_odo_without_to, "odo-without-to")

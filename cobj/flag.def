@@ -1,0 +1,76 @@
+/*
+ * Copyright (C) 2003-2009 Keisuke Nishida
+ * Copyright (C) 2007-2009 Roger While
+ * Copyright (C) 2021-2022 TOKYO SYSTEM HOUSE Co., Ltd.
+ *
+ * This program is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation; either version 3, or (at your option)
+ * any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this software; see the file COPYING.  If not, write to
+ * the Free Software Foundation, 51 Franklin Street, Fifth Floor
+ * Boston, MA 02110-1301 USA
+ */
+
+
+#include "lib/gettext.h"
+
+/* CB_FLAG (var, name, doc) */
+
+CB_FLAG (cb_flag_trace, "trace",
+	 N_("Generate trace code (Executed SECTION/PARAGRAPH)"))
+
+CB_FLAG (cb_flag_traceall, "traceall",
+	 N_("Generate trace code (Executed SECTION/PARAGRAPH/STATEMENTS)"))
+
+CB_FLAG (cb_flag_syntax_only, "syntax-only",
+	 N_("Syntax error checking only; don't emit any output"))
+
+CB_FLAG (cb_flag_static_call, "static-call",
+	 N_("Output static function calls for the CALL statement"))
+
+CB_FLAG (cb_flag_debugging_line, "debugging-line",
+	 N_("Enable debugging lines ('D' in indicator column)"))
+
+CB_FLAG (cb_flag_source_location, "source-location",
+	 N_("Generate source location code (Turned on by -debug or -g)"))
+
+CB_FLAG (cb_flag_implicit_init, "implicit-init",
+	 N_("Do automatic initialization of the Cobol runtime system"))
+
+CB_FLAG (cb_flag_sign_ascii, "sign-ascii",
+	 N_("Numeric display sign ASCII (Default on ASCII machines)"))
+
+CB_FLAG (cb_flag_sign_ebcdic, "sign-ebcdic",
+	 N_("Numeric display sign EBCDIC (Default on EBCDIC machines)"))
+
+CB_FLAG (cb_flag_stack_check, "stack-check",
+	 N_("PERFORM stack checking (Turned on by -debug or -g)"))
+
+CB_FLAG (cb_flag_fold_copy_lower, "fold-copy-lower",
+	 N_("Fold COPY subject to lower case (Default no transformation)"))
+
+CB_FLAG (cb_flag_fold_copy_upper, "fold-copy-upper",
+	 N_("Fold COPY subject to upper case (Default no transformation)"))
+
+CB_FLAG (cb_flag_notrunc, "notrunc",
+	 N_("Do not truncate binary fields according to PICTURE"))
+
+CB_FLAG (cb_flag_functions_all, "functions-all",
+	 N_("Allow use of intrinsic functions without FUNCTION keyword"))
+
+CB_FLAG (cb_flag_mfcomment, "mfcomment",
+	 N_("'*' or '/' in column 1 treated as comment (FIXED only)"))
+
+CB_FLAG (cb_flag_null_param, "null-param",
+	 N_("Pass extra NULL terminating pointers on CALL statements"))
+
+CB_FLAG (cb_flag_serial_variable, "serial-variable",
+	 N_("Instead of embedding COBOL variable names in Java variable names, give them serial numbers."))

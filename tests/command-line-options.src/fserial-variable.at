@@ -1,0 +1,64 @@
+AT_SETUP([-fserial-variable])
+
+AT_DATA([prog.cbl], [       IDENTIFICATION              DIVISION.
+       PROGRAM-ID.                 prog.
+       DATA                        DIVISION.
+       WORKING-STORAGE             SECTION.
+       01 AAA PIC 9 VALUE 0.
+       01 BBB PIC 9 COMP-3 VALUE 1.
+       01 CCC PIC X VALUE "A".
+       01 GRP.
+         03 DDD PIC 9 VALUE 2.
+         03 EEE PIC 9 COMP-3 VALUE 3.
+         03 FFF PIC X VALUE "B".
+       PROCEDURE                   DIVISION.
+       MAIN SECTION.
+          DISPLAY AAA.
+          DISPLAY BBB.
+          DISPLAY CCC.
+          DISPLAY DDD.
+          DISPLAY EEE.
+          DISPLAY FFF.
+])
+
+AT_CHECK([${COMPILE} -fserial-variable prog.cbl])
+AT_CHECK([${RUN_MODULE} prog], [0],
+[0
+1
+A
+2
+3
+B
+])
+AT_CHECK([grep f_AAA prog.java], [1])
+AT_CHECK([grep b_AAA prog.java], [1])
+AT_CHECK([grep f_BBB prog.java], [1])
+AT_CHECK([grep b_BBB prog.java], [1])
+AT_CHECK([grep f_CCC prog.java], [1])
+AT_CHECK([grep b_CCC prog.java], [1])
+AT_CHECK([grep f_DDD prog.java], [1])
+AT_CHECK([grep f_EEE prog.java], [1])
+AT_CHECK([grep f_FFF prog.java], [1])
+AT_CHECK([grep b_GRP prog.java], [1])
+
+AT_CHECK([${COMPILE} prog.cbl])
+AT_CHECK([${RUN_MODULE} prog], [0],
+[0
+1
+A
+2
+3
+B
+])
+AT_CHECK([grep f_AAA prog.java > /dev/null], [0])
+AT_CHECK([grep b_AAA prog.java > /dev/null], [0])
+AT_CHECK([grep f_BBB prog.java > /dev/null], [0])
+AT_CHECK([grep b_BBB prog.java > /dev/null], [0])
+AT_CHECK([grep f_CCC prog.java > /dev/null], [0])
+AT_CHECK([grep b_CCC prog.java > /dev/null], [0])
+AT_CHECK([grep f_DDD prog.java > /dev/null], [0])
+AT_CHECK([grep f_EEE prog.java > /dev/null], [0])
+AT_CHECK([grep f_FFF prog.java > /dev/null], [0])
+AT_CHECK([grep b_GRP prog.java > /dev/null], [0])
+
+AT_CLEANUP

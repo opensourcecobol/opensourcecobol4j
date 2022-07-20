@@ -1,0 +1,101 @@
+name: NIST COBOL85 tests
+on:
+  push:
+  pull_request:
+    types: [opened, reopened, review_requested, synchronize]
+    
+jobs:
+  run-tests:
+    runs-on: ubuntu-latest
+    steps:
+      # Checkout opensource COBOL
+      - name: Checkout opensource COBOL 4j
+        uses: actions/checkout@v2
+        
+      - name: Install dependencies
+        run: |
+          sudo apt-get update
+          sudo apt-get install default-jdk
+          sudo apt-get install -y build-essential bison flex gettext texinfo
+      
+      - name: Install opensource COBOL 4j
+        run: |
+          mkdir ~/.java_lib
+          curl -L -o ~/.java_lib/sqlite.jar https://github.com/xerial/sqlite-jdbc/releases/download/3.36.0.3/sqlite-jdbc-3.36.0.3.jar
+          export CLASSPATH=":$HOME/.java_lib/sqlite.jar"
+          ./configure --prefix=/usr/
+          make
+          sudo make install
+          cp libcobj/build/libcobj.jar ~/.java_lib
+          export CLASSPATH="$HOME/.java_lib/libcobj.jar:$HOME/.java_lib/sqlite.jar"
+  
+      - name: Make test scripts
+        run: |
+          cd tests/
+          make
+          cd ../
+
+      - name: Run tests "command-line-options"
+        run: |
+          export CLASSPATH=":$HOME/.java_lib/libcobj.jar:$HOME/.java_lib/sqlite.jar"
+          cd tests/
+          ./command-line-options
+          cd ../
+
+      - name: Run tests "misc"
+        run: |
+          export CLASSPATH=":$HOME/.java_lib/libcobj.jar:$HOME/.java_lib/sqlite.jar"
+          cd tests/
+          ./misc
+          cd ../
+
+      - name: Run tests "data-rep"
+        run: |
+          export CLASSPATH=":$HOME/.java_lib/libcobj.jar:$HOME/.java_lib/sqlite.jar"
+          cd tests/
+          ./data-rep || true
+          cd ../
+
+      - name: Run tests "i18n_sjis"
+        run: |
+          export CLASSPATH=":$HOME/.java_lib/libcobj.jar:$HOME/.java_lib/sqlite.jar"
+          cd tests/
+          ./i18n_sjis || true
+
+      - name: Run tests "jp-compat"
+        run: |
+          export CLASSPATH=":$HOME/.java_lib/libcobj.jar:$HOME/.java_lib/sqlite.jar"
+          cd tests/
+          ./jp-compat || true
+          cd ../
+
+      #- name: Run tests "run"
+      #  run: |
+      #    export CLASSPATH=":$HOME/.java_lib/libcobj.jar:$HOME/.java_lib/sqlite.jar"
+      #    cd tests/
+      #    ./run || true
+      #    cd ../
+
+      - name: Run tests "syntax"
+        run: |
+          export CLASSPATH=":$HOME/.java_lib/libcobj.jar:$HOME/.java_lib/sqlite.jar"
+          cd tests/
+          ./syntax || true
+          cd ../
+
+      - name: Run NIST test
+        run: |
+          export CLASSPATH=":$HOME/.java_lib/libcobj.jar:$HOME/.java_lib/sqlite.jar"
+          cd tests/cobol85/
+          make test
+
+      - name: Run tests "i18n_utf8"
+        run: |
+          export CLASSPATH=":$HOME/.java_lib/sqlite.jar"
+          ./configure --prefix=/usr/ --with-vbisam --enable-utf8
+          make
+          sudo make install
+          cp libcobj/build/libcobj.jar ~/.java_lib
+          export CLASSPATH=":$HOME/.java_lib/libcobj.jar:$HOME/.java_lib/sqlite.jar"
+          ./i18n_utf8 || true
+          cd ../

@@ -1,0 +1,23 @@
+AT_SETUP([comp index])
+
+AT_DATA([prog.cbl], [
+       IDENTIFICATION              DIVISION.
+       PROGRAM-ID.                 prog.
+       DATA                        DIVISION.
+       WORKING-STORAGE             SECTION.
+       01   IDX  PIC 9(04) COMP VALUE 5.
+       01   SRC  PIC X(10) VALUE "0123456789".
+       01   DST  PIC X(10) VALUE "          ".
+       PROCEDURE                   DIVISION.
+       MAIN.
+           MOVE  SRC(1:IDX)  TO  DST.
+           DISPLAY "<" DST ">".
+           STOP RUN.
+])
+
+AT_CHECK([${COBJ} prog.cbl])
+AT_CHECK([${RUN_MODULE} prog], [0],
+[<01234     >
+])
+
+AT_CLEANUP

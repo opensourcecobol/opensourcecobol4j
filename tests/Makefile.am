@@ -1,43 +1,45 @@
-#
-# Makefile opencobol/tests
-# Process this file with automake to produce Makefile.in
-#
+
 # Copyright (C) 2003,2004,2005,2006,2007 Keisuke Nishida
 # Copyright (C) 2008-2011 Roger While
+# Copyright (C) 2021-2022 TOKYO SYSTEM HOUSE Co., Ltd.
 #
-# This file is part of OpenCOBOL.
+# This program is free software; you can redistribute it and/or modify
+# it under the terms of the GNU General Public License as published by
+# the Free Software Foundation; either version 3, or (at your option)
+# any later version.
 #
-# The OpenCOBOL compiler is free software: you can redistribute it
-# and/or modify it under the terms of the GNU General Public License
-# as published by the Free Software Foundation, either version 2 of the
-# License, or (at your option) any later version.
-#
-# OpenCOBOL is distributed in the hope that it will be useful,
+# This program is distributed in the hope that it will be useful,
 # but WITHOUT ANY WARRANTY; without even the implied warranty of
 # MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 # GNU General Public License for more details.
 #
 # You should have received a copy of the GNU General Public License
-# along with OpenCOBOL.  If not, see <http://www.gnu.org/licenses/>.
+# along with this software; see the file COPYING.  If not, write to
+# the Free Software Foundation, 51 Franklin Street, Fifth Floor
+# Boston, MA 02110-1301 USA
 
 SUBDIRS = cobol85
 
 if I18N_UTF8
-TESTS = $(srcdir)/syntax \
-	$(srcdir)/run \
-	$(srcdir)/run-O \
-	$(srcdir)/data-rep \
-	$(srcdir)/data-rep-O \
-	$(srcdir)/i18n_utf8 \
-	$(srcdir)/jp-compat
+TESTS = syntax \
+	run \
+	run-O \
+	data-rep \
+	data-rep-O \
+	i18n_utf8 \
+	jp-compat \
+	command-line-options \
+	misc
 else
-TESTS = $(srcdir)/syntax \
-	$(srcdir)/run \
-	$(srcdir)/run-O \
-	$(srcdir)/data-rep \
-	$(srcdir)/data-rep-O \
-	$(srcdir)/i18n_sjis \
-	$(srcdir)/jp-compat
+TESTS = syntax \
+	run \
+	run-O \
+	data-rep \
+	data-rep-O \
+	i18n_sjis \
+	jp-compat \
+	command-line-options \
+	misc
 endif
 
 syntax_DEPENDENCIES = \
@@ -64,7 +66,7 @@ run_DEPENDENCIES = \
 	run.src/fundamental.at \
 	run.src/accept.at \
 	run.src/initialize.at \
-	run.src/misc.at \
+	run.src/miscellaneous.at \
 	run.src/ref-mod.at \
 	run.src/subscripts.at \
 	run.src/extensions.at \
@@ -136,13 +138,24 @@ jp_compat_DEPENDENCIES = \
 	jp-compat.src/abort-on-file-error.at \
 	jp-compat.src/system-routine.at
 
-EXTRA_DIST = $(srcdir)/package.m4 $(TESTS) \
+command_line_options_DEPENDENCIES = \
+	command-line-options.src/ftrace-ftraceall.at \
+	command-line-options.src/fserial-variable.at \
+	command-line-options.src/assign_external.at
+
+misc_DEPENDENCIES = \
+	misc.src/signed-comp3.at \
+	misc.src/index-comp.at
+
+EXTRA_DIST = $(srcdir)/package.m4 \
+	$(TESTS) \
 	$(syntax_DEPENDENCIES) \
-	$(run_DEPENDENCIES) \
 	$(data_rep_DEPENDENCIES) \
 	$(i18n_utf8_DEPENDENCIES) \
 	$(i18n_sjis_DEPENDENCIES) \
-	$(jp_compat_DEPENDENCIES)
+	$(jp_compat_DEPENDENCIES) \
+	$(command_line_options_DEPENDENCIES) \
+	$(misc_DEPENDENCIES)
 
 
 DISTCLEANFILES = atconfig
@@ -173,3 +186,5 @@ $(srcdir)/data-rep: $(data_rep_DEPENDENCIES)
 $(srcdir)/i18n_utf8: $(i18n_utf8_DEPENDENCIES)
 $(srcdir)/i18n_sjis: $(i18n_sjis_DEPENDENCIES)
 $(srcdir)/jp-compat: $(jp_compat_DEPENDENCIES)
+$(srcdir)/command-line-options: $(command_line_options_DEPENDENCIES)
+$(srcdir)/misc: $(misc_DEPENDENCIES)
