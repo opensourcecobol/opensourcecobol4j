@@ -7,7 +7,7 @@ NEWS - user visible changes				-*- outline -*-
     (2) -fserial-variable option
         (2-1) By default, Java variable names are f_{COBOL variable name} or b_{COBOL variable name}. With -fvar-number option, Java variable names are f_{serial number}.
     (3) Improve the performance of control statements.
-    (4) In v1.0.3 and earlier, the memory consumption increases the number of GOTO loops increases. In v2.0.0, the memory problem is solved.
+    (4) In v1.0.3 and earlier, the memory consumption increases the number of GOTO loops increases. In v1.0.4, the memory problem is solved.
         (4-1) Due to the fix, the number of class files that cobj command genearates increase compared to earlier version in some cases.
     (6) Implement -ftrace and -ftraceall options.
     (7) Change the license of libcobj to LGPL3.

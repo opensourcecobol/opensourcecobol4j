@@ -1,6 +1,6 @@
 # opensource COBOL 4j
 
-[日本語版README](https://github.com/opensourcecobol/opensourcecobol4j/blob/develop/README_JP.md)
+[日本語版README](https://github.com/opensourcecobol/opensourcecobol4j/blob/main/README_JP.md)
 
 "opensource COBOL 4j" is a COBOL compiler that translates COBOL parograms to Java programs.
 This compiler is deeply inspired by ["opensource COBOL"](https://github.com/opensourcecobol/opensource-cobol) which translates COBOL programs to C programs.
