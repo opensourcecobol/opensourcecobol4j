@@ -220,9 +220,9 @@ CTAGS = ctags
 CSCOPE = cscope
 DIST_SUBDIRS = $(SUBDIRS)
 am__DIST_COMMON = $(srcdir)/Makefile.in $(srcdir)/config.h.in \
-	ABOUT-NLS AUTHORS COPYING ChangeLog INSTALL NEWS README TODO \
-	compile config.guess config.rpath config.sub depcomp \
-	install-sh ltmain.sh missing mkinstalldirs
+	ABOUT-NLS AUTHORS COPYING COPYING.LIB ChangeLog INSTALL NEWS \
+	README TODO compile config.guess config.rpath config.sub \
+	depcomp install-sh ltmain.sh missing mkinstalldirs
 DISTFILES = $(DIST_COMMON) $(DIST_SOURCES) $(TEXINFOS) $(EXTRA_DIST)
 top_distdir = $(distdir)
 am__remove_distdir = \
