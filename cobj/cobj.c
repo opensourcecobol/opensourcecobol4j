@@ -839,7 +839,7 @@ cobc_print_usage (void)
 	puts (_("Options:"));
 	puts (_("  --help                Display this message"));
 	puts (_("  --version, -V         Display compiler version"));
-	puts (_("  -I <directory>        Add <directory> to copy/include search path"));
+	puts (_("  -I <directory>        Add <directory> to copy files search path"));
 	puts (_("  -assign_external      Set the file assign to external"));
 	putchar ('\n');
 
@@ -849,7 +849,6 @@ cobc_print_usage (void)
 		printf ("  -f%-19s %s\n", name, gettext (doc));
 #include "flag-help.def"
 #undef	CB_FLAG
-	putchar ('\n');
 }
 
 static void

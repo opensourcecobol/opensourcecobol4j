@@ -24,5 +24,12 @@
  */
 
 #include "lib/gettext.h"
+
+CB_FLAG (cb_flag_trace, "trace",
+	 N_("Generate trace code (Executed SECTION/PARAGRAPH)"))
+
+CB_FLAG (cb_flag_traceall, "traceall",
+	 N_("Generate trace code (Executed SECTION/PARAGRAPH/STATEMENTS)"))
+
 CB_FLAG (cb_flag_serial_variable, "serial-variable",
 	 N_("Instead of embedding COBOL variable names in Java variable names, give them serial numbers."))
