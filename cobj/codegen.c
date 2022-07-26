@@ -537,7 +537,6 @@ joutput_base (struct cb_field *f)
 			}
 		}
 	} else {
-		//sprintf (name, "%d", f01->id);
 		base_name = get_java_identifier_base(f01);
 		strcpy(name, base_name);
 	}
@@ -4150,22 +4149,17 @@ static void
 joutput_internal_function (struct cb_program *prog, cb_tree parameter_list)
 {
 	cb_tree			l;
-	cb_tree			l2;
 	struct cb_field		*f;
-	struct cb_field		*ff;
-	struct field_list	*k;
-	struct local_list	*locptr;
 	struct cb_file		*fl;
 	char			*p;
-	struct handler_struct	*hstr;
 #ifndef	__GNUC__
 	struct label_list	*pl;
 #endif
 	int			i;
-	int			n;
+	//int			n;
 	int			parmnum = 0;
-	int			seen = 0;
-	int			anyseen;
+	//int			seen = 0;
+	//int			anyseen;
 	char			name[COB_MINI_BUFF];
 
 	/* Program function */
@@ -5222,7 +5216,6 @@ void joutput_declare_member_variables(struct cb_program *prog, cb_tree parameter
 	cb_tree			l;
 	struct literal_list	*m;
 	struct field_list	*k;
-	unsigned char		*s;
 	struct attr_list	*j;
 	struct base_list	*blp;
 	const char		*prevprog;
@@ -5683,16 +5676,11 @@ codegen (struct cb_program *prog, const int nested, char** program_id_list)
 {
 	int			i;
 	cb_tree			l;
-	struct attr_list	*j;
-	struct literal_list	*m;
 	struct field_list	*k;
 	struct call_list	*clp;
-	struct base_list	*blp;
-	unsigned char		*s;
 	struct cb_program	*cp;
 	cb_tree			l1;
 	cb_tree			l2;
-	const char		*prevprog;
 	time_t			loctime;
 	char			locbuff[48];
 
