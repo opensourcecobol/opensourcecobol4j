@@ -23613,7 +23613,7 @@ COB_BIGENDIAN="$ac_cv_c_bigendian"
 
 
 
-ac_config_files="$ac_config_files Makefile lib/Makefile cobj/Makefile po/Makefile.in texi/Makefile config/Makefile copy/Makefile tests/atlocal tests/Makefile tests/cobol85/Makefile"
+ac_config_files="$ac_config_files bin/cob-config Makefile lib/Makefile cobj/Makefile bin/Makefile po/Makefile.in texi/Makefile config/Makefile copy/Makefile tests/atlocal tests/Makefile tests/cobol85/Makefile"
 
 
 ac_config_commands="$ac_config_commands chmod1"
@@ -24839,9 +24839,11 @@ do
     "depfiles") CONFIG_COMMANDS="$CONFIG_COMMANDS depfiles" ;;
     "libtool") CONFIG_COMMANDS="$CONFIG_COMMANDS libtool" ;;
     "po-directories") CONFIG_COMMANDS="$CONFIG_COMMANDS po-directories" ;;
+    "bin/cob-config") CONFIG_FILES="$CONFIG_FILES bin/cob-config" ;;
     "Makefile") CONFIG_FILES="$CONFIG_FILES Makefile" ;;
     "lib/Makefile") CONFIG_FILES="$CONFIG_FILES lib/Makefile" ;;
     "cobj/Makefile") CONFIG_FILES="$CONFIG_FILES cobj/Makefile" ;;
+    "bin/Makefile") CONFIG_FILES="$CONFIG_FILES bin/Makefile" ;;
     "po/Makefile.in") CONFIG_FILES="$CONFIG_FILES po/Makefile.in" ;;
     "texi/Makefile") CONFIG_FILES="$CONFIG_FILES texi/Makefile" ;;
     "config/Makefile") CONFIG_FILES="$CONFIG_FILES config/Makefile" ;;

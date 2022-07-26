@@ -1797,16 +1797,6 @@ process_compile (struct filename *fn)
 		strcat (name, ".s");
 #endif
 	}
-#ifdef _MSC_VER
-	sprintf (buff, gflag_set ?
-		"%s /c %s %s /Od /MDd /Zi /FR /c /Fa\"%s\" /Fo\"%s\" %s" :
-		"%s /c %s %s /MD /c /Fa\"%s\" /Fo\"%s\" %s",
-			cob_cc, cob_cflags, cob_define_flags, name,
-			name, fn->translate);
-#else
-	sprintf (buff, "%s %s -S -o \"%s\" %s %s %s", cob_cc, gccpipe, name,
-			cob_cflags, cob_define_flags, fn->translate);
-#endif
 
     for(char** program_id = program_id_list; *program_id; ++program_id) {
         sprintf(buff, "javac -encoding UTF8 %s.java", *program_id);
@@ -1844,7 +1834,7 @@ process_assemble (struct filename *fn)
 }
 
 static int
-process_module_direct (struct filename *fn)
+process_build_module (struct filename *fn)
 {
 	int	ret;
 	char	buff[COB_MEDIUM_BUFF];
@@ -1852,7 +1842,7 @@ process_module_direct (struct filename *fn)
 
 	char	basename[COB_MEDIUM_BUFF];
 	file_basename(fn->source, basename);
-    struct cb_program* p;
+    	struct cb_program* p;
 
 	if (output_name) {
 		strcpy (name, output_name);
@@ -1871,60 +1861,20 @@ process_module_direct (struct filename *fn)
 		strcat (name, COB_MODULE_EXT);
 #endif
 	}
-
-
-#ifdef _MSC_VER
-	sprintf (buff, gflag_set ?
-		"%s %s %s /Od /MDd /LDd /Zi /FR /Fe\"%s\" /Fo\"%s\" %s \"%s\" %s %s" :
-		"%s %s %s /MD /LD /Fe\"%s\" /Fo\"%s\" %s \"%s\" %s %s",
-		cob_cc, cob_cflags, cob_define_flags, name, name,
-		cob_ldflags, fn->translate, cob_libs, manilink);
-	ret = process (buff);
-#if _MSC_VER >= 1400
-	/* Embedding manifest */
-	if (ret == 0) {
-		sprintf (buff,
-			 "%s /manifest \"%s.dll.manifest\" /outputresource:\"%s.dll\";#2",
-			 manicmd, name, name);
+	
+	for(p = current_program; p; p = p->next_program) {
+		sprintf (buff, "jar cf %s.jar ./", p->program_id);
 		ret = process (buff);
-		sprintf (buff, "%s.dll.manifest", name);
-		cobc_check_action (buff);
-	}
-#endif
-	sprintf (buff, "%s.exp", name);
-	cobc_check_action (buff);
-	sprintf (buff, "%s.lib", name);
-	cobc_check_action (buff);
-#else	/* _MSC_VER */
-	//sprintf (buff, "%s %s %s %s %s %s %s %s -o %s %s %s",
-	//	 cob_cc, gccpipe, cob_cflags, cob_define_flags, COB_SHARED_OPT,
-	//	 cob_ldflags, COB_PIC_FLAGS, COB_EXPORT_DYN, name,
-	//	 fn->translate, cob_libs);
+		if(ret) {
+			return ret;
+		}
 
-    for(p = current_program; p; p = p->next_program) {
-	    sprintf (buff, "javac -g -encoding UTF8 %s.java", p->program_id);
-	    ret = process (buff);
-    }
-
-    //同一ソースコード内の複数のプログラムが一括でコンパイルされるように修正する.
-    /*for(i = 1; ;++i) {
-        //check if the sub file exists.
-        sprintf(sub_file, "%s__%d.java", basename, i);
-        status_code = stat(sub_file, &st);
-        if(status_code != 0 || (st.st_mode & S_IFMT) != S_IFREG) {
-            break;
-        }
-
-	    sprintf (buff, "javac -g -encoding UTF-8 %s", sub_file);
-    }*/
-
-#ifdef	COB_STRIP_CMD
-	if (strip_output && ret == 0) {
-		sprintf (buff, "%s \"%s\"", COB_STRIP_CMD, name);
+		sprintf (buff, "rm %s*.class", p->program_id);
 		ret = process (buff);
+		if(ret) {
+			return ret;
+		}
 	}
-#endif
-#endif	/* _MSC_VER */
 	return ret;
 }
 
@@ -2450,28 +2400,15 @@ main (int argc, char *argv[])
 		}
 
 		/* Build module */
-		//if (cb_compile_level == CB_LEVEL_MODULE && fn->need_assemble) {
-		//	if (process_module_direct (fn) != 0) {
-		//		cobc_clean_up (status);
-		//		return status;
-		//	}
-		//} else {
-		//	/* Assemble */
-		//	if (cb_compile_level >= CB_LEVEL_ASSEMBLE && fn->need_assemble) {
-		//		if (process_assemble (fn) != 0) {
-		//			cobc_clean_up (status);
-		//			return status;
-		//		}
-		//	}
-
-		//	/* Build module */
-		//	if (cb_compile_level == CB_LEVEL_MODULE) {
-		//		if (process_module (fn) != 0) {
-		//			cobc_clean_up (status);
-		//			return status;
-		//		}
-		//	}
-		//}
+		if (cb_compile_level == CB_LEVEL_MODULE) {
+			if (process_build_module (fn) != 0) {
+				cobc_clean_up (status);
+				return status;
+			}
+		/* Build executable */
+		} else {
+			fprintf(stderr, "Building executable files is not supported");
+		}
 	}
 
 	if (!cb_flag_syntax_only) {

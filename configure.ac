@@ -660,8 +660,8 @@ AC_SUBST(COB_HAS_ISAM)
 AC_SUBST(COB_SPLITKEY_FLAGS)
 AC_SUBST(COB_M4_FLAGS)
 
-AC_CONFIG_FILES([Makefile lib/Makefile
-		cobj/Makefile po/Makefile.in texi/Makefile config/Makefile
+AC_CONFIG_FILES([bin/cob-config Makefile lib/Makefile
+		cobj/Makefile bin/Makefile po/Makefile.in texi/Makefile config/Makefile
 		copy/Makefile tests/atlocal tests/Makefile tests/cobol85/Makefile])
 
 AC_CONFIG_COMMANDS([chmod1], [chmod +x bin/cob-config])
