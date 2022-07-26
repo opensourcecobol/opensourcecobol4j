@@ -5514,7 +5514,7 @@ create_label_id_map(struct cb_program* prog)
 			append_label_id_map(label);
 		}
 	}
-	append_label_id_map(cb_standard_error_handler);
+	append_label_id_map(CB_LABEL(cb_standard_error_handler));
 }
 
 int
