@@ -114,7 +114,7 @@ int	cb_display_sign = COB_DISPLAY_SIGN_ASCII;	/* 0 */
 #define	COB_EXCEPTION(code,tag,name,critical) {name, 0x##code, 0},
 struct cb_exception cb_exception_table[] = {
 	{NULL, 0, 0},		/* CB_EC_ZERO */
-#include <libcob/exception.def>
+#include <exception.def>
 	{NULL, 0, 0}		/* CB_EC_MAX */
 };
 #undef	COB_EXCEPTION

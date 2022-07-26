@@ -140,7 +140,7 @@ struct system_table {
 static const struct system_table	system_tab[] = {
 #undef	COB_SYSTEM_GEN
 #define	COB_SYSTEM_GEN(x, y, z)	{ x, #z },
-#include "libcob/system.def"
+#include <system.def>
 	{ NULL, NULL }
 };
 
