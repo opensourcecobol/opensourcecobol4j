@@ -1784,8 +1784,7 @@ process_compile (struct filename *fn)
 {
 	char buff[COB_MEDIUM_BUFF];
 	char name[COB_MEDIUM_BUFF];
-    int i;
-    int ret, tmpret;
+    int ret = 0;
 
 	if (output_name) {
 		strcpy (name, output_name);
@@ -1850,11 +1849,6 @@ process_module_direct (struct filename *fn)
 	int	ret;
 	char	buff[COB_MEDIUM_BUFF];
 	char	name[COB_MEDIUM_BUFF];
-
-    struct stat st;
-    char sub_file[COB_MEDIUM_BUFF];
-    int i;
-    int status_code;
 
 	char	basename[COB_MEDIUM_BUFF];
 	file_basename(fn->source, basename);
