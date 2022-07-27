@@ -2319,8 +2319,7 @@ main (int argc, char *argv[])
 			} else if (cb_flag_library) {
 				cb_compile_level = CB_LEVEL_LIBRARY;
 			} else if (cb_compile_level == 0) {
-				cb_compile_level = CB_LEVEL_MODULE;
-				cb_flag_module = 1;
+				cb_compile_level = CB_LEVEL_COMPILE;
 			}
 		}
 		if (wants_nonfinal && cb_compile_level != CB_LEVEL_PREPROCESS &&
@@ -2406,7 +2405,7 @@ main (int argc, char *argv[])
 				return status;
 			}
 		/* Build executable */
-		} else {
+		} else if(cb_compile_level == CB_LEVEL_EXECUTABLE) {
 			fprintf(stderr, "Building executable files is not supported");
 		}
 	}

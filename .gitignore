@@ -48,3 +48,7 @@ tests/misc
 tests/run
 tests/syntax
 texi/Makefile
+bin/.deps/
+bin/cob-config
+bin/cobcrun
+bin/cobcrun-cobcrun.o
