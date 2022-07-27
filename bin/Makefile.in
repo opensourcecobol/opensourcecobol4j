@@ -110,7 +110,7 @@ PRE_UNINSTALL = :
 POST_UNINSTALL = :
 build_triplet = @build@
 host_triplet = @host@
-bin_PROGRAMS = cobcrun$(EXEEXT)
+bin_PROGRAMS = cobjrun$(EXEEXT)
 subdir = bin
 ACLOCAL_M4 = $(top_srcdir)/aclocal.m4
 am__aclocal_m4_deps = $(top_srcdir)/m4/libtool.m4 \
@@ -126,16 +126,13 @@ CONFIG_CLEAN_FILES = cob-config
 CONFIG_CLEAN_VPATH_FILES =
 am__installdirs = "$(DESTDIR)$(bindir)" "$(DESTDIR)$(bindir)"
 PROGRAMS = $(bin_PROGRAMS)
-am_cobcrun_OBJECTS = cobcrun-cobcrun.$(OBJEXT)
-cobcrun_OBJECTS = $(am_cobcrun_OBJECTS)
-cobcrun_LDADD = $(LDADD)
+cobjrun_SOURCES = cobjrun.c
+cobjrun_OBJECTS = cobjrun.$(OBJEXT)
+cobjrun_LDADD = $(LDADD)
 AM_V_lt = $(am__v_lt_@AM_V@)
 am__v_lt_ = $(am__v_lt_@AM_DEFAULT_V@)
 am__v_lt_0 = --silent
 am__v_lt_1 = 
-cobcrun_LINK = $(LIBTOOL) $(AM_V_lt) --tag=CC $(AM_LIBTOOLFLAGS) \
-	$(LIBTOOLFLAGS) --mode=link $(CCLD) $(cobcrun_CFLAGS) \
-	$(CFLAGS) $(AM_LDFLAGS) $(LDFLAGS) -o $@
 am__vpath_adj_setup = srcdirstrip=`echo "$(srcdir)" | sed 's|.|.|g'`;
 am__vpath_adj = case $$p in \
     $(srcdir)/*) f=`echo "$$p" | sed "s|^$$srcdirstrip/||"`;; \
@@ -179,7 +176,7 @@ am__v_at_1 =
 DEFAULT_INCLUDES = -I.@am__isrc@ -I$(top_builddir)
 depcomp = $(SHELL) $(top_srcdir)/depcomp
 am__maybe_remake_depfiles = depfiles
-am__depfiles_remade = ./$(DEPDIR)/cobcrun-cobcrun.Po
+am__depfiles_remade = ./$(DEPDIR)/cobjrun.Po
 am__mv = mv -f
 COMPILE = $(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) \
 	$(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS)
@@ -199,8 +196,8 @@ AM_V_CCLD = $(am__v_CCLD_@AM_V@)
 am__v_CCLD_ = $(am__v_CCLD_@AM_DEFAULT_V@)
 am__v_CCLD_0 = @echo "  CCLD    " $@;
 am__v_CCLD_1 = 
-SOURCES = $(cobcrun_SOURCES)
-DIST_SOURCES = $(cobcrun_SOURCES)
+SOURCES = cobjrun.c
+DIST_SOURCES = cobjrun.c
 am__can_run_installinfo = \
   case $$AM_UPDATE_INFO_DIR in \
     n|no|NO) false;; \
@@ -386,7 +383,7 @@ top_build_prefix = @top_build_prefix@
 top_builddir = @top_builddir@
 top_srcdir = @top_srcdir@
 bin_SCRIPTS = cob-config
-cobcrun_SOURCES = cobcrun.c
+cobcrun_SOURCES = cobjrun.c
 AM_LDFLAGS = $(COB_EXPORT_DYN)
 cobcrun_CFLAGS = $(AM_CFLAGS) -I$(top_srcdir)
 all: all-am
@@ -474,9 +471,9 @@ clean-binPROGRAMS:
 	echo " rm -f" $$list; \
 	rm -f $$list
 
-cobcrun$(EXEEXT): $(cobcrun_OBJECTS) $(cobcrun_DEPENDENCIES) $(EXTRA_cobcrun_DEPENDENCIES) 
-	@rm -f cobcrun$(EXEEXT)
-	$(AM_V_CCLD)$(cobcrun_LINK) $(cobcrun_OBJECTS) $(cobcrun_LDADD) $(LIBS)
+cobjrun$(EXEEXT): $(cobjrun_OBJECTS) $(cobjrun_DEPENDENCIES) $(EXTRA_cobjrun_DEPENDENCIES) 
+	@rm -f cobjrun$(EXEEXT)
+	$(AM_V_CCLD)$(LINK) $(cobjrun_OBJECTS) $(cobjrun_LDADD) $(LIBS)
 install-binSCRIPTS: $(bin_SCRIPTS)
 	@$(NORMAL_INSTALL)
 	@list='$(bin_SCRIPTS)'; test -n "$(bindir)" || list=; \
@@ -519,7 +516,7 @@ mostlyclean-compile:
 distclean-compile:
 	-rm -f *.tab.c
 
-@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/cobcrun-cobcrun.Po@am__quote@ # am--include-marker
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/cobjrun.Po@am__quote@ # am--include-marker
 
 $(am__depfiles_remade):
 	@$(MKDIR_P) $(@D)
@@ -547,20 +544,6 @@ am--depfiles: $(am__depfiles_remade)
 @AMDEP_TRUE@@am__fastdepCC_FALSE@	$(AM_V_CC)source='$<' object='$@' libtool=yes @AMDEPBACKSLASH@
 @AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
 @am__fastdepCC_FALSE@	$(AM_V_CC@am__nodep@)$(LTCOMPILE) -c -o $@ $<
-
-cobcrun-cobcrun.o: cobcrun.c
-@am__fastdepCC_TRUE@	$(AM_V_CC)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(cobcrun_CFLAGS) $(CFLAGS) -MT cobcrun-cobcrun.o -MD -MP -MF $(DEPDIR)/cobcrun-cobcrun.Tpo -c -o cobcrun-cobcrun.o `test -f 'cobcrun.c' || echo '$(srcdir)/'`cobcrun.c
-@am__fastdepCC_TRUE@	$(AM_V_at)$(am__mv) $(DEPDIR)/cobcrun-cobcrun.Tpo $(DEPDIR)/cobcrun-cobcrun.Po
-@AMDEP_TRUE@@am__fastdepCC_FALSE@	$(AM_V_CC)source='cobcrun.c' object='cobcrun-cobcrun.o' libtool=no @AMDEPBACKSLASH@
-@AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
-@am__fastdepCC_FALSE@	$(AM_V_CC@am__nodep@)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(cobcrun_CFLAGS) $(CFLAGS) -c -o cobcrun-cobcrun.o `test -f 'cobcrun.c' || echo '$(srcdir)/'`cobcrun.c
-
-cobcrun-cobcrun.obj: cobcrun.c
-@am__fastdepCC_TRUE@	$(AM_V_CC)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(cobcrun_CFLAGS) $(CFLAGS) -MT cobcrun-cobcrun.obj -MD -MP -MF $(DEPDIR)/cobcrun-cobcrun.Tpo -c -o cobcrun-cobcrun.obj `if test -f 'cobcrun.c'; then $(CYGPATH_W) 'cobcrun.c'; else $(CYGPATH_W) '$(srcdir)/cobcrun.c'; fi`
-@am__fastdepCC_TRUE@	$(AM_V_at)$(am__mv) $(DEPDIR)/cobcrun-cobcrun.Tpo $(DEPDIR)/cobcrun-cobcrun.Po
-@AMDEP_TRUE@@am__fastdepCC_FALSE@	$(AM_V_CC)source='cobcrun.c' object='cobcrun-cobcrun.obj' libtool=no @AMDEPBACKSLASH@
-@AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
-@am__fastdepCC_FALSE@	$(AM_V_CC@am__nodep@)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(cobcrun_CFLAGS) $(CFLAGS) -c -o cobcrun-cobcrun.obj `if test -f 'cobcrun.c'; then $(CYGPATH_W) 'cobcrun.c'; else $(CYGPATH_W) '$(srcdir)/cobcrun.c'; fi`
 
 mostlyclean-libtool:
 	-rm -f *.lo
@@ -695,7 +678,7 @@ clean: clean-am
 clean-am: clean-binPROGRAMS clean-generic clean-libtool mostlyclean-am
 
 distclean: distclean-am
-		-rm -f ./$(DEPDIR)/cobcrun-cobcrun.Po
+		-rm -f ./$(DEPDIR)/cobjrun.Po
 	-rm -f Makefile
 distclean-am: clean-am distclean-compile distclean-generic \
 	distclean-tags
@@ -741,7 +724,7 @@ install-ps-am:
 installcheck-am:
 
 maintainer-clean: maintainer-clean-am
-		-rm -f ./$(DEPDIR)/cobcrun-cobcrun.Po
+		-rm -f ./$(DEPDIR)/cobjrun.Po
 	-rm -f Makefile
 maintainer-clean-am: distclean-am maintainer-clean-generic
 
@@ -779,7 +762,6 @@ uninstall-am: uninstall-binPROGRAMS uninstall-binSCRIPTS
 
 .PRECIOUS: Makefile
 
-#cobcrun_LDADD = $(top_builddir)/libcob/libcob.la $(top_builddir)/lib/libsupport.a
 
 # Tell versions [3.59,3.63) of GNU make to not export all variables.
 # Otherwise a system limit (for SysV at least) may be exceeded.

@@ -839,6 +839,7 @@ cobc_print_usage (void)
 	puts (_("Options:"));
 	puts (_("  --help                Display this message"));
 	puts (_("  --version, -V         Display compiler version"));
+	puts (_("  -m                    Create jar files instead of class files"));
 	puts (_("  -free                 Use free source format"));
 	puts (_("  -free_1col_aster      Use free(1col_aster) source format"));
 	puts (_("  -I <directory>        Add <directory> to copy files search path"));

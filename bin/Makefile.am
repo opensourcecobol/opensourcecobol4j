@@ -20,9 +20,8 @@
 # along with OpenCOBOL.  If not, see <http://www.gnu.org/licenses/>.
 
 bin_SCRIPTS=cob-config
-bin_PROGRAMS = cobcrun
-cobcrun_SOURCES = cobcrun.c
+bin_PROGRAMS = cobjrun
+cobcrun_SOURCES = cobjrun.c
 
 AM_LDFLAGS = $(COB_EXPORT_DYN)
 cobcrun_CFLAGS = $(AM_CFLAGS) -I$(top_srcdir)
-#cobcrun_LDADD = $(top_builddir)/libcob/libcob.la $(top_builddir)/lib/libsupport.a
