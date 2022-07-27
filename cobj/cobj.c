@@ -843,6 +843,7 @@ cobc_print_usage (void)
 	puts (_("  -free                 Use free source format"));
 	puts (_("  -free_1col_aster      Use free(1col_aster) source format"));
 	puts (_("  -I <directory>        Add <directory> to copy files search path"));
+	puts (_("  -C                    Translation only; convert COBOL to Java"));
 	puts (_("  -assign_external      Set the file assign to external"));
 	putchar ('\n');
 
@@ -1730,53 +1731,12 @@ process_translate (struct filename *fn)
 			 fn->preprocess, fn->translate, fn->source);
 	}
 
-	/* open the output file */
-	yyout = fopen (fn->translate, "w");
-	if (!yyout) {
-		cobc_terminate (fn->translate);
-	}
-
-	/* open the common storage file */
-	cb_storage_file_name = fn->trstorage;
-	cb_storage_file = fopen (cb_storage_file_name, "w");
-	if (!cb_storage_file) {
-		cobc_terminate (cb_storage_file_name);
-	}
-
-	p = program_list_reverse (current_program);
-
-	/* set up local storage files */
-	ret = 1;
-	for (q = p; q; q = q->next_program, ret++) {
-		lf = cobc_malloc (sizeof(struct local_filename));
-		lf->local_name = cobc_malloc (strlen (fn->translate) + 9);
-		if (q == p && !q->next_program) {
-			sprintf (lf->local_name, "%s.l.h", fn->translate);
-		} else {
-			sprintf (lf->local_name, "%s.l%d.h", fn->translate, ret);
-		}
-		lf->local_fp = fopen (lf->local_name, "w");
-		if (!lf->local_fp) {
-			cobc_terminate (lf->local_name);
-		}
-		q->local_storage_file = lf->local_fp;
-		q->local_storage_name = lf->local_name;
-		lf->next = fn->localfile;
-		fn->localfile = lf;
-	}
-
-	/* translate to C */
+	/* translate to Java */
     for(int i=0; i<PROGRAM_ID_LIST_MAX_LEN; ++i) {
         program_id_list[i] = NULL;
     }
 	codegen (p, 0, program_id_list);
 
-	/* close the files */
-	fclose (cb_storage_file);
-	fclose (yyout);
-	for (q = p; q; q = q->next_program) {
-		fclose (q->local_storage_file);
-	}
 	return 0;
 }
 
