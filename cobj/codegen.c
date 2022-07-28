@@ -1915,7 +1915,7 @@ joutput_initialize_literal (cb_tree x, struct cb_field *f, struct cb_literal *l)
 	i_counters[0] = 1;
 
 
-	joutput_line ("for (i0 = 0; i0 < %u; i0++)", (unsigned int)i);
+	joutput_line ("for (int i0 = 0; i0 < %u; i0++)", (unsigned int)i);
 	joutput_indent ("  {");
 	joutput_prefix ();
 	joutput_data (x);
