@@ -1760,7 +1760,7 @@ process_compile (struct filename *fn)
 	}
 
     for(char** program_id = program_id_list; *program_id; ++program_id) {
-        sprintf(buff, "javac -encoding UTF8 %s.java", *program_id);
+        sprintf(buff, "javac -encoding SJIS %s.java", *program_id);
         ret = process (buff);
     }
 	return ret;

@@ -1592,4 +1592,7 @@ extern void		cb_reset_78 (void);
 extern struct cb_field	*check_level_78 (const char *name);
 extern void		cb_unget_token (int tok, YYSTYPE lval);
 
+/* typeck.c */
+extern void * make_tree (int tag, enum cb_category category, size_t size);
+
 #endif /* CB_TREE_H */
