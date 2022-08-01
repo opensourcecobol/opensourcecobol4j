@@ -4073,47 +4073,17 @@ cb_emit_goto (cb_tree target, cb_tree depending)
 
 
 void
-cb_emit_java_continue (cb_tree target, cb_tree depending)
+cb_emit_java_continue ()
 {
-	if (target == cb_error_node) {
-		return;
-	}
-	if (depending) {
-		/* GO TO procedure-name ... DEPENDING ON identifier */
-		cb_emit (cb_build_java_continue (target, depending));
-	} else {
-		/* GO TO procedure-name */
-		if (target == NULL) {
-			cb_verify (cb_goto_statement_without_name, "GO TO without procedure-name");
-		} else if (CB_CHAIN (target)) {
-			cb_error (_("GO TO with multiple procedure-names"));
-		} else {
-			cb_emit (cb_build_java_continue (CB_VALUE (target), NULL));
-		}
-	}
+	cb_emit(make_tree (CB_TAG_JAVA_CONTINUE, CB_CATEGORY_UNKNOWN, sizeof (struct cb_tree_common)));
 }
 
 
 void
-cb_emit_java_break (cb_tree target, cb_tree depending)
+cb_emit_java_break ()
 {
-	if (target == cb_error_node) {
-		return;
-	}
-	if (depending) {
-		/* GO TO procedure-name ... DEPENDING ON identifier */
-		cb_emit (cb_build_java_break (target, depending));
-	} else {
-		/* GO TO procedure-name */
-		if (target == NULL) {
-			cb_verify (cb_goto_statement_without_name, "GO TO without procedure-name");
-		} else if (CB_CHAIN (target)) {
-			cb_error (_("GO TO with multiple procedure-names"));
-		} else {
-			//cb_emit (cb_build_java_break (CB_VALUE (target), NULL));
-            cb_emit(make_tree (CB_TAG_JAVA_BREAK, CB_CATEGORY_UNKNOWN, sizeof (struct cb_tree_common)));
-		}
-	}
+
+	cb_emit(make_tree (CB_TAG_JAVA_BREAK, CB_CATEGORY_UNKNOWN, sizeof (struct cb_tree_common)));
 }
 
 void
