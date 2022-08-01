@@ -4215,7 +4215,8 @@ cb_emit_java_break (cb_tree target, cb_tree depending)
 		} else if (CB_CHAIN (target)) {
 			cb_error (_("GO TO with multiple procedure-names"));
 		} else {
-			cb_emit (cb_build_java_break (CB_VALUE (target), NULL));
+			//cb_emit (cb_build_java_break (CB_VALUE (target), NULL));
+            cb_emit(make_tree (CB_TAG_JAVA_BREAK, CB_CATEGORY_UNKNOWN, sizeof (struct cb_tree_common)));
 		}
 	}
 }
