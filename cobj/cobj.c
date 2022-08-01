@@ -1808,7 +1808,7 @@ process_compile (struct filename *fn)
 #endif
 
     for(char** program_id = program_id_list; *program_id; ++program_id) {
-        sprintf(buff, "javac -encoding UTF8 %s.java", *program_id);
+        sprintf(buff, "javac -encoding SJIS %s.java", *program_id);
         ret = process (buff);
     }
 	return ret;
@@ -1906,7 +1906,7 @@ process_module_direct (struct filename *fn)
 	//	 fn->translate, cob_libs);
 
     for(p = current_program; p; p = p->next_program) {
-	    sprintf (buff, "javac -g -encoding UTF8 %s.java", p->program_id);
+	    sprintf (buff, "javac -encoding SJIS %s.java", p->program_id);
 	    ret = process (buff);
     }
 
