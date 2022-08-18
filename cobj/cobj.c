@@ -284,7 +284,7 @@ static cob_sighandler_t		intsig = NULL;
 static cob_sighandler_t		qutsig = NULL;
 #endif
 
-static const char short_options[] = "hVvECScbmxOgwo:t:I:L:l:D:";
+static const char short_options[] = "hVvECScbmxgwo:t:I:L:l:D:";
 
 static const struct option long_options[] = {
 	{"help", no_argument, NULL, 'h'},
@@ -305,9 +305,6 @@ static const struct option long_options[] = {
 	{"fixed", no_argument, &cb_source_format, CB_FORMAT_FIXED},
 	{"static", no_argument, &cb_flag_static_call, 1},
 	{"dynamic", no_argument, &cb_flag_static_call, 0},
-	{"O2", no_argument, NULL, '2'},
-	{"Os", no_argument, NULL, 's'},
-	{"Q", required_argument, NULL, 'Q'},
 	{"B", required_argument, NULL, 'B'},
 	{"MT", required_argument, NULL, '%'},
 	{"MF", required_argument, NULL, '@'},
@@ -332,7 +329,7 @@ static const struct option long_options[] = {
 };
 
 static const char	*cob_cc;				/* gcc */
-static char		cob_cflags[COB_SMALL_BUFF];		/* -I... */
+static char		cob_java_flags[COB_SMALL_BUFF];		/* -I... */
 static char		cob_libs[COB_MEDIUM_BUFF];		/* -L... -lcob */
 static char		cob_define_flags[COB_SMALL_BUFF];	/* -D... */
 static char		cob_ldflags[COB_SMALL_BUFF];
@@ -844,8 +841,9 @@ cobc_print_usage (void)
 	puts (_("  -free_1col_aster      Use free(1col_aster) source format"));
 	puts (_("  -g                    Enable Java compiler debug"));
 	puts (_("  -E                    Preprocess only; do not compile or link"));
-	puts (_("  -I <directory>        Add <directory> to copy files search path"));
 	puts (_("  -C                    Translation only; convert COBOL to Java"));
+	puts (_("  -I <directory>        Add <directory> to copy files search path"));
+	puts (_("  -B <options>          Add <options> to the Java compiler"));
 	puts (_("  -assign_external      Set the file assign to external"));
 	putchar ('\n');
 
@@ -995,41 +993,13 @@ process_command_line (const int argc, char *argv[])
 			output_name = strdup (optarg);
 			break;
 
-		case 'O':
-			/* -O : Optimize */
-			strcat (cob_cflags, CB_COPT_1);
-			strcat (cob_cflags, fcopts);
-			strcat (cob_cflags, COB_EXTRA_FLAGS);
-			optimize_flag = 1;
-			break;
-
-		case '2':
-			/* -O2 : Optimize */
-			strip_output = 1;
-			strcat (cob_cflags, CB_COPT_2);
-			strcat (cob_cflags, fcopts);
-			strcat (cob_cflags, COB_EXTRA_FLAGS);
-			optimize_flag = 2;
-			break;
-
-		case 's':
-			/* -Os : Optimize */
-			strip_output = 1;
-			strcat (cob_cflags, CB_COPT_S);
-			strcat (cob_cflags, fcopts);
-			strcat (cob_cflags, COB_EXTRA_FLAGS);
-			optimize_flag = 2;
-			break;
-
 		case 'g':
 			/* -g : Generate C debug code */
 			save_csrc = 1;
 			gflag_set = 1;
 			cb_flag_stack_check = 1;
 			cb_flag_source_location = 1;
-#ifndef _MSC_VER
-			strcat (cob_cflags, " -g");
-#endif
+			strcat (cob_java_flags, " -g");
 			break;
 
 		case '$':
@@ -1156,8 +1126,8 @@ process_command_line (const int argc, char *argv[])
 
 		case 'B':
 			/* -B <xx> : Add options to C compile phase */
-			strcat (cob_cflags, " ");
-			strcat (cob_cflags, optarg);
+			strcat (cob_java_flags, " ");
+			strcat (cob_java_flags, optarg);
 			break;
 
 		case 'Q':
@@ -1237,11 +1207,6 @@ process_command_line (const int argc, char *argv[])
 	if (cb_flag_source_location) {
 		optimize_flag = 0;
 	}
-#if defined (__GNUC__) && (__GNUC__ >= 3)
-	if (strip_output) {
-		strcat (cob_cflags, " -fomit-frame-pointer");
-	}
-#endif
 
 	/* default extension list */
 	cb_extension_list = cb_text_list_add (cb_extension_list, ".CPY");
@@ -1763,7 +1728,7 @@ process_compile (struct filename *fn)
 
 	for(char** program_id = program_id_list; *program_id; ++program_id) {
 		sprintf(buff, "javac %s -encoding SJIS %s.java",
-			gflag_set ? "-g" : "",
+			cob_java_flags,
 			*program_id);
 		ret = process (buff);
 	}
@@ -1781,17 +1746,17 @@ process_assemble (struct filename *fn)
 	sprintf (buff, gflag_set ?
 		"%s /c %s %s /Od /MDd /Zi /FR /Fo\"%s\" \"%s\"" :
 		"%s /c %s %s /MD /Fo\"%s\" \"%s\"",
-			cob_cc, cob_cflags, cob_define_flags,
+			cob_cc, cob_java_flags, cob_define_flags,
 			fn->object, fn->translate);
 #else
 	if (cb_compile_level == CB_LEVEL_MODULE ||
 	    cb_compile_level == CB_LEVEL_LIBRARY) {
 		sprintf (buff, "%s %s -c %s %s %s -o \"%s\" \"%s\"",
-			 cob_cc, gccpipe, cob_cflags, cob_define_flags,
+			 cob_cc, gccpipe, cob_java_flags, cob_define_flags,
 			 COB_PIC_FLAGS, fn->object, fn->translate);
 	} else {
 		sprintf (buff, "%s %s -c %s %s -o \"%s\" \"%s\"",
-			 cob_cc, gccpipe, cob_cflags, cob_define_flags,
+			 cob_cc, gccpipe, cob_java_flags, cob_define_flags,
 			 fn->object, fn->translate);
 	}
 #endif
@@ -2183,7 +2148,7 @@ main (int argc, char *argv[])
 		cob_config_dir = COB_CONFIG_DIR;
 	}
 
-	cobc_init_var (cob_cflags, "COB_CFLAGS", COB_CFLAGS);
+	cobc_init_var (cob_java_flags, "COB_JAVA_FLAGS", "");
 
 	cobc_init_var (cob_ldflags, "COB_LDFLAGS", COB_LDFLAGS);
 
@@ -2206,17 +2171,6 @@ main (int argc, char *argv[])
 		alt_ebcdic = 1;
 	}
 
-	/* Compiler special options */
-
-#if	defined(__INTEL_COMPILER)
-	strcat (cob_cflags, " -vec-report0 -opt-report 0");
-#elif	defined(__GNUC__)
-	strcat (cob_cflags, " -Wno-unused -fsigned-char");
-#ifdef	HAVE_PSIGN_OPT
-	strcat (cob_cflags, " -Wno-pointer-sign");
-#endif
-#endif
-
 	/* Process command line arguments */
 	iargs = process_command_line (argc, argv);
 
@@ -2237,9 +2191,6 @@ main (int argc, char *argv[])
 
 	/* Windows stuff reliant upon verbose option */
 #ifdef	_MSC_VER
-	if (!verbose_output) {
-		strcat (cob_cflags, " /nologo");
-	}
 #if	_MSC_VER >= 1400
 	if (!verbose_output) {
 		manicmd = "mt /nologo";
