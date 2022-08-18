@@ -843,6 +843,7 @@ cobc_print_usage (void)
 	puts (_("  -free                 Use free source format"));
 	puts (_("  -free_1col_aster      Use free(1col_aster) source format"));
 	puts (_("  -g                    Enable Java compiler debug"));
+	puts (_("  -E                    Preprocess only; do not compile or link"));
 	puts (_("  -I <directory>        Add <directory> to copy files search path"));
 	puts (_("  -C                    Translation only; convert COBOL to Java"));
 	puts (_("  -assign_external      Set the file assign to external"));

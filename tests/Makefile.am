@@ -141,8 +141,9 @@ jp_compat_DEPENDENCIES = \
 command_line_options_DEPENDENCIES = \
 	command-line-options.src/free.at \
 	command-line-options.src/g.at \
-	command-line-options.src/assign_external.at \
+	command-line-options.src/E.at \
 	command-line-options.src/C.at \
+	command-line-options.src/assign_external.at \
 	command-line-options.src/ftrace-ftraceall.at \
 	command-line-options.src/fserial-variable.at
 
