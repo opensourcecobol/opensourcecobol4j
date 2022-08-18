@@ -842,6 +842,7 @@ cobc_print_usage (void)
 	puts (_("  -m                    Create jar files instead of class files"));
 	puts (_("  -free                 Use free source format"));
 	puts (_("  -free_1col_aster      Use free(1col_aster) source format"));
+	puts (_("  -g                    Enable Java compiler debug"));
 	puts (_("  -I <directory>        Add <directory> to copy files search path"));
 	puts (_("  -C                    Translation only; convert COBOL to Java"));
 	puts (_("  -assign_external      Set the file assign to external"));
@@ -1745,7 +1746,7 @@ process_compile (struct filename *fn)
 {
 	char buff[COB_MEDIUM_BUFF];
 	char name[COB_MEDIUM_BUFF];
-    int ret = 0;
+	int ret = 0;
 
 	if (output_name) {
 		strcpy (name, output_name);
@@ -1759,10 +1760,12 @@ process_compile (struct filename *fn)
 #endif
 	}
 
-    for(char** program_id = program_id_list; *program_id; ++program_id) {
-        sprintf(buff, "javac -encoding SJIS %s.java", *program_id);
-        ret = process (buff);
-    }
+	for(char** program_id = program_id_list; *program_id; ++program_id) {
+		sprintf(buff, "javac %s -encoding SJIS %s.java",
+			gflag_set ? "-g" : "",
+			*program_id);
+		ret = process (buff);
+	}
 	return ret;
 }
 

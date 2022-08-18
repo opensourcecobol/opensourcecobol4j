@@ -1,0 +1,15 @@
+AT_SETUP([-g])
+
+AT_DATA([prog.cbl], [
+       IDENTIFICATION              DIVISION.
+       PROGRAM-ID.                 prog.
+       DATA                        DIVISION.
+       WORKING-STORAGE             SECTION.
+       PROCEDURE                   DIVISION.
+           DISPLAY "HELLO".
+])
+
+AT_CHECK([${COBJ} -g prog.cbl])
+AT_CHECK([javap -l prog | grep -i 'line [0-9]\+: [0-9]' ], [1])
+
+AT_CLEANUP
