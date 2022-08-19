@@ -284,7 +284,7 @@ static cob_sighandler_t		intsig = NULL;
 static cob_sighandler_t		qutsig = NULL;
 #endif
 
-static const char short_options[] = "hVvECScbmxgwo:t:I:L:l:D:";
+static const char short_options[] = "hVvECbmxgwo:t:I:L:l:D:";
 
 static const struct option long_options[] = {
 	{"help", no_argument, NULL, 'h'},
@@ -936,24 +936,6 @@ process_command_line (const int argc, char *argv[])
 			}
 			wants_nonfinal = 1;
 			cb_compile_level = CB_LEVEL_TRANSLATE;
-			break;
-
-		case 'S':
-			/* -S : Generate assembler code */
-			if (wants_nonfinal) {
-				cobc_options_error ();
-			}
-			wants_nonfinal = 1;
-			cb_compile_level = CB_LEVEL_COMPILE;
-			break;
-
-		case 'c':
-			/* -c : Generate C object code */
-			if (wants_nonfinal) {
-				cobc_options_error ();
-			}
-			wants_nonfinal = 1;
-			cb_compile_level = CB_LEVEL_ASSEMBLE;
 			break;
 
 		case 'b':
