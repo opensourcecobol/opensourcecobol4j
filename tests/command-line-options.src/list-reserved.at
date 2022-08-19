@@ -1,0 +1,10 @@
+AT_SETUP([--list-reserved])
+
+AT_CHECK([${COBJ} --list-reserved | grep IF > /dev/null], [0])
+AT_CHECK([${COBJ} --list-reserved | grep PERFORM > /dev/null], [0])
+AT_CHECK([${COBJ} --list-reserved | grep DISPLAY > /dev/null], [0])
+AT_CHECK([${COBJ} --list-reserved | grep SECTION > /dev/null], [0])
+AT_CHECK([${COBJ} --list-reserved | grep DIVISION > /dev/null], [0])
+AT_CHECK([${COBJ} --list-reserved | grep MOVE > /dev/null], [0])
+
+AT_CLEANUP
