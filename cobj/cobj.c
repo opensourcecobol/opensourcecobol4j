@@ -844,7 +844,20 @@ cobc_print_usage (void)
 	puts (_("  -C                    Translation only; convert COBOL to Java"));
 	puts (_("  -I <directory>        Add <directory> to copy files search path"));
 	puts (_("  -B <options>          Add <options> to the Java compiler"));
+	puts (_("  --list-reserved       Display reserved words"));
 	puts (_("  -assign_external      Set the file assign to external"));
+	putchar ('\n');
+
+#undef	CB_WARNDEF
+#define	CB_WARNDEF(var,name,wall,doc)		\
+	printf ("  -W%-19s %s", name, gettext (doc)); \
+	if (!wall) { \
+		puts (_(" (NOT set with -Wall)")); \
+	} else { \
+		printf ("\n"); \
+	}
+#include "warning-help.def"
+#undef	CB_WARNDEF
 	putchar ('\n');
 
 #undef	CB_FLAG

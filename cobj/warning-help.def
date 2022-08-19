@@ -19,20 +19,9 @@
  * Boston, MA 02110-1301 USA
  */
 
-/**
- * This file describes the options shown when executing cobj --help command
- */
-
 #include "lib/gettext.h"
 
-CB_FLAG (cb_flag_trace, "trace",
-	 N_("Generate trace code (Executed SECTION/PARAGRAPH)"))
+/* CB_WARNDEF (var, name, wall, doc) */
 
-CB_FLAG (cb_flag_traceall, "traceall",
-	 N_("Generate trace code (Executed SECTION/PARAGRAPH/STATEMENTS)"))
-
-CB_FLAG (cb_flag_syntax_only, "syntax-only",
-	 N_("Syntax error checking only; don't emit any output"))
-
-CB_FLAG (cb_flag_serial_variable, "serial-variable",
-	 N_("Instead of embedding COBOL variable names in Java variable names, give them serial numbers."))
+CB_WARNDEF (cb_warn_unreachable, "unreachable", 0,
+	    N_("Warn unreachable statements"))
