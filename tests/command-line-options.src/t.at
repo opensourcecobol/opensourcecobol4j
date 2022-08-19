@@ -1,0 +1,21 @@
+AT_SETUP([-t])
+
+AT_DATA([prog.cbl], [
+       IDENTIFICATION              DIVISION.
+       PROGRAM-ID.                 prog.
+       DATA                        DIVISION.
+       WORKING-STORAGE             SECTION.
+       PROCEDURE                   DIVISION.
+           DISPLAY "HELLO".
+           COPY "CPY.CPY".
+])
+
+AT_DATA([CPY.CPY], [
+           DISPLAY "HELLO COPY".
+])
+
+AT_CHECK([${COBJ} -t out.txt prog.cbl])
+AT_CHECK([grep CPY.CPY out.txt > /dev/null], [0])
+AT_CHECK([grep 'HELLO COPY' out.txt > /dev/null], [0])
+
+AT_CLEANUP
