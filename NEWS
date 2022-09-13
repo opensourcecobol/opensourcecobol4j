@@ -1,5 +1,31 @@
 NEWS - user visible changes				-*- outline -*-
 
+* opensource cobol 4j 1.0.5
+
+** New Features
+    (1)  -m option and cobjrun command (an experimental feature)
+    (2)  -g option
+    (3)  -E option
+    (4)  -B option
+    (5)  --list-reserved option
+    (6)  -fsyntax-only option
+    (7)  -Wunreachable option
+    (8)  -t option
+    (9)  -C option
+    (10) -free and -free_1col_aster options
+    (11) cobj generates java source code with multi-byte characters
+
+** Bug fixes
+
+    (1) Fix exit perform and perform cycle
+
+** Miscellaneous
+
+    (1) Remove libcob/ directory
+    (2) Resolve some warnings displayed when executing make command
+
+-----------------------------------------------------------------------
+
 * opensource cobol 4j 1.0.4
 
 ** New Features
