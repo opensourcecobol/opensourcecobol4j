@@ -842,6 +842,7 @@ cobc_print_usage (void)
 	puts (_("  -g                    Enable Java compiler debug"));
 	puts (_("  -E                    Preprocess only; do not compile or link"));
 	puts (_("  -C                    Translation only; convert COBOL to Java"));
+	puts (_("  -t <file>             Generate and place a program listing into <file>"));
 	puts (_("  -I <directory>        Add <directory> to copy files search path"));
 	puts (_("  -B <options>          Add <options> to the Java compiler"));
 	puts (_("  --list-reserved       Display reserved words"));
