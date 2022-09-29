@@ -492,6 +492,8 @@ test: $(MODULES)
 	@for MODULE in $(MODULES); do\
   		(cat $$MODULE/report.txt) \
 	done
+	cat summary.log
+	head -n -2 summary.log | tail -n +4 | awk '$$4 != 0 || $$5 != 0 {exit 1}'
 
 save:
 	@for m in $(MODULES); do \
@@ -517,7 +519,6 @@ $(MODULES): newcob.val build/EXEC85.class $(srcdir)/EXEC85.conf.in
 	@rm -f newcob.tmp newcob.log EXEC85.conf
 	@echo "test:"               > $@/Makefile
 	@echo "	. ../../atconfig; . ../../atlocal; export PATH; perl $(COB85DIR)/report.pl" >> $@/Makefile
-	@echo "	diff $(COB85DIR)/$@.txt report.txt" >> $@/Makefile
 	@echo "done"
 
 build/EXEC85.class: newcob.val
