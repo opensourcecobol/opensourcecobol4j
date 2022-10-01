@@ -1,8 +1,8 @@
-/* A Bison parser, made by GNU Bison 3.5.1.  */
+/* A Bison parser, made by GNU Bison 3.8.2.  */
 
 /* Bison interface for Yacc-like parsers in C
 
-   Copyright (C) 1984, 1989-1990, 2000-2015, 2018-2020 Free Software Foundation,
+   Copyright (C) 1984, 1989-1990, 2000-2015, 2018-2021 Free Software Foundation,
    Inc.
 
    This program is free software: you can redistribute it and/or modify
@@ -16,7 +16,7 @@
    GNU General Public License for more details.
 
    You should have received a copy of the GNU General Public License
-   along with this program.  If not, see <http://www.gnu.org/licenses/>.  */
+   along with this program.  If not, see <https://www.gnu.org/licenses/>.  */
 
 /* As a special exception, you may create a larger work that contains
    part or all of the Bison parser skeleton and distribute that work
@@ -31,8 +31,9 @@
    This special exception was added by the Free Software Foundation in
    version 2.2 of Bison.  */
 
-/* Undocumented macros, especially those whose name start with YY_,
-   are private implementation details.  Do not rely on them.  */
+/* DO NOT RELY ON FEATURES THAT ARE NOT DOCUMENTED in the manual,
+   especially those whose name start with YY_ or yy_.  They are
+   private implementation details that can be changed or removed.  */
 
 #ifndef YY_PP_PPPARSE_H_INCLUDED
 # define YY_PP_PPPARSE_H_INCLUDED
@@ -44,41 +45,45 @@
 extern int ppdebug;
 #endif
 
-/* Token type.  */
+/* Token kinds.  */
 #ifndef YYTOKENTYPE
 # define YYTOKENTYPE
   enum yytokentype
   {
-    TOKEN_EOF = 0,
-    COPY = 258,
-    REPLACE = 259,
-    SUPPRESS = 260,
-    PRINTING = 261,
-    REPLACING = 262,
-    OFF = 263,
-    IN = 264,
-    OF = 265,
-    BY = 266,
-    EQEQ = 267,
-    LEADING = 268,
-    TRAILING = 269,
-    JOINING = 270,
-    AS = 271,
-    PREFIX = 272,
-    SUFFIX = 273,
-    PREFIXING = 274,
-    SUFFIXING = 275,
-    LEVEL_NUMBER = 276,
-    REDEFINES = 277,
-    TOKEN = 278,
-    PROGRAM_ID = 279,
-    FUNCTION_ID = 280,
-    ENVIRONMENT_DIVISION = 281,
-    DATA_DIVISION = 282,
-    PROCEDURE_DIVISION = 283,
-    END_PROGRAM = 284,
-    END_FUNCTION = 285
+    YYEMPTY = -2,
+    TOKEN_EOF = 0,                 /* "end of file"  */
+    YYerror = 256,                 /* error  */
+    YYUNDEF = 257,                 /* "invalid token"  */
+    COPY = 258,                    /* COPY  */
+    REPLACE = 259,                 /* REPLACE  */
+    SUPPRESS = 260,                /* SUPPRESS  */
+    PRINTING = 261,                /* PRINTING  */
+    REPLACING = 262,               /* REPLACING  */
+    OFF = 263,                     /* OFF  */
+    IN = 264,                      /* IN  */
+    OF = 265,                      /* OF  */
+    BY = 266,                      /* BY  */
+    EQEQ = 267,                    /* EQEQ  */
+    LEADING = 268,                 /* LEADING  */
+    TRAILING = 269,                /* TRAILING  */
+    JOINING = 270,                 /* JOINING  */
+    AS = 271,                      /* AS  */
+    PREFIX = 272,                  /* PREFIX  */
+    SUFFIX = 273,                  /* SUFFIX  */
+    PREFIXING = 274,               /* PREFIXING  */
+    SUFFIXING = 275,               /* SUFFIXING  */
+    LEVEL_NUMBER = 276,            /* LEVEL_NUMBER  */
+    REDEFINES = 277,               /* REDEFINES  */
+    TOKEN = 278,                   /* TOKEN  */
+    PROGRAM_ID = 279,              /* PROGRAM_ID  */
+    FUNCTION_ID = 280,             /* FUNCTION_ID  */
+    ENVIRONMENT_DIVISION = 281,    /* ENVIRONMENT_DIVISION  */
+    DATA_DIVISION = 282,           /* DATA_DIVISION  */
+    PROCEDURE_DIVISION = 283,      /* PROCEDURE_DIVISION  */
+    END_PROGRAM = 284,             /* END_PROGRAM  */
+    END_FUNCTION = 285             /* END_FUNCTION  */
   };
+  typedef enum yytokentype yytoken_kind_t;
 #endif
 
 /* Value type.  */
@@ -93,7 +98,7 @@ union YYSTYPE
 	struct cb_joining_ext	*jx;
 	cb_joining_ext_type_t	jt;
 
-#line 97 "ppparse.h"
+#line 102 "ppparse.h"
 
 };
 typedef union YYSTYPE YYSTYPE;
@@ -104,6 +109,8 @@ typedef union YYSTYPE YYSTYPE;
 
 extern YYSTYPE pplval;
 
+
 int ppparse (void);
+
 
 #endif /* !YY_PP_PPPARSE_H_INCLUDED  */

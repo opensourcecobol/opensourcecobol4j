@@ -1067,6 +1067,8 @@ struct cb_goto {
 #define CB_GOTO_P(x)		(CB_TREE_TAG (x) == CB_TAG_GOTO)
 
 extern cb_tree		cb_build_goto (cb_tree target, cb_tree depending);
+extern cb_tree		cb_build_java_continue (cb_tree target, cb_tree depending);
+extern cb_tree		cb_build_java_break (cb_tree target, cb_tree depending);
 
 
 /*
@@ -1484,6 +1486,8 @@ extern void		cb_emit_divide (cb_tree dividend, cb_tree divisor,
 extern void		cb_emit_evaluate (cb_tree subject_list, cb_tree case_list);
 
 extern void		cb_emit_goto (cb_tree target, cb_tree depending);
+extern void		cb_emit_java_continue (cb_tree target, cb_tree depending);
+extern void		cb_emit_java_break (cb_tree target, cb_tree depending);
 extern void		cb_emit_exit (size_t goback);
 
 extern void		cb_emit_if (cb_tree cond, cb_tree stmt1, cb_tree stmt2);
