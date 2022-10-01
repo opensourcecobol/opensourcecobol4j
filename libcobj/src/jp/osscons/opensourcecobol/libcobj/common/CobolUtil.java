@@ -594,7 +594,7 @@ public class CobolUtil {
 			int b12 = s1.getByte(i + 1);
 			int b21 = s2.getByte(i);
 			int b22 = s2.getByte(i + 1);
-			ret = ((b11 << 8 | b12) > (b21 << 8 | b22)) ? 1 : 0;
+			ret = (b11 << 8 | b12) - (b21 << 8 | b22);
 		}
 		return ret;
 	}
