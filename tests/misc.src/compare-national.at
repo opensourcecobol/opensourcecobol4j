@@ -1,0 +1,43 @@
+AT_SETUP([compare national])
+
+AT_DATA([prog.cbl], [
+       IDENTIFICATION DIVISION.
+       PROGRAM-ID. prog.
+       DATA DIVISION.
+       WORKING-STORAGE SECTION.
+       01 A PIC N VALUE N"‚ ".
+       01 I PIC N VALUE N"‚¢".
+       01 X1 PIC N VALUE "‹u".
+       01 X2 PIC N VALUE "‰ª".
+       01 X3 PIC N VALUE "‰Ô".
+       01 X4 PIC N VALUE "•@".
+       PROCEDURE DIVISION.
+           IF A = I
+             DISPLAY "A = I"
+           ELSE
+             DISPLAY "A != I"
+           END-IF.
+
+           IF X1 = X2
+             DISPLAY "X1 = X2"
+           ELSE
+             DISPLAY "X1 != X2"
+           END-IF.
+
+           IF X3 = X4
+             DISPLAY "X3 = X4"
+           ELSE
+             DISPLAY "X3 != X4"
+           END-IF.
+
+           STOP RUN.
+])
+
+AT_CHECK([${COBJ} prog.cbl])
+AT_CHECK([${RUN_MODULE} prog], [0],
+[A != I
+X1 != X2
+X3 != X4
+])
+
+AT_CLEANUP
