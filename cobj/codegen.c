@@ -477,28 +477,14 @@ joutput_string (const unsigned char *s, int size)
 			joutput(")");
 		}
 	} else {
-		joutput("new CobolDataStorage(\"");
-		for(i = 0; i < size;) {
-			unsigned char c = s[i];
-			// multi bytes
-			if((0x81 <= c && c <= 0xFC) || (0xE0 <= c && c <= 0xEF)) {
-				joutput("%c", s[i++]);
-				joutput("%c", s[i++]);
-			// single byte
-			} else {
-				if(c == '\"') {
-					joutput("\\\"");
-				} else if(c == '\n') {
-					joutput("\\n");
-				} else if(c == '\\') {
-					joutput("\\\\");
-				} else {
-					joutput("%c", c);
-				}
-				i++;
+		joutput("makeCobolDataStorage(");
+		for(i = 0; i < size; i++) {
+			joutput("(byte)0x%02x", s[i]);
+			if(i < size - 1) {
+				joutput(", ");
 			}
 		}
-		joutput("\")");
+		joutput(")");
 	}
 }
 
