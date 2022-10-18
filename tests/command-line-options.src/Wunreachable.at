@@ -1,0 +1,23 @@
+AT_SETUP([-Wunreachable])
+
+AT_DATA([prog.cbl], [
+       IDENTIFICATION              DIVISION.
+       PROGRAM-ID.                 prog.
+       DATA                        DIVISION.
+       WORKING-STORAGE             SECTION.
+       PROCEDURE                   DIVISION.
+           DISPLAY "HELLO".
+           GOBACK.
+           DISPLAY "HELLO".
+])
+
+AT_CHECK([${COBJ} -Wunreachable prog.cbl 2>&1], [0], [prog.cbl:9: Warning: Unreachable statement 'DISPLAY'
+])
+
+AT_CHECK([java prog], [0],
+[HELLO
+])
+
+AT_CHECK([${COBJ} --help | grep '\-Wunreachable' > /dev/null], [0])
+
+AT_CLEANUP

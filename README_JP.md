@@ -27,7 +27,7 @@ java [PROGRAM-ID]
 
 ## The progress of the development
 
-下記の実装済みリストにある機能は[NIST COBOL85 test suite](https://www.itl.nist.gov/div897/ctg/cobol_form.htm)でテストされており,**999%** のテストケースをパスしています.
+下記の実装済みリストにある機能は[NIST COBOL85 test suite](https://www.itl.nist.gov/div897/ctg/cobol_form.htm)でテストされており,**99%** のテストケースをパスしています.
 
 実装済み
 

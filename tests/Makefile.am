@@ -139,9 +139,18 @@ jp_compat_DEPENDENCIES = \
 	jp-compat.src/system-routine.at
 
 command_line_options_DEPENDENCIES = \
+	command-line-options.src/free.at \
+	command-line-options.src/g.at \
+	command-line-options.src/E.at \
+	command-line-options.src/C.at \
+	command-line-options.src/t.at \
+	command-line-options.src/B.at \
+	command-line-options.src/list-reserved.at \
+	command-line-options.src/assign_external.at \
+	command-line-options.src/Wunreachable.at \
 	command-line-options.src/ftrace-ftraceall.at \
-	command-line-options.src/fserial-variable.at \
-	command-line-options.src/assign_external.at
+	command-line-options.src/fsyntax-only.at \
+	command-line-options.src/fserial-variable.at
 
 misc_DEPENDENCIES = \
 	misc.src/signed-comp3.at \

@@ -1,0 +1,45 @@
+AT_SETUP([-fsyntax-only])
+
+AT_DATA([prog1.cbl], [
+       IDENTIFICATION   DIVISION.
+       PROGRAM-ID.      prog1.
+       DATA             DIVISION.
+       WORKING-STORAGE  SECTION.
+       PROCEDURE        DIVISION.
+           MOVE 0 TO UNDEFINED-VARIABLE(1).
+           STOP RUN.
+])
+
+AT_DATA([prog2.cbl], [
+       IDENTIFICATION   DIVISION.
+       PROGRAM-ID.      prog2.
+       DATA             DIVISION.
+       WORKING-STORAGE  SECTION.
+       PROCEDURE        DIVISION.
+           INVALID STATEMENT.
+           STOP RUN.
+])
+
+AT_DATA([prog3.cbl], [
+       IDENTIFICATION   DIVISION.
+       PROGRAM-ID.      prog3.
+       DATA             DIVISION.
+       WORKING-STORAGE  SECTION.
+       PROCEDURE        DIVISION.
+           DISPLAY "HELLO".
+           STOP RUN.
+])
+
+AT_CHECK([${COBJ} -fsyntax-only prog1.cbl 2> /dev/null], [1])
+AT_CHECK([${COBJ} -fsyntax-only prog2.cbl 2> /dev/null], [1])
+AT_CHECK([${COBJ} -fsyntax-only prog3.cbl], [0])
+AT_CHECK([for f in ./*; do echo $f; done | sort], [0],
+[./command-line-options.log
+./prog1.cbl
+./prog2.cbl
+./prog3.cbl
+])
+AT_CHECK([cobj --help | grep '\-fsyntax\-only' > /dev/null], [0])
+
+
+AT_CLEANUP
