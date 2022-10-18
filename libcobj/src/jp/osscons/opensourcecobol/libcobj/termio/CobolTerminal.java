@@ -29,10 +29,7 @@ import java.util.Scanner;
 
 import jp.osscons.opensourcecobol.libcobj.common.CobolModule;
 import jp.osscons.opensourcecobol.libcobj.common.CobolUtil;
-import jp.osscons.opensourcecobol.libcobj.data.AbstractCobolField;
-import jp.osscons.opensourcecobol.libcobj.data.CobolDataStorage;
-import jp.osscons.opensourcecobol.libcobj.data.CobolFieldAttribute;
-import jp.osscons.opensourcecobol.libcobj.data.CobolFieldFactory;
+import jp.osscons.opensourcecobol.libcobj.data.*;
 import jp.osscons.opensourcecobol.libcobj.exceptions.CobolException;
 import jp.osscons.opensourcecobol.libcobj.exceptions.CobolExceptionId;
 
@@ -50,18 +47,20 @@ public class CobolTerminal {
 	 */
 	public static void display(boolean dispStdout, boolean newline, AbstractCobolField ...fields) {
 		PrintStream stream = dispStdout ? System.out : System.err;
-		for(AbstractCobolField field: fields) {
+		for (AbstractCobolField field : fields) {
 			CobolFieldAttribute attr = field.getAttribute();
-			if(attr.isTypeNumericBinary() && CobolModule.getCurrentModule().flag_pretty_display == 0) {
+			if (attr.isTypeNumericBinary() && CobolModule.getCurrentModule().flag_pretty_display == 0) {
 				stream.print(field);
-			} else if(attr.isTypeNumeric()){
+			} else if (attr.isTypeNumeric()) {
+				stream.print(field);
+			} else if (attr.isTypeNational() || attr.isTypeNationalAll() || attr.isTypeNationalEdited()) {
 				stream.print(field);
 			} else {
 				displayAlnum(field, stream);
 			}
 		}
-		if(newline) {
-			stream.println("");
+		if (newline) {
+			stream.println();
 		}
 	}
 
@@ -80,18 +79,20 @@ public class CobolTerminal {
 	 */
 	public static void display(int outorerr, int newline, int varcnt, AbstractCobolField ...fields) {
 		PrintStream stream = outorerr == 0 ? System.out : System.err;
-		for(AbstractCobolField field: fields) {
+		for (AbstractCobolField field : fields) {
 			CobolFieldAttribute attr = field.getAttribute();
-			if(attr.isTypeNumericBinary() && CobolModule.getCurrentModule().flag_pretty_display == 0) {
+			if (attr.isTypeNumericBinary() && CobolModule.getCurrentModule().flag_pretty_display == 0) {
 				stream.print(field);
-			} else if(attr.isTypeNumeric()){
+			} else if (attr.isTypeNumeric()) {
+				stream.print(field);
+			} else if (attr.isTypeNational() || attr.isTypeNationalAll() || attr.isTypeNationalEdited()) {
 				stream.print(field);
 			} else {
 				displayAlnum(field, stream);
 			}
 		}
-		if(newline == 1) {
-			stream.println("");
+		if(newline != 0) {
+			stream.println();
 		}
 	}
 
