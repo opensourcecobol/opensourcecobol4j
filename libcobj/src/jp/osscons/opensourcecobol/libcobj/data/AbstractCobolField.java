@@ -1003,29 +1003,27 @@ public abstract class AbstractCobolField {
 		case CobolFieldAttribute.COB_TYPE_NUMERIC_DOUBLE:
 			return true;
 		case CobolFieldAttribute.COB_TYPE_NUMERIC_PACKED:
+			byte b = 0;
 			for(i=0; i<this.size - 1; ++i) {
-				c = (char)this.getDataStorage().getByte(i);
-				if((c & 0xF0) > 0x90 || (c & 0x0f) > 0x09) {
+				b = this.getDataStorage().getByte(i);
+				if((b & 0xF0) > 0x90 || (b & 0x0f) > 0x09) {
 					return false;
 				}
 			}
-			if((c & 0xf0) > 0x90) {
+			b = this.getDataStorage().getByte(i);
+			if((b & 0xf0) > 0x90) {
 				return false;
 			}
-			sign = c & 0x0f;
+			sign = b & 0x0f;
 			if(sign == 0x0f) {
 				return true;
 			}
-			if((this.getAttribute().getFlags() & CobolFieldAttribute.COB_FLAG_HAVE_SIGN) != 0) {
-				if(sign == 0x0c || sign == 0x0d) {
-					return true;
-				}
-			} else if(CobolUtil.nibbleCForUnsigned) {
+			if(CobolUtil.nibbleCForUnsigned) {
 				if(sign == 0x0c) {
 					return true;
 				}
 			}
-			return false;
+			return sign == 0x0c || sign == 0x0d;
 		case CobolFieldAttribute.COB_TYPE_NUMERIC_DISPLAY:
 			int size = this.getFieldSize();
 			int firstIndex = this.getFirstDataIndex();
