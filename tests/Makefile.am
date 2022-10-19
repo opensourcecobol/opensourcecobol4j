@@ -155,7 +155,8 @@ command_line_options_DEPENDENCIES = \
 misc_DEPENDENCIES = \
 	misc.src/signed-comp3.at \
 	misc.src/index-comp.at \
-	misc.src/compare-national.at
+	misc.src/compare-national.at \
+	misc.src/current-date.at
 
 EXTRA_DIST = $(srcdir)/package.m4 \
 	$(TESTS) \
