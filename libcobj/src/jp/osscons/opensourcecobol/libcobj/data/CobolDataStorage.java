@@ -225,7 +225,9 @@ public class CobolDataStorage {
 	public int memcmp(byte[] buf, int size) {
 		for(int i=0; i<size; ++i) {
 			if(this.getByte(i) != buf[i]) {
-				return this.getByte(i) - buf[i];
+				int x = Byte.toUnsignedInt(this.getByte(i));
+				int y = Byte.toUnsignedInt(buf[i]);
+				return x - y;
 			}
 		}
 		return 0;
@@ -250,7 +252,9 @@ public class CobolDataStorage {
 	public int memcmp(CobolDataStorage buf, int size) {
 		for(int i=0; i<size; ++i) {
 			if(this.getByte(i) != buf.getByte(i)) {
-				return this.getByte(i) - buf.getByte(i);
+				int x = Byte.toUnsignedInt(this.getByte(i));
+				int y = Byte.toUnsignedInt(buf.getByte(i));
+				return x - y;
 			}
 		}
 		return 0;

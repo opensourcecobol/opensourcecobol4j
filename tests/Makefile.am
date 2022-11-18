@@ -157,7 +157,8 @@ misc_DEPENDENCIES = \
 	misc.src/index-comp.at \
 	misc.src/compare-national.at \
 	misc.src/current-date.at \
-	misc.src/comp3-is-numeric.at
+	misc.src/comp3-is-numeric.at \
+	misc.src/high-low-value.at
 
 EXTRA_DIST = $(srcdir)/package.m4 \
 	$(TESTS) \

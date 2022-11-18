@@ -1514,7 +1514,7 @@ joutput_funcall (cb_tree x)
 			break;
 		case 'G':
 			/* Test of one character */
-			joutput ("(((int)");
+			joutput ("(Byte.toUnsignedInt(");
 
 			save_flag = param_wrap_string_flag;
 			param_wrap_string_flag = 1;
@@ -1533,9 +1533,9 @@ joutput_funcall (cb_tree x)
 			} else if (CB_LITERAL_P (p->argv[1])) {
 				joutput (" - (int)%d)", *(CB_LITERAL (p->argv[1])->data));
 			} else {
-				joutput (" - ");
+				joutput (" - Byte.toUnsignedInt(");
 				joutput_data (p->argv[1]);
-				joutput (".getByte(0))");
+				joutput (".getByte(0)))");
 			}
 			break;
 		default:

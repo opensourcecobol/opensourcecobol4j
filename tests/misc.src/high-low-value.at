@@ -1,0 +1,295 @@
+AT_SETUP([high-value and low-value])
+
+AT_DATA([prog.cbl], [
+       IDENTIFICATION              DIVISION.
+       PROGRAM-ID.                 prog.
+       DATA                        DIVISION.
+       WORKING-STORAGE             SECTION.
+       01  TEST-AREA-X.
+           03 TEST-DATA1-X  PIC X(01).
+           03 TEST-DATA2-X  PIC X(02).
+           03 TEST-DATA3-X  PIC X(04).
+
+       01  TEST-AREA-9.
+           03 TEST-DATA1-9  PIC 9(01).
+           03 TEST-DATA2-9  PIC 9(02).
+           03 TEST-DATA3-9  PIC 9(04).
+
+       01  TEST-AREA-COMP3.
+           03 TEST-DATA1-COMP3  PIC 9(01).
+           03 TEST-DATA2-COMP3  PIC 9(02).
+           03 TEST-DATA3-COMP3  PIC 9(04).
+
+       01  HIGH-VALUE-AREA.
+           03 HIGH-DATA1  PIC X(01).
+           03 HIGH-DATA2  PIC X(02).
+           03 HIGH-DATA3  PIC X(04).
+
+       01  LOW-VALUE-AREA.
+           03 LOW-DATA1  PIC X(01).
+           03 LOW-DATA2  PIC X(02).
+           03 LOW-DATA3  PIC X(04).
+
+       01 HIGH-VALUE-1-BYTE PIC X.
+       01 LOW-VALUE-1-BYTE PIC X.
+
+       PROCEDURE                   DIVISION.
+       MAIN-RTN.
+
+           MOVE 9    TO TEST-DATA1-X.
+           MOVE 99   TO TEST-DATA2-X.
+           MOVE 9999 TO TEST-DATA3-X.
+
+           MOVE HIGH-VALUE TO HIGH-VALUE-1-BYTE.
+
+      *==================================================
+
+           IF TEST-DATA1-X < HIGH-VALUE-1-BYTE
+             THEN
+               DISPLAY 'TEST-DATA1-X < HIGH-VALUE-1-BYTE'
+             ELSE
+               DISPLAY 'TEST-DATA1-X >= HIGH-VALUE-1-BYTE'
+             END-IF.
+
+           IF TEST-DATA2-X < HIGH-VALUE-1-BYTE
+             THEN
+               DISPLAY 'TEST-DATA2-X < HIGH-VALUE-1-BYTE'
+             ELSE
+               DISPLAY 'TEST-DATA2-X >= HIGH-VALUE-1-BYTE'
+             END-IF.
+
+           IF TEST-DATA3-X < HIGH-VALUE-1-BYTE
+             THEN
+               DISPLAY 'TEST-DATA3-X < HIGH-VALUE-1-BYTE'
+             ELSE
+               DISPLAY 'TEST-DATA3-X >= HIGH-VALUE-1-BYTE'
+             END-IF.
+
+      *==================================================
+      *
+           MOVE ZERO TO TEST-DATA1-X.
+           MOVE ZERO TO TEST-DATA2-X.
+           MOVE ZERO TO TEST-DATA3-X.
+
+           MOVE LOW-VALUE TO LOW-VALUE-1-BYTE.
+
+      *==================================================
+
+           IF TEST-DATA1-X > LOW-VALUE-1-BYTE
+             THEN
+               DISPLAY 'TEST-DATA1-X > LOW-VALUE-1-BYTE'
+             ELSE
+               DISPLAY 'TEST-DATA1-X <= LOW-VALUE-1-BYTE'
+             END-IF.
+
+           IF TEST-DATA2-X > LOW-VALUE-1-BYTE
+             THEN
+               DISPLAY 'TEST-DATA2-X > LOW-VALUE-1-BYTE'
+             ELSE
+               DISPLAY 'TEST-DATA2-X <= LOW-VALUE-1-BYTE'
+             END-IF.
+
+           IF TEST-DATA3-X > LOW-VALUE-1-BYTE
+             THEN
+               DISPLAY 'TEST-DATA3-X > LOW-VALUE-1-BYTE'
+             ELSE
+               DISPLAY 'TEST-DATA3-X <= LOW-VALUE-1-BYTE'
+             END-IF.
+
+      *==================================================
+
+           MOVE '1234567' TO TEST-AREA-X.
+           MOVE '1234567' TO TEST-AREA-9.
+           MOVE ZERO TO TEST-DATA1-COMP3.
+           MOVE ZERO TO TEST-DATA2-COMP3.
+           MOVE ZERO TO TEST-DATA3-COMP3.
+
+           MOVE HIGH-VALUE TO HIGH-VALUE-AREA.
+
+      *==================================================
+           IF TEST-AREA-X < HIGH-VALUE-AREA
+             THEN
+               DISPLAY 'TEST-AREA < HIGH-VALUE-AREA'
+             ELSE
+               DISPLAY 'TEST-AREA >= HIGH-VALUE-AREA'
+             END-IF.
+      *==================================================
+
+           IF TEST-DATA1-X < HIGH-DATA1
+             THEN
+               DISPLAY 'TEST-DATA1-X < HIGH-DATA1'
+             ELSE
+               DISPLAY 'TEST-DATA1-X >= HIGH-DATA1'
+             END-IF.
+
+           IF TEST-DATA2-X < HIGH-DATA2
+             THEN
+               DISPLAY 'TEST-DATA2-X < HIGH-DATA2'
+             ELSE
+               DISPLAY 'TEST-DATA2-X >= HIGH-DATA2'
+             END-IF.
+
+           IF TEST-DATA3-X < HIGH-DATA3
+             THEN
+               DISPLAY 'TEST-DATA3-X < HIGH-DATA3'
+             ELSE
+               DISPLAY 'TEST-DATA3-X >= HIGH-DATA3'
+             END-IF.
+      *==================================================
+           IF TEST-DATA1-9 < HIGH-DATA1
+             THEN
+               DISPLAY 'TEST-DATA1-9 < HIGH-DATA1'
+             ELSE
+               DISPLAY 'TEST-DATA1-9 >= HIGH-DATA1'
+             END-IF.
+
+           IF TEST-DATA2-9 < HIGH-DATA2
+             THEN
+               DISPLAY 'TEST-DATA2-9 < HIGH-DATA2'
+             ELSE
+               DISPLAY 'TEST-DATA2-9 >= HIGH-DATA2'
+             END-IF.
+
+           IF TEST-DATA3-9 < HIGH-DATA3
+             THEN
+               DISPLAY 'TEST-DATA3-9 < HIGH-DATA3'
+             ELSE
+               DISPLAY 'TEST-DATA3-9 >= HIGH-DATA3'
+             END-IF.
+      *==================================================
+           IF TEST-DATA1-COMP3 < HIGH-DATA1
+             THEN
+               DISPLAY 'TEST-DATA1-COMP3 < HIGH-DATA1'
+             ELSE
+               DISPLAY 'TEST-DATA1-COMP3 >= HIGH-DATA1'
+             END-IF.
+
+           IF TEST-DATA2-COMP3 < HIGH-DATA2
+             THEN
+               DISPLAY 'TEST-DATA2-COMP3 < HIGH-DATA2'
+             ELSE
+               DISPLAY 'TEST-DATA2-COMP3 >= HIGH-DATA2'
+             END-IF.
+
+           IF TEST-DATA3-COMP3 < HIGH-DATA3
+             THEN
+               DISPLAY 'TEST-DATA3-COMP3 < HIGH-DATA3'
+             ELSE
+               DISPLAY 'TEST-DATA3-COMP3 >= HIGH-DATA3'
+             END-IF.
+
+      *==================================================
+      *
+           MOVE '1234567' TO TEST-AREA-X.
+           MOVE '1234567' TO TEST-AREA-9.
+           MOVE 9    TO TEST-DATA1-COMP3.
+           MOVE 99   TO TEST-DATA2-COMP3.
+           MOVE 9999 TO TEST-DATA3-COMP3.
+
+           MOVE LOW-VALUE TO LOW-VALUE-AREA.
+
+      *==================================================
+           IF TEST-AREA-X > LOW-VALUE-AREA
+             THEN
+               DISPLAY 'TEST-AREA > LOW-VALUE-AREA'
+             ELSE
+               DISPLAY 'TEST-AREA <= LOW-VALUE-AREA'
+             END-IF.
+      *==================================================
+
+           IF TEST-DATA1-X > LOW-DATA1
+             THEN
+               DISPLAY 'TEST-DATA1-X > LOW-DATA1'
+             ELSE
+               DISPLAY 'TEST-DATA1-X <= LOW-DATA1'
+             END-IF.
+
+           IF TEST-DATA2-X > LOW-DATA2
+             THEN
+               DISPLAY 'TEST-DATA2-X > LOW-DATA2'
+             ELSE
+               DISPLAY 'TEST-DATA2-X <= LOW-DATA2'
+             END-IF.
+
+           IF TEST-DATA3-X > LOW-DATA3
+             THEN
+               DISPLAY 'TEST-DATA3-X > LOW-DATA3'
+             ELSE
+               DISPLAY 'TEST-DATA3-X <= LOW-DATA3'
+             END-IF.
+      *==================================================
+           IF TEST-DATA1-9 > LOW-DATA1
+             THEN
+               DISPLAY 'TEST-DATA1-9 > LOW-DATA1'
+             ELSE
+               DISPLAY 'TEST-DATA1-9 <= LOW-DATA1'
+             END-IF.
+
+           IF TEST-DATA2-9 > LOW-DATA2
+             THEN
+               DISPLAY 'TEST-DATA2-9 > LOW-DATA2'
+             ELSE
+               DISPLAY 'TEST-DATA2-9 <= LOW-DATA2'
+             END-IF.
+
+           IF TEST-DATA3-9 > LOW-DATA3
+             THEN
+               DISPLAY 'TEST-DATA3-9 > LOW-DATA3'
+             ELSE
+               DISPLAY 'TEST-DATA3-9 <= LOW-DATA3'
+             END-IF.
+      *==================================================
+           IF TEST-DATA1-COMP3 > LOW-DATA1
+             THEN
+               DISPLAY 'TEST-DATA1-COMP3 > LOW-DATA1'
+             ELSE
+               DISPLAY 'TEST-DATA1-COMP3 <= LOW-DATA1'
+             END-IF.
+
+           IF TEST-DATA2-COMP3 > LOW-DATA2
+             THEN
+               DISPLAY 'TEST-DATA2-COMP3 > LOW-DATA2'
+             ELSE
+               DISPLAY 'TEST-DATA2-COMP3 <= LOW-DATA2'
+             END-IF.
+
+           IF TEST-DATA3-COMP3 > LOW-DATA3
+             THEN
+               DISPLAY 'TEST-DATA3-COMP3 > LOW-DATA3'
+             ELSE
+               DISPLAY 'TEST-DATA3-COMP3 <= LOW-DATA3'
+             END-IF.
+       STOP RUN.
+])
+
+AT_CHECK([cobj prog.cbl])
+AT_CHECK([java prog], [0],
+[TEST-DATA1-X < HIGH-VALUE-1-BYTE
+TEST-DATA2-X < HIGH-VALUE-1-BYTE
+TEST-DATA3-X < HIGH-VALUE-1-BYTE
+TEST-DATA1-X > LOW-VALUE-1-BYTE
+TEST-DATA2-X > LOW-VALUE-1-BYTE
+TEST-DATA3-X > LOW-VALUE-1-BYTE
+TEST-AREA < HIGH-VALUE-AREA
+TEST-DATA1-X < HIGH-DATA1
+TEST-DATA2-X < HIGH-DATA2
+TEST-DATA3-X < HIGH-DATA3
+TEST-DATA1-9 < HIGH-DATA1
+TEST-DATA2-9 < HIGH-DATA2
+TEST-DATA3-9 < HIGH-DATA3
+TEST-DATA1-COMP3 < HIGH-DATA1
+TEST-DATA2-COMP3 < HIGH-DATA2
+TEST-DATA3-COMP3 < HIGH-DATA3
+TEST-AREA > LOW-VALUE-AREA
+TEST-DATA1-X > LOW-DATA1
+TEST-DATA2-X > LOW-DATA2
+TEST-DATA3-X > LOW-DATA3
+TEST-DATA1-9 > LOW-DATA1
+TEST-DATA2-9 > LOW-DATA2
+TEST-DATA3-9 > LOW-DATA3
+TEST-DATA1-COMP3 > LOW-DATA1
+TEST-DATA2-COMP3 > LOW-DATA2
+TEST-DATA3-COMP3 > LOW-DATA3
+])
+
+AT_CLEANUP
