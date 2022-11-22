@@ -1066,8 +1066,9 @@ struct cb_goto {
 #define CB_GOTO(x)		(CB_TREE_CAST (CB_TAG_GOTO, struct cb_goto, x))
 #define CB_GOTO_P(x)		(CB_TREE_TAG (x) == CB_TAG_GOTO)
 
-extern cb_tree		cb_build_goto (cb_tree target, cb_tree depending);
-
+extern cb_tree cb_build_goto (cb_tree target, cb_tree depending);
+extern cb_tree cb_build_java_continue (cb_tree target, cb_tree depending);
+extern cb_tree cb_build_java_break (cb_tree target, cb_tree depending);
 
 /*
  * IF
@@ -1484,6 +1485,8 @@ extern void		cb_emit_divide (cb_tree dividend, cb_tree divisor,
 extern void		cb_emit_evaluate (cb_tree subject_list, cb_tree case_list);
 
 extern void		cb_emit_goto (cb_tree target, cb_tree depending);
+extern void		cb_emit_java_continue ();
+extern void		cb_emit_java_break ();
 extern void		cb_emit_exit (size_t goback);
 
 extern void		cb_emit_if (cb_tree cond, cb_tree stmt1, cb_tree stmt2);
@@ -1588,5 +1591,8 @@ extern void		cb_add_78 (struct cb_field *f);
 extern void		cb_reset_78 (void);
 extern struct cb_field	*check_level_78 (const char *name);
 extern void		cb_unget_token (int tok, YYSTYPE lval);
+
+/* typeck.c */
+extern void * make_tree (int tag, enum cb_category category, size_t size);
 
 #endif /* CB_TREE_H */

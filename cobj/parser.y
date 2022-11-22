@@ -4977,8 +4977,7 @@ exit_body:
 			p->exit_label = cb_build_reference (name);
 			CB_LABEL (cb_build_label (p->exit_label, current_section))->need_begin = 1;
 		}
-		//cb_emit_goto (cb_list_init (p->exit_label), NULL);
-		cb_emit_java_break (cb_list_init (p->cycle_label), NULL);
+		cb_emit_java_break ();
 	}
   }
 | PERFORM CYCLE
@@ -4995,8 +4994,7 @@ exit_body:
 			p->cycle_label = cb_build_reference (name);
 			CB_LABEL (cb_build_label (p->cycle_label, current_section))->need_begin = 1;
 		}
-		//cb_emit_goto (cb_list_init (p->cycle_label), NULL);
-		cb_emit_java_continue (cb_list_init (p->cycle_label), NULL);
+		cb_emit_java_continue ();
 	}
   }
 | SECTION

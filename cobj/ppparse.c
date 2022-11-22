@@ -1866,7 +1866,7 @@ yyerrlab:
                 yymsgp = yymsg;
               }
           }
-        yyerror (yymsgp);
+        yyerror ("%s", yymsgp);
         if (yysyntax_error_status == 2)
           goto yyexhaustedlab;
       }

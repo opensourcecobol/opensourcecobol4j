@@ -69,14 +69,24 @@ public class CobolNumericPackedField extends AbstractCobolField {
 	 */
 	@Override
 	public String getString() {
-		//TODO SIGN LEADINGおよびSIGN SEPARATEに対応する
 		StringBuilder sb = new StringBuilder();
-		int counter = this.getAttribute().getDigits() - this.getAttribute().getScale();
-		for(int i=0; i<this.getAttribute().getDigits(); ++i, --counter) {
+		int digits = this.getAttribute().getDigits();
+		int scale = this.getAttribute().getScale();
+		int counter = digits - scale;
+		int len;
+		if(scale < 0) {
+			len = digits + scale;
+		} else {
+			len = digits;
+		}
+		for(int i=0; i<len; ++i, --counter) {
 			if(counter == 0) {
 				sb.append('.');
 			}
 			sb.append((char)(this.getDigit(i) + 0x30));
+		}
+		for(int i=0; i<-scale; ++i) {
+			sb.append('0');
 		}
 
 		if(this.getAttribute().isFlagHaveSign()) {
@@ -153,6 +163,12 @@ public class CobolNumericPackedField extends AbstractCobolField {
 		CobolDataStorage data2 = this.getDataStorage();
 		int digits2 = this.getAttribute().getDigits();
 		int scale2 = this.getAttribute().getScale();
+		int packedRealDigits;
+		if(scale2 < 0) {
+			packedRealDigits = digits2 + scale2;
+		} else {
+			packedRealDigits = digits2;
+		}
 
 		/* null check */
 		boolean flagNull = true;
@@ -169,19 +185,30 @@ public class CobolNumericPackedField extends AbstractCobolField {
 		/* pack string */
 		this.getDataStorage().fillBytes((byte) 0, this.getSize());
 		int offset = 1 - (digits2 % 2);
-		int p = (digits1 - scale1) - (digits2 - scale2);
-		for(int i=offset; i < digits2 + offset; ++i, ++p) {
+		int p;
+		if(scale2 < 0) {
+			p = (digits1 - scale1) - digits2;
+		} else {
+			p = (digits1 - scale1) - (digits2 - scale2);
+		}
+
+		boolean isZero = true;
+		for(int i=offset; i < offset + packedRealDigits; ++i, ++p) {
 			byte n;
-			if(data1FirstIndex + p >= field.getSize()) {
+			int index1 = data1FirstIndex + p;
+			if(index1 >= field.getSize() || index1 < data1FirstIndex) {
 				n = 0;
 			} else {
-				byte ch = data1.getByte(data1FirstIndex + p);
+				byte ch = data1.getByte(index1);
 				if(ch == (byte)0x20) {
 					n = 0;
+				} else if(ch >= 0x70){
+					n = (byte)(ch - 0x70);
 				} else {
-					n = (data1FirstIndex <= p && p < data1FirstIndex + digits1) ? (byte)(ch - 0x30) : 0;
+					n = (byte)(ch - 0x30);
 				}
 			}
+			isZero &= n == 0;
 			if(i % 2 == 0) {
 				data2.setByte(i / 2, (byte) (n << 4));
 			} else {
@@ -194,7 +221,7 @@ public class CobolNumericPackedField extends AbstractCobolField {
 		byte value = this.getDataStorage().getByte(p);
 		if((this.getAttribute().getFlags() & CobolFieldAttribute.COB_FLAG_HAVE_SIGN) == 0) {
 			this.getDataStorage().setByte(p, (byte) ((value & 0xf0) | 0x0f));
-		} else if(sign < 0) {
+		} else if(sign < 0 && !isZero) {
 			this.getDataStorage().setByte(p, (byte) ((value & 0xf0) | 0x0d));
 		} else {
 			this.getDataStorage().setByte(p, (byte) ((value & 0xf0) | 0x0c));

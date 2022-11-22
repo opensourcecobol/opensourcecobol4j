@@ -114,7 +114,7 @@ int	cb_display_sign = COB_DISPLAY_SIGN_ASCII;	/* 0 */
 #define	COB_EXCEPTION(code,tag,name,critical) {name, 0x##code, 0},
 struct cb_exception cb_exception_table[] = {
 	{NULL, 0, 0},		/* CB_EC_ZERO */
-#include <libcob/exception.def>
+#include <exception.def>
 	{NULL, 0, 0}		/* CB_EC_MAX */
 };
 #undef	COB_EXCEPTION
@@ -284,7 +284,7 @@ static cob_sighandler_t		intsig = NULL;
 static cob_sighandler_t		qutsig = NULL;
 #endif
 
-static const char short_options[] = "hVvECScbmxOgwo:t:I:L:l:D:";
+static const char short_options[] = "hVvECbmxgwo:t:I:L:l:D:";
 
 static const struct option long_options[] = {
 	{"help", no_argument, NULL, 'h'},
@@ -305,9 +305,6 @@ static const struct option long_options[] = {
 	{"fixed", no_argument, &cb_source_format, CB_FORMAT_FIXED},
 	{"static", no_argument, &cb_flag_static_call, 1},
 	{"dynamic", no_argument, &cb_flag_static_call, 0},
-	{"O2", no_argument, NULL, '2'},
-	{"Os", no_argument, NULL, 's'},
-	{"Q", required_argument, NULL, 'Q'},
 	{"B", required_argument, NULL, 'B'},
 	{"MT", required_argument, NULL, '%'},
 	{"MF", required_argument, NULL, '@'},
@@ -332,7 +329,7 @@ static const struct option long_options[] = {
 };
 
 static const char	*cob_cc;				/* gcc */
-static char		cob_cflags[COB_SMALL_BUFF];		/* -I... */
+static char		cob_java_flags[COB_SMALL_BUFF];		/* -I... */
 static char		cob_libs[COB_MEDIUM_BUFF];		/* -L... -lcob */
 static char		cob_define_flags[COB_SMALL_BUFF];	/* -D... */
 static char		cob_ldflags[COB_SMALL_BUFF];
@@ -839,8 +836,29 @@ cobc_print_usage (void)
 	puts (_("Options:"));
 	puts (_("  --help                Display this message"));
 	puts (_("  --version, -V         Display compiler version"));
+	puts (_("  -m                    Create jar files instead of class files (an experimental feature)"));
+	puts (_("  -free                 Use free source format"));
+	puts (_("  -free_1col_aster      Use free(1col_aster) source format"));
+	puts (_("  -g                    Enable Java compiler debug"));
+	puts (_("  -E                    Preprocess only; do not compile or link"));
+	puts (_("  -C                    Translation only; convert COBOL to Java"));
+	puts (_("  -t <file>             Generate and place a program listing into <file>"));
 	puts (_("  -I <directory>        Add <directory> to copy files search path"));
+	puts (_("  -B <options>          Add <options> to the Java compiler"));
+	puts (_("  --list-reserved       Display reserved words"));
 	puts (_("  -assign_external      Set the file assign to external"));
+	putchar ('\n');
+
+#undef	CB_WARNDEF
+#define	CB_WARNDEF(var,name,wall,doc)		\
+	printf ("  -W%-19s %s", name, gettext (doc)); \
+	if (!wall) { \
+		puts (_(" (NOT set with -Wall)")); \
+	} else { \
+		printf ("\n"); \
+	}
+#include "warning-help.def"
+#undef	CB_WARNDEF
 	putchar ('\n');
 
 #undef	CB_FLAG
@@ -934,24 +952,6 @@ process_command_line (const int argc, char *argv[])
 			cb_compile_level = CB_LEVEL_TRANSLATE;
 			break;
 
-		case 'S':
-			/* -S : Generate assembler code */
-			if (wants_nonfinal) {
-				cobc_options_error ();
-			}
-			wants_nonfinal = 1;
-			cb_compile_level = CB_LEVEL_COMPILE;
-			break;
-
-		case 'c':
-			/* -c : Generate C object code */
-			if (wants_nonfinal) {
-				cobc_options_error ();
-			}
-			wants_nonfinal = 1;
-			cb_compile_level = CB_LEVEL_ASSEMBLE;
-			break;
-
 		case 'b':
 			/* -b : Generate combined library module */
 			if (cb_flag_main || cb_flag_module) {
@@ -989,41 +989,13 @@ process_command_line (const int argc, char *argv[])
 			output_name = strdup (optarg);
 			break;
 
-		case 'O':
-			/* -O : Optimize */
-			strcat (cob_cflags, CB_COPT_1);
-			strcat (cob_cflags, fcopts);
-			strcat (cob_cflags, COB_EXTRA_FLAGS);
-			optimize_flag = 1;
-			break;
-
-		case '2':
-			/* -O2 : Optimize */
-			strip_output = 1;
-			strcat (cob_cflags, CB_COPT_2);
-			strcat (cob_cflags, fcopts);
-			strcat (cob_cflags, COB_EXTRA_FLAGS);
-			optimize_flag = 2;
-			break;
-
-		case 's':
-			/* -Os : Optimize */
-			strip_output = 1;
-			strcat (cob_cflags, CB_COPT_S);
-			strcat (cob_cflags, fcopts);
-			strcat (cob_cflags, COB_EXTRA_FLAGS);
-			optimize_flag = 2;
-			break;
-
 		case 'g':
 			/* -g : Generate C debug code */
 			save_csrc = 1;
 			gflag_set = 1;
 			cb_flag_stack_check = 1;
 			cb_flag_source_location = 1;
-#ifndef _MSC_VER
-			strcat (cob_cflags, " -g");
-#endif
+			strcat (cob_java_flags, " -g");
 			break;
 
 		case '$':
@@ -1150,8 +1122,8 @@ process_command_line (const int argc, char *argv[])
 
 		case 'B':
 			/* -B <xx> : Add options to C compile phase */
-			strcat (cob_cflags, " ");
-			strcat (cob_cflags, optarg);
+			strcat (cob_java_flags, " ");
+			strcat (cob_java_flags, optarg);
 			break;
 
 		case 'Q':
@@ -1231,11 +1203,6 @@ process_command_line (const int argc, char *argv[])
 	if (cb_flag_source_location) {
 		optimize_flag = 0;
 	}
-#if defined (__GNUC__) && (__GNUC__ >= 3)
-	if (strip_output) {
-		strcat (cob_cflags, " -fomit-frame-pointer");
-	}
-#endif
 
 	/* default extension list */
 	cb_extension_list = cb_text_list_add (cb_extension_list, ".CPY");
@@ -1727,53 +1694,12 @@ process_translate (struct filename *fn)
 			 fn->preprocess, fn->translate, fn->source);
 	}
 
-	/* open the output file */
-	yyout = fopen (fn->translate, "w");
-	if (!yyout) {
-		cobc_terminate (fn->translate);
-	}
-
-	/* open the common storage file */
-	cb_storage_file_name = fn->trstorage;
-	cb_storage_file = fopen (cb_storage_file_name, "w");
-	if (!cb_storage_file) {
-		cobc_terminate (cb_storage_file_name);
-	}
-
-	p = program_list_reverse (current_program);
-
-	/* set up local storage files */
-	ret = 1;
-	for (q = p; q; q = q->next_program, ret++) {
-		lf = cobc_malloc (sizeof(struct local_filename));
-		lf->local_name = cobc_malloc (strlen (fn->translate) + 9);
-		if (q == p && !q->next_program) {
-			sprintf (lf->local_name, "%s.l.h", fn->translate);
-		} else {
-			sprintf (lf->local_name, "%s.l%d.h", fn->translate, ret);
-		}
-		lf->local_fp = fopen (lf->local_name, "w");
-		if (!lf->local_fp) {
-			cobc_terminate (lf->local_name);
-		}
-		q->local_storage_file = lf->local_fp;
-		q->local_storage_name = lf->local_name;
-		lf->next = fn->localfile;
-		fn->localfile = lf;
-	}
-
-	/* translate to C */
+	/* translate to Java */
     for(int i=0; i<PROGRAM_ID_LIST_MAX_LEN; ++i) {
         program_id_list[i] = NULL;
     }
 	codegen (p, 0, program_id_list);
 
-	/* close the files */
-	fclose (cb_storage_file);
-	fclose (yyout);
-	for (q = p; q; q = q->next_program) {
-		fclose (q->local_storage_file);
-	}
 	return 0;
 }
 
@@ -1782,8 +1708,7 @@ process_compile (struct filename *fn)
 {
 	char buff[COB_MEDIUM_BUFF];
 	char name[COB_MEDIUM_BUFF];
-    int i;
-    int ret, tmpret;
+	int ret = 0;
 
 	if (output_name) {
 		strcpy (name, output_name);
@@ -1796,21 +1721,13 @@ process_compile (struct filename *fn)
 		strcat (name, ".s");
 #endif
 	}
-#ifdef _MSC_VER
-	sprintf (buff, gflag_set ?
-		"%s /c %s %s /Od /MDd /Zi /FR /c /Fa\"%s\" /Fo\"%s\" %s" :
-		"%s /c %s %s /MD /c /Fa\"%s\" /Fo\"%s\" %s",
-			cob_cc, cob_cflags, cob_define_flags, name,
-			name, fn->translate);
-#else
-	sprintf (buff, "%s %s -S -o \"%s\" %s %s %s", cob_cc, gccpipe, name,
-			cob_cflags, cob_define_flags, fn->translate);
-#endif
 
-    for(char** program_id = program_id_list; *program_id; ++program_id) {
-        sprintf(buff, "javac -encoding UTF8 %s.java", *program_id);
-        ret = process (buff);
-    }
+	for(char** program_id = program_id_list; *program_id; ++program_id) {
+		sprintf(buff, "javac %s -encoding SJIS %s.java",
+			cob_java_flags,
+			*program_id);
+		ret = process (buff);
+	}
 	return ret;
 }
 
@@ -1825,17 +1742,17 @@ process_assemble (struct filename *fn)
 	sprintf (buff, gflag_set ?
 		"%s /c %s %s /Od /MDd /Zi /FR /Fo\"%s\" \"%s\"" :
 		"%s /c %s %s /MD /Fo\"%s\" \"%s\"",
-			cob_cc, cob_cflags, cob_define_flags,
+			cob_cc, cob_java_flags, cob_define_flags,
 			fn->object, fn->translate);
 #else
 	if (cb_compile_level == CB_LEVEL_MODULE ||
 	    cb_compile_level == CB_LEVEL_LIBRARY) {
 		sprintf (buff, "%s %s -c %s %s %s -o \"%s\" \"%s\"",
-			 cob_cc, gccpipe, cob_cflags, cob_define_flags,
+			 cob_cc, gccpipe, cob_java_flags, cob_define_flags,
 			 COB_PIC_FLAGS, fn->object, fn->translate);
 	} else {
 		sprintf (buff, "%s %s -c %s %s -o \"%s\" \"%s\"",
-			 cob_cc, gccpipe, cob_cflags, cob_define_flags,
+			 cob_cc, gccpipe, cob_java_flags, cob_define_flags,
 			 fn->object, fn->translate);
 	}
 #endif
@@ -1843,20 +1760,15 @@ process_assemble (struct filename *fn)
 }
 
 static int
-process_module_direct (struct filename *fn)
+process_build_module (struct filename *fn)
 {
 	int	ret;
 	char	buff[COB_MEDIUM_BUFF];
 	char	name[COB_MEDIUM_BUFF];
 
-    struct stat st;
-    char sub_file[COB_MEDIUM_BUFF];
-    int i;
-    int status_code;
-
 	char	basename[COB_MEDIUM_BUFF];
 	file_basename(fn->source, basename);
-    struct cb_program* p;
+    	struct cb_program* p;
 
 	if (output_name) {
 		strcpy (name, output_name);
@@ -1875,60 +1787,20 @@ process_module_direct (struct filename *fn)
 		strcat (name, COB_MODULE_EXT);
 #endif
 	}
-
-
-#ifdef _MSC_VER
-	sprintf (buff, gflag_set ?
-		"%s %s %s /Od /MDd /LDd /Zi /FR /Fe\"%s\" /Fo\"%s\" %s \"%s\" %s %s" :
-		"%s %s %s /MD /LD /Fe\"%s\" /Fo\"%s\" %s \"%s\" %s %s",
-		cob_cc, cob_cflags, cob_define_flags, name, name,
-		cob_ldflags, fn->translate, cob_libs, manilink);
-	ret = process (buff);
-#if _MSC_VER >= 1400
-	/* Embedding manifest */
-	if (ret == 0) {
-		sprintf (buff,
-			 "%s /manifest \"%s.dll.manifest\" /outputresource:\"%s.dll\";#2",
-			 manicmd, name, name);
+	
+	for(p = current_program; p; p = p->next_program) {
+		sprintf (buff, "jar cf %s.jar ./", p->program_id);
 		ret = process (buff);
-		sprintf (buff, "%s.dll.manifest", name);
-		cobc_check_action (buff);
-	}
-#endif
-	sprintf (buff, "%s.exp", name);
-	cobc_check_action (buff);
-	sprintf (buff, "%s.lib", name);
-	cobc_check_action (buff);
-#else	/* _MSC_VER */
-	//sprintf (buff, "%s %s %s %s %s %s %s %s -o %s %s %s",
-	//	 cob_cc, gccpipe, cob_cflags, cob_define_flags, COB_SHARED_OPT,
-	//	 cob_ldflags, COB_PIC_FLAGS, COB_EXPORT_DYN, name,
-	//	 fn->translate, cob_libs);
+		if(ret) {
+			return ret;
+		}
 
-    for(p = current_program; p; p = p->next_program) {
-	    sprintf (buff, "javac -g -encoding UTF8 %s.java", p->program_id);
-	    ret = process (buff);
-    }
-
-    //同一ソースコード内の複数のプログラムが一括でコンパイルされるように修正する.
-    /*for(i = 1; ;++i) {
-        //check if the sub file exists.
-        sprintf(sub_file, "%s__%d.java", basename, i);
-        status_code = stat(sub_file, &st);
-        if(status_code != 0 || (st.st_mode & S_IFMT) != S_IFREG) {
-            break;
-        }
-
-	    sprintf (buff, "javac -g -encoding UTF-8 %s", sub_file);
-    }*/
-
-#ifdef	COB_STRIP_CMD
-	if (strip_output && ret == 0) {
-		sprintf (buff, "%s \"%s\"", COB_STRIP_CMD, name);
+		sprintf (buff, "rm %s*.class", p->program_id);
 		ret = process (buff);
+		if(ret) {
+			return ret;
+		}
 	}
-#endif
-#endif	/* _MSC_VER */
 	return ret;
 }
 
@@ -2272,7 +2144,7 @@ main (int argc, char *argv[])
 		cob_config_dir = COB_CONFIG_DIR;
 	}
 
-	cobc_init_var (cob_cflags, "COB_CFLAGS", COB_CFLAGS);
+	cobc_init_var (cob_java_flags, "COB_JAVA_FLAGS", "");
 
 	cobc_init_var (cob_ldflags, "COB_LDFLAGS", COB_LDFLAGS);
 
@@ -2295,17 +2167,6 @@ main (int argc, char *argv[])
 		alt_ebcdic = 1;
 	}
 
-	/* Compiler special options */
-
-#if	defined(__INTEL_COMPILER)
-	strcat (cob_cflags, " -vec-report0 -opt-report 0");
-#elif	defined(__GNUC__)
-	strcat (cob_cflags, " -Wno-unused -fsigned-char");
-#ifdef	HAVE_PSIGN_OPT
-	strcat (cob_cflags, " -Wno-pointer-sign");
-#endif
-#endif
-
 	/* Process command line arguments */
 	iargs = process_command_line (argc, argv);
 
@@ -2326,9 +2187,6 @@ main (int argc, char *argv[])
 
 	/* Windows stuff reliant upon verbose option */
 #ifdef	_MSC_VER
-	if (!verbose_output) {
-		strcat (cob_cflags, " /nologo");
-	}
 #if	_MSC_VER >= 1400
 	if (!verbose_output) {
 		manicmd = "mt /nologo";
@@ -2373,8 +2231,7 @@ main (int argc, char *argv[])
 			} else if (cb_flag_library) {
 				cb_compile_level = CB_LEVEL_LIBRARY;
 			} else if (cb_compile_level == 0) {
-				cb_compile_level = CB_LEVEL_MODULE;
-				cb_flag_module = 1;
+				cb_compile_level = CB_LEVEL_COMPILE;
 			}
 		}
 		if (wants_nonfinal && cb_compile_level != CB_LEVEL_PREPROCESS &&
@@ -2454,28 +2311,15 @@ main (int argc, char *argv[])
 		}
 
 		/* Build module */
-		//if (cb_compile_level == CB_LEVEL_MODULE && fn->need_assemble) {
-		//	if (process_module_direct (fn) != 0) {
-		//		cobc_clean_up (status);
-		//		return status;
-		//	}
-		//} else {
-		//	/* Assemble */
-		//	if (cb_compile_level >= CB_LEVEL_ASSEMBLE && fn->need_assemble) {
-		//		if (process_assemble (fn) != 0) {
-		//			cobc_clean_up (status);
-		//			return status;
-		//		}
-		//	}
-
-		//	/* Build module */
-		//	if (cb_compile_level == CB_LEVEL_MODULE) {
-		//		if (process_module (fn) != 0) {
-		//			cobc_clean_up (status);
-		//			return status;
-		//		}
-		//	}
-		//}
+		if (cb_compile_level == CB_LEVEL_MODULE) {
+			if (process_build_module (fn) != 0) {
+				cobc_clean_up (status);
+				return status;
+			}
+		/* Build executable */
+		} else if(cb_compile_level == CB_LEVEL_EXECUTABLE) {
+			fprintf(stderr, "Building executable files is not supported");
+		}
 	}
 
 	if (!cb_flag_syntax_only) {

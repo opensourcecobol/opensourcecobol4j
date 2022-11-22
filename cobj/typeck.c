@@ -94,7 +94,7 @@ static char		expr_prio[256];
 static const struct system_table	system_tab[] = {
 #undef	COB_SYSTEM_GEN
 #define	COB_SYSTEM_GEN(x, y, z)	{ x, y },
-#include "libcob/system.def"
+#include <system.def>
 	{ NULL, 0 }
 };
 
@@ -204,111 +204,6 @@ static const char	*const bin_sub_funcs[] = {
 	"subS48Binary",
 	"subS56Binary",
 	"subS64Binary",
-	"subU8Binary",
-	"subSwpU16Binary",
-	"subSwpU24Binary",
-	"subSwpU32Binary",
-	"subSwpU40Binary",
-	"subSwpU48Binary",
-	"subSwpU56Binary",
-	"subSwpU64Binary",
-	"subS8Binary",
-	"subSwpS16Binary",
-	"subSwpS24Binary",
-	"subSwpS32Binary",
-	"subSwpS40Binary",
-	"subSwpS48Binary",
-	"subSwpS56Binary",
-	"subSwpS64Binary"
-};
-
-static const char	*const align_bin_compare_funcs[] = {
-	"cmpU8Binary",
-	"cmpAlignU16Binary",
-	"cmpU24Binary",
-	"cmpAlignU32Binary",
-	"cmpU40Binary",
-	"cmpU48Binary",
-	"cmpU56Binary",
-	"cmpAlignU64Binary",
-	"cmpS8Binary",
-	"cmpAlignS16Binary",
-	"cmpS24Binary",
-	"cmpAlignS32Binary",
-	"cmpS40Binary",
-	"cmpS48Binary",
-	"cmpS56Binary",
-	"cmpAlignS64Binary",
-	"cmpU8Binary",
-	"cmpSwpAlignU16Binary",
-	"cmpSwpU24Binary",
-	"cmpSwpAlignU32Binary",
-	"cmpSwpU40Binary",
-	"cmpSwpU48Binary",
-	"cmpSwpU56Binary",
-	"cmpSwpAlignU64Binary",
-	"cmpS8Binary",
-	"cmpSwpAlignS16Binary",
-	"cmpSwpS24Binary",
-	"cmpSwpAlignS32Binary",
-	"cmpSwpS40Binary",
-	"cmpSwpS48Binary",
-	"cmpSwpS56Binary",
-	"cmpSwpAlignS64Binary"
-};
-
-static const char	*const align_bin_add_funcs[] = {
-	"addU8Binary",
-	"addAlignU16Binary",
-	"addU24Binary",
-	"addAlignU32Binary",
-	"addU40Binary",
-	"addU48Binary",
-	"addU56Binary",
-	"addAlignU64Binary",
-	"addS8Binary",
-	"addAlignS16Binary",
-	"addS24Binary",
-	"addAlignS32Binary",
-	"addS40Binary",
-	"addS48Binary",
-	"addS56Binary",
-	"addAlignS64Binary",
-	"addU8Binary",
-	"addSwpU16Binary",
-	"addSwpU24Binary",
-	"addSwpU32Binary",
-	"addSwpU40Binary",
-	"addSwpU48Binary",
-	"addSwpU56Binary",
-	"addSwpU64Binary",
-	"addS8Binary",
-	"addSwpS16Binary",
-	"addSwpS24Binary",
-	"addSwpS32Binary",
-	"addSwpS40Binary",
-	"addSwpS48Binary",
-	"addSwpS56Binary",
-	"addSwpS64Binary"
-};
-
-static const char	*const align_bin_sub_funcs[] = {
-	"subU8Binary",
-	"subAlignU16Binary",
-	"subU24Binary",
-	"subAlignU32Binary",
-	"subU40Binary",
-	"subU48Binary",
-	"subU56Binary",
-	"subAlignU64Binary",
-	"subS8Binary",
-	"subAlignS16Binary",
-	"subS24Binary",
-	"subAlignS32Binary",
-	"subS40Binary",
-	"subS48Binary",
-	"subS56Binary",
-	"subAlignS64Binary",
 	"subU8Binary",
 	"subSwpU16Binary",
 	"subSwpU24Binary",
@@ -4178,46 +4073,17 @@ cb_emit_goto (cb_tree target, cb_tree depending)
 
 
 void
-cb_emit_java_continue (cb_tree target, cb_tree depending)
+cb_emit_java_continue ()
 {
-	if (target == cb_error_node) {
-		return;
-	}
-	if (depending) {
-		/* GO TO procedure-name ... DEPENDING ON identifier */
-		cb_emit (cb_build_java_continue (target, depending));
-	} else {
-		/* GO TO procedure-name */
-		if (target == NULL) {
-			cb_verify (cb_goto_statement_without_name, "GO TO without procedure-name");
-		} else if (CB_CHAIN (target)) {
-			cb_error (_("GO TO with multiple procedure-names"));
-		} else {
-			cb_emit (cb_build_java_continue (CB_VALUE (target), NULL));
-		}
-	}
+	cb_emit(make_tree (CB_TAG_JAVA_CONTINUE, CB_CATEGORY_UNKNOWN, sizeof (struct cb_tree_common)));
 }
 
 
 void
-cb_emit_java_break (cb_tree target, cb_tree depending)
+cb_emit_java_break ()
 {
-	if (target == cb_error_node) {
-		return;
-	}
-	if (depending) {
-		/* GO TO procedure-name ... DEPENDING ON identifier */
-		cb_emit (cb_build_java_break (target, depending));
-	} else {
-		/* GO TO procedure-name */
-		if (target == NULL) {
-			cb_verify (cb_goto_statement_without_name, "GO TO without procedure-name");
-		} else if (CB_CHAIN (target)) {
-			cb_error (_("GO TO with multiple procedure-names"));
-		} else {
-			cb_emit (cb_build_java_break (CB_VALUE (target), NULL));
-		}
-	}
+
+	cb_emit(make_tree (CB_TAG_JAVA_BREAK, CB_CATEGORY_UNKNOWN, sizeof (struct cb_tree_common)));
 }
 
 void

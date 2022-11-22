@@ -1,0 +1,16 @@
+AT_SETUP([-C])
+
+AT_DATA([prog.cbl], [
+       IDENTIFICATION              DIVISION.
+       PROGRAM-ID.                 prog.
+       DATA                        DIVISION.
+       WORKING-STORAGE             SECTION.
+       PROCEDURE                   DIVISION.
+           DISPLAY "HELLO".
+])
+
+AT_CHECK([${COBJ} -C prog.cbl])
+AT_CHECK([test -e prog.java], [0])
+AT_CHECK([test "$(ls *.class *.jar 2> /dev/null)" = "" ], [0])
+
+AT_CLEANUP

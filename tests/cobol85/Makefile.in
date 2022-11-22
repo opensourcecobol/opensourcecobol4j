@@ -92,11 +92,9 @@ ACLOCAL_M4 = $(top_srcdir)/aclocal.m4
 am__aclocal_m4_deps = $(top_srcdir)/m4/codeset.m4 \
 	$(top_srcdir)/m4/gettext.m4 $(top_srcdir)/m4/iconv.m4 \
 	$(top_srcdir)/m4/lib-ld.m4 $(top_srcdir)/m4/lib-link.m4 \
-	$(top_srcdir)/m4/lib-prefix.m4 $(top_srcdir)/m4/libtool.m4 \
-	$(top_srcdir)/m4/ltoptions.m4 $(top_srcdir)/m4/ltsugar.m4 \
-	$(top_srcdir)/m4/ltversion.m4 $(top_srcdir)/m4/lt~obsolete.m4 \
-	$(top_srcdir)/m4/nls.m4 $(top_srcdir)/m4/po.m4 \
-	$(top_srcdir)/m4/progtest.m4 $(top_srcdir)/configure.ac
+	$(top_srcdir)/m4/lib-prefix.m4 $(top_srcdir)/m4/nls.m4 \
+	$(top_srcdir)/m4/po.m4 $(top_srcdir)/m4/progtest.m4 \
+	$(top_srcdir)/configure.ac
 am__configure_deps = $(am__aclocal_m4_deps) $(CONFIGURE_DEPENDENCIES) \
 	$(ACLOCAL_M4)
 DIST_COMMON = $(srcdir)/Makefile.am $(am__DIST_COMMON)
@@ -492,6 +490,8 @@ test: $(MODULES)
 	@for MODULE in $(MODULES); do\
   		(cat $$MODULE/report.txt) \
 	done
+	cat summary.log
+	head -n -2 summary.log | tail -n +4 | awk '$$4 != 0 || $$5 != 0 {exit 1}'
 
 save:
 	@for m in $(MODULES); do \
@@ -517,7 +517,6 @@ $(MODULES): newcob.val build/EXEC85.class $(srcdir)/EXEC85.conf.in
 	@rm -f newcob.tmp newcob.log EXEC85.conf
 	@echo "test:"               > $@/Makefile
 	@echo "	. ../../atconfig; . ../../atlocal; export PATH; perl $(COB85DIR)/report.pl" >> $@/Makefile
-	@echo "	diff $(COB85DIR)/$@.txt report.txt" >> $@/Makefile
 	@echo "done"
 
 build/EXEC85.class: newcob.val

@@ -1,0 +1,16 @@
+AT_SETUP([-E])
+
+AT_DATA([prog.cbl], [
+       IDENTIFICATION              DIVISION.
+       PROGRAM-ID.                 prog.
+       DATA                        DIVISION.
+       WORKING-STORAGE             SECTION.
+       PROCEDURE                   DIVISION.
+           DISPLAY "HELLO".
+])
+
+AT_CHECK([${COBJ} -E prog.cbl | grep -i 'PROGRAM-ID. prog.' > /dev/null], [0])
+AT_CHECK([ls *.java 2> /dev/null], [2])
+AT_CHECK([ls *.class 2> /dev/null], [2])
+
+AT_CLEANUP

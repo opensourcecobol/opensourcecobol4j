@@ -200,7 +200,7 @@ increase_character_length (int *character_length, int increase)
  * Tree
  */
 
-static void *
+extern void *
 make_tree (int tag, enum cb_category category, size_t size)
 {
 	cb_tree x;

@@ -1,4 +1,4 @@
-name: NIST COBOL85 tests
+name: test
 on:
   push:
   pull_request:

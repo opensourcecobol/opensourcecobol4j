@@ -1,0 +1,17 @@
+AT_SETUP([FUNCTION CURRENT DATE])
+
+AT_DATA([prog.cbl], [
+       IDENTIFICATION              DIVISION.
+       PROGRAM-ID.                 prog.
+       DATA                        DIVISION.
+       WORKING-STORAGE             SECTION.
+       PROCEDURE                   DIVISION.
+         DISPLAY FUNCTION CURRENT-DATE.
+])
+
+AT_CHECK([cobj prog.cbl])
+AT_CHECK([java prog | cut -b 1-8 > out1.txt])
+AT_CHECK([date +%Y%m%d > out2.txt])
+AT_CHECK([diff out1.txt out2.txt], [0])
+
+AT_CLEANUP

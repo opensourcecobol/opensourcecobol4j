@@ -1,5 +1,35 @@
 NEWS - user visible changes				-*- outline -*-
 
+* opensource cobol 4j 1.0.5
+
+** New Features
+    (1)  -m option and cobjrun command (an experimental feature)
+    (2)  -g option
+    (3)  -E option
+    (4)  -B option
+    (5)  --list-reserved option
+    (6)  -fsyntax-only option
+    (7)  -Wunreachable option
+    (8)  -t option
+    (9)  -C option
+    (10) -free and -free_1col_aster options
+
+** Bug fixes
+
+    (1) Fix exit perform and perform cycle
+    (2) Fix comparing NATIONAL characters
+    (3) Fix "FUNCTION CURRENT-DATE"
+    (4) Fix the bug of "IS NUMERIC" for COMP-3 data
+    (5) Fix comparing HIGH-VALUE and PIC X(n) data
+    (6) Fix moving sign-leading-separate to COMP3
+
+** Miscellaneous
+
+    (1) Remove libcob/ directory
+    (2) Resolve some warnings displayed when executing make command
+
+-----------------------------------------------------------------------
+
 * opensource cobol 4j 1.0.4
 
 ** New Features

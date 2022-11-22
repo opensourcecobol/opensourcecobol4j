@@ -1,0 +1,83 @@
+AT_SETUP([COMP3 IS NUMERIC])
+
+AT_DATA([prog.cbl], [
+       IDENTIFICATION              DIVISION.
+       PROGRAM-ID.                 prog.
+       DATA                        DIVISION.
+       WORKING-STORAGE             SECTION.
+       01 packed-var-01 PIC 9(5) COMP-3 value 0.
+       01 packed-var-02 PIC 9(5) COMP-3 value 1.
+       01 packed-var-03 PIC 9(5) COMP-3 value 10.
+       01 packed-var-04 PIC 9(5) COMP-3 value 11.
+       01 packed-var-05 PIC 9(5) COMP-3 value 10000.
+       01 packed-var-06 PIC 9(5) COMP-3 value 99999.
+       01 packed-var-07 PIC S9(5) COMP-3 value 0.
+       01 packed-var-08 PIC S9(5) COMP-3 value 1.
+       01 packed-var-09 PIC S9(5) COMP-3 value 10.
+       01 packed-var-10 PIC S9(5) COMP-3 value 11.
+       01 packed-var-11 PIC S9(5) COMP-3 value 10000.
+       01 packed-var-12 PIC S9(5) COMP-3 value 99999.
+       01 packed-var-13 PIC S9(5) COMP-3 value -1.
+       01 packed-var-14 PIC S9(5) COMP-3 value -10.
+       01 packed-var-15 PIC S9(5) COMP-3 value -11.
+       01 packed-var-16 PIC S9(5) COMP-3 value -10000.
+       01 packed-var-17 PIC S9(5) COMP-3 value -99999.
+       PROCEDURE                   DIVISION.
+       MAIN-RTN.
+         if packed-var-01 is not numeric then
+           display "packed-var-01 is not numeric"
+         end-if.
+         if packed-var-02 is not numeric then
+           display "packed-var-02 is not numeric"
+         end-if.
+         if packed-var-03 is not numeric then
+           display "packed-var-03 is not numeric"
+         end-if.
+         if packed-var-04 is not numeric then
+           display "packed-var-04 is not numeric"
+         end-if.
+         if packed-var-05 is not numeric then
+           display "packed-var-05 is not numeric"
+         end-if.
+         if packed-var-06 is not numeric then
+           display "packed-var-06 is not numeric"
+         end-if.
+         if packed-var-07 is not numeric then
+           display "packed-var-07 is not numeric"
+         end-if.
+         if packed-var-08 is not numeric then
+           display "packed-var-08 is not numeric"
+         end-if.
+         if packed-var-09 is not numeric then
+           display "packed-var-09 is not numeric"
+         end-if.
+         if packed-var-10 is not numeric then
+           display "packed-var-10 is not numeric"
+         end-if.
+         if packed-var-11 is not numeric then
+           display "packed-var-11 is not numeric"
+         end-if.
+         if packed-var-12 is not numeric then
+           display "packed-var-12 is not numeric"
+         end-if.
+         if packed-var-13 is not numeric then
+           display "packed-var-13 is not numeric"
+         end-if.
+         if packed-var-14 is not numeric then
+           display "packed-var-14 is not numeric"
+         end-if.
+         if packed-var-15 is not numeric then
+           display "packed-var-15 is not numeric"
+         end-if.
+         if packed-var-16 is not numeric then
+           display "packed-var-16 is not numeric"
+         end-if.
+         if packed-var-17 is not numeric then
+           display "packed-var-17 is not numeric"
+         end-if.
+])
+
+AT_CHECK([cobj prog.cbl])
+AT_CHECK([java prog], [0],[])
+
+AT_CLEANUP

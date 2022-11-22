@@ -234,8 +234,16 @@ public class CobolNumericField extends AbstractCobolField {
 		int sign = field.getSign();
 		int offset = 1 - (field.getAttribute().getDigits() % 2);
 		CobolDataStorage buff = new CobolDataStorage(64);
+		int packedDigits = field.getAttribute().getDigits();
+		int packedScale = field.getAttribute().getScale();
+		int end;
+		if(packedScale < 0) {
+			end = offset + packedDigits + packedScale;
+		} else {
+			end = offset + packedDigits;
+		}
 
-		for(int i=offset; i< field.getAttribute().getDigits() + offset; ++i) {
+		for(int i=offset; i<end; ++i) {
 			if(i % 2 == 0) {
 				buff.setByte(i - offset, (byte) (((field.getDataStorage().getByte(i / 2) >> 4) & 0x0f) + 0x30));
 			} else {

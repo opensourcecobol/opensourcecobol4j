@@ -28,24 +28,37 @@ binary-size: 2-4-8
 binary-byteorder: big-endian
 ])
 
-AT_DATA([dump.c], [
-#include <stdio.h>
-int dump (unsigned char *data);
-int dump (unsigned char *data)
-{
-  int i;
-  for (i = 0; i < 8; i++)
-    printf ("%02x", data[[i]]);
-  puts ("");
-  return 0;
+AT_DATA([dump.java], [
+import jp.osscons.opensourcecobol.libcobj.data.*;
+import jp.osscons.opensourcecobol.libcobj.call.*;
+
+public class dump implements CobolRunnable {
+	@Override
+  	public int run(CobolDataStorage... argStorages) {
+		for(int i=0; i<8; ++i) {
+			System.out.print(String.format("%02x", argStorages@<:@0@:>@.getByte(i)));
+		}
+		System.out.println("");
+  		return 0;
+  	}
+
+  	@Override
+  	public void cancel() {
+		return;
+  	}
+
+  	@Override
+  	public boolean isActive() {
+		return false;
+	}
 }
 ])
 
-AT_CHECK([${CC} ${SHROPT} -o dump.${SHREXT} dump.c])
+AT_CHECK([javac dump.java])
 
 sed -e 's/@USAGE@/BINARY/' ${TEMPLATE}/numeric-dump.cob > prog.cob
 
-AT_CHECK([${COMPILE} -conf=test.conf -o prog prog.cob])
+AT_CHECK([${COMPILE} -conf=test.conf prog.cob])
 AT_CHECK([java prog], [0],
 [0001202020202020
 000c202020202020
@@ -159,7 +172,7 @@ fe4964b459cf0cb2
 
 sed -e 's/@USAGE@/BINARY/' ${TEMPLATE}/numeric-display.cob > prog.cob
 
-AT_CHECK([${COMPILE} -conf=test.conf -o prog prog.cob])
+AT_CHECK([${COMPILE} -conf=test.conf prog.cob])
 AT_CHECK([java prog], [0],
 [1
 12
@@ -216,24 +229,37 @@ binary-size: 2-4-8
 binary-byteorder: native
 ])
 
-AT_DATA([dump.c], [
-#include <stdio.h>
-int dump (unsigned char *data);
-int dump (unsigned char *data)
-{
-  int i;
-  for (i = 0; i < 8; i++)
-    printf ("%02x", data[[i]]);
-  puts ("");
-  return 0;
+AT_DATA([dump.java], [
+import jp.osscons.opensourcecobol.libcobj.data.*;
+import jp.osscons.opensourcecobol.libcobj.call.*;
+
+public class dump implements CobolRunnable {
+	@Override
+  	public int run(CobolDataStorage... argStorages) {
+		for(int i=0; i<8; ++i) {
+			System.out.print(String.format("%02x", argStorages@<:@0@:>@.getByte(i)));
+		}
+		System.out.println("");
+  		return 0;
+  	}
+
+  	@Override
+  	public void cancel() {
+		return;
+  	}
+
+  	@Override
+  	public boolean isActive() {
+		return false;
+	}
 }
 ])
 
-AT_CHECK([${CC} ${SHROPT} -o dump.${SHREXT} dump.c])
+AT_CHECK([javac dump.java])
 
 sed -e 's/@USAGE@/BINARY/' ${TEMPLATE}/numeric-dump.cob > prog.cob
 
-AT_CHECK([${COMPILE} -conf=test.conf -o prog prog.cob])
+AT_CHECK([${COMPILE} -conf=test.conf prog.cob])
 AT_CHECK([java prog], [0],
 [0100202020202020
 0c00202020202020
@@ -347,7 +373,7 @@ b20ccf59b46449fe
 
 sed -e 's/@USAGE@/BINARY/' ${TEMPLATE}/numeric-display.cob > prog.cob
 
-AT_CHECK([${COMPILE} -conf=test.conf -o prog prog.cob])
+AT_CHECK([${COMPILE} -conf=test.conf prog.cob])
 AT_CHECK([java prog], [0],
 [1
 12
@@ -401,24 +427,38 @@ binary-size: 1-2-4-8
 binary-byteorder: big-endian
 ])
 
-AT_DATA([dump.c], [
-#include <stdio.h>
-int dump (unsigned char *data);
-int dump (unsigned char *data)
-{
-  int i;
-  for (i = 0; i < 8; i++)
-    printf ("%02x", data[[i]]);
-  puts ("");
-  return 0;
+AT_DATA([dump.java], [
+import jp.osscons.opensourcecobol.libcobj.data.*;
+import jp.osscons.opensourcecobol.libcobj.call.*;
+
+public class dump implements CobolRunnable {
+	@Override
+  	public int run(CobolDataStorage... argStorages) {
+		for(int i=0; i<8; ++i) {
+			System.out.print(String.format("%02x", argStorages@<:@0@:>@.getByte(i)));
+		}
+		System.out.println("");
+  		return 0;
+  	}
+
+  	@Override
+  	public void cancel() {
+		return;
+  	}
+
+  	@Override
+  	public boolean isActive() {
+		return false;
+	}
 }
 ])
 
-AT_CHECK([${CC} ${SHROPT} -o dump.${SHREXT} dump.c])
+AT_CHECK([javac dump.java])
+
 
 sed -e 's/@USAGE@/BINARY/' ${TEMPLATE}/numeric-dump.cob > prog.cob
 
-AT_CHECK([${COMPILE} -conf=test.conf -o prog prog.cob])
+AT_CHECK([${COMPILE} -conf=test.conf prog.cob])
 AT_CHECK([java prog], [0],
 [0120202020202020
 0c20202020202020
@@ -532,7 +572,7 @@ fe4964b459cf0cb2
 
 sed -e 's/@USAGE@/BINARY/' ${TEMPLATE}/numeric-display.cob > prog.cob
 
-AT_CHECK([${COMPILE} -conf=test.conf -o prog prog.cob])
+AT_CHECK([${COMPILE} -conf=test.conf prog.cob])
 AT_CHECK([java prog], [0],
 [1
 12
@@ -589,24 +629,38 @@ binary-size: 1-2-4-8
 binary-byteorder: native
 ])
 
-AT_DATA([dump.c], [
-#include <stdio.h>
-int dump (unsigned char *data);
-int dump (unsigned char *data)
-{
-  int i;
-  for (i = 0; i < 8; i++)
-    printf ("%02x", data[[i]]);
-  puts ("");
-  return 0;
+AT_DATA([dump.java], [
+import jp.osscons.opensourcecobol.libcobj.data.*;
+import jp.osscons.opensourcecobol.libcobj.call.*;
+
+public class dump implements CobolRunnable {
+	@Override
+  	public int run(CobolDataStorage... argStorages) {
+		for(int i=0; i<8; ++i) {
+			System.out.print(String.format("%02x", argStorages@<:@0@:>@.getByte(i)));
+		}
+		System.out.println("");
+  		return 0;
+  	}
+
+  	@Override
+  	public void cancel() {
+		return;
+  	}
+
+  	@Override
+  	public boolean isActive() {
+		return false;
+	}
 }
 ])
 
-AT_CHECK([${CC} ${SHROPT} -o dump.${SHREXT} dump.c])
+AT_CHECK([javac dump.java])
+
 
 sed -e 's/@USAGE@/BINARY/' ${TEMPLATE}/numeric-dump.cob > prog.cob
 
-AT_CHECK([${COMPILE} -conf=test.conf -o prog prog.cob])
+AT_CHECK([${COMPILE} -conf=test.conf prog.cob])
 AT_CHECK([java prog], [0],
 [0120202020202020
 0c20202020202020
@@ -720,7 +774,7 @@ b20ccf59b46449fe
 
 sed -e 's/@USAGE@/BINARY/' ${TEMPLATE}/numeric-display.cob > prog.cob
 
-AT_CHECK([${COMPILE} -conf=test.conf -o prog prog.cob])
+AT_CHECK([${COMPILE} -conf=test.conf prog.cob])
 AT_CHECK([java prog], [0],
 [1
 12
@@ -775,24 +829,37 @@ binary-size: 1--8
 binary-byteorder: big-endian
 ])
 
-AT_DATA([dump.c], [
-#include <stdio.h>
-int dump (unsigned char *data);
-int dump (unsigned char *data)
-{
-  int i;
-  for (i = 0; i < 8; i++)
-    printf ("%02x", data[[i]]);
-  puts ("");
-  return 0;
+AT_DATA([dump.java], [
+import jp.osscons.opensourcecobol.libcobj.data.*;
+import jp.osscons.opensourcecobol.libcobj.call.*;
+
+public class dump implements CobolRunnable {
+	@Override
+  	public int run(CobolDataStorage... argStorages) {
+		for(int i=0; i<8; ++i) {
+			System.out.print(String.format("%02x", argStorages@<:@0@:>@.getByte(i)));
+		}
+		System.out.println("");
+  		return 0;
+  	}
+
+  	@Override
+  	public void cancel() {
+		return;
+  	}
+
+  	@Override
+  	public boolean isActive() {
+		return false;
+	}
 }
 ])
 
-AT_CHECK([${CC} ${SHROPT} -o dump.${SHREXT} dump.c])
+AT_CHECK([javac dump.java])
 
 sed -e 's/@USAGE@/BINARY/' ${TEMPLATE}/numeric-dump.cob > prog.cob
 
-AT_CHECK([${COMPILE} -conf=test.conf -o prog prog.cob])
+AT_CHECK([${COMPILE} -conf=test.conf prog.cob])
 AT_CHECK([java prog], [0],
 [0120202020202020
 0c20202020202020
@@ -906,7 +973,7 @@ fe4964b459cf0cb2
 
 sed -e 's/@USAGE@/BINARY/' ${TEMPLATE}/numeric-display.cob > prog.cob
 
-AT_CHECK([${COMPILE} -conf=test.conf -o prog prog.cob])
+AT_CHECK([${COMPILE} -conf=test.conf prog.cob])
 AT_CHECK([java prog], [0],
 [1
 12
@@ -963,24 +1030,37 @@ binary-size: 1--8
 binary-byteorder: native
 ])
 
-AT_DATA([dump.c], [
-#include <stdio.h>
-int dump (unsigned char *data);
-int dump (unsigned char *data)
-{
-  int i;
-  for (i = 0; i < 8; i++)
-    printf ("%02x", data[[i]]);
-  puts ("");
-  return 0;
+AT_DATA([dump.java], [
+import jp.osscons.opensourcecobol.libcobj.data.*;
+import jp.osscons.opensourcecobol.libcobj.call.*;
+
+public class dump implements CobolRunnable {
+	@Override
+  	public int run(CobolDataStorage... argStorages) {
+		for(int i=0; i<8; ++i) {
+			System.out.print(String.format("%02x", argStorages@<:@0@:>@.getByte(i)));
+		}
+		System.out.println("");
+  		return 0;
+  	}
+
+  	@Override
+  	public void cancel() {
+		return;
+  	}
+
+  	@Override
+  	public boolean isActive() {
+		return false;
+	}
 }
 ])
 
-AT_CHECK([${CC} ${SHROPT} -o dump.${SHREXT} dump.c])
+AT_CHECK([javac dump.java])
 
 sed -e 's/@USAGE@/BINARY/' ${TEMPLATE}/numeric-dump.cob > prog.cob
 
-AT_CHECK([${COMPILE} -conf=test.conf -o prog prog.cob])
+AT_CHECK([${COMPILE} -conf=test.conf prog.cob])
 AT_CHECK([java prog], [0],
 [0120202020202020
 0c20202020202020
@@ -1094,7 +1174,7 @@ b20ccf59b46449fe
 
 sed -e 's/@USAGE@/BINARY/' ${TEMPLATE}/numeric-display.cob > prog.cob
 
-AT_CHECK([${COMPILE} -conf=test.conf -o prog prog.cob])
+AT_CHECK([${COMPILE} -conf=test.conf prog.cob])
 AT_CHECK([java prog], [0],
 [1
 12
@@ -1151,7 +1231,7 @@ pretty-display: no
 
 sed -e 's/@USAGE@/BINARY/' ${TEMPLATE}/numeric-display.cob > prog.cob
 
-AT_CHECK([${COMPILE} -conf=test.conf -o prog prog.cob])
+AT_CHECK([${COMPILE} -conf=test.conf prog.cob])
 AT_CHECK([java prog], [0],
 [001
 012
