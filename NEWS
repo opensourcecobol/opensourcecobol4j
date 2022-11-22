@@ -13,11 +13,15 @@ NEWS - user visible changes				-*- outline -*-
     (8)  -t option
     (9)  -C option
     (10) -free and -free_1col_aster options
-    (11) cobj generates java source code with multi-byte characters
 
 ** Bug fixes
 
     (1) Fix exit perform and perform cycle
+    (2) Fix comparing NATIONAL characters
+    (3) Fix "FUNCTION CURRENT-DATE"
+    (4) Fix the bug of "IS NUMERIC" for COMP-3 data
+    (5) Fix comparing HIGH-VALUE and PIC X(n) data
+    (6) Fix moving sign-leading-separate to COMP3
 
 ** Miscellaneous
 
