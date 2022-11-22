@@ -192,19 +192,23 @@ public class CobolNumericPackedField extends AbstractCobolField {
 			p = (digits1 - scale1) - (digits2 - scale2);
 		}
 
+		boolean isZero = true;
 		for(int i=offset; i < offset + packedRealDigits; ++i, ++p) {
 			byte n;
 			int index1 = data1FirstIndex + p;
-			if(index1 >= field.getSize() || index1 < 0) {
+			if(index1 >= field.getSize() || index1 < data1FirstIndex) {
 				n = 0;
 			} else {
 				byte ch = data1.getByte(index1);
 				if(ch == (byte)0x20) {
 					n = 0;
+				} else if(ch >= 0x70){
+					n = (byte)(ch - 0x70);
 				} else {
 					n = (byte)(ch - 0x30);
 				}
 			}
+			isZero &= n == 0;
 			if(i % 2 == 0) {
 				data2.setByte(i / 2, (byte) (n << 4));
 			} else {
@@ -217,7 +221,7 @@ public class CobolNumericPackedField extends AbstractCobolField {
 		byte value = this.getDataStorage().getByte(p);
 		if((this.getAttribute().getFlags() & CobolFieldAttribute.COB_FLAG_HAVE_SIGN) == 0) {
 			this.getDataStorage().setByte(p, (byte) ((value & 0xf0) | 0x0f));
-		} else if(sign < 0) {
+		} else if(sign < 0 && !isZero) {
 			this.getDataStorage().setByte(p, (byte) ((value & 0xf0) | 0x0d));
 		} else {
 			this.getDataStorage().setByte(p, (byte) ((value & 0xf0) | 0x0c));
