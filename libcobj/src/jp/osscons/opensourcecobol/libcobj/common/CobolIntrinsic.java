@@ -345,11 +345,11 @@ public class CobolIntrinsic {
 	 * @return
 	 */
 
-	 public static String replaceString(String str){
-        String match = "[^0-9]";
-        str = str.replaceAll(match, "");
-        return str;
-    }
+	public static String replaceString(String str){
+    	String match = "[^0-9]";
+    	str = str.replaceAll(match, "");
+    	return str;
+	}
 
 	public static AbstractCobolField funcCurrentDate(int offset, int length) {
 		CobolFieldAttribute attr = new CobolFieldAttribute(
@@ -364,8 +364,7 @@ public class CobolIntrinsic {
 		try{
 			cobdate = System.getenv("COB_DATE");
 			cobdate = replaceString(cobdate);
-		}catch(NullPointerException e){
-			e.printStackTrace();
+		}catch(NullPointerException ignored){
 		}
 
 		if(!cobdate.equals("")){
@@ -391,7 +390,7 @@ public class CobolIntrinsic {
 		if(offset > 0) {
 			calcRefMod(currField, offset, length);
 		}
-			return currField;
+		return currField;
 	}
 
 	/**
