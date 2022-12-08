@@ -38,9 +38,6 @@ import jp.osscons.opensourcecobol.libcobj.exceptions.CobolExceptionId;
 import jp.osscons.opensourcecobol.libcobj.exceptions.CobolRuntimeException;
 import jp.osscons.opensourcecobol.libcobj.exceptions.CobolStopRunException;
 
-//import jp.osscons.opensourcecobol.libcobj.termio.CobolTerminal.jobOrCurrentLocalTime;
-
-
 public class CobolIntrinsic {
 	
 	private static int[] normalDays = {0,31,59,90,120,151,181,212,243,273,304,334,365};
