@@ -23,6 +23,10 @@ import java.math.RoundingMode;
 import java.util.Arrays;
 import java.util.Calendar;
 import java.util.Random;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
+import java.util.Map;
+import java.text.ParseException;
 
 import jp.osscons.opensourcecobol.libcobj.data.AbstractCobolField;
 import jp.osscons.opensourcecobol.libcobj.data.CobolDataStorage;
@@ -33,6 +37,9 @@ import jp.osscons.opensourcecobol.libcobj.data.CobolNationalField;
 import jp.osscons.opensourcecobol.libcobj.exceptions.CobolExceptionId;
 import jp.osscons.opensourcecobol.libcobj.exceptions.CobolRuntimeException;
 import jp.osscons.opensourcecobol.libcobj.exceptions.CobolStopRunException;
+
+//import jp.osscons.opensourcecobol.libcobj.termio.CobolTerminal.jobOrCurrentLocalTime;
+
 
 public class CobolIntrinsic {
 	
@@ -337,6 +344,13 @@ public class CobolIntrinsic {
 	 * @param length
 	 * @return
 	 */
+
+	 public static String replaceString(String str){
+        String match = "[^0-9]";
+        str = str.replaceAll(match, "");
+        return str;
+    }
+
 	public static AbstractCobolField funcCurrentDate(int offset, int length) {
 		CobolFieldAttribute attr = new CobolFieldAttribute(
 			CobolFieldAttribute.COB_TYPE_ALPHANUMERIC, 0, 0, 0, null);
@@ -344,19 +358,40 @@ public class CobolIntrinsic {
 		makeFieldEntry(field);
 		Calendar cal = Calendar.getInstance();
 		//TODO Time Zoneを表示する機能を取り入れる
+
+		String cobdate="";
+		int addMonth=1;
+		try{
+			cobdate = System.getenv("COB_DATE");
+			cobdate = replaceString(cobdate);
+		}catch(NullPointerException e){
+			e.printStackTrace();
+		}
+
+		if(!cobdate.equals("")){
+			int year = Integer.parseInt(cobdate.substring(0,4));
+			int month = Integer.parseInt(cobdate.substring(4,6));
+			int day = Integer.parseInt(cobdate.substring(6,8));
+			cal.set(Calendar.YEAR, year);
+			cal.set(Calendar.MONTH, month);
+			cal.set(Calendar.DAY_OF_MONTH, day);
+			addMonth=0;
+		}
+
 		String dateString = String.format("%4d%02d%02d%02d%02d%02d%02d00000",
 			cal.get(Calendar.YEAR),
-			cal.get(Calendar.MONTH) + 1,
+			cal.get(Calendar.MONTH) + addMonth,
 			cal.get(Calendar.DAY_OF_MONTH),
 			cal.get(Calendar.HOUR),
 			cal.get(Calendar.MINUTE),
 			cal.get(Calendar.SECOND),
 			cal.get(Calendar.MILLISECOND) / 10);
 		currField.getDataStorage().memcpy(dateString.getBytes());
+
 		if(offset > 0) {
 			calcRefMod(currField, offset, length);
 		}
-		return currField;
+			return currField;
 	}
 
 	/**
