@@ -356,27 +356,22 @@ public class CobolIntrinsic {
 		Calendar cal = Calendar.getInstance();
 		//TODO Time Zoneを表示する機能を取り入れる
 
-		String cobdate="";
-		int addMonth=1;
+		//String cobdate="";
 		try{
-			cobdate = System.getenv("COB_DATE");
+			String cobdate = System.getenv("COB_DATE");
 			cobdate = replaceString(cobdate);
-		}catch(NullPointerException ignored){
-		}
-
-		if(!cobdate.equals("")){
 			int year = Integer.parseInt(cobdate.substring(0,4));
 			int month = Integer.parseInt(cobdate.substring(4,6));
 			int day = Integer.parseInt(cobdate.substring(6,8));
 			cal.set(Calendar.YEAR, year);
-			cal.set(Calendar.MONTH, month);
+			cal.set(Calendar.MONTH, month -1);
 			cal.set(Calendar.DAY_OF_MONTH, day);
-			addMonth=0;
+		}catch(NullPointerException ignored){
 		}
 
 		String dateString = String.format("%4d%02d%02d%02d%02d%02d%02d00000",
 			cal.get(Calendar.YEAR),
-			cal.get(Calendar.MONTH) + addMonth,
+			cal.get(Calendar.MONTH) + 1,
 			cal.get(Calendar.DAY_OF_MONTH),
 			cal.get(Calendar.HOUR),
 			cal.get(Calendar.MINUTE),
