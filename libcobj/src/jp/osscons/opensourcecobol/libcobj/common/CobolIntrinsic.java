@@ -356,9 +356,9 @@ public class CobolIntrinsic {
 		Calendar cal = Calendar.getInstance();
 		//TODO Time Zoneを表示する機能を取り入れる
 
-		//String cobdate="";
+		String cobdate;
+		cobdate = System.getenv("COB_DATE");
 		try{
-			String cobdate = System.getenv("COB_DATE");
 			cobdate = replaceString(cobdate);
 			int year = Integer.parseInt(cobdate.substring(0,4));
 			int month = Integer.parseInt(cobdate.substring(4,6));
