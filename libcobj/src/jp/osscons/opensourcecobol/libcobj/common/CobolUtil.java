@@ -63,6 +63,8 @@ public class CobolUtil {
 	private static String currentSection;
 	private static String currentParagraph;
 	private static String sourceStatement;
+	
+	public static String cobdate = System.getenv("COB_DATE");
 
 	abstract class handlerlist {
 		public handlerlist next = null;
@@ -120,12 +122,11 @@ public class CobolUtil {
 			}
 		}
 
-		String s;
-		
-		s = System.getenv("COB_DATE");
+		String s = cobdate;
 		if(s != null) {
 			Scanner scan = new Scanner(s);
-			scan.findInLine("(\\d+)/(\\d+)/(\\d+)");
+			scan.findInLine("(\\d{4})/(\\d{2})/(\\d{2})");
+			try{
 			MatchResult result = scan.match();
 			date_time_block: if(result.groupCount() != 3) {
 				System.err.println("Warning: COB_DATE format invalid, ignored.");
@@ -140,6 +141,9 @@ public class CobolUtil {
 					break date_time_block;
 				}
 				cobLocalTm = tm;
+			}
+			}catch(IllegalStateException e){
+				System.err.println("Warning: COB_DATE format invalid, ignored.");
 			}
 		}
 		
