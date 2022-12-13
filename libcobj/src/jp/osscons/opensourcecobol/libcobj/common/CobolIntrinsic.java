@@ -24,9 +24,6 @@ import java.util.Arrays;
 import java.util.Calendar;
 import java.util.Random;
 import java.time.LocalDateTime;
-import java.time.format.DateTimeFormatter;
-import java.util.Map;
-import java.text.ParseException;
 
 import jp.osscons.opensourcecobol.libcobj.data.AbstractCobolField;
 import jp.osscons.opensourcecobol.libcobj.data.CobolDataStorage;
@@ -349,29 +346,16 @@ public class CobolIntrinsic {
 			CobolFieldAttribute.COB_TYPE_ALPHANUMERIC, 0, 0, 0, null);
 		AbstractCobolField field = CobolFieldFactory.makeCobolField(21, (CobolDataStorage)null, attr);
 		makeFieldEntry(field);
-		Calendar cal = Calendar.getInstance();
 		//TODO Time Zoneを表示する機能を取り入れる
 
-		try{
-			if(CobolUtil.cobdate.matches("[0-9]{4}/[0-9]{2}/[0-9]{2}")){
-				int year = Integer.parseInt(CobolUtil.cobdate.substring(0,4));
-				int month = Integer.parseInt(CobolUtil.cobdate.substring(5,7));
-				int day = Integer.parseInt(CobolUtil.cobdate.substring(8,10));
-				cal.set(Calendar.YEAR, year);
-				cal.set(Calendar.MONTH, month -1);
-				cal.set(Calendar.DAY_OF_MONTH, day);
-			}
-		}catch(NullPointerException ignored){
-		}
-
 		String dateString = String.format("%4d%02d%02d%02d%02d%02d%02d00000",
-			cal.get(Calendar.YEAR),
-			cal.get(Calendar.MONTH) + 1,
-			cal.get(Calendar.DAY_OF_MONTH),
-			cal.get(Calendar.HOUR),
-			cal.get(Calendar.MINUTE),
-			cal.get(Calendar.SECOND),
-			cal.get(Calendar.MILLISECOND) / 10);
+			CobolUtil.cal.get(Calendar.YEAR),
+			CobolUtil.cal.get(Calendar.MONTH) + 1,
+			CobolUtil.cal.get(Calendar.DAY_OF_MONTH),
+			CobolUtil.cal.get(Calendar.HOUR),
+			CobolUtil.cal.get(Calendar.MINUTE),
+			CobolUtil.cal.get(Calendar.SECOND),
+			CobolUtil.cal.get(Calendar.MILLISECOND) / 10);
 		currField.getDataStorage().memcpy(dateString.getBytes());
 
 		if(offset > 0) {

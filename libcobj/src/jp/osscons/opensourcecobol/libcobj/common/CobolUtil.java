@@ -23,6 +23,9 @@ import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.util.Scanner;
 import java.util.regex.MatchResult;
+import java.util.Calendar;
+import java.util.regex.Pattern;
+import java.util.regex.Matcher;
 
 import jp.osscons.opensourcecobol.libcobj.data.AbstractCobolField;
 import jp.osscons.opensourcecobol.libcobj.data.CobolDataStorage;
@@ -54,6 +57,7 @@ public class CobolUtil {
 	
 	public static boolean verbose = false;
 	public static boolean cobErrorOnExitFlag = false;
+	public static Calendar cal;
 	
 	private static boolean lineTrace = false;
 
@@ -63,8 +67,6 @@ public class CobolUtil {
 	private static String currentSection;
 	private static String currentParagraph;
 	private static String sourceStatement;
-	
-	public static String cobdate = System.getenv("COB_DATE");
 
 	abstract class handlerlist {
 		public handlerlist next = null;
@@ -122,18 +124,22 @@ public class CobolUtil {
 			}
 		}
 
-		String s = cobdate;
+		cal = Calendar.getInstance();
+		String s = System.getenv("COB_DATE");
 		if(s != null) {
 			Scanner scan = new Scanner(s);
-			scan.findInLine("(\\d{4})/(\\d{2})/(\\d{2})");
-			try{
-			MatchResult result = scan.match();
-			date_time_block: if(result.groupCount() != 3) {
+			Pattern p = Pattern.compile("([0-9]{4})/([0-9]{2})/([0-9]{2})");
+			Matcher m = p.matcher(s);
+			if(m.matches()){
+			date_time_block: if(m.groupCount() != 3) {
 				System.err.println("Warning: COB_DATE format invalid, ignored.");
 			} else  {
-				int year = Integer.parseInt(result.group(1));
-				int month = Integer.parseInt(result.group(2));
-				int dayOfMonth = Integer.parseInt(result.group(3));
+				int year = Integer.parseInt(m.group(1));
+				int month = Integer.parseInt(m.group(2));
+				int dayOfMonth = Integer.parseInt(m.group(3));
+				cal.set(Calendar.YEAR, year);
+				cal.set(Calendar.MONTH, month -1);
+				cal.set(Calendar.DAY_OF_MONTH, dayOfMonth);
 				LocalDateTime tm;
 				try {
 					tm = LocalDateTime.of(year, month, dayOfMonth, 0, 0);
@@ -142,7 +148,7 @@ public class CobolUtil {
 				}
 				cobLocalTm = tm;
 			}
-			}catch(IllegalStateException e){
+			}else{
 				System.err.println("Warning: COB_DATE format invalid, ignored.");
 			}
 		}
