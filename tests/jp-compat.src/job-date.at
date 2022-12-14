@@ -113,6 +113,87 @@ AT_CHECK([COB_DATE=1970/01/02 java prog], [0], [19700102
 
 AT_CLEANUP
 
+AT_SETUP([COB_DATE FUNC. INVALID-ENV 1])
+
+AT_DATA([prog.cob],[
+       IDENTIFICATION   DIVISION.
+       PROGRAM-ID.      prog.
+       DATA             DIVISION.
+       WORKING-STORAGE  SECTION.
+       01  CURR-DATE.
+         03  CURR-YYYY PIC X(4).
+         03  CURR-MM   PIC X(2).
+         03  CURR-DD   PIC X(2).
+         03  FILLER    PIC X(13).
+       PROCEDURE        DIVISION.
+           MOVE FUNCTION CURRENT-DATE TO CURR-DATE.
+           DISPLAY CURR-YYYY CURR-MM CURR-DD.
+           GOBACK.
+])
+
+AT_CHECK([${COMPILE_JP_COMPAT} -o prog prog.cob])
+AT_CHECK([COB_DATE=1970 java prog > out1.txt], [0], [],
+[Warning: COB_DATE format invalid, ignored.
+])
+AT_CHECK([date +%Y%m%d > out2.txt])
+AT_CHECK([diff out1.txt out2.txt], [0])
+
+AT_CLEANUP
+
+AT_SETUP([COB_DATE FUNC. INVALID-ENV 2])
+
+AT_DATA([prog.cob],[
+       IDENTIFICATION   DIVISION.
+       PROGRAM-ID.      prog.
+       DATA             DIVISION.
+       WORKING-STORAGE  SECTION.
+       01  CURR-DATE.
+         03  CURR-YYYY PIC X(4).
+         03  CURR-MM   PIC X(2).
+         03  CURR-DD   PIC X(2).
+         03  FILLER    PIC X(13).
+       PROCEDURE        DIVISION.
+           MOVE FUNCTION CURRENT-DATE TO CURR-DATE.
+           DISPLAY CURR-YYYY CURR-MM CURR-DD.
+           GOBACK.
+])
+
+AT_CHECK([${COMPILE_JP_COMPAT} -o prog prog.cob])
+AT_CHECK([COB_DATE=1970/1/1 java prog > out1.txt], [0], [],
+[Warning: COB_DATE format invalid, ignored.
+])
+AT_CHECK([date +%Y%m%d > out2.txt])
+AT_CHECK([diff out1.txt out2.txt], [0])
+
+AT_CLEANUP
+
+AT_SETUP([COB_DATE FUNC. INVALID-ENV 3])
+
+AT_DATA([prog.cob],[
+       IDENTIFICATION   DIVISION.
+       PROGRAM-ID.      prog.
+       DATA             DIVISION.
+       WORKING-STORAGE  SECTION.
+       01  CURR-DATE.
+         03  CURR-YYYY PIC X(4).
+         03  CURR-MM   PIC X(2).
+         03  CURR-DD   PIC X(2).
+         03  FILLER    PIC X(13).
+       PROCEDURE        DIVISION.
+           MOVE FUNCTION CURRENT-DATE TO CURR-DATE.
+           DISPLAY CURR-YYYY CURR-MM CURR-DD.
+           GOBACK.
+])
+
+AT_CHECK([${COMPILE_JP_COMPAT} -o prog prog.cob])
+AT_CHECK([COB_DATE=10000/01/01 java prog > out1.txt], [0], [],
+[Warning: COB_DATE format invalid, ignored.
+])
+AT_CHECK([date +%Y%m%d > out2.txt])
+AT_CHECK([diff out1.txt out2.txt], [0])
+
+AT_CLEANUP
+
 AT_SETUP([COB_DATE FUNC. CURRENT-DATE of time])
 
 AT_CHECK([test $SHREXT != "dll" || exit 77])

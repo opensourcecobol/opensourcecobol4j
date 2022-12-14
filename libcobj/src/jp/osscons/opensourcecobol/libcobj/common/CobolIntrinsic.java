@@ -1,16 +1,16 @@
 /*
  * Copyright (C) 2021-2022 TOKYO SYSTEM HOUSE Co., Ltd.
- * 
+ *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public License
  * as published by the Free Software Foundation; either version 3.0,
  * or (at your option) any later version.
- * 
+ *
  * This library is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU Lesser General Public License for more details.
- * 
+ *
  * You should have received a copy of the GNU Lesser General Public
  * License along with this library; see the file COPYING.LIB.  If
  * not, write to the Free Software Foundation, 51 Franklin Street, Fifth Floor
@@ -23,6 +23,7 @@ import java.math.RoundingMode;
 import java.util.Arrays;
 import java.util.Calendar;
 import java.util.Random;
+import java.time.LocalDateTime;
 
 import jp.osscons.opensourcecobol.libcobj.data.AbstractCobolField;
 import jp.osscons.opensourcecobol.libcobj.data.CobolDataStorage;
@@ -33,9 +34,10 @@ import jp.osscons.opensourcecobol.libcobj.data.CobolNationalField;
 import jp.osscons.opensourcecobol.libcobj.exceptions.CobolExceptionId;
 import jp.osscons.opensourcecobol.libcobj.exceptions.CobolRuntimeException;
 import jp.osscons.opensourcecobol.libcobj.exceptions.CobolStopRunException;
+import jp.osscons.opensourcecobol.libcobj.common.CobolUtil;
 
 public class CobolIntrinsic {
-	
+
 	private static int[] normalDays = {0,31,59,90,120,151,181,212,243,273,304,334,365};
 	private static int[] leapDays = {0,31,60,91,121,152,182,213,244,274,305,335,366};
 	private static int[] normalMonthDays = {0,31,28,31,30,31,30,31,31,30,31,30,31};
@@ -48,7 +50,7 @@ public class CobolIntrinsic {
 	private static AbstractCobolField[] calcField = new AbstractCobolField[DEPTH_LEVEL];
 	private static CobolFieldAttribute[] calcAttr = new CobolFieldAttribute[DEPTH_LEVEL];
 	private static Random random = new Random();
-		
+
 	/**
 	 * libcob/intrinsicのmake_double_entryの実装
 	 */
@@ -62,7 +64,7 @@ public class CobolIntrinsic {
 			CobolFieldAttribute.COB_FLAG_HAVE_SIGN,
 			null);
 		AbstractCobolField newField = CobolFieldFactory.makeCobolField(sizeOfDouble, s, newAttr);
-		
+
 		calcAttr[currEntry] = newAttr;
 		calcField[currEntry] = newField;
 		currAttr = newAttr;
@@ -71,11 +73,11 @@ public class CobolIntrinsic {
 			currEntry = 0;
 		}
 	}
-	
+
 	/**
 	 * libcob/intrinsicのmake_field_entryの実装
 	 */
-	private static void makeFieldEntry(AbstractCobolField f) {		
+	private static void makeFieldEntry(AbstractCobolField f) {
 		AbstractCobolField newField = CobolFieldFactory.makeCobolField(
 			f.getSize(), new CobolDataStorage(f.getSize() + 1), f.getAttribute());
 		calcField[currEntry] = newField;
@@ -87,7 +89,7 @@ public class CobolIntrinsic {
 			currEntry = 0;
 		}
 	}
-	
+
 	/**
 	 * libcob/intrinsicのcob_intr_ordの実装
 	 * @param year
@@ -96,7 +98,7 @@ public class CobolIntrinsic {
 	private static boolean isLeapYear(int year) {
 		return ((year % 4 == 0 && year % 100 != 0) || (year % 400 == 0));
 	}
-	
+
 	/**
 	 * libcob/intrinsicのcob_init_intrinsicの実装
 	 */
@@ -107,7 +109,7 @@ public class CobolIntrinsic {
 			calcField[i] = CobolFieldFactory.makeCobolField(256, new CobolDataStorage(256), attr);
 		}
 	}
-	
+
 	/**
 	 * libcob/intrinsicのcob_intr_get_doubleの実装
 	 */
@@ -159,7 +161,7 @@ public class CobolIntrinsic {
 		CobolDecimal d2 = new CobolDecimal();
 		d1.setField(f1);
 		d2.setField(f2);
-		
+
 		switch((char)op) {
 		case '+': d1.add(d2); break;
 		case '-': d1.sub(d2); break;
@@ -168,7 +170,7 @@ public class CobolIntrinsic {
 		case '^': d1.pow(d2); break;
 		default: break;
 		}
-		
+
 		int attrsign = 0;
 		int sign = 0;
 		if(d1.getValue().signum() < 0) {
@@ -178,7 +180,7 @@ public class CobolIntrinsic {
 			attrsign = 0;
 			sign = 0;
 		}
-	
+
 		int size = sizeInBase10(d1.getValue());
 		if(d1.getScale() > size) {
 			size = d1.getScale();
@@ -215,7 +217,7 @@ public class CobolIntrinsic {
 				CobolFieldAttribute.COB_TYPE_NUMERIC_BINARY, 18, 0, CobolFieldAttribute.COB_FLAG_HAVE_SIGN, null);
 		AbstractCobolField field = CobolFieldFactory.makeCobolField(8, (CobolDataStorage)null, attr);
 		makeFieldEntry(field);
-		
+
 		CobolDecimal d1 = new CobolDecimal();
 		d1.setField(srcfield);
 		if(d1.getValue().signum() >= 0) {
@@ -228,11 +230,11 @@ public class CobolIntrinsic {
 		for(int i=0; i<Math.abs(d1.getScale()); ++i) {
 			if(isScalePositive) {
 				val = val.divide(BigDecimal.TEN);
-			} else {				
+			} else {
 				val = val.multiply(BigDecimal.TEN);
 			}
 		}
-		
+
 		//Rouding to negative infinity
 		BigDecimal[] vals = val.divideAndRemainder(BigDecimal.ONE);
 		if(vals[1].signum() != 0) {
@@ -242,7 +244,7 @@ public class CobolIntrinsic {
 		try { new CobolDecimal(vals[0], 0).getField(currField, 0); } catch (CobolStopRunException e) {}
 		return currField;
 	}
-	
+
 	/**
 	 * libcob/intrinsicのcob_intr_integer_partの実装
 	 * @param srcfield
@@ -276,7 +278,7 @@ public class CobolIntrinsic {
 		}
 		return currField;
 	}
-	
+
 	/**
 	 * libcob/intrinsicのcob_intr_lower_caseの実装
 	 * @param srcfield
@@ -295,7 +297,7 @@ public class CobolIntrinsic {
 		}
 		return currField;
 	}
-	
+
 	/**
 	 * libcob/intrinsicのcob_intr_reverseの実装
 	 * @param srcfield
@@ -337,22 +339,25 @@ public class CobolIntrinsic {
 	 * @param length
 	 * @return
 	 */
+
+
 	public static AbstractCobolField funcCurrentDate(int offset, int length) {
 		CobolFieldAttribute attr = new CobolFieldAttribute(
 			CobolFieldAttribute.COB_TYPE_ALPHANUMERIC, 0, 0, 0, null);
 		AbstractCobolField field = CobolFieldFactory.makeCobolField(21, (CobolDataStorage)null, attr);
 		makeFieldEntry(field);
-		Calendar cal = Calendar.getInstance();
 		//TODO Time Zoneを表示する機能を取り入れる
+
 		String dateString = String.format("%4d%02d%02d%02d%02d%02d%02d00000",
-			cal.get(Calendar.YEAR),
-			cal.get(Calendar.MONTH) + 1,
-			cal.get(Calendar.DAY_OF_MONTH),
-			cal.get(Calendar.HOUR),
-			cal.get(Calendar.MINUTE),
-			cal.get(Calendar.SECOND),
-			cal.get(Calendar.MILLISECOND) / 10);
+			CobolUtil.cal.get(Calendar.YEAR),
+			CobolUtil.cal.get(Calendar.MONTH) + 1,
+			CobolUtil.cal.get(Calendar.DAY_OF_MONTH),
+			CobolUtil.cal.get(Calendar.HOUR),
+			CobolUtil.cal.get(Calendar.MINUTE),
+			CobolUtil.cal.get(Calendar.SECOND),
+			CobolUtil.cal.get(Calendar.MILLISECOND) / 10);
 		currField.getDataStorage().memcpy(dateString.getBytes());
+
 		if(offset > 0) {
 			calcRefMod(currField, offset, length);
 		}
@@ -369,7 +374,7 @@ public class CobolIntrinsic {
 			CobolFieldAttribute.COB_TYPE_ALPHANUMERIC, 0, 0, 0, null);
 		AbstractCobolField field = CobolFieldFactory.makeCobolField(1, (CobolDataStorage)null, attr);
 		makeFieldEntry(field);
-		
+
 		int i = srcfield.getInt();
 		if(i < 1 || i > 256) {
 			currField.getDataStorage().setByte(0, (byte)0);
@@ -389,11 +394,11 @@ public class CobolIntrinsic {
 			CobolFieldAttribute.COB_TYPE_NUMERIC_BINARY, 8, 0, 0, null);
 		AbstractCobolField field = CobolFieldFactory.makeCobolField(4, (CobolDataStorage)null, attr);
 		makeFieldEntry(field);
-		
+
 		currField.setInt(srcfield.getDataStorage().getByte(0) + 1);
 		return currField;
 	}
-	
+
 
 	/**
 	 * libcob/intrinsicのcob_intr_date_of_integerの実装
@@ -405,16 +410,16 @@ public class CobolIntrinsic {
 			CobolFieldAttribute.COB_TYPE_NUMERIC_DISPLAY, 8, 0, 0, null);
 		AbstractCobolField field = CobolFieldFactory.makeCobolField(8, (CobolDataStorage)null, attr);
 		makeFieldEntry(field);
-		
+
 		CobolRuntimeException.setException(0);
 		int days = srcdays.getInt();
-		
+
 		if(days < 1 || days > 3067671) {
 			CobolRuntimeException.setException(CobolExceptionId.COB_EC_ARGUMENT_FUNCTION);
 			currField.getDataStorage().memset((byte)'0', 8);
 			return currField;
 		}
-		
+
 		int leapyear = 365;
 		int baseyear = 1601;
 		while(days > leapyear) {
@@ -455,16 +460,16 @@ public class CobolIntrinsic {
 			CobolFieldAttribute.COB_TYPE_NUMERIC_DISPLAY, 7, 0, 0, null);
 		AbstractCobolField field = CobolFieldFactory.makeCobolField(7, (CobolDataStorage)null, attr);
 		makeFieldEntry(field);
-		
+
 		CobolRuntimeException.setException(0);
 		int days = srcdays.getInt();
-		
+
 		if(days < 1 || days > 3067671) {
 			CobolRuntimeException.setException(CobolExceptionId.COB_EC_ARGUMENT_FUNCTION);
 			currField.getDataStorage().memset((byte)'0', 8);
 			return currField;
 		}
-		
+
 		int leapyear = 365;
 		int baseyear = 1601;
 		while(days > leapyear) {
@@ -478,7 +483,7 @@ public class CobolIntrinsic {
 		}
 		String dateString = String.format("%04d%03d", baseyear, days);
 		currField.getDataStorage().memcpy(dateString.getBytes());
-		return currField;	
+		return currField;
 	}
 
 	/**
@@ -491,7 +496,7 @@ public class CobolIntrinsic {
 			CobolFieldAttribute.COB_TYPE_NUMERIC_BINARY, 8, 0, 0, null);
 		AbstractCobolField field = CobolFieldFactory.makeCobolField(4, (CobolDataStorage)null, attr);
 		makeFieldEntry(field);
-		
+
 		CobolRuntimeException.setException(0);
 		int indate = srcfield.getInt();
 		int year = indate / 10000;
@@ -511,7 +516,7 @@ public class CobolIntrinsic {
 		if(days < 1 || days > 31) {
 			CobolRuntimeException.setException(CobolExceptionId.COB_EC_ARGUMENT_FUNCTION);
 			currField.setInt(0);
-			return currField;		
+			return currField;
 		}
 		if(isLeapYear(year)) {
 			if(days > leapMonthDays[month]) {
@@ -526,7 +531,7 @@ public class CobolIntrinsic {
 				return currField;
 			}
 		}
-		
+
 		int totaldays = 0;
 		int baseyear = 1601;
 		while(baseyear != year) {
@@ -537,18 +542,18 @@ public class CobolIntrinsic {
 			}
 			++baseyear;
 		}
-		
+
 		if(isLeapYear(baseyear)) {
 			totaldays += leapDays[month - 1];
 		} else {
 			totaldays += normalDays[month - 1];
 		}
-		
+
 		totaldays += days;
 		currField.setInt(totaldays);
 		return currField;
 	}
-	
+
 	/**
 	 * libcob/intrinsicのcob_intr_integer_of_dayの実装
 	 * @param srcfield
@@ -559,7 +564,7 @@ public class CobolIntrinsic {
 			CobolFieldAttribute.COB_TYPE_NUMERIC_BINARY, 8, 0, 0, null);
 		AbstractCobolField field = CobolFieldFactory.makeCobolField(4, (CobolDataStorage)null, attr);
 		makeFieldEntry(field);
-		
+
 		CobolRuntimeException.setException(0);
 		int indate = srcfield.getInt();
 		int year = indate / 1000;
@@ -572,7 +577,7 @@ public class CobolIntrinsic {
 		if(days < 1 || days > 365 + (isLeapYear(year) ? 1 : 0)) {
 			CobolRuntimeException.setException(CobolExceptionId.COB_EC_ARGUMENT_FUNCTION);
 			currField.setInt(0);
-			return currField;		
+			return currField;
 		}
 		int totaldays = 0;
 		int baseyear = 1601;
@@ -588,7 +593,7 @@ public class CobolIntrinsic {
 		currField.setInt(totaldays);
 		return currField;
 	}
-	
+
 	/**
 	 * libcob/intrinsicのcob_intr_factorialの実装
 	 * @param srcfield
@@ -599,7 +604,7 @@ public class CobolIntrinsic {
 			CobolFieldAttribute.COB_TYPE_NUMERIC_BINARY, 18, 0, 0, null);
 		AbstractCobolField field = CobolFieldFactory.makeCobolField(8, (CobolDataStorage)null, attr);
 		makeFieldEntry(field);
-		
+
 		CobolRuntimeException.setException(0);
 		int srcval = srcfield.getInt();
 		if(srcval < 0) {
@@ -614,7 +619,7 @@ public class CobolIntrinsic {
 		try { new CobolDecimal(d, 0).getField(currField, 0); } catch (CobolStopRunException e) {}
 		return currField;
 	}
-	
+
 	private static CobolDecimal mathFunctionBefore1(AbstractCobolField srcfield) {
 		CobolDecimal d1 = new CobolDecimal();
 		CobolFieldAttribute attr = new CobolFieldAttribute(
@@ -624,14 +629,14 @@ public class CobolIntrinsic {
 		makeFieldEntry(field);
 		return d1;
 	}
-	
+
 	private static CobolDecimal mathFunctionBefore2(AbstractCobolField srcfield) {
 		CobolDecimal d1 = new CobolDecimal();
 		d1.setField(srcfield);
 		makeDoubleEntry();
 		return d1;
 	}
-	
+
 	private static AbstractCobolField mathFunctionAfter1(double mathd2) {
 		if(Double.isNaN(mathd2) || mathd2 == Double.POSITIVE_INFINITY || mathd2 == Double.NEGATIVE_INFINITY) {
 			currField.setInt(0);
@@ -647,9 +652,9 @@ public class CobolIntrinsic {
 			mathd2 -= tempres;
 		}
 		currField.getDataStorage().set(result);
-		return currField;	
+		return currField;
 	}
-	
+
 	private static AbstractCobolField mathFunctionAfter2(double mathd2) {
 		if(Double.isNaN(mathd2) || mathd2 == Double.POSITIVE_INFINITY || mathd2 == Double.NEGATIVE_INFINITY) {
 			currField.setInt(0);
@@ -658,7 +663,7 @@ public class CobolIntrinsic {
 		currField.getDataStorage().set(mathd2);
 		return currField;
 	}
-	
+
 	/**
 	 * libcob/intrinsicのcob_intr_expの実装
 	 */
@@ -667,7 +672,7 @@ public class CobolIntrinsic {
 		double mathd2 = Math.pow(2.7182818284590452354, intrGetDouble(d1));
 		return mathFunctionAfter2(mathd2);
 	}
-	
+
 	/**
 	 * libcob/intrinsicのcob_intr_exp10の実装
 	 */
@@ -676,7 +681,7 @@ public class CobolIntrinsic {
 		double mathd2 = Math.pow(10, intrGetDouble(d1));
 		return mathFunctionAfter2(mathd2);
 	}
-	
+
 	/**
 	 * libcob/intrinsicのcob_intr_absの実装
 	 */
@@ -690,7 +695,7 @@ public class CobolIntrinsic {
 		}
 		return currField;
 	}
-	
+
 	/**
 	 * libcob/intrinsicのcob_intr_acosの実装
 	 */
@@ -699,7 +704,7 @@ public class CobolIntrinsic {
 		double mathd2 = Math.acos(intrGetDouble(d1));
 		return mathFunctionAfter1(mathd2);
 	}
-	
+
 	/**
 	 * libcob/intrinsicのcob_intr_asinの実装
 	 */
@@ -708,7 +713,7 @@ public class CobolIntrinsic {
 		double mathd2 = Math.asin(intrGetDouble(d1));
 		return mathFunctionAfter1(mathd2);
 	}
-		
+
 	/**
 	 * libcob/intrinsicのcob_intr_atanの実装
 	 */
@@ -717,7 +722,7 @@ public class CobolIntrinsic {
 		double mathd2 = Math.atan(intrGetDouble(d1));
 		return mathFunctionAfter1(mathd2);
 	}
-	
+
 	/**
 	 * libcob/intrinsicのcob_intr_cosの実装
 	 */
@@ -726,7 +731,7 @@ public class CobolIntrinsic {
 		double mathd2 = Math.cos(intrGetDouble(d1));
 		return mathFunctionAfter1(mathd2);
 	}
-	
+
 	/**
 	 * libcob/intrinsicのcob_intr_logの実装
 	 */
@@ -735,7 +740,7 @@ public class CobolIntrinsic {
 		double mathd2 = Math.log(intrGetDouble(d1));
 		return mathFunctionAfter2(mathd2);
 	}
-	
+
 	/**
 	 * libcob/intrinsicのcob_intr_log10の実装
 	 */
@@ -744,7 +749,7 @@ public class CobolIntrinsic {
 		double mathd2 = Math.log10(intrGetDouble(d1));
 		return mathFunctionAfter2(mathd2);
 	}
-	
+
 	/**
 	 * libcob/intrinsicのcob_intr_sinの実装
 	 */
@@ -753,7 +758,7 @@ public class CobolIntrinsic {
 		double mathd2 = Math.sin(intrGetDouble(d1));
 		return mathFunctionAfter1(mathd2);
 	}
-	
+
 	/**
 	 * libcob/intrinsicのcob_intr_sqrtの実装
 	 */
@@ -762,7 +767,7 @@ public class CobolIntrinsic {
 		double mathd2 = Math.sqrt(intrGetDouble(d1));
 		return mathFunctionAfter2(mathd2);
 	}
-	
+
 	/**
 	 * libcob/intrinsicのcob_intr_tanの実装
 	 */
@@ -781,7 +786,7 @@ public class CobolIntrinsic {
 		CobolFieldAttribute attr = new CobolFieldAttribute(
 			CobolFieldAttribute.COB_TYPE_NUMERIC_BINARY, 18, 0, CobolFieldAttribute.COB_FLAG_HAVE_SIGN, null);
 		AbstractCobolField field = CobolFieldFactory.makeCobolField(8, (CobolDataStorage)null, attr);
-		
+
 		CobolDataStorage s = srcfield.getDataStorage();
 		boolean sign = false;
 		boolean decimalSeen = false;
@@ -855,7 +860,7 @@ public class CobolIntrinsic {
 		CobolFieldAttribute attr = new CobolFieldAttribute(
 			CobolFieldAttribute.COB_TYPE_NUMERIC_BINARY, 18, 0, CobolFieldAttribute.COB_FLAG_HAVE_SIGN, null);
 		AbstractCobolField field = CobolFieldFactory.makeCobolField(8, (CobolDataStorage)null, attr);
-		
+
 		CobolDataStorage s = srcfield.getDataStorage();
 		boolean sign = false;
 		boolean decimalSeen = false;
@@ -864,7 +869,7 @@ public class CobolIntrinsic {
 		int decimalDigits = 0;
 		StringBuilder integerBuff = new StringBuilder();
 		StringBuilder decimalBuff = new StringBuilder();
-		
+
 		CobolDataStorage currencyData = null;
 		if(currency != null) {
 			if(currency.getSize() < srcfield.getSize()) {
@@ -939,7 +944,7 @@ public class CobolIntrinsic {
 		}
 		return currField;
 	}
-		
+
 	public static AbstractCobolField funcNumvalC(int n, AbstractCobolField currency) {
 		return funcNumvalC(null, currency);
 	}
@@ -949,7 +954,7 @@ public class CobolIntrinsic {
 	public static AbstractCobolField funcNumvalC(int n, int m) {
 		return funcNumvalC(null, null);
 	}
-	
+
 	/**
 	 * libcob/intrinsicのcob_intr_annuityの実装
 	 * @param srcfield1
@@ -962,7 +967,7 @@ public class CobolIntrinsic {
 		CobolDecimal d2 = new CobolDecimal();
 		d1.setField(srcfield1);
 		d2.setField(srcfield2);
-		
+
 		double mathd1 = intrGetDouble(d1);
 		double mathd2 = intrGetDouble(d2);
 		if(mathd1 == 0) {
@@ -970,12 +975,12 @@ public class CobolIntrinsic {
 			currField.getDataStorage().set(mathd1);
 			return currField;
 		}
-		
+
 		mathd1 /= (1.0 - Math.pow(mathd1 + 1.0, 0.0 - mathd2));
 		currField.getDataStorage().set(mathd1);
 		return currField;
 	}
-	
+
 	private static int sizeInBase10(BigDecimal d1) {
 		String s = d1.toPlainString();
 		int begin = s.charAt(0) == '-' ? 0 : -1;
@@ -994,7 +999,7 @@ public class CobolIntrinsic {
 		CobolDecimal d1 = new CobolDecimal();
 		CobolDecimal d2 = new CobolDecimal();
 		d1.setValue(BigDecimal.ZERO);
-		
+
 		int scale = 0;
 		for(AbstractCobolField f: fields) {
 			if(f.getAttribute().getScale() > scale) {
@@ -1003,7 +1008,7 @@ public class CobolIntrinsic {
 			d2.setField(f);
 			d1.add(d2);
 		}
-		
+
 		int size = sizeInBase10(d1.getValue());
 		AbstractCobolField field;
 		if(size < 19) {
@@ -1037,15 +1042,15 @@ public class CobolIntrinsic {
 	 */
 	public static AbstractCobolField funcOrdMin(int params, AbstractCobolField... fields) {
 		CobolFieldAttribute attr = new CobolFieldAttribute(
-			CobolFieldAttribute.COB_TYPE_NUMERIC_DISPLAY, 8, 0, 0, null);	
+			CobolFieldAttribute.COB_TYPE_NUMERIC_DISPLAY, 8, 0, 0, null);
 		AbstractCobolField field = CobolFieldFactory.makeCobolField(4, (CobolDataStorage)null, attr);
 		makeFieldEntry(field);
-		
+
 		if(fields.length <= 1) {
 			currField.setInt(0);
 			return currField;
 		}
-		
+
 		AbstractCobolField basef = fields[0];
 		int ordmin = 0;
 		for(int i=1; i<fields.length; ++i) {
@@ -1055,11 +1060,11 @@ public class CobolIntrinsic {
 				ordmin = i;
 			}
 		}
-		
+
 		currField.setInt(ordmin + 1);
 		return currField;
 	}
-	
+
 	/**
 	 * libcob/intrinsicのcob_intr_ord_maxの実装
 	 * @param params
@@ -1068,15 +1073,15 @@ public class CobolIntrinsic {
 	 */
 	public static AbstractCobolField funcOrdMax(int params, AbstractCobolField... fields) {
 		CobolFieldAttribute attr = new CobolFieldAttribute(
-			CobolFieldAttribute.COB_TYPE_NUMERIC_DISPLAY, 8, 0, 0, null);	
+			CobolFieldAttribute.COB_TYPE_NUMERIC_DISPLAY, 8, 0, 0, null);
 		AbstractCobolField field = CobolFieldFactory.makeCobolField(4, (CobolDataStorage)null, attr);
 		makeFieldEntry(field);
-		
+
 		if(fields.length <= 1) {
 			currField.setInt(0);
 			return currField;
 		}
-		
+
 		AbstractCobolField basef = fields[0];
 		int ordmax = 0;
 		for(int i=1; i<fields.length; ++i) {
@@ -1086,7 +1091,7 @@ public class CobolIntrinsic {
 				ordmax = i;
 			}
 		}
-		
+
 		currField.setInt(ordmax + 1);
 		return currField;
 	}
@@ -1105,10 +1110,10 @@ public class CobolIntrinsic {
 				beasef = f;
 			}
 		}
-		
+
 		return beasef;
 	}
-	
+
 	/**
 	 * libcob/intrinsicのcob_intr_maxの実装
 	 * @param params
@@ -1123,10 +1128,10 @@ public class CobolIntrinsic {
 				beasef = f;
 			}
 		}
-		
+
 		return beasef;
 	}
-	
+
 	/**
 	 * libcob/intrinsicのcob_intr_midrangeの実装
 	 * @param params
@@ -1146,7 +1151,7 @@ public class CobolIntrinsic {
 				basemax = f;
 			}
 		}
-		
+
 		CobolDecimal d1 = new CobolDecimal();
 		CobolDecimal d2 = new CobolDecimal();
 		d1.setField(basemin);
@@ -1171,13 +1176,13 @@ public class CobolIntrinsic {
 		if(fields.length == 1) {
 			return fields[0];
 		}
-		
+
 		AbstractCobolField[] fieldAlloc = new AbstractCobolField[fields.length];
-		
+
 		for(int i=0; i<params; ++i) {
 			fieldAlloc[i] = fields[i];
 		}
-		
+
 		Arrays.sort(fieldAlloc, (a, b) -> a.compareTo(b));
 		int i = params / 2;
 		if(params % 2 != 0) {
@@ -1211,15 +1216,15 @@ public class CobolIntrinsic {
 		AbstractCobolField field = CobolFieldFactory.makeCobolField(8, (CobolDataStorage)null, attr);
 		CobolDecimal d1 = new CobolDecimal(BigDecimal.ZERO);
 		CobolDecimal d2 = new CobolDecimal();
-		
+
 		for(AbstractCobolField f: fields) {
 			d2.setField(f);
 			d1.add(d2);
 		}
-		
+
 		d2 = new CobolDecimal(new BigDecimal(fields.length), 0);
 		try { d1.div(d2); } catch (CobolStopRunException e) {}
-		
+
 		CobolDataStorage storage = new CobolDataStorage(8);
 		field.setDataStorage(storage);
 		try { d1.getField(field, 0); } catch (CobolStopRunException e) {}
@@ -1249,7 +1254,7 @@ public class CobolIntrinsic {
 		CobolDecimal d1 = new CobolDecimal();
 		CobolDecimal d2 = new CobolDecimal();
 		makeFieldEntry(field);
-		
+
 		AbstractCobolField f1 = funcInteger(intrBinop(srcfield1, '/', srcfield2));
 		d1.setField(srcfield2);
 		d2.setField(f1);
@@ -1273,7 +1278,7 @@ public class CobolIntrinsic {
 		AbstractCobolField field = CobolFieldFactory.makeCobolField(8, (CobolDataStorage)null, attr);
 		CobolDecimal d1 = new CobolDecimal();
 		CobolDecimal d2 = new CobolDecimal();
-		
+
 		AbstractCobolField basemin = fields[0];
 		AbstractCobolField basemax = fields[0];
 		for(int i=1; i<fields.length; ++i) {
@@ -1285,7 +1290,7 @@ public class CobolIntrinsic {
 				basemax = f;
 			}
 		}
-		
+
 		attr.setScale(basemin.getAttribute().getScale());
 		if(basemax.getAttribute().getScale() > attr.getScale()) {
 			attr.setScale(basemax.getAttribute().getScale());
@@ -1297,7 +1302,7 @@ public class CobolIntrinsic {
 		d1.getField(currField, 0);
 		return currField;
 	}
-	
+
 	/**
 	 * libcob/intrinsicのcob_intr_remの実装
 	 * @param srcfield1
@@ -1311,14 +1316,14 @@ public class CobolIntrinsic {
 		AbstractCobolField field = CobolFieldFactory.makeCobolField(8, (CobolDataStorage)null, attr);
 		AbstractCobolField f1 = funcIntegerPart(intrBinop(srcfield1, '/', srcfield2));
 		CobolDecimal d1 = new CobolDecimal();
-		CobolDecimal d2 = new CobolDecimal();	
-		
+		CobolDecimal d2 = new CobolDecimal();
+
 		d1.setField(srcfield2);
 		d2.setField(f1);
 		d2.mul(d1);
 		d1.setField(srcfield1);
 		d1.sub(d2);
-		
+
 		attr.setScale(srcfield1.getAttribute().getScale());
 		if(srcfield2.getAttribute().getScale() > attr.getScale()) {
 			attr.setScale(srcfield2.getAttribute().getScale());
@@ -1347,9 +1352,9 @@ public class CobolIntrinsic {
 			}
 			random.setSeed(seed);
 		}
-		
+
 		int r = random.nextInt(1000000001);
-		
+
 		int exp10 = 1;
 		int i=0;
 		for(i=0; i<10; ++i) {
@@ -1377,35 +1382,35 @@ public class CobolIntrinsic {
 	public static AbstractCobolField funcVariance(int prams, AbstractCobolField... fields) throws CobolStopRunException {
 		CobolFieldAttribute attr = new CobolFieldAttribute(
 			CobolFieldAttribute.COB_TYPE_NUMERIC_BINARY, 18, 0, CobolFieldAttribute.COB_FLAG_HAVE_SIGN, null);
-		AbstractCobolField field = CobolFieldFactory.makeCobolField(8, (CobolDataStorage)null, attr);	
-		
+		AbstractCobolField field = CobolFieldFactory.makeCobolField(8, (CobolDataStorage)null, attr);
+
 		if(fields.length == 1) {
 			makeFieldEntry(field);
 			currField.setInt(0);
 			return currField;
 		}
-		
+
 		CobolDecimal d1 = new CobolDecimal(new BigDecimal(0), 0);
 		CobolDecimal d2 = new CobolDecimal();
-		
+
 		for(AbstractCobolField f: fields) {
 			d2.setField(f);
 			d1.add(d2);
 		}
-		
+
 		d2.setValue(new BigDecimal(fields.length));
 		d2.setScale(0);
 		try { d1.div(d2); } catch (CobolStopRunException e) {}
-		
+
 		CobolDecimal d4 = new CobolDecimal(new BigDecimal(0), 0);
-		
+
 		for(AbstractCobolField f: fields) {
 			d2.setField(f);
 			d2.sub(d1);
 			d2.mul(d2);
 			d4.add(d2);
 		}
-		
+
 		CobolDecimal d3 = new CobolDecimal(new BigDecimal(fields.length), 0);
 		try { d4.div(d3); } catch (CobolStopRunException e) {}
 		CobolDataStorage data = new CobolDataStorage(8);
@@ -1422,7 +1427,7 @@ public class CobolIntrinsic {
 		d4.getField(currField, 0);
 		return currField;
 	}
-	
+
 	/**
 	 * libcob/intrinsicのcob_intr_standard_deviationの実装
 	 * @param prams
@@ -1433,37 +1438,37 @@ public class CobolIntrinsic {
 	public static AbstractCobolField funcStandardDeviation(int prams, AbstractCobolField... fields) throws CobolStopRunException {
 		CobolFieldAttribute attr = new CobolFieldAttribute(
 			CobolFieldAttribute.COB_TYPE_NUMERIC_BINARY, 18, 0, CobolFieldAttribute.COB_FLAG_HAVE_SIGN, null);
-		AbstractCobolField field = CobolFieldFactory.makeCobolField(8, (CobolDataStorage)null, attr);	
-		
+		AbstractCobolField field = CobolFieldFactory.makeCobolField(8, (CobolDataStorage)null, attr);
+
 		makeDoubleEntry();
-		
+
 		if(fields.length == 1) {
 			makeFieldEntry(field);
 			currField.setInt(0);
 			return currField;
 		}
-		
+
 		CobolDecimal d1 = new CobolDecimal(new BigDecimal(0), 0);
 		CobolDecimal d2 = new CobolDecimal();
-		
+
 		for(AbstractCobolField f: fields) {
 			d2.setField(f);
 			d1.add(d2);
 		}
-		
+
 		d2.setValue(new BigDecimal(fields.length));
 		d2.setScale(0);
 		try { d1.div(d2); } catch (CobolStopRunException e) {}
-		
+
 		CobolDecimal d4 = new CobolDecimal(new BigDecimal(0), 0);
-		
+
 		for(AbstractCobolField f: fields) {
 			d2.setField(f);
 			d2.sub(d1);
 			d2.mul(d2);
 			d4.add(d2);
 		}
-		
+
 		CobolDecimal d3 = new CobolDecimal(new BigDecimal(fields.length), 0);
 		try { d4.div(d3); } catch (CobolStopRunException e) {}
 		d4.getField(currField, 0);
@@ -1491,7 +1496,7 @@ public class CobolIntrinsic {
 		CobolDecimal d2 = new CobolDecimal(new BigDecimal(1), 0);
 		d1.add(d2);
 		CobolDecimal d4 = new CobolDecimal(new BigDecimal(0), 0);
-		
+
 		for(int i=1; i<fields.length; ++i) {
 			f = fields[i];
 			d2.setField(f);
@@ -1503,7 +1508,7 @@ public class CobolIntrinsic {
 			d2.div(d3);
 			d4.add(d2);
 		}
-		
+
 		d4.getField(currField, 0);
 		return currField;
 	}
