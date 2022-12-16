@@ -1,0 +1,12 @@
+#!/bin/bash
+
+if [ "${PATH_GOOGLE_JAVA_FORMAT}" = "" ]; then
+	echo "[libcobj/ Error] google-java-format is not intalled on your system." 1>&2
+	echo "[libcobj/ Error] Download google-java-format-1.15.0-all-deps (or later) from https://github.com/google/google-java-format/releases" 1>&2
+	echo "[libcobj/ Error] and set the environment variable PATH_GOOGLE_JAVA_FORMAT to the path to the jar file." 1>&2
+	exit 1
+fi
+
+SRC_FILES=src/jp/osscons/opensourcecobol/libcobj/*/*.java
+
+RESULT=$(java -jar ${PATH_GOOGLE_JAVA_FORMAT} --replace ${SRC_FILES})
