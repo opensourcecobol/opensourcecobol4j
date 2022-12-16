@@ -22933,7 +22933,7 @@ COB_BIGENDIAN="$ac_cv_c_bigendian"
 
 
 
-ac_config_files="$ac_config_files bin/cob-config Makefile lib/Makefile cobj/Makefile bin/Makefile po/Makefile.in texi/Makefile config/Makefile copy/Makefile tests/atlocal tests/Makefile tests/cobol85/Makefile"
+ac_config_files="$ac_config_files bin/cob-config Makefile lib/Makefile cobj/Makefile bin/Makefile po/Makefile.in texi/Makefile config/Makefile libcobj/Makefile copy/Makefile tests/atlocal tests/Makefile tests/cobol85/Makefile"
 
 
 ac_config_commands="$ac_config_commands chmod1"
@@ -24167,6 +24167,7 @@ do
     "po/Makefile.in") CONFIG_FILES="$CONFIG_FILES po/Makefile.in" ;;
     "texi/Makefile") CONFIG_FILES="$CONFIG_FILES texi/Makefile" ;;
     "config/Makefile") CONFIG_FILES="$CONFIG_FILES config/Makefile" ;;
+    "libcobj/Makefile") CONFIG_FILES="$CONFIG_FILES libcobj/Makefile" ;;
     "copy/Makefile") CONFIG_FILES="$CONFIG_FILES copy/Makefile" ;;
     "tests/atlocal") CONFIG_FILES="$CONFIG_FILES tests/atlocal" ;;
     "tests/Makefile") CONFIG_FILES="$CONFIG_FILES tests/Makefile" ;;
