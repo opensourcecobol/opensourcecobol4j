@@ -20,7 +20,9 @@ libcob/Makefile
 libcob/*.la
 libcob/*.lo
 libcob/*.o
-libcobj/build/
+libcobj/jp
+libcobj/build
+libcobj/libcobj.jar
 libtool
 m4/libtool.m4
 m4/ltoptions.m4
