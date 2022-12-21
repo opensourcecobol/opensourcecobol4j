@@ -97,3 +97,24 @@ jobs:
           export CLASSPATH=":/usr/lib/opensourcecobol4j/libcobj.jar:$HOME/.java_lib/sqlite.jar"
           ./i18n_utf8 || true
           cd ../
+
+  check-format:
+    runs-on: ubuntu-latest
+    steps:
+      # Checkout opensource COBOL
+      - name: Checkout opensource COBOL 4j
+        uses: actions/checkout@v2
+        
+      - name: Install dependencies
+        run: |
+          sudo apt-get install default-jdk
+
+      # Download google-java-format
+      - name: Install dependencies
+        run: |
+          curl -L -o google-java-format.jar https://github.com/google/google-java-format/releases/download/v1.15.0/google-java-format-1.15.0-all-deps.jar
+
+      - name: Check format
+        run: |
+          export PATH_GOOGLE_JAVA_FORMAT=${PWD}/google-java-format.jar
+          ./check-format
