@@ -23,8 +23,8 @@ AT_DATA([prog.cob], [
            STOP RUN.
 ])
 
-AT_CHECK([${COMPILE_MODULE} -o prog prog.cob])
-AT_CHECK([export OC_IO_CREATES=yes && ${COBCRUN} prog], [0], [00
+AT_CHECK([${COMPILE_JP_COMPAT} -o prog prog.cob])
+AT_CHECK([OC_IO_CREATES=yes java prog], [0], [00
 ])
 
 AT_CLEANUP
@@ -54,8 +54,9 @@ AT_DATA([prog.cob], [
            STOP RUN.
 ])
 
-AT_CHECK([${COMPILE_MODULE} -o prog prog.cob])
-AT_CHECK([export OC_IO_CREATES=yes && ${COBCRUN} prog], [0], [00
+
+AT_CHECK([${COMPILE_JP_COMPAT} -o prog prog.cob])
+AT_CHECK([OC_IO_CREATES=yes java prog], [0], [00
 ])
 
 AT_CLEANUP
@@ -87,8 +88,8 @@ AT_DATA([prog.cob], [
            STOP RUN.
 ])
 
-AT_CHECK([${COMPILE_MODULE} -o prog prog.cob])
-AT_CHECK([export OC_IO_CREATES=yes && ${COBCRUN} prog], [0], [00
+AT_CHECK([${COMPILE_JP_COMPAT} -o prog prog.cob])
+AT_CHECK([OC_IO_CREATES=yes java prog], [0], [00
 ])
 
 AT_CLEANUP
@@ -120,8 +121,8 @@ AT_DATA([prog.cob], [
            STOP RUN.
 ])
 
-AT_CHECK([${COMPILE_MODULE} -o prog prog.cob])
-AT_CHECK([export OC_IO_CREATES=yes && ${COBCRUN} prog], [0], [00
+AT_CHECK([${COMPILE_JP_COMPAT} -o prog prog.cob])
+AT_CHECK([OC_IO_CREATES=yes java prog], [0], [00
 ])
 
 AT_CLEANUP
@@ -151,8 +152,8 @@ AT_DATA([prog.cob], [
            STOP RUN.
 ])
 
-AT_CHECK([${COMPILE_MODULE} -o prog prog.cob])
-AT_CHECK([export OC_EXTEND_CREATES=yes && ${COBCRUN} prog], [0], [00
+AT_CHECK([${COMPILE_JP_COMPAT} -o prog prog.cob])
+AT_CHECK([OC_EXTEND_CREATES=yes java prog], [0], [00
 ])
 
 AT_CLEANUP
@@ -182,8 +183,8 @@ AT_DATA([prog.cob], [
            STOP RUN.
 ])
 
-AT_CHECK([${COMPILE_MODULE} -o prog prog.cob])
-AT_CHECK([export OC_EXTEND_CREATES=yes && ${COBCRUN} prog], [0], [00
+AT_CHECK([${COMPILE_JP_COMPAT} -o prog prog.cob])
+AT_CHECK([OC_EXTEND_CREATES=yes java prog], [0], [00
 ])
 
 AT_CLEANUP
@@ -215,8 +216,8 @@ AT_DATA([prog.cob], [
            STOP RUN.
 ])
 
-AT_CHECK([${COMPILE_MODULE} -o prog prog.cob])
-AT_CHECK([export OC_EXTEND_CREATES=yes && ${COBCRUN} prog], [0], [00
+AT_CHECK([${COMPILE_JP_COMPAT} -o prog prog.cob])
+AT_CHECK([OC_EXTEND_CREATES=yes java prog], [0], [00
 ])
 
 AT_CLEANUP
@@ -248,8 +249,8 @@ AT_DATA([prog.cob], [
            STOP RUN.
 ])
 
-AT_CHECK([${COMPILE_MODULE} -o prog prog.cob])
-AT_CHECK([export OC_EXTEND_CREATES=yes && ${COBCRUN} prog], [0], [00
+AT_CHECK([${COMPILE_JP_COMPAT} -o prog prog.cob])
+AT_CHECK([OC_EXTEND_CREATES=yes java prog], [0], [00
 ])
 
 AT_CLEANUP
@@ -280,8 +281,8 @@ AT_DATA([prog.cob], [
            STOP RUN.
 ])
 
-AT_CHECK([${COMPILE_MODULE} -o prog prog.cob])
-AT_CHECK([${COBCRUN} prog], [0], [00
+AT_CHECK([${COMPILE_JP_COMPAT} -o prog prog.cob])
+AT_CHECK([java prog], [0], [00
 ])
 
 AT_CLEANUP
@@ -312,8 +313,8 @@ AT_DATA([prog.cob], [
            STOP RUN.
 ])
 
-AT_CHECK([${COMPILE_MODULE} -o prog prog.cob])
-AT_CHECK([${COBCRUN} prog], [0], [00
+AT_CHECK([${COMPILE_JP_COMPAT} -o prog prog.cob])
+AT_CHECK([java prog], [0], [00
 ])
 
 AT_CLEANUP
@@ -346,8 +347,8 @@ AT_DATA([prog.cob], [
            STOP RUN.
 ])
 
-AT_CHECK([${COMPILE_MODULE} -o prog prog.cob])
-AT_CHECK([${COBCRUN} prog], [0], [00
+AT_CHECK([${COMPILE_JP_COMPAT} -o prog prog.cob])
+AT_CHECK([java prog], [0], [00
 ])
 
 AT_CLEANUP
@@ -382,8 +383,8 @@ AT_DATA([prog.cob], [
            STOP RUN.
 ])
 
-AT_CHECK([${COMPILE_MODULE} -o prog prog.cob])
-AT_CHECK([${COBCRUN} prog], [0], [00
+AT_CHECK([${COMPILE_JP_COMPAT} -o prog prog.cob])
+AT_CHECK([java prog], [0], [00
 ])
 
 AT_CLEANUP
@@ -418,8 +419,8 @@ AT_DATA([prog.cob], [
            STOP RUN.
 ])
 
-AT_CHECK([${COMPILE_MODULE} -o prog prog.cob])
-AT_CHECK([${COBCRUN} prog], [0], [91
+AT_CHECK([${COMPILE_JP_COMPAT} -o prog prog.cob])
+AT_CHECK([java prog], [0], [91
 ])
 
 AT_CLEANUP
@@ -448,8 +449,8 @@ AT_DATA([prog.cob], [
 ])
 
 AT_CHECK([echo 000011112222 >TEST-FILE])
-AT_CHECK([${COMPILE_MODULE} -o prog prog.cob])
-AT_CHECK([COB_IO_ASSUME_REWRITE=Y ${COBCRUN} prog])
+AT_CHECK([${COMPILE_JP_COMPAT} -o prog prog.cob])
+AT_CHECK([COB_IO_ASSUME_REWRITE=Y java prog])
 AT_CHECK([test `cat TEST-FILE` = '0000AAAA2222'])
 
 AT_CLEANUP

@@ -20,10 +20,8 @@ package jp.osscons.opensourcecobol.libcobj.common;
 
 import java.time.DateTimeException;
 import java.time.LocalDateTime;
-import java.util.Calendar;
 import java.util.Scanner;
 import java.util.regex.MatchResult;
-
 import jp.osscons.opensourcecobol.libcobj.data.AbstractCobolField;
 import jp.osscons.opensourcecobol.libcobj.data.CobolDataStorage;
 import jp.osscons.opensourcecobol.libcobj.exceptions.CobolException;
@@ -33,29 +31,29 @@ import jp.osscons.opensourcecobol.libcobj.exceptions.CobolStopRunException;
 import jp.osscons.opensourcecobol.libcobj.file.CobolFile;
 
 public class CobolUtil {
-	private static int cob_io_assume_rewrite = 0;
-	private static boolean cob_verbose = false;
-	private static handlerlist hdlrs = null;
-	private static String runtime_err_str = null;	
-	
-	public static LocalDateTime cobLocalTm = null;
-	public static String cobLocalEnv = null;
-	
-	public static String[] commandLineArgs = null;
-	public static int currentArgIndex = 1;
-	
-	public static boolean nibbleCForUnsigned = false;
-	
-	public static int commlncnt = 0;
-	public static byte[] commlnptr = null;
-	
-	public static boolean[] cobSwitch = new boolean[8];
-	public static int cobSaveCallParams = 0;
-	
-	public static boolean verbose = false;
-	public static boolean cobErrorOnExitFlag = false;
-	
-	private static boolean lineTrace = false;
+  private static int cob_io_assume_rewrite = 0;
+  private static boolean cob_verbose = false;
+  private static handlerlist hdlrs = null;
+  private static String runtime_err_str = null;
+
+  public static LocalDateTime cobLocalTm = null;
+  public static String cobLocalEnv = null;
+
+  public static String[] commandLineArgs = null;
+  public static int currentArgIndex = 1;
+
+  public static boolean nibbleCForUnsigned = false;
+
+  public static int commlncnt = 0;
+  public static byte[] commlnptr = null;
+
+  public static boolean[] cobSwitch = new boolean[8];
+  public static int cobSaveCallParams = 0;
+
+  public static boolean verbose = false;
+  public static boolean cobErrorOnExitFlag = false;
+
+  private static boolean lineTrace = false;
 
   private static String currentProgramId;
   private static String sourceFile;
@@ -100,56 +98,54 @@ public class CobolUtil {
     return cob_io_assume_rewrite;
   }
 
-	/**
-	 * libcob/common.cのcob_initの実装
-	 * TODO 未完成
-	 */
-	public static void cob_init(String[] argv, boolean cob_initialized) {
-		if(!cob_initialized) {
-			CobolUtil.commandLineArgs = argv;
-			CobolInspect.initString();
-			CobolFile.cob_init_fileio();
-			CobolIntrinsic.init();
-			
-			for(int i=0; i<8; ++i) {
-				String envVariableName = String.format("COB_SWITCH_%d", i + 1);
-				String envValue = System.getenv(envVariableName);
-				if(envValue == null) {
-					CobolUtil.cobSwitch[i] = false;
-				} else  {
-					CobolUtil.cobSwitch[i] = envValue.equals("ON");
-				}
-			}
-		}
+  /** libcob/common.cのcob_initの実装 TODO 未完成 */
+  public static void cob_init(String[] argv, boolean cob_initialized) {
+    if (!cob_initialized) {
+      CobolUtil.commandLineArgs = argv;
+      CobolInspect.initString();
+      CobolFile.cob_init_fileio();
+      CobolIntrinsic.init();
 
-		String s;
-		
-		s = System.getenv("COB_DATE");
-		if(s != null) {
-			Scanner scan = new Scanner(s);
-			scan.findInLine("(\\d+)/(\\d+)/(\\d+)");
-			MatchResult result = scan.match();
-			date_time_block: if(result.groupCount() != 3) {
-				System.err.println("Warning: COB_DATE format invalid, ignored.");
-			} else  {
-				int year = Integer.parseInt(result.group(1));
-				int month = Integer.parseInt(result.group(2));
-				int dayOfMonth = Integer.parseInt(result.group(3));
-				LocalDateTime tm;
-				try {
-					tm = LocalDateTime.of(year, month, dayOfMonth, 0, 0);
-				} catch (DateTimeException e) {
-					break date_time_block;
-				}
-				cobLocalTm = tm;
-			}
-		}
-		
-		s = System.getenv("COB_VERBOSE");
-		if(s != null && s.length() > 0 && (s.charAt(0) == 'y' || s.charAt(0) == 'Y')) {
-			CobolUtil.cob_verbose = true;
-		}
-	}
+      for (int i = 0; i < 8; ++i) {
+        String envVariableName = String.format("COB_SWITCH_%d", i + 1);
+        String envValue = System.getenv(envVariableName);
+        if (envValue == null) {
+          CobolUtil.cobSwitch[i] = false;
+        } else {
+          CobolUtil.cobSwitch[i] = envValue.equals("ON");
+        }
+      }
+    }
+
+    String s;
+
+    s = System.getenv("COB_DATE");
+    if (s != null) {
+      Scanner scan = new Scanner(s);
+      scan.findInLine("(\\d+)/(\\d+)/(\\d+)");
+      MatchResult result = scan.match();
+      date_time_block:
+      if (result.groupCount() != 3) {
+        System.err.println("Warning: COB_DATE format invalid, ignored.");
+      } else {
+        int year = Integer.parseInt(result.group(1));
+        int month = Integer.parseInt(result.group(2));
+        int dayOfMonth = Integer.parseInt(result.group(3));
+        LocalDateTime tm;
+        try {
+          tm = LocalDateTime.of(year, month, dayOfMonth, 0, 0);
+        } catch (DateTimeException e) {
+          break date_time_block;
+        }
+        cobLocalTm = tm;
+      }
+    }
+
+    s = System.getenv("COB_VERBOSE");
+    if (s != null && s.length() > 0 && (s.charAt(0) == 'y' || s.charAt(0) == 'Y')) {
+      CobolUtil.cob_verbose = true;
+    }
+  }
 
   /**
    * libcob/common.cとcob_localtime
