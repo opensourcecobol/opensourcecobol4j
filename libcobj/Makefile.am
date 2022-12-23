@@ -1,21 +1,4 @@
-# Copyright (C) 2021-2022 TOKYO SYSTEM HOUSE Co., Ltd.
-# 
-# This library is free software; you can redistribute it and/or
-# modify it under the terms of the GNU Lesser General Public License
-# as published by the Free Software Foundation; either version 3.0,
-# or (at your option) any later version.
-# 
-# This library is distributed in the hope that it will be useful,
-# but WITHOUT ANY WARRANTY; without even the implied warranty of
-# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-# GNU Lesser General Public License for more details.
-# 
-# You should have received a copy of the GNU Lesser General Public
-# License along with this library; see the file COPYING.LIB.  If
-# not, write to the Free Software Foundation, 51 Franklin Street, Fifth Floor
-# Boston, MA 02110-1301 USA
-
-SRC_FILES=\
+SRC_FILES = \
 	./src/jp/osscons/opensourcecobol/libcobj/Const.java \
 	./src/jp/osscons/opensourcecobol/libcobj/call/CobolCallDataContent.java \
 	./src/jp/osscons/opensourcecobol/libcobj/call/CobolResolve.java \
@@ -80,15 +63,15 @@ SRC_FILES=\
 	./src/jp/osscons/opensourcecobol/libcobj/file/KeyComponent.java \
 	./src/jp/osscons/opensourcecobol/libcobj/termio/CobolTerminal.java
 
-all: build/libcobj.jar
+all: libcobj.jar
 
-build/libcobj.jar: $(SRC_FILES)
-	javac -encoding UTF8 -d build $^
-	cd build && jar cf libcobj.jar jp
+libcobj.jar: $(SRC_FILES)
+	javac -encoding UTF8 -d . $^
+	jar cf libcobj.jar jp
 
 clean:
-	rm -rf build/
+	rm -rf jp/
 
 install:
-
-.PHONY: clean all install
+	mkdir -p $(prefix)/lib/opensourcecobol4j/
+	install libcobj.jar $(prefix)/lib/opensourcecobol4j/
