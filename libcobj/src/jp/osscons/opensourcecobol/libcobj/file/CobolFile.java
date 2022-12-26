@@ -165,7 +165,7 @@ public class CobolFile {
   protected static String file_open_name;
   protected static byte[] file_open_buff = new byte[1024];
 
-  protected static final String[] prefix = {"DD_", "dd_", ""};
+  protected static final String[] prefix = { "DD_", "dd_", "" };
   protected static final int NUM_PREFIX = prefix.length;
 
   protected static int eop_status = 0;
@@ -174,16 +174,16 @@ public class CobolFile {
   private static List<CobolFile> file_cache = new ArrayList<CobolFile>();
 
   protected static int[] status_exception = {
-    0,
-    CobolExceptionId.COB_EC_I_O_AT_END,
-    CobolExceptionId.COB_EC_I_O_INVALID_KEY,
-    CobolExceptionId.COB_EC_I_O_PERMANENT_ERROR,
-    CobolExceptionId.COB_EC_I_O_LOGIC_ERROR,
-    CobolExceptionId.COB_EC_I_O_RECORD_OPERATION,
-    CobolExceptionId.COB_EC_I_O_FILE_SHARING,
-    CobolExceptionId.COB_EC_I_O,
-    CobolExceptionId.COB_EC_I_O,
-    CobolExceptionId.COB_EC_I_O_IMP
+      0,
+      CobolExceptionId.COB_EC_I_O_AT_END,
+      CobolExceptionId.COB_EC_I_O_INVALID_KEY,
+      CobolExceptionId.COB_EC_I_O_PERMANENT_ERROR,
+      CobolExceptionId.COB_EC_I_O_LOGIC_ERROR,
+      CobolExceptionId.COB_EC_I_O_RECORD_OPERATION,
+      CobolExceptionId.COB_EC_I_O_FILE_SHARING,
+      CobolExceptionId.COB_EC_I_O,
+      CobolExceptionId.COB_EC_I_O,
+      CobolExceptionId.COB_EC_I_O_IMP
   };
   protected String select_name;
   public byte[] file_status;
@@ -229,7 +229,8 @@ public class CobolFile {
     this.linorkeyptr = ptr;
   }
 
-  public CobolFile() {}
+  public CobolFile() {
+  }
 
   public CobolFile(
       String select_name,
@@ -286,7 +287,8 @@ public class CobolFile {
   }
 
   /**
-   * libcob/fileio.cのsave_statusの実装 RETURN_STATUSマクロは実装できないため,本メソッドの呼び出し後の次の文はreturn;を書くこと.
+   * libcob/fileio.cのsave_statusの実装
+   * RETURN_STATUSマクロは実装できないため,本メソッドの呼び出し後の次の文はreturn;を書くこと.
    *
    * @param status
    * @param fnstatus
@@ -684,32 +686,20 @@ public class CobolFile {
 
     boolean was_not_exist = false;
     if (this.organization == COB_ORG_INDEXED) {
-      if (Files.notExists(Paths.get(file_open_name))
-              && (mode == COB_OPEN_I_O && CobolUtil.checkEnv(COB_IO_CREATES, "yes") == 1)
-          || (mode == COB_OPEN_EXTEND && CobolUtil.checkEnv(COB_EXTEND_CREATES, "yes") == 1)) {
-        saveStatus(COB_STATUS_00_SUCCESS, fnstatus);
-        return;
-      }
-      // if(!Files.exists(Paths.get(file_open_name))) {
-      else {
+      if (!Files.exists(Paths.get(file_open_name))) {
         was_not_exist = true;
-        if (mode != COB_OPEN_OUTPUT
-            && !this.flag_optional
-            && (mode != COB_OPEN_I_O || System.getenv(COB_IO_CREATES).equals("yes"))
-            && (mode != COB_OPEN_EXTEND || System.getenv(COB_EXTEND_CREATES).equals("yes"))) {
+        if (mode != COB_OPEN_OUTPUT && !this.flag_optional &&
+            (mode != COB_OPEN_I_O || System.getenv(COB_IO_CREATES).equals("yes")) &&
+            (mode != COB_OPEN_EXTEND || System.getenv(COB_EXTEND_CREATES).equals("yes"))) {
           saveStatus(COB_STATUS_35_NOT_EXISTS, fnstatus);
           return;
         }
       }
     } else if (Files.notExists(Paths.get(file_open_name))) {
       was_not_exist = true;
-      if (mode == COB_OPEN_I_O && CobolUtil.checkEnv(COB_IO_CREATES, "yes") == 1) {
-        saveStatus(COB_STATUS_00_SUCCESS, fnstatus);
-        return;
-      } else if (mode != COB_OPEN_OUTPUT
-          && !this.flag_optional
-          && (mode != COB_OPEN_I_O || CobolUtil.checkEnv(COB_IO_CREATES, "yes") == 0)
-          && (mode != COB_OPEN_EXTEND || CobolUtil.checkEnv(COB_EXTEND_CREATES, "yes") == 0)) {
+      if (mode != COB_OPEN_OUTPUT && !this.flag_optional &&
+          (mode != COB_OPEN_I_O || CobolUtil.checkEnv(COB_IO_CREATES, "yes") == 0) &&
+          (mode != COB_OPEN_EXTEND || CobolUtil.checkEnv(COB_EXTEND_CREATES, "yes") == 0)) {
         saveStatus(COB_STATUS_35_NOT_EXISTS, fnstatus);
         return;
       }
@@ -781,25 +771,24 @@ public class CobolFile {
           fp = FileChannel.open(Paths.get(filename), StandardOpenOption.READ);
           break;
         case COB_OPEN_OUTPUT:
-          fp =
-              FileChannel.open(
-                  Paths.get(filename),
-                  StandardOpenOption.WRITE,
-                  StandardOpenOption.CREATE,
-                  StandardOpenOption.TRUNCATE_EXISTING);
+          fp = FileChannel.open(
+              Paths.get(filename),
+              StandardOpenOption.WRITE,
+              StandardOpenOption.CREATE,
+              StandardOpenOption.TRUNCATE_EXISTING);
           break;
         case COB_OPEN_I_O:
-          fp =
-              FileChannel.open(
-                  Paths.get(filename), StandardOpenOption.READ, StandardOpenOption.WRITE);
+          fp = FileChannel.open(
+              Paths.get(filename), StandardOpenOption.READ, StandardOpenOption.WRITE, StandardOpenOption.CREATE);
           break;
         case COB_OPEN_EXTEND:
-          fp =
-              FileChannel.open(
-                  Paths.get(filename), StandardOpenOption.APPEND, StandardOpenOption.CREATE);
+          fp = FileChannel.open(
+              Paths.get(filename), StandardOpenOption.APPEND, StandardOpenOption.CREATE);
           break;
       }
-    } catch (IOException e) {
+    } catch (
+
+    IOException e) {
       if (fp != null) {
         this.file.setChannel(fp, null);
       }
@@ -1031,7 +1020,7 @@ public class CobolFile {
       read_opts &= ~COB_READ_LOCK;
     }
 
-    if (this.organization == COB_ORG_INDEXED /* && bdb_env != null*/) {
+    if (this.organization == COB_ORG_INDEXED /* && bdb_env != null */) {
       if (this.open_mode != COB_OPEN_I_O || (this.lock_mode & COB_LOCK_EXCLUSIVE) != 0) {
         read_opts &= ~COB_READ_LOCK;
       } else if ((this.lock_mode & COB_LOCK_AUTOMATIC) != 0
@@ -1100,8 +1089,7 @@ public class CobolFile {
     }
 
     String openMode = String.format("%02d", (int) this.last_open_mode);
-    if (invokeFun(COB_IO_WRITE, this, null, rec.getDataStorage(), fnstatus, openMode, null, null)
-        != 0) {
+    if (invokeFun(COB_IO_WRITE, this, null, rec.getDataStorage(), fnstatus, openMode, null, null) != 0) {
       return;
     }
 
@@ -1275,7 +1263,8 @@ public class CobolFile {
   public void unlock_() {
     if (this.open_mode != COB_OPEN_CLOSED && this.open_mode != COB_OPEN_LOCKED) {
       this.file.flush();
-      if ((this.lock_mode & COB_LOCK_EXCLUSIVE) == 0) {}
+      if ((this.lock_mode & COB_LOCK_EXCLUSIVE) == 0) {
+      }
     }
   }
 
