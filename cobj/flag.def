@@ -74,3 +74,6 @@ CB_FLAG (cb_flag_null_param, "null-param",
 
 CB_FLAG (cb_flag_serial_variable, "serial-variable",
 	 N_("Instead of embedding COBOL variable names in Java variable names, give them serial numbers."))
+
+CB_FLAG (cb_flag_short_variable, "short-variable",
+	 N_("Use short variable names in Java source code. This feature may cause compilation errors"))
