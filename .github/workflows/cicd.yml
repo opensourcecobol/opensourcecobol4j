@@ -122,4 +122,4 @@ jobs:
       - name: Run PMD
         uses: pmd/pmd-github-action@v1
         with:
-          rulesets: 'ruleset.xml'
+          rulesets: .github/ruleset.xml
