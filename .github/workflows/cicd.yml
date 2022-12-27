@@ -123,6 +123,7 @@ jobs:
         uses: pmd/pmd-github-action@v1
         with:
           rulesets: .github/ruleset.xml
+          analyzeModifiedFilesOnly: false
 
       - name: Show the result of PMD check
         if: steps.pmd.outputs.violations != 0
