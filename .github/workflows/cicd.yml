@@ -123,4 +123,4 @@ jobs:
 
       - name: Run PMD
         run: |
-          pmd-bin-6.52.0/bin/run.sh pmd -d ${PWD}/libcobj/src -R rulesets/java/quickstart.xml -f text
+          pmd-bin-6.52.0/bin/run.sh pmd -d ${PWD}/libcobj/src -R rulesets/java/quickstart.xml -f text || true
