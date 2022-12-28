@@ -6,17 +6,29 @@ on:
     
 jobs:
   run-tests:
+    strategy:
+      matrix:
+        os: ["ubuntu:22.04", "almalinux:9"]
     runs-on: ubuntu-latest
+    container:
+      image: ${{ matrix.os }}
     steps:
-      # Checkout opensource COBOL
+        
+      - name: Install dependencies on Ubuntu 22.04
+        if: matrix.os == 'ubuntu:22.04'
+        run: |
+          apt-get update -y
+          apt-get install -y default-jdk
+          apt-get install -y build-essential bison flex gettext texinfo automake autoconf libtool 
+
+      - name: Install dependencies on AlmaLinux 9
+        if: matrix.os == 'almalinux:9'
+        run: |
+          dnf -y update
+          dnf install -y java-17-openjdk-devel gcc gcc-c++ make bison flex automake autoconf libtool diffutils gettext
+
       - name: Checkout opensource COBOL 4j
         uses: actions/checkout@v2
-        
-      - name: Install dependencies
-        run: |
-          sudo apt-get update
-          sudo apt-get install default-jdk
-          sudo apt-get install -y build-essential bison flex gettext texinfo
       
       - name: Install opensource COBOL 4j
         run: |
@@ -25,7 +37,7 @@ jobs:
           export CLASSPATH=":$HOME/.java_lib/sqlite.jar"
           ./configure --prefix=/usr/
           make
-          sudo make install
+          make install
           export CLASSPATH=":/usr/lib/opensourcecobol4j/libcobj.jar:$HOME/.java_lib/sqlite.jar"
   
       - name: Make test scripts
@@ -93,7 +105,7 @@ jobs:
           export CLASSPATH=":$HOME/.java_lib/sqlite.jar"
           ./configure --prefix=/usr/ --with-vbisam --enable-utf8
           make
-          sudo make install
+          make install
           export CLASSPATH=":/usr/lib/opensourcecobol4j/libcobj.jar:$HOME/.java_lib/sqlite.jar"
           ./i18n_utf8 || true
           cd ../
