@@ -1,5 +1,19 @@
 NEWS - user visible changes				-*- outline -*-
 
+* opensource cobol 4j 1.0.6
+
+** New Features
+    (1) Add -fshort-variable option
+    (2) make install command installs libcobj.jar in ${prefix}/lib/opensourcecobol4j
+
+** Bug fixes
+    (1) Fix FUNCTION CURRENT-DATE
+
+** Miscellaneous
+    (1) Build and run tests on AlmaLinux 9
+
+-----------------------------------------------------------------------
+
 * opensource cobol 4j 1.0.5
 
 ** New Features
