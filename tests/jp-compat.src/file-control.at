@@ -24,7 +24,7 @@ AT_DATA([prog.cob], [
 ])
 
 AT_CHECK([${COMPILE_MODULE} -o prog prog.cob])
-AT_CHECK([export OC_IO_CREATES=yes && ${COBCRUN} prog], [0], [00
+AT_CHECK([export OC_IO_CREATES=yes && ${RUN_MODULE} prog], [0], [00
 ])
 
 AT_CLEANUP
@@ -55,7 +55,7 @@ AT_DATA([prog.cob], [
 ])
 
 AT_CHECK([${COMPILE_MODULE} -o prog prog.cob])
-AT_CHECK([export OC_IO_CREATES=yes && ${COBCRUN} prog], [0], [00
+AT_CHECK([export OC_IO_CREATES=yes && ${RUN_MODULE} prog], [0], [00
 ])
 
 AT_CLEANUP
@@ -88,7 +88,7 @@ AT_DATA([prog.cob], [
 ])
 
 AT_CHECK([${COMPILE_MODULE} -o prog prog.cob])
-AT_CHECK([export OC_IO_CREATES=yes && ${COBCRUN} prog], [0], [00
+AT_CHECK([export OC_IO_CREATES=yes && ${RUN_MODULE} prog], [0], [00
 ])
 
 AT_CLEANUP
@@ -121,7 +121,7 @@ AT_DATA([prog.cob], [
 ])
 
 AT_CHECK([${COMPILE_MODULE} -o prog prog.cob])
-AT_CHECK([export OC_IO_CREATES=yes && ${COBCRUN} prog], [0], [00
+AT_CHECK([export OC_IO_CREATES=yes && ${RUN_MODULE} prog], [0], [00
 ])
 
 AT_CLEANUP
@@ -152,7 +152,7 @@ AT_DATA([prog.cob], [
 ])
 
 AT_CHECK([${COMPILE_MODULE} -o prog prog.cob])
-AT_CHECK([export OC_EXTEND_CREATES=yes && ${COBCRUN} prog], [0], [00
+AT_CHECK([export OC_EXTEND_CREATES=yes && ${RUN_MODULE} prog], [0], [00
 ])
 
 AT_CLEANUP
@@ -183,7 +183,7 @@ AT_DATA([prog.cob], [
 ])
 
 AT_CHECK([${COMPILE_MODULE} -o prog prog.cob])
-AT_CHECK([export OC_EXTEND_CREATES=yes && ${COBCRUN} prog], [0], [00
+AT_CHECK([export OC_EXTEND_CREATES=yes && ${RUN_MODULE} prog], [0], [00
 ])
 
 AT_CLEANUP
@@ -216,7 +216,7 @@ AT_DATA([prog.cob], [
 ])
 
 AT_CHECK([${COMPILE_MODULE} -o prog prog.cob])
-AT_CHECK([export OC_EXTEND_CREATES=yes && ${COBCRUN} prog], [0], [00
+AT_CHECK([export OC_EXTEND_CREATES=yes && ${RUN_MODULE} prog], [0], [00
 ])
 
 AT_CLEANUP
@@ -249,7 +249,7 @@ AT_DATA([prog.cob], [
 ])
 
 AT_CHECK([${COMPILE_MODULE} -o prog prog.cob])
-AT_CHECK([export OC_EXTEND_CREATES=yes && ${COBCRUN} prog], [0], [00
+AT_CHECK([export OC_EXTEND_CREATES=yes && ${RUN_MODULE} prog], [0], [00
 ])
 
 AT_CLEANUP
@@ -281,7 +281,7 @@ AT_DATA([prog.cob], [
 ])
 
 AT_CHECK([${COMPILE_MODULE} -o prog prog.cob])
-AT_CHECK([${COBCRUN} prog], [0], [00
+AT_CHECK([${RUN_MODULE} prog], [0], [00
 ])
 
 AT_CLEANUP
@@ -313,7 +313,7 @@ AT_DATA([prog.cob], [
 ])
 
 AT_CHECK([${COMPILE_MODULE} -o prog prog.cob])
-AT_CHECK([${COBCRUN} prog], [0], [00
+AT_CHECK([${RUN_MODULE} prog], [0], [00
 ])
 
 AT_CLEANUP
@@ -347,7 +347,7 @@ AT_DATA([prog.cob], [
 ])
 
 AT_CHECK([${COMPILE_MODULE} -o prog prog.cob])
-AT_CHECK([${COBCRUN} prog], [0], [00
+AT_CHECK([${RUN_MODULE} prog], [0], [00
 ])
 
 AT_CLEANUP
@@ -383,7 +383,7 @@ AT_DATA([prog.cob], [
 ])
 
 AT_CHECK([${COMPILE_MODULE} -o prog prog.cob])
-AT_CHECK([${COBCRUN} prog], [0], [00
+AT_CHECK([${RUN_MODULE} prog], [0], [00
 ])
 
 AT_CLEANUP
@@ -419,7 +419,7 @@ AT_DATA([prog.cob], [
 ])
 
 AT_CHECK([${COMPILE_MODULE} -o prog prog.cob])
-AT_CHECK([${COBCRUN} prog], [0], [91
+AT_CHECK([${RUN_MODULE} prog], [0], [91
 ])
 
 AT_CLEANUP
@@ -449,7 +449,7 @@ AT_DATA([prog.cob], [
 
 AT_CHECK([echo 000011112222 >TEST-FILE])
 AT_CHECK([${COMPILE_MODULE} -o prog prog.cob])
-AT_CHECK([COB_IO_ASSUME_REWRITE=Y ${COBCRUN} prog])
+AT_CHECK([COB_IO_ASSUME_REWRITE=Y ${RUN_MODULE} prog])
 AT_CHECK([test `cat TEST-FILE` = '0000AAAA2222'])
 
 AT_CLEANUP

@@ -781,7 +781,10 @@ public class CobolFile {
         case COB_OPEN_I_O:
           fp =
               FileChannel.open(
-                  Paths.get(filename), StandardOpenOption.READ, StandardOpenOption.WRITE);
+                  Paths.get(filename),
+                  StandardOpenOption.READ,
+                  StandardOpenOption.WRITE,
+                  StandardOpenOption.CREATE);
           break;
         case COB_OPEN_EXTEND:
           fp =
@@ -1021,7 +1024,7 @@ public class CobolFile {
       read_opts &= ~COB_READ_LOCK;
     }
 
-    if (this.organization == COB_ORG_INDEXED /* && bdb_env != null*/) {
+    if (this.organization == COB_ORG_INDEXED /* && bdb_env != null */) {
       if (this.open_mode != COB_OPEN_I_O || (this.lock_mode & COB_LOCK_EXCLUSIVE) != 0) {
         read_opts &= ~COB_READ_LOCK;
       } else if ((this.lock_mode & COB_LOCK_AUTOMATIC) != 0
