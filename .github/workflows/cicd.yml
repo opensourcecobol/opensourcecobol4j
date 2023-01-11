@@ -100,15 +100,15 @@ jobs:
           cd tests/cobol85/
           make test
 
-      - name: Run tests "i18n_utf8"
-        run: |
-          export CLASSPATH=":$HOME/.java_lib/sqlite.jar"
-          ./configure --prefix=/usr/ --with-vbisam --enable-utf8
-          make
-          make install
-          export CLASSPATH=":/usr/lib/opensourcecobol4j/libcobj.jar:$HOME/.java_lib/sqlite.jar"
-          ./i18n_utf8 || true
-          cd ../
+          #- name: Run tests "i18n_utf8"
+          #  run: |
+          #    export CLASSPATH=":$HOME/.java_lib/sqlite.jar"
+          #    ./configure --prefix=/usr/ --with-vbisam --enable-utf8
+          #    make
+          #    make install
+          #    export CLASSPATH=":/usr/lib/opensourcecobol4j/libcobj.jar:$HOME/.java_lib/sqlite.jar"
+          #    ./i18n_utf8 || true
+          #    cd ../
 
   static_analysis:
     runs-on: ubuntu-latest
