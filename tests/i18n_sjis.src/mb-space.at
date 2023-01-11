@@ -1,4 +1,5 @@
 AT_SETUP([Zenkaku SPC delims in headings])
+AT_CHECK([${SKIP_TEST}])
 
 AT_DATA([prog.cob], [
        IDENTIFICATIONÅ@DIVISION.
@@ -17,6 +18,7 @@ AT_CHECK([java prog], [0], [OK])
 AT_CLEANUP
 
 AT_SETUP([Zenkaku SPC delims in record def])
+AT_CHECK([${SKIP_TEST}])
 
 AT_DATA([prog.cob], [
        IDENTIFICATION   DIVISION.
@@ -41,6 +43,7 @@ AT_CHECK([java prog], [0], [Zen SPC between item name and PIC clause])
 AT_CLEANUP
 
 AT_SETUP([Zenkaku SPC delims in COPY stmt])
+AT_CHECK([${SKIP_TEST}])
 
 AT_DATA([inc.cpy], [
        01 çÄñ⁄Å@PIC X(2) VALUE "OK".
