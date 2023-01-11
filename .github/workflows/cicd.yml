@@ -64,20 +64,20 @@ jobs:
         run: |
           export CLASSPATH=":/usr/lib/opensourcecobol4j/libcobj.jar:$HOME/.java_lib/sqlite.jar"
           cd tests/
-          ./data-rep || true
+          ./data-rep
           cd ../
 
       - name: Run tests "i18n_sjis"
         run: |
           export CLASSPATH=":/usr/lib/opensourcecobol4j/libcobj.jar:$HOME/.java_lib/sqlite.jar"
           cd tests/
-          ./i18n_sjis || true
+          ./i18n_sjis
 
       - name: Run tests "jp-compat"
         run: |
           export CLASSPATH=":/usr/lib/opensourcecobol4j/libcobj.jar:$HOME/.java_lib/sqlite.jar"
           cd tests/
-          ./jp-compat || true
+          ./jp-compat
           cd ../
 
       #- name: Run tests "run"
@@ -91,7 +91,7 @@ jobs:
         run: |
           export CLASSPATH=":/usr/lib/opensourcecobol4j/libcobj.jar:$HOME/.java_lib/sqlite.jar"
           cd tests/
-          ./syntax || true
+          ./syntax
           cd ../
 
       - name: Run NIST test
