@@ -1,4 +1,5 @@
 AT_SETUP([USERFH - READ LOCK - so])
+AT_CHECK([${SKIP_TEST}])
 
 AT_CHECK([test $SHREXT != "dll" || exit 77])
 
