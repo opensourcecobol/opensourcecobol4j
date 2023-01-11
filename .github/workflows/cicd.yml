@@ -110,7 +110,7 @@ jobs:
           ./i18n_utf8 || true
           cd ../
 
-  check-format:
+  static_analysis:
     runs-on: ubuntu-latest
     steps:
       # Checkout opensource COBOL
@@ -121,12 +121,18 @@ jobs:
         run: |
           sudo apt-get install default-jdk
 
-      # Download google-java-format
+      # Download google-java-format and PMD
       - name: Install dependencies
         run: |
           curl -L -o google-java-format.jar https://github.com/google/google-java-format/releases/download/v1.15.0/google-java-format-1.15.0-all-deps.jar
+          curl -L -o pmd-bin-6.52.0.zip https://github.com/pmd/pmd/releases/download/pmd_releases%2F6.52.0/pmd-bin-6.52.0.zip
+          unzip pmd-bin-6.52.0.zip
 
-      - name: Check format
+      - name: Check format with google-java-format
         run: |
           export PATH_GOOGLE_JAVA_FORMAT=${PWD}/google-java-format.jar
           ./check-format
+
+      - name: Run PMD
+        run: |
+          pmd-bin-6.52.0/bin/run.sh pmd -d ${PWD}/libcobj/src -R ${PWD}/.github/ruleset.xml -f text || true

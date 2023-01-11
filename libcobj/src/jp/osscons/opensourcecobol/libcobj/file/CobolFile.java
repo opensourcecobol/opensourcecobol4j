@@ -688,8 +688,8 @@ public class CobolFile {
         was_not_exist = true;
         if (mode != COB_OPEN_OUTPUT
             && !this.flag_optional
-            && (mode != COB_OPEN_I_O || System.getenv(COB_IO_CREATES).equals("yes"))
-            && (mode != COB_OPEN_EXTEND || System.getenv(COB_EXTEND_CREATES).equals("yes"))) {
+            && (mode != COB_OPEN_I_O || !System.getenv(COB_IO_CREATES).equals("yes"))
+            && (mode != COB_OPEN_EXTEND || !System.getenv(COB_EXTEND_CREATES).equals("yes"))) {
           saveStatus(COB_STATUS_35_NOT_EXISTS, fnstatus);
           return;
         }
@@ -781,7 +781,10 @@ public class CobolFile {
         case COB_OPEN_I_O:
           fp =
               FileChannel.open(
-                  Paths.get(filename), StandardOpenOption.READ, StandardOpenOption.WRITE);
+                  Paths.get(filename),
+                  StandardOpenOption.READ,
+                  StandardOpenOption.WRITE,
+                  StandardOpenOption.CREATE);
           break;
         case COB_OPEN_EXTEND:
           fp =
@@ -1021,7 +1024,7 @@ public class CobolFile {
       read_opts &= ~COB_READ_LOCK;
     }
 
-    if (this.organization == COB_ORG_INDEXED /* && bdb_env != null*/) {
+    if (this.organization == COB_ORG_INDEXED /* && bdb_env != null */) {
       if (this.open_mode != COB_OPEN_I_O || (this.lock_mode & COB_LOCK_EXCLUSIVE) != 0) {
         read_opts &= ~COB_READ_LOCK;
       } else if ((this.lock_mode & COB_LOCK_AUTOMATIC) != 0

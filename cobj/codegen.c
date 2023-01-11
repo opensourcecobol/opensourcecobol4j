@@ -185,6 +185,9 @@ get_java_identifier_field(struct cb_field* f) {
 	char *buf = malloc(COB_SMALL_BUFF);
 	if(cb_flag_serial_variable) {
 		sprintf(buf, "%s%d", CB_PREFIX_FIELD, f->id);
+	} else if(cb_flag_short_variable) {
+		strcpy(buf, CB_PREFIX_FIELD);
+		strcpy_identifier_cobol_to_java(buf + strlen(CB_PREFIX_FIELD), f->name);
 	} else {
 		strcpy(buf, CB_PREFIX_FIELD);
 		get_java_identifier_helper(f, buf + strlen(CB_PREFIX_FIELD));
@@ -197,6 +200,9 @@ get_java_identifier_base(struct cb_field* f) {
 	char *buf = malloc(COB_SMALL_BUFF);
 	if(cb_flag_serial_variable) {
 		sprintf(buf, "%s%d", CB_PREFIX_BASE, f->id);
+	} else if(cb_flag_short_variable) {
+		strcpy(buf, CB_PREFIX_BASE);
+		strcpy_identifier_cobol_to_java(buf + strlen(CB_PREFIX_BASE), f->name);
 	} else {
 		strcpy(buf, CB_PREFIX_BASE);
 		get_java_identifier_helper(f, buf + strlen(CB_PREFIX_BASE));
