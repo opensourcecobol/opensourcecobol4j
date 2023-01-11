@@ -22,6 +22,7 @@
 
 
 AT_SETUP([COMP-5])
+AT_CHECK([${SKIP_TEST}])
 
 AT_DATA([dump.c], [
 #include <stdio.h>
@@ -118,6 +119,7 @@ AT_CLEANUP
 ## ADDRESS OF
 
 AT_SETUP([ADDRESS OF])
+AT_CHECK([${SKIP_TEST}])
 
 AT_DATA([prog.cob], [
        IDENTIFICATION   DIVISION.
@@ -238,6 +240,7 @@ AT_CLEANUP
 ## OCCURS
 
 AT_SETUP([Complex OCCURS DEPENDING ON])
+AT_CHECK([${SKIP_TEST}])
 
 AT_DATA([prog.cob], [
        IDENTIFICATION   DIVISION.
@@ -357,6 +360,7 @@ AT_CLEANUP
 ## CALL
 
 AT_SETUP([CALL USING file-name - so])
+AT_CHECK([${SKIP_TEST}])
 
 AT_CHECK([test $SHREXT != "dll" || exit 77])
 
@@ -447,6 +451,7 @@ AT_CHECK([test -e TESTFILE], [0])
 AT_CLEANUP
 
 AT_SETUP([CALL unusual PROGRAM-ID.])
+AT_CHECK([${SKIP_TEST}])
 
 AT_DATA([A@B.cob], [
        IDENTIFICATION   DIVISION.
@@ -556,6 +561,7 @@ AT_CHECK([java prog], [0], [OK])
 AT_CLEANUP
 
 AT_SETUP([Quoted PROGRAM-ID])
+AT_CHECK([${SKIP_TEST}])
 
 AT_DATA([prog.cob], [
        IDENTIFICATION   DIVISION.
@@ -742,6 +748,7 @@ AT_CLEANUP
 # Number of call parameters
 
 AT_SETUP([NUMBER-OF-CALL-PARAMETERS])
+AT_CHECK([${SKIP_TEST}])
 
 AT_DATA([callee.cob], [
        IDENTIFICATION   DIVISION.
@@ -798,6 +805,7 @@ AT_CLEANUP
 # Program parameters
 
 AT_SETUP([PROCEDURE DIVISION USING BY ...])
+AT_CHECK([${SKIP_TEST}])
 
 AT_DATA([callee.cob], [
        IDENTIFICATION   DIVISION.
@@ -847,6 +855,7 @@ X = X Y = 56 Z = 34
 AT_CLEANUP
 
 AT_SETUP([PROCEDURE DIVISION CHAINING ...])
+AT_CHECK([${SKIP_TEST}])
 
 AT_DATA([prog.cob], [
        IDENTIFICATION   DIVISION.
@@ -892,6 +901,7 @@ AT_CLEANUP
 # ENTRY
 
 AT_SETUP([ENTRY])
+AT_CHECK([${SKIP_TEST}])
 
 AT_DATA([caller.cob], [
        IDENTIFICATION   DIVISION.
@@ -1039,6 +1049,7 @@ AT_CLEANUP
 
 
 AT_SETUP([ASSIGN to KEYBOARD/DISPLAY])
+AT_CHECK([${SKIP_TEST}])
 
 AT_DATA([TEST-FILE],
 [a
@@ -1095,6 +1106,7 @@ abcdef
 AT_CLEANUP
 
 AT_SETUP([Environment/Argument variable])
+AT_CHECK([${SKIP_TEST}])
 
 AT_DATA([prog.cob], [
        IDENTIFICATION   DIVISION.
@@ -1140,6 +1152,7 @@ AT_CHECK([java prog CHECKPAR], [0],
 AT_CLEANUP
 
 AT_SETUP([DECIMAL-POINT is COMMA (1)])
+AT_CHECK([${SKIP_TEST}])
 
 AT_DATA([prog.cob], [
        IDENTIFICATION   DIVISION.
@@ -1166,6 +1179,7 @@ AT_CHECK([java prog], [0],
 AT_CLEANUP
 
 AT_SETUP([DECIMAL-POINT is COMMA (2)])
+AT_CHECK([${SKIP_TEST}])
 
 AT_DATA([prog.cob], [
        IDENTIFICATION   DIVISION.
@@ -1192,6 +1206,7 @@ AT_CHECK([java prog], [0],
 AT_CLEANUP
 
 AT_SETUP([DECIMAL-POINT is COMMA (3)])
+AT_CHECK([${SKIP_TEST}])
 
 AT_DATA([prog.cob], [
        IDENTIFICATION   DIVISION.
@@ -1218,6 +1233,7 @@ AT_CHECK([java prog], [0],
 AT_CLEANUP
 
 AT_SETUP([DECIMAL-POINT is COMMA (4)])
+AT_CHECK([${SKIP_TEST}])
 
 AT_DATA([prog.cob], [
        IDENTIFICATION   DIVISION.
@@ -1244,6 +1260,7 @@ AT_CHECK([java prog], [0],
 AT_CLEANUP
 
 AT_SETUP([DECIMAL-POINT is COMMA (5)])
+AT_CHECK([${SKIP_TEST}])
 
 AT_DATA([prog.cob], [
        IDENTIFICATION   DIVISION.

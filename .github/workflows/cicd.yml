@@ -80,12 +80,12 @@ jobs:
           ./jp-compat
           cd ../
 
-      #- name: Run tests "run"
-      #  run: |
-      #    export CLASSPATH=":/usr/lib/opensourcecobol4j/libcobj.jar:$HOME/.java_lib/sqlite.jar"
-      #    cd tests/
-      #    ./run || true
-      #    cd ../
+      - name: Run tests "run"
+        run: |
+          export CLASSPATH=":/usr/lib/opensourcecobol4j/libcobj.jar:$HOME/.java_lib/sqlite.jar"
+          cd tests/
+          ./run
+          cd ../
 
       - name: Run tests "syntax"
         run: |
