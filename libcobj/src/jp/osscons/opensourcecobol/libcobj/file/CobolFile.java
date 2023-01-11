@@ -688,8 +688,8 @@ public class CobolFile {
         was_not_exist = true;
         if (mode != COB_OPEN_OUTPUT
             && !this.flag_optional
-            && (mode != COB_OPEN_I_O || System.getenv(COB_IO_CREATES).equals("yes"))
-            && (mode != COB_OPEN_EXTEND || System.getenv(COB_EXTEND_CREATES).equals("yes"))) {
+            && (mode != COB_OPEN_I_O || !System.getenv(COB_IO_CREATES).equals("yes"))
+            && (mode != COB_OPEN_EXTEND || !System.getenv(COB_EXTEND_CREATES).equals("yes"))) {
           saveStatus(COB_STATUS_35_NOT_EXISTS, fnstatus);
           return;
         }
@@ -707,6 +707,13 @@ public class CobolFile {
     cacheFile(this);
 
     try {
+
+      if (this.organization == COB_ORG_INDEXED) {
+        int status = this.open_(file_open_name, mode, sharing);
+        saveStatus(status, fnstatus);
+        return;
+      }
+
       switch (this.open_(file_open_name, mode, sharing)) {
         case 0:
           this.open_mode = (char) mode;
