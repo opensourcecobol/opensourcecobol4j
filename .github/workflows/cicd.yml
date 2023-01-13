@@ -39,13 +39,7 @@ jobs:
           ./configure --prefix=/usr/
           make
           make install
-          export CLASSPATH=":/usr/lib/opensourcecobol4j/libcobj.jar:$HOME/.java_lib/sqlite.jar"
-  
-      - name: Make test scripts
-        run: |
-          cd tests/
-          make
-          cd ../
+          export CLASSPATH=":/usr/lib/opensourcecobol4j/libcobj.jar:$HOME/.java_lib/sqlite.jar" 
 
       - name: Run tests "command-line-options"
         run: |
