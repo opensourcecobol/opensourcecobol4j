@@ -19,7 +19,7 @@ jobs:
         run: |
           apt update -y
           apt install -y default-jdk
-          apt install -y build-essential bison flex gettext texinfo automake autoconf libtool 
+          apt install -y build-essential bison flex gettext texinfo
 
       - name: Install dependencies on AlmaLinux 9
         if: matrix.os == 'almalinux:9'
