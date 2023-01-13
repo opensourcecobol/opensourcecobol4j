@@ -58,6 +58,7 @@ AT_CLEANUP
 
 
 AT_SETUP([DISPLAY literals, DECIMAL-POINT is COMMA])
+AT_CHECK([${SKIP_TEST}])
 
 AT_DATA([prog.cob], [
        IDENTIFICATION   DIVISION.
@@ -86,6 +87,7 @@ AT_CHECK([java prog], [0],
 AT_CLEANUP
 
 AT_SETUP([Hexadecimal literal])
+AT_CHECK([${SKIP_TEST}])
 
 AT_DATA([dump.c], [
 #include <stdio.h>
@@ -213,6 +215,7 @@ AT_CLEANUP
 
 
 AT_SETUP([GLOBAL at same level])
+AT_CHECK([${SKIP_TEST}])
 
 AT_DATA([prog.cob], [
        IDENTIFICATION   DIVISION.
@@ -261,6 +264,7 @@ AT_CLEANUP
 
 
 AT_SETUP([GLOBAL at lower level])
+AT_CHECK([${SKIP_TEST}])
 
 AT_DATA([prog.cob], [
        IDENTIFICATION   DIVISION.

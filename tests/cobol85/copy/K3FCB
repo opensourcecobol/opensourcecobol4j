@@ -1,0 +1,4 @@
+000100     SELECT PRINT-FILE ASSIGN TO                                  K3FCB4.2
+000200     "report.log".                                                K3FCB4.2
+000300     SELECT DUMMY-TEST-FILE ASSIGN TO                             K3FCB4.2
+000400     "XXXXX002".                                                  K3FCB4.2
