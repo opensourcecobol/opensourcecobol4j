@@ -8,13 +8,14 @@ jobs:
   run-tests:
     strategy:
       matrix:
-        os: ["ubuntu:20.04", "almalinux:9"]
+        #os: ["ubuntu:22.04", "almalinux:9"]
+        os: ["almalinux:9"]
     runs-on: ubuntu-latest
     container:
       image: ${{ matrix.os }}
     steps:
         
-      - name: Install dependencies on Ubuntu 20.04
+      - name: Install dependencies on Ubuntu 22.04
         if: matrix.os == 'ubuntu:20.04'
         run: |
           apt update -y
@@ -116,10 +117,11 @@ jobs:
       # Checkout opensource COBOL
       - name: Checkout opensource COBOL 4j
         uses: actions/checkout@v2
-        
-      - name: Install dependencies
-        run: |
-          sudo apt-get install default-jdk
+
+      - uses: actions/setup-java@v3
+        with:
+          distribution: 'temurin'
+          java-version: '17'
 
       # Download google-java-format and PMD
       - name: Install dependencies
