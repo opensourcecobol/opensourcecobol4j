@@ -4189,12 +4189,12 @@ joutput_java_entrypoint (struct cb_program *prog, cb_tree parameter_list)
 		free(field_name);
 	}
 
-	joutput_line("run_module(0);", prog->program_id);
+	joutput_line("int returnCode = run_module(0);", prog->program_id);
 
 	joutput_prefix();
-	joutput("return new CobolResultSet(");
+	joutput("return new CobolResultSet(returnCode");
 	if(parameter_list) {
-		joutput("\n");
+		joutput(",\n");
 		joutput_indent_level += 2;
 		for (l = parameter_list; l; l = CB_CHAIN (l)) {
 			struct cb_field* arg_field = cb_field (CB_VALUE (l));
