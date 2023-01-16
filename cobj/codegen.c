@@ -4151,6 +4151,36 @@ joutput_initial_values (struct cb_field *p)
 }
 
 static void
+joutput_java_entrypoint (struct cb_program *prog, cb_tree parameter_list)
+{
+	cb_tree			l;
+	struct cb_field		*f;
+
+	joutput_prefix();
+	joutput ("int execute (");
+
+	if (!prog->flag_chained) {
+		int k;
+		for (k =0, l = parameter_list; l; l = CB_CHAIN (l), ++k) {
+			struct cb_field* arg_field = cb_field (CB_VALUE (l));
+			int type = cb_tree_type(CB_TREE(arg_field));
+			joutput("%s param_%d",
+					type & COB_TYPE_NUMERIC ? "int" : "String",
+					k);
+			if(CB_CHAIN(l)) {
+				joutput(", ");
+			}
+		}
+	}
+
+	joutput("){\n");
+	joutput_indent_level += 2;
+	joutput_line("return 0;");
+	joutput_indent_level -= 2;
+	joutput_line("}\n");
+}
+
+static void
 joutput_internal_function (struct cb_program *prog, cb_tree parameter_list)
 {
 	cb_tree			l;
@@ -5830,6 +5860,7 @@ codegen (struct cb_program *prog, const int nested, char** program_id_list)
 	//}
 
 	create_label_id_map(prog);
+	joutput_java_entrypoint(prog, prog->parameter_list);
 	joutput_internal_function (prog, prog->parameter_list);
 
 	joutput_execution_list(prog);
