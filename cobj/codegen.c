@@ -4155,27 +4155,65 @@ joutput_java_entrypoint (struct cb_program *prog, cb_tree parameter_list)
 {
 	cb_tree			l;
 	struct cb_field		*f;
+	char arg_field_name[COB_SMALL_BUFF];
 
 	joutput_prefix();
-	joutput ("int execute (");
+	joutput ("CobolResultSet execute (");
 
-	if (!prog->flag_chained) {
-		int k;
-		for (k =0, l = parameter_list; l; l = CB_CHAIN (l), ++k) {
-			struct cb_field* arg_field = cb_field (CB_VALUE (l));
-			int type = cb_tree_type(CB_TREE(arg_field));
-			joutput("%s param_%d",
-					type & COB_TYPE_NUMERIC ? "int" : "String",
-					k);
-			if(CB_CHAIN(l)) {
-				joutput(", ");
-			}
+	int k;
+	for (l = parameter_list; l; l = CB_CHAIN (l)) {
+		struct cb_field* arg_field = cb_field (CB_VALUE (l));
+		int type = cb_tree_type(CB_TREE(arg_field));
+		char* field_name = get_java_identifier_field(arg_field);
+		get_java_identifier_helper(arg_field, arg_field_name);
+		joutput("%s %s",
+				type & COB_TYPE_NUMERIC ? "int" : "String",
+				arg_field_name);
+		free(field_name);
+		if(CB_CHAIN(l)) {
+			joutput(", ");
 		}
 	}
 
-	joutput("){\n");
+	joutput(") throws CobolResultSetException {\n");
 	joutput_indent_level += 2;
-	joutput_line("return 0;");
+
+	for (l = parameter_list; l; l = CB_CHAIN (l)) {
+		struct cb_field* arg_field = cb_field (CB_VALUE (l));
+		int type = cb_tree_type(CB_TREE(arg_field));
+		char* field_name = get_java_identifier_field(arg_field);
+		get_java_identifier_helper(arg_field, arg_field_name);
+		joutput_line("this.%s.moveFrom(%s);",
+				field_name,
+				arg_field_name);
+		free(field_name);
+	}
+
+	joutput_line("run_module(0);", prog->program_id);
+
+	joutput_prefix();
+	joutput("return new CobolResultSet(");
+	if(parameter_list) {
+		joutput("\n");
+		joutput_indent_level += 2;
+		for (l = parameter_list; l; l = CB_CHAIN (l)) {
+			struct cb_field* arg_field = cb_field (CB_VALUE (l));
+			int type = cb_tree_type(CB_TREE(arg_field));
+			char* field_name = get_java_identifier_field(arg_field);
+			joutput_prefix();
+			joutput("new %s(%s.%s())",
+					type & COB_TYPE_NUMERIC ? "CobolResultInt" : "CobolResultString",
+					field_name,
+					type & COB_TYPE_NUMERIC ? "getInt" : "getString"
+					);
+			joutput(CB_CHAIN(l) ? ",\n" : "\n");
+			free(field_name);
+		}
+		joutput_indent_level -= 2;
+		joutput_prefix();
+	}
+
+	joutput(");\n");
 	joutput_indent_level -= 2;
 	joutput_line("}\n");
 }
@@ -4223,9 +4261,13 @@ joutput_internal_function (struct cb_program *prog, cb_tree parameter_list)
 			parmnum++;
 		}
 	}
-
+	joutput_line("return this.run_module(entry);");
+	joutput_indent_level -=2;
+	joutput_line("}");
 	joutput("\n");
 
+	joutput_line ("int run_module (int entry) {");
+	joutput_indent_level += 2;
 	//if (!prog->flag_chained) {
 	//	for (l = parameter_list; l; l = CB_CHAIN (l)) {
 	//		joutput_line ("if (fields.length > %d) {", parmnum);
@@ -4951,6 +4993,14 @@ void joutput_init_method(struct cb_program *prog) {
 		joutput_line ("/* End of data storage */\n\n");
 	}
 
+	/* Declare CobolDataStorage of call parameters*/
+	for (l = prog->parameter_list; l; l = CB_CHAIN (l)) {
+		struct cb_field* field = cb_field (CB_VALUE (l));
+		char* base_name = get_java_identifier_base(field);
+		joutput_line("%s = new CobolDataStorage(%d);", base_name, field->size);
+		free(base_name);
+	}
+
 	/* init attribute function*/
 	joutput_line("initAttr();\n");
 
@@ -4974,11 +5024,17 @@ void joutput_init_method(struct cb_program *prog) {
 			if (!k->f->flag_local && !k->f->flag_item_external) {
 				joutput_field (k->x);
 			} else {
+				char* base_name = get_java_identifier_base(k->f);
 				joutput ("CobolFieldFactory.makeCobolField(");
 				joutput_size (k->x);
-				joutput (", (CobolDataStorage)null, ");
+				//joutput (", (CobolDataStorage)null, ");
+				//joutput (", new CobolDataStorage(");
+				//joutput_size (k->x);
+				//joutput("), ");
+				joutput(", %s, ", base_name);
 				joutput_attr (k->x);
 				joutput (")");
+				free(base_name);
 			}
 			joutput (";\t/* %s */\n", k->f->name);
 		}
@@ -5800,6 +5856,7 @@ codegen (struct cb_program *prog, const int nested, char** program_id_list)
 	joutput_line("import jp.osscons.opensourcecobol.libcobj.termio.*;");
 	joutput_line("import jp.osscons.opensourcecobol.libcobj.call.*;");
 	joutput_line("import jp.osscons.opensourcecobol.libcobj.file.*;");
+	joutput_line("import jp.osscons.opensourcecobol.libcobj.ui.*;");
     joutput_line("import java.util.Optional;");
 	joutput("\n");
 
