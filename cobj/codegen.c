@@ -5397,8 +5397,11 @@ void joutput_declare_member_variables(struct cb_program *prog, cb_tree parameter
 	joutput_line("/* Call parameters */");
 	for (l = parameter_list; l; l = CB_CHAIN (l)) {
 		char* base_name = get_java_identifier_base(cb_field (CB_VALUE (l)));
+		char* field_name = get_java_identifier_field(cb_field (CB_VALUE (l)));
 		joutput_line("private CobolDataStorage %s;", base_name);
+		joutput_line("private AbstractCobolField %s;", field_name);
 		free(base_name);
+		free(field_name);
 	}
 
 	/* Dangling linkage section items */
