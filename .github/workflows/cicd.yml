@@ -41,53 +41,53 @@ jobs:
           make install
           export CLASSPATH=":/usr/lib/opensourcecobol4j/libcobj.jar:$HOME/.java_lib/sqlite.jar" 
 
-          #- name: Run tests "command-line-options"
-          #  run: |
-          #    export CLASSPATH=":/usr/lib/opensourcecobol4j/libcobj.jar:$HOME/.java_lib/sqlite.jar"
-          #    cd tests/
-          #    ./command-line-options
-          #    cd ../
+      - name: Run tests "command-line-options"
+        run: |
+          export CLASSPATH=":/usr/lib/opensourcecobol4j/libcobj.jar:$HOME/.java_lib/sqlite.jar"
+          cd tests/
+          ./command-line-options
+          cd ../
 
-          #- name: Run tests "misc"
-          #  run: |
-          #    export CLASSPATH=":/usr/lib/opensourcecobol4j/libcobj.jar:$HOME/.java_lib/sqlite.jar"
-          #    cd tests/
-          #    ./misc
-          #    cd ../
+      - name: Run tests "misc"
+        run: |
+          export CLASSPATH=":/usr/lib/opensourcecobol4j/libcobj.jar:$HOME/.java_lib/sqlite.jar"
+          cd tests/
+          ./misc
+          cd ../
 
-          #- name: Run tests "data-rep"
-          #  run: |
-          #    export CLASSPATH=":/usr/lib/opensourcecobol4j/libcobj.jar:$HOME/.java_lib/sqlite.jar"
-          #    cd tests/
-          #    ./data-rep
-          #    cd ../
+      - name: Run tests "data-rep"
+        run: |
+          export CLASSPATH=":/usr/lib/opensourcecobol4j/libcobj.jar:$HOME/.java_lib/sqlite.jar"
+          cd tests/
+          ./data-rep
+          cd ../
 
-          #- name: Run tests "i18n_sjis"
-          #  run: |
-          #    export CLASSPATH=":/usr/lib/opensourcecobol4j/libcobj.jar:$HOME/.java_lib/sqlite.jar"
-          #    cd tests/
-          #    ./i18n_sjis
+      - name: Run tests "i18n_sjis"
+        run: |
+          export CLASSPATH=":/usr/lib/opensourcecobol4j/libcobj.jar:$HOME/.java_lib/sqlite.jar"
+          cd tests/
+          ./i18n_sjis
 
-          #- name: Run tests "jp-compat"
-          #  run: |
-          #    export CLASSPATH=":/usr/lib/opensourcecobol4j/libcobj.jar:$HOME/.java_lib/sqlite.jar"
-          #    cd tests/
-          #    ./jp-compat
-          #    cd ../
+      - name: Run tests "jp-compat"
+        run: |
+          export CLASSPATH=":/usr/lib/opensourcecobol4j/libcobj.jar:$HOME/.java_lib/sqlite.jar"
+          cd tests/
+          ./jp-compat
+          cd ../
 
-          #- name: Run tests "run"
-          #  run: |
-          #    export CLASSPATH=":/usr/lib/opensourcecobol4j/libcobj.jar:$HOME/.java_lib/sqlite.jar"
-          #    cd tests/
-          #    ./run
-          #    cd ../
+      - name: Run tests "run"
+        run: |
+          export CLASSPATH=":/usr/lib/opensourcecobol4j/libcobj.jar:$HOME/.java_lib/sqlite.jar"
+          cd tests/
+          ./run
+          cd ../
 
-          #- name: Run tests "syntax"
-          #  run: |
-          #    export CLASSPATH=":/usr/lib/opensourcecobol4j/libcobj.jar:$HOME/.java_lib/sqlite.jar"
-          #    cd tests/
-          #    ./syntax
-          #    cd ../
+      - name: Run tests "syntax"
+        run: |
+          export CLASSPATH=":/usr/lib/opensourcecobol4j/libcobj.jar:$HOME/.java_lib/sqlite.jar"
+          cd tests/
+          ./syntax
+          cd ../
 
       - name: Run NIST test
         run: |
