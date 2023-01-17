@@ -4183,7 +4183,6 @@ joutput_java_entrypoint (struct cb_program *prog, cb_tree parameter_list)
 		call_parameter->next = call_parameter_cache;
 		call_parameter->field = arg_field;
 		call_parameter_cache = call_parameter;
-		free(field_name);
 	}
 
 	joutput(") throws CobolResultSetException {\n");
@@ -4191,13 +4190,19 @@ joutput_java_entrypoint (struct cb_program *prog, cb_tree parameter_list)
 
 	for (l = parameter_list; l; l = CB_CHAIN (l)) {
 		struct cb_field* arg_field = cb_field (CB_VALUE (l));
-		int type = cb_tree_type(CB_TREE(arg_field));
 		char* field_name = get_java_identifier_field(arg_field);
+		char* base_name = get_java_identifier_base(arg_field);
 		get_java_identifier_helper(arg_field, arg_field_name);
+		joutput_line("this.%s.setDataStorage(new CobolDataStorage(%d));",
+				field_name,
+				arg_field->size
+				);
 		joutput_line("this.%s.moveFrom(%s);",
 				field_name,
 				arg_field_name);
+		joutput_line("this.%s = this.%s.getDataStorage();", base_name, field_name);
 		free(field_name);
+		free(base_name);
 	}
 
 	joutput_line("int returnCode = run_module(0);", prog->program_id);
@@ -4209,8 +4214,8 @@ joutput_java_entrypoint (struct cb_program *prog, cb_tree parameter_list)
 		joutput_indent_level += 2;
 		for (l = parameter_list; l; l = CB_CHAIN (l)) {
 			struct cb_field* arg_field = cb_field (CB_VALUE (l));
-			int type = cb_tree_type(CB_TREE(arg_field));
 			char* field_name = get_java_identifier_field(arg_field);
+			int type = cb_tree_type(CB_TREE(arg_field));
 			joutput_prefix();
 			joutput("new %s(%s.%s())",
 					type & COB_TYPE_NUMERIC ? "CobolResultInt" : "CobolResultString",
@@ -5022,23 +5027,17 @@ void joutput_init_method(struct cb_program *prog) {
 
 			joutput_prefix();
 			char* field_name = get_java_identifier_field(k->f);
+
 			if (!k->f->flag_local && !k->f->flag_item_external) {
 				joutput ("%s\t= ", field_name);
 				joutput_field (k->x);
 			} else {
-				char* base_name = get_java_identifier_base(k->f);
-				joutput("%s\t= new CobolDataStorage(", base_name);
-				joutput_size(k->x);
-				joutput(");\n");
-
-				joutput_prefix();
 				joutput ("%s\t= ", field_name);
 				joutput ("CobolFieldFactory.makeCobolField(");
 				joutput_size (k->x);
-				joutput(", %s, ", base_name);
+				joutput(", (CobolDataStorage)null, ");
 				joutput_attr (k->x);
 				joutput (")");
-				free(base_name);
 			}
 
 			free(field_name);
@@ -5493,6 +5492,7 @@ void joutput_declare_member_variables(struct cb_program *prog, cb_tree parameter
 			joutput_line ("private CobolFieldAttribute %s%d;",
 					CB_PREFIX_ATTR, j->id);
 		}
+		joutput("\n");
 	}
 
 	if(call_parameter_cache) {
