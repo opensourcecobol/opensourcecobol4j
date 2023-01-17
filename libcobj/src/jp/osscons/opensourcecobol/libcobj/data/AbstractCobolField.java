@@ -591,7 +591,28 @@ public abstract class AbstractCobolField {
    *
    * @param field 代入元のデータ(int型)
    */
-  public abstract void moveFrom(int number);
+  public void moveFrom(int number) {
+    // The maximum number of digits of int type in decimal is 10
+    final int length = 10;
+
+    CobolDataStorage storage = new CobolDataStorage(length);
+    String formatted_number_string = String.format("%10d", Math.abs(number));
+    storage.memcpy(formatted_number_string, length);
+    if(number < 0) {
+      storage.setByte(length - 1, (byte)(storage.getByte(length - 1) + 0x40));
+    }
+
+    CobolFieldAttribute attr = new CobolFieldAttribute(
+      CobolFieldAttribute.COB_TYPE_NUMERIC_DISPLAY,
+      length,
+      0,
+      0,
+      "S9(10)"
+    );
+
+    AbstractCobolField tmp = CobolFieldFactory.makeCobolField(length, storage, attr);
+    this.moveFrom(tmp);
+  }
   /**
    * 引数で与えらえられたデータからthisへの代入を行う
    *
