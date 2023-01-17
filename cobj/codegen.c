@@ -4150,6 +4150,12 @@ joutput_initial_values (struct cb_field *p)
 	}
 }
 
+struct call_parameter_list {
+	struct call_paramter_list* next;
+	struct cb_field* field;
+};
+struct call_paramter_list* call_parameter_cache = NULL;
+
 static void
 joutput_java_entrypoint (struct cb_program *prog, cb_tree parameter_list)
 {
@@ -4169,10 +4175,15 @@ joutput_java_entrypoint (struct cb_program *prog, cb_tree parameter_list)
 		joutput("%s %s",
 				type & COB_TYPE_NUMERIC ? "int" : "String",
 				arg_field_name);
-		free(field_name);
 		if(CB_CHAIN(l)) {
 			joutput(", ");
 		}
+
+		struct call_parameter_list* call_parameter = malloc(sizeof(struct call_parameter_list));
+		call_parameter->next = call_parameter_cache;
+		call_parameter->field = arg_field;
+		call_parameter_cache = call_parameter;
+		free(field_name);
 	}
 
 	joutput(") throws CobolResultSetException {\n");
@@ -4993,14 +5004,6 @@ void joutput_init_method(struct cb_program *prog) {
 		joutput_line ("/* End of data storage */\n\n");
 	}
 
-	/* Declare CobolDataStorage of call parameters*/
-	for (l = prog->parameter_list; l; l = CB_CHAIN (l)) {
-		struct cb_field* field = cb_field (CB_VALUE (l));
-		char* base_name = get_java_identifier_base(field);
-		joutput_line("%s = new CobolDataStorage(%d);", base_name, field->size);
-		free(base_name);
-	}
-
 	/* init attribute function*/
 	joutput_line("initAttr();\n");
 
@@ -5019,23 +5022,26 @@ void joutput_init_method(struct cb_program *prog) {
 
 			joutput_prefix();
 			char* field_name = get_java_identifier_field(k->f);
-			joutput ("%s\t= ", field_name);
-			free(field_name);
 			if (!k->f->flag_local && !k->f->flag_item_external) {
+				joutput ("%s\t= ", field_name);
 				joutput_field (k->x);
 			} else {
 				char* base_name = get_java_identifier_base(k->f);
+				joutput("%s\t= new CobolDataStorage(", base_name);
+				joutput_size(k->x);
+				joutput(");\n");
+
+				joutput_prefix();
+				joutput ("%s\t= ", field_name);
 				joutput ("CobolFieldFactory.makeCobolField(");
 				joutput_size (k->x);
-				//joutput (", (CobolDataStorage)null, ");
-				//joutput (", new CobolDataStorage(");
-				//joutput_size (k->x);
-				//joutput("), ");
 				joutput(", %s, ", base_name);
 				joutput_attr (k->x);
 				joutput (")");
 				free(base_name);
 			}
+
+			free(field_name);
 			joutput (";\t/* %s */\n", k->f->name);
 		}
 		joutput("\n");
@@ -5394,16 +5400,6 @@ void joutput_declare_member_variables(struct cb_program *prog, cb_tree parameter
 		joutput_line ("/* End of data storage */\n\n");
 	}
 
-	joutput_line("/* Call parameters */");
-	for (l = parameter_list; l; l = CB_CHAIN (l)) {
-		char* base_name = get_java_identifier_base(cb_field (CB_VALUE (l)));
-		char* field_name = get_java_identifier_field(cb_field (CB_VALUE (l)));
-		joutput_line("private CobolDataStorage %s;", base_name);
-		joutput_line("private AbstractCobolField %s;", field_name);
-		free(base_name);
-		free(field_name);
-	}
-
 	/* Dangling linkage section items */
 	int seen = 0;
 	for (f = prog->linkage_storage; f; f = f->sister) {
@@ -5496,6 +5492,31 @@ void joutput_declare_member_variables(struct cb_program *prog, cb_tree parameter
 		for (j = attr_cache; j; j = j->next) {
 			joutput_line ("private CobolFieldAttribute %s%d;",
 					CB_PREFIX_ATTR, j->id);
+		}
+	}
+
+	if(call_parameter_cache) {
+		joutput_line("/* Call parameters */");
+		struct call_parameter_list* l;
+		for(l = call_parameter_cache; l; l=l->next) {
+			int cached = 0;
+			if(field_cache) {
+				struct field_list* f;
+				for(f = field_cache; f; f=f->next) {
+					if(f->f == l->field) {
+						cached = 1;
+						break;
+					}
+				}
+			}
+			if(!cached) {
+				char* field_name = get_java_identifier_field(l->field);
+				joutput_line("private AbstractCobolField %s;", field_name);
+				free(field_name);
+			}
+			char* base_name = get_java_identifier_base(l->field);
+			joutput_line("private CobolDataStorage %s;", base_name);
+			free(base_name);
 		}
 	}
 
