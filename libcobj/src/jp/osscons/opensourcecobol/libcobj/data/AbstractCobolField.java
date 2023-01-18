@@ -618,7 +618,37 @@ public abstract class AbstractCobolField {
    *
    * @param field 代入元のデータ(double型)
    */
-  public abstract void moveFrom(double number);
+  public void moveFrom(double number) {
+    String s = Double.toString(Math.abs(number));
+    String ss;
+    int scale;
+    int pointIndex = s.indexOf('.');
+    if(pointIndex < 0) {
+      ss = s;
+      scale = 0;
+    } else {
+      scale = s.length() - pointIndex;
+      ss = s.replace(".", "");
+    }
+
+    CobolDataStorage storage = new CobolDataStorage(ss.length());
+    storage.memcpy(ss, ss.length());
+    if(number < 0) {
+      storage.setByte(ss.length() - 1, (byte)(storage.getByte(ss.length() - 1) + 0x40));
+    }
+
+    CobolFieldAttribute attr = new CobolFieldAttribute(
+      CobolFieldAttribute.COB_TYPE_NUMERIC_DISPLAY,
+      ss.length(),
+      scale,
+      0,
+      ""
+    );
+
+    AbstractCobolField tmp = CobolFieldFactory.makeCobolField(ss.length(), storage, attr);
+    this.moveFrom(tmp);
+
+  }
   /**
    * 引数で与えらえられたデータからthisへの代入を行う
    *

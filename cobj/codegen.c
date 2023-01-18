@@ -4172,9 +4172,16 @@ joutput_java_entrypoint (struct cb_program *prog, cb_tree parameter_list)
 		int type = cb_tree_type(CB_TREE(arg_field));
 		char* field_name = get_java_identifier_field(arg_field);
 		get_java_identifier_helper(arg_field, arg_field_name);
-		joutput("%s %s",
-				type & COB_TYPE_NUMERIC ? "int" : "String",
-				arg_field_name);
+		if(type & COB_TYPE_NUMERIC) {
+			if(arg_field->pic->scale > 0) {
+				joutput("double");
+			} else {
+				joutput("int");
+			}
+		} else {
+			joutput("String");
+		}
+		joutput(" %s", arg_field_name);
 		if(CB_CHAIN(l)) {
 			joutput(", ");
 		}
@@ -4185,7 +4192,7 @@ joutput_java_entrypoint (struct cb_program *prog, cb_tree parameter_list)
 		call_parameter_cache = call_parameter;
 	}
 
-	joutput(") throws CobolResultSetException {\n");
+	joutput(") {\n");
 	joutput_indent_level += 2;
 
 	for (l = parameter_list; l; l = CB_CHAIN (l)) {
