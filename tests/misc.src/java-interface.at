@@ -337,3 +337,41 @@ AT_CHECK([java a], [0],
 ])
 
 AT_CLEANUP
+
+AT_SETUP([PIC X(3)])
+
+AT_DATA([b.cbl], [
+       identification division.
+       program-id. b.
+       data division.
+       linkage section.
+       01 arg pic X(3).
+       procedure division using arg.
+         display "<cobol> arg: " arg.
+         MOVE "123" TO arg.
+])
+
+AT_DATA([a.java], [
+import jp.osscons.opensourcecobol.libcobj.ui.*;
+public class a {
+	public static void main(String@<:@@:>@ args) {
+		b prog = new b();
+		CobolResultSet rs;
+		try{
+			rs = prog.execute("abc");
+			System.out.println("<java> arg: " + rs.getString(1));
+		} catch(CobolResultSetException e) {
+			e.printStackTrace();
+		}
+	}
+}
+])
+
+AT_CHECK([cobj b.cbl])
+AT_CHECK([javac a.java])
+AT_CHECK([java a], [0],
+[<cobol> arg: abc
+<java> arg: 123
+])
+
+AT_CLEANUP
