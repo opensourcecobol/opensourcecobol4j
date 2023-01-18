@@ -4155,7 +4155,7 @@ struct call_parameter_list {
 	struct cb_field* field;
 	cb_tree x;
 };
-struct call_paramter_list* call_parameter_cache = NULL;
+struct call_parameter_list* call_parameter_cache = NULL;
 
 static void
 joutput_java_entrypoint (struct cb_program *prog, cb_tree parameter_list)
@@ -4190,7 +4190,7 @@ joutput_java_entrypoint (struct cb_program *prog, cb_tree parameter_list)
 		struct call_parameter_list* call_parameter = malloc(sizeof(struct call_parameter_list));
 		call_parameter->next = call_parameter_cache;
 		call_parameter->field = arg_field;
-		call_parameter->x = l;
+		call_parameter->x = CB_VALUE (l);
 		call_parameter_cache = call_parameter;
 	}
 
@@ -5075,14 +5075,12 @@ void joutput_init_method(struct cb_program *prog) {
 		struct call_parameter_list* l;
 		for(l = call_parameter_cache; l; l=l->next) {
 			int cached = 0;
-			cb_tree x;
 			char* call_parameter_field_name = get_java_identifier_field(l->field);
 			if(field_cache) {
 				struct field_list* f;
 				for(f = field_cache; f; f=f->next) {
 					char* field_name = get_java_identifier_field(f->f);
 					if(f->f == l->field && strcmp(call_parameter_field_name, field_name) == 0) {
-						x = f->x;
 						cached = 1;
 						free(field_name);
 						break;
@@ -5093,9 +5091,8 @@ void joutput_init_method(struct cb_program *prog) {
 			if(!cached) {
 				joutput_prefix();
 				joutput("%s = CobolFieldFactory.makeCobolField(", call_parameter_field_name);
-				joutput_size (x);
-				joutput(", (CobolDataStorage)null, ");
-				joutput_attr (x);
+				joutput("%d, (CobolDataStorage)null, ", l->field->size);
+				joutput_attr (l->x);
 				joutput (");\n");
 			}
 			free(call_parameter_field_name);
