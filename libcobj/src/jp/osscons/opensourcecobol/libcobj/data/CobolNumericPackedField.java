@@ -457,16 +457,6 @@ public class CobolNumericPackedField extends AbstractCobolField {
   /**
    * 引数で与えらえられたデータからthisへの代入を行う
    *
-   * @param field 代入元のデータ(double型)
-   */
-  @Override
-  public void moveFrom(double number) {
-    this.moveFrom((int) number);
-  }
-
-  /**
-   * 引数で与えらえられたデータからthisへの代入を行う
-   *
    * @param field 代入元のデータ(BigDecimal型)
    */
   @Override
