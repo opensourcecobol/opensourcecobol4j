@@ -146,12 +146,6 @@ public class CobolNumericField extends AbstractCobolField {
     return val;
   }
 
-  /** TODO */
-  @Override
-  public double getDouble() {
-    throw new CobolRuntimeException(CobolRuntimeException.COBOL_FITAL_ERROR, "未対応");
-  }
-
   @Override
   public void setDecimal(BigDecimal decimal) {
     byte[] decimalBytes = decimal.toPlainString().getBytes();
@@ -820,7 +814,7 @@ public class CobolNumericField extends AbstractCobolField {
       n /= 10;
     }
 
-    if(number < 0 && this.getAttribute().isFlagHaveSign()) {
+    if (number < 0 && this.getAttribute().isFlagHaveSign()) {
       this.putSign(-1);
     }
   }
@@ -1032,10 +1026,10 @@ public class CobolNumericField extends AbstractCobolField {
    *
    * @param field 代入元のデータ(double型)
    */
-  @Override
+  /*@Override
   public void moveFrom(double number) {
     this.moveFrom((int) number);
-  }
+  }*/
 
   /**
    * 引数で与えらえられたデータからthisへの代入を行う

@@ -186,12 +186,6 @@ public class CobolNumericPackedField extends AbstractCobolField {
     }
   }
 
-  /** TODO */
-  @Override
-  public double getDouble() {
-    throw new CobolRuntimeException(CobolRuntimeException.COBOL_FITAL_ERROR, "未対応");
-  }
-
   @Override
   public void setDecimal(BigDecimal decimal) {
     byte[] decimalBytes = decimal.toPlainString().getBytes();

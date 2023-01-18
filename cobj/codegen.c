@@ -4153,6 +4153,7 @@ joutput_initial_values (struct cb_field *p)
 struct call_parameter_list {
 	struct call_paramter_list* next;
 	struct cb_field* field;
+	cb_tree x;
 };
 struct call_paramter_list* call_parameter_cache = NULL;
 
@@ -4189,6 +4190,7 @@ joutput_java_entrypoint (struct cb_program *prog, cb_tree parameter_list)
 		struct call_parameter_list* call_parameter = malloc(sizeof(struct call_parameter_list));
 		call_parameter->next = call_parameter_cache;
 		call_parameter->field = arg_field;
+		call_parameter->x = l;
 		call_parameter_cache = call_parameter;
 	}
 
@@ -4224,10 +4226,24 @@ joutput_java_entrypoint (struct cb_program *prog, cb_tree parameter_list)
 			char* field_name = get_java_identifier_field(arg_field);
 			int type = cb_tree_type(CB_TREE(arg_field));
 			joutput_prefix();
+			const char* constructor;
+			const char* getter;
+			if(type & COB_TYPE_NUMERIC) {
+				if(arg_field->pic->scale > 0) {
+					constructor = "CobolResultDouble";
+					getter = "getDouble";
+				} else {
+					constructor = "CobolResultInt";
+					getter = "getInt";
+				}
+			} else {
+				constructor = "CobolResultString";
+				getter = "getString";
+			}
 			joutput("new %s(%s.%s())",
-					type & COB_TYPE_NUMERIC ? "CobolResultInt" : "CobolResultString",
+					constructor,
 					field_name,
-					type & COB_TYPE_NUMERIC ? "getInt" : "getString"
+					getter
 					);
 			joutput(CB_CHAIN(l) ? ",\n" : "\n");
 			free(field_name);
@@ -5054,6 +5070,37 @@ void joutput_init_method(struct cb_program *prog) {
 		joutput_line ("/* End of fields */\n\n");
 	}
 
+	if(call_parameter_cache) {
+		joutput_line("/* Call parameters */");
+		struct call_parameter_list* l;
+		for(l = call_parameter_cache; l; l=l->next) {
+			int cached = 0;
+			cb_tree x;
+			char* call_parameter_field_name = get_java_identifier_field(l->field);
+			if(field_cache) {
+				struct field_list* f;
+				for(f = field_cache; f; f=f->next) {
+					char* field_name = get_java_identifier_field(f->f);
+					if(f->f == l->field && strcmp(call_parameter_field_name, field_name) == 0) {
+						x = f->x;
+						cached = 1;
+						free(field_name);
+						break;
+					}
+					free(field_name);
+				}
+			}
+			if(!cached) {
+				joutput_prefix();
+				joutput("%s = CobolFieldFactory.makeCobolField(", call_parameter_field_name);
+				joutput_size (x);
+				joutput(", (CobolDataStorage)null, ");
+				joutput_attr (x);
+				joutput (");\n");
+			}
+			free(call_parameter_field_name);
+		}
+	}
 
 	/* AbstractCobolField型変数の初期化(定数) */
 	if (literal_cache) {

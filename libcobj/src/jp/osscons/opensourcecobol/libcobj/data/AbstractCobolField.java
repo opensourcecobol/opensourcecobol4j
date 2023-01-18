@@ -20,6 +20,7 @@ package jp.osscons.opensourcecobol.libcobj.data;
 
 import java.math.BigDecimal;
 import java.nio.ByteBuffer;
+import java.nio.charset.Charset;
 import jp.osscons.opensourcecobol.libcobj.common.CobolConstant;
 import jp.osscons.opensourcecobol.libcobj.common.CobolModule;
 import jp.osscons.opensourcecobol.libcobj.common.CobolUtil;
@@ -163,7 +164,13 @@ public abstract class AbstractCobolField {
   /**
    * @return
    */
-  public abstract double getDouble();
+  public double getDouble() {
+    try {
+      return Double.parseDouble(this.getString());
+    } catch (Exception e) {
+      return 0;
+    }
+  }
 
   /**
    * 数値を表すデータが実装すべきメソッド. 保持する数値データをCobolDecimal型に変換する.
@@ -585,7 +592,25 @@ public abstract class AbstractCobolField {
    *
    * @param field 代入元のデータ(String型)
    */
-  public abstract void moveFrom(String string);
+  public void moveFrom(String s) {
+    // The maximum number of digits of int type in decimal is 10
+
+    byte[] bytes = s.getBytes(Charset.forName("SJIS"));
+
+    CobolDataStorage storage = new CobolDataStorage(bytes.length);
+    storage.memcpy(bytes);
+
+    CobolFieldAttribute attr =
+        new CobolFieldAttribute(
+            CobolFieldAttribute.COB_TYPE_ALPHANUMERIC,
+            bytes.length,
+            0,
+            0,
+            String.format("X(%d)", bytes.length));
+
+    AbstractCobolField tmp = CobolFieldFactory.makeCobolField(bytes.length, storage, attr);
+    this.moveFrom(tmp);
+  }
   /**
    * 引数で与えらえられたデータからthisへの代入を行う
    *
@@ -598,17 +623,17 @@ public abstract class AbstractCobolField {
     CobolDataStorage storage = new CobolDataStorage(length);
     String formatted_number_string = String.format("%10d", Math.abs(number));
     storage.memcpy(formatted_number_string, length);
-    if(number < 0) {
-      storage.setByte(length - 1, (byte)(storage.getByte(length - 1) + 0x40));
+    if (number < 0) {
+      storage.setByte(length - 1, (byte) (storage.getByte(length - 1) + 0x40));
     }
 
-    CobolFieldAttribute attr = new CobolFieldAttribute(
-      CobolFieldAttribute.COB_TYPE_NUMERIC_DISPLAY,
-      length,
-      0,
-      0,
-      "S9(10)"
-    );
+    CobolFieldAttribute attr =
+        new CobolFieldAttribute(
+            CobolFieldAttribute.COB_TYPE_NUMERIC_DISPLAY,
+            length,
+            0,
+            CobolFieldAttribute.COB_FLAG_HAVE_SIGN,
+            "S9(10)");
 
     AbstractCobolField tmp = CobolFieldFactory.makeCobolField(length, storage, attr);
     this.moveFrom(tmp);
@@ -622,32 +647,31 @@ public abstract class AbstractCobolField {
     String s = Double.toString(Math.abs(number));
     String ss;
     int scale;
-    int pointIndex = s.indexOf('.');
-    if(pointIndex < 0) {
-      ss = s;
+    ss = s.replace("+", "").replace("-", "");
+    int pointIndex = ss.indexOf('.');
+    if (pointIndex < 0) {
       scale = 0;
     } else {
-      scale = s.length() - pointIndex;
-      ss = s.replace(".", "");
+      scale = ss.length() - 1 - pointIndex;
+      ss = ss.replace(".", "");
     }
 
     CobolDataStorage storage = new CobolDataStorage(ss.length());
     storage.memcpy(ss, ss.length());
-    if(number < 0) {
-      storage.setByte(ss.length() - 1, (byte)(storage.getByte(ss.length() - 1) + 0x40));
-    }
 
-    CobolFieldAttribute attr = new CobolFieldAttribute(
-      CobolFieldAttribute.COB_TYPE_NUMERIC_DISPLAY,
-      ss.length(),
-      scale,
-      0,
-      ""
-    );
+    CobolFieldAttribute attr =
+        new CobolFieldAttribute(
+            CobolFieldAttribute.COB_TYPE_NUMERIC_DISPLAY,
+            ss.length(),
+            scale,
+            CobolFieldAttribute.COB_FLAG_HAVE_SIGN,
+            "");
 
     AbstractCobolField tmp = CobolFieldFactory.makeCobolField(ss.length(), storage, attr);
+    if (number < 0) {
+      tmp.putSign(-1);
+    }
     this.moveFrom(tmp);
-
   }
   /**
    * 引数で与えらえられたデータからthisへの代入を行う
