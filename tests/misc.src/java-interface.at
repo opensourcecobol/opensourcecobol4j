@@ -408,3 +408,68 @@ AT_CHECK([cobj b.cbl])
 AT_CHECK([javac a.java])
 AT_CHECK([java a 2>&1 | grep 'The index is out of range' > /dev/null], [0])
 AT_CLEANUP
+
+AT_SETUP([Type mismatch])
+
+AT_DATA([b.cbl], [
+       identification division.
+       program-id. b.
+       data division.
+       linkage section.
+       01 arg-i pic 9(3).
+       01 arg-d pic 9(3)V9.
+       01 arg-s pic X(3).
+       procedure division using arg-i arg-d arg-s.
+])
+
+AT_DATA([a.java], [
+import jp.osscons.opensourcecobol.libcobj.ui.*;
+public class a {
+	public static void main(String@<:@@:>@ args) {
+                b prog = new b();
+                CobolResultSet rs = prog.execute(1, 1.1, "abc");
+                try{
+                        rs.getDouble(1);
+                } catch(CobolResultSetException e) {
+                        e.printStackTrace();
+                }
+                try{
+                        rs.getString(1);
+                } catch(CobolResultSetException e) {
+                        e.printStackTrace();
+                }
+                try{
+                        rs.getInt(2);
+                } catch(CobolResultSetException e) {
+                        e.printStackTrace();
+                }
+                try{
+                        rs.getString(2);
+                } catch(CobolResultSetException e) {
+                        e.printStackTrace();
+                }
+                try{
+                        rs.getInt(3);
+                } catch(CobolResultSetException e) {
+                        e.printStackTrace();
+                }
+                try{
+                        rs.getDouble(3);
+                } catch(CobolResultSetException e) {
+                        e.printStackTrace();
+                }
+        }
+}
+])
+
+AT_CHECK([cobj b.cbl])
+AT_CHECK([javac a.java])
+AT_CHECK([java a 2>&1 | grep 'jp.osscons.opensourcecobol.libcobj.ui.CobolResultSetException'], [0],
+[jp.osscons.opensourcecobol.libcobj.ui.CobolResultSetException: The result type is not 'double'
+jp.osscons.opensourcecobol.libcobj.ui.CobolResultSetException: The result type is not 'String'
+jp.osscons.opensourcecobol.libcobj.ui.CobolResultSetException: The result type is not 'int'
+jp.osscons.opensourcecobol.libcobj.ui.CobolResultSetException: The result type is not 'String'
+jp.osscons.opensourcecobol.libcobj.ui.CobolResultSetException: The result type is not 'int'
+jp.osscons.opensourcecobol.libcobj.ui.CobolResultSetException: The result type is not 'double'
+])
+AT_CLEANUP
