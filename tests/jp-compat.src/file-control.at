@@ -257,7 +257,6 @@ AT_CHECK([export OC_EXTEND_CREATES=yes && ${RUN_MODULE} prog], [0], [00
 AT_CLEANUP
 
 AT_SETUP([Allow file delete (SEQUENTIAL)])
-AT_CHECK([${SKIP_TEST}])
 
 AT_DATA([prog.cob], [
        IDENTIFICATION   DIVISION.
@@ -290,7 +289,6 @@ AT_CHECK([${RUN_MODULE} prog], [0], [00
 AT_CLEANUP
 
 AT_SETUP([Allow file delete (LINE SEQ)])
-AT_CHECK([${SKIP_TEST}])
 
 AT_DATA([prog.cob], [
        IDENTIFICATION   DIVISION.
