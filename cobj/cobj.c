@@ -163,6 +163,7 @@ int			cb_saveargc;
 char			**cb_saveargv;
 
 const char		*cob_config_dir;
+extern char		*cb_java_package_name = NULL;
 
 #define PROGRAM_ID_LIST_MAX_LEN 1024
 char* program_id_list[PROGRAM_ID_LIST_MAX_LEN];
@@ -296,6 +297,7 @@ static const struct option long_options[] = {
 	{"list-intrinsics", no_argument, NULL, '6'},
 	{"list-mnemonics", no_argument, NULL, 'q'},
 	{"save-temps", optional_argument, NULL, '_'},
+	{"java-package", optional_argument, NULL, 'P'},
 	{"std", required_argument, NULL, '$'},
 	{"conf", required_argument, NULL, '&'},
 	{"debug", no_argument, NULL, 'd'},
@@ -834,19 +836,20 @@ cobc_print_usage (void)
 {
 	puts (_("Usage: cobj [options] file..."));
 	puts (_("Options:"));
-	puts (_("  --help                Display this message"));
-	puts (_("  --version, -V         Display compiler version"));
-	puts (_("  -m                    Create jar files instead of class files (an experimental feature)"));
-	puts (_("  -free                 Use free source format"));
-	puts (_("  -free_1col_aster      Use free(1col_aster) source format"));
-	puts (_("  -g                    Enable Java compiler debug"));
-	puts (_("  -E                    Preprocess only; do not compile or link"));
-	puts (_("  -C                    Translation only; convert COBOL to Java"));
-	puts (_("  -t <file>             Generate and place a program listing into <file>"));
-	puts (_("  -I <directory>        Add <directory> to copy files search path"));
-	puts (_("  -B <options>          Add <options> to the Java compiler"));
-	puts (_("  --list-reserved       Display reserved words"));
-	puts (_("  -assign_external      Set the file assign to external"));
+	puts (_("  --help                            Display this message"));
+	puts (_("  --version, -V                     Display compiler version"));
+	puts (_("  -m                                Create jar files instead of class files (an experimental feature)"));
+	puts (_("  -free                             Use free source format"));
+	puts (_("  -free_1col_aster                  Use free(1col_aster) source format"));
+	puts (_("  -g                                Enable Java compiler debug"));
+	puts (_("  -E                                Preprocess only; do not compile or link"));
+	puts (_("  -C                                Translation only; convert COBOL to Java"));
+	puts (_("  -t <file>                         Generate and place a program listing into <file>"));
+	puts (_("  -I <directory>                    Add <directory> to copy files search path"));
+	puts (_("  -B <options>                      Add <options> to the Java compiler"));
+	puts (_("  --list-reserved                   Display reserved words"));
+	puts (_("  -assign_external                  Set the file assign to external"));
+	puts (_("  -java-package(=<package name>)    Specify the package name of the generated source code"));
 	putchar ('\n');
 
 #undef	CB_WARNDEF
@@ -1036,6 +1039,11 @@ process_command_line (const int argc, char *argv[])
 				}
 			}
 			break;
+		case 'P':
+			/* --java-package : Java package name to be written in the head of generated source code */
+			if(optarg) {
+				cb_java_package_name = optarg;
+			}
 
 		case '3':	/* --constant */
 			if (optarg) {
