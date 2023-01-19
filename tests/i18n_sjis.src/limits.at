@@ -1,4 +1,5 @@
 AT_SETUP([Field length limit PIC A/VALID])
+AT_CHECK([${SKIP_TEST}])
 
 AT_DATA([prog.cob], [
        IDENTIFICATION   DIVISION.
@@ -15,6 +16,7 @@ AT_CHECK([cobc -m prog.cob], [0])
 AT_CLEANUP
 
 AT_SETUP([Field length limit PIC A/TOO LONG])
+AT_CHECK([${SKIP_TEST}])
 
 AT_DATA([prog.cob], [
        IDENTIFICATION   DIVISION.
@@ -33,6 +35,7 @@ AT_CHECK([cobc -m prog.cob], [1], [],
 AT_CLEANUP
 
 AT_SETUP([Field length limit PIC X/VALID])
+AT_CHECK([${SKIP_TEST}])
 
 AT_DATA([prog.cob], [
        IDENTIFICATION   DIVISION.
@@ -49,6 +52,7 @@ AT_CHECK([cobc -m prog.cob], [0])
 AT_CLEANUP
 
 AT_SETUP([Field length limit PIC X/TOO LONG])
+AT_CHECK([${SKIP_TEST}])
 
 AT_DATA([prog.cob], [
        IDENTIFICATION   DIVISION.
@@ -67,6 +71,7 @@ AT_CHECK([cobc -m prog.cob], [1], [],
 AT_CLEANUP
 
 AT_SETUP([Field length limit PIC B9/VALID])
+AT_CHECK([${SKIP_TEST}])
 
 AT_DATA([prog.cob], [
        IDENTIFICATION   DIVISION.
@@ -83,6 +88,7 @@ AT_CHECK([cobc -m prog.cob], [0])
 AT_CLEANUP
 
 AT_SETUP([Field length limit PIC B9/TOO LONG])
+AT_CHECK([${SKIP_TEST}])
 
 AT_DATA([prog.cob], [
        IDENTIFICATION   DIVISION.
@@ -101,6 +107,7 @@ AT_CHECK([cobc -m prog.cob], [1], [],
 AT_CLEANUP
 
 AT_SETUP([Field length limit PIC B/VALID])
+AT_CHECK([${SKIP_TEST}])
 
 AT_DATA([prog.cob], [
        IDENTIFICATION   DIVISION.
@@ -117,6 +124,7 @@ AT_CHECK([cobc -m prog.cob], [0])
 AT_CLEANUP
 
 AT_SETUP([Field length limit PIC B/TOO LONG])
+AT_CHECK([${SKIP_TEST}])
 
 AT_DATA([prog.cob], [
        IDENTIFICATION   DIVISION.
@@ -135,6 +143,7 @@ AT_CHECK([cobc -m prog.cob], [1], [],
 AT_CLEANUP
 
 AT_SETUP([Field length limit PIC BA/VALID])
+AT_CHECK([${SKIP_TEST}])
 
 AT_DATA([prog.cob], [
        IDENTIFICATION   DIVISION.
@@ -151,6 +160,7 @@ AT_CHECK([cobc -m prog.cob], [0])
 AT_CLEANUP
 
 AT_SETUP([Field length limit PIC BA/TOO LONG])
+AT_CHECK([${SKIP_TEST}])
 
 AT_DATA([prog.cob], [
        IDENTIFICATION   DIVISION.
@@ -169,6 +179,7 @@ AT_CHECK([cobc -m prog.cob], [1], [],
 AT_CLEANUP
 
 AT_SETUP([Field length limit PIC BX/VALID])
+AT_CHECK([${SKIP_TEST}])
 
 AT_DATA([prog.cob], [
        IDENTIFICATION   DIVISION.
@@ -185,6 +196,7 @@ AT_CHECK([cobc -m prog.cob], [0])
 AT_CLEANUP
 
 AT_SETUP([Field length limit PIC BX/TOO LONG])
+AT_CHECK([${SKIP_TEST}])
 
 AT_DATA([prog.cob], [
        IDENTIFICATION   DIVISION.
@@ -203,6 +215,7 @@ AT_CHECK([cobc -m prog.cob], [1], [],
 AT_CLEANUP
 
 AT_SETUP([Field length limit PIC N/VALID (SJIS)])
+AT_CHECK([${SKIP_TEST}])
 
 AT_DATA([prog.cob], [
        IDENTIFICATION   DIVISION.
@@ -219,6 +232,7 @@ AT_CHECK([cobc -m prog.cob], [0])
 AT_CLEANUP
 
 AT_SETUP([Field length limit PIC N/TOO LONG (SJIS)])
+AT_CHECK([${SKIP_TEST}])
 
 AT_DATA([prog.cob], [
        IDENTIFICATION   DIVISION.
@@ -237,6 +251,7 @@ AT_CHECK([cobc -m prog.cob], [1], [],
 AT_CLEANUP
 
 AT_SETUP([Field length limit PIC BN/VALID (SJIS)])
+AT_CHECK([${SKIP_TEST}])
 
 AT_DATA([prog.cob], [
        IDENTIFICATION   DIVISION.
@@ -253,6 +268,7 @@ AT_CHECK([cobc -m prog.cob], [0])
 AT_CLEANUP
 
 AT_SETUP([Field length limit PIC BN/TOO LONG (SJIS)])
+AT_CHECK([${SKIP_TEST}])
 
 AT_DATA([prog.cob], [
        IDENTIFICATION   DIVISION.

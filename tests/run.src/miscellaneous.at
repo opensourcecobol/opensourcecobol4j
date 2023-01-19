@@ -19,6 +19,7 @@
 ## Boston, MA 02110-1301 USA
 
 AT_SETUP([Source file not found])
+AT_CHECK([${SKIP_TEST}])
 
 AT_CHECK([${COMPILE_ONLY} prog.cob], [1], ,
 [cobc: prog.cob: No such file or directory
@@ -45,6 +46,7 @@ AT_CLEANUP
 
 
 AT_SETUP([LOCAL-STORAGE])
+AT_CHECK([${SKIP_TEST}])
 
 AT_DATA([callee.cob], [
        IDENTIFICATION   DIVISION.
@@ -87,6 +89,7 @@ AT_CLEANUP
 
 
 AT_SETUP([EXTERNAL data item])
+AT_CHECK([${SKIP_TEST}])
 
 AT_DATA([callee.cob], [
        IDENTIFICATION   DIVISION.
@@ -129,6 +132,7 @@ AT_CLEANUP
 
 
 AT_SETUP([EXTERNAL AS data item])
+AT_CHECK([${SKIP_TEST}])
 
 AT_DATA([callee.cob], [
        IDENTIFICATION   DIVISION.
@@ -175,6 +179,7 @@ AT_CLEANUP
 
 
 AT_SETUP([cobcrun validation])
+AT_CHECK([${SKIP_TEST}])
 
 AT_DATA([callee.cob], [
        IDENTIFICATION   DIVISION.
@@ -259,6 +264,7 @@ AT_CHECK([java prog], [0], [1000])
 AT_CLEANUP
 
 AT_SETUP([MOVE with refmod (variable)])
+AT_CHECK([${SKIP_TEST}])
 
 AT_DATA([prog.cob], [
        IDENTIFICATION   DIVISION.
@@ -324,6 +330,7 @@ AT_CHECK([java prog], [0], [0])
 AT_CLEANUP
 
 AT_SETUP([MOVE X'00'])
+AT_CHECK([${SKIP_TEST}])
 
 AT_DATA([dump.c], [
 #include <stdio.h>
@@ -479,6 +486,7 @@ AT_CLEANUP
 ## CALL statement
 
 AT_SETUP([Dynamic call with static linking])
+AT_CHECK([${SKIP_TEST}])
 
 AT_DATA([callee.cob], [
        IDENTIFICATION   DIVISION.
@@ -504,6 +512,7 @@ AT_CHECK([java prog], [0], [OK])
 AT_CLEANUP
 
 AT_SETUP([CALL m1. CALL m2. CALL m1.])
+AT_CHECK([${SKIP_TEST}])
 
 AT_DATA([m1.cob], [
        IDENTIFICATION   DIVISION.
@@ -557,6 +566,7 @@ AT_CHECK([./caller], [0],
 AT_CLEANUP
 
 AT_SETUP([CANCEL ALL])
+AT_CHECK([${SKIP_TEST}])
 
 AT_DATA([prog.cob], [
        IDENTIFICATION   DIVISION.
@@ -606,6 +616,7 @@ AT_CHECK([java prog], [0],
 AT_CLEANUP
 
 AT_SETUP([CALL binary literal parameter/LENGTH OF - so])
+AT_CHECK([${SKIP_TEST}])
 
 AT_CHECK([test $SHREXT != "dll" || exit 77])
 
@@ -883,6 +894,7 @@ AT_CHECK([java prog], [0], [000003])
 AT_CLEANUP
 
 AT_SETUP([INSPECT REPLACING TRAILING ZEROS BY SPACES])
+AT_CHECK([${SKIP_TEST}])
 
 AT_DATA([prog.cob], [
        IDENTIFICATION   DIVISION.
@@ -903,6 +915,7 @@ AT_CHECK([java prog], [0], [1   ])
 AT_CLEANUP
 
 AT_SETUP([INSPECT REPLACING complex])
+AT_CHECK([${SKIP_TEST}])
 
 AT_DATA([prog.cob], [
        IDENTIFICATION   DIVISION.
@@ -1032,6 +1045,7 @@ AT_CLEANUP
 ## (= the same as in MF-LRM  "EXIT"  FORMAT 2 ... )
 
 AT_SETUP([EXIT PERFORM CYCLE])
+AT_CHECK([${SKIP_TEST}])
 
 AT_DATA([prog.cob], [
        IDENTIFICATION   DIVISION.
@@ -1318,6 +1332,7 @@ AT_CLEANUP
 
 
 AT_SETUP([REWRITE a RELATIVE file with RANDOM access])
+AT_CHECK([${SKIP_TEST}])
 
 AT_DATA([prog.cob], [
        IDENTIFICATION   DIVISION.
@@ -1372,6 +1387,7 @@ AT_CLEANUP
 
 
 AT_SETUP([SORT: table sort])
+AT_CHECK([${SKIP_TEST}])
 
 AT_DATA([prog.cob], [
        IDENTIFICATION   DIVISION.
@@ -1409,6 +1425,7 @@ e1d4c5b2a3
 AT_CLEANUP
 
 AT_SETUP([SORT: EBCDIC table sort])
+AT_CHECK([${SKIP_TEST}])
 
 AT_DATA([prog.cob], [
        IDENTIFICATION   DIVISION.
@@ -1606,6 +1623,7 @@ AT_CLEANUP
 
 
 AT_SETUP([Sticky LINKAGE])
+AT_CHECK([${SKIP_TEST}])
 
 AT_DATA([test.conf], [
 include "default.conf"
@@ -1656,6 +1674,7 @@ AT_CHECK([./caller], [0],
 AT_CLEANUP
 
 AT_SETUP([COB_PRE_LOAD test])
+AT_CHECK([${SKIP_TEST}])
 
 AT_DATA([callee.cob], [
        IDENTIFICATION   DIVISION.
@@ -1680,6 +1699,7 @@ AT_CHECK([export COB_PRE_LOAD=callee; ./caller], [0], [OK])
 AT_CLEANUP
 
 AT_SETUP([COB_LOAD_CASE=UPPER test])
+AT_CHECK([${SKIP_TEST}])
 
 AT_DATA([CALLEE.cob], [
        IDENTIFICATION   DIVISION.
@@ -1729,6 +1749,7 @@ AT_CHECK([java prog], [0],
 AT_CLEANUP
 
 AT_SETUP([ALLOCATE/FREE with BASED item])
+AT_CHECK([${SKIP_TEST}])
 
 AT_DATA([prog.cob], [
        IDENTIFICATION   DIVISION.
@@ -1776,6 +1797,7 @@ AT_CHECK([java prog], [0],
 AT_CLEANUP
 
 AT_SETUP([CALL with OMITTED parameter])
+AT_CHECK([${SKIP_TEST}])
 
 AT_DATA([callee.cob], [
        IDENTIFICATION   DIVISION.
@@ -1814,6 +1836,7 @@ AT_CHECK([./caller], [0],
 AT_CLEANUP
 
 AT_SETUP([ANY LENGTH])
+AT_CHECK([${SKIP_TEST}])
 
 AT_DATA([callee.cob], [
        IDENTIFICATION   DIVISION.
@@ -1887,6 +1910,7 @@ AT_CHECK([${COMPILE} -o prog prog.cob], [0], [],
 AT_CLEANUP
 
 AT_SETUP([SORT - missing fcd in variable-length WRITE])
+AT_CHECK([${SKIP_TEST}])
 
 AT_DATA([prog.cob], [
        IDENTIFICATION    DIVISION.
@@ -1974,6 +1998,7 @@ AT_CHECK([java prog], [0], [027021013])
 AT_CLEANUP
 
 AT_SETUP([READ - missing fcd in variable-length WRITE])
+AT_CHECK([${SKIP_TEST}])
 
 AT_DATA([prog.cob], [
        IDENTIFICATION    DIVISION.
@@ -2029,6 +2054,7 @@ AT_CLEANUP
 
 
 AT_SETUP([MOVE x TO numeric])
+AT_CHECK([${SKIP_TEST}])
 
 AT_DATA([prog.cob], [
        IDENTIFICATION   DIVISION.
@@ -2051,6 +2077,7 @@ AT_CLEANUP
 
 
 AT_SETUP([COMPUTE include string])
+AT_CHECK([${SKIP_TEST}])
 
 AT_DATA([prog.cob], [
        IDENTIFICATION   DIVISION.

@@ -150,7 +150,8 @@ command_line_options_DEPENDENCIES = \
 	command-line-options.src/Wunreachable.at \
 	command-line-options.src/ftrace-ftraceall.at \
 	command-line-options.src/fsyntax-only.at \
-	command-line-options.src/fserial-variable.at
+	command-line-options.src/fserial-variable.at \
+	command-line-options.src/fshort-variable.at
 
 misc_DEPENDENCIES = \
 	misc.src/signed-comp3.at \
@@ -159,7 +160,8 @@ misc_DEPENDENCIES = \
 	misc.src/current-date.at \
 	misc.src/comp3-is-numeric.at \
 	misc.src/high-low-value.at \
-	misc.src/move-sign-leading-separate-to-signed-comp3.at
+	misc.src/move-sign-leading-separate-to-signed-comp3.at \
+	misc.src/java-interface.at
 
 EXTRA_DIST = $(srcdir)/package.m4 \
 	$(TESTS) \

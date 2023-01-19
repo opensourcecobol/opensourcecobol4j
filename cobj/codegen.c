@@ -185,6 +185,9 @@ get_java_identifier_field(struct cb_field* f) {
 	char *buf = malloc(COB_SMALL_BUFF);
 	if(cb_flag_serial_variable) {
 		sprintf(buf, "%s%d", CB_PREFIX_FIELD, f->id);
+	} else if(cb_flag_short_variable) {
+		strcpy(buf, CB_PREFIX_FIELD);
+		strcpy_identifier_cobol_to_java(buf + strlen(CB_PREFIX_FIELD), f->name);
 	} else {
 		strcpy(buf, CB_PREFIX_FIELD);
 		get_java_identifier_helper(f, buf + strlen(CB_PREFIX_FIELD));
@@ -197,6 +200,9 @@ get_java_identifier_base(struct cb_field* f) {
 	char *buf = malloc(COB_SMALL_BUFF);
 	if(cb_flag_serial_variable) {
 		sprintf(buf, "%s%d", CB_PREFIX_BASE, f->id);
+	} else if(cb_flag_short_variable) {
+		strcpy(buf, CB_PREFIX_BASE);
+		strcpy_identifier_cobol_to_java(buf + strlen(CB_PREFIX_BASE), f->name);
 	} else {
 		strcpy(buf, CB_PREFIX_BASE);
 		get_java_identifier_helper(f, buf + strlen(CB_PREFIX_BASE));
@@ -4144,6 +4150,113 @@ joutput_initial_values (struct cb_field *p)
 	}
 }
 
+struct call_parameter_list {
+	struct call_paramter_list* next;
+	struct cb_field* field;
+	cb_tree x;
+};
+struct call_parameter_list* call_parameter_cache = NULL;
+
+static void
+joutput_java_entrypoint (struct cb_program *prog, cb_tree parameter_list)
+{
+	cb_tree			l;
+	struct cb_field		*f;
+	char arg_field_name[COB_SMALL_BUFF];
+
+	joutput_prefix();
+	joutput ("CobolResultSet execute (");
+
+	int k;
+	for (l = parameter_list; l; l = CB_CHAIN (l)) {
+		struct cb_field* arg_field = cb_field (CB_VALUE (l));
+		int type = cb_tree_type(CB_TREE(arg_field));
+		char* field_name = get_java_identifier_field(arg_field);
+		get_java_identifier_helper(arg_field, arg_field_name);
+		if(type & COB_TYPE_NUMERIC) {
+			if(arg_field->pic->scale > 0) {
+				joutput("double");
+			} else {
+				joutput("int");
+			}
+		} else {
+			joutput("String");
+		}
+		joutput(" %s", arg_field_name);
+		if(CB_CHAIN(l)) {
+			joutput(", ");
+		}
+
+		struct call_parameter_list* call_parameter = malloc(sizeof(struct call_parameter_list));
+		call_parameter->next = call_parameter_cache;
+		call_parameter->field = arg_field;
+		call_parameter->x = CB_VALUE (l);
+		call_parameter_cache = call_parameter;
+	}
+
+	joutput(") {\n");
+	joutput_indent_level += 2;
+
+	for (l = parameter_list; l; l = CB_CHAIN (l)) {
+		struct cb_field* arg_field = cb_field (CB_VALUE (l));
+		char* field_name = get_java_identifier_field(arg_field);
+		char* base_name = get_java_identifier_base(arg_field);
+		get_java_identifier_helper(arg_field, arg_field_name);
+		joutput_line("this.%s.setDataStorage(new CobolDataStorage(%d));",
+				field_name,
+				arg_field->size
+				);
+		joutput_line("this.%s.moveFrom(%s);",
+				field_name,
+				arg_field_name);
+		joutput_line("this.%s = this.%s.getDataStorage();", base_name, field_name);
+		free(field_name);
+		free(base_name);
+	}
+
+	joutput_line("int returnCode = run_module(0);", prog->program_id);
+
+	joutput_prefix();
+	joutput("return new CobolResultSet(returnCode");
+	if(parameter_list) {
+		joutput(",\n");
+		joutput_indent_level += 2;
+		for (l = parameter_list; l; l = CB_CHAIN (l)) {
+			struct cb_field* arg_field = cb_field (CB_VALUE (l));
+			char* field_name = get_java_identifier_field(arg_field);
+			int type = cb_tree_type(CB_TREE(arg_field));
+			joutput_prefix();
+			const char* constructor;
+			const char* getter;
+			if(type & COB_TYPE_NUMERIC) {
+				if(arg_field->pic->scale > 0) {
+					constructor = "CobolResultDouble";
+					getter = "getDouble";
+				} else {
+					constructor = "CobolResultInt";
+					getter = "getInt";
+				}
+			} else {
+				constructor = "CobolResultString";
+				getter = "getString";
+			}
+			joutput("new %s(%s.%s())",
+					constructor,
+					field_name,
+					getter
+					);
+			joutput(CB_CHAIN(l) ? ",\n" : "\n");
+			free(field_name);
+		}
+		joutput_indent_level -= 2;
+		joutput_prefix();
+	}
+
+	joutput(");\n");
+	joutput_indent_level -= 2;
+	joutput_line("}\n");
+}
+
 static void
 joutput_internal_function (struct cb_program *prog, cb_tree parameter_list)
 {
@@ -4187,9 +4300,13 @@ joutput_internal_function (struct cb_program *prog, cb_tree parameter_list)
 			parmnum++;
 		}
 	}
-
+	joutput_line("return this.run_module(entry);");
+	joutput_indent_level -=2;
+	joutput_line("}");
 	joutput("\n");
 
+	joutput_line ("int run_module (int entry) {");
+	joutput_indent_level += 2;
 	//if (!prog->flag_chained) {
 	//	for (l = parameter_list; l; l = CB_CHAIN (l)) {
 	//		joutput_line ("if (fields.length > %d) {", parmnum);
@@ -4933,23 +5050,54 @@ void joutput_init_method(struct cb_program *prog) {
 
 			joutput_prefix();
 			char* field_name = get_java_identifier_field(k->f);
-			joutput ("%s\t= ", field_name);
-			free(field_name);
+
 			if (!k->f->flag_local && !k->f->flag_item_external) {
+				joutput ("%s\t= ", field_name);
 				joutput_field (k->x);
 			} else {
+				joutput ("%s\t= ", field_name);
 				joutput ("CobolFieldFactory.makeCobolField(");
 				joutput_size (k->x);
-				joutput (", (CobolDataStorage)null, ");
+				joutput(", (CobolDataStorage)null, ");
 				joutput_attr (k->x);
 				joutput (")");
 			}
+
+			free(field_name);
 			joutput (";\t/* %s */\n", k->f->name);
 		}
 		joutput("\n");
 		joutput_line ("/* End of fields */\n\n");
 	}
 
+	if(call_parameter_cache) {
+		joutput_line("/* Call parameters */");
+		struct call_parameter_list* l;
+		for(l = call_parameter_cache; l; l=l->next) {
+			int cached = 0;
+			char* call_parameter_field_name = get_java_identifier_field(l->field);
+			if(field_cache) {
+				struct field_list* f;
+				for(f = field_cache; f; f=f->next) {
+					char* field_name = get_java_identifier_field(f->f);
+					if(f->f == l->field && strcmp(call_parameter_field_name, field_name) == 0) {
+						cached = 1;
+						free(field_name);
+						break;
+					}
+					free(field_name);
+				}
+			}
+			if(!cached) {
+				joutput_prefix();
+				joutput("%s = CobolFieldFactory.makeCobolField(", call_parameter_field_name);
+				joutput("%d, (CobolDataStorage)null, ", l->field->size);
+				joutput_attr (l->x);
+				joutput (");\n");
+			}
+			free(call_parameter_field_name);
+		}
+	}
 
 	/* AbstractCobolField型変数の初期化(定数) */
 	if (literal_cache) {
@@ -5302,13 +5450,6 @@ void joutput_declare_member_variables(struct cb_program *prog, cb_tree parameter
 		joutput_line ("/* End of data storage */\n\n");
 	}
 
-	joutput_line("/* Call parameters */");
-	for (l = parameter_list; l; l = CB_CHAIN (l)) {
-		char* base_name = get_java_identifier_base(cb_field (CB_VALUE (l)));
-		joutput_line("private CobolDataStorage %s;", base_name);
-		free(base_name);
-	}
-
 	/* Dangling linkage section items */
 	int seen = 0;
 	for (f = prog->linkage_storage; f; f = f->sister) {
@@ -5401,6 +5542,32 @@ void joutput_declare_member_variables(struct cb_program *prog, cb_tree parameter
 		for (j = attr_cache; j; j = j->next) {
 			joutput_line ("private CobolFieldAttribute %s%d;",
 					CB_PREFIX_ATTR, j->id);
+		}
+		joutput("\n");
+	}
+
+	if(call_parameter_cache) {
+		joutput_line("/* Call parameters */");
+		struct call_parameter_list* l;
+		for(l = call_parameter_cache; l; l=l->next) {
+			int cached = 0;
+			if(field_cache) {
+				struct field_list* f;
+				for(f = field_cache; f; f=f->next) {
+					if(f->f == l->field) {
+						cached = 1;
+						break;
+					}
+				}
+			}
+			if(!cached) {
+				char* field_name = get_java_identifier_field(l->field);
+				joutput_line("private AbstractCobolField %s;", field_name);
+				free(field_name);
+			}
+			char* base_name = get_java_identifier_base(l->field);
+			joutput_line("private CobolDataStorage %s;", base_name);
+			free(base_name);
 		}
 	}
 
@@ -5764,6 +5931,7 @@ codegen (struct cb_program *prog, const int nested, char** program_id_list)
 	joutput_line("import jp.osscons.opensourcecobol.libcobj.termio.*;");
 	joutput_line("import jp.osscons.opensourcecobol.libcobj.call.*;");
 	joutput_line("import jp.osscons.opensourcecobol.libcobj.file.*;");
+	joutput_line("import jp.osscons.opensourcecobol.libcobj.ui.*;");
     joutput_line("import java.util.Optional;");
 	joutput("\n");
 
@@ -5824,6 +5992,7 @@ codegen (struct cb_program *prog, const int nested, char** program_id_list)
 	//}
 
 	create_label_id_map(prog);
+	joutput_java_entrypoint(prog, prog->parameter_list);
 	joutput_internal_function (prog, prog->parameter_list);
 
 	joutput_execution_list(prog);

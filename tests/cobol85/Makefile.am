@@ -4,8 +4,10 @@
 ## Copyright (C) 2008-2009 Roger While
 ##
 
-#MODULES = CM DB IC IF IX NC OB RL RW SG SM SQ ST
+#MODULES = NC SM IC SQ IX ST SG OB IF RL
 MODULES = NC SM IC SQ IX ST SG OB IF
+MODULES_MAKEFILES = NC/Makefile SM/Makefile IC/Makefile SQ/Makefile IX/Makefile ST/Makefile SG/Makefile OB/Makefile IF/Makefile RL/Makefile
+
 
 EXTRA_DIST = EXEC85.conf.in expand.pl report.pl summary.pl summary.txt \
 	NC.txt SM.txt IC.txt SQ.txt RL.txt IX.txt ST.txt SG.txt OB.txt IF.txt ifedit.sh
@@ -15,7 +17,7 @@ COBOL = cobj -std=cobol85
 
 COB85DIR = "`cd $(srcdir) && pwd`"
 
-test: $(MODULES)
+test: $(MODULES_MAKEFILES)
 	@for m in $(MODULES); do \
 	  (cd $$m && make test) \
 	done
@@ -39,27 +41,8 @@ diff:
 	diff summary.txt summary.log
 
 clean-local:
-	rm -rf copy copyalt $(MODULES)
+	rm -rf copy copyalt $(MODULES_MAKEFILES)
 
-$(MODULES): newcob.val build/EXEC85.class $(srcdir)/EXEC85.conf.in
-	@echo -n "Building module $@..."
-	@sed 's/@MODULE@/$@/' $(srcdir)/EXEC85.conf.in > EXEC85.conf
-	@. ../atconfig; . ../atlocal; export PATH; java -cp $$CLASSPATH:./build EXEC85
-	@$(srcdir)/ifedit.sh
-	@perl $(srcdir)/expand.pl newcob.tmp
-	@rm -f newcob.tmp newcob.log EXEC85.conf
-	@echo "test:"               > $@/Makefile
-	@echo "	. ../../atconfig; . ../../atlocal; export PATH; perl $(COB85DIR)/report.pl" >> $@/Makefile
-	@echo "done"
-
-build/EXEC85.class: newcob.val
-	@perl -pe 'BEGIN{<>; <>;} exit if /^\*END/;' newcob.val		     \
-	| sed -e 's/XXXXX001.*/"newcob.val" ORGANIZATION LINE SEQUENTIAL./'  \
-	      -e 's/XXXXX002.*/"newcob.tmp" ORGANIZATION LINE SEQUENTIAL./'  \
-	      -e 's/XXXXX003.*/"unused"./'				     \
-	      -e 's/XXXXX055.*/"newcob.log"./'				     \
-	      -e 's/XXXXX058.*/"EXEC85.conf" ORGANIZATION LINE SEQUENTIAL./' \
-	      -e 's/ORGANIZATION SEQUENTIAL.*//'			     \
-	    > EXEC85.cob
-	. ../atconfig; . ../atlocal; export PATH; $(COBOL) EXEC85.cob
-	@rm -f EXEC85.cob
+$(MODULES_MAKEFILES):
+	@echo "test:"               > $@
+	@echo "	. ../../atconfig; . ../../atlocal; export PATH; perl $(COB85DIR)/report.pl" >> $@

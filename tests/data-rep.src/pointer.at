@@ -20,6 +20,7 @@
 
 
 AT_SETUP([POINTER: display])
+AT_CHECK([${SKIP_TEST}])
 
 AT_DATA([prog.cob], [
        IDENTIFICATION   DIVISION.
