@@ -375,3 +375,36 @@ AT_CHECK([java a], [0],
 ])
 
 AT_CLEANUP
+
+AT_SETUP([Out of range])
+
+AT_DATA([b.cbl], [
+       identification division.
+       program-id. b.
+       data division.
+       linkage section.
+       01 arg pic 9(3).
+       procedure division using arg.
+       add 1 to arg.
+])
+
+AT_DATA([a.java], [
+import jp.osscons.opensourcecobol.libcobj.ui.*;
+public class a {
+	public static void main(String@<:@@:>@ args) {
+		b prog = new b();
+		CobolResultSet rs;
+		try{
+			rs = prog.execute(0);
+			System.out.println("<java> arg: " + rs.getInt(2));
+		} catch(CobolResultSetException e) {
+			e.printStackTrace();
+		}
+	}
+}
+])
+
+AT_CHECK([cobj b.cbl])
+AT_CHECK([javac a.java])
+AT_CHECK([java a 2>&1 | grep 'The index is out of range' > /dev/null], [0])
+AT_CLEANUP
