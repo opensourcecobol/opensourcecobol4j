@@ -127,12 +127,6 @@ public class CobolNumericBinaryField extends AbstractCobolField {
 
   /** TODO */
   @Override
-  public double getDouble() {
-    return 0;
-  }
-
-  /** TODO */
-  @Override
   public void setDecimal(BigDecimal decimal) {}
 
   /**

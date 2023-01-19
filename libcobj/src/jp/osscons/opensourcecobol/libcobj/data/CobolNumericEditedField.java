@@ -47,11 +47,6 @@ public class CobolNumericEditedField extends AbstractCobolField {
   }
 
   @Override
-  public double getDouble() {
-    return 0;
-  }
-
-  @Override
   public CobolDecimal getDecimal() {
     return null;
   }
