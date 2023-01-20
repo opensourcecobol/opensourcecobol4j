@@ -4165,7 +4165,7 @@ joutput_java_entrypoint (struct cb_program *prog, cb_tree parameter_list)
 	char arg_field_name[COB_SMALL_BUFF];
 
 	joutput_prefix();
-	joutput ("CobolResultSet execute (");
+	joutput ("public CobolResultSet execute (");
 
 	int k;
 	for (l = parameter_list; l; l = CB_CHAIN (l)) {
@@ -4286,7 +4286,7 @@ joutput_internal_function (struct cb_program *prog, cb_tree parameter_list)
 	//output (")\n");
 	//output_indent ("{");
 
-	joutput_line ("int %s_ (int entry, CobolDataStorage ...argStorages) {", prog->program_id);
+	joutput_line ("public int %s_ (int entry, CobolDataStorage ...argStorages) {", prog->program_id);
 	joutput_indent_level += 2;
 
 	joutput_line("this.entry = entry;");
@@ -5921,6 +5921,10 @@ codegen (struct cb_program *prog, const int nested, char** program_id_list)
 			//output (");\n");
 		}
 		//output ("\n");
+	}
+
+	if(cb_java_package_name) {
+		joutput_line("package %s;\n", cb_java_package_name);
 	}
 
 	joutput_line("import java.io.UnsupportedEncodingException;");
