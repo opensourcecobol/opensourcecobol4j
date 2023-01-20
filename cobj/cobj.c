@@ -1731,7 +1731,7 @@ process_compile (struct filename *fn)
 	}
 
 	for(char** program_id = program_id_list; *program_id; ++program_id) {
-		sprintf(buff, "javac %s -encoding SJIS %s.java",
+		sprintf(buff, "javac %s -encoding SJIS -d . %s.java",
 			cob_java_flags,
 			*program_id);
 		ret = process (buff);
