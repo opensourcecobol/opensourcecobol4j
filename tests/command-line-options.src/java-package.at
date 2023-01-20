@@ -1,0 +1,15 @@
+AT_SETUP([-java-package])
+
+AT_DATA([prog.cbl], [
+       IDENTIFICATION              DIVISION.
+       PROGRAM-ID.                 prog.
+       PROCEDURE                   DIVISION.
+           DISPLAY "Hello".
+])
+
+AT_CHECK([${COBJ} -java-package=libcobj.test prog.cbl])
+AT_CHECK([java libcobj.test.prog], [0],
+[Hello
+])
+
+AT_CLEANUP
