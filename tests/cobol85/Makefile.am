@@ -4,8 +4,8 @@
 ## Copyright (C) 2008-2009 Roger While
 ##
 
-MODULES = NC SM IC SQ IX ST SG OB IF RL
-#MODULES = NC SM IC SQ IX ST SG OB IF
+#MODULES = NC SM IC SQ IX ST SG OB IF RL
+MODULES = RL
 MODULES_MAKEFILES = NC/Makefile SM/Makefile IC/Makefile SQ/Makefile IX/Makefile ST/Makefile SG/Makefile OB/Makefile IF/Makefile RL/Makefile
 
 
