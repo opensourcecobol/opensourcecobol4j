@@ -21,6 +21,7 @@ package jp.osscons.opensourcecobol.libcobj.common;
 import java.time.DateTimeException;
 import java.time.LocalDateTime;
 import java.util.Calendar;
+import java.util.Properties;
 import java.util.Scanner;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -76,6 +77,8 @@ public class CobolUtil {
   public static final int FERROR_CHAINING = 2;
   public static final int FERROR_STACK = 3;
 
+  private static Properties envVarTable = new Properties();
+
   /**
    * libcob/common.cのcob_check_envの実装
    *
@@ -88,7 +91,7 @@ public class CobolUtil {
       return 0;
     }
 
-    String s = System.getenv(name);
+    String s = CobolUtil.getEnv(name);
     if (s != null) {
       if (s.contentEquals(value)) {
         return 1;
@@ -108,10 +111,11 @@ public class CobolUtil {
       CobolInspect.initString();
       CobolFile.cob_init_fileio();
       CobolIntrinsic.init();
+      CobolUtil.envVarTable = new Properties();
 
       for (int i = 0; i < 8; ++i) {
         String envVariableName = String.format("COB_SWITCH_%d", i + 1);
-        String envValue = System.getenv(envVariableName);
+        String envValue = CobolUtil.getEnv(envVariableName);
         if (envValue == null) {
           CobolUtil.cobSwitch[i] = false;
         } else {
@@ -121,7 +125,7 @@ public class CobolUtil {
     }
 
     cal = Calendar.getInstance();
-    String s = System.getenv("COB_DATE");
+    String s = CobolUtil.getEnv("COB_DATE");
     if (s != null) {
       Scanner scan = new Scanner(s);
       Pattern p = Pattern.compile("([0-9]{4})/([0-9]{2})/([0-9]{2})");
@@ -150,7 +154,7 @@ public class CobolUtil {
       }
     }
 
-    s = System.getenv("COB_VERBOSE");
+    s = CobolUtil.getEnv("COB_VERBOSE");
     if (s != null && s.length() > 0 && (s.charAt(0) == 'y' || s.charAt(0) == 'Y')) {
       CobolUtil.cob_verbose = true;
     }
@@ -226,7 +230,7 @@ public class CobolUtil {
    * @param envval
    */
   public static void getEnvironment(AbstractCobolField envname, AbstractCobolField envval) {
-    String p = System.getenv(envname.fieldToString());
+    String p = CobolUtil.getEnv(envname.fieldToString());
     if (p == null) {
       CobolException.setException(CobolExceptionId.COB_EC_IMP_ACCEPT);
       p = " ";
@@ -667,5 +671,23 @@ public class CobolUtil {
               progId, sline, cstatement == null ? "Unknown" : cstatement));
       System.err.flush();
     }
+  }
+
+  public static String getEnv(String envVarName) {
+    String envVarInTable = CobolUtil.envVarTable.getProperty(envVarName);
+    if (envVarInTable != null) {
+      return envVarInTable;
+    } else {
+      return System.getenv(envVarName);
+    }
+  }
+
+  public static void setEnv(String envVarName, String envVarValue) {
+    CobolUtil.envVarTable.setProperty(envVarName, envVarValue);
+  }
+
+  public static void setEnv(AbstractCobolField envVarName, AbstractCobolField envVarValue) {
+    CobolUtil.envVarTable.setProperty(
+        envVarName.getString().trim(), envVarValue.getString().trim());
   }
 }

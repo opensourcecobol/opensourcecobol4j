@@ -7623,7 +7623,7 @@ void cb_emit_search_all(cb_tree table, cb_tree at_end, cb_tree when, cb_tree stm
 
 void cb_emit_setenv(cb_tree x, cb_tree y)
 {
-	cb_emit(cb_build_funcall_2("CobolTerminal.setEnvironment", x, y));
+	cb_emit(cb_build_funcall_2("CobolUtil.setEnv", x, y));
 }
 
 void cb_emit_set_to(cb_tree vars, cb_tree x)
