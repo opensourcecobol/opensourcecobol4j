@@ -682,10 +682,23 @@ public class CobolUtil {
     }
   }
 
+  /**
+   * get environemnt variable
+   *
+   * @param envVarName the name of an environment variable.
+   * @return the value of envVarName, or null if the envVarName is not defined.
+   */
   public static void setEnv(String envVarName, String envVarValue) {
     CobolUtil.envVarTable.setProperty(envVarName, envVarValue);
   }
 
+  /**
+   * Set environemnt variable
+   *
+   * @param envVarName the name of an environment variable. The leading and trailing spaces are
+   *     ignored.
+   * @param envVarValue the value of an environment variable to be set.
+   */
   public static void setEnv(AbstractCobolField envVarName, AbstractCobolField envVarValue) {
     CobolUtil.envVarTable.setProperty(envVarName.getString().trim(), envVarValue.getString());
   }
