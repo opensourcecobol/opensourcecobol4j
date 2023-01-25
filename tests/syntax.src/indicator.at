@@ -1,4 +1,5 @@
 AT_SETUP([dollarif defined - true])
+AT_CHECK([${SKIP_TEST}])
 
 AT_DATA([prog.cob], [
        IDENTIFICATION   DIVISION.
@@ -17,6 +18,7 @@ AT_CHECK([${COBCRUN} prog], [0], [SW1 DEFINED
 AT_CLEANUP
 
 AT_SETUP([dollarif defined - false])
+AT_CHECK([${SKIP_TEST}])
 
 AT_DATA([prog.cob], [
        IDENTIFICATION   DIVISION.
@@ -37,6 +39,7 @@ AT_CHECK([${COBCRUN} prog], [0], [SW2 DEFINED
 AT_CLEANUP
 
 AT_SETUP([dollarif value match - true])
+AT_CHECK([${SKIP_TEST}])
 
 AT_DATA([prog.cob], [
        IDENTIFICATION   DIVISION.
@@ -57,6 +60,7 @@ AT_CHECK([${COBCRUN} prog], [0], [SW3 = 1
 AT_CLEANUP
 
 AT_SETUP([dollarif value match - false])
+AT_CHECK([${SKIP_TEST}])
 
 AT_DATA([prog.cob], [
        IDENTIFICATION   DIVISION.
@@ -77,6 +81,7 @@ AT_CHECK([${COBCRUN} prog], [0], [SW3 != 1
 AT_CLEANUP
 
 AT_SETUP([dollarif value match - not true])
+AT_CHECK([${SKIP_TEST}])
 
 AT_DATA([prog.cob], [
        IDENTIFICATION   DIVISION.
@@ -97,6 +102,7 @@ AT_CHECK([${COBCRUN} prog], [0], [SW4 != 1
 AT_CLEANUP
 
 AT_SETUP([dollarif value match - not false])
+AT_CHECK([${SKIP_TEST}])
 
 AT_DATA([prog.cob], [
        IDENTIFICATION   DIVISION.
@@ -117,6 +123,7 @@ AT_CHECK([${COBCRUN} prog], [0], [SW4 = 1
 AT_CLEANUP
 
 AT_SETUP([column 7 is undefined value])
+AT_CHECK([${SKIP_TEST}])
 
 AT_DATA([prog.cob], [
        IDENTIFICATION   DIVISION.

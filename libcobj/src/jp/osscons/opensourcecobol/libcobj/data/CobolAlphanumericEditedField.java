@@ -48,12 +48,6 @@ public class CobolAlphanumericEditedField extends AbstractCobolField {
   }
 
   @Override
-  public double getDouble() {
-    // TODO Auto-generated method stub
-    return 0;
-  }
-
-  @Override
   public CobolDecimal getDecimal() {
     // TODO Auto-generated method stub
     return null;

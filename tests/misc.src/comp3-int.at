@@ -1,0 +1,70 @@
+AT_SETUP([Compare comp3 and int])
+
+AT_DATA([a.java],[
+import java.util.stream.Collectors;
+import java.util.stream.IntStream;
+import jp.osscons.opensourcecobol.libcobj.data.*;
+
+public class a {
+	public static void main(String@<:@@:>@ args) {
+                byte@<:@@:>@ data = new byte@<:@7@:>@;
+                CobolNumericPackedField packedField = new CobolNumericPackedField(
+                        7,
+                        new CobolDataStorage(data),
+                        new CobolFieldAttribute(
+                                CobolFieldAttribute.COB_TYPE_NUMERIC_PACKED,
+                                13,
+                                0,
+                                CobolFieldAttribute.COB_FLAG_HAVE_SIGN,
+                                null
+                        )
+                );
+                int@<:@@:>@ positive_data = {
+                        1,
+                        2,
+                        99,
+                        999,
+                        9999,
+                        99999,
+                        999999,
+                        9999999,
+                        99999999,
+                        999999999,
+                        Integer.MAX_VALUE
+                };
+                int@<:@@:>@ negative_data = {
+                        -1,
+                        -2,
+                        -99,
+                        -999,
+                        -9999,
+                        -99999,
+                        -999999,
+                        -9999999,
+                        -99999999,
+                        -999999999,
+                        Integer.MIN_VALUE+1
+                };
+                for(int v : positive_data) {
+                        packedField.moveFrom(v);
+                        if(packedField.cmpInt(0) <= 0) {
+                                System.out.println("error: " + v);
+                        }
+                }
+                for(int v : negative_data) {
+                        packedField.moveFrom(v);
+                        if(packedField.cmpInt(0) >= 0) {
+                                System.out.println("error: " + v);
+                        }
+                }
+                packedField.moveFrom(0);
+                if(packedField.cmpInt(0) != 0) {
+                        System.out.println("error: " + 0);
+                }
+        }
+}
+])
+AT_CHECK([javac a.java])
+AT_CHECK([java a], [0],[])
+
+AT_CLEANUP

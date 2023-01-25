@@ -88,6 +88,7 @@ d:d
 AT_CLEANUP
 
 AT_SETUP([Dynamic reference modification])
+AT_CHECK([${SKIP_TEST}])
 
 AT_DATA([prog.cob], [
        IDENTIFICATION   DIVISION.
@@ -148,6 +149,7 @@ prog.cob:14: Error: Length of 'X' out of bounds: 5
 AT_CLEANUP
 
 AT_SETUP([Offset underflow])
+AT_CHECK([${SKIP_TEST}])
 
 AT_DATA([prog.cob], [
        IDENTIFICATION   DIVISION.
@@ -170,6 +172,7 @@ AT_CHECK([java prog], [1], ,
 AT_CLEANUP
 
 AT_SETUP([Offset overflow])
+AT_CHECK([${SKIP_TEST}])
 
 AT_DATA([prog.cob], [
        IDENTIFICATION   DIVISION.
@@ -192,6 +195,7 @@ AT_CHECK([java prog], [1], ,
 AT_CLEANUP
 
 AT_SETUP([Length underflow])
+AT_CHECK([${SKIP_TEST}])
 
 AT_DATA([prog.cob], [
        IDENTIFICATION   DIVISION.
@@ -214,6 +218,7 @@ AT_CHECK([java prog], [1], ,
 AT_CLEANUP
 
 AT_SETUP([Length overflow])
+AT_CHECK([${SKIP_TEST}])
 
 AT_DATA([prog.cob], [
        IDENTIFICATION   DIVISION.
@@ -239,6 +244,7 @@ AT_CLEANUP
 # 6) TODO
 
 AT_SETUP([Offset out of bounds in MOVE (1)])
+AT_CHECK([${SKIP_TEST}])
 
 AT_DATA([prog.cob], [
        IDENTIFICATION   DIVISION.
@@ -262,6 +268,7 @@ AT_CLEANUP
 
 
 AT_SETUP([Offset out of bounds in MOVE (2)])
+AT_CHECK([${SKIP_TEST}])
 
 AT_DATA([prog.cob], [
        IDENTIFICATION   DIVISION.

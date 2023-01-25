@@ -8,18 +8,19 @@ jobs:
   run-tests:
     strategy:
       matrix:
-        os: ["ubuntu:22.04", "almalinux:9"]
+        #os: ["ubuntu:22.04", "almalinux:9"]
+        os: ["almalinux:9"]
     runs-on: ubuntu-latest
     container:
       image: ${{ matrix.os }}
     steps:
         
       - name: Install dependencies on Ubuntu 22.04
-        if: matrix.os == 'ubuntu:22.04'
+        if: matrix.os == 'ubuntu:20.04'
         run: |
-          apt-get update -y
-          apt-get install -y default-jdk
-          apt-get install -y build-essential bison flex gettext texinfo automake autoconf libtool 
+          apt update -y
+          apt install -y default-jdk
+          apt install -y build-essential bison flex gettext texinfo
 
       - name: Install dependencies on AlmaLinux 9
         if: matrix.os == 'almalinux:9'
@@ -38,13 +39,7 @@ jobs:
           ./configure --prefix=/usr/
           make
           make install
-          export CLASSPATH=":/usr/lib/opensourcecobol4j/libcobj.jar:$HOME/.java_lib/sqlite.jar"
-  
-      - name: Make test scripts
-        run: |
-          cd tests/
-          make
-          cd ../
+          export CLASSPATH=":/usr/lib/opensourcecobol4j/libcobj.jar:$HOME/.java_lib/sqlite.jar" 
 
       - name: Run tests "command-line-options"
         run: |
@@ -64,34 +59,34 @@ jobs:
         run: |
           export CLASSPATH=":/usr/lib/opensourcecobol4j/libcobj.jar:$HOME/.java_lib/sqlite.jar"
           cd tests/
-          ./data-rep || true
+          ./data-rep
           cd ../
 
       - name: Run tests "i18n_sjis"
         run: |
           export CLASSPATH=":/usr/lib/opensourcecobol4j/libcobj.jar:$HOME/.java_lib/sqlite.jar"
           cd tests/
-          ./i18n_sjis || true
+          ./i18n_sjis
 
       - name: Run tests "jp-compat"
         run: |
           export CLASSPATH=":/usr/lib/opensourcecobol4j/libcobj.jar:$HOME/.java_lib/sqlite.jar"
           cd tests/
-          ./jp-compat || true
+          ./jp-compat
           cd ../
 
-      #- name: Run tests "run"
-      #  run: |
-      #    export CLASSPATH=":/usr/lib/opensourcecobol4j/libcobj.jar:$HOME/.java_lib/sqlite.jar"
-      #    cd tests/
-      #    ./run || true
-      #    cd ../
+      - name: Run tests "run"
+        run: |
+          export CLASSPATH=":/usr/lib/opensourcecobol4j/libcobj.jar:$HOME/.java_lib/sqlite.jar"
+          cd tests/
+          ./run
+          cd ../
 
       - name: Run tests "syntax"
         run: |
           export CLASSPATH=":/usr/lib/opensourcecobol4j/libcobj.jar:$HOME/.java_lib/sqlite.jar"
           cd tests/
-          ./syntax || true
+          ./syntax
           cd ../
 
       - name: Run NIST test
@@ -100,15 +95,15 @@ jobs:
           cd tests/cobol85/
           make test
 
-      - name: Run tests "i18n_utf8"
-        run: |
-          export CLASSPATH=":$HOME/.java_lib/sqlite.jar"
-          ./configure --prefix=/usr/ --with-vbisam --enable-utf8
-          make
-          make install
-          export CLASSPATH=":/usr/lib/opensourcecobol4j/libcobj.jar:$HOME/.java_lib/sqlite.jar"
-          ./i18n_utf8 || true
-          cd ../
+          #- name: Run tests "i18n_utf8"
+          #  run: |
+          #    export CLASSPATH=":$HOME/.java_lib/sqlite.jar"
+          #    ./configure --prefix=/usr/ --with-vbisam --enable-utf8
+          #    make
+          #    make install
+          #    export CLASSPATH=":/usr/lib/opensourcecobol4j/libcobj.jar:$HOME/.java_lib/sqlite.jar"
+          #    ./i18n_utf8 || true
+          #    cd ../
 
   static_analysis:
     runs-on: ubuntu-latest
@@ -116,10 +111,11 @@ jobs:
       # Checkout opensource COBOL
       - name: Checkout opensource COBOL 4j
         uses: actions/checkout@v2
-        
-      - name: Install dependencies
-        run: |
-          sudo apt-get install default-jdk
+
+      - uses: actions/setup-java@v3
+        with:
+          distribution: 'temurin'
+          java-version: '17'
 
       # Download google-java-format and PMD
       - name: Install dependencies

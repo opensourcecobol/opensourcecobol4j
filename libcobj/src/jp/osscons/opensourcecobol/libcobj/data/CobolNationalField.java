@@ -65,11 +65,6 @@ public class CobolNationalField extends AbstractCobolField {
   }
 
   @Override
-  public double getDouble() {
-    return 0;
-  }
-
-  @Override
   public CobolDecimal getDecimal() {
     return null;
   }
