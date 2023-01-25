@@ -687,7 +687,6 @@ public class CobolUtil {
   }
 
   public static void setEnv(AbstractCobolField envVarName, AbstractCobolField envVarValue) {
-    CobolUtil.envVarTable.setProperty(
-        envVarName.getString().trim(), envVarValue.getString().trim());
+    CobolUtil.envVarTable.setProperty(envVarName.getString().trim(), envVarValue.getString());
   }
 }
