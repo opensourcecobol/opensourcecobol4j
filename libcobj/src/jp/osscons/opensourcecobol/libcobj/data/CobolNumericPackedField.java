@@ -911,9 +911,11 @@ public class CobolNumericPackedField extends AbstractCobolField {
     for (size = 0; size < 20; size++) {
       if (val1[size] != CobolDecimal.packedValue[size]) {
         if (sign < 0) {
-          return CobolDecimal.packedValue[size] - val1[size];
+          return Byte.toUnsignedInt(CobolDecimal.packedValue[size])
+              - Byte.toUnsignedInt(val1[size]);
         } else {
-          return val1[size] - CobolDecimal.packedValue[size];
+          return Byte.toUnsignedInt(val1[size])
+              - Byte.toUnsignedInt(CobolDecimal.packedValue[size]);
         }
       }
     }
