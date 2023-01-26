@@ -121,6 +121,7 @@ public class CobolRelativeFile extends CobolFile {
             return COB_STATUS_00_SUCCESS;
           }
         } catch (IOException e) {
+          return COB_STATUS_30_PERMANENT_ERROR;
         }
         switch (cond) {
           case COB_EQ:
@@ -137,8 +138,8 @@ public class CobolRelativeFile extends CobolFile {
       }
 
     } catch (FileNotFoundException e) {
+      return COB_STATUS_30_PERMANENT_ERROR;
     }
-    return 0;
   }
 
   @Override
