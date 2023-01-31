@@ -218,6 +218,7 @@ AT_CLEANUP
 # 2-4-8 native
 
 AT_SETUP([BINARY: 2-4-8 native])
+AT_CHECK([${SKIP_TEST}])
 
 if test "x$COB_BIGENDIAN" = "xyes"; then
 AT_CHECK([true])
@@ -618,6 +619,7 @@ AT_CLEANUP
 # 1-2-4-8 native
 
 AT_SETUP([BINARY: 1-2-4-8 native])
+AT_CHECK([${SKIP_TEST}])
 
 if test "x$COB_BIGENDIAN" = "xyes"; then
 AT_CHECK([true])
@@ -822,6 +824,7 @@ AT_CLEANUP
 # 1--8 big-endian
 
 AT_SETUP([BINARY: 1--8 big-endian])
+AT_CHECK([${SKIP_TEST}])
 
 AT_DATA([test.conf], [
 include "cobol2002.conf"
@@ -1019,6 +1022,7 @@ AT_CLEANUP
 # 1--8 native
 
 AT_SETUP([BINARY: 1--8 native])
+AT_CHECK([${SKIP_TEST}])
 
 if test "x$COB_BIGENDIAN" = "xyes"; then
 AT_CHECK([true])
@@ -1222,6 +1226,7 @@ AT_CLEANUP
 # full-print
 
 AT_SETUP([BINARY: full-print])
+AT_CHECK([${SKIP_TEST}])
 
 AT_DATA([test.conf], [
 include "cobol2002.conf"

@@ -186,12 +186,6 @@ public class CobolNumericPackedField extends AbstractCobolField {
     }
   }
 
-  /** TODO */
-  @Override
-  public double getDouble() {
-    throw new CobolRuntimeException(CobolRuntimeException.COBOL_FITAL_ERROR, "未対応");
-  }
-
   @Override
   public void setDecimal(BigDecimal decimal) {
     byte[] decimalBytes = decimal.toPlainString().getBytes();
@@ -458,16 +452,6 @@ public class CobolNumericPackedField extends AbstractCobolField {
     CobolNumericField field = new CobolNumericField(size, data, attr);
     field.moveFrom(this);
     return field;
-  }
-
-  /**
-   * 引数で与えらえられたデータからthisへの代入を行う
-   *
-   * @param field 代入元のデータ(double型)
-   */
-  @Override
-  public void moveFrom(double number) {
-    this.moveFrom((int) number);
   }
 
   /**
@@ -927,9 +911,11 @@ public class CobolNumericPackedField extends AbstractCobolField {
     for (size = 0; size < 20; size++) {
       if (val1[size] != CobolDecimal.packedValue[size]) {
         if (sign < 0) {
-          return CobolDecimal.packedValue[size] - val1[size];
+          return Byte.toUnsignedInt(CobolDecimal.packedValue[size])
+              - Byte.toUnsignedInt(val1[size]);
         } else {
-          return val1[size] - CobolDecimal.packedValue[size];
+          return Byte.toUnsignedInt(val1[size])
+              - Byte.toUnsignedInt(CobolDecimal.packedValue[size]);
         }
       }
     }

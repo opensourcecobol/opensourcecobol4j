@@ -1,0 +1,519 @@
+AT_SETUP([no-argument])
+
+AT_DATA([b.cbl], [
+       identification division.
+       program-id. b.
+       data division.
+       linkage section.
+       procedure division.
+         display "<cobol> b".
+])
+
+AT_DATA([a.java], [
+import jp.osscons.opensourcecobol.libcobj.ui.*;
+public class a {
+	public static void main(String@<:@@:>@ args) {
+		b prog = new b();
+		CobolResultSet rs = prog.execute();
+	}
+}
+])
+
+AT_CHECK([cobj b.cbl])
+AT_CHECK([javac a.java])
+AT_CHECK([java a], [0],
+[<cobol> b
+])
+
+AT_CLEANUP
+
+AT_SETUP([PIC 9(3)])
+
+AT_DATA([b.cbl], [
+       identification division.
+       program-id. b.
+       data division.
+       linkage section.
+       01 arg pic 9(3).
+       procedure division using arg.
+         display "<cobol> arg: " arg.
+         add 1 to arg.
+])
+
+AT_DATA([a.java], [
+import jp.osscons.opensourcecobol.libcobj.ui.*;
+public class a {
+	public static void main(String@<:@@:>@ args) {
+		b prog = new b();
+		CobolResultSet rs;
+		int@<:@@:>@ data_list = {0, 1, 2, 998};
+		try{
+			for(int data : data_list) {
+				rs = prog.execute(data);
+				System.out.println("<java> arg: " + rs.getInt(1));
+			}
+		} catch(CobolResultSetException e) {
+			e.printStackTrace();
+		}
+	}
+}
+])
+
+AT_CHECK([cobj b.cbl])
+AT_CHECK([javac a.java])
+AT_CHECK([java a], [0],
+[<cobol> arg: 000
+<java> arg: 1
+<cobol> arg: 001
+<java> arg: 2
+<cobol> arg: 002
+<java> arg: 3
+<cobol> arg: 998
+<java> arg: 999
+])
+
+AT_CLEANUP
+
+AT_SETUP([PIC S9(3)])
+
+AT_DATA([b.cbl], [
+       identification division.
+       program-id. b.
+       data division.
+       linkage section.
+       01 arg pic S9(3).
+       procedure division using arg.
+         display "<cobol> arg: " arg.
+         add 1 to arg.
+])
+
+AT_DATA([a.java], [
+import jp.osscons.opensourcecobol.libcobj.ui.*;
+public class a {
+	public static void main(String@<:@@:>@ args) {
+		b prog = new b();
+		CobolResultSet rs;
+		int@<:@@:>@ data_list = {-999, -2, -1, 0, 1, 2, 998};
+		try{
+			for(int data : data_list) {
+				rs = prog.execute(data);
+				System.out.println("<java> arg: " + rs.getInt(1));
+			}
+		} catch(CobolResultSetException e) {
+			e.printStackTrace();
+		}
+	}
+}
+])
+
+AT_CHECK([cobj b.cbl])
+AT_CHECK([javac a.java])
+AT_CHECK([java a], [0],
+[<cobol> arg: -999
+<java> arg: -998
+<cobol> arg: -002
+<java> arg: -1
+<cobol> arg: -001
+<java> arg: 0
+<cobol> arg: +000
+<java> arg: 1
+<cobol> arg: +001
+<java> arg: 2
+<cobol> arg: +002
+<java> arg: 3
+<cobol> arg: +998
+<java> arg: 999
+])
+
+AT_CLEANUP
+
+AT_SETUP([PIC S9(3)V99])
+
+AT_DATA([b.cbl], [
+       identification division.
+       program-id. b.
+       data division.
+       linkage section.
+       01 arg pic S9(3)V99.
+       procedure division using arg.
+         display "<cobol> arg: " arg.
+         add 1 to arg.
+])
+
+AT_DATA([a.java], [
+import jp.osscons.opensourcecobol.libcobj.ui.*;
+public class a {
+	public static void main(String@<:@@:>@ args) {
+		b prog = new b();
+		CobolResultSet rs;
+		double@<:@@:>@ data_list = {-999.99, -2.01, -1.01, -1.00, 0, 1.01, 2.01, 998.99};
+		try{
+			for(double data : data_list) {
+				rs = prog.execute(data);
+				System.out.println("<java> arg: " + rs.getDouble(1));
+			}
+		} catch(CobolResultSetException e) {
+			e.printStackTrace();
+		}
+	}
+}
+])
+
+AT_CHECK([cobj b.cbl])
+AT_CHECK([javac a.java])
+AT_CHECK([java a], [0],
+[<cobol> arg: -999.99
+<java> arg: -998.99
+<cobol> arg: -002.01
+<java> arg: -1.01
+<cobol> arg: -001.01
+<java> arg: -0.01
+<cobol> arg: -001.00
+<java> arg: 0.0
+<cobol> arg: +000.00
+<java> arg: 1.0
+<cobol> arg: +001.01
+<java> arg: 2.01
+<cobol> arg: +002.01
+<java> arg: 3.01
+<cobol> arg: +998.99
+<java> arg: 999.99
+])
+
+AT_CLEANUP
+
+
+AT_SETUP([PIC 9(3) USAGE COMP-3])
+
+AT_DATA([b.cbl], [
+       identification division.
+       program-id. b.
+       data division.
+       linkage section.
+       01 arg pic 9(3) USAGE COMP-3.
+       procedure division using arg.
+         display "<cobol> arg: " arg.
+         add 1 to arg.
+])
+
+AT_DATA([a.java], [
+import jp.osscons.opensourcecobol.libcobj.ui.*;
+public class a {
+	public static void main(String@<:@@:>@ args) {
+		b prog = new b();
+		CobolResultSet rs;
+		int@<:@@:>@ data_list = {0, 1, 2, 998};
+		try{
+			for(int data : data_list) {
+				rs = prog.execute(data);
+				System.out.println("<java> arg: " + rs.getInt(1));
+			}
+		} catch(CobolResultSetException e) {
+			e.printStackTrace();
+		}
+	}
+}
+])
+
+AT_CHECK([cobj b.cbl])
+AT_CHECK([javac a.java])
+AT_CHECK([java a], [0],
+[<cobol> arg: 000
+<java> arg: 1
+<cobol> arg: 001
+<java> arg: 2
+<cobol> arg: 002
+<java> arg: 3
+<cobol> arg: 998
+<java> arg: 999
+])
+
+AT_CLEANUP
+
+AT_SETUP([PIC S9(3) USAGE COMP-3])
+
+AT_DATA([b.cbl], [
+       identification division.
+       program-id. b.
+       data division.
+       linkage section.
+       01 arg pic S9(3) USAGE COMP-3.
+       procedure division using arg.
+         display "<cobol> arg: " arg.
+         add 1 to arg.
+])
+
+AT_DATA([a.java], [
+import jp.osscons.opensourcecobol.libcobj.ui.*;
+public class a {
+	public static void main(String@<:@@:>@ args) {
+		b prog = new b();
+		CobolResultSet rs;
+		int@<:@@:>@ data_list = {-999, -2, -1, 0, 1, 2, 998};
+		try{
+			for(int data : data_list) {
+				rs = prog.execute(data);
+				System.out.println("<java> arg: " + rs.getInt(1));
+			}
+		} catch(CobolResultSetException e) {
+			e.printStackTrace();
+		}
+	}
+}
+])
+
+AT_CHECK([cobj b.cbl])
+AT_CHECK([javac a.java])
+AT_CHECK([java a], [0],
+[<cobol> arg: -999
+<java> arg: -998
+<cobol> arg: -002
+<java> arg: -1
+<cobol> arg: -001
+<java> arg: 0
+<cobol> arg: +000
+<java> arg: 1
+<cobol> arg: +001
+<java> arg: 2
+<cobol> arg: +002
+<java> arg: 3
+<cobol> arg: +998
+<java> arg: 999
+])
+
+AT_CLEANUP
+
+AT_SETUP([PIC S9(3)V99 USAGE COMP-3])
+
+AT_DATA([b.cbl], [
+       identification division.
+       program-id. b.
+       data division.
+       linkage section.
+       01 arg pic S9(3)V99 USAGE COMP-3.
+       procedure division using arg.
+         display "<cobol> arg: " arg.
+         add 1 to arg.
+])
+
+AT_DATA([a.java], [
+import jp.osscons.opensourcecobol.libcobj.ui.*;
+public class a {
+	public static void main(String@<:@@:>@ args) {
+		b prog = new b();
+		CobolResultSet rs;
+		double@<:@@:>@ data_list = {-999.99, -2.01, -1.01, -1.00, 0, 1.01, 2.01, 998.99};
+		try{
+			for(double data : data_list) {
+				rs = prog.execute(data);
+				System.out.println("<java> arg: " + rs.getDouble(1));
+			}
+		} catch(CobolResultSetException e) {
+			e.printStackTrace();
+		}
+	}
+}
+])
+
+AT_CHECK([cobj b.cbl])
+AT_CHECK([javac a.java])
+AT_CHECK([java a], [0],
+[<cobol> arg: -999.99
+<java> arg: -998.99
+<cobol> arg: -002.01
+<java> arg: -1.01
+<cobol> arg: -001.01
+<java> arg: -0.01
+<cobol> arg: -001.00
+<java> arg: 0.0
+<cobol> arg: +000.00
+<java> arg: 1.0
+<cobol> arg: +001.01
+<java> arg: 2.01
+<cobol> arg: +002.01
+<java> arg: 3.01
+<cobol> arg: +998.99
+<java> arg: 999.99
+])
+
+AT_CLEANUP
+
+AT_SETUP([PIC X(3)])
+
+AT_DATA([b.cbl], [
+       identification division.
+       program-id. b.
+       data division.
+       linkage section.
+       01 arg pic X(3).
+       procedure division using arg.
+         display "<cobol> arg: " arg.
+         MOVE "123" TO arg.
+])
+
+AT_DATA([a.java], [
+import jp.osscons.opensourcecobol.libcobj.ui.*;
+public class a {
+	public static void main(String@<:@@:>@ args) {
+		b prog = new b();
+		CobolResultSet rs;
+		try{
+			rs = prog.execute("abc");
+			System.out.println("<java> arg: " + rs.getString(1));
+		} catch(CobolResultSetException e) {
+			e.printStackTrace();
+		}
+	}
+}
+])
+
+AT_CHECK([cobj b.cbl])
+AT_CHECK([javac a.java])
+AT_CHECK([java a], [0],
+[<cobol> arg: abc
+<java> arg: 123
+])
+
+AT_CLEANUP
+
+AT_SETUP([Out of range])
+
+AT_DATA([b.cbl], [
+       identification division.
+       program-id. b.
+       data division.
+       linkage section.
+       01 arg pic 9(3).
+       procedure division using arg.
+       add 1 to arg.
+])
+
+AT_DATA([a.java], [
+import jp.osscons.opensourcecobol.libcobj.ui.*;
+public class a {
+	public static void main(String@<:@@:>@ args) {
+		b prog = new b();
+		CobolResultSet rs;
+		try{
+			rs = prog.execute(0);
+			System.out.println("<java> arg: " + rs.getInt(2));
+		} catch(CobolResultSetException e) {
+			e.printStackTrace();
+		}
+	}
+}
+])
+
+AT_CHECK([cobj b.cbl])
+AT_CHECK([javac a.java])
+AT_CHECK([java a 2>&1 | grep 'The index is out of range' > /dev/null], [0])
+AT_CLEANUP
+
+AT_SETUP([Type mismatch])
+
+AT_DATA([b.cbl], [
+       identification division.
+       program-id. b.
+       data division.
+       linkage section.
+       01 arg-i pic 9(3).
+       01 arg-d pic 9(3)V9.
+       01 arg-s pic X(3).
+       procedure division using arg-i arg-d arg-s.
+])
+
+AT_DATA([a.java], [
+import jp.osscons.opensourcecobol.libcobj.ui.*;
+public class a {
+	public static void main(String@<:@@:>@ args) {
+                b prog = new b();
+                CobolResultSet rs = prog.execute(1, 1.1, "abc");
+                try{
+                        rs.getDouble(1);
+                } catch(CobolResultSetException e) {
+                        e.printStackTrace();
+                }
+                try{
+                        rs.getString(1);
+                } catch(CobolResultSetException e) {
+                        e.printStackTrace();
+                }
+                try{
+                        rs.getInt(2);
+                } catch(CobolResultSetException e) {
+                        e.printStackTrace();
+                }
+                try{
+                        rs.getString(2);
+                } catch(CobolResultSetException e) {
+                        e.printStackTrace();
+                }
+                try{
+                        rs.getInt(3);
+                } catch(CobolResultSetException e) {
+                        e.printStackTrace();
+                }
+                try{
+                        rs.getDouble(3);
+                } catch(CobolResultSetException e) {
+                        e.printStackTrace();
+                }
+        }
+}
+])
+
+AT_CHECK([cobj b.cbl])
+AT_CHECK([javac a.java])
+AT_CHECK([java a 2>&1 | grep 'jp.osscons.opensourcecobol.libcobj.ui.CobolResultSetException'], [0],
+[jp.osscons.opensourcecobol.libcobj.ui.CobolResultSetException: The result type is not 'double'
+jp.osscons.opensourcecobol.libcobj.ui.CobolResultSetException: The result type is not 'String'
+jp.osscons.opensourcecobol.libcobj.ui.CobolResultSetException: The result type is not 'int'
+jp.osscons.opensourcecobol.libcobj.ui.CobolResultSetException: The result type is not 'String'
+jp.osscons.opensourcecobol.libcobj.ui.CobolResultSetException: The result type is not 'int'
+jp.osscons.opensourcecobol.libcobj.ui.CobolResultSetException: The result type is not 'double'
+])
+AT_CLEANUP
+
+AT_SETUP([Japanese])
+
+AT_DATA([b.cbl], [
+       identification division.
+       program-id. b.
+       data division.
+       linkage section.
+       01 arg-1 pic 9(3).
+       01 arg-2 pic N(5).
+       procedure division using arg-1 arg-2.
+         display arg-1.
+         display arg-2.
+         add 1 to arg-1.
+         move N"‚©‚«‚­‚¯‚±" to arg-2.
+])
+
+AT_DATA([a.java], [
+import jp.osscons.opensourcecobol.libcobj.ui.*;
+public class a {
+	public static void main(String@<:@@:>@ args) {
+		b prog = new b();
+		CobolResultSet rs = prog.execute(100, "‚ ‚¢‚¤‚¦‚¨");
+		try{
+			int ret1 = rs.getInt(1);
+			String ret2 = rs.getString(2);
+			System.out.println("ret1: " + ret1);
+			System.out.println("ret2: " + ret2);
+		} catch(CobolResultSetException e){
+			e.printStackTrace();
+		}
+	}
+}
+])
+
+AT_CHECK([cobj b.cbl])
+AT_CHECK([javac -encoding SJIS a.java])
+AT_CHECK([java -Dfile.encoding=SJIS a], [0],
+[100
+‚ ‚¢‚¤‚¦‚¨
+ret1: 101
+ret2: ‚©‚«‚­‚¯‚±
+])
+AT_CLEANUP

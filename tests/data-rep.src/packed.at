@@ -23,6 +23,7 @@
 
 # dump
 AT_SETUP([PACKED-DECIMAL dump])
+AT_CHECK([${SKIP_TEST}])
 
 AT_DATA([dump.c], [
 #include <stdio.h>
@@ -322,6 +323,7 @@ AT_CLEANUP
 
 # numeric test
 AT_SETUP([PACKED-DECIMAL numeric test])
+AT_CHECK([${SKIP_TEST}])
 
 AT_DATA([prog.cob], [
        IDENTIFICATION   DIVISION.

@@ -25,6 +25,7 @@ import java.nio.channels.FileLock;
 import java.nio.channels.NonWritableChannelException;
 import java.nio.channels.OverlappingFileLockException;
 import java.nio.file.Files;
+import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.nio.file.StandardOpenOption;
 import java.util.ArrayList;
@@ -146,6 +147,7 @@ public class CobolFile {
   protected static final int EACCESS = 13;
   protected static final int EISDIR = 21;
   protected static final int EROFS = 30;
+  protected static final int EAGAIN = 11;
 
   public static CobolFile errorFile;
 
@@ -331,7 +333,7 @@ public class CobolFile {
     byte[] tmpfnstatus = String.format("%02d", 0).getBytes();
     byte[] pTmpfnstatus = tmpfnstatus;
     String p_excpcode = "";
-    String s = System.getenv(TIS_DEFINE_USERFH);
+    String s = CobolUtil.getEnv(TIS_DEFINE_USERFH);
     int iRet = 0;
     char ret = '0';
     int status1 = 0;
@@ -643,7 +645,7 @@ public class CobolFile {
             file_open_env[j] = src[src_i + 1 + j];
           }
           file_open_env[i - 1] = 0;
-          String p = System.getenv(new String(Arrays.copyOfRange(file_open_env, 0, i - 1)));
+          String p = CobolUtil.getEnv(new String(Arrays.copyOfRange(file_open_env, 0, i - 1)));
           if (p != null) {
             byte[] pbytes = p.getBytes();
             for (int j = 0; j < pbytes.length; ++j) {
@@ -667,7 +669,7 @@ public class CobolFile {
         for (i = 0; i < NUM_PREFIX; i++) {
           byte[] file_open_buff = String.format("%s%s", prefix[i], file_open_name).getBytes();
           String p;
-          if ((p = System.getenv(new String(file_open_buff))) != null) {
+          if ((p = CobolUtil.getEnv(new String(file_open_buff))) != null) {
             file_open_name_bytes = p.getBytes();
             break;
           }
@@ -688,8 +690,8 @@ public class CobolFile {
         was_not_exist = true;
         if (mode != COB_OPEN_OUTPUT
             && !this.flag_optional
-            && (mode != COB_OPEN_I_O || System.getenv(COB_IO_CREATES).equals("yes"))
-            && (mode != COB_OPEN_EXTEND || System.getenv(COB_EXTEND_CREATES).equals("yes"))) {
+            && (mode != COB_OPEN_I_O || !CobolUtil.getEnv(COB_IO_CREATES).equals("yes"))
+            && (mode != COB_OPEN_EXTEND || !CobolUtil.getEnv(COB_EXTEND_CREATES).equals("yes"))) {
           saveStatus(COB_STATUS_35_NOT_EXISTS, fnstatus);
           return;
         }
@@ -781,7 +783,10 @@ public class CobolFile {
         case COB_OPEN_I_O:
           fp =
               FileChannel.open(
-                  Paths.get(filename), StandardOpenOption.READ, StandardOpenOption.WRITE);
+                  Paths.get(filename),
+                  StandardOpenOption.READ,
+                  StandardOpenOption.WRITE,
+                  StandardOpenOption.CREATE);
           break;
         case COB_OPEN_EXTEND:
           fp =
@@ -1021,7 +1026,7 @@ public class CobolFile {
       read_opts &= ~COB_READ_LOCK;
     }
 
-    if (this.organization == COB_ORG_INDEXED /* && bdb_env != null*/) {
+    if (this.organization == COB_ORG_INDEXED /* && bdb_env != null */) {
       if (this.open_mode != COB_OPEN_I_O || (this.lock_mode & COB_LOCK_EXCLUSIVE) != 0) {
         read_opts &= ~COB_READ_LOCK;
       } else if ((this.lock_mode & COB_LOCK_AUTOMATIC) != 0
@@ -1291,7 +1296,9 @@ public class CobolFile {
   public static void exitFileIO() {
     for (CobolFile f : file_cache) {
       if (f.open_mode != COB_OPEN_CLOSED && f.open_mode != COB_OPEN_LOCKED) {
-        System.err.println(String.format("WRNING - IMPLICIT CLOSE of %s", f.select_name));
+        String filename = f.assign.fieldToString();
+        System.err.print(
+            String.format("WARNING - Implicit CLOSE of %s (\"%s\") \n", f.select_name, filename));
       }
     }
   }
@@ -1312,7 +1319,7 @@ public class CobolFile {
 
   /** libcob/fileio.cのcob_init_fileioの実装 */
   public static void cob_init_fileio() {
-    String s = System.getenv("COB_SYNC");
+    String s = CobolUtil.getEnv("COB_SYNC");
     if (s != null) {
       if (s.charAt(0) == 'Y' || s.charAt(0) == 'y') {
         cob_do_sync = 1;
@@ -1322,15 +1329,15 @@ public class CobolFile {
       }
     }
 
-    cob_file_path = System.getenv("COB_FILE_PATH");
+    cob_file_path = CobolUtil.getEnv("COB_FILE_PATH");
     if (cob_file_path != null) {
       if (cob_file_path.charAt(0) == '\0' || cob_file_path.charAt(0) == ' ') {
         cob_file_path = null;
       }
     }
 
-    cob_ls_nulls = System.getenv("COB_LS_NULLS");
-    cob_ls_fixed = System.getenv("COB_LS_FIXED");
+    cob_ls_nulls = CobolUtil.getEnv("COB_LS_NULLS");
+    cob_ls_fixed = CobolUtil.getEnv("COB_LS_FIXED");
 
     file_open_env = new byte[COB_SMALL_BUFF];
     // file_open_name = new byte[COB_SMALL_BUFF];
@@ -1411,5 +1418,136 @@ public class CobolFile {
     }
     String filename = CobolFile.errorFile.assign.fieldToString();
     CobolUtil.runtimeError(String.format("%s (STATUS = %02d) File : '%s'", msg, status, filename));
+  }
+
+  public void cob_delete_file(AbstractCobolField fnstatus) {
+    String openMode = String.format("%02d", (int) this.last_open_mode);
+    if (invokeFun(COB_IO_DELETE_FILE, this, null, null, fnstatus, openMode, null, null) != 0) {
+      return;
+    }
+
+    if (this.open_mode == COB_OPEN_LOCKED) {
+      saveStatus(COB_STATUS_38_CLOSED_WITH_LOCK, fnstatus);
+      return;
+    }
+
+    /* file is already open */
+    if (this.open_mode != COB_OPEN_CLOSED) {
+      saveStatus(COB_STATUS_41_ALREADY_OPEN, fnstatus);
+      return;
+    }
+
+    if (this.special != 0) {
+      saveStatus(COB_STATUS_30_PERMANENT_ERROR, fnstatus);
+      return;
+    }
+
+    if (this.assign == null) {
+      file_open_name = this.select_name;
+    } else {
+      file_open_name = this.assign.fieldToString();
+    }
+
+    byte[] src;
+    byte[] dst;
+    boolean simple;
+    if (CobolModule.getCurrentModule().flag_filename_mapping != 0) {
+      src = file_open_name.getBytes();
+      dst = file_open_buff;
+      simple = true;
+      int src_i = 0;
+      int dst_i = 0;
+      while (src_i < src.length) {
+        char c = (char) src[src_i];
+        if (!Character.isLetterOrDigit(c) && c != '_' && c != '-') {
+          simple = false;
+        }
+        if (c == '$') {
+          int i;
+          for (i = 1; src_i + i < src.length; i++) {
+            char d = (char) src[src_i + i];
+            if (!Character.isLetterOrDigit(d) && d != '_' && c != '-') {
+              break;
+            }
+          }
+          for (int j = 0; j < i - 1; ++j) {
+            file_open_env[j] = src[src_i + 1 + j];
+          }
+          file_open_env[i - 1] = 0;
+          String p = CobolUtil.getEnv(new String(Arrays.copyOfRange(file_open_env, 0, i - 1)));
+          if (p != null) {
+            byte[] pbytes = p.getBytes();
+            for (int j = 0; j < pbytes.length; ++j) {
+              dst[dst_i + j] = pbytes[j];
+            }
+            dst_i += pbytes.length;
+          }
+          src_i += i;
+        } else {
+          dst[dst_i++] = src[src_i++];
+        }
+      }
+
+      file_open_name = new String(Arrays.copyOfRange(dst, 0, dst_i));
+
+      byte[] file_open_name_bytes = file_open_name.getBytes();
+      cb_get_jisword_buff(file_open_buff, file_open_name_bytes, COB_SMALL_BUFF);
+
+      if (simple) {
+        int i;
+        for (i = 0; i < NUM_PREFIX; i++) {
+          byte[] file_open_buff = String.format("%s%s", prefix[i], file_open_name).getBytes();
+          String p;
+          if ((p = CobolUtil.getEnv(new String(file_open_buff))) != null) {
+            file_open_name_bytes = p.getBytes();
+            break;
+          }
+        }
+
+        if (i == NUM_PREFIX && cob_file_path != null) {
+          byte[] file_open_buff = String.format("%s/%s", cob_file_path, file_open_name).getBytes();
+          file_open_name_bytes = file_open_buff;
+        }
+      }
+
+      file_open_name = new String(file_open_name_bytes);
+    }
+
+    Path filePath = Paths.get(this.assign.fieldToString());
+    try {
+      saveStatus(COB_STATUS_00_SUCCESS, fnstatus);
+      Files.delete(filePath);
+      return;
+    } catch (IOException e) {
+      int mode = (int) this.last_open_mode;
+      try {
+        switch (this.open_(file_open_name, mode, 0)) {
+          case ENOENT:
+            saveStatus(COB_STATUS_35_NOT_EXISTS, fnstatus);
+            return;
+          case EACCESS:
+          case EISDIR:
+          case EROFS:
+            saveStatus(COB_STATUS_37_PERMISSION_DENIED, fnstatus);
+            return;
+          case EAGAIN:
+          case COB_STATUS_61_FILE_SHARING:
+            saveStatus(COB_STATUS_61_FILE_SHARING, fnstatus);
+            return;
+          case COB_STATUS_91_NOT_AVAILABLE:
+            saveStatus(COB_STATUS_91_NOT_AVAILABLE, fnstatus);
+            return;
+          case COB_LINAGE_INVALID:
+            saveStatus(COB_STATUS_57_I_O_LINAGE, fnstatus);
+            return;
+          default:
+            saveStatus(COB_STATUS_30_PERMANENT_ERROR, fnstatus);
+            return;
+        }
+      } catch (IOException e1) {
+        saveStatus(COB_STATUS_30_PERMANENT_ERROR, fnstatus);
+        return;
+      }
+    }
   }
 }

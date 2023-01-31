@@ -339,7 +339,13 @@ SRC_FILES = \
 	./src/jp/osscons/opensourcecobol/libcobj/file/CobolSequentialFile.java \
 	./src/jp/osscons/opensourcecobol/libcobj/file/FileStruct.java \
 	./src/jp/osscons/opensourcecobol/libcobj/file/KeyComponent.java \
-	./src/jp/osscons/opensourcecobol/libcobj/termio/CobolTerminal.java
+	./src/jp/osscons/opensourcecobol/libcobj/termio/CobolTerminal.java \
+	./src/jp/osscons/opensourcecobol/libcobj/ui/CobolResultSetException.java \
+	./src/jp/osscons/opensourcecobol/libcobj/ui/CobolResultSet.java \
+	./src/jp/osscons/opensourcecobol/libcobj/ui/CobolCallResult.java \
+	./src/jp/osscons/opensourcecobol/libcobj/ui/CobolResultInt.java \
+	./src/jp/osscons/opensourcecobol/libcobj/ui/CobolResultString.java \
+	./src/jp/osscons/opensourcecobol/libcobj/ui/CobolResultDouble.java
 
 all: all-am
 

@@ -138,6 +138,8 @@ extern int			cb_source_line;
 
 extern const char		*cob_config_dir;
 
+extern char			*cb_java_package_name;
+
 extern char			*source_name;
 extern char			*demangle_name;
 extern FILE			*cb_storage_file;
