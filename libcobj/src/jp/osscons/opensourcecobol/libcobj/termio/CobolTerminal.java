@@ -229,7 +229,7 @@ public class CobolTerminal {
   public static void acceptEnvironment(AbstractCobolField f) {
     String p = null;
     if (CobolUtil.cobLocalEnv != null) {
-      p = System.getenv(CobolUtil.cobLocalEnv);
+      p = CobolUtil.getEnv(CobolUtil.cobLocalEnv);
     }
 
     if (p == null) {

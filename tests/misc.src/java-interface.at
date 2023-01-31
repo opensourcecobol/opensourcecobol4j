@@ -473,3 +473,47 @@ jp.osscons.opensourcecobol.libcobj.ui.CobolResultSetException: The result type i
 jp.osscons.opensourcecobol.libcobj.ui.CobolResultSetException: The result type is not 'double'
 ])
 AT_CLEANUP
+
+AT_SETUP([Japanese])
+
+AT_DATA([b.cbl], [
+       identification division.
+       program-id. b.
+       data division.
+       linkage section.
+       01 arg-1 pic 9(3).
+       01 arg-2 pic N(5).
+       procedure division using arg-1 arg-2.
+         display arg-1.
+         display arg-2.
+         add 1 to arg-1.
+         move N"‚©‚«‚­‚¯‚±" to arg-2.
+])
+
+AT_DATA([a.java], [
+import jp.osscons.opensourcecobol.libcobj.ui.*;
+public class a {
+	public static void main(String@<:@@:>@ args) {
+		b prog = new b();
+		CobolResultSet rs = prog.execute(100, "‚ ‚¢‚¤‚¦‚¨");
+		try{
+			int ret1 = rs.getInt(1);
+			String ret2 = rs.getString(2);
+			System.out.println("ret1: " + ret1);
+			System.out.println("ret2: " + ret2);
+		} catch(CobolResultSetException e){
+			e.printStackTrace();
+		}
+	}
+}
+])
+
+AT_CHECK([cobj b.cbl])
+AT_CHECK([javac -encoding SJIS a.java])
+AT_CHECK([java -Dfile.encoding=SJIS a], [0],
+[100
+‚ ‚¢‚¤‚¦‚¨
+ret1: 101
+ret2: ‚©‚«‚­‚¯‚±
+])
+AT_CLEANUP
