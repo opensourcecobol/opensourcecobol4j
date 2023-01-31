@@ -1,6 +1,6 @@
 # opensource COBOL 4J
 
-[English version README](https://github.com/opensourcecobol/opensourcecobol4j/blob/main/README.md)
+[English version README](./README.md)
 
 opensource COBOL 4JはCOBOLソースコードをJavaソースコードに変換するCOBOLコンパイラです.
 opensource COBOL 4JはCOBOLからCに変換するCOBOLコンパイラ["opensource COBOL"](https://github.com/opensourcecobol/opensource-cobol)をもとに開発されています.
