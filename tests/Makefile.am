@@ -164,7 +164,8 @@ misc_DEPENDENCIES = \
 	misc.src/move-sign-leading-separate-to-signed-comp3.at \
 	misc.src/java-interface.at \
 	misc.src/comp3-int.at \
-	misc.src/env.at
+	misc.src/env.at \
+	misc.src/exit-perform.at
 
 EXTRA_DIST = $(srcdir)/package.m4 \
 	$(TESTS) \
