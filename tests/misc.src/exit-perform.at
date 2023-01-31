@@ -1,0 +1,72 @@
+AT_SETUP([exit perform])
+AT_DATA([prog.cbl], [
+       identification              division.
+       program-id.                 prog.
+
+       data                        division.
+
+       working-storage             section.
+       01 I PIC 9.
+       procedure                   division.
+       main section.
+         perform b-proc.
+         stop run.
+
+       a-proc section.
+       a-proc-1.
+       perform varying i from i by 1 until i>4
+        display "perform varying " i
+        exit perform
+       end-perform.
+
+       b-proc section.
+         display "b-proc".
+       b-proc-1.
+         display "b-proc-1".
+       b-proc-2.
+         display "b-proc-2".
+])
+
+AT_CHECK([${COBJ} prog.cbl])
+AT_CHECK([java prog], [0],
+[b-proc
+b-proc-1
+b-proc-2
+])
+
+AT_DATA([prog2.cbl], [
+       identification              division.
+       program-id.                 prog2.
+
+       data                        division.
+
+       working-storage             section.
+       01 I PIC 9.
+       procedure                   division.
+       main section.
+         perform b-proc.
+         stop run.
+
+       a-proc section.
+       a-proc-1.
+       perform varying i from i by 1 until i>4
+        display "perform varying " i
+        exit perform cycle
+       end-perform.
+
+       b-proc section.
+         display "b-proc".
+       b-proc-1.
+         display "b-proc-1".
+       b-proc-2.
+         display "b-proc-2".
+])
+
+AT_CHECK([${COBJ} prog2.cbl])
+AT_CHECK([java prog2], [0],
+[b-proc
+b-proc-1
+b-proc-2
+])
+
+AT_CLEANUP

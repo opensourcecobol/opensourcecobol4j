@@ -4971,12 +4971,6 @@ exit_body:
 	if (!perform_stack) {
 		cb_error (_("EXIT PERFORM is only valid with inline PERFORM"));
 	} else {
-		p = CB_PERFORM (CB_VALUE (perform_stack));
-		if (!p->exit_label) {
-			sprintf (name, "EXIT PERFORM %d", cb_id);
-			p->exit_label = cb_build_reference (name);
-			CB_LABEL (cb_build_label (p->exit_label, current_section))->need_begin = 1;
-		}
 		cb_emit_java_break ();
 	}
   }
@@ -4988,12 +4982,6 @@ exit_body:
 	if (!perform_stack) {
 		cb_error (_("EXIT PERFORM is only valid with inline PERFORM"));
 	} else {
-		p = CB_PERFORM (CB_VALUE (perform_stack));
-		if (!p->cycle_label) {
-			sprintf (name, "EXIT PERFORM CYCLE %d", cb_id);
-			p->cycle_label = cb_build_reference (name);
-			CB_LABEL (cb_build_label (p->cycle_label, current_section))->need_begin = 1;
-		}
 		cb_emit_java_continue ();
 	}
   }
