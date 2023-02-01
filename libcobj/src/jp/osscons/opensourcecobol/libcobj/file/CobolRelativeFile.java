@@ -408,13 +408,74 @@ public class CobolRelativeFile extends CobolFile {
 
   @Override
   public int rewrite_(int opt) {
-    System.out.println("Relative.rewrite");
-    return 0;
+    int relsize;
+    int relnum;
+    int off;
+
+    try {
+      RandomAccessFile file = new RandomAccessFile(this.assign.fieldToString(), "rw");
+      int offset = 0;
+      if (this.access_mode == COB_ACCESS_SEQUENTIAL) {
+        file.seek(file.getFilePointer() - this.record_max);
+      } else {
+        relsize = this.record_max + this.record_size.getInt();
+        relnum = this.keys[0].getField().getInt() - 1;
+        off = relnum * relsize;
+
+        boolean isSeek = true;
+        try {
+          file.seek(off);
+        } catch (IOException e) {
+          isSeek = false;
+        }
+        if (!isSeek
+            || file.read(this.record_size.getBytes(), offset, this.record_size.getInt()) != 1) {
+          return COB_STATUS_23_KEY_NOT_EXISTS;
+        }
+      }
+
+      file.write(this.record.getBytes(), offset, this.record_max);
+      return COB_STATUS_30_PERMANENT_ERROR;
+    } catch (IOException e) {
+      return COB_STATUS_30_PERMANENT_ERROR;
+    }
   }
 
   @Override
   public int delete_() {
-    System.out.println("Relative.delete");
-    return 0;
+    int relsize;
+    int relnum;
+    int off;
+
+    relnum = this.keys[0].getField().getInt() - 1;
+    relsize = this.record_max + this.record_size.getInt();
+    off = relnum * relsize;
+
+    try {
+      RandomAccessFile file = new RandomAccessFile(this.assign.fieldToString(), "rw");
+      boolean isSeek = true;
+      try {
+        file.seek(off);
+      } catch (IOException e) {
+        isSeek = false;
+      }
+      int offset = 0;
+      if (!isSeek
+          || file.read(this.record_size.getBytes(), offset, this.record_size.getInt()) != 1) {
+        return COB_STATUS_23_KEY_NOT_EXISTS;
+      }
+      file.seek(file.getFilePointer() - this.record_size.getInt());
+
+      this.record_size.setInt(0);
+      file.write(this.record_size.getBytes(), offset, this.record_size.getInt());
+
+      file.seek(file.getFilePointer() - this.record_max);
+      return COB_STATUS_00_SUCCESS;
+
+    } catch (FileNotFoundException e) {
+      return COB_STATUS_30_PERMANENT_ERROR;
+    } catch (IOException e) {
+      return COB_STATUS_30_PERMANENT_ERROR;
+    }
   }
 }
