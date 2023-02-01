@@ -219,7 +219,7 @@ public class CobolRelativeFile extends CobolFile {
     RandomAccessFile file;
     try {
       file = new RandomAccessFile(this.assign.fieldToString(), "r");
-      for (;;) {
+      for (; ; ) {
         off = kindex * relsize;
         try {
           file.seek((long) off);
@@ -305,7 +305,7 @@ public class CobolRelativeFile extends CobolFile {
       RandomAccessFile file = new RandomAccessFile(this.assign.fieldToString(), "r");
       relsize = this.record_max + this.record_size.getInt();
       int offset = 0;
-      for (;;) {
+      for (; ; ) {
         if (file.read(this.record_size.getBytes(), offset, this.record_size.getInt()) != 1) {
           return COB_STATUS_10_END_OF_FILE;
         }
