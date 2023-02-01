@@ -218,7 +218,7 @@ public class CobolRelativeFile extends CobolFile {
     RandomAccessFile file;
     try {
       file = new RandomAccessFile(this.assign.fieldToString(), "r");
-      for (;;) {
+      for (; ; ) {
         off = kindex * relsize;
         try {
           file.seek((long) off);
@@ -273,7 +273,8 @@ public class CobolRelativeFile extends CobolFile {
         isSeek = false;
       }
       int offset = 0;
-      if (!isSeek || file.read(this.record_size.getBytes(), offset, this.record_size.getInt()) != 1) {
+      if (!isSeek
+          || file.read(this.record_size.getBytes(), offset, this.record_size.getInt()) != 1) {
         return COB_STATUS_23_KEY_NOT_EXISTS;
       }
 
