@@ -24,6 +24,7 @@ import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.nio.file.StandardOpenOption;
 import jp.osscons.opensourcecobol.libcobj.data.AbstractCobolField;
+import jp.osscons.opensourcecobol.libcobj.exceptions.CobolStopRunException;
 
 public class CobolRelativeFile extends CobolFile {
 
@@ -218,7 +219,7 @@ public class CobolRelativeFile extends CobolFile {
     RandomAccessFile file;
     try {
       file = new RandomAccessFile(this.assign.fieldToString(), "r");
-      for (; ; ) {
+      for (;;) {
         off = kindex * relsize;
         try {
           file.seek((long) off);
@@ -297,8 +298,51 @@ public class CobolRelativeFile extends CobolFile {
 
   @Override
   public int readNext(int readOpts) {
-    System.out.println("Relative.readNext");
-    return 0;
+    int off;
+    int relsize;
+    int relnum;
+    try {
+      RandomAccessFile file = new RandomAccessFile(this.assign.fieldToString(), "r");
+      relsize = this.record_max + this.record_size.getInt();
+      int offset = 0;
+      for (;;) {
+        if (file.read(this.record_size.getBytes(), offset, this.record_size.getInt()) != 1) {
+          return COB_STATUS_10_END_OF_FILE;
+        }
+
+        if (this.keys[0].getField().getInt() == 0) {
+          if (this.flag_first_read == 0) {
+            this.keys[0].getField().setInt(1);
+            this.flag_first_read = 0;
+          } else {
+            off = (int) file.getFilePointer();
+            relnum = (int) ((off / relsize) + 1);
+            this.keys[0].getField().setInt(0);
+            try {
+              if (this.keys[0].getField().addInt(relnum) != 0) {
+                file.seek(off - this.record_size.getInt());
+                return COB_STATUS_14_OUT_OF_KEY_RANGE;
+              }
+            } catch (CobolStopRunException e) {
+              return COB_STATUS_30_PERMANENT_ERROR;
+            }
+          }
+        }
+
+        if (this.record_size.getInt() > 0) {
+          if (file.read(this.record.getBytes(), offset, this.record_max) != 1) {
+            return COB_STATUS_30_PERMANENT_ERROR;
+          }
+          return COB_STATUS_00_SUCCESS;
+        }
+
+        file.seek(file.getFilePointer() + this.record_max);
+      }
+    } catch (FileNotFoundException e) {
+      return COB_STATUS_30_PERMANENT_ERROR;
+    } catch (IOException e) {
+      return COB_STATUS_30_PERMANENT_ERROR;
+    }
   }
 
   @Override
@@ -347,10 +391,11 @@ public class CobolRelativeFile extends CobolFile {
 
       /* update RELATIVE KEY */
       if (this.access_mode == COB_ACCESS_SEQUENTIAL) {
-        // this.keys[0].getField())
-        off += relsize;
-        i = (int) (off / relsize);
-        this.keys[0].getField().setInt(i);
+        if (this.keys[0].getField().getInt() == 0) {
+          off += relsize;
+          i = (int) (off / relsize);
+          this.keys[0].getField().setInt(i);
+        }
       }
 
       return COB_STATUS_00_SUCCESS;
