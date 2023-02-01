@@ -20,6 +20,9 @@ package jp.osscons.opensourcecobol.libcobj.file;
 
 import java.io.*;
 import java.nio.channels.*;
+import java.nio.file.Files;
+import java.nio.file.Paths;
+import java.nio.file.StandardOpenOption;
 import jp.osscons.opensourcecobol.libcobj.data.AbstractCobolField;
 
 public class CobolRelativeFile extends CobolFile {
@@ -82,6 +85,117 @@ public class CobolRelativeFile extends CobolFile {
         flag_needs_nl,
         flag_needs_top,
         file_version);
+  }
+
+  @Override
+  public int open_(String filename, int mode, int sharing) throws IOException {
+    RandomAccessFile fp;
+    FileChannel ch;
+    try {
+      switch (mode) {
+        case COB_OPEN_INPUT:
+          fp = new RandomAccessFile(this.assign.fieldToString(), "r"); // fileが存在しない場合エラー処理
+          break;
+        case COB_OPEN_OUTPUT:
+          FileChannel.open(Paths.get(filename), StandardOpenOption.TRUNCATE_EXISTING);
+          fp = new RandomAccessFile(this.assign.fieldToString(), "rw");
+          break;
+        case COB_OPEN_I_O:
+          fp = new RandomAccessFile(this.assign.fieldToString(), "rw");
+          break;
+        case COB_OPEN_EXTEND:
+          fp = new RandomAccessFile(this.assign.fieldToString(), "rw");
+          fp.seek(fp.getFilePointer());
+          break;
+        default:
+          fp = null;
+          break;
+      }
+    } catch (IOException e) {
+      // if (fp != null) {
+      // this.file.setChannel(fp, null);
+      // }
+      if (Files.notExists(Paths.get(filename))) {
+        return ENOENT;
+      } else {
+        return EACCESS;
+      }
+    }
+
+    if (mode == COB_OPEN_EXTEND) {
+      // ここは何もしない
+    }
+
+    ch = fp.getChannel();
+
+    FileLock fl = null;
+    if (!filename.startsWith("/dev/")) {
+      try {
+        boolean lock_flag;
+        if (sharing != 0 || mode == COB_OPEN_OUTPUT) {
+          lock_flag = false;
+        } else {
+          lock_flag = true;
+        }
+        fl = ch.tryLock(0L, Long.MAX_VALUE, lock_flag);
+      } catch (NonWritableChannelException e) {
+        fp.close();
+        return EBADF;
+      } catch (ClosedChannelException e) {
+        fp.close();
+        return COB_STATUS_61_FILE_SHARING;
+      } catch (OverlappingFileLockException e) {
+        fp.close();
+        return COB_STATUS_61_FILE_SHARING;
+      } catch (IOException e) {
+        fp.close();
+        return COB_STATUS_61_FILE_SHARING;
+      }
+
+      this.file.setChannel(ch, fl);
+      if (fl == null || !fl.isValid()) {
+        fp.close();
+        return COB_STATUS_61_FILE_SHARING;
+      }
+    }
+
+    this.file.setChannel(ch, fl);
+    if ((this.flag_select_features & COB_SELECT_LINAGE) != 0) {
+      if (this.file_linage_check()) {
+        return COB_LINAGE_INVALID;
+      }
+      this.flag_needs_top = true;
+      Linage lingptr = this.getLinorkeyptr();
+      lingptr.getLinageCtr().setInt(1);
+    }
+    return 0;
+  }
+
+  @Override
+  public int close_(int opt) {
+    switch (opt) {
+      case COB_CLOSE_NORMAL:
+      case COB_CLOSE_LOCK:
+      case COB_CLOSE_NO_REWIND:
+        if (this.organization == COB_ORG_LINE_SEQUENTIAL) {
+          if (this.flag_needs_nl && ((this.flag_select_features & COB_SELECT_LINAGE) == 0)) {
+            this.flag_needs_nl = false;
+            this.file.putc((byte) '\n');
+          }
+        }
+
+        this.file.releaseLock();
+        this.file.close();
+
+        if (opt == COB_CLOSE_NO_REWIND) {
+          this.open_mode = COB_OPEN_CLOSED;
+          return COB_STATUS_07_SUCCESS_NO_UNIT;
+        }
+        return COB_STATUS_00_SUCCESS;
+      default:
+        this.file.flush();
+        return COB_STATUS_07_SUCCESS_NO_UNIT;
+    }
   }
 
   @Override
@@ -156,8 +270,62 @@ public class CobolRelativeFile extends CobolFile {
 
   @Override
   public int write_(int opt) {
-    System.out.println("Relative.write");
-    return 0;
+    int relsize;
+    int i;
+    int kindex;
+    int off;
+    RandomAccessFile file;
+
+    try {
+      file = new RandomAccessFile(this.assign.fieldToString(), "rw");
+      relsize = this.record_max + this.record_size.getInt();
+      if (this.access_mode != COB_ACCESS_SEQUENTIAL) {
+        kindex = this.keys[0].getField().getInt() - 1;
+        if (kindex < 0) {
+          return COB_STATUS_21_KEY_INVALID;
+        }
+        off = relsize * kindex;
+
+        try {
+          file.seek((long) off);
+        } catch (IOException e) {
+          return COB_STATUS_21_KEY_INVALID;
+        }
+      } else {
+        off = (int) file.getFilePointer();
+      }
+      int offset = 0;
+
+      if (file.read(this.record_size.getBytes(), offset, this.record_size.getInt()) > 0) {
+
+        file.seek(file.getFilePointer() - this.record_size.getInt());
+        if (this.record_size.getInt() > 0) {
+          return COB_STATUS_22_KEY_EXISTS;
+        }
+      } else {
+        file.seek(off);
+      }
+      try {
+        file.write(this.record_size.getBytes(), offset, this.record_size.getInt());
+        file.write(this.record.getBytes(), offset, this.record_max);
+      } catch (IOException e) {
+        return COB_STATUS_30_PERMANENT_ERROR;
+      }
+
+      /* update RELATIVE KEY */
+      if (this.access_mode == COB_ACCESS_SEQUENTIAL) {
+        // this.keys[0].getField())
+        off += relsize;
+        i = (int) (off / relsize);
+        this.keys[0].getField().setInt(i);
+      }
+
+      return COB_STATUS_00_SUCCESS;
+    } catch (FileNotFoundException e) {
+      return COB_STATUS_30_PERMANENT_ERROR;
+    } catch (IOException e) {
+      return COB_STATUS_30_PERMANENT_ERROR;
+    }
   }
 
   @Override
