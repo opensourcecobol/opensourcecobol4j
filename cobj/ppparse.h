@@ -35,10 +35,10 @@
    are private implementation details.  Do not rely on them.  */
 
 #ifndef YY_PP_PPPARSE_H_INCLUDED
-# define YY_PP_PPPARSE_H_INCLUDED
+#define YY_PP_PPPARSE_H_INCLUDED
 /* Debug traces.  */
 #ifndef YYDEBUG
-# define YYDEBUG 0
+#define YYDEBUG 0
 #endif
 #if YYDEBUG
 extern int ppdebug;
@@ -46,64 +46,60 @@ extern int ppdebug;
 
 /* Token type.  */
 #ifndef YYTOKENTYPE
-# define YYTOKENTYPE
-  enum yytokentype
-  {
-    TOKEN_EOF = 0,
-    COPY = 258,
-    REPLACE = 259,
-    SUPPRESS = 260,
-    PRINTING = 261,
-    REPLACING = 262,
-    OFF = 263,
-    IN = 264,
-    OF = 265,
-    BY = 266,
-    EQEQ = 267,
-    LEADING = 268,
-    TRAILING = 269,
-    JOINING = 270,
-    AS = 271,
-    PREFIX = 272,
-    SUFFIX = 273,
-    PREFIXING = 274,
-    SUFFIXING = 275,
-    LEVEL_NUMBER = 276,
-    REDEFINES = 277,
-    TOKEN = 278,
-    PROGRAM_ID = 279,
-    FUNCTION_ID = 280,
-    ENVIRONMENT_DIVISION = 281,
-    DATA_DIVISION = 282,
-    PROCEDURE_DIVISION = 283,
-    END_PROGRAM = 284,
-    END_FUNCTION = 285
-  };
+#define YYTOKENTYPE
+enum yytokentype {
+  TOKEN_EOF = 0,
+  COPY = 258,
+  REPLACE = 259,
+  SUPPRESS = 260,
+  PRINTING = 261,
+  REPLACING = 262,
+  OFF = 263,
+  IN = 264,
+  OF = 265,
+  BY = 266,
+  EQEQ = 267,
+  LEADING = 268,
+  TRAILING = 269,
+  JOINING = 270,
+  AS = 271,
+  PREFIX = 272,
+  SUFFIX = 273,
+  PREFIXING = 274,
+  SUFFIXING = 275,
+  LEVEL_NUMBER = 276,
+  REDEFINES = 277,
+  TOKEN = 278,
+  PROGRAM_ID = 279,
+  FUNCTION_ID = 280,
+  ENVIRONMENT_DIVISION = 281,
+  DATA_DIVISION = 282,
+  PROCEDURE_DIVISION = 283,
+  END_PROGRAM = 284,
+  END_FUNCTION = 285
+};
 #endif
 
 /* Value type.  */
-#if ! defined YYSTYPE && ! defined YYSTYPE_IS_DECLARED
-union YYSTYPE
-{
+#if !defined YYSTYPE && !defined YYSTYPE_IS_DECLARED
+union YYSTYPE {
 #line 51 "ppparse.y"
 
-	char			*s;
-	struct cb_text_list	*l;
-	struct cb_replace_list	*r;
-	struct cb_joining_ext	*jx;
-	cb_joining_ext_type_t	jt;
+  char *s;
+  struct cb_text_list *l;
+  struct cb_replace_list *r;
+  struct cb_joining_ext *jx;
+  cb_joining_ext_type_t jt;
 
 #line 97 "ppparse.h"
-
 };
 typedef union YYSTYPE YYSTYPE;
-# define YYSTYPE_IS_TRIVIAL 1
-# define YYSTYPE_IS_DECLARED 1
+#define YYSTYPE_IS_TRIVIAL 1
+#define YYSTYPE_IS_DECLARED 1
 #endif
-
 
 extern YYSTYPE pplval;
 
-int ppparse (void);
+int ppparse(void);
 
 #endif /* !YY_PP_PPPARSE_H_INCLUDED  */
