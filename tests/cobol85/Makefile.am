@@ -43,6 +43,12 @@ diff:
 clean-local:
 	rm -rf copy copyalt $(MODULES_MAKEFILES)
 
+clean-debug:
+	rm -rf */*.class */tmp.cbl */XXXXX*
+
+clean-all:
+	rm -rf */*.class */*.java */*.out */*.log */tmp.cbl */XXXXX* */report.txt summary.log
+
 $(MODULES_MAKEFILES):
 	@echo "test:"               > $@
 	@echo "	. ../../atconfig; . ../../atlocal; export PATH; perl $(COB85DIR)/report.pl" >> $@
