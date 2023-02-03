@@ -1,0 +1,16 @@
+#!/bin/bash
+
+clang-format -i \
+cobj.c \
+cobj.h \
+codegen.c \
+config.c \
+error.c \
+field.c \
+pplex.c \
+ppparse.c \
+ppparse.h \
+reserved.c \
+tree.c \
+tree.h \
+typeck.c
