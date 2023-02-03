@@ -39,29 +39,27 @@
 /* Strip command */
 #undef COB_STRIP_CMD
 
-/* Define to 1 if using 'alloca.c'. */
+/* Define to one of `_getb67', `GETB67', `getb67' for Cray-2 and Cray-YMP
+   systems. This function is required for `alloca.c' support on those systems.
+   */
+#undef CRAY_STACKSEG_END
+
+/* Define to 1 if using `alloca.c'. */
 #undef C_ALLOCA
 
 /* Define to 1 if translation of program messages to the user's native
    language is requested. */
 #undef ENABLE_NLS
 
-/* Define to 1 if you have 'alloca', as a function or macro. */
+/* Define to 1 if you have `alloca', as a function or macro. */
 #undef HAVE_ALLOCA
 
-/* Define to 1 if <alloca.h> works. */
+/* Define to 1 if you have <alloca.h> and it should be used (not on Ultrix).
+   */
 #undef HAVE_ALLOCA_H
 
 /* Has __attribute__((aligned)) */
 #undef HAVE_ATTRIBUTE_ALIGNED
-
-/* Define to 1 if you have the Mac OS X function
-   CFLocaleCopyPreferredLanguages in the CoreFoundation framework. */
-#undef HAVE_CFLOCALECOPYPREFERREDLANGUAGES
-
-/* Define to 1 if you have the Mac OS X function CFPreferencesCopyAppValue in
-   the CoreFoundation framework. */
-#undef HAVE_CFPREFERENCESCOPYAPPVALUE
 
 /* curses has color_set function */
 #undef HAVE_COLOR_SET
@@ -121,7 +119,7 @@
 /* Define to 1 if you have the `gettimeofday' function. */
 #undef HAVE_GETTIMEOFDAY
 
-/* Define if you have the iconv() function and it works. */
+/* Define if you have the iconv() function. */
 #undef HAVE_ICONV
 
 /* Define to 1 if you have the <inttypes.h> header file. */
@@ -129,6 +127,9 @@
 
 /* Define to 1 if you have the <kpathsea/getopt.h> header file. */
 #undef HAVE_KPATHSEA_GETOPT_H
+
+/* Define if you have <langinfo.h> and nl_langinfo(CODESET). */
+#undef HAVE_LANGINFO_CODESET
 
 /* Define to 1 if you have the `ltdl' library (-lltdl). */
 #undef HAVE_LIBLTDL
@@ -151,6 +152,9 @@
 /* Define to 1 if you have the `memmove' function. */
 #undef HAVE_MEMMOVE
 
+/* Define to 1 if you have the <memory.h> header file. */
+#undef HAVE_MEMORY_H
+
 /* Define to 1 if you have the `memset' function. */
 #undef HAVE_MEMSET
 
@@ -168,9 +172,6 @@
 
 /* Define to 1 if you have the <stdint.h> header file. */
 #undef HAVE_STDINT_H
-
-/* Define to 1 if you have the <stdio.h> header file. */
-#undef HAVE_STDIO_H
 
 /* Define to 1 if you have the <stdlib.h> header file. */
 #undef HAVE_STDLIB_H
@@ -264,9 +265,7 @@
 	STACK_DIRECTION = 0 => direction of growth unknown */
 #undef STACK_DIRECTION
 
-/* Define to 1 if all of the C90 standard headers exist (not just the ones
-   required in a freestanding environment). This macro is provided for
-   backward compatibility; new code need not use it. */
+/* Define to 1 if you have the ANSI C header files. */
 #undef STDC_HEADERS
 
 /* Define to 1 if your <sys/time.h> declares `struct tm'. */

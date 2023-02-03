@@ -1,8 +1,5 @@
 Makefile
 autom4te.cache/
-bin/cobjrun
-bin/cobjrun.o
-cobj/parser.output
 cobj/.deps/
 cobj/Makefile
 cobj/cobj
@@ -51,16 +48,7 @@ tests/i18n_utf8
 tests/jp-compat
 tests/misc
 tests/run
-tests/*.log
 tests/syntax
-tests/cobol85/*/*.class
-tests/cobol85/*/*.java
-tests/cobol85/*/*.out
-tests/cobol85/*/*.log
-tests/cobol85/*/tmp.cbl
-tests/cobol85/*/report.txt
-tests/cobol85/*/XXXXX*
-tests/cobol85/summary.log
 texi/Makefile
 bin/.deps/
 bin/cob-config
