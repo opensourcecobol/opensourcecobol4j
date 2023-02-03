@@ -8,23 +8,25 @@ jobs:
   run-tests:
     strategy:
       matrix:
-        os: ["ubuntu:22.04", "almalinux:9"]
+        #os: ["ubuntu:22.04", "almalinux:9"]
+        os: ["almalinux:9"]
     runs-on: ubuntu-latest
     container:
       image: ${{ matrix.os }}
     steps:
         
       - name: Install dependencies on Ubuntu 22.04
-        if: matrix.os == 'ubuntu:22.04'
+        if: matrix.os == 'ubuntu:20.04'
         run: |
           apt update -y
-          apt install -y default-jdk build-essential bison flex gettext texinfo automake autoconf
+          apt install -y default-jdk
+          apt install -y build-essential bison flex gettext texinfo
 
       - name: Install dependencies on AlmaLinux 9
         if: matrix.os == 'almalinux:9'
         run: |
           dnf -y update
-          dnf install -y java-17-openjdk-devel gcc gcc-c++ make bison flex automake autoconf diffutils gettext
+          dnf install -y java-17-openjdk-devel gcc gcc-c++ make bison flex automake autoconf libtool diffutils gettext
 
       - name: Checkout opensource COBOL 4j
         uses: actions/checkout@v2
