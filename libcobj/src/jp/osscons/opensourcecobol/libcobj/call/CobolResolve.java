@@ -400,7 +400,7 @@ public class CobolResolve {
   }
 
   public static void cobCancel(String name) throws CobolStopRunException {
-    if (name == null || name == "") {
+    if (name == null || name.equals("")) {
       // TODO cob_runtime_errorの実装
       CobolStopRunException.stopRunAndThrow(1);
     }

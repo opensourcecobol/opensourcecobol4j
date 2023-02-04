@@ -213,7 +213,7 @@ public class CobolTerminal {
    * @param f
    */
   public static void displayEnvValue(AbstractCobolField f) {
-    if (CobolUtil.cobLocalEnv == null || CobolUtil.cobLocalEnv == "") {
+    if (CobolUtil.cobLocalEnv == null || CobolUtil.cobLocalEnv.equals("")) {
       CobolException.setException(CobolExceptionId.COB_EC_IMP_DISPLAY);
       return;
     }
