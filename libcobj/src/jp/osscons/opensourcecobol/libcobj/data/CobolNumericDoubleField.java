@@ -168,7 +168,7 @@ public class CobolNumericDoubleField extends AbstractCobolField {
 
   @Override
   public CobolDecimal getDecimal() {
-    return new CobolDecimal(new BigDecimal(this.getBinaryValue()), 0);
+    return new CobolDecimal(BigDecimal.valueOf(this.getBinaryValue()), 0);
   }
 
   @Override
