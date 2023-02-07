@@ -59,10 +59,11 @@ public class CobolAlphanumericField extends AbstractCobolField {
     }
   }
 
-  @Override
-  public int getInt() {
-    throw new CobolRuntimeException(CobolRuntimeException.COBOL_FITAL_ERROR, "未対応");
-  }
+  // @Override
+  // public int getInt() {
+  // throw new CobolRuntimeException(CobolRuntimeException.COBOL_FITAL_ERROR,
+  // "未対応");
+  // }
 
   @Override
   public void setDecimal(BigDecimal decimal) {
