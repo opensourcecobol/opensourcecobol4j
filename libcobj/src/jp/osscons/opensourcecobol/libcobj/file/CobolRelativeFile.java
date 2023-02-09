@@ -19,7 +19,6 @@
 package jp.osscons.opensourcecobol.libcobj.file;
 
 import java.io.*;
-import java.nio.ByteBuffer;
 import java.nio.channels.*;
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -36,6 +35,8 @@ public class CobolRelativeFile extends CobolFile {
   protected static final int COB_GE = 5;
 
   RandomAccessFile fp;
+  byte[] sizeof_size = new byte[8];
+  int seek;
 
   public CobolRelativeFile(
       String select_name,
@@ -102,7 +103,6 @@ public class CobolRelativeFile extends CobolFile {
           System.out.print("(input)");
           break;
         case COB_OPEN_OUTPUT:
-          // FileChannel.open(Paths.get(filename), StandardOpenOption.TRUNCATE_EXISTING);
           Path path = Paths.get(filename);
           if (Files.exists(path)) {
             Files.delete(path);
@@ -115,7 +115,7 @@ public class CobolRelativeFile extends CobolFile {
           break;
         case COB_OPEN_EXTEND:
           this.fp = new RandomAccessFile(this.assign.fieldToString(), "rw");
-          this.fp.seek(fp.length());
+          this.fp.seek(this.fp.length());
           break;
         default:
           this.fp = null;
@@ -125,8 +125,8 @@ public class CobolRelativeFile extends CobolFile {
       // if (fp != null) {
       // this.file.setChannel(fp, null);
       // }
-      if (fp != null) {
-        this.file.setRandomAccessFile(fp, null);
+      if (this.fp != null) {
+        this.file.setRandomAccessFile(this.fp, null);
       }
       // e.printStackTrace();
       if (Files.notExists(Paths.get(filename))) {
@@ -153,30 +153,30 @@ public class CobolRelativeFile extends CobolFile {
         }
         fl = ch.tryLock(0L, Long.MAX_VALUE, lock_flag);
       } catch (NonWritableChannelException e) {
-        fp.close();
+        this.fp.close();
         return EBADF;
       } catch (ClosedChannelException e) {
-        fp.close();
+        this.fp.close();
         return COB_STATUS_61_FILE_SHARING;
       } catch (OverlappingFileLockException e) {
-        fp.close();
+        this.fp.close();
         return COB_STATUS_61_FILE_SHARING;
       } catch (IOException e) {
-        fp.close();
+        this.fp.close();
         return COB_STATUS_61_FILE_SHARING;
       }
 
       // this.file.setChannel(ch, fl);
-      this.file.setRandomAccessFile(fp, fl);
+      this.file.setRandomAccessFile(this.fp, fl);
 
       if (fl == null || !fl.isValid()) {
-        fp.close();
+        this.fp.close();
         return COB_STATUS_61_FILE_SHARING;
       }
     }
 
     // this.file.setChannel(ch, fl);
-    this.file.setRandomAccessFile(fp, fl);
+    this.file.setRandomAccessFile(this.fp, fl);
     if ((this.flag_select_features & COB_SELECT_LINAGE) != 0) {
       if (this.file_linage_check()) {
         return COB_LINAGE_INVALID;
@@ -191,29 +191,35 @@ public class CobolRelativeFile extends CobolFile {
 
   @Override
   public int close_(int opt) {
-    switch (opt) {
-      case COB_CLOSE_NORMAL:
-      case COB_CLOSE_LOCK:
-      case COB_CLOSE_NO_REWIND:
-        if (this.organization == COB_ORG_LINE_SEQUENTIAL) {
-          if (this.flag_needs_nl && ((this.flag_select_features & COB_SELECT_LINAGE) == 0)) {
-            this.flag_needs_nl = false;
-            this.file.putc((byte) '\n');
+    try {
+      switch (opt) {
+        case COB_CLOSE_NORMAL:
+        case COB_CLOSE_LOCK:
+        case COB_CLOSE_NO_REWIND:
+          if (this.organization == COB_ORG_LINE_SEQUENTIAL) {
+            if (this.flag_needs_nl && ((this.flag_select_features & COB_SELECT_LINAGE) == 0)) {
+              this.flag_needs_nl = false;
+
+              this.fp.writeChars("\n");
+            }
           }
-        }
 
-        this.file.releaseLock();
-        this.file.close();
+          this.file.releaseLock();
+          this.fp.close();
+          this.file.close();
 
-        if (opt == COB_CLOSE_NO_REWIND) {
-          this.open_mode = COB_OPEN_CLOSED;
+          if (opt == COB_CLOSE_NO_REWIND) {
+            this.open_mode = COB_OPEN_CLOSED;
+            return COB_STATUS_07_SUCCESS_NO_UNIT;
+          }
+          System.out.println("COB_STATUS_00_SUCCESS(close)");
+          return COB_STATUS_00_SUCCESS;
+        default:
+          this.file.flush();
           return COB_STATUS_07_SUCCESS_NO_UNIT;
-        }
-        System.out.println("COB_STATUS_00_SUCCESS(close)");
-        return COB_STATUS_00_SUCCESS;
-      default:
-        this.file.flush();
-        return COB_STATUS_07_SUCCESS_NO_UNIT;
+      }
+    } catch (IOException e) {
+      return COB_STATUS_30_PERMANENT_ERROR;
     }
   }
 
@@ -225,7 +231,7 @@ public class CobolRelativeFile extends CobolFile {
 
     /* get the index */
     kindex = key.getInt() - 1;
-    relsize = this.record_max + this.record.getSize();
+    relsize = this.record_max + this.sizeof_size.length; // this.record.getSize();
     if (cond == COB_LT) {
       kindex--;
     } else if (cond == COB_GT) {
@@ -234,26 +240,34 @@ public class CobolRelativeFile extends CobolFile {
 
     /* seek the index */
     int offset = 0;
-    RandomAccessFile file;
+    boolean isSeek = true;
     try {
-      file = new RandomAccessFile(this.assign.fieldToString(), "r");
+      this.fp = new RandomAccessFile(this.assign.fieldToString(), "r");
       for (; ; ) {
         off = kindex * relsize;
         try {
-          file.seek((long) off);
+          this.fp.seek((long) off);
+          try {
+            this.fp.seek(off);
+          } catch (IOException e) {
+            isSeek = false;
+          }
 
-          if (file.getFilePointer() - file.length() != 0
-              || file.read(this.record.getBytes(), offset, this.record.getSize()) != 1) {
+          if (!isSeek
+              || this.fp.read(this.sizeof_size, offset, this.sizeof_size.length)
+                  != this.sizeof_size.length) {
             return COB_STATUS_23_KEY_NOT_EXISTS;
           }
 
           /* check if a valid record */
           if (this.record.getSize() > 0) {
             key.setInt(kindex + 1);
-            file.seek(file.getFilePointer() - this.record.getSize());
+            this.fp.seek(this.fp.getFilePointer() - this.sizeof_size.length);
+            System.out.println("COB_STATUS_00_SUCCESS(start)");
             return COB_STATUS_00_SUCCESS;
           }
         } catch (IOException e) {
+          System.err.println("COB_STATUS_30_PERMANENT_ERROR(start1)");
           return COB_STATUS_30_PERMANENT_ERROR;
         }
         switch (cond) {
@@ -272,6 +286,8 @@ public class CobolRelativeFile extends CobolFile {
       }
 
     } catch (FileNotFoundException e) {
+
+      System.err.println("COB_STATUS_30_PERMANENT_ERROR(start2)");
       return COB_STATUS_30_PERMANENT_ERROR;
     }
   }
@@ -283,38 +299,44 @@ public class CobolRelativeFile extends CobolFile {
     int off;
     boolean isSeek = true;
     try {
-      RandomAccessFile file = this.fp;
+      // RandomAccessFile file = this.fp;
       relnum = key.getInt() - 1;
-      relsize = this.record_max + this.record.getSize();
+      relsize = this.record_max + this.sizeof_size.length; // this.record.getSize();
       off = relnum * relsize;
       try {
-        file.seek(off);
+        this.fp.seek(off);
       } catch (IOException e) {
         isSeek = false;
       }
       int offset = 0;
-      if (!isSeek || file.read(this.record.getBytes(), offset, this.record.getSize()) != 1) {
+
+      if (!isSeek
+          || this.fp.read(this.sizeof_size, offset, this.sizeof_size.length)
+              != this.sizeof_size.length) {
         System.out.println("COB_STATUS_23_KEY_NOT_EXISTS(read1)");
         return COB_STATUS_23_KEY_NOT_EXISTS;
       }
 
       if (this.record.getSize() == 0) {
-        file.seek(file.getFilePointer() - this.record.getSize());
+        this.fp.seek(this.fp.getFilePointer() - this.sizeof_size.length);
         System.out.println("COB_STATUS_23_KEY_NOT_EXISTS(read2)");
         return COB_STATUS_23_KEY_NOT_EXISTS;
       }
-
-      if (file.read(this.record.getDataStorage().getData(), offset, this.record_max) != 1) {
-        System.out.println("COB_STATUS_30_PERMANENT_ERROR(read1)");
+      if (this.fp.read(
+              this.record.getDataStorage().getByteArray(0, this.record_max),
+              offset,
+              this.record_max)
+          != this.record_max) {
+        System.err.println("COB_STATUS_30_PERMANENT_ERROR(read1)");
         return COB_STATUS_30_PERMANENT_ERROR;
       }
       System.out.println("COB_STATUS_00_SUCCESS(read)");
       return COB_STATUS_00_SUCCESS;
     } catch (FileNotFoundException e) {
-      System.out.println("COB_STATUS_30_PERMANENT_ERROR(read2)");
+      System.err.println("COB_STATUS_30_PERMANENT_ERROR(read2)");
       return COB_STATUS_30_PERMANENT_ERROR;
     } catch (IOException e) {
-      System.out.println("COB_STATUS_30_PERMANENT_ERROR(read3)");
+      System.err.println("COB_STATUS_30_PERMANENT_ERROR(read3)");
       return COB_STATUS_30_PERMANENT_ERROR;
     }
   }
@@ -325,17 +347,16 @@ public class CobolRelativeFile extends CobolFile {
     int relsize;
     int relnum;
     try {
-      RandomAccessFile file = this.fp;
-      relsize = this.record_max + this.record.getSize();
+      relsize = this.record_max + this.sizeof_size.length; // this.record.getSize();
       int offset = 0;
       // byte[] size_bytes =
       // ByteBuffer.allocate(64).putInt(this.record.getSize()).array();
       // ByteBuffer bf = ByteBuffer.allocate(64);
       // int c = this.record.getInt(this.record_size.getInt());
-      file.seek(0);
+      // this.fp.seek(0);
       for (; ; ) {
-        int a = file.read(this.record.getBytes(), offset, this.record.getSize());
-        if (a != this.record.getSize()) {
+        int a = this.fp.read(this.sizeof_size, offset, this.sizeof_size.length);
+        if (a != this.sizeof_size.length) {
           System.out.printf("a=%d\n", a);
           // System.out.println(c);
           // System.out.println(bf.getLong());
@@ -348,12 +369,12 @@ public class CobolRelativeFile extends CobolFile {
             this.keys[0].getField().setInt(1);
             this.flag_first_read = 0;
           } else {
-            off = (int) file.getFilePointer();
+            off = (int) this.fp.getFilePointer();
             relnum = (int) ((off / relsize) + 1);
             this.keys[0].getField().setInt(0);
             try {
               if (this.keys[0].getField().addInt(relnum) != 0) {
-                file.seek(off - this.record.getSize());
+                this.fp.seek(off - this.sizeof_size.length);
                 System.out.println("COB_STATUS_14_OUT_OF_KEY_RANGE(readnext)");
                 return COB_STATUS_14_OUT_OF_KEY_RANGE;
               }
@@ -365,15 +386,20 @@ public class CobolRelativeFile extends CobolFile {
         }
 
         if (this.record.getSize() > 0) {
-          if (file.read(this.record.getBytes(), offset, this.record_max) != this.record_max) {
-            System.out.println("COB_STATUS_30_PERMANENT_ERROR(readnext2)");
+          System.out.println("getpointer1=" + this.fp.getFilePointer());
+          if (this.fp.read(
+                  this.record.getDataStorage().getByteArray(0, this.record_max),
+                  offset,
+                  this.record_max)
+              != this.record_max) {
             return COB_STATUS_30_PERMANENT_ERROR;
           }
+          System.out.println("getpointer2=" + this.fp.getFilePointer());
           System.out.println("COB_STATUS_00_SUCCESS(read_next)");
           return COB_STATUS_00_SUCCESS;
         }
 
-        file.seek(file.getFilePointer() + this.record_max);
+        this.fp.seek(this.fp.getFilePointer() + this.record_max);
       }
     } catch (FileNotFoundException e) {
       System.out.println("COB_STATUS_30_PERMANENT_ERROR(readnext3)");
@@ -386,7 +412,7 @@ public class CobolRelativeFile extends CobolFile {
 
   @Override
   public int write_(int opt) {
-    byte[] size = new byte[1000];
+    // byte[] size = new byte[1000];
     int relsize;
     int i;
     int kindex;
@@ -394,11 +420,12 @@ public class CobolRelativeFile extends CobolFile {
 
     try {
       this.fp.seek(0);
-      relsize = this.record_max + this.record.getSize();
-
+      relsize = this.record_max + this.sizeof_size.length; // this.record.getSize();
       if (this.access_mode != COB_ACCESS_SEQUENTIAL) {
         kindex = this.keys[0].getField().getInt() - 1;
         if (kindex < 0) {
+          System.out.println("kindex=" + kindex);
+          System.out.println("COB_STATUS_21_KEY_INVALID(write)");
           return COB_STATUS_21_KEY_INVALID;
         }
         off = relsize * kindex;
@@ -406,6 +433,7 @@ public class CobolRelativeFile extends CobolFile {
         try {
           this.fp.seek((long) off);
         } catch (IOException e) {
+          System.out.println("COB_STATUS_21_KEY_INVALID(write)");
           return COB_STATUS_21_KEY_INVALID;
         }
       } else {
@@ -413,38 +441,45 @@ public class CobolRelativeFile extends CobolFile {
       }
       int offset = 0;
 
-      ByteBuffer bf = ByteBuffer.allocate(10000);
-      int c = this.fp.read(size, offset, this.record.getSize());
+      // ByteBuffer bf = ByteBuffer.allocate(10000);
+      int c = this.fp.read(this.sizeof_size, offset, this.sizeof_size.length);
       System.out.println("c=" + c);
       if (c > 0) {
-        bf.get(size);
-        this.fp.seek(this.fp.getFilePointer() - this.record.getSize());
-        if (bf.getInt() > 0) {
+        // bf.get(size);
+        this.fp.seek(this.fp.getFilePointer() - this.sizeof_size.length);
+        if (this.sizeof_size.length > 0) {
+          System.out.println("COB_STATUS_22_KEY_EXISTS(write)");
           return COB_STATUS_22_KEY_EXISTS;
         }
       } else {
         this.fp.seek(off);
       }
       try {
-        this.fp.write(this.record.getBytes(), offset, this.record.getSize());
-        this.fp.write(this.record.getDataStorage().getData(), offset, this.record_max);
+        this.fp.writeLong(this.record.getSize());
+        // this.record_size.setInt((int) this.fp.getFilePointer());
+        this.fp.write(
+            this.record.getDataStorage().getByteArray(0, this.record_max), offset, this.record_max);
+        System.out.println("record_max=" + this.record_max);
       } catch (IOException e) {
+        System.out.println("COB_STATUS_30_PERMANENT_ERROR(write1)");
         return COB_STATUS_30_PERMANENT_ERROR;
       }
 
       /* update RELATIVE KEY */
-      // if (this.access_mode == COB_ACCESS_SEQUENTIAL) {
-      // if (this.keys[0].getField() != null) {
-      // off += relsize;
-      // i = (int) (off / relsize);
-      // this.keys[0].getField().setInt(i);
-      // }
-      // }
-      System.out.println("COB_STATUS_00_SUCCESS(write)");
+      if (this.access_mode == COB_ACCESS_SEQUENTIAL) {
+        if (this.keys[0].getField() != null) {
+          off += relsize;
+          i = (int) (off / relsize);
+          this.keys[0].getField().setInt(i);
+        }
+      }
+      // System.err.println("COB_STATUS_00_SUCCESS(write)");
       return COB_STATUS_00_SUCCESS;
     } catch (FileNotFoundException e) {
+      System.err.println("COB_STATUS_30_PERMANENT_ERROR(write2)");
       return COB_STATUS_30_PERMANENT_ERROR;
     } catch (IOException e) {
+      System.err.println("COB_STATUS_30_PERMANENT_ERROR(write3)");
       return COB_STATUS_30_PERMANENT_ERROR;
     }
   }
@@ -461,7 +496,7 @@ public class CobolRelativeFile extends CobolFile {
       if (this.access_mode == COB_ACCESS_SEQUENTIAL) {
         file.seek(file.getFilePointer() - this.record_max);
       } else {
-        relsize = this.record_max + this.record.getSize();
+        relsize = this.record_max + 8; // this.record.getSize();
         relnum = this.keys[0].getField().getInt() - 1;
         off = relnum * relsize;
 
@@ -471,13 +506,16 @@ public class CobolRelativeFile extends CobolFile {
         } catch (IOException e) {
           isSeek = false;
         }
-        if (!isSeek || file.read(this.record.getBytes(), offset, this.record.getSize()) != 1) {
+        if (!isSeek
+            || file.read(this.sizeof_size, offset, this.sizeof_size.length)
+                != this.sizeof_size.length) {
           return COB_STATUS_23_KEY_NOT_EXISTS;
         }
         file.seek(0);
       }
 
-      file.write(this.record.getBytes(), offset, this.record_max);
+      file.write(
+          this.record.getDataStorage().getByteArray(0, this.record_max), offset, this.record_max);
     } catch (IOException e) {
       return COB_STATUS_30_PERMANENT_ERROR;
     }
@@ -491,7 +529,7 @@ public class CobolRelativeFile extends CobolFile {
     int off;
 
     relnum = this.keys[0].getField().getInt() - 1;
-    relsize = this.record_max + this.record.getSize();
+    relsize = this.record_max + this.sizeof_size.length; // this.record.getSize();
     off = relnum * relsize;
 
     try {
@@ -504,19 +542,21 @@ public class CobolRelativeFile extends CobolFile {
       }
       int offset = 0;
       if (!isSeek
-          || file.read(this.record.getBytes(), offset, this.record.getSize())
-              != this.record.getSize()) {
+          || file.read(this.sizeof_size, offset, this.sizeof_size.length)
+              != this.sizeof_size.length) { // this.record.getSize())
+        // !=
+        // this.record.getSize()) {
         // System.err.println("COB_STATUS_23_KEY_NOT_EXISTS(delete)");
         return COB_STATUS_23_KEY_NOT_EXISTS;
       }
 
-      file.seek(file.getFilePointer() - this.record.getSize());
+      file.seek(file.getFilePointer() - 8); // this.record.getSize());
 
       this.record.setSize(0);
-      file.write(this.record.getBytes(), offset, this.record.getSize());
+      file.writeLong(this.record.getSize()); // this.record.getSize());
 
       file.seek(file.getFilePointer() + this.record_max);
-
+      // System.err.println("COB_STATUS_00_SUCCESS(delete)");
       return COB_STATUS_00_SUCCESS;
 
     } catch (FileNotFoundException e) {
