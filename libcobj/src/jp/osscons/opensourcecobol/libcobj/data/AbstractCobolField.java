@@ -21,6 +21,7 @@ package jp.osscons.opensourcecobol.libcobj.data;
 import java.math.BigDecimal;
 import java.nio.ByteBuffer;
 import java.nio.charset.Charset;
+import java.util.Arrays;
 import jp.osscons.opensourcecobol.libcobj.common.CobolConstant;
 import jp.osscons.opensourcecobol.libcobj.common.CobolModule;
 import jp.osscons.opensourcecobol.libcobj.common.CobolUtil;
@@ -312,16 +313,21 @@ public abstract class AbstractCobolField {
     if (n == 0) {
       return 0;
     }
-    CobolDecimal d1 = this.getDecimal();
-    CobolDecimal d2 = new CobolDecimal(n);
-    d2.setScale(0);
-    if (d1.getScale() != 0) {
-      BigDecimal cobMexp = BigDecimal.TEN.pow(d1.getScale());
-      d2.setValue(d2.getValue().multiply(cobMexp));
-      d2.setScale(d1.getScale());
+    switch (this.getAttribute().getType()) {
+      case CobolFieldAttribute.COB_TYPE_NUMERIC_DISPLAY:
+        return displayAddInt_(this, n);
+      default:
+        CobolDecimal d1 = this.getDecimal();
+        CobolDecimal d2 = new CobolDecimal(n);
+        d2.setScale(0);
+        if (d1.getScale() != 0) {
+          BigDecimal cobMexp = BigDecimal.TEN.pow(d1.getScale());
+          d2.setValue(d2.getValue().multiply(cobMexp));
+          d2.setScale(d1.getScale());
+        }
+        d1.setValue(d1.getValue().add(d2.getValue()));
+        return d1.getField(this, 0);
     }
-    d1.setValue(d1.getValue().add(d2.getValue()));
-    return d1.getField(this, 0);
   }
 
   /**
@@ -340,6 +346,66 @@ public abstract class AbstractCobolField {
    */
   public int subInt(int n) throws CobolStopRunException {
     return n == 0 ? 0 : this.addInt(-n);
+  }
+
+  public int displayAddInt_(AbstractCobolField f, int n) {
+    byte[] tfield = new byte[64];
+    byte[] data = this.getDataStorage().getData();
+    int size = this.getSize();
+    int scale = this.getAttribute().getScale();
+    int sign = this.getSign();
+    int osize = size;
+    tfield = Arrays.copyOf(data, osize);
+
+    if (sign < 0) {
+      n = -n;
+    }
+    while (scale > 0) {
+      --scale;
+      n *= 10;
+    }
+
+    if (scale < 0) {
+      if (-scale < 10) {
+        while (scale != 0) {
+          ++scale;
+          n /= 10;
+        }
+      } else {
+        n = 0;
+      }
+    } else {
+      size -= scale;
+    }
+    // if(n>0){
+    // if()
+    // }
+    return 0;
+  }
+
+  public int displayAddInt(byte[] data, int size, int n) {
+    int sp;
+    int carry = 0;
+    int i;
+    int is;
+
+    ByteBuffer d = ByteBuffer.allocate(64);
+    d.put(data);
+    sp = d.getInt() + size;
+    while (n > 0) {
+      i = n % 10;
+      n /= 10;
+
+      if (--sp < d.getInt()) {
+        if (CobolModule.getCurrentModule().flag_binary_truncate == 0) {
+          return 0;
+        }
+        return 1;
+      }
+
+      is = (sp & 0x0f) + i + carry;
+    }
+    return 0;
   }
 
   /** libcob/numeric.cのcob_div_quotientの実装 */
