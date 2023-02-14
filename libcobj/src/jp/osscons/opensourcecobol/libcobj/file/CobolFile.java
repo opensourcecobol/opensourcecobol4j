@@ -1222,6 +1222,7 @@ public class CobolFile {
   public void delete(AbstractCobolField fnstatus) {
     String openMode = String.format("%02d", (int) this.last_open_mode);
     if (invokeFun(COB_IO_DELETE, this, null, null, fnstatus, openMode, null, null) != 0) {
+      System.out.println("delete1");
       return;
     }
 
@@ -1230,11 +1231,13 @@ public class CobolFile {
 
     if (this.open_mode == COB_OPEN_CLOSED || this.open_mode != COB_OPEN_I_O) {
       saveStatus(COB_STATUS_49_I_O_DENIED, fnstatus);
+      System.out.println("delete2");
       return;
     }
 
     if (this.access_mode == COB_ACCESS_SEQUENTIAL && !read_done) {
       saveStatus(COB_STATUS_43_READ_NOT_DONE, fnstatus);
+      System.out.println("delete3");
       return;
     }
 
@@ -1243,7 +1246,6 @@ public class CobolFile {
     if (cob_do_sync != 0 && ret == 0) {
       cob_sync(this, cob_do_sync);
     }
-
     saveStatus(ret, fnstatus);
     return;
   }
@@ -1523,6 +1525,7 @@ public class CobolFile {
       try {
         switch (this.open_(file_open_name, mode, 0)) {
           case ENOENT:
+            System.err.println("p4");
             saveStatus(COB_STATUS_35_NOT_EXISTS, fnstatus);
             return;
           case EACCESS:

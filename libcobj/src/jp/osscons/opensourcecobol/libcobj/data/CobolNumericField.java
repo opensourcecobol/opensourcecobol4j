@@ -32,16 +32,17 @@ public class CobolNumericField extends AbstractCobolField {
   /**
    * コンストラクタ
    *
-   * @param size データを格納するバイト配列の長さ
+   * @param size        データを格納するバイト配列の長さ
    * @param dataStorage データを格納するバイト配列を扱うオブジェクト
-   * @param attribute 変数に関する様々な情報を保持するオブジェクト
+   * @param attribute   変数に関する様々な情報を保持するオブジェクト
    */
   public CobolNumericField(int size, CobolDataStorage dataStorage, CobolFieldAttribute attribute) {
     super(size, dataStorage, attribute);
   }
 
   /** TODO実装 */
-  public void checkNumeric(String s) {}
+  public void checkNumeric(String s) {
+  }
 
   /** this.dataの保持するバイト配列のコピーを返す */
   @Override
@@ -75,10 +76,9 @@ public class CobolNumericField extends AbstractCobolField {
 
     int signIndex = attr.isFlagSignLeading() ? 0 : this.getSize() - 1;
     int i = 0;
-    int dataLastIndex =
-        attr.isFlagHaveSign() && !attr.isFlagSignLeading() && attr.isFlagSignSeparate()
-            ? this.getSize() - 2
-            : this.getSize() - 1;
+    int dataLastIndex = attr.isFlagHaveSign() && !attr.isFlagSignLeading() && attr.isFlagSignSeparate()
+        ? this.getSize() - 2
+        : this.getSize() - 1;
 
     for (; i + getFirstDataIndex() <= dataLastIndex; ++i) {
       if (scale > 0 && i - 1 == pointIndex) {
@@ -534,7 +534,8 @@ public class CobolNumericField extends AbstractCobolField {
       // return -1;
       // }
 
-      // this.getDataStorage().setByte(p, (byte) (this.getDataStorage().getByte(p) - 0x40));
+      // this.getDataStorage().setByte(p, (byte) (this.getDataStorage().getByte(p) -
+      // 0x40));
       return -1;
     }
   }
@@ -832,7 +833,8 @@ public class CobolNumericField extends AbstractCobolField {
   }
 
   // addInt内のgotoの代替として使用する
-  class OverflowException extends Exception {}
+  class OverflowException extends Exception {
+  }
 
   /**
    * thisの保持する数値データに加算する
@@ -972,7 +974,7 @@ public class CobolNumericField extends AbstractCobolField {
    * @param n
    * @return
    */
-  private int displaySubInt(CobolDataStorage data, int firstDataIndex, int size, long n) {
+  public static int displaySubInt(CobolDataStorage data, int firstDataIndex, int size, long n) {
     int carry = 0;
     int sp = firstDataIndex + size;
     int i;
@@ -1026,10 +1028,12 @@ public class CobolNumericField extends AbstractCobolField {
    *
    * @param field 代入元のデータ(double型)
    */
-  /*@Override
-  public void moveFrom(double number) {
-    this.moveFrom((int) number);
-  }*/
+  /*
+   * @Override
+   * public void moveFrom(double number) {
+   * this.moveFrom((int) number);
+   * }
+   */
 
   /**
    * 引数で与えらえられたデータからthisへの代入を行う
@@ -1037,7 +1041,8 @@ public class CobolNumericField extends AbstractCobolField {
    * @param field 代入元のデータ(BigDecimal型)
    */
   @Override
-  public void moveFrom(BigDecimal number) {}
+  public void moveFrom(BigDecimal number) {
+  }
 
   /**
    * 引数で与えらえられたデータからthisへの代入を行う
@@ -1045,7 +1050,8 @@ public class CobolNumericField extends AbstractCobolField {
    * @param field 代入元のデータ(CobolDataStorage型)
    */
   @Override
-  public void moveFrom(CobolDataStorage dataStrage) {}
+  public void moveFrom(CobolDataStorage dataStrage) {
+  }
 
   /** 実装しないメソッド */
   public int addPackedInt(int n) {
