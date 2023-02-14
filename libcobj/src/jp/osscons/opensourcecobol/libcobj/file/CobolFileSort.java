@@ -331,10 +331,7 @@ public class CobolFileSort {
     if (fp.write(q.getUnique(), 8, 1) != 1) {
       return true;
     }
-    if (fp.write(q.getItem(), hp.getSize(), 1) != 1) {
-      return true;
-    }
-    return false;
+    return fp.write(q.getItem(), hp.getSize(), 1) != 1;  // 元334行目の改善案
   }
 
   /**
