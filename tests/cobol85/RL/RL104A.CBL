@@ -454,6 +454,7 @@
 045400     MOVE     SPACE     TO  RL-FS2-STATUS.                        RL1044.2
 045500     MOVE     90000002  TO  RL-FS2-KEY.                           RL1044.2
 045600     MOVE     01 TO REC-CT.                                       RL1044.2
+           display "here1".
 045700     OPEN     OUTPUT    RL-FS2.                                   RL1044.2
 045800     MOVE     RL-FS2-STATUS TO WRK-XN-0002-001.                   RL1044.2
 045900*CAPTURE STATUS KEY AFTER  OPEN STATEMENT IS EXECUTED.            RL1044.2
@@ -471,6 +472,7 @@
 047100     GO TO    REL-TEST-009-R.                                     RL1044.2
 047200 REL-TEST-009-2.                                                  RL1044.2
 047300     IF       WRK-CS-09V00-014 NOT EQUAL TO ZERO                  RL1044.2
+                    display WRK-CS-09V00-014
 047400              MOVE "EXCEPTIONS/ERRORS" TO RE-MARK                 RL1044.2
 047500              MOVE ZERO TO CORRECT-18V0                           RL1044.2
 047600              MOVE WRK-CS-09V00-014 TO COMPUTED-18V0              RL1044.2
@@ -511,6 +513,7 @@
 051100     ADD      01 TO REC-CT.                                       RL1044.2
 051200*    .04                                                          RL1044.2
 051300     MOVE     SPACE  TO  RL-FS2-STATUS.                           RL1044.2
+           display "here2".
 051400     CLOSE    RL-FS2.                                             RL1044.2
 051500     IF        RL-FS2-STATUS NOT EQUAL TO "00"                    RL1044.2
 051600              MOVE "CLOSE/STATUS" TO RE-MARK                      RL1044.2
@@ -532,6 +535,7 @@
 053200     MOVE     ZERO  TO  WRK-CS-09V00-017.                         RL1044.2
 053300     MOVE     ZERO  TO  WRK-CS-09V00-018.                         RL1044.2
 053400     MOVE     01 TO REC-CT.                                       RL1044.2
+           display "here3".
 053500     OPEN     I-O  RL-FS2.                                        RL1044.2
 053600     MOVE     SPACE     TO  WRK-XN-0002-002                       RL1044.2
 053700     MOVE     SPACE     TO  WRK-XN-0002-003                       RL1044.2
@@ -543,6 +547,7 @@
 054300 REL-TEST-010-R.                                                  RL1044.2
 054400     ADD      1 TO WRK-CS-09V00-014.                              RL1044.2
 054500     ADD      1 TO WRK-CS-09V00-015.                              RL1044.2
+           display "here4".
 054600     READ     RL-FS2.                                             RL1044.2
 054700     IF        RL-FS2-STATUS EQUAL TO "10"                        RL1044.2
 054800              GO TO  REL-TEST-010-3.                              RL1044.2
@@ -623,6 +628,7 @@
 062300     ADD      01 TO REC-CT.                                       RL1044.2
 062400*    .06                                                          RL1044.2
 062500     MOVE     SPACE TO RL-FS2-STATUS.                             RL1044.2
+           display "here5".
 062600     CLOSE    RL-FS2                                              RL1044.2
 062700     IF        RL-FS2-STATUS NOT EQUAL TO "00"                    RL1044.2
 062800              MOVE "CLOSE/STATUS" TO RE-MARK                      RL1044.2
