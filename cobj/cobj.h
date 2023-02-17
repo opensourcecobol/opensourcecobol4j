@@ -174,6 +174,9 @@ DECLNORET extern void cobc_abort(const char *filename,
 
 extern size_t cobc_check_valid_name(char *name);
 
+extern char edit_code_command[512];
+extern char edit_code_command_is_set;
+
 #ifdef I18N_UTF8
 #define COB_U8CSIZ 3
 

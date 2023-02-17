@@ -175,6 +175,7 @@ void append_label_id_map(struct cb_label *label);
 void create_label_id_map(struct cb_program *prog);
 int find_label_id(struct cb_label *label);
 void destroy_label_id_map();
+void joutput_edit_code_command(const char *option);
 
 const int EXECUTION_NORMAL = 0;
 const int EXECUTION_LAST = 1;
@@ -476,6 +477,32 @@ static void joutput_local(const char *fmt, ...) {
     vfprintf(joutput_target, fmt, ap);
     va_end(ap);
   }
+}
+
+void joutput_edit_code_command(const char *target) {
+  if (!edit_code_command_is_set) {
+    return;
+  }
+
+  const int BUF_SIZE = 1024;
+
+  char command[BUF_SIZE];
+  char buf[BUF_SIZE];
+  sprintf(command, "%s --target=%s", edit_code_command, target);
+
+  FILE *fp = popen(command, "r");
+  if (fp == NULL) {
+    return;
+  }
+  memset(buf, 0, BUF_SIZE);
+
+  while (fgets(buf, BUF_SIZE, fp) != NULL) {
+    joutput("%s", buf);
+  }
+
+  pclose(fp);
+
+  return 0;
 }
 
 /*
@@ -5698,6 +5725,9 @@ void codegen(struct cb_program *prog, const int nested,
   if (cb_java_package_name) {
     joutput_line("package %s;\n", cb_java_package_name);
   }
+  if (edit_code_command_is_set) {
+    joutput_edit_code_command("file-header");
+  }
 
   joutput_line("import java.io.UnsupportedEncodingException;");
   joutput_line("import jp.osscons.opensourcecobol.libcobj.*;");
@@ -5711,7 +5741,17 @@ void codegen(struct cb_program *prog, const int nested,
   joutput_line("import java.util.Optional;");
   joutput("\n");
 
-  joutput_line("public class %s implements CobolRunnable {", prog->program_id);
+  if (edit_code_command_is_set) {
+    joutput_edit_code_command("main-class-annotation");
+  }
+  if (edit_code_command_is_set) {
+    joutput("public class %s implements CobolRunnable, ", prog->program_id);
+    joutput_edit_code_command("main-class-implements");
+    joutput(" {\n");
+  } else {
+    joutput_line("public class %s implements CobolRunnable {",
+                 prog->program_id);
+  }
   joutput_indent_level += 2;
   joutput("\n");
 
@@ -5729,7 +5769,12 @@ void codegen(struct cb_program *prog, const int nested,
   joutput("\n");
 
   // output_storage ("union cob_call_union\tcob_unifunc;\n\n");
-  joutput_line("private CobolRunnable cob_unifunc;\n\n");
+  joutput_line("private CobolRunnable cob_unifunc;\n");
+
+  if (edit_code_command_is_set) {
+    joutput_edit_code_command("main-class-contents");
+  }
+  joutput("\n");
 
   joutput_line("@Override");
   joutput_line("public int run(CobolDataStorage... argStorages) {");
