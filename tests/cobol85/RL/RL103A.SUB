@@ -412,6 +412,7 @@
 041200     READ     RL-FS1                                              RL1034.2
 041300              AT END GO TO REL-TEST-006-3.                        RL1034.2
 041400     MOVE     RL-FS1R1-F-G-120    TO FILE-RECORD-INFO-P1-120 (1). RL1034.2
+      *     display "RL-FS1R1-F-G-120=" RL-FS1R1-F-G-120
 041500     IF       UPDATE-NUMBER (1) EQUAL TO 00                       RL1034.2
 041600             ADD 1 TO WRK-CS-09V00-007                            RL1034.2
 041700              GO TO REL-TEST-006-2.                               RL1034.2
@@ -439,6 +440,8 @@
 043900     IF       WRK-CS-09V00-007 EQUAL TO 400                       RL1034.2
 044000              PERFORM PASS                                        RL1034.2
 044100              ELSE                                                RL1034.2
+      *              display "WRK-CS-09V00-006=" WRK-CS-09V00-006
+      *              display "WRK-CS-09V00-007=" WRK-CS-09V00-007
 044200              MOVE "NON-UPDATED RECORDS" TO COMPUTED-A            RL1034.2
 044300              MOVE  WRK-CS-09V00-007 TO CORRECT-18V0              RL1034.2
 044400              MOVE "SHOULD BE 400" TO RE-MARK                     RL1034.2
@@ -499,6 +502,7 @@
 049900 REL-TEST-007-R.                                                  RL1034.2
 050000     ADD      1 TO WRK-CS-09V00-006                               RL1034.2
 050100     ADD      1 TO WRK-CS-09V00-007.                              RL1034.2
+                    display "WRK-CS-09V00-007=" WRK-CS-09V00-007
 050200     READ     RL-FS1                                              RL1034.2
 050300              AT END                                              RL1034.2
 050400              MOVE "AT END PATH TAKEN " TO RE-MARK                RL1034.2

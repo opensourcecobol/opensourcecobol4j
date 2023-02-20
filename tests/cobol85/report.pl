@@ -69,9 +69,9 @@ $skip{IC235A} = 1;
 $skip{IC237A} = 1;
 $skip{IC401M} = 1;
 
- $skip{RL102A} = 1;
- $skip{RL103A} = 1;
- #$skip{RL104A} = 1;
+ #$skip{RL102A} = 1;
+ #$skip{RL103A} = 1;
+ $skip{RL104A} = 1;
  $skip{RL105A} = 1;
  $skip{RL106A} = 1;
  $skip{RL107A} = 1;
