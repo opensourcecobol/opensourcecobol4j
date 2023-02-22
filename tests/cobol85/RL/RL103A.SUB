@@ -560,6 +560,7 @@
 055600     ADD      1 TO WRK-CS-09V00-006.                              RL1034.2
 055700     ADD      1 TO WRK-CS-09V00-007.                              RL1034.2
 055800     ADD      1 TO WRK-CS-09V00-008.                              RL1034.2
+           display "REL-TEST-008-R. read".
 055900     READ     RL-FS1  AT END  GO TO REL-TEST-008-3.               RL1034.2
 056000     MOVE     RL-FS1R1-F-G-120 TO FILE-RECORD-INFO-P1-120 (1).    RL1034.2
 056100     IF       UPDATE-NUMBER (1) EQUAL TO 99                       RL1034.2

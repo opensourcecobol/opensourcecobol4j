@@ -474,6 +474,7 @@
 047400     ADD 3 TO ACTUAL-KEY-1.                                       RL1074.2
 047500     IF RECORD-NUMXXX IS GREATER THAN 125 GO TO TEST-5-EXIT.      RL1074.2
 047600     MOVE RECORD-SKELTON TO RAC-REC-1.                            RL1074.2
+      *     display "write TEST-5".
 047700     WRITE RAC-REC-1 INVALID KEY PERFORM ERROR-INVALID-KEY.       RL1074.2
 047800     GO TO TEST-5.                                                RL1074.2
 047900 TEST-5-EXIT.                                                     RL1074.2
@@ -489,6 +490,7 @@
 048900     ADD 3 TO ACTUAL-KEY-1.                                       RL1074.2
 049000     IF RECORD-NUMXXX IS GREATER THAN 125 GO TO TEST-6-EXIT.      RL1074.2
 049100     MOVE RECORD-SKELTON TO RAC-REC-1.                            RL1074.2
+           display "write TEST-6".
 049200     WRITE RAC-REC-1 INVALID KEY PERFORM ERROR-INVALID-KEY.       RL1074.2
 049300     GO TO TEST-6.                                                RL1074.2
 049400 TEST-6-EXIT.                                                     RL1074.2
@@ -768,6 +770,7 @@
 076800     IF REC-CT IS EQUAL TO ZERO PERFORM FAIL.                     RL1074.2
 076900     ADD 1 TO REC-CT.                                             RL1074.2
 077000     MOVE RECORD-NUMXXX TO CORRECT-18V0.                          RL1074.2
+           display "RECORD-NUMXXX=" RECORD-NUMXXX
 077100     MOVE "INVALID KEY" TO COMPUTED-A.                            RL1074.2
 077200     PERFORM PRINT-DETAIL.                                        RL1074.2
 077300 ERROR-INVALID-KEY-EXPECTED.                                      RL1074.2
