@@ -218,7 +218,6 @@ public class CobolRelativeFile extends CobolFile {
     final int offset = 0;
     boolean isSeek = true;
 
-    /* get the index */
     kindex = key.getInt() - 1;
     relsize = this.record_max + size.length;
     if (cond == COB_LT) {
@@ -227,48 +226,40 @@ public class CobolRelativeFile extends CobolFile {
       kindex++;
     }
 
-    /* seek the index */
-    try {
-      this.fp = new RandomAccessFile(this.assign.fieldToString(), "r");
-      for (; ; ) {
-        off = kindex * relsize;
+    for (; ; ) {
+      off = kindex * relsize;
+      try {
+        this.fp.seek((long) off);
         try {
-          this.fp.seek((long) off);
-          try {
-            this.fp.seek(off);
-          } catch (IOException e) {
-            isSeek = false;
-          }
-
-          if (!isSeek || this.fp.read(size, offset, size.length) != size.length) {
-            return COB_STATUS_23_KEY_NOT_EXISTS;
-          }
-
-          /* check if a valid record */
-          if (this.record.getSize() > 0) {
-            key.setInt(kindex + 1);
-            this.fp.seek(this.fp.getFilePointer() - size.length);
-            return COB_STATUS_00_SUCCESS;
-          }
+          this.fp.seek(off);
         } catch (IOException e) {
-          return COB_STATUS_30_PERMANENT_ERROR;
+          isSeek = false;
         }
-        switch (cond) {
-          case COB_EQ:
-            return COB_STATUS_23_KEY_NOT_EXISTS;
-          case COB_LT:
-          case COB_LE:
-            kindex--;
-            break;
-          case COB_GT:
-          case COB_GE:
-            kindex++;
-            break;
-        }
-      }
 
-    } catch (FileNotFoundException e) {
-      return COB_STATUS_30_PERMANENT_ERROR;
+        if (!isSeek || this.fp.read(size, offset, size.length) != size.length) {
+          return COB_STATUS_23_KEY_NOT_EXISTS;
+        }
+
+        if (this.record.getSize() > 0) {
+          key.setInt(kindex + 1);
+          this.fp.seek(this.fp.getFilePointer() - size.length);
+          return COB_STATUS_00_SUCCESS;
+        }
+      } catch (IOException e) {
+        return COB_STATUS_30_PERMANENT_ERROR;
+      }
+      switch (cond) {
+        case COB_EQ:
+          return COB_STATUS_23_KEY_NOT_EXISTS;
+        case COB_LT:
+        case COB_LE:
+          kindex--;
+          break;
+        case COB_GT:
+        case COB_GE:
+          kindex++;
+          break;
+      }
     }
   }
 
@@ -403,7 +394,6 @@ public class CobolRelativeFile extends CobolFile {
         return COB_STATUS_30_PERMANENT_ERROR;
       }
 
-      /* update RELATIVE KEY */
       if (this.access_mode == COB_ACCESS_SEQUENTIAL) {
         if (this.keys[0].getField() != null) {
           off += relsize;
@@ -425,6 +415,7 @@ public class CobolRelativeFile extends CobolFile {
     int relnum;
     int off;
     final int offset = 0;
+    boolean isSeek = true;
 
     try {
       if (this.access_mode == COB_ACCESS_SEQUENTIAL) {
@@ -434,7 +425,6 @@ public class CobolRelativeFile extends CobolFile {
         relnum = this.keys[0].getField().getInt() - 1;
         off = relnum * relsize;
 
-        boolean isSeek = true;
         try {
           this.fp.seek(off);
         } catch (IOException e) {
