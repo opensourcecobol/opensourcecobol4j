@@ -29,6 +29,7 @@ import java.util.Map;
 import java.util.Map.Entry;
 import java.util.UUID;
 import jp.osscons.opensourcecobol.libcobj.common.CobolConstant;
+import jp.osscons.opensourcecobol.libcobj.common.CobolUtil;
 import jp.osscons.opensourcecobol.libcobj.data.AbstractCobolField;
 import jp.osscons.opensourcecobol.libcobj.data.CobolDataStorage;
 import jp.osscons.opensourcecobol.libcobj.exceptions.CobolCallException;
@@ -72,7 +73,7 @@ public class CobolResolve {
     //		call_entry_buff = cob_malloc (COB_SMALL_BUFF);
     //		call_entry2_buff = cob_malloc (COB_SMALL_BUFF);
 
-    s = System.getenv("COB_LOAD_CASE");
+    s = CobolUtil.getEnv("COB_LOAD_CASE");
     if (s != null) {
       String sU = s.toUpperCase();
       if (sU.equals("LOWER")) {
@@ -82,7 +83,7 @@ public class CobolResolve {
       }
     }
 
-    s = System.getenv("COB_LIBRARY_PATH");
+    s = CobolUtil.getEnv("COB_LIBRARY_PATH");
     if (s == null || s.equals("")) {
       buf = "." + System.getProperty("path.separator") + CobolConstant.COB_LIBRARY_PATH;
     } else {
@@ -95,11 +96,11 @@ public class CobolResolve {
     }
     setLibraryPath(buf);
 
-    s = System.getenv("COB_PACKAGE_PATH");
+    s = CobolUtil.getEnv("COB_PACKAGE_PATH");
     setPackagePath(s);
 
     // TODO プリロードの扱いを検討する
-    s = System.getenv("COB_PRE_LOAD");
+    s = CobolUtil.getEnv("COB_PRE_LOAD");
 
     // 用途不明
     //		call_buffer = cob_malloc (CALL_BUFF_SIZE);
@@ -399,7 +400,7 @@ public class CobolResolve {
   }
 
   public static void cobCancel(String name) throws CobolStopRunException {
-    if (name == null || name == "") {
+    if (name == null || name.equals("")) {
       // TODO cob_runtime_errorの実装
       CobolStopRunException.stopRunAndThrow(1);
     }

@@ -473,3 +473,115 @@ jp.osscons.opensourcecobol.libcobj.ui.CobolResultSetException: The result type i
 jp.osscons.opensourcecobol.libcobj.ui.CobolResultSetException: The result type is not 'double'
 ])
 AT_CLEANUP
+
+AT_SETUP([Japanese])
+
+AT_DATA([b.cbl], [
+       identification division.
+       program-id. b.
+       data division.
+       linkage section.
+       01 arg-1 pic 9(3).
+       01 arg-2 pic N(5).
+       procedure division using arg-1 arg-2.
+         display arg-1.
+         display arg-2.
+         add 1 to arg-1.
+         move N"‚©‚«‚­‚¯‚±" to arg-2.
+])
+
+AT_DATA([a.java], [
+import jp.osscons.opensourcecobol.libcobj.ui.*;
+public class a {
+	public static void main(String@<:@@:>@ args) {
+		b prog = new b();
+		CobolResultSet rs = prog.execute(100, "‚ ‚¢‚¤‚¦‚¨");
+		try{
+			int ret1 = rs.getInt(1);
+			String ret2 = rs.getString(2);
+			System.out.println("ret1: " + ret1);
+			System.out.println("ret2: " + ret2);
+		} catch(CobolResultSetException e){
+			e.printStackTrace();
+		}
+	}
+}
+])
+
+AT_CHECK([cobj b.cbl])
+AT_CHECK([javac -encoding SJIS a.java])
+AT_CHECK([java -Dfile.encoding=SJIS a], [0],
+[100
+‚ ‚¢‚¤‚¦‚¨
+ret1: 101
+ret2: ‚©‚«‚­‚¯‚±
+])
+AT_CLEANUP
+
+
+AT_SETUP([COMP-3 Integer.MIN_VALUE])
+
+AT_DATA([b.cbl], [
+       identification division.
+       program-id. b.
+       data division.
+       linkage section.
+       01 k1 pic S9(1) usage comp-3 value zero.
+       01 k2 pic S9(2) usage comp-3 value zero.
+       01 k3 pic S9(3) usage comp-3 value zero.
+       01 k4 pic S9(4) usage comp-3 value zero.
+       01 k5 pic S9(5) usage comp-3 value zero.
+       01 k6 pic S9(6) usage comp-3 value zero.
+       01 k7 pic S9(7) usage comp-3 value zero.
+       01 k8 pic S9(8) usage comp-3 value zero.
+       01 k9 pic S9(9) usage comp-3 value zero.
+       01 k10 pic S9(10) usage comp-3 value zero.
+       01 k11 pic S9(11) usage comp-3 value zero.
+       01 k12 pic S9(12) usage comp-3 value zero.
+       01 k13 pic S9(13) usage comp-3 value zero.
+       procedure division
+           using k1 k2 k3 k4 k5 k6 k7 k8 k9 k10 k11 k12 k13.
+
+       display k1.
+       display k2.
+       display k3.
+       display k4.
+       display k5.
+       display k6.
+       display k7.
+       display k8.
+       display k9.
+       display k10.
+       display k11.
+       display k12.
+       display k13.
+])
+
+AT_DATA([a.java], [
+public class a {
+        public static void main(String@<:@@:>@ args) {
+                int v = Integer.MIN_VALUE;
+                b prog = new b();
+                prog.execute(v, v, v, v, v, v, v, v, v, v, v, v, v);
+        }
+}
+])
+
+AT_CHECK([cobj b.cbl])
+AT_CHECK([javac a.java])
+AT_CHECK([java a], [0],
+[-8
+-48
+-648
+-3648
+-83648
+-483648
+-7483648
+-47483648
+-147483648
+-2147483648
+-02147483648
+-002147483648
+-0002147483648
+])
+AT_CLEANUP

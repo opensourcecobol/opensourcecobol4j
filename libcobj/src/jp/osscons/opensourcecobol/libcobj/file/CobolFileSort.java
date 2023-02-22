@@ -167,9 +167,9 @@ public class CobolFileSort {
   private static FileIO tmpfile() {
     String s;
     FileIO fp = new FileIO();
-    if ((s = System.getenv("TMPDIR")) == null
-        && (s = System.getenv("TMP")) == null
-        && (s = System.getenv("TEMP")) == null) {
+    if ((s = CobolUtil.getEnv("TMPDIR")) == null
+        && (s = CobolUtil.getEnv("TMP")) == null
+        && (s = CobolUtil.getEnv("TEMP")) == null) {
       s = "/tmp";
     }
     if (cob_process_id.equals("")) {
@@ -331,10 +331,7 @@ public class CobolFileSort {
     if (fp.write(q.getUnique(), 8, 1) != 1) {
       return true;
     }
-    if (fp.write(q.getItem(), hp.getSize(), 1) != 1) {
-      return true;
-    }
-    return false;
+    return fp.write(q.getItem(), hp.getSize(), 1) != 1;
   }
 
   /**

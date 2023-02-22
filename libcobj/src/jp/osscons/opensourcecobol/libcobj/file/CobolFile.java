@@ -333,7 +333,7 @@ public class CobolFile {
     byte[] tmpfnstatus = String.format("%02d", 0).getBytes();
     byte[] pTmpfnstatus = tmpfnstatus;
     String p_excpcode = "";
-    String s = System.getenv(TIS_DEFINE_USERFH);
+    String s = CobolUtil.getEnv(TIS_DEFINE_USERFH);
     int iRet = 0;
     char ret = '0';
     int status1 = 0;
@@ -645,7 +645,7 @@ public class CobolFile {
             file_open_env[j] = src[src_i + 1 + j];
           }
           file_open_env[i - 1] = 0;
-          String p = System.getenv(new String(Arrays.copyOfRange(file_open_env, 0, i - 1)));
+          String p = CobolUtil.getEnv(new String(Arrays.copyOfRange(file_open_env, 0, i - 1)));
           if (p != null) {
             byte[] pbytes = p.getBytes();
             for (int j = 0; j < pbytes.length; ++j) {
@@ -669,7 +669,7 @@ public class CobolFile {
         for (i = 0; i < NUM_PREFIX; i++) {
           byte[] file_open_buff = String.format("%s%s", prefix[i], file_open_name).getBytes();
           String p;
-          if ((p = System.getenv(new String(file_open_buff))) != null) {
+          if ((p = CobolUtil.getEnv(new String(file_open_buff))) != null) {
             file_open_name_bytes = p.getBytes();
             break;
           }
@@ -690,8 +690,8 @@ public class CobolFile {
         was_not_exist = true;
         if (mode != COB_OPEN_OUTPUT
             && !this.flag_optional
-            && (mode != COB_OPEN_I_O || !System.getenv(COB_IO_CREATES).equals("yes"))
-            && (mode != COB_OPEN_EXTEND || !System.getenv(COB_EXTEND_CREATES).equals("yes"))) {
+            && (mode != COB_OPEN_I_O || !CobolUtil.getEnv(COB_IO_CREATES).equals("yes"))
+            && (mode != COB_OPEN_EXTEND || !CobolUtil.getEnv(COB_EXTEND_CREATES).equals("yes"))) {
           saveStatus(COB_STATUS_35_NOT_EXISTS, fnstatus);
           return;
         }
@@ -1321,7 +1321,7 @@ public class CobolFile {
 
   /** libcob/fileio.cのcob_init_fileioの実装 */
   public static void cob_init_fileio() {
-    String s = System.getenv("COB_SYNC");
+    String s = CobolUtil.getEnv("COB_SYNC");
     if (s != null) {
       if (s.charAt(0) == 'Y' || s.charAt(0) == 'y') {
         cob_do_sync = 1;
@@ -1331,15 +1331,15 @@ public class CobolFile {
       }
     }
 
-    cob_file_path = System.getenv("COB_FILE_PATH");
+    cob_file_path = CobolUtil.getEnv("COB_FILE_PATH");
     if (cob_file_path != null) {
       if (cob_file_path.charAt(0) == '\0' || cob_file_path.charAt(0) == ' ') {
         cob_file_path = null;
       }
     }
 
-    cob_ls_nulls = System.getenv("COB_LS_NULLS");
-    cob_ls_fixed = System.getenv("COB_LS_FIXED");
+    cob_ls_nulls = CobolUtil.getEnv("COB_LS_NULLS");
+    cob_ls_fixed = CobolUtil.getEnv("COB_LS_FIXED");
 
     file_open_env = new byte[COB_SMALL_BUFF];
     // file_open_name = new byte[COB_SMALL_BUFF];
@@ -1476,7 +1476,7 @@ public class CobolFile {
             file_open_env[j] = src[src_i + 1 + j];
           }
           file_open_env[i - 1] = 0;
-          String p = System.getenv(new String(Arrays.copyOfRange(file_open_env, 0, i - 1)));
+          String p = CobolUtil.getEnv(new String(Arrays.copyOfRange(file_open_env, 0, i - 1)));
           if (p != null) {
             byte[] pbytes = p.getBytes();
             for (int j = 0; j < pbytes.length; ++j) {
@@ -1500,7 +1500,7 @@ public class CobolFile {
         for (i = 0; i < NUM_PREFIX; i++) {
           byte[] file_open_buff = String.format("%s%s", prefix[i], file_open_name).getBytes();
           String p;
-          if ((p = System.getenv(new String(file_open_buff))) != null) {
+          if ((p = CobolUtil.getEnv(new String(file_open_buff))) != null) {
             file_open_name_bytes = p.getBytes();
             break;
           }
@@ -1525,7 +1525,6 @@ public class CobolFile {
       try {
         switch (this.open_(file_open_name, mode, 0)) {
           case ENOENT:
-            System.err.println("p4");
             saveStatus(COB_STATUS_35_NOT_EXISTS, fnstatus);
             return;
           case EACCESS:

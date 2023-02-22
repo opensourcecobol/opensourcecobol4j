@@ -343,7 +343,22 @@ public class CobolNumericPackedField extends AbstractCobolField {
     int n;
     int sign = 0;
     CobolDataStorage data = this.getDataStorage();
-    if (val < 0) {
+
+    if (val == Integer.MIN_VALUE) {
+      // Integer.MIN_VALUE == -2147483647
+      int[] bytes = {2, 1, 4, 7, 4, 8, 3, 6, 4, 8};
+      int digits = this.getAttribute().getDigits();
+      int iter = Math.min(bytes.length, digits);
+      for (int i = 0; i < digits; ++i) {
+        if (i < bytes.length) {
+          this.setDigit(digits - 1 - i, bytes[bytes.length - 1 - i]);
+        } else {
+          this.setDigit(digits - 1 - i, 0);
+        }
+      }
+      this.putSign(-1);
+      return;
+    } else if (val < 0) {
       n = -val;
       sign = 1;
     } else {
@@ -911,9 +926,11 @@ public class CobolNumericPackedField extends AbstractCobolField {
     for (size = 0; size < 20; size++) {
       if (val1[size] != CobolDecimal.packedValue[size]) {
         if (sign < 0) {
-          return CobolDecimal.packedValue[size] - val1[size];
+          return Byte.toUnsignedInt(CobolDecimal.packedValue[size])
+              - Byte.toUnsignedInt(val1[size]);
         } else {
-          return val1[size] - CobolDecimal.packedValue[size];
+          return Byte.toUnsignedInt(val1[size])
+              - Byte.toUnsignedInt(CobolDecimal.packedValue[size]);
         }
       }
     }

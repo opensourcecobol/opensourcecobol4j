@@ -213,7 +213,7 @@ public class CobolTerminal {
    * @param f
    */
   public static void displayEnvValue(AbstractCobolField f) {
-    if (CobolUtil.cobLocalEnv == null || CobolUtil.cobLocalEnv == "") {
+    if (CobolUtil.cobLocalEnv == null || CobolUtil.cobLocalEnv.equals("")) {
       CobolException.setException(CobolExceptionId.COB_EC_IMP_DISPLAY);
       return;
     }
@@ -229,7 +229,7 @@ public class CobolTerminal {
   public static void acceptEnvironment(AbstractCobolField f) {
     String p = null;
     if (CobolUtil.cobLocalEnv != null) {
-      p = System.getenv(CobolUtil.cobLocalEnv);
+      p = CobolUtil.getEnv(CobolUtil.cobLocalEnv);
     }
 
     if (p == null) {
