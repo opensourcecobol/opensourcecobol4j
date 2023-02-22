@@ -632,7 +632,6 @@ ac_includes_default="\
 # include <unistd.h>
 #endif"
 
-gt_needs=
 ac_subst_vars='am__EXEEXT_FALSE
 am__EXEEXT_TRUE
 LTLIBOBJS
@@ -660,17 +659,12 @@ POSUB
 LTLIBINTL
 LIBINTL
 INTLLIBS
-INTL_MACOSX_LIBS
-XGETTEXT_EXTRA_OPTIONS
 MSGMERGE
-XGETTEXT_015
 XGETTEXT
-GMSGFMT_015
-MSGFMT_015
 GMSGFMT
 MSGFMT
-GETTEXT_MACRO_VERSION
 USE_NLS
+MKINSTALLDIRS
 LIBOBJS
 LTLIBICONV
 LIBICONV
@@ -1502,7 +1496,7 @@ Optional Packages:
   --with-gnu-ld           assume the C compiler uses GNU ld [default=no]
   --with-sysroot[=DIR]    Search for dependent libraries within DIR (or the
                           compiler's sysroot if not specified).
-  --with-gnu-ld           assume the C compiler uses GNU ld [default=no]
+  --with-gnu-ld           assume the C compiler uses GNU ld default=no
   --with-libiconv-prefix[=DIR]  search for libiconv in DIR/include and DIR/lib
   --without-libiconv-prefix     don't search for libiconv in includedir and libdir
   --with-libintl-prefix[=DIR]  search for libintl in DIR/include and DIR/lib
@@ -2419,7 +2413,6 @@ $as_echo "$as_me: creating cache $cache_file" >&6;}
   >$cache_file
 fi
 
-gt_needs="$gt_needs "
 # Check that the precious variables saved in the cache have kept the same
 # value.
 ac_cache_corrupted=false
@@ -19675,7 +19668,6 @@ rm -f core conftest.err conftest.$ac_objext conftest.$ac_ext
   prefix="$acl_save_prefix"
 
 
-
 # Check whether --with-gnu-ld was given.
 if test "${with_gnu_ld+set}" = set; then :
   withval=$with_gnu_ld; test "$withval" = no || with_gnu_ld=yes
@@ -19686,21 +19678,21 @@ fi
 # Prepare PATH_SEPARATOR.
 # The user is always right.
 if test "${PATH_SEPARATOR+set}" != set; then
-  # Determine PATH_SEPARATOR by trying to find /bin/sh in a PATH which
-  # contains only /bin. Note that ksh looks also at the FPATH variable,
-  # so we have to set that as well for the test.
-  PATH_SEPARATOR=:
-  (PATH='/bin;/bin'; FPATH=$PATH; sh -c :) >/dev/null 2>&1 \
-    && { (PATH='/bin:/bin'; FPATH=$PATH; sh -c :) >/dev/null 2>&1 \
-           || PATH_SEPARATOR=';'
-       }
+  echo "#! /bin/sh" >conf$$.sh
+  echo  "exit 0"   >>conf$$.sh
+  chmod +x conf$$.sh
+  if (PATH="/nonexistent;."; conf$$.sh) >/dev/null 2>&1; then
+    PATH_SEPARATOR=';'
+  else
+    PATH_SEPARATOR=:
+  fi
+  rm -f conf$$.sh
 fi
-
 ac_prog=ld
 if test "$GCC" = yes; then
   # Check if gcc -print-prog-name=ld gives a path.
-  { $as_echo "$as_me:${as_lineno-$LINENO}: checking for ld used by $CC" >&5
-$as_echo_n "checking for ld used by $CC... " >&6; }
+  { $as_echo "$as_me:${as_lineno-$LINENO}: checking for ld used by GCC" >&5
+$as_echo_n "checking for ld used by GCC... " >&6; }
   case $host in
   *-*-mingw*)
     # gcc leaves a trailing carriage return which upsets mingw
@@ -19710,12 +19702,12 @@ $as_echo_n "checking for ld used by $CC... " >&6; }
   esac
   case $ac_prog in
     # Accept absolute paths.
-    [\\/]* | ?:[\\/]*)
+    [\\/]* | [A-Za-z]:[\\/]*)
       re_direlt='/[^/][^/]*/\.\./'
-      # Canonicalize the pathname of ld
-      ac_prog=`echo "$ac_prog"| sed 's%\\\\%/%g'`
-      while echo "$ac_prog" | grep "$re_direlt" > /dev/null 2>&1; do
-        ac_prog=`echo $ac_prog| sed "s%$re_direlt%/%"`
+      # Canonicalize the path of ld
+      ac_prog=`echo $ac_prog| sed 's%\\\\%/%g'`
+      while echo $ac_prog | grep "$re_direlt" > /dev/null 2>&1; do
+	ac_prog=`echo $ac_prog| sed "s%$re_direlt%/%"`
       done
       test -z "$LD" && LD="$ac_prog"
       ;;
@@ -19739,26 +19731,23 @@ if ${acl_cv_path_LD+:} false; then :
   $as_echo_n "(cached) " >&6
 else
   if test -z "$LD"; then
-  acl_save_ifs="$IFS"; IFS=$PATH_SEPARATOR
+  IFS="${IFS= 	}"; ac_save_ifs="$IFS"; IFS="${IFS}${PATH_SEPARATOR-:}"
   for ac_dir in $PATH; do
-    IFS="$acl_save_ifs"
     test -z "$ac_dir" && ac_dir=.
     if test -f "$ac_dir/$ac_prog" || test -f "$ac_dir/$ac_prog$ac_exeext"; then
       acl_cv_path_LD="$ac_dir/$ac_prog"
       # Check to see if the program is GNU ld.  I'd rather use --version,
-      # but apparently some variants of GNU ld only accept -v.
+      # but apparently some GNU ld's only accept -v.
       # Break only if it was the GNU/non-GNU ld that we prefer.
-      case `"$acl_cv_path_LD" -v 2>&1 </dev/null` in
+      case `"$acl_cv_path_LD" -v 2>&1 < /dev/null` in
       *GNU* | *'with BFD'*)
-        test "$with_gnu_ld" != no && break
-        ;;
+	test "$with_gnu_ld" != no && break ;;
       *)
-        test "$with_gnu_ld" != yes && break
-        ;;
+	test "$with_gnu_ld" != yes && break ;;
       esac
     fi
   done
-  IFS="$acl_save_ifs"
+  IFS="$ac_save_ifs"
 else
   acl_cv_path_LD="$LD" # Let the user override the test with a path.
 fi
@@ -19778,20 +19767,17 @@ $as_echo_n "checking if the linker ($LD) is GNU ld... " >&6; }
 if ${acl_cv_prog_gnu_ld+:} false; then :
   $as_echo_n "(cached) " >&6
 else
-  # I'd rather use --version here, but apparently some GNU lds only accept -v.
+  # I'd rather use --version here, but apparently some GNU ld's only accept -v.
 case `$LD -v 2>&1 </dev/null` in
 *GNU* | *'with BFD'*)
-  acl_cv_prog_gnu_ld=yes
-  ;;
+  acl_cv_prog_gnu_ld=yes ;;
 *)
-  acl_cv_prog_gnu_ld=no
-  ;;
+  acl_cv_prog_gnu_ld=no ;;
 esac
 fi
 { $as_echo "$as_me:${as_lineno-$LINENO}: result: $acl_cv_prog_gnu_ld" >&5
 $as_echo "$acl_cv_prog_gnu_ld" >&6; }
 with_gnu_ld=$acl_cv_prog_gnu_ld
-
 
 
 
@@ -19811,88 +19797,18 @@ fi
 { $as_echo "$as_me:${as_lineno-$LINENO}: result: $acl_cv_rpath" >&5
 $as_echo "$acl_cv_rpath" >&6; }
   wl="$acl_cv_wl"
-  acl_libext="$acl_cv_libext"
-  acl_shlibext="$acl_cv_shlibext"
-  acl_libname_spec="$acl_cv_libname_spec"
-  acl_library_names_spec="$acl_cv_library_names_spec"
-  acl_hardcode_libdir_flag_spec="$acl_cv_hardcode_libdir_flag_spec"
-  acl_hardcode_libdir_separator="$acl_cv_hardcode_libdir_separator"
-  acl_hardcode_direct="$acl_cv_hardcode_direct"
-  acl_hardcode_minus_L="$acl_cv_hardcode_minus_L"
+  libext="$acl_cv_libext"
+  shlibext="$acl_cv_shlibext"
+  hardcode_libdir_flag_spec="$acl_cv_hardcode_libdir_flag_spec"
+  hardcode_libdir_separator="$acl_cv_hardcode_libdir_separator"
+  hardcode_direct="$acl_cv_hardcode_direct"
+  hardcode_minus_L="$acl_cv_hardcode_minus_L"
     # Check whether --enable-rpath was given.
 if test "${enable_rpath+set}" = set; then :
   enableval=$enable_rpath; :
 else
   enable_rpath=yes
 fi
-
-
-
-
-  acl_libdirstem=lib
-  acl_libdirstem2=
-  case "$host_os" in
-    solaris*)
-                                    { $as_echo "$as_me:${as_lineno-$LINENO}: checking for 64-bit host" >&5
-$as_echo_n "checking for 64-bit host... " >&6; }
-if ${gl_cv_solaris_64bit+:} false; then :
-  $as_echo_n "(cached) " >&6
-else
-  cat confdefs.h - <<_ACEOF >conftest.$ac_ext
-/* end confdefs.h.  */
-
-#ifdef _LP64
-sixtyfour bits
-#endif
-
-_ACEOF
-if (eval "$ac_cpp conftest.$ac_ext") 2>&5 |
-  $EGREP "sixtyfour bits" >/dev/null 2>&1; then :
-  gl_cv_solaris_64bit=yes
-else
-  gl_cv_solaris_64bit=no
-fi
-rm -f conftest*
-
-
-fi
-{ $as_echo "$as_me:${as_lineno-$LINENO}: result: $gl_cv_solaris_64bit" >&5
-$as_echo "$gl_cv_solaris_64bit" >&6; }
-      if test $gl_cv_solaris_64bit = yes; then
-        acl_libdirstem=lib/64
-        case "$host_cpu" in
-          sparc*)        acl_libdirstem2=lib/sparcv9 ;;
-          i*86 | x86_64) acl_libdirstem2=lib/amd64 ;;
-        esac
-      fi
-      ;;
-    *)
-      searchpath=`(LC_ALL=C $CC -print-search-dirs) 2>/dev/null | sed -n -e 's,^libraries: ,,p' | sed -e 's,^=,,'`
-      if test -n "$searchpath"; then
-        acl_save_IFS="${IFS= 	}"; IFS=":"
-        for searchdir in $searchpath; do
-          if test -d "$searchdir"; then
-            case "$searchdir" in
-              */lib64/ | */lib64 ) acl_libdirstem=lib64 ;;
-              */../ | */.. )
-                # Better ignore directories of this form. They are misleading.
-                ;;
-              *) searchdir=`cd "$searchdir" && pwd`
-                 case "$searchdir" in
-                   */lib64 ) acl_libdirstem=lib64 ;;
-                 esac ;;
-            esac
-          fi
-        done
-        IFS="$acl_save_IFS"
-      fi
-      ;;
-  esac
-  test -n "$acl_libdirstem2" || acl_libdirstem2="$acl_libdirstem"
-
-
-
-
 
 
 
@@ -19936,11 +19852,7 @@ if test "${with_libiconv_prefix+set}" = set; then :
 
       else
         additional_includedir="$withval/include"
-        additional_libdir="$withval/$acl_libdirstem"
-        if test "$acl_libdirstem2" != "$acl_libdirstem" \
-           && ! test -d "$withval/$acl_libdirstem"; then
-          additional_libdir="$withval/$acl_libdirstem2"
-        fi
+        additional_libdir="$withval/lib"
       fi
     fi
 
@@ -19949,8 +19861,6 @@ fi
       LIBICONV=
   LTLIBICONV=
   INCICONV=
-  LIBICONV_PREFIX=
-      HAVE_LIBICONV=
   rpathdirs=
   ltrpathdirs=
   names_already_handled=
@@ -19968,7 +19878,7 @@ fi
       done
       if test -z "$already_handled"; then
         names_already_handled="$names_already_handled $name"
-                        uppername=`echo "$name" | sed -e 'y|abcdefghijklmnopqrstuvwxyz./+-|ABCDEFGHIJKLMNOPQRSTUVWXYZ____|'`
+                        uppername=`echo "$name" | sed -e 'y|abcdefghijklmnopqrstuvwxyz./-|ABCDEFGHIJKLMNOPQRSTUVWXYZ___|'`
         eval value=\"\$HAVE_LIB$uppername\"
         if test -n "$value"; then
           if test "$value" = yes; then
@@ -19984,50 +19894,20 @@ fi
           found_la=
           found_so=
           found_a=
-          eval libname=\"$acl_libname_spec\"    # typically: libname=lib$name
-          if test -n "$acl_shlibext"; then
-            shrext=".$acl_shlibext"             # typically: shrext=.so
-          else
-            shrext=
-          fi
           if test $use_additional = yes; then
-            dir="$additional_libdir"
-                                    if test -n "$acl_shlibext"; then
-              if test -f "$dir/$libname$shrext"; then
-                found_dir="$dir"
-                found_so="$dir/$libname$shrext"
-              else
-                if test "$acl_library_names_spec" = '$libname$shrext$versuffix'; then
-                  ver=`(cd "$dir" && \
-                        for f in "$libname$shrext".*; do echo "$f"; done \
-                        | sed -e "s,^$libname$shrext\\\\.,," \
-                        | sort -t '.' -n -r -k1,1 -k2,2 -k3,3 -k4,4 -k5,5 \
-                        | sed 1q ) 2>/dev/null`
-                  if test -n "$ver" && test -f "$dir/$libname$shrext.$ver"; then
-                    found_dir="$dir"
-                    found_so="$dir/$libname$shrext.$ver"
-                  fi
-                else
-                  eval library_names=\"$acl_library_names_spec\"
-                  for f in $library_names; do
-                    if test -f "$dir/$f"; then
-                      found_dir="$dir"
-                      found_so="$dir/$f"
-                      break
-                    fi
-                  done
+            if test -n "$shlibext" && test -f "$additional_libdir/lib$name.$shlibext"; then
+              found_dir="$additional_libdir"
+              found_so="$additional_libdir/lib$name.$shlibext"
+              if test -f "$additional_libdir/lib$name.la"; then
+                found_la="$additional_libdir/lib$name.la"
+              fi
+            else
+              if test -f "$additional_libdir/lib$name.$libext"; then
+                found_dir="$additional_libdir"
+                found_a="$additional_libdir/lib$name.$libext"
+                if test -f "$additional_libdir/lib$name.la"; then
+                  found_la="$additional_libdir/lib$name.la"
                 fi
-              fi
-            fi
-                        if test "X$found_dir" = "X"; then
-              if test -f "$dir/$libname.$acl_libext"; then
-                found_dir="$dir"
-                found_a="$dir/$libname.$acl_libext"
-              fi
-            fi
-            if test "X$found_dir" != "X"; then
-              if test -f "$dir/$libname.la"; then
-                found_la="$dir/$libname.la"
               fi
             fi
           fi
@@ -20045,42 +19925,19 @@ fi
               case "$x" in
                 -L*)
                   dir=`echo "X$x" | sed -e 's/^X-L//'`
-                                    if test -n "$acl_shlibext"; then
-                    if test -f "$dir/$libname$shrext"; then
+                  if test -n "$shlibext" && test -f "$dir/lib$name.$shlibext"; then
+                    found_dir="$dir"
+                    found_so="$dir/lib$name.$shlibext"
+                    if test -f "$dir/lib$name.la"; then
+                      found_la="$dir/lib$name.la"
+                    fi
+                  else
+                    if test -f "$dir/lib$name.$libext"; then
                       found_dir="$dir"
-                      found_so="$dir/$libname$shrext"
-                    else
-                      if test "$acl_library_names_spec" = '$libname$shrext$versuffix'; then
-                        ver=`(cd "$dir" && \
-                              for f in "$libname$shrext".*; do echo "$f"; done \
-                              | sed -e "s,^$libname$shrext\\\\.,," \
-                              | sort -t '.' -n -r -k1,1 -k2,2 -k3,3 -k4,4 -k5,5 \
-                              | sed 1q ) 2>/dev/null`
-                        if test -n "$ver" && test -f "$dir/$libname$shrext.$ver"; then
-                          found_dir="$dir"
-                          found_so="$dir/$libname$shrext.$ver"
-                        fi
-                      else
-                        eval library_names=\"$acl_library_names_spec\"
-                        for f in $library_names; do
-                          if test -f "$dir/$f"; then
-                            found_dir="$dir"
-                            found_so="$dir/$f"
-                            break
-                          fi
-                        done
+                      found_a="$dir/lib$name.$libext"
+                      if test -f "$dir/lib$name.la"; then
+                        found_la="$dir/lib$name.la"
                       fi
-                    fi
-                  fi
-                                    if test "X$found_dir" = "X"; then
-                    if test -f "$dir/$libname.$acl_libext"; then
-                      found_dir="$dir"
-                      found_a="$dir/$libname.$acl_libext"
-                    fi
-                  fi
-                  if test "X$found_dir" != "X"; then
-                    if test -f "$dir/$libname.la"; then
-                      found_la="$dir/$libname.la"
                     fi
                   fi
                   ;;
@@ -20093,9 +19950,7 @@ fi
           if test "X$found_dir" != "X"; then
                         LTLIBICONV="${LTLIBICONV}${LTLIBICONV:+ }-L$found_dir -l$name"
             if test "X$found_so" != "X"; then
-                                                        if test "$enable_rpath" = no \
-                 || test "X$found_dir" = "X/usr/$acl_libdirstem" \
-                 || test "X$found_dir" = "X/usr/$acl_libdirstem2"; then
+                                                        if test "$enable_rpath" = no || test "X$found_dir" = "X/usr/lib"; then
                                 LIBICONV="${LIBICONV}${LIBICONV:+ }$found_so"
               else
                                                                                 haveit=
@@ -20108,10 +19963,10 @@ fi
                 if test -z "$haveit"; then
                   ltrpathdirs="$ltrpathdirs $found_dir"
                 fi
-                                if test "$acl_hardcode_direct" = yes; then
+                                if test "$hardcode_direct" = yes; then
                                                       LIBICONV="${LIBICONV}${LIBICONV:+ }$found_so"
                 else
-                  if test -n "$acl_hardcode_libdir_flag_spec" && test "$acl_hardcode_minus_L" = no; then
+                  if test -n "$hardcode_libdir_flag_spec" && test "$hardcode_minus_L" = no; then
                                                             LIBICONV="${LIBICONV}${LIBICONV:+ }$found_so"
                                                             haveit=
                     for x in $rpathdirs; do
@@ -20143,7 +19998,7 @@ fi
                     if test -z "$haveit"; then
                       LIBICONV="${LIBICONV}${LIBICONV:+ }-L$found_dir"
                     fi
-                    if test "$acl_hardcode_minus_L" != no; then
+                    if test "$hardcode_minus_L" != no; then
                                                                                         LIBICONV="${LIBICONV}${LIBICONV:+ }$found_so"
                     else
                                                                                                                                                                                 LIBICONV="${LIBICONV}${LIBICONV:+ }-l$name"
@@ -20160,18 +20015,8 @@ fi
             fi
                         additional_includedir=
             case "$found_dir" in
-              */$acl_libdirstem | */$acl_libdirstem/)
-                basedir=`echo "X$found_dir" | sed -e 's,^X,,' -e "s,/$acl_libdirstem/"'*$,,'`
-                if test "$name" = 'iconv'; then
-                  LIBICONV_PREFIX="$basedir"
-                fi
-                additional_includedir="$basedir/include"
-                ;;
-              */$acl_libdirstem2 | */$acl_libdirstem2/)
-                basedir=`echo "X$found_dir" | sed -e 's,^X,,' -e "s,/$acl_libdirstem2/"'*$,,'`
-                if test "$name" = 'iconv'; then
-                  LIBICONV_PREFIX="$basedir"
-                fi
+              */lib | */lib/)
+                basedir=`echo "X$found_dir" | sed -e 's,^X,,' -e 's,/lib/*$,,'`
                 additional_includedir="$basedir/include"
                 ;;
             esac
@@ -20181,7 +20026,7 @@ fi
                 if test "X$additional_includedir" = "X/usr/local/include"; then
                   if test -n "$GCC"; then
                     case $host_os in
-                      linux* | gnu* | k*bsd*-gnu) haveit=yes;;
+                      linux*) haveit=yes;;
                     esac
                   fi
                 fi
@@ -20220,14 +20065,12 @@ fi
                 case "$dep" in
                   -L*)
                     additional_libdir=`echo "X$dep" | sed -e 's/^X-L//'`
-                                                                                                                                                                if test "X$additional_libdir" != "X/usr/$acl_libdirstem" \
-                       && test "X$additional_libdir" != "X/usr/$acl_libdirstem2"; then
+                                                                                                                                                                if test "X$additional_libdir" != "X/usr/lib"; then
                       haveit=
-                      if test "X$additional_libdir" = "X/usr/local/$acl_libdirstem" \
-                         || test "X$additional_libdir" = "X/usr/local/$acl_libdirstem2"; then
+                      if test "X$additional_libdir" = "X/usr/local/lib"; then
                         if test -n "$GCC"; then
                           case $host_os in
-                            linux* | gnu* | k*bsd*-gnu) haveit=yes;;
+                            linux*) haveit=yes;;
                           esac
                         fi
                       fi
@@ -20324,21 +20167,21 @@ fi
     done
   done
   if test "X$rpathdirs" != "X"; then
-    if test -n "$acl_hardcode_libdir_separator"; then
+    if test -n "$hardcode_libdir_separator"; then
                         alldirs=
       for found_dir in $rpathdirs; do
-        alldirs="${alldirs}${alldirs:+$acl_hardcode_libdir_separator}$found_dir"
+        alldirs="${alldirs}${alldirs:+$hardcode_libdir_separator}$found_dir"
       done
             acl_save_libdir="$libdir"
       libdir="$alldirs"
-      eval flag=\"$acl_hardcode_libdir_flag_spec\"
+      eval flag=\"$hardcode_libdir_flag_spec\"
       libdir="$acl_save_libdir"
       LIBICONV="${LIBICONV}${LIBICONV:+ }$flag"
     else
             for found_dir in $rpathdirs; do
         acl_save_libdir="$libdir"
         libdir="$found_dir"
-        eval flag=\"$acl_hardcode_libdir_flag_spec\"
+        eval flag=\"$hardcode_libdir_flag_spec\"
         libdir="$acl_save_libdir"
         LIBICONV="${LIBICONV}${LIBICONV:+ }$flag"
       done
@@ -20349,11 +20192,6 @@ fi
       LTLIBICONV="${LTLIBICONV}${LTLIBICONV:+ }-R$found_dir"
     done
   fi
-
-
-
-
-
 
 
 
@@ -20396,16 +20234,14 @@ else
     am_cv_lib_iconv=no
     cat confdefs.h - <<_ACEOF >conftest.$ac_ext
 /* end confdefs.h.  */
-
 #include <stdlib.h>
 #include <iconv.h>
-
 int
 main ()
 {
 iconv_t cd = iconv_open("","");
-           iconv(cd,NULL,NULL,NULL,NULL);
-           iconv_close(cd);
+       iconv(cd,NULL,NULL,NULL,NULL);
+       iconv_close(cd);
   ;
   return 0;
 }
@@ -20420,16 +20256,14 @@ rm -f core conftest.err conftest.$ac_objext \
       LIBS="$LIBS $LIBICONV"
       cat confdefs.h - <<_ACEOF >conftest.$ac_ext
 /* end confdefs.h.  */
-
 #include <stdlib.h>
 #include <iconv.h>
-
 int
 main ()
 {
 iconv_t cd = iconv_open("","");
-             iconv(cd,NULL,NULL,NULL,NULL);
-             iconv_close(cd);
+         iconv(cd,NULL,NULL,NULL,NULL);
+         iconv_close(cd);
   ;
   return 0;
 }
@@ -20447,157 +20281,6 @@ fi
 { $as_echo "$as_me:${as_lineno-$LINENO}: result: $am_cv_func_iconv" >&5
 $as_echo "$am_cv_func_iconv" >&6; }
   if test "$am_cv_func_iconv" = yes; then
-    { $as_echo "$as_me:${as_lineno-$LINENO}: checking for working iconv" >&5
-$as_echo_n "checking for working iconv... " >&6; }
-if ${am_cv_func_iconv_works+:} false; then :
-  $as_echo_n "(cached) " >&6
-else
-
-                  am_save_LIBS="$LIBS"
-      if test $am_cv_lib_iconv = yes; then
-        LIBS="$LIBS $LIBICONV"
-      fi
-      am_cv_func_iconv_works=no
-      for ac_iconv_const in '' 'const'; do
-        if test "$cross_compiling" = yes; then :
-  case "$host_os" in
-             aix* | hpux*) am_cv_func_iconv_works="guessing no" ;;
-             *)            am_cv_func_iconv_works="guessing yes" ;;
-           esac
-else
-  cat confdefs.h - <<_ACEOF >conftest.$ac_ext
-/* end confdefs.h.  */
-
-#include <iconv.h>
-#include <string.h>
-
-#ifndef ICONV_CONST
-# define ICONV_CONST $ac_iconv_const
-#endif
-
-int
-main ()
-{
-int result = 0;
-  /* Test against AIX 5.1 bug: Failures are not distinguishable from successful
-     returns.  */
-  {
-    iconv_t cd_utf8_to_88591 = iconv_open ("ISO8859-1", "UTF-8");
-    if (cd_utf8_to_88591 != (iconv_t)(-1))
-      {
-        static ICONV_CONST char input[] = "\342\202\254"; /* EURO SIGN */
-        char buf[10];
-        ICONV_CONST char *inptr = input;
-        size_t inbytesleft = strlen (input);
-        char *outptr = buf;
-        size_t outbytesleft = sizeof (buf);
-        size_t res = iconv (cd_utf8_to_88591,
-                            &inptr, &inbytesleft,
-                            &outptr, &outbytesleft);
-        if (res == 0)
-          result |= 1;
-        iconv_close (cd_utf8_to_88591);
-      }
-  }
-  /* Test against Solaris 10 bug: Failures are not distinguishable from
-     successful returns.  */
-  {
-    iconv_t cd_ascii_to_88591 = iconv_open ("ISO8859-1", "646");
-    if (cd_ascii_to_88591 != (iconv_t)(-1))
-      {
-        static ICONV_CONST char input[] = "\263";
-        char buf[10];
-        ICONV_CONST char *inptr = input;
-        size_t inbytesleft = strlen (input);
-        char *outptr = buf;
-        size_t outbytesleft = sizeof (buf);
-        size_t res = iconv (cd_ascii_to_88591,
-                            &inptr, &inbytesleft,
-                            &outptr, &outbytesleft);
-        if (res == 0)
-          result |= 2;
-        iconv_close (cd_ascii_to_88591);
-      }
-  }
-  /* Test against AIX 6.1..7.1 bug: Buffer overrun.  */
-  {
-    iconv_t cd_88591_to_utf8 = iconv_open ("UTF-8", "ISO-8859-1");
-    if (cd_88591_to_utf8 != (iconv_t)(-1))
-      {
-        static ICONV_CONST char input[] = "\304";
-        static char buf[2] = { (char)0xDE, (char)0xAD };
-        ICONV_CONST char *inptr = input;
-        size_t inbytesleft = 1;
-        char *outptr = buf;
-        size_t outbytesleft = 1;
-        size_t res = iconv (cd_88591_to_utf8,
-                            &inptr, &inbytesleft,
-                            &outptr, &outbytesleft);
-        if (res != (size_t)(-1) || outptr - buf > 1 || buf[1] != (char)0xAD)
-          result |= 4;
-        iconv_close (cd_88591_to_utf8);
-      }
-  }
-#if 0 /* This bug could be worked around by the caller.  */
-  /* Test against HP-UX 11.11 bug: Positive return value instead of 0.  */
-  {
-    iconv_t cd_88591_to_utf8 = iconv_open ("utf8", "iso88591");
-    if (cd_88591_to_utf8 != (iconv_t)(-1))
-      {
-        static ICONV_CONST char input[] = "\304rger mit b\366sen B\374bchen ohne Augenma\337";
-        char buf[50];
-        ICONV_CONST char *inptr = input;
-        size_t inbytesleft = strlen (input);
-        char *outptr = buf;
-        size_t outbytesleft = sizeof (buf);
-        size_t res = iconv (cd_88591_to_utf8,
-                            &inptr, &inbytesleft,
-                            &outptr, &outbytesleft);
-        if ((int)res > 0)
-          result |= 8;
-        iconv_close (cd_88591_to_utf8);
-      }
-  }
-#endif
-  /* Test against HP-UX 11.11 bug: No converter from EUC-JP to UTF-8 is
-     provided.  */
-  if (/* Try standardized names.  */
-      iconv_open ("UTF-8", "EUC-JP") == (iconv_t)(-1)
-      /* Try IRIX, OSF/1 names.  */
-      && iconv_open ("UTF-8", "eucJP") == (iconv_t)(-1)
-      /* Try AIX names.  */
-      && iconv_open ("UTF-8", "IBM-eucJP") == (iconv_t)(-1)
-      /* Try HP-UX names.  */
-      && iconv_open ("utf8", "eucJP") == (iconv_t)(-1))
-    result |= 16;
-  return result;
-
-  ;
-  return 0;
-}
-_ACEOF
-if ac_fn_c_try_run "$LINENO"; then :
-  am_cv_func_iconv_works=yes
-fi
-rm -f core *.core core.conftest.* gmon.out bb.out conftest$ac_exeext \
-  conftest.$ac_objext conftest.beam conftest.$ac_ext
-fi
-
-        test "$am_cv_func_iconv_works" = no || break
-      done
-      LIBS="$am_save_LIBS"
-
-fi
-{ $as_echo "$as_me:${as_lineno-$LINENO}: result: $am_cv_func_iconv_works" >&5
-$as_echo "$am_cv_func_iconv_works" >&6; }
-    case "$am_cv_func_iconv_works" in
-      *no) am_func_iconv=no am_cv_lib_iconv=no ;;
-      *)   am_func_iconv=yes ;;
-    esac
-  else
-    am_func_iconv=no am_cv_lib_iconv=no
-  fi
-  if test "$am_func_iconv" = yes; then
 
 $as_echo "#define HAVE_ICONV 1" >>confdefs.h
 
@@ -20631,7 +20314,7 @@ extern
 #ifdef __cplusplus
 "C"
 #endif
-#if defined(__STDC__) || defined(_MSC_VER) || defined(__cplusplus)
+#if defined(__STDC__) || defined(__cplusplus)
 size_t iconv (iconv_t cd, char * *inbuf, size_t *inbytesleft, char * *outbuf, size_t *outbytesleft);
 #else
 size_t iconv();
@@ -20655,15 +20338,14 @@ rm -f core conftest.err conftest.$ac_objext conftest.$ac_ext
 fi
 
     am_cv_proto_iconv=`echo "$am_cv_proto_iconv" | tr -s ' ' | sed -e 's/( /(/'`
-    { $as_echo "$as_me:${as_lineno-$LINENO}: result:
-         $am_cv_proto_iconv" >&5
-$as_echo "
-         $am_cv_proto_iconv" >&6; }
+    { $as_echo "$as_me:${as_lineno-$LINENO}: result: ${ac_t:-
+         }$am_cv_proto_iconv" >&5
+$as_echo "${ac_t:-
+         }$am_cv_proto_iconv" >&6; }
 
 cat >>confdefs.h <<_ACEOF
 #define ICONV_CONST $am_cv_proto_iconv_arg1
 _ACEOF
-
 
   fi
 
@@ -20679,7 +20361,7 @@ else
 int
 main ()
 {
-char* cs = nl_langinfo(CODESET); return !cs;
+char* cs = nl_langinfo(CODESET);
   ;
   return 0;
 }
@@ -20858,6 +20540,19 @@ rm -f core conftest.err conftest.$ac_objext \
 
 # Checks for gettext.
 
+        MKINSTALLDIRS=
+  if test -n "$ac_aux_dir"; then
+    case "$ac_aux_dir" in
+      /*) MKINSTALLDIRS="$ac_aux_dir/mkinstalldirs" ;;
+      *) MKINSTALLDIRS="\$(top_builddir)/$ac_aux_dir/mkinstalldirs" ;;
+    esac
+  fi
+  if test -z "$MKINSTALLDIRS"; then
+    MKINSTALLDIRS="\$(top_srcdir)/mkinstalldirs"
+  fi
+
+
+
   { $as_echo "$as_me:${as_lineno-$LINENO}: checking whether NLS is requested" >&5
 $as_echo_n "checking whether NLS is requested... " >&6; }
     # Check whether --enable-nls was given.
@@ -20873,22 +20568,20 @@ $as_echo "$USE_NLS" >&6; }
 
 
 
-      GETTEXT_MACRO_VERSION=0.19
-
-
 
 
 # Prepare PATH_SEPARATOR.
 # The user is always right.
 if test "${PATH_SEPARATOR+set}" != set; then
-  # Determine PATH_SEPARATOR by trying to find /bin/sh in a PATH which
-  # contains only /bin. Note that ksh looks also at the FPATH variable,
-  # so we have to set that as well for the test.
-  PATH_SEPARATOR=:
-  (PATH='/bin;/bin'; FPATH=$PATH; sh -c :) >/dev/null 2>&1 \
-    && { (PATH='/bin:/bin'; FPATH=$PATH; sh -c :) >/dev/null 2>&1 \
-           || PATH_SEPARATOR=';'
-       }
+  echo "#! /bin/sh" >conf$$.sh
+  echo  "exit 0"   >>conf$$.sh
+  chmod +x conf$$.sh
+  if (PATH="/nonexistent;."; conf$$.sh) >/dev/null 2>&1; then
+    PATH_SEPARATOR=';'
+  else
+    PATH_SEPARATOR=:
+  fi
+  rm -f conf$$.sh
 fi
 
 # Find out how to test for executable files. Don't use a zero-byte file,
@@ -20923,8 +20616,7 @@ else
       test -z "$ac_dir" && ac_dir=.
       for ac_exec_ext in '' $ac_executable_extensions; do
         if $ac_executable_p "$ac_dir/$ac_word$ac_exec_ext"; then
-          echo "$as_me: trying $ac_dir/$ac_word..." >&5
-          if $ac_dir/$ac_word --statistics /dev/null >&5 2>&1 &&
+          if $ac_dir/$ac_word --statistics /dev/null >/dev/null 2>&1 &&
      (if $ac_dir/$ac_word --statistics /dev/null 2>&1 >/dev/null | grep usage >/dev/null; then exit 1; else exit 0; fi); then
             ac_cv_path_MSGFMT="$ac_dir/$ac_word$ac_exec_ext"
             break 2
@@ -20988,29 +20680,19 @@ fi
 
 
 
-    case `$MSGFMT --version | sed 1q | sed -e 's,^[^0-9]*,,'` in
-    '' | 0.[0-9] | 0.[0-9].* | 0.1[0-4] | 0.1[0-4].*) MSGFMT_015=: ;;
-    *) MSGFMT_015=$MSGFMT ;;
-  esac
-
-  case `$GMSGFMT --version | sed 1q | sed -e 's,^[^0-9]*,,'` in
-    '' | 0.[0-9] | 0.[0-9].* | 0.1[0-4] | 0.1[0-4].*) GMSGFMT_015=: ;;
-    *) GMSGFMT_015=$GMSGFMT ;;
-  esac
-
-
 
 # Prepare PATH_SEPARATOR.
 # The user is always right.
 if test "${PATH_SEPARATOR+set}" != set; then
-  # Determine PATH_SEPARATOR by trying to find /bin/sh in a PATH which
-  # contains only /bin. Note that ksh looks also at the FPATH variable,
-  # so we have to set that as well for the test.
-  PATH_SEPARATOR=:
-  (PATH='/bin;/bin'; FPATH=$PATH; sh -c :) >/dev/null 2>&1 \
-    && { (PATH='/bin:/bin'; FPATH=$PATH; sh -c :) >/dev/null 2>&1 \
-           || PATH_SEPARATOR=';'
-       }
+  echo "#! /bin/sh" >conf$$.sh
+  echo  "exit 0"   >>conf$$.sh
+  chmod +x conf$$.sh
+  if (PATH="/nonexistent;."; conf$$.sh) >/dev/null 2>&1; then
+    PATH_SEPARATOR=';'
+  else
+    PATH_SEPARATOR=:
+  fi
+  rm -f conf$$.sh
 fi
 
 # Find out how to test for executable files. Don't use a zero-byte file,
@@ -21045,8 +20727,7 @@ else
       test -z "$ac_dir" && ac_dir=.
       for ac_exec_ext in '' $ac_executable_extensions; do
         if $ac_executable_p "$ac_dir/$ac_word$ac_exec_ext"; then
-          echo "$as_me: trying $ac_dir/$ac_word..." >&5
-          if $ac_dir/$ac_word --omit-header --copyright-holder= --msgid-bugs-address= /dev/null >&5 2>&1 &&
+          if $ac_dir/$ac_word --omit-header --copyright-holder= --msgid-bugs-address= /dev/null >/dev/null 2>&1 &&
      (if $ac_dir/$ac_word --omit-header --copyright-holder= --msgid-bugs-address= /dev/null 2>&1 >/dev/null | grep usage >/dev/null; then exit 1; else exit 0; fi); then
             ac_cv_path_XGETTEXT="$ac_dir/$ac_word$ac_exec_ext"
             break 2
@@ -21070,24 +20751,19 @@ fi
 
     rm -f messages.po
 
-    case `$XGETTEXT --version | sed 1q | sed -e 's,^[^0-9]*,,'` in
-    '' | 0.[0-9] | 0.[0-9].* | 0.1[0-4] | 0.1[0-4].*) XGETTEXT_015=: ;;
-    *) XGETTEXT_015=$XGETTEXT ;;
-  esac
-
-
 
 # Prepare PATH_SEPARATOR.
 # The user is always right.
 if test "${PATH_SEPARATOR+set}" != set; then
-  # Determine PATH_SEPARATOR by trying to find /bin/sh in a PATH which
-  # contains only /bin. Note that ksh looks also at the FPATH variable,
-  # so we have to set that as well for the test.
-  PATH_SEPARATOR=:
-  (PATH='/bin;/bin'; FPATH=$PATH; sh -c :) >/dev/null 2>&1 \
-    && { (PATH='/bin:/bin'; FPATH=$PATH; sh -c :) >/dev/null 2>&1 \
-           || PATH_SEPARATOR=';'
-       }
+  echo "#! /bin/sh" >conf$$.sh
+  echo  "exit 0"   >>conf$$.sh
+  chmod +x conf$$.sh
+  if (PATH="/nonexistent;."; conf$$.sh) >/dev/null 2>&1; then
+    PATH_SEPARATOR=';'
+  else
+    PATH_SEPARATOR=:
+  fi
+  rm -f conf$$.sh
 fi
 
 # Find out how to test for executable files. Don't use a zero-byte file,
@@ -21122,8 +20798,7 @@ else
       test -z "$ac_dir" && ac_dir=.
       for ac_exec_ext in '' $ac_executable_extensions; do
         if $ac_executable_p "$ac_dir/$ac_word$ac_exec_ext"; then
-          echo "$as_me: trying $ac_dir/$ac_word..." >&5
-          if $ac_dir/$ac_word --update -q /dev/null /dev/null >&5 2>&1; then
+          if $ac_dir/$ac_word --update -q /dev/null /dev/null >/dev/null 2>&1; then
             ac_cv_path_MSGMERGE="$ac_dir/$ac_word$ac_exec_ext"
             break 2
           fi
@@ -21145,113 +20820,60 @@ $as_echo "no" >&6; }
 fi
 
 
-        test -n "$localedir" || localedir='${datadir}/locale'
-
-
-    test -n "${XGETTEXT_EXTRA_OPTIONS+set}" || XGETTEXT_EXTRA_OPTIONS=
-
-
-  ac_config_commands="$ac_config_commands po-directories"
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-    { $as_echo "$as_me:${as_lineno-$LINENO}: checking for CFPreferencesCopyAppValue" >&5
-$as_echo_n "checking for CFPreferencesCopyAppValue... " >&6; }
-if ${gt_cv_func_CFPreferencesCopyAppValue+:} false; then :
-  $as_echo_n "(cached) " >&6
-else
-  gt_save_LIBS="$LIBS"
-     LIBS="$LIBS -Wl,-framework -Wl,CoreFoundation"
-     cat confdefs.h - <<_ACEOF >conftest.$ac_ext
-/* end confdefs.h.  */
-#include <CoreFoundation/CFPreferences.h>
-int
-main ()
-{
-CFPreferencesCopyAppValue(NULL, NULL)
-  ;
-  return 0;
-}
-_ACEOF
-if ac_fn_c_try_link "$LINENO"; then :
-  gt_cv_func_CFPreferencesCopyAppValue=yes
-else
-  gt_cv_func_CFPreferencesCopyAppValue=no
-fi
-rm -f core conftest.err conftest.$ac_objext \
-    conftest$ac_exeext conftest.$ac_ext
-     LIBS="$gt_save_LIBS"
-fi
-{ $as_echo "$as_me:${as_lineno-$LINENO}: result: $gt_cv_func_CFPreferencesCopyAppValue" >&5
-$as_echo "$gt_cv_func_CFPreferencesCopyAppValue" >&6; }
-  if test $gt_cv_func_CFPreferencesCopyAppValue = yes; then
-
-$as_echo "#define HAVE_CFPREFERENCESCOPYAPPVALUE 1" >>confdefs.h
-
-  fi
-    { $as_echo "$as_me:${as_lineno-$LINENO}: checking for CFLocaleCopyCurrent" >&5
-$as_echo_n "checking for CFLocaleCopyCurrent... " >&6; }
-if ${gt_cv_func_CFLocaleCopyCurrent+:} false; then :
-  $as_echo_n "(cached) " >&6
-else
-  gt_save_LIBS="$LIBS"
-     LIBS="$LIBS -Wl,-framework -Wl,CoreFoundation"
-     cat confdefs.h - <<_ACEOF >conftest.$ac_ext
-/* end confdefs.h.  */
-#include <CoreFoundation/CFLocale.h>
-int
-main ()
-{
-CFLocaleCopyCurrent();
-  ;
-  return 0;
-}
-_ACEOF
-if ac_fn_c_try_link "$LINENO"; then :
-  gt_cv_func_CFLocaleCopyCurrent=yes
-else
-  gt_cv_func_CFLocaleCopyCurrent=no
-fi
-rm -f core conftest.err conftest.$ac_objext \
-    conftest$ac_exeext conftest.$ac_ext
-     LIBS="$gt_save_LIBS"
-fi
-{ $as_echo "$as_me:${as_lineno-$LINENO}: result: $gt_cv_func_CFLocaleCopyCurrent" >&5
-$as_echo "$gt_cv_func_CFLocaleCopyCurrent" >&6; }
-  if test $gt_cv_func_CFLocaleCopyCurrent = yes; then
-
-$as_echo "#define HAVE_CFLOCALECOPYCURRENT 1" >>confdefs.h
-
-  fi
-  INTL_MACOSX_LIBS=
-  if test $gt_cv_func_CFPreferencesCopyAppValue = yes || test $gt_cv_func_CFLocaleCopyCurrent = yes; then
-    INTL_MACOSX_LIBS="-Wl,-framework -Wl,CoreFoundation"
+      if test "$GMSGFMT" != ":"; then
+            if $GMSGFMT --statistics /dev/null >/dev/null 2>&1 &&
+       (if $GMSGFMT --statistics /dev/null 2>&1 >/dev/null | grep usage >/dev/null; then exit 1; else exit 0; fi); then
+      : ;
+    else
+      GMSGFMT=`echo "$GMSGFMT" | sed -e 's,^.*/,,'`
+      { $as_echo "$as_me:${as_lineno-$LINENO}: result: found $GMSGFMT program is not GNU msgfmt; ignore it" >&5
+$as_echo "found $GMSGFMT program is not GNU msgfmt; ignore it" >&6; }
+      GMSGFMT=":"
+    fi
   fi
 
+      if test "$XGETTEXT" != ":"; then
+            if $XGETTEXT --omit-header --copyright-holder= --msgid-bugs-address= /dev/null >/dev/null 2>&1 &&
+       (if $XGETTEXT --omit-header --copyright-holder= --msgid-bugs-address= /dev/null 2>&1 >/dev/null | grep usage >/dev/null; then exit 1; else exit 0; fi); then
+      : ;
+    else
+      { $as_echo "$as_me:${as_lineno-$LINENO}: result: found xgettext program is not GNU xgettext; ignore it" >&5
+$as_echo "found xgettext program is not GNU xgettext; ignore it" >&6; }
+      XGETTEXT=":"
+    fi
+        rm -f messages.po
+  fi
 
+  ac_config_commands="$ac_config_commands default-1"
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  { $as_echo "$as_me:${as_lineno-$LINENO}: checking whether NLS is requested" >&5
+$as_echo_n "checking whether NLS is requested... " >&6; }
+    # Check whether --enable-nls was given.
+if test "${enable_nls+set}" = set; then :
+  enableval=$enable_nls; USE_NLS=$enableval
+else
+  USE_NLS=yes
+fi
+
+  { $as_echo "$as_me:${as_lineno-$LINENO}: result: $USE_NLS" >&5
+$as_echo "$USE_NLS" >&6; }
 
 
 
@@ -21260,76 +20882,45 @@ $as_echo "#define HAVE_CFLOCALECOPYCURRENT 1" >>confdefs.h
   LTLIBINTL=
   POSUB=
 
-    case " $gt_needs " in
-    *" need-formatstring-macros "*) gt_api_version=3 ;;
-    *" need-ngettext "*) gt_api_version=2 ;;
-    *) gt_api_version=1 ;;
-  esac
-  gt_func_gnugettext_libc="gt_cv_func_gnugettext${gt_api_version}_libc"
-  gt_func_gnugettext_libintl="gt_cv_func_gnugettext${gt_api_version}_libintl"
-
     if test "$USE_NLS" = "yes"; then
     gt_use_preinstalled_gnugettext=no
 
 
-        if test $gt_api_version -ge 3; then
-          gt_revision_test_code='
-#ifndef __GNU_GETTEXT_SUPPORTED_REVISION
-#define __GNU_GETTEXT_SUPPORTED_REVISION(major) ((major) == 0 ? 0 : -1)
-#endif
-typedef int array [2 * (__GNU_GETTEXT_SUPPORTED_REVISION(0) >= 1) - 1];
-'
-        else
-          gt_revision_test_code=
-        fi
-        if test $gt_api_version -ge 2; then
-          gt_expression_test_code=' + * ngettext ("", "", 0)'
-        else
-          gt_expression_test_code=
-        fi
+
+
+
 
         { $as_echo "$as_me:${as_lineno-$LINENO}: checking for GNU gettext in libc" >&5
 $as_echo_n "checking for GNU gettext in libc... " >&6; }
-if eval \${$gt_func_gnugettext_libc+:} false; then :
+if ${gt_cv_func_gnugettext1_libc+:} false; then :
   $as_echo_n "(cached) " >&6
 else
   cat confdefs.h - <<_ACEOF >conftest.$ac_ext
 /* end confdefs.h.  */
-
 #include <libintl.h>
-#ifndef __GNU_GETTEXT_SUPPORTED_REVISION
 extern int _nl_msg_cat_cntr;
 extern int *_nl_domain_bindings;
-#define __GNU_GETTEXT_SYMBOL_EXPRESSION (_nl_msg_cat_cntr + *_nl_domain_bindings)
-#else
-#define __GNU_GETTEXT_SYMBOL_EXPRESSION 0
-#endif
-$gt_revision_test_code
-
 int
 main ()
 {
-
 bindtextdomain ("", "");
-return * gettext ("")$gt_expression_test_code + __GNU_GETTEXT_SYMBOL_EXPRESSION
-
+return (int) gettext ("") + _nl_msg_cat_cntr + *_nl_domain_bindings
   ;
   return 0;
 }
 _ACEOF
 if ac_fn_c_try_link "$LINENO"; then :
-  eval "$gt_func_gnugettext_libc=yes"
+  gt_cv_func_gnugettext1_libc=yes
 else
-  eval "$gt_func_gnugettext_libc=no"
+  gt_cv_func_gnugettext1_libc=no
 fi
 rm -f core conftest.err conftest.$ac_objext \
     conftest$ac_exeext conftest.$ac_ext
 fi
-eval ac_res=\$$gt_func_gnugettext_libc
-	       { $as_echo "$as_me:${as_lineno-$LINENO}: result: $ac_res" >&5
-$as_echo "$ac_res" >&6; }
+{ $as_echo "$as_me:${as_lineno-$LINENO}: result: $gt_cv_func_gnugettext1_libc" >&5
+$as_echo "$gt_cv_func_gnugettext1_libc" >&6; }
 
-        if { eval "gt_val=\$$gt_func_gnugettext_libc"; test "$gt_val" != "yes"; }; then
+        if test "$gt_cv_func_gnugettext1_libc" != "yes"; then
 
 
 
@@ -21370,16 +20961,14 @@ else
     am_cv_lib_iconv=no
     cat confdefs.h - <<_ACEOF >conftest.$ac_ext
 /* end confdefs.h.  */
-
 #include <stdlib.h>
 #include <iconv.h>
-
 int
 main ()
 {
 iconv_t cd = iconv_open("","");
-           iconv(cd,NULL,NULL,NULL,NULL);
-           iconv_close(cd);
+       iconv(cd,NULL,NULL,NULL,NULL);
+       iconv_close(cd);
   ;
   return 0;
 }
@@ -21394,16 +20983,14 @@ rm -f core conftest.err conftest.$ac_objext \
       LIBS="$LIBS $LIBICONV"
       cat confdefs.h - <<_ACEOF >conftest.$ac_ext
 /* end confdefs.h.  */
-
 #include <stdlib.h>
 #include <iconv.h>
-
 int
 main ()
 {
 iconv_t cd = iconv_open("","");
-             iconv(cd,NULL,NULL,NULL,NULL);
-             iconv_close(cd);
+         iconv(cd,NULL,NULL,NULL,NULL);
+         iconv_close(cd);
   ;
   return 0;
 }
@@ -21421,157 +21008,6 @@ fi
 { $as_echo "$as_me:${as_lineno-$LINENO}: result: $am_cv_func_iconv" >&5
 $as_echo "$am_cv_func_iconv" >&6; }
   if test "$am_cv_func_iconv" = yes; then
-    { $as_echo "$as_me:${as_lineno-$LINENO}: checking for working iconv" >&5
-$as_echo_n "checking for working iconv... " >&6; }
-if ${am_cv_func_iconv_works+:} false; then :
-  $as_echo_n "(cached) " >&6
-else
-
-                  am_save_LIBS="$LIBS"
-      if test $am_cv_lib_iconv = yes; then
-        LIBS="$LIBS $LIBICONV"
-      fi
-      am_cv_func_iconv_works=no
-      for ac_iconv_const in '' 'const'; do
-        if test "$cross_compiling" = yes; then :
-  case "$host_os" in
-             aix* | hpux*) am_cv_func_iconv_works="guessing no" ;;
-             *)            am_cv_func_iconv_works="guessing yes" ;;
-           esac
-else
-  cat confdefs.h - <<_ACEOF >conftest.$ac_ext
-/* end confdefs.h.  */
-
-#include <iconv.h>
-#include <string.h>
-
-#ifndef ICONV_CONST
-# define ICONV_CONST $ac_iconv_const
-#endif
-
-int
-main ()
-{
-int result = 0;
-  /* Test against AIX 5.1 bug: Failures are not distinguishable from successful
-     returns.  */
-  {
-    iconv_t cd_utf8_to_88591 = iconv_open ("ISO8859-1", "UTF-8");
-    if (cd_utf8_to_88591 != (iconv_t)(-1))
-      {
-        static ICONV_CONST char input[] = "\342\202\254"; /* EURO SIGN */
-        char buf[10];
-        ICONV_CONST char *inptr = input;
-        size_t inbytesleft = strlen (input);
-        char *outptr = buf;
-        size_t outbytesleft = sizeof (buf);
-        size_t res = iconv (cd_utf8_to_88591,
-                            &inptr, &inbytesleft,
-                            &outptr, &outbytesleft);
-        if (res == 0)
-          result |= 1;
-        iconv_close (cd_utf8_to_88591);
-      }
-  }
-  /* Test against Solaris 10 bug: Failures are not distinguishable from
-     successful returns.  */
-  {
-    iconv_t cd_ascii_to_88591 = iconv_open ("ISO8859-1", "646");
-    if (cd_ascii_to_88591 != (iconv_t)(-1))
-      {
-        static ICONV_CONST char input[] = "\263";
-        char buf[10];
-        ICONV_CONST char *inptr = input;
-        size_t inbytesleft = strlen (input);
-        char *outptr = buf;
-        size_t outbytesleft = sizeof (buf);
-        size_t res = iconv (cd_ascii_to_88591,
-                            &inptr, &inbytesleft,
-                            &outptr, &outbytesleft);
-        if (res == 0)
-          result |= 2;
-        iconv_close (cd_ascii_to_88591);
-      }
-  }
-  /* Test against AIX 6.1..7.1 bug: Buffer overrun.  */
-  {
-    iconv_t cd_88591_to_utf8 = iconv_open ("UTF-8", "ISO-8859-1");
-    if (cd_88591_to_utf8 != (iconv_t)(-1))
-      {
-        static ICONV_CONST char input[] = "\304";
-        static char buf[2] = { (char)0xDE, (char)0xAD };
-        ICONV_CONST char *inptr = input;
-        size_t inbytesleft = 1;
-        char *outptr = buf;
-        size_t outbytesleft = 1;
-        size_t res = iconv (cd_88591_to_utf8,
-                            &inptr, &inbytesleft,
-                            &outptr, &outbytesleft);
-        if (res != (size_t)(-1) || outptr - buf > 1 || buf[1] != (char)0xAD)
-          result |= 4;
-        iconv_close (cd_88591_to_utf8);
-      }
-  }
-#if 0 /* This bug could be worked around by the caller.  */
-  /* Test against HP-UX 11.11 bug: Positive return value instead of 0.  */
-  {
-    iconv_t cd_88591_to_utf8 = iconv_open ("utf8", "iso88591");
-    if (cd_88591_to_utf8 != (iconv_t)(-1))
-      {
-        static ICONV_CONST char input[] = "\304rger mit b\366sen B\374bchen ohne Augenma\337";
-        char buf[50];
-        ICONV_CONST char *inptr = input;
-        size_t inbytesleft = strlen (input);
-        char *outptr = buf;
-        size_t outbytesleft = sizeof (buf);
-        size_t res = iconv (cd_88591_to_utf8,
-                            &inptr, &inbytesleft,
-                            &outptr, &outbytesleft);
-        if ((int)res > 0)
-          result |= 8;
-        iconv_close (cd_88591_to_utf8);
-      }
-  }
-#endif
-  /* Test against HP-UX 11.11 bug: No converter from EUC-JP to UTF-8 is
-     provided.  */
-  if (/* Try standardized names.  */
-      iconv_open ("UTF-8", "EUC-JP") == (iconv_t)(-1)
-      /* Try IRIX, OSF/1 names.  */
-      && iconv_open ("UTF-8", "eucJP") == (iconv_t)(-1)
-      /* Try AIX names.  */
-      && iconv_open ("UTF-8", "IBM-eucJP") == (iconv_t)(-1)
-      /* Try HP-UX names.  */
-      && iconv_open ("utf8", "eucJP") == (iconv_t)(-1))
-    result |= 16;
-  return result;
-
-  ;
-  return 0;
-}
-_ACEOF
-if ac_fn_c_try_run "$LINENO"; then :
-  am_cv_func_iconv_works=yes
-fi
-rm -f core *.core core.conftest.* gmon.out bb.out conftest$ac_exeext \
-  conftest.$ac_objext conftest.beam conftest.$ac_ext
-fi
-
-        test "$am_cv_func_iconv_works" = no || break
-      done
-      LIBS="$am_save_LIBS"
-
-fi
-{ $as_echo "$as_me:${as_lineno-$LINENO}: result: $am_cv_func_iconv_works" >&5
-$as_echo "$am_cv_func_iconv_works" >&6; }
-    case "$am_cv_func_iconv_works" in
-      *no) am_func_iconv=no am_cv_lib_iconv=no ;;
-      *)   am_func_iconv=yes ;;
-    esac
-  else
-    am_func_iconv=no am_cv_lib_iconv=no
-  fi
-  if test "$am_func_iconv" = yes; then
 
 $as_echo "#define HAVE_ICONV 1" >>confdefs.h
 
@@ -21586,11 +21022,6 @@ $as_echo "$LIBICONV" >&6; }
     LIBICONV=
     LTLIBICONV=
   fi
-
-
-
-
-
 
 
 
@@ -21632,11 +21063,7 @@ if test "${with_libintl_prefix+set}" = set; then :
 
       else
         additional_includedir="$withval/include"
-        additional_libdir="$withval/$acl_libdirstem"
-        if test "$acl_libdirstem2" != "$acl_libdirstem" \
-           && ! test -d "$withval/$acl_libdirstem"; then
-          additional_libdir="$withval/$acl_libdirstem2"
-        fi
+        additional_libdir="$withval/lib"
       fi
     fi
 
@@ -21645,8 +21072,6 @@ fi
       LIBINTL=
   LTLIBINTL=
   INCINTL=
-  LIBINTL_PREFIX=
-      HAVE_LIBINTL=
   rpathdirs=
   ltrpathdirs=
   names_already_handled=
@@ -21664,7 +21089,7 @@ fi
       done
       if test -z "$already_handled"; then
         names_already_handled="$names_already_handled $name"
-                        uppername=`echo "$name" | sed -e 'y|abcdefghijklmnopqrstuvwxyz./+-|ABCDEFGHIJKLMNOPQRSTUVWXYZ____|'`
+                        uppername=`echo "$name" | sed -e 'y|abcdefghijklmnopqrstuvwxyz./-|ABCDEFGHIJKLMNOPQRSTUVWXYZ___|'`
         eval value=\"\$HAVE_LIB$uppername\"
         if test -n "$value"; then
           if test "$value" = yes; then
@@ -21680,50 +21105,20 @@ fi
           found_la=
           found_so=
           found_a=
-          eval libname=\"$acl_libname_spec\"    # typically: libname=lib$name
-          if test -n "$acl_shlibext"; then
-            shrext=".$acl_shlibext"             # typically: shrext=.so
-          else
-            shrext=
-          fi
           if test $use_additional = yes; then
-            dir="$additional_libdir"
-                                    if test -n "$acl_shlibext"; then
-              if test -f "$dir/$libname$shrext"; then
-                found_dir="$dir"
-                found_so="$dir/$libname$shrext"
-              else
-                if test "$acl_library_names_spec" = '$libname$shrext$versuffix'; then
-                  ver=`(cd "$dir" && \
-                        for f in "$libname$shrext".*; do echo "$f"; done \
-                        | sed -e "s,^$libname$shrext\\\\.,," \
-                        | sort -t '.' -n -r -k1,1 -k2,2 -k3,3 -k4,4 -k5,5 \
-                        | sed 1q ) 2>/dev/null`
-                  if test -n "$ver" && test -f "$dir/$libname$shrext.$ver"; then
-                    found_dir="$dir"
-                    found_so="$dir/$libname$shrext.$ver"
-                  fi
-                else
-                  eval library_names=\"$acl_library_names_spec\"
-                  for f in $library_names; do
-                    if test -f "$dir/$f"; then
-                      found_dir="$dir"
-                      found_so="$dir/$f"
-                      break
-                    fi
-                  done
+            if test -n "$shlibext" && test -f "$additional_libdir/lib$name.$shlibext"; then
+              found_dir="$additional_libdir"
+              found_so="$additional_libdir/lib$name.$shlibext"
+              if test -f "$additional_libdir/lib$name.la"; then
+                found_la="$additional_libdir/lib$name.la"
+              fi
+            else
+              if test -f "$additional_libdir/lib$name.$libext"; then
+                found_dir="$additional_libdir"
+                found_a="$additional_libdir/lib$name.$libext"
+                if test -f "$additional_libdir/lib$name.la"; then
+                  found_la="$additional_libdir/lib$name.la"
                 fi
-              fi
-            fi
-                        if test "X$found_dir" = "X"; then
-              if test -f "$dir/$libname.$acl_libext"; then
-                found_dir="$dir"
-                found_a="$dir/$libname.$acl_libext"
-              fi
-            fi
-            if test "X$found_dir" != "X"; then
-              if test -f "$dir/$libname.la"; then
-                found_la="$dir/$libname.la"
               fi
             fi
           fi
@@ -21741,42 +21136,19 @@ fi
               case "$x" in
                 -L*)
                   dir=`echo "X$x" | sed -e 's/^X-L//'`
-                                    if test -n "$acl_shlibext"; then
-                    if test -f "$dir/$libname$shrext"; then
+                  if test -n "$shlibext" && test -f "$dir/lib$name.$shlibext"; then
+                    found_dir="$dir"
+                    found_so="$dir/lib$name.$shlibext"
+                    if test -f "$dir/lib$name.la"; then
+                      found_la="$dir/lib$name.la"
+                    fi
+                  else
+                    if test -f "$dir/lib$name.$libext"; then
                       found_dir="$dir"
-                      found_so="$dir/$libname$shrext"
-                    else
-                      if test "$acl_library_names_spec" = '$libname$shrext$versuffix'; then
-                        ver=`(cd "$dir" && \
-                              for f in "$libname$shrext".*; do echo "$f"; done \
-                              | sed -e "s,^$libname$shrext\\\\.,," \
-                              | sort -t '.' -n -r -k1,1 -k2,2 -k3,3 -k4,4 -k5,5 \
-                              | sed 1q ) 2>/dev/null`
-                        if test -n "$ver" && test -f "$dir/$libname$shrext.$ver"; then
-                          found_dir="$dir"
-                          found_so="$dir/$libname$shrext.$ver"
-                        fi
-                      else
-                        eval library_names=\"$acl_library_names_spec\"
-                        for f in $library_names; do
-                          if test -f "$dir/$f"; then
-                            found_dir="$dir"
-                            found_so="$dir/$f"
-                            break
-                          fi
-                        done
+                      found_a="$dir/lib$name.$libext"
+                      if test -f "$dir/lib$name.la"; then
+                        found_la="$dir/lib$name.la"
                       fi
-                    fi
-                  fi
-                                    if test "X$found_dir" = "X"; then
-                    if test -f "$dir/$libname.$acl_libext"; then
-                      found_dir="$dir"
-                      found_a="$dir/$libname.$acl_libext"
-                    fi
-                  fi
-                  if test "X$found_dir" != "X"; then
-                    if test -f "$dir/$libname.la"; then
-                      found_la="$dir/$libname.la"
                     fi
                   fi
                   ;;
@@ -21789,9 +21161,7 @@ fi
           if test "X$found_dir" != "X"; then
                         LTLIBINTL="${LTLIBINTL}${LTLIBINTL:+ }-L$found_dir -l$name"
             if test "X$found_so" != "X"; then
-                                                        if test "$enable_rpath" = no \
-                 || test "X$found_dir" = "X/usr/$acl_libdirstem" \
-                 || test "X$found_dir" = "X/usr/$acl_libdirstem2"; then
+                                                        if test "$enable_rpath" = no || test "X$found_dir" = "X/usr/lib"; then
                                 LIBINTL="${LIBINTL}${LIBINTL:+ }$found_so"
               else
                                                                                 haveit=
@@ -21804,10 +21174,10 @@ fi
                 if test -z "$haveit"; then
                   ltrpathdirs="$ltrpathdirs $found_dir"
                 fi
-                                if test "$acl_hardcode_direct" = yes; then
+                                if test "$hardcode_direct" = yes; then
                                                       LIBINTL="${LIBINTL}${LIBINTL:+ }$found_so"
                 else
-                  if test -n "$acl_hardcode_libdir_flag_spec" && test "$acl_hardcode_minus_L" = no; then
+                  if test -n "$hardcode_libdir_flag_spec" && test "$hardcode_minus_L" = no; then
                                                             LIBINTL="${LIBINTL}${LIBINTL:+ }$found_so"
                                                             haveit=
                     for x in $rpathdirs; do
@@ -21839,7 +21209,7 @@ fi
                     if test -z "$haveit"; then
                       LIBINTL="${LIBINTL}${LIBINTL:+ }-L$found_dir"
                     fi
-                    if test "$acl_hardcode_minus_L" != no; then
+                    if test "$hardcode_minus_L" != no; then
                                                                                         LIBINTL="${LIBINTL}${LIBINTL:+ }$found_so"
                     else
                                                                                                                                                                                 LIBINTL="${LIBINTL}${LIBINTL:+ }-l$name"
@@ -21856,18 +21226,8 @@ fi
             fi
                         additional_includedir=
             case "$found_dir" in
-              */$acl_libdirstem | */$acl_libdirstem/)
-                basedir=`echo "X$found_dir" | sed -e 's,^X,,' -e "s,/$acl_libdirstem/"'*$,,'`
-                if test "$name" = 'intl'; then
-                  LIBINTL_PREFIX="$basedir"
-                fi
-                additional_includedir="$basedir/include"
-                ;;
-              */$acl_libdirstem2 | */$acl_libdirstem2/)
-                basedir=`echo "X$found_dir" | sed -e 's,^X,,' -e "s,/$acl_libdirstem2/"'*$,,'`
-                if test "$name" = 'intl'; then
-                  LIBINTL_PREFIX="$basedir"
-                fi
+              */lib | */lib/)
+                basedir=`echo "X$found_dir" | sed -e 's,^X,,' -e 's,/lib/*$,,'`
                 additional_includedir="$basedir/include"
                 ;;
             esac
@@ -21877,7 +21237,7 @@ fi
                 if test "X$additional_includedir" = "X/usr/local/include"; then
                   if test -n "$GCC"; then
                     case $host_os in
-                      linux* | gnu* | k*bsd*-gnu) haveit=yes;;
+                      linux*) haveit=yes;;
                     esac
                   fi
                 fi
@@ -21916,14 +21276,12 @@ fi
                 case "$dep" in
                   -L*)
                     additional_libdir=`echo "X$dep" | sed -e 's/^X-L//'`
-                                                                                                                                                                if test "X$additional_libdir" != "X/usr/$acl_libdirstem" \
-                       && test "X$additional_libdir" != "X/usr/$acl_libdirstem2"; then
+                                                                                                                                                                if test "X$additional_libdir" != "X/usr/lib"; then
                       haveit=
-                      if test "X$additional_libdir" = "X/usr/local/$acl_libdirstem" \
-                         || test "X$additional_libdir" = "X/usr/local/$acl_libdirstem2"; then
+                      if test "X$additional_libdir" = "X/usr/local/lib"; then
                         if test -n "$GCC"; then
                           case $host_os in
-                            linux* | gnu* | k*bsd*-gnu) haveit=yes;;
+                            linux*) haveit=yes;;
                           esac
                         fi
                       fi
@@ -22020,21 +21378,21 @@ fi
     done
   done
   if test "X$rpathdirs" != "X"; then
-    if test -n "$acl_hardcode_libdir_separator"; then
+    if test -n "$hardcode_libdir_separator"; then
                         alldirs=
       for found_dir in $rpathdirs; do
-        alldirs="${alldirs}${alldirs:+$acl_hardcode_libdir_separator}$found_dir"
+        alldirs="${alldirs}${alldirs:+$hardcode_libdir_separator}$found_dir"
       done
             acl_save_libdir="$libdir"
       libdir="$alldirs"
-      eval flag=\"$acl_hardcode_libdir_flag_spec\"
+      eval flag=\"$hardcode_libdir_flag_spec\"
       libdir="$acl_save_libdir"
       LIBINTL="${LIBINTL}${LIBINTL:+ }$flag"
     else
             for found_dir in $rpathdirs; do
         acl_save_libdir="$libdir"
         libdir="$found_dir"
-        eval flag=\"$acl_hardcode_libdir_flag_spec\"
+        eval flag=\"$hardcode_libdir_flag_spec\"
         libdir="$acl_save_libdir"
         LIBINTL="${LIBINTL}${LIBINTL:+ }$flag"
       done
@@ -22046,14 +21404,9 @@ fi
     done
   fi
 
-
-
-
-
-
           { $as_echo "$as_me:${as_lineno-$LINENO}: checking for GNU gettext in libintl" >&5
 $as_echo_n "checking for GNU gettext in libintl... " >&6; }
-if eval \${$gt_func_gnugettext_libintl+:} false; then :
+if ${gt_cv_func_gnugettext1_libintl+:} false; then :
   $as_echo_n "(cached) " >&6
 else
   gt_save_CPPFLAGS="$CPPFLAGS"
@@ -22062,73 +21415,53 @@ else
             LIBS="$LIBS $LIBINTL"
                         cat confdefs.h - <<_ACEOF >conftest.$ac_ext
 /* end confdefs.h.  */
-
 #include <libintl.h>
-#ifndef __GNU_GETTEXT_SUPPORTED_REVISION
 extern int _nl_msg_cat_cntr;
 extern
 #ifdef __cplusplus
 "C"
 #endif
-const char *_nl_expand_alias (const char *);
-#define __GNU_GETTEXT_SYMBOL_EXPRESSION (_nl_msg_cat_cntr + *_nl_expand_alias (""))
-#else
-#define __GNU_GETTEXT_SYMBOL_EXPRESSION 0
-#endif
-$gt_revision_test_code
-
+const char *_nl_expand_alias ();
 int
 main ()
 {
-
 bindtextdomain ("", "");
-return * gettext ("")$gt_expression_test_code + __GNU_GETTEXT_SYMBOL_EXPRESSION
-
+return (int) gettext ("") + _nl_msg_cat_cntr + *_nl_expand_alias (0)
   ;
   return 0;
 }
 _ACEOF
 if ac_fn_c_try_link "$LINENO"; then :
-  eval "$gt_func_gnugettext_libintl=yes"
+  gt_cv_func_gnugettext1_libintl=yes
 else
-  eval "$gt_func_gnugettext_libintl=no"
+  gt_cv_func_gnugettext1_libintl=no
 fi
 rm -f core conftest.err conftest.$ac_objext \
     conftest$ac_exeext conftest.$ac_ext
-                        if { eval "gt_val=\$$gt_func_gnugettext_libintl"; test "$gt_val" != yes; } && test -n "$LIBICONV"; then
+                        if test "$gt_cv_func_gnugettext1_libintl" != yes && test -n "$LIBICONV"; then
               LIBS="$LIBS $LIBICONV"
               cat confdefs.h - <<_ACEOF >conftest.$ac_ext
 /* end confdefs.h.  */
-
 #include <libintl.h>
-#ifndef __GNU_GETTEXT_SUPPORTED_REVISION
 extern int _nl_msg_cat_cntr;
 extern
 #ifdef __cplusplus
 "C"
 #endif
-const char *_nl_expand_alias (const char *);
-#define __GNU_GETTEXT_SYMBOL_EXPRESSION (_nl_msg_cat_cntr + *_nl_expand_alias (""))
-#else
-#define __GNU_GETTEXT_SYMBOL_EXPRESSION 0
-#endif
-$gt_revision_test_code
-
+const char *_nl_expand_alias ();
 int
 main ()
 {
-
 bindtextdomain ("", "");
-return * gettext ("")$gt_expression_test_code + __GNU_GETTEXT_SYMBOL_EXPRESSION
-
+return (int) gettext ("") + _nl_msg_cat_cntr + *_nl_expand_alias (0)
   ;
   return 0;
 }
 _ACEOF
 if ac_fn_c_try_link "$LINENO"; then :
   LIBINTL="$LIBINTL $LIBICONV"
-                 LTLIBINTL="$LTLIBINTL $LTLIBICONV"
-                 eval "$gt_func_gnugettext_libintl=yes"
+                LTLIBINTL="$LTLIBINTL $LTLIBICONV"
+                gt_cv_func_gnugettext1_libintl=yes
 
 fi
 rm -f core conftest.err conftest.$ac_objext \
@@ -22137,13 +21470,12 @@ rm -f core conftest.err conftest.$ac_objext \
             CPPFLAGS="$gt_save_CPPFLAGS"
             LIBS="$gt_save_LIBS"
 fi
-eval ac_res=\$$gt_func_gnugettext_libintl
-	       { $as_echo "$as_me:${as_lineno-$LINENO}: result: $ac_res" >&5
-$as_echo "$ac_res" >&6; }
+{ $as_echo "$as_me:${as_lineno-$LINENO}: result: $gt_cv_func_gnugettext1_libintl" >&5
+$as_echo "$gt_cv_func_gnugettext1_libintl" >&6; }
         fi
 
-                                        if { eval "gt_val=\$$gt_func_gnugettext_libc"; test "$gt_val" = "yes"; } \
-           || { { eval "gt_val=\$$gt_func_gnugettext_libintl"; test "$gt_val" = "yes"; } \
+                                        if test "$gt_cv_func_gnugettext1_libc" = "yes" \
+           || { test "$gt_cv_func_gnugettext1_libintl" = "yes" \
                 && test "$PACKAGE" != gettext-runtime \
                 && test "$PACKAGE" != gettext-tools; }; then
           gt_use_preinstalled_gnugettext=yes
@@ -22154,14 +21486,6 @@ $as_echo "$ac_res" >&6; }
         fi
 
 
-
-    if test -n "$INTL_MACOSX_LIBS"; then
-      if test "$gt_use_preinstalled_gnugettext" = "yes" \
-         || test "$nls_cv_use_gnu_gettext" = "yes"; then
-                LIBINTL="$LIBINTL $INTL_MACOSX_LIBS"
-        LTLIBINTL="$LTLIBINTL $INTL_MACOSX_LIBS"
-      fi
-    fi
 
     if test "$gt_use_preinstalled_gnugettext" = "yes" \
        || test "$nls_cv_use_gnu_gettext" = "yes"; then
@@ -22181,7 +21505,7 @@ $as_echo "$USE_NLS" >&6; }
     { $as_echo "$as_me:${as_lineno-$LINENO}: checking where the gettext function comes from" >&5
 $as_echo_n "checking where the gettext function comes from... " >&6; }
     if test "$gt_use_preinstalled_gnugettext" = "yes"; then
-      if { eval "gt_val=\$$gt_func_gnugettext_libintl"; test "$gt_val" = "yes"; }; then
+      if test "$gt_cv_func_gnugettext1_libintl" = "yes"; then
         gt_source="external libintl"
       else
         gt_source="libc"
@@ -22196,7 +21520,7 @@ $as_echo "$gt_source" >&6; }
   if test "$USE_NLS" = "yes"; then
 
     if test "$gt_use_preinstalled_gnugettext" = "yes"; then
-      if { eval "gt_val=\$$gt_func_gnugettext_libintl"; test "$gt_val" = "yes"; }; then
+      if test "$gt_cv_func_gnugettext1_libintl" = "yes"; then
         { $as_echo "$as_me:${as_lineno-$LINENO}: checking how to link with libintl" >&5
 $as_echo_n "checking how to link with libintl... " >&6; }
         { $as_echo "$as_me:${as_lineno-$LINENO}: result: $LIBINTL" >&5
@@ -24816,7 +24140,7 @@ fi
 
 # Capture the value of obsolete ALL_LINGUAS because we need it to compute
     # POFILES, UPDATEPOFILES, DUMMYPOFILES, GMOFILES, CATALOGS. But hide it
-    # from automake < 1.5.
+    # from automake.
     eval 'OBSOLETE_ALL_LINGUAS''="$ALL_LINGUAS"'
     # Capture the value of LINGUAS because we need it to compute CATALOGS.
     LINGUAS="${LINGUAS-%UNSET%}"
@@ -24834,7 +24158,7 @@ do
     "tests/atconfig") CONFIG_COMMANDS="$CONFIG_COMMANDS tests/atconfig" ;;
     "depfiles") CONFIG_COMMANDS="$CONFIG_COMMANDS depfiles" ;;
     "libtool") CONFIG_COMMANDS="$CONFIG_COMMANDS libtool" ;;
-    "po-directories") CONFIG_COMMANDS="$CONFIG_COMMANDS po-directories" ;;
+    "default-1") CONFIG_COMMANDS="$CONFIG_COMMANDS default-1" ;;
     "bin/cob-config") CONFIG_FILES="$CONFIG_FILES bin/cob-config" ;;
     "Makefile") CONFIG_FILES="$CONFIG_FILES Makefile" ;;
     "lib/Makefile") CONFIG_FILES="$CONFIG_FILES lib/Makefile" ;;
@@ -26428,7 +25752,7 @@ compiler_lib_search_path=$lt_compiler_lib_search_path_F77
 _LT_EOF
 
  ;;
-    "po-directories":C)
+    "default-1":C)
     for ac_file in $CONFIG_FILES; do
       # Support "outfile[:infile[:infile...]]"
       case "$ac_file" in
@@ -26438,7 +25762,7 @@ _LT_EOF
       case "$ac_file" in */Makefile.in)
         # Adjust a relative srcdir.
         ac_dir=`echo "$ac_file"|sed 's%/[^/][^/]*$%%'`
-        ac_dir_suffix=/`echo "$ac_dir"|sed 's%^\./%%'`
+        ac_dir_suffix="/`echo "$ac_dir"|sed 's%^\./%%'`"
         ac_dots=`echo "$ac_dir_suffix"|sed 's%/[^/]*%../%g'`
         # In autoconf-2.13 it is called $ac_given_srcdir.
         # In autoconf-2.50 it is called $srcdir.
@@ -26448,14 +25772,10 @@ _LT_EOF
           /*) top_srcdir="$ac_given_srcdir" ;;
           *)  top_srcdir="$ac_dots$ac_given_srcdir" ;;
         esac
-        # Treat a directory as a PO directory if and only if it has a
-        # POTFILES.in file. This allows packages to have multiple PO
-        # directories under different names or in different locations.
         if test -f "$ac_given_srcdir/$ac_dir/POTFILES.in"; then
           rm -f "$ac_dir/POTFILES"
           test -n "$as_me" && echo "$as_me: creating $ac_dir/POTFILES" || echo "creating $ac_dir/POTFILES"
-          gt_tab=`printf '\t'`
-          cat "$ac_given_srcdir/$ac_dir/POTFILES.in" | sed -e "/^#/d" -e "/^[ ${gt_tab}]*\$/d" -e "s,.*,     $top_srcdir/& \\\\," | sed -e "\$s/\(.*\) \\\\/\1/" > "$ac_dir/POTFILES"
+          cat "$ac_given_srcdir/$ac_dir/POTFILES.in" | sed -e "/^#/d" -e "/^[ 	]*\$/d" -e "s,.*,     $top_srcdir/& \\\\," | sed -e "\$s/\(.*\) \\\\/\1/" > "$ac_dir/POTFILES"
           POMAKEFILEDEPS="POTFILES.in"
           # ALL_LINGUAS, POFILES, UPDATEPOFILES, DUMMYPOFILES, GMOFILES depend
           # on $ac_dir but don't depend on user-specified configuration
@@ -26465,13 +25785,12 @@ _LT_EOF
             if test -n "$OBSOLETE_ALL_LINGUAS"; then
               test -n "$as_me" && echo "$as_me: setting ALL_LINGUAS in configure.in is obsolete" || echo "setting ALL_LINGUAS in configure.in is obsolete"
             fi
-            ALL_LINGUAS_=`sed -e "/^#/d" -e "s/#.*//" "$ac_given_srcdir/$ac_dir/LINGUAS"`
-            # Hide the ALL_LINGUAS assignment from automake < 1.5.
+            ALL_LINGUAS_=`sed -e "/^#/d" "$ac_given_srcdir/$ac_dir/LINGUAS"`
+            # Hide the ALL_LINGUAS assigment from automake.
             eval 'ALL_LINGUAS''=$ALL_LINGUAS_'
             POMAKEFILEDEPS="$POMAKEFILEDEPS LINGUAS"
           else
             # The set of available languages was given in configure.in.
-            # Hide the ALL_LINGUAS assignment from automake < 1.5.
             eval 'ALL_LINGUAS''=$OBSOLETE_ALL_LINGUAS'
           fi
           # Compute POFILES
