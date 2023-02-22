@@ -314,6 +314,7 @@ public class CobolRelativeFile extends CobolFile {
     long off;
     int relsize;
     int relnum;
+    int record_size;
     final int offset = 0;
     try {
 
@@ -322,8 +323,9 @@ public class CobolRelativeFile extends CobolFile {
         if (this.fp.read(size, offset, size.length) != size.length) {
           return COB_STATUS_10_END_OF_FILE;
         }
-        this.fp.seek(this.fp.getFilePointer() - 4);
-        this.record.setSize(this.fp.readInt());
+        this.fp.seek(this.fp.getFilePointer() - 8);
+        record_size = (int) this.fp.readLong();
+        this.record.setSize(record_size);
 
         if (this.keys[0].getField() != null) {
           if (this.flag_first_read != 0) {
@@ -341,8 +343,6 @@ public class CobolRelativeFile extends CobolFile {
         }
 
         byte[] bytes = new byte[this.record_max];
-        this.fp.seek(this.fp.getFilePointer() - 4);
-        int record_size = this.fp.readInt();
         if (record_size > 0) {
           if (this.fp.read(bytes, offset, this.record_max) != this.record_max) {
             return COB_STATUS_30_PERMANENT_ERROR;
