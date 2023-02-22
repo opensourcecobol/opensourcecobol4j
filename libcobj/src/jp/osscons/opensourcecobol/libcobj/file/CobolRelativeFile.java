@@ -98,7 +98,6 @@ public class CobolRelativeFile extends CobolFile {
         case COB_OPEN_INPUT:
           this.fp = new RandomAccessFile(this.assign.fieldToString(), "r");
           this.fp.seek(0);
-          System.out.print("(input)");
           break;
         case COB_OPEN_OUTPUT:
           Path path = Paths.get(filename);
@@ -107,7 +106,6 @@ public class CobolRelativeFile extends CobolFile {
           }
           this.fp = new RandomAccessFile(this.assign.fieldToString(), "rw");
           this.fp.seek(0);
-          System.out.print("(output)");
           break;
         case COB_OPEN_I_O:
           this.fp = new RandomAccessFile(this.assign.fieldToString(), "rw");
