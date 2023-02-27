@@ -549,8 +549,8 @@ clean:
 	rm -rf jp/
 
 install:
-	mkdir -p $(prefix)/lib/opensourcecobol4j/
-	install libcobj.jar $(prefix)/lib/opensourcecobol4j/
+	mkdir -p $(DESTDIR)$(prefix)/lib/opensourcecobol4j/
+	install libcobj.jar $(DESTDIR)$(prefix)/lib/opensourcecobol4j/
 
 # Tell versions [3.59,3.63) of GNU make to not export all variables.
 # Otherwise a system limit (for SysV at least) may be exceeded.
