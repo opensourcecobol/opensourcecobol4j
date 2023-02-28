@@ -1,5 +1,22 @@
 NEWS - user visible changes				-*- outline -*-
 
+* opensource COBOL 4J 1.0.8
+
+** New Features
+    (1) Implement RELATIVE files
+    (2) Add -edit-code-command
+    (3) Add a sample script that generates Java source files compatible with Spring Batch
+
+** Bug fixes
+    (1) Fix the bug moveFrom method of CobolNumericPackedField
+    (2) Fix bugs found by static analyzers
+    (3) Fix Makefile in libcobj
+
+** Miscellaneous
+    (1) Format all C source code in cobj/ using clang-format
+
+-----------------------------------------------------------------------
+
 * opensource COBOL 4J 1.0.7
 
 ** New Features
