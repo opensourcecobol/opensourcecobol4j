@@ -1,0 +1,94 @@
+AT_SETUP([-edit-code-command])
+
+AT_DATA([prog.cbl], [
+       identification division.
+       program-id. prog.
+       procedure division.
+       display "hello".
+])
+
+AT_DATA([SampleInterface.java], [
+    public interface SampleInterface {
+        public void sampleInterfaceRun();
+    }
+])
+
+AT_DATA([CallSampleInterface.java], [
+    public class CallSampleInterface {
+        public static void main(String@<:@@:>@ args) {
+            SampleInterface s = new prog();
+            s.sampleInterfaceRun();
+        }
+    }
+])
+
+AT_DATA([edit.sh], [
+#!/bin/bash
+
+while getopts c:t-: opt; do
+    optarg="$OPTARG"
+    if @<:@@<:@ "$opt" = - @:>@@:>@; then
+        opt="-${OPTARG%%=*}"
+        optarg="${OPTARG/${OPTARG%%=*}/}"
+        optarg="${optarg#=}"
+
+        if @<:@@<:@ -z "$optarg" @:>@@:>@ && @<:@@<:@ ! "${!OPTIND}" = -* @:>@@:>@; then
+            optarg="${!OPTIND}"
+            shift
+        fi
+    fi
+
+    case "-$opt" in
+        --target)
+	        target="$optarg"
+            ;;
+        --class-name)
+            class_name="$optarg"
+            ;;
+        --)
+            break
+            ;;
+    esac
+done
+shift $((OPTIND - 1))
+
+
+case "$target" in
+    # when `--target=main-class` is specified
+    main-class-annotation)
+        echo "//annotation here"
+	    exit 0
+	    ;;
+    # when `--target=file-header` is specified
+    file-header)
+        echo '//file-header here'
+        exit 0
+        ;;
+    # when `--target=main-class` is specified
+    main-class-implements)
+        echo -n 'SampleInterface'
+        exit 0
+        ;;
+    # when `--target=main-class` is specified
+    main-class-contents)
+        echo '  @Override'
+        echo '  public void sampleInterfaceRun() { System.out.println("COBOL"); }'
+        exit 0
+        ;;
+esac
+
+exit 1
+
+])
+
+AT_CHECK([${COBJ} -edit-code-command="bash edit.sh" prog.cbl], [0])
+AT_CHECK([java prog], [0], [hello
+])
+AT_CHECK([javac CallSampleInterface.java])
+AT_CHECK([java CallSampleInterface], [0], [COBOL
+])
+AT_CHECK([cat prog.java | grep 'annotation here' > /dev/null], [0])
+AT_CHECK([cat prog.java | grep 'file-header here' > /dev/null], [0])
+AT_CHECK([cobj --help | grep 'edit-code-command' > /dev/null], [0])
+
+AT_CLEANUP

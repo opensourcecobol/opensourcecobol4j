@@ -21821,7 +21821,7 @@ printf "%s\n" "#define ICONV_CONST $am_cv_proto_iconv_arg1" >>confdefs.h
 
 
 
-AM_LANGINFO_CODESET
+# AM_LANGINFO_CODESET
 
 # Checks for getopt_long.
 # Cygwin has getopt_long_only prototype in kpathsea/getopt.h

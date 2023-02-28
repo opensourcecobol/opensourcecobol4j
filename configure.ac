@@ -231,7 +231,6 @@ AC_COMPILE_IFELSE([AC_LANG_PROGRAM([[#include <time.h>]], [[timezone = 3600;]])]
 
 # Checks for internationalization stuff
 AM_ICONV
-AM_LANGINFO_CODESET
 
 # Checks for getopt_long.
 # Cygwin has getopt_long_only prototype in kpathsea/getopt.h
