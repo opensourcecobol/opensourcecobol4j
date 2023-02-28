@@ -63,6 +63,8 @@ public abstract class AbstractCobolField {
     this.attribute = attribute;
   }
 
+  public AbstractCobolField() {}
+
   /**
    * メンバ変数dataStorageのgetter
    *
@@ -136,7 +138,19 @@ public abstract class AbstractCobolField {
     return (this.attribute.isFlagSignSeparate() && this.attribute.isFlagSignLeading()) ? 1 : 0;
   }
 
-  public abstract byte[] getBytes();
+  public byte[] getBytes() {
+    CobolFieldAttribute attr =
+        new CobolFieldAttribute(
+            CobolFieldAttribute.COB_TYPE_NUMERIC_BINARY,
+            9,
+            0,
+            CobolFieldAttribute.COB_FLAG_HAVE_SIGN,
+            null);
+    CobolDataStorage n = new CobolDataStorage(new byte[4], 0);
+    AbstractCobolField temp = CobolFieldFactory.makeCobolField(4, n, attr);
+    temp.moveFrom(this);
+    return ByteBuffer.wrap(n.getByteArray(0, 4)).array();
+  }
 
   /**
    * thisの文字列表現をかえす.(toStringだけで十分か?)
@@ -161,6 +175,7 @@ public abstract class AbstractCobolField {
     temp.moveFrom(this);
     return ByteBuffer.wrap(n.getByteArray(0, 4)).getInt();
   }
+
   /**
    * @return
    */
@@ -228,6 +243,7 @@ public abstract class AbstractCobolField {
     ret.setScale(this.getAttribute().getScale());
     return ret;
   }
+
   /**
    * TODO 確認 未使用?
    *
@@ -575,18 +591,21 @@ public abstract class AbstractCobolField {
    * @param field 代入元のデータ(AbstractCobolField型)
    */
   public abstract void moveFrom(AbstractCobolField field);
+
   /**
    * 引数で与えらえられたデータからthisへの代入を行う
    *
    * @param field 代入元のデータ(CobolDataStorage型)
    */
   public abstract void moveFrom(CobolDataStorage dataStrage);
+
   /**
    * 引数で与えらえられたデータからthisへの代入を行う
    *
    * @param field 代入元のデータ(byte[]型)
    */
   public abstract void moveFrom(byte[] bytes);
+
   /**
    * 引数で与えらえられたデータからthisへの代入を行う
    *
@@ -611,6 +630,7 @@ public abstract class AbstractCobolField {
     AbstractCobolField tmp = CobolFieldFactory.makeCobolField(bytes.length, storage, attr);
     this.moveFrom(tmp);
   }
+
   /**
    * 引数で与えらえられたデータからthisへの代入を行う
    *
@@ -638,6 +658,7 @@ public abstract class AbstractCobolField {
     AbstractCobolField tmp = CobolFieldFactory.makeCobolField(length, storage, attr);
     this.moveFrom(tmp);
   }
+
   /**
    * 引数で与えらえられたデータからthisへの代入を行う
    *
@@ -673,6 +694,7 @@ public abstract class AbstractCobolField {
     }
     this.moveFrom(tmp);
   }
+
   /**
    * 引数で与えらえられたデータからthisへの代入を行う
    *
@@ -954,7 +976,7 @@ public abstract class AbstractCobolField {
       case CobolFieldAttribute.COB_TYPE_ALPHANUMERIC_EDITED:
         switch (field.getAttribute().getType()) {
           case CobolFieldAttribute.COB_TYPE_NUMERIC:
-            /*case COB_TYPE_NUMERIC_DISPLAY:*/
+            /* case COB_TYPE_NUMERIC_DISPLAY: */
           case CobolFieldAttribute.COB_TYPE_NUMERIC_BINARY:
           case CobolFieldAttribute.COB_TYPE_NUMERIC_PACKED:
           case CobolFieldAttribute.COB_TYPE_NUMERIC_FLOAT:

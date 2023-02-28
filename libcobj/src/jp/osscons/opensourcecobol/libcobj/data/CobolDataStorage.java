@@ -730,7 +730,7 @@ public class CobolDataStorage {
     this.fromLong(numOfBytes, isBigEndian, x);
   }
 
-  //                                                     n  numofBytes signed  isBigEndian
+  // n numofBytes signed isBigEndian
   public int cmpU8Binary(long n) {
     return compareToBinary(n, 1, false, true);
   }
@@ -827,7 +827,7 @@ public class CobolDataStorage {
     return compareToBinary(n, 8, true, true);
   }
 
-  //                                          n  numofBytes signed  isBigEndian
+  // n numofBytes signed isBigEndian
   public void addU8Binary(long n) {
     addBinary(n, 1, false, true);
   }
@@ -924,7 +924,7 @@ public class CobolDataStorage {
     addBinary(n, 8, true, true);
   }
 
-  //                                          n  numofBytes signed  isBigEndian
+  // n numofBytes signed isBigEndian
   public void subU8Binary(long n) {
     subBinary(n, 1, false, true);
   }
@@ -1021,7 +1021,7 @@ public class CobolDataStorage {
     subBinary(n, 8, true, true);
   }
 
-  //                                                     n  numofBytes signed  isBigEndian
+  // n numofBytes signed isBigEndian
   public int cmpSwpU8Binary(long n) {
     return compareToBinary(n, 1, false, true);
   }
@@ -1118,7 +1118,7 @@ public class CobolDataStorage {
     return compareToBinary(n, 8, true, true);
   }
 
-  //                                          n  numofBytes signed  isBigEndian
+  // n numofBytes signed isBigEndian
   public void addSwpU8Binary(long n) {
     addBinary(n, 1, false, true);
   }
@@ -1215,7 +1215,7 @@ public class CobolDataStorage {
     addBinary(n, 8, true, true);
   }
 
-  //                                          n  numofBytes signed  isBigEndian
+  // n numofBytes signed isBigEndian
   public void subSwpU8Binary(int n) {
     subBinary(n, 1, false, true);
   }

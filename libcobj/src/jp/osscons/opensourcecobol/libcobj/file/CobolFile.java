@@ -1243,7 +1243,6 @@ public class CobolFile {
     if (cob_do_sync != 0 && ret == 0) {
       cob_sync(this, cob_do_sync);
     }
-
     saveStatus(ret, fnstatus);
     return;
   }
