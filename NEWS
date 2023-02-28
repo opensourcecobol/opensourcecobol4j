@@ -4,13 +4,13 @@ NEWS - user visible changes				-*- outline -*-
 
 ** New Features
     (1) Implement RELATIVE files
-    (2) Add -edit-code-command
-    (3) Add a sample script that generates Java source files compatible with Spring Batch
+       (a) Pass all NIST tests on Relative files
+    (2) Implement ${DESTDIR} of libcobj/Makefile
 
 ** Bug fixes
-    (1) Fix the bug moveFrom method of CobolNumericPackedField
-    (2) Fix bugs found by static analyzers
-    (3) Fix Makefile in libcobj
+    (1) Fix move statement for COMP-3
+       (a) Fix moveFrom method of CobolNumericPackedField
+    (2) Fix warnings found by static analyzers
 
 ** Miscellaneous
     (1) Format all C source code in cobj/ using clang-format
