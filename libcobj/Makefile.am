@@ -79,5 +79,5 @@ clean:
 	rm -rf jp/
 
 install:
-	mkdir -p $(prefix)/lib/opensourcecobol4j/
-	install libcobj.jar $(prefix)/lib/opensourcecobol4j/
+	mkdir -p $(DESTDIR)$(prefix)/lib/opensourcecobol4j/
+	install libcobj.jar $(DESTDIR)$(prefix)/lib/opensourcecobol4j/
