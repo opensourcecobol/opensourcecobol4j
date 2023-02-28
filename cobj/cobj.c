@@ -786,6 +786,9 @@ static void cobc_print_usage(void) {
       _("  -assign_external                  Set the file assign to external"));
   puts(_("  -java-package(=<package name>)    Specify the package name of the "
          "generated source code"));
+  puts(_("  -edit-code-command(=<command>)    Specify the command to edit java "
+         "source code. See script/spring_batch_tasklet.sh in opensource COBOL "
+         "4J for details."));
   putchar('\n');
 
 #undef CB_WARNDEF
