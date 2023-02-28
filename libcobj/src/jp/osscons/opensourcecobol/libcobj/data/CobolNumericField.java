@@ -534,7 +534,8 @@ public class CobolNumericField extends AbstractCobolField {
       // return -1;
       // }
 
-      // this.getDataStorage().setByte(p, (byte) (this.getDataStorage().getByte(p) - 0x40));
+      // this.getDataStorage().setByte(p, (byte) (this.getDataStorage().getByte(p) -
+      // 0x40));
       return -1;
     }
   }
@@ -972,7 +973,7 @@ public class CobolNumericField extends AbstractCobolField {
    * @param n
    * @return
    */
-  private int displaySubInt(CobolDataStorage data, int firstDataIndex, int size, long n) {
+  public static int displaySubInt(CobolDataStorage data, int firstDataIndex, int size, long n) {
     int carry = 0;
     int sp = firstDataIndex + size;
     int i;
@@ -1026,10 +1027,12 @@ public class CobolNumericField extends AbstractCobolField {
    *
    * @param field 代入元のデータ(double型)
    */
-  /*@Override
-  public void moveFrom(double number) {
-    this.moveFrom((int) number);
-  }*/
+  /*
+   * @Override
+   * public void moveFrom(double number) {
+   * this.moveFrom((int) number);
+   * }
+   */
 
   /**
    * 引数で与えらえられたデータからthisへの代入を行う

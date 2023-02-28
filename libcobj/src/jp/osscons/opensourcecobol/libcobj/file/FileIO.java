@@ -23,6 +23,7 @@ import java.io.BufferedOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.PrintStream;
+import java.io.RandomAccessFile;
 import java.nio.ByteBuffer;
 import java.nio.channels.Channels;
 import java.nio.channels.ClosedChannelException;
@@ -35,6 +36,7 @@ import jp.osscons.opensourcecobol.libcobj.data.CobolDataStorage;
 public class FileIO {
 
   private FileChannel fc;
+  private RandomAccessFile ra;
   private FileLock fl = null;
   private PrintStream out = System.out;
   private InputStream in = System.in;
@@ -72,6 +74,18 @@ public class FileIO {
     this.fc = fc;
     this.useStdOut = false;
     this.useStdIn = false;
+
+    if (USE_STD_BUFFER) {
+      this.bis = new BufferedInputStream(Channels.newInputStream(this.fc));
+      this.bos = new BufferedOutputStream(Channels.newOutputStream(this.fc));
+    }
+  }
+
+  public void setRandomAccessFile(RandomAccessFile ra, FileLock fl) {
+    this.ra = ra;
+    this.useStdOut = false;
+    this.useStdIn = false;
+    this.fc = ra.getChannel();
 
     if (USE_STD_BUFFER) {
       this.bis = new BufferedInputStream(Channels.newInputStream(this.fc));
@@ -404,10 +418,12 @@ public class FileIO {
 
   public void seekInit() {
     if (!useStdOut && !useStdIn) {
-      /*try {
-      	this.fc.position(this.fc.position() + 0);
-      } catch (IOException e) {
-      }*/
+      /*
+       * try {
+       * this.fc.position(this.fc.position() + 0);
+       * } catch (IOException e) {
+       * }
+       */
     }
   }
 
