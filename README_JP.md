@@ -25,7 +25,7 @@ cobj [COBOL source file]
 java [PROGRAM-ID]
 ```
 
-## The progress of the development
+## 実装状況
 
 下記の実装済みリストにある機能は[NIST COBOL85 test suite](https://www.itl.nist.gov/div897/ctg/cobol_form.htm)でテストされており,**99%** のテストケースをパスしています.
 
@@ -36,14 +36,15 @@ java [PROGRAM-ID]
 * DISPLAY文, ACCEPT文
 * CALLによる呼び出し
 * SEQUENTIALファイルの入出力機能
+* RELATIVEファイルの入出力機能
 * INDEXEDファイルの入出力機能
 * SORT文
 * 組み込み関数 (ACOS, LENGTH, MAX, ...)
 
-実装予定
-
-* RELATIVEファイルの入出力機能
-
 既知の不具合
 
 * 同一ソースコード内の別プログラムのCALLができない.
+
+# コントリビュータ
+
+https://github.com/opensourcecobol/opensourcecobol4j/graphs/contributors を参照してください.
