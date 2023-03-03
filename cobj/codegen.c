@@ -163,9 +163,9 @@ int param_wrap_string_flag = 0;
 static char *get_java_identifier_field(struct cb_field *f);
 static char *get_java_identifier_base(struct cb_field *f);
 static void get_java_identifier_helper(struct cb_field *f, char *buf);
-static void strcpy_identifier_cobol_to_java(char *buf, char *identifier);
+static void strcpy_identifier_cobol_to_java(char *buf, const char *identifier);
 void joutput_execution_list(struct cb_program *prog);
-void joutput_execution_entry_func();
+void joutput_execution_entry_func(void);
 void joutput_init_method(struct cb_program *prog);
 void joutput_declare_member_variables(struct cb_program *prog,
                                       cb_tree parameter_list);
@@ -174,8 +174,8 @@ char *convert_byte_value_format(char value);
 void append_label_id_map(struct cb_label *label);
 void create_label_id_map(struct cb_program *prog);
 int find_label_id(struct cb_label *label);
-void destroy_label_id_map();
-void joutput_edit_code_command(const char *option);
+void destroy_label_id_map(void);
+void joutput_edit_code_command(const char *target);
 
 const int EXECUTION_NORMAL = 0;
 const int EXECUTION_LAST = 1;
@@ -220,7 +220,7 @@ static void get_java_identifier_helper(struct cb_field *f, char *buf) {
   }
 }
 
-static void strcpy_identifier_cobol_to_java(char *buf, char *identifier) {
+static void strcpy_identifier_cobol_to_java(char *buf, const char *identifier) {
   for (; *identifier != '\0'; ++identifier, ++buf) {
     if (*identifier == '-') {
       *buf = '_';
@@ -287,18 +287,6 @@ static struct attr_list *attr_list_reverse(struct attr_list *p) {
 static struct literal_list *literal_list_reverse(struct literal_list *p) {
   struct literal_list *next;
   struct literal_list *last = NULL;
-
-  for (; p; p = next) {
-    next = p->next;
-    p->next = last;
-    last = p;
-  }
-  return last;
-}
-
-static struct local_list *local_list_reverse(struct local_list *p) {
-  struct local_list *next;
-  struct local_list *last = NULL;
 
   for (; p; p = next) {
     next = p->next;
@@ -501,8 +489,6 @@ void joutput_edit_code_command(const char *target) {
   }
 
   pclose(fp);
-
-  return 0;
 }
 
 /*
@@ -516,7 +502,7 @@ static void joutput_base(struct cb_field *f) {
   struct base_list *bl;
   char *nmp;
   char name[COB_SMALL_BUFF];
-  char *base_name;
+  char *base_name = NULL;
 
   f01 = cb_field_founder(f);
 
@@ -571,7 +557,9 @@ static void joutput_base(struct cb_field *f) {
     joutput("%s%s", CB_PREFIX_BASE, name);
   } else {
     joutput(name);
-    free(base_name);
+    if (base_name != NULL) {
+      free(base_name);
+    }
   }
 
   if (cb_field_variable_address(f)) {
@@ -1328,7 +1316,6 @@ static void joutput_param(cb_tree x, int id) {
     }
     if (!r->subs && !r->offset && f->count > 0 && !cb_field_variable_size(f) &&
         !cb_field_variable_address(f)) {
-      int joutput_flag = 0;
       if (!f->flag_field) {
         savetarget = joutput_target;
         joutput_target = NULL;
@@ -2454,7 +2441,7 @@ static void joutput_call(struct cb_call *p) {
   char *system_call = NULL;
   struct system_table *psyst;
   size_t n;
-  size_t parmnum;
+  size_t parmnum = 0;
   size_t retptr;
   int dynamic_link = 1;
   int sizes;
@@ -4027,17 +4014,14 @@ struct call_parameter_list *call_parameter_cache = NULL;
 static void joutput_java_entrypoint(struct cb_program *prog,
                                     cb_tree parameter_list) {
   cb_tree l;
-  struct cb_field *f;
   char arg_field_name[COB_SMALL_BUFF];
 
   joutput_prefix();
   joutput("public CobolResultSet execute (");
 
-  int k;
   for (l = parameter_list; l; l = CB_CHAIN(l)) {
     struct cb_field *arg_field = cb_field(CB_VALUE(l));
     int type = cb_tree_type(CB_TREE(arg_field));
-    char *field_name = get_java_identifier_field(arg_field);
     get_java_identifier_helper(arg_field, arg_field_name);
     if (type & COB_TYPE_NUMERIC) {
       if (arg_field->pic->scale > 0) {
@@ -5381,16 +5365,6 @@ void joutput_declare_member_variables(struct cb_program *prog,
   joutput("\n");
 }
 
-static void joutput_main_function(struct cb_program *prog) {
-  joutput_line("/* Main function */");
-  joutput_line("int");
-  joutput_line("main (int argc, char **argv)");
-  joutput_indent("{");
-  joutput_line("cob_init (argc, argv);");
-  joutput_line("cob_stop_run (%s ());", prog->program_id);
-  joutput_indent("}\n");
-}
-
 /*
  * Class definition
  */
@@ -5672,7 +5646,7 @@ void codegen(struct cb_program *prog, const int nested,
   joutput_target = yyout;
   char java_file_name[64];
   sprintf(java_file_name, "%s.java", prog->program_id);
-  *program_id_list = prog->program_id;
+  *program_id_list = (char *)prog->program_id;
   joutput_target = fopen(java_file_name, "w");
 
   if (!nested) {

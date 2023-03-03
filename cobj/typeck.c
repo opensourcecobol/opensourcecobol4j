@@ -3743,12 +3743,12 @@ void cb_emit_goto(cb_tree target, cb_tree depending) {
   }
 }
 
-void cb_emit_java_continue() {
+void cb_emit_java_continue(void) {
   cb_emit(make_tree(CB_TAG_JAVA_CONTINUE, CB_CATEGORY_UNKNOWN,
                     sizeof(struct cb_tree_common)));
 }
 
-void cb_emit_java_break() {
+void cb_emit_java_break(void) {
 
   cb_emit(make_tree(CB_TAG_JAVA_BREAK, CB_CATEGORY_UNKNOWN,
                     sizeof(struct cb_tree_common)));
