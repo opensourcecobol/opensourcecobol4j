@@ -1472,8 +1472,8 @@ extern void cb_emit_divide(cb_tree dividend, cb_tree divisor, cb_tree quotient,
 extern void cb_emit_evaluate(cb_tree subject_list, cb_tree case_list);
 
 extern void cb_emit_goto(cb_tree target, cb_tree depending);
-extern void cb_emit_java_continue();
-extern void cb_emit_java_break();
+extern void cb_emit_java_continue(void);
+extern void cb_emit_java_break(void);
 extern void cb_emit_exit(size_t goback);
 
 extern void cb_emit_if(cb_tree cond, cb_tree stmt1, cb_tree stmt2);
