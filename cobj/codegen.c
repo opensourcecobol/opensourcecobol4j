@@ -436,6 +436,8 @@ static void joutput_string(const unsigned char *s, int size) {
     c = s[i];
     if (c == '\"' || c == '\\') {
       joutput("\\%c", c);
+    } else if(c == '\n') {
+      joutput("\\n");
     } else {
       joutput("%c", c);
     }
