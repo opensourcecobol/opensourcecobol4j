@@ -428,31 +428,20 @@ static void joutput_string(const unsigned char *s, int size) {
     }
   }
 
-  if (printable) {
-    if (param_wrap_string_flag) {
-      joutput("new CobolDataStorage(");
+  if (param_wrap_string_flag) {
+    joutput("new CobolDataStorage(");
+  }
+  joutput("\"");
+  for (i = 0; i < size; i++) {
+    c = s[i];
+    if (c == '\"' || c == '\\') {
+      joutput("\\%c", c);
+    } else {
+      joutput("%c", c);
     }
-    joutput("\"");
-    for (i = 0; i < size; i++) {
-      c = s[i];
-      if (c == '\"' || c == '\\') {
-        joutput("\\%c", c);
-      } else {
-        joutput("%c", c);
-      }
-    }
-    joutput("\"");
-    if (param_wrap_string_flag) {
-      joutput(")");
-    }
-  } else {
-    joutput("makeCobolDataStorage(");
-    for (i = 0; i < size; i++) {
-      joutput("(byte)0x%02x", s[i]);
-      if (i < size - 1) {
-        joutput(", ");
-      }
-    }
+  }
+  joutput("\"");
+  if (param_wrap_string_flag) {
     joutput(")");
   }
 }
