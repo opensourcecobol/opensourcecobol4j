@@ -733,7 +733,7 @@ public class CobolIntrinsic {
   /** libcob/intrinsicのcob_intr_absの実装 */
   public static AbstractCobolField funcAbs(AbstractCobolField srcfield) {
     makeFieldEntry(srcfield);
-    CobolDecimal d1 = new CobolDecimal();
+    CobolDecimal d1 = srcfield.getDecimal();
     d1.setValue(d1.getValue().abs());
     try {
       d1.getField(currField, 0);

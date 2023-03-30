@@ -20,7 +20,6 @@
 ### ISO+IEC+1989-2002 15 Intrinsic Functions
 
 AT_SETUP([FUNCTION ABS])
-AT_CHECK([${SKIP_TEST}])
 
 AT_DATA([prog.cob], [
        IDENTIFICATION   DIVISION.
