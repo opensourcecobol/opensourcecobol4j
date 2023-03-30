@@ -775,6 +775,8 @@ static void cobc_print_usage(void) {
   puts(_("  --list-reserved                   Display reserved words"));
   puts(
       _("  -assign_external                  Set the file assign to external"));
+  puts(_("  -constant                         Define <name> to <value> for $IF "
+         "statement"));
   puts(_("  -java-package(=<package name>)    Specify the package name of the "
          "generated source code"));
   // puts(_("  -edit-code-command(=<command>)    Specify the command to edit
