@@ -422,9 +422,16 @@ static void joutput_string(const unsigned char *s, int size) {
   int c;
   int printable = 1;
 
-  for (i = 0; i < size; i++) {
-    if (!isprint(s[i])) {
+  for (i = 0; i < size;) {
+    c = s[i];
+    if ((0x00 <= c && c <= 0x1F) || (c == 0x7F) || (c == 0x80) || (0xf0 <= c)) {
       printable = 0;
+      break;
+    } else if (i < size - 1 &&
+               ((0x81 <= c && c <= 0x9f) || (0xE0 <= c && c <= 0xEF))) {
+      i += 2;
+    } else {
+      i += 1;
     }
   }
 
@@ -437,6 +444,8 @@ static void joutput_string(const unsigned char *s, int size) {
       c = s[i];
       if (c == '\"' || c == '\\') {
         joutput("\\%c", c);
+      } else if (c == '\n') {
+        joutput("\\n");
       } else {
         joutput("%c", c);
       }
