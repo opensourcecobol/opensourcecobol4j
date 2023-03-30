@@ -1,5 +1,22 @@
 NEWS - user visible changes				-*- outline -*-
 
+* opensource COBOL 4J 1.0.9
+
+** New Features
+    (1) Implement -constant option and $IF macro
+    (2) Improve the representations of Shift_JIS string literals in generated Java files
+
+** Bug fixes
+    (1) Fix some mathematics functions
+    (2) Fix warnings messages for MOVE statements
+    (3) Fix some broken tests
+
+** Miscellaneous
+    (1) Remove some unused variables in generated Java files
+    (2) Fix some warning messages of make command
+
+-----------------------------------------------------------------------
+
 * opensource COBOL 4J 1.0.8
 
 ** New Features
