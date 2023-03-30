@@ -19,10 +19,9 @@
 ## Boston, MA 02110-1301 USA
 
 AT_SETUP([Source file not found])
-AT_CHECK([${SKIP_TEST}])
 
 AT_CHECK([${COMPILE_ONLY} prog.cob], [1], ,
-[cobc: prog.cob: No such file or directory
+[cobj: prog.cob: No such file or directory
 ])
 
 AT_CLEANUP
