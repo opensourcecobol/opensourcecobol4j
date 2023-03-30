@@ -35,7 +35,6 @@
 # 5) DONE
 
 AT_SETUP([MOVE SPACE TO numeric or numeric-edited item])
-AT_CHECK([${SKIP_TEST}])
 
 AT_DATA([prog.cob], [
        IDENTIFICATION   DIVISION.
@@ -61,7 +60,6 @@ AT_CLEANUP
 # 6) DONE
 
 AT_SETUP([MOVE ZERO TO alphabetic item])
-AT_CHECK([${SKIP_TEST}])
 
 AT_DATA([prog.cob], [
        IDENTIFICATION   DIVISION.
@@ -87,7 +85,6 @@ AT_CLEANUP
 # 8) TODO
 
 AT_SETUP([MOVE alphabetic TO x])
-AT_CHECK([${SKIP_TEST}])
 
 AT_DATA([prog.cob], [
        IDENTIFICATION   DIVISION.
@@ -143,7 +140,6 @@ AT_CHECK([${COMPILE_ONLY} prog.cob], [0])
 AT_CLEANUP
 
 AT_SETUP([MOVE alphanumeric-edited TO x])
-AT_CHECK([${SKIP_TEST}])
 
 AT_DATA([prog.cob], [
        IDENTIFICATION   DIVISION.
@@ -173,7 +169,6 @@ prog.cob:17: Error: Invalid MOVE statement
 AT_CLEANUP
 
 AT_SETUP([MOVE numeric (integer) TO x])
-AT_CHECK([${SKIP_TEST}])
 
 AT_DATA([prog.cob], [
        IDENTIFICATION   DIVISION.
@@ -202,7 +197,6 @@ AT_CHECK([${COMPILE_ONLY} prog.cob], [1], ,
 AT_CLEANUP
 
 AT_SETUP([MOVE numeric (non-integer) TO x])
-AT_CHECK([${SKIP_TEST}])
 
 AT_DATA([prog.cob], [
        IDENTIFICATION   DIVISION.
@@ -233,7 +227,6 @@ prog.cob:15: Error: Invalid MOVE statement
 AT_CLEANUP
 
 AT_SETUP([MOVE numeric-edited TO x])
-AT_CHECK([${SKIP_TEST}])
 
 AT_DATA([prog.cob], [
        IDENTIFICATION   DIVISION.

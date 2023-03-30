@@ -4877,7 +4877,7 @@ invalid:
   if (is_value) {
     cb_error_x(loc, _("Invalid VALUE clause"));
   } else {
-    // cb_error_x (loc, _("Invalid MOVE statement"));
+    cb_error_x(loc, _("Invalid MOVE statement"));
     return 0;
   }
   return -1;
