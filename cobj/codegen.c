@@ -2975,35 +2975,7 @@ static void joutput_perform_call(struct cb_label *lb, struct cb_label *le) {
                  find_label_id(lb), find_label_id(le));
   }
 
-  // if (cb_flag_stack_check) {
-  //	joutput_line ("if (unlikely(frame_ptr == frame_overflow))");
-  //	joutput_line ("    cob_fatal_error (COB_FERROR_STACK);");
-  // }
-#ifndef __GNUC__
-  // l = cobc_malloc (sizeof (struct label_list));
-  // l->next = label_cache;
-  // l->id = cb_id;
-  // if (label_cache == NULL) {
-  //	l->call_num = 0;
-  // } else {
-  //	l->call_num = label_cache->call_num + 1;
-  // }
-  // label_cache = l;
-  // joutput_line ("frame_ptr->return_address = %d;", l->call_num);
-  // joutput_line ("goto %s%d;", CB_PREFIX_LABEL, lb->id);
-  // joutput_line ("%s%d:", CB_PREFIX_LABEL, cb_id);
-#elif COB_USE_SETJMP
-  // joutput_line ("if (setjmp (frame_ptr->return_address) == 0)");
-  // joutput_line ("  goto %s%d;", CB_PREFIX_LABEL, lb->id);
-#else
-  // joutput_line ("frame_ptr->return_address = &&%s%d;",
-  //	     CB_PREFIX_LABEL, cb_id);
-  // joutput_line ("goto %s%d;", CB_PREFIX_LABEL, lb->id);
-  // joutput_line ("%s%d:", CB_PREFIX_LABEL, cb_id);
-#endif
   cb_id++;
-  // joutput_line ("frame_ptr--;");
-  // joutput_line ("throw new CobolRuntimeException(0, \"\");");
 }
 
 static void joutput_perform_once(struct cb_perform *p) {
@@ -3141,64 +3113,8 @@ static void joutput_sort_proc(struct cb_sort_proc *p) {
     joutput_line("CobolControl.performThrough(contList, %d, %d).run();",
                  find_label_id(lb), find_label_id(le));
   }
-  // joutput_line ("this.frameIndex++;");
 
-  // if (cb_flag_stack_check) {
-  //	joutput_line ("if (unlikely(frame_ptr == frame_overflow))");
-  //	joutput_line ("    cob_fatal_error (COB_FERROR_STACK);");
-  // }
-  // joutput_line ("this.frameStack[this.frameIndex].setPerformThrough(%d);",
-  // le->id); joutput_line ("frame_ptr++;"); joutput_line ("memset (frame_ptr,
-  // 0, sizeof (struct cob_frame));"); if (cb_flag_stack_check) {
-  // joutput_line
-  //("if (unlikely(frame_ptr == frame_overflow))"); 	joutput_line ("
-  // cob_fatal_error (COB_FERROR_STACK);");
-  // }
-  // joutput_line ("frame_ptr->perform_through = %d;", le->id);
-  // joutput_prefix ();
-  // joutput ("frame_ptr->current_sort_merge_file = ");
-  // joutput_param (p->sort_file, 0);
-  // joutput (";\n");
-#ifndef __GNUC__
-  // l = cobc_malloc (sizeof (struct label_list));
-  // l->next = label_cache;
-  // l->id = cb_id;
-  // if (label_cache == NULL) {
-  //	l->call_num = 0;
-  // } else {
-  //	l->call_num = label_cache->call_num + 1;
-  // }
-  // label_cache = l;
-  // joutput_line ("frame_ptr->return_address = %d;", l->call_num);
-  // joutput_prefix ();
-  // joutput ("if (unlikely(*(int*)(");
-  // joutput_param (p->sort_return, 0);
-  // joutput (") != 0))\n");
-  // joutput_prefix ();
-  // joutput_line ("goto %s%d;", CB_PREFIX_LABEL, cb_id);
-  // joutput_line ("goto %s%d;", CB_PREFIX_LABEL, lb->id);
-  // joutput_line ("%s%d:", CB_PREFIX_LABEL, cb_id);
-#elif COB_USE_SETJMP
-  // joutput_line ("if (setjmp (frame_ptr->return_address) == 0)");
-  // joutput_line ("  goto %s%d;", CB_PREFIX_LABEL, lb->id);
-#else
-  // joutput_line ("frame_ptr->return_address = &&%s%d;",
-  //	     CB_PREFIX_LABEL, cb_id);
-  // joutput_prefix ();
-  // joutput ("if (unlikely(*(int*)(");
-  // joutput_param (p->sort_return, 0);
-  // joutput (") != 0))\n");
-  // joutput_prefix ();
-  // joutput_line ("goto %s%d;", CB_PREFIX_LABEL, cb_id);
-  // joutput_line ("goto %s%d;", CB_PREFIX_LABEL, lb->id);
-  // joutput_line ("%s%d:", CB_PREFIX_LABEL, cb_id);
-#endif
-  // joutput_line ("/* perform call */");
-  // joutput_line("entryFunc(%d, %d);", lb->id, le->id);
-  // cb_id++;
-  // joutput_line ("frame_ptr--;");
   cb_id++;
-  // joutput_line ("this.frameIndex--;");
 }
 
 static void joutput_file_return(struct cb_return *p) {
@@ -4346,38 +4262,6 @@ static void joutput_internal_function(struct cb_program *prog,
   joutput_line("	this.initialized = false;");
   joutput_line("	return 0;");
   joutput_line("}");
-  // output_newline ();
-  // if (cb_sticky_linkage && parmnum) {
-  //	output_line ("if (cob_call_params < %d) {", parmnum);
-  //	output_line ("  switch (cob_call_params) {");
-  //	for (i = 0, l = parameter_list; l; l = CB_CHAIN (l), i++) {
-  //		output_line ("  case %d:", i);
-  //		output_line ("   if (cob_parm_%d != NULL)", i);
-  //		output_line ("       %s%d = cob_parm_%d;",
-  //			     CB_PREFIX_BASE, cb_field (CB_VALUE (l))->id, i);
-  //	}
-  //	output_line ("  }");
-  //	output_line ("}");
-  //	for (i = 0, l = parameter_list; l; l = CB_CHAIN (l), i++) {
-  //		output_line ("if (%s%d != NULL)",
-  //			     CB_PREFIX_BASE, cb_field (CB_VALUE (l))->id);
-  //		output_line ("  cob_parm_%d = %s%d;", i,
-  //			     CB_PREFIX_BASE, cb_field (CB_VALUE (l))->id);
-  //	}
-  //	output_newline ();
-  // }
-
-  // joutput_line("/* Initialize frame stack */");
-  // joutput_line("this.frameIndex = 0;");
-  // joutput_line("this.frameStack = new CobolFrame[255];");
-  // joutput_line("for(int i=0; i<frameStack.length; ++i){");
-  // joutput_line("  frameStack[i] = new CobolFrame();");
-  // joutput_line("}");
-  // joutput_line("this.frame = frameStack[0];");
-  // joutput_line("frameStack[0].setPerformThrough(0);");
-  // if (cb_flag_stack_check) {
-  //	output_line ("frame_overflow = &frame_stack[COB_STACK_SIZE - 1];");
-  // }
   joutput_newline();
 
   joutput_line("/* Push module stack */");
@@ -5740,10 +5624,8 @@ void codegen(struct cb_program *prog, const int nested,
 
   joutput_line("private boolean initialized = false;");
   joutput_line("private CobolModule cobolCurrentModule;");
-  joutput_line("private int frameIndex;");
   joutput_line("private CobolModule module;");
   joutput_line("private CobolFrame frame;");
-  // joutput_line("private CobolFrame[] frameStack;");
   joutput_line("private static boolean cobolInitialized = false;");
   joutput_line("private CobolCallParams cobolSaveCallParams = null;");
   joutput_line("private CobolCallParams cobolCallParams = null;");
