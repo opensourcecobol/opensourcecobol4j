@@ -149,15 +149,15 @@ public class CobolNumericDoubleField extends AbstractCobolField {
     CobolFieldAttribute attr =
         new CobolFieldAttribute(
             CobolFieldAttribute.COB_TYPE_NUMERIC_DISPLAY,
-            24,
-            12,
+            40,
+            20,
             CobolFieldAttribute.COB_FLAG_HAVE_SIGN,
             null);
-    CobolDataStorage storage = new CobolDataStorage(24);
+    CobolDataStorage storage = new CobolDataStorage(40);
     double dval = Math.abs(this.getBinaryValue());
-    String dataString = String.format("%024.12f", dval).replace(".", "");
-    storage.memcpy(dataString, 24);
-    AbstractCobolField field = CobolFieldFactory.makeCobolField(24, storage, attr);
+    String dataString = String.format("%041.20f", dval).replace(".", "");
+    storage.memcpy(dataString, 40);
+    AbstractCobolField field = CobolFieldFactory.makeCobolField(40, storage, attr);
     if (this.getSign() >= 0) {
       field.putSign(1);
     } else {

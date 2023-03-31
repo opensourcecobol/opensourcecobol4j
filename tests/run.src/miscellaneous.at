@@ -19,10 +19,9 @@
 ## Boston, MA 02110-1301 USA
 
 AT_SETUP([Source file not found])
-AT_CHECK([${SKIP_TEST}])
 
 AT_CHECK([${COMPILE_ONLY} prog.cob], [1], ,
-[cobc: prog.cob: No such file or directory
+[cobj: prog.cob: No such file or directory
 ])
 
 AT_CLEANUP
@@ -1045,7 +1044,6 @@ AT_CLEANUP
 ## (= the same as in MF-LRM  "EXIT"  FORMAT 2 ... )
 
 AT_SETUP([EXIT PERFORM CYCLE])
-AT_CHECK([${SKIP_TEST}])
 
 AT_DATA([prog.cob], [
        IDENTIFICATION   DIVISION.

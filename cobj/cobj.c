@@ -163,7 +163,7 @@ int cb_saveargc;
 char **cb_saveargv;
 
 const char *cob_config_dir;
-extern char *cb_java_package_name = NULL;
+char *cb_java_package_name = NULL;
 
 char edit_code_command[512];
 char edit_code_command_is_set = 0;
@@ -234,15 +234,6 @@ static char *output_name;
 static const char *cob_tmpdir; /* /tmp */
 
 static struct filename *file_list;
-
-/* NOTE fcopts MUST have at least one leading space */
-#if defined(__GNUC__) && (__GNUC__ >= 3)
-static const char fcopts[] = " -finline-functions -fno-gcse -freorder-blocks ";
-#elif defined(__xlc__)
-static const char fcopts[] = " -Q -qro -qroconst ";
-#else
-static const char fcopts[] = " ";
-#endif
 
 #if defined(__GNUC__) && (__GNUC__ >= 3)
 static const char gccpipe[] = "-pipe";
@@ -756,7 +747,7 @@ static void cobc_print_version(void) {
 #endif /*I18N_UTF8*/
   puts("----");
   printf("cobj (%s) %s\n", PACKAGE_NAME, PACKAGE_VERSION);
-  puts("Copyright (C) 2021-2022 TOKYO SYSTEM HOUSE CO.,LTD.");
+  puts("Copyright (C) 2021-2023 TOKYO SYSTEM HOUSE CO.,LTD.");
   printf("Built    %s\n", cb_oc_build_stamp);
 }
 
@@ -784,6 +775,8 @@ static void cobc_print_usage(void) {
   puts(_("  --list-reserved                   Display reserved words"));
   puts(
       _("  -assign_external                  Set the file assign to external"));
+  puts(_("  -constant                         Define <name> to <value> for $IF "
+         "statement"));
   puts(_("  -java-package(=<package name>)    Specify the package name of the "
          "generated source code"));
   // puts(_("  -edit-code-command(=<command>)    Specify the command to edit
@@ -1526,25 +1519,12 @@ static int preprocess(struct filename *fn) {
   return 0;
 }
 
-static struct cb_program *program_list_reverse(struct cb_program *p) {
-  struct cb_program *next;
-  struct cb_program *last = NULL;
-
-  for (; p; p = next) {
-    next = p->next_program;
-    p->next_program = last;
-    last = p;
-  }
-  return last;
-}
-
 static int process_translate(struct filename *fn) {
   struct cb_program *p;
   struct cb_program *q;
   struct cb_program *r;
   struct handler_struct *hstr1;
   struct handler_struct *hstr2;
-  struct local_filename *lf;
   int ret;
   int i;
 
@@ -1643,30 +1623,6 @@ static int process_compile(struct filename *fn) {
   return ret;
 }
 
-/* Create single-element assembled object */
-
-static int process_assemble(struct filename *fn) {
-  char buff[COB_MEDIUM_BUFF];
-
-#ifdef _MSC_VER
-  sprintf(buff,
-          gflag_set ? "%s /c %s %s /Od /MDd /Zi /FR /Fo\"%s\" \"%s\""
-                    : "%s /c %s %s /MD /Fo\"%s\" \"%s\"",
-          cob_cc, cob_java_flags, cob_define_flags, fn->object, fn->translate);
-#else
-  if (cb_compile_level == CB_LEVEL_MODULE ||
-      cb_compile_level == CB_LEVEL_LIBRARY) {
-    sprintf(buff, "%s %s -c %s %s %s -o \"%s\" \"%s\"", cob_cc, gccpipe,
-            cob_java_flags, cob_define_flags, COB_PIC_FLAGS, fn->object,
-            fn->translate);
-  } else {
-    sprintf(buff, "%s %s -c %s %s -o \"%s\" \"%s\"", cob_cc, gccpipe,
-            cob_java_flags, cob_define_flags, fn->object, fn->translate);
-  }
-#endif
-  return process(buff);
-}
-
 static int process_build_module(struct filename *fn) {
   int ret;
   char buff[COB_MEDIUM_BUFF];
@@ -1707,66 +1663,6 @@ static int process_build_module(struct filename *fn) {
       return ret;
     }
   }
-  return ret;
-}
-
-/* Create single-element loadable object */
-
-static int process_module(struct filename *fn) {
-  int ret;
-  char buff[COB_MEDIUM_BUFF];
-  char name[COB_MEDIUM_BUFF];
-
-  if (output_name) {
-    strcpy(name, output_name);
-#if defined(_MSC_VER)
-    file_stripext(name);
-#else
-    if (strchr(output_name, '.') == NULL) {
-      strcat(name, ".");
-      strcat(name, COB_MODULE_EXT);
-    }
-#endif
-  } else {
-    file_basename(fn->source, name);
-#if !defined(_MSC_VER)
-    strcat(name, ".");
-    strcat(name, COB_MODULE_EXT);
-#endif
-  }
-#ifdef _MSC_VER
-  sprintf(buff,
-          gflag_set ? "%s /Od /MDd /LDd /Zi /FR /Fe\"%s\" %s \"%s\" %s"
-                    : "%s /MD /LD /Fe\"%s\" %s \"%s\" %s",
-          cob_cc, name, cob_ldflags, fn->object, cob_libs);
-  ret = process(buff);
-#if _MSC_VER >= 1400
-  /* Embedding manifest */
-  if (ret == 0) {
-    sprintf(buff,
-            "%s /manifest \"%s.dll.manifest\" /outputresource:\"%s.dll\";#2",
-            manicmd, name, name);
-    ret = process(buff);
-    sprintf(buff, "%s.dll.manifest", name);
-    cobc_check_action(buff);
-  }
-#endif
-  sprintf(buff, "%s.exp", name);
-  cobc_check_action(buff);
-  sprintf(buff, "%s.lib", name);
-  cobc_check_action(buff);
-#else /* _MSC_VER */
-  sprintf(buff, "%s %s %s %s %s %s -o %s %s %s", cob_cc, gccpipe,
-          COB_SHARED_OPT, cob_ldflags, COB_PIC_FLAGS, COB_EXPORT_DYN, name,
-          fn->object, cob_libs);
-  ret = process(buff);
-#ifdef COB_STRIP_CMD
-  if (strip_output && ret == 0) {
-    sprintf(buff, "%s %s", COB_STRIP_CMD, name);
-    ret = process(buff);
-  }
-#endif
-#endif /* _MSC_VER */
   return ret;
 }
 

@@ -1,5 +1,4 @@
 AT_SETUP([dollarif defined - true])
-AT_CHECK([${SKIP_TEST}])
 
 AT_DATA([prog.cob], [
        IDENTIFICATION   DIVISION.
@@ -11,14 +10,13 @@ AT_DATA([prog.cob], [
            STOP RUN.
 ])
 
-AT_CHECK([${COMPILE_MODULE} --constant=SW1 -o prog prog.cob])
-AT_CHECK([${COBCRUN} prog], [0], [SW1 DEFINED
+AT_CHECK([${COMPILE} --constant=SW1 prog.cob])
+AT_CHECK([${RUN_MODULE} prog], [0], [SW1 DEFINED
 ])
 
 AT_CLEANUP
 
 AT_SETUP([dollarif defined - false])
-AT_CHECK([${SKIP_TEST}])
 
 AT_DATA([prog.cob], [
        IDENTIFICATION   DIVISION.
@@ -32,14 +30,13 @@ AT_DATA([prog.cob], [
            STOP RUN.
 ])
 
-AT_CHECK([${COMPILE_MODULE} --constant=SW2 -o prog prog.cob])
-AT_CHECK([${COBCRUN} prog], [0], [SW2 DEFINED
+AT_CHECK([${COMPILE} --constant=SW2 prog.cob])
+AT_CHECK([${RUN_MODULE} prog], [0], [SW2 DEFINED
 ])
 
 AT_CLEANUP
 
 AT_SETUP([dollarif value match - true])
-AT_CHECK([${SKIP_TEST}])
 
 AT_DATA([prog.cob], [
        IDENTIFICATION   DIVISION.
@@ -53,14 +50,14 @@ AT_DATA([prog.cob], [
            STOP RUN.
 ])
 
-AT_CHECK([${COMPILE_MODULE} --constant=SW3\"1\" -o prog prog.cob])
-AT_CHECK([${COBCRUN} prog], [0], [SW3 = 1
+AT_CHECK([${COMPILE} --constant=SW3\"1\" prog.cob])
+AT_CHECK([java prog], [0], [SW3 = 1
 ])
+
 
 AT_CLEANUP
 
 AT_SETUP([dollarif value match - false])
-AT_CHECK([${SKIP_TEST}])
 
 AT_DATA([prog.cob], [
        IDENTIFICATION   DIVISION.
@@ -74,14 +71,13 @@ AT_DATA([prog.cob], [
            STOP RUN.
 ])
 
-AT_CHECK([${COMPILE_MODULE} --constant=SW3\"2\" -o prog prog.cob])
-AT_CHECK([${COBCRUN} prog], [0], [SW3 != 1
+AT_CHECK([${COMPILE} --constant=SW3\"2\" prog.cob])
+AT_CHECK([java prog], [0], [SW3 != 1
 ])
 
 AT_CLEANUP
 
 AT_SETUP([dollarif value match - not true])
-AT_CHECK([${SKIP_TEST}])
 
 AT_DATA([prog.cob], [
        IDENTIFICATION   DIVISION.
@@ -95,14 +91,13 @@ AT_DATA([prog.cob], [
            STOP RUN.
 ])
 
-AT_CHECK([${COMPILE_MODULE} --constant=SW4\"2\" -o prog prog.cob])
-AT_CHECK([${COBCRUN} prog], [0], [SW4 != 1
+AT_CHECK([${COMPILE} --constant=SW4\"2\" prog.cob])
+AT_CHECK([java prog], [0], [SW4 != 1
 ])
 
 AT_CLEANUP
 
 AT_SETUP([dollarif value match - not false])
-AT_CHECK([${SKIP_TEST}])
 
 AT_DATA([prog.cob], [
        IDENTIFICATION   DIVISION.
@@ -116,14 +111,13 @@ AT_DATA([prog.cob], [
            STOP RUN.
 ])
 
-AT_CHECK([${COMPILE_MODULE} --constant=SW4\"1\" -o prog prog.cob])
-AT_CHECK([${COBCRUN} prog], [0], [SW4 = 1
+AT_CHECK([${COMPILE} --constant=SW4\"1\" prog.cob])
+AT_CHECK([java prog], [0], [SW4 = 1
 ])
 
 AT_CLEANUP
 
 AT_SETUP([column 7 is undefined value])
-AT_CHECK([${SKIP_TEST}])
 
 AT_DATA([prog.cob], [
        IDENTIFICATION   DIVISION.
@@ -135,7 +129,7 @@ AT_DATA([prog.cob], [
            STOP RUN.
 ])
 
-AT_CHECK([cobc -m prog.cob], [1], [], 
+AT_CHECK([${COMPILE} prog.cob], [1], [], 
 [prog.cob:4: Error: Invalid indicator '1' at column 7
 ])
 
