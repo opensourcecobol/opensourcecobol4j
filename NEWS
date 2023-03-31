@@ -4,11 +4,11 @@ NEWS - user visible changes				-*- outline -*-
 
 ** New Features
     (1) Implement -constant option and $IF macro
-    (2) Improve the representations of Shift_JIS string literals in generated Java files
+    (2) Improve the readability of Shift_JIS string literals in generated Java files
 
 ** Bug fixes
-    (1) Fix some mathematics functions
-    (2) Fix warnings messages for MOVE statements
+    (1) Fix some mathematical functions
+    (2) Fix error messages for invalid MOVE statements
     (3) Fix some broken tests
 
 ** Miscellaneous
