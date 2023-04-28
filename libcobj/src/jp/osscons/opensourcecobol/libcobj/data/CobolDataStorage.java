@@ -18,6 +18,7 @@
  */
 package jp.osscons.opensourcecobol.libcobj.data;
 
+import java.io.UnsupportedEncodingException;
 import java.nio.ByteBuffer;
 import java.nio.ByteOrder;
 import jp.osscons.opensourcecobol.libcobj.common.CobolModule;
@@ -180,7 +181,11 @@ public class CobolDataStorage {
    * @param size
    */
   public void memcpy(String str, int size) {
-    this.memcpy(str.getBytes(), size);
+    try {
+      this.memcpy(str.getBytes("SJIS"), size);
+    } catch (UnsupportedEncodingException e) {
+      this.memcpy(str.getBytes(), size);
+    }
   }
 
   /**

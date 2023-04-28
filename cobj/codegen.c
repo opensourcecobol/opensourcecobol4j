@@ -420,18 +420,18 @@ static void joutput_indent(const char *str) {
 static void joutput_string(const unsigned char *s, int size) {
   int i;
   int c;
+  int output_multibyte = 0;
   int printable = 1;
 
   for (i = 0; i < size;) {
     c = s[i];
-    if ((0x00 <= c && c <= 0x1F) || (c == 0x7F) || (c == 0x80) || (0xf0 <= c)) {
-      printable = 0;
-      break;
-    } else if (i < size - 1 &&
-               ((0x81 <= c && c <= 0x9f) || (0xE0 <= c && c <= 0xEF))) {
+    if (0x20 <= c && c <= 0x7e) {
+      i += 1;
+    } else if ((0x81 <= c && c <= 0x9f) || (0xe0 <= c && c <= 0xef)) {
       i += 2;
     } else {
-      i += 1;
+      printable = 0;
+      break;
     }
   }
 
@@ -439,29 +439,37 @@ static void joutput_string(const unsigned char *s, int size) {
     if (param_wrap_string_flag) {
       joutput("new CobolDataStorage(");
     }
+
     joutput("\"");
+
     for (i = 0; i < size; i++) {
       c = s[i];
-      if (c == '\"' || c == '\\') {
+      if (!output_multibyte && (c == '\"' || c == '\\')) {
         joutput("\\%c", c);
-      } else if (c == '\n') {
+      } else if (!output_multibyte && (c == '\n')) {
         joutput("\\n");
       } else {
         joutput("%c", c);
       }
+      output_multibyte = !output_multibyte &&
+                         ((0x81 <= c && c <= 0x9f) || (0xe0 <= c && c <= 0xef));
     }
+
     joutput("\"");
+
     if (param_wrap_string_flag) {
       joutput(")");
     }
   } else {
     joutput("makeCobolDataStorage(");
+
     for (i = 0; i < size; i++) {
       joutput("(byte)0x%02x", s[i]);
       if (i < size - 1) {
         joutput(", ");
       }
     }
+
     joutput(")");
   }
 }
