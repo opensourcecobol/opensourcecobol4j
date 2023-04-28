@@ -1,5 +1,18 @@
 NEWS - user visible changes				-*- outline -*-
 
+-----------------------------------------------------------------------
+
+* opensource COBOL 4J 1.0.10
+
+** Bug fixes
+  (1) Fix a bug related to string literals containing specified multi-byte characters
+    * For example, "十郎"
+
+** Miscellaneous
+  (1) Fix some tests
+
+-----------------------------------------------------------------------
+
 * opensource COBOL 4J 1.0.9
 
 ** New Features
