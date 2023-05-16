@@ -76,9 +76,30 @@ public class CobolTerminal {
     PrintStream stream = outorerr == 0 ? System.out : System.err;
     for (AbstractCobolField field : fields) {
       CobolFieldAttribute attr = field.getAttribute();
+      AbstractCobolField field_display = field;
+      if (!attr.isFlagBinarySwap() && attr.isTypeNumericBinary()) {
+        ByteBuffer buffer = ByteBuffer.wrap(field.getDataStorage().getData());
+        int i;
+        byte[] array = new byte[buffer.array().length];
+        for (i = 0; i < buffer.array().length; i++) {
+          array[i] = buffer.array()[buffer.array().length - 1 - i];
+        }
+
+        field_display.setDataStorage(new CobolDataStorage(array));
+      }
+
       if (attr.isTypeNumericBinary() && CobolModule.getCurrentModule().flag_pretty_display == 0) {
         stream.print(field);
       } else if (attr.isTypeNumeric()) {
+        // // System.out.println("dbg:getInt " + field.getInt());
+        // if (field.getAttribute().getScale() > 0) {
+        // ByteBuffer buffer = ByteBuffer.wrap(field.getDataStorage().getData());
+        // int i;
+        // byte[] array = new byte[buffer.array().length];
+
+        // field.setDataStorage(new CobolDataStorage(array));
+        // }
+
         stream.print(field);
       } else {
         displayAlnum(field, stream);
@@ -90,6 +111,7 @@ public class CobolTerminal {
   }
 
   private static Scanner scan = null;
+
   /**
    * cob_acceptの実装(暫定)
    *

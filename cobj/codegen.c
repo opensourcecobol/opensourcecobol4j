@@ -331,7 +331,6 @@ static void joutput(const char *fmt, ...) {
 
       strcpy(buf->buffer + buf->index, joutput_temp_buffer);
       buf->index += size;
-
     } else {
       va_start(ap, fmt);
       vfprintf(joutput_target, fmt, ap);
@@ -610,10 +609,7 @@ static void joutput_data(cb_tree x) {
     l = CB_LITERAL(x);
     if (CB_TREE_CLASS(x) == CB_CLASS_NUMERIC) {
       joutput("\"%s%s\"", l->data,
-              (l->sign < 0)   ? "-"
-              : (l->sign > 0) ? "+"
-                              : "");
-
+              (l->sign < 0) ? "-" : (l->sign > 0) ? "+" : "");
     } else {
       joutput_string(l->data, (int)l->size);
     }
@@ -1671,30 +1667,30 @@ static void joutput_cond(cb_tree x, int save_flag) {
     if (save_flag) {
       joutput("(ret = ");
     }
-    //#ifdef __GNUC__
+    // #ifdef __GNUC__
     //		joutput_indent ("({");
-    //#else
+    // #else
     //		inside_stack[inside_check] = 0;
     //		++inside_check;
     //		joutput ("(\n");
-    //#endif
+    // #endif
     joutput_indent("(new GetInt() {");
     joutput_indent_level += 2;
     joutput_indent("public int run(){");
     joutput_indent_level += 2;
     for (; x; x = CB_CHAIN(x)) {
-      //最後の文ならreturn文を書く
+      // 最後の文ならreturn文を書く
       if (!CB_CHAIN(x)) {
         joutput_indent("return ");
       }
       joutput_stmt(CB_VALUE(x));
     }
-    //#ifdef __GNUC__
+    // #ifdef __GNUC__
     //		joutput_indent ("})");
-    //#else
+    // #else
     //		--inside_check;
     //		joutput (")");
-    //#endif
+    // #endif
     joutput_indent_level -= 2;
     joutput_indent("}");
     joutput_indent_level -= 2;
@@ -1965,7 +1961,6 @@ static void joutput_initialize_uniform(cb_tree x, int c, int size) {
     char *value_string = convert_byte_value_format(c);
     joutput(".setByte(%s);\n", value_string);
     free(value_string);
-
   } else {
     if (CB_REFERENCE_P(x) && CB_REFERENCE(x)->length) {
       joutput_data(x);
@@ -3499,15 +3494,15 @@ static void joutput_stmt(cb_tree x) {
       joutput_integer(ap->val);
       --index_read_flag;
       joutput(");\n");
-      //#ifdef __GNUC__
+      // #ifdef __GNUC__
       //			joutput (";\n");
-      //#else
+      // #else
       //			if (inside_check == 0) {
       //				joutput (";\n");
       //			} else {
       //				inside_stack[inside_check -1] = 1;
       //			}
-      //#endif
+      // #endif
     }
 #else /* Nonaligned */
     joutput_prefix();
@@ -3517,7 +3512,12 @@ static void joutput_stmt(cb_tree x) {
     joutput_integer(ap->var);
     integer_reference_flag = tmp_flag;
 
-    joutput(".set(");
+    f = cb_field(ap->var);
+    if (f->flag_binary_swap != 1) {
+      joutput(".setNative(");
+    } else {
+      joutput(".set(");
+    }
 
     f = cb_field(ap->var);
     if (f->usage == CB_USAGE_BINARY || f->usage == CB_USAGE_COMP_5 ||
@@ -3537,7 +3537,11 @@ static void joutput_stmt(cb_tree x) {
     joutput_integer(ap->val);
     --index_read_flag;
 #ifdef __GNUC__
-    joutput(");\n");
+    if (f->flag_binary_swap != 1) {
+      joutput(",%d);\n", f->size);
+    } else {
+      joutput(");\n");
+    }
 #else
     if (inside_check == 0) {
       joutput(");\n");
@@ -5744,19 +5748,19 @@ void codegen(struct cb_program *prog, const int nested,
 
   /* Program local stuff */
 
-  //コンストラクタの実装コードを出力
-  //メンバ変数の初期化を行う
+  // コンストラクタの実装コードを出力
+  // メンバ変数の初期化を行う
   joutput_line("public %s()", prog->program_id);
   joutput_line("{");
   joutput_line("  init();");
   joutput_line("}");
   joutput_newline();
 
-  //メンバ変数の初期化メソッドを出力
+  // メンバ変数の初期化メソッドを出力
   joutput_init_method(prog);
   joutput_newline();
 
-  //メンバ変数の出力
+  // メンバ変数の出力
   joutput_declare_member_variables(prog, prog->parameter_list);
   joutput("\n");
 
@@ -5772,7 +5776,7 @@ void codegen(struct cb_program *prog, const int nested,
   }
   joutput("\n");
 
-  //未実装のメソッド群の出力
+  // 未実装のメソッド群の出力
   joutput_line("private void cobolPushCallStackList(String programId)");
   joutput_line("{");
   joutput_line("}\n");

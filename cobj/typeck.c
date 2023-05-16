@@ -2829,10 +2829,10 @@ static void output_screen_from(struct cb_field *p, const size_t sisters) {
     output_screen_from(p->children, 1);
   }
 
-  type = (p->children     ? COB_SCREEN_TYPE_GROUP
-          : p->values     ? COB_SCREEN_TYPE_VALUE
-          : (p->size > 0) ? COB_SCREEN_TYPE_FIELD
-                          : COB_SCREEN_TYPE_ATTRIBUTE);
+  type = (p->children ? COB_SCREEN_TYPE_GROUP
+                      : p->values ? COB_SCREEN_TYPE_VALUE
+                                  : (p->size > 0) ? COB_SCREEN_TYPE_FIELD
+                                                  : COB_SCREEN_TYPE_ATTRIBUTE);
   if (type == COB_SCREEN_TYPE_FIELD && p->screen_from) {
     cb_emit(cb_build_method_call_2("moveFrom", p->screen_from, CB_TREE(p)));
   }
@@ -2848,10 +2848,10 @@ static void output_screen_to(struct cb_field *p, const size_t sisters) {
     output_screen_to(p->children, 1);
   }
 
-  type = (p->children     ? COB_SCREEN_TYPE_GROUP
-          : p->values     ? COB_SCREEN_TYPE_VALUE
-          : (p->size > 0) ? COB_SCREEN_TYPE_FIELD
-                          : COB_SCREEN_TYPE_ATTRIBUTE);
+  type = (p->children ? COB_SCREEN_TYPE_GROUP
+                      : p->values ? COB_SCREEN_TYPE_VALUE
+                                  : (p->size > 0) ? COB_SCREEN_TYPE_FIELD
+                                                  : COB_SCREEN_TYPE_ATTRIBUTE);
   if (type == COB_SCREEN_TYPE_FIELD && p->screen_to) {
     cb_emit(cb_build_method_call_2("moveFrom", CB_TREE(p), p->screen_to));
   }

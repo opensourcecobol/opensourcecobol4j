@@ -33,7 +33,7 @@ public class CobolNumericDoubleField extends AbstractCobolField {
     return storage.doubleValue();
   }
 
-  private void setBinaryValue(double value) {
+  private void setBinaryValue(double value, int scale) {
     CobolDataStorage storage = this.getDataStorage();
     storage.set(value);
   }

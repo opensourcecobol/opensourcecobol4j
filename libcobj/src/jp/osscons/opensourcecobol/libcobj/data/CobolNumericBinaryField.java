@@ -62,16 +62,28 @@ public class CobolNumericBinaryField extends AbstractCobolField {
     }
   }
 
-  private void setBinaryValue(long n) {
+  private void setBinaryValue(long n, int scale) {
     CobolDataStorage storage = this.getDataStorage();
-    if (this.size == 1) {
-      storage.setByte(0, (byte) n);
-    } else if (this.size == 2) {
-      storage.set((short) n);
-    } else if (this.size == 4) {
-      storage.set((int) n);
+    if (scale > 0) {
+      if (this.size == 1) {
+        storage.setByte(0, (byte) n);
+      } else if (this.size == 2) {
+        storage.set((short) n);
+      } else if (this.size == 4) {
+        storage.set_comp((int) n);
+      } else {
+        storage.set((long) n);
+      }
     } else {
-      storage.set((long) n);
+      if (this.size == 1) {
+        storage.setByte(0, (byte) n);
+      } else if (this.size == 2) {
+        storage.set((short) n);
+      } else if (this.size == 4) {
+        storage.set((int) n);
+      } else {
+        storage.set((long) n);
+      }
     }
   }
 
@@ -82,7 +94,7 @@ public class CobolNumericBinaryField extends AbstractCobolField {
 
   @Override
   public void setLongValue(long n) {
-    this.setBinaryValue(n);
+    this.setBinaryValue(n, 0);
   }
 
   /**
@@ -104,6 +116,7 @@ public class CobolNumericBinaryField extends AbstractCobolField {
     CobolDataStorage storage = new CobolDataStorage(thisAttr.getDigits());
     CobolNumericField numericField = new CobolNumericField(thisAttr.getDigits(), storage, attr);
     numericField.moveFrom(this);
+    // System.out.println("dbg:numericfield " + numericField);
     return numericField.getString();
   }
 
@@ -140,9 +153,9 @@ public class CobolNumericBinaryField extends AbstractCobolField {
     if (src1 == null) {
       return;
     }
-
     switch (src1.getAttribute().getType()) {
       case CobolFieldAttribute.COB_TYPE_NUMERIC_DISPLAY:
+        // System.out.println("dbg:COB_TYPE_NUMERIC_DISPLAY");
         this.moveDisplayToBinary(src1);
         break;
       case CobolFieldAttribute.COB_TYPE_NUMERIC_PACKED:
@@ -210,7 +223,7 @@ public class CobolNumericBinaryField extends AbstractCobolField {
       val %= CobolConstant.exp10LL[this.getAttribute().getDigits()];
     }
 
-    this.setBinaryValue(val);
+    this.setBinaryValue(val, field.getAttribute().getScale());
     field.putSign(sign);
   }
 

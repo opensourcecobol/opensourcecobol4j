@@ -21,6 +21,7 @@ package jp.osscons.opensourcecobol.libcobj.data;
 import java.io.UnsupportedEncodingException;
 import java.nio.ByteBuffer;
 import java.nio.ByteOrder;
+import java.util.*;
 import jp.osscons.opensourcecobol.libcobj.common.CobolModule;
 
 /** COBOLのデータを保存するバイト配列を扱うクラス */
@@ -30,6 +31,8 @@ public class CobolDataStorage {
   private byte[] data;
   /** このクラスの扱うデータが保存する領域のバイト配列中での相対位置 */
   private int index;
+
+  private boolean flag_native = false;
 
   /**
    * コンストラクタ.引数で指定された長さ分のバイト配列を確保する.
@@ -135,6 +138,10 @@ public class CobolDataStorage {
     System.arraycopy(this.data, this.index + index, result, 0, result.length);
 
     return result;
+  }
+
+  public boolean getFlagNative() {
+    return this.flag_native;
   }
 
   /**
@@ -544,6 +551,7 @@ public class CobolDataStorage {
 
   public void set(byte value) {
     this.setByte(0, value);
+    this.flag_native = false;
   }
 
   /**
@@ -553,6 +561,7 @@ public class CobolDataStorage {
    */
   public void set(short value) {
     ByteBuffer.wrap(this.data, this.index, 2).putShort(value);
+    this.flag_native = false;
   }
 
   /**
@@ -562,6 +571,27 @@ public class CobolDataStorage {
    */
   public void set(int value) {
     ByteBuffer.wrap(this.data, this.index, 4).putInt(value);
+    this.flag_native = false;
+  }
+
+  public void set_comp(int value) {
+    // ByteBuffer buffer1 = ByteBuffer.allocate(4).putInt(value);
+    // // byte[] b = buffer1.array();
+    // // for (int i = 0; i < 2; i++) {
+    // // buffer1.array()[i] = b[i + 2];
+    // // }
+
+    // System.out.println();
+    // ByteBuffer buffer = ByteBuffer.wrap(this.data);
+    // System.out.println("dbg:index " + this.index);
+    // buffer.wrap(this.data).put(buffer1.array());
+    ByteBuffer buffer = ByteBuffer.wrap(this.data, this.index, 4).putInt(value);
+    for (byte b1 : buffer.array()) {
+      System.out.printf("%02x ", b1);
+    }
+    System.out.println();
+
+    this.flag_native = false;
   }
 
   /**
@@ -569,8 +599,9 @@ public class CobolDataStorage {
    *
    * @param value this.dataに書き込むlong型の値
    */
-  public void set(long value) {
+  public void set(long value) { // endian変える
     ByteBuffer.wrap(this.data, this.index, 8).putLong(value);
+    this.flag_native = false;
   }
 
   /**
@@ -580,10 +611,12 @@ public class CobolDataStorage {
    */
   public void set(double value) {
     ByteBuffer.wrap(this.data, this.index, 8).putDouble(value);
+    this.flag_native = false;
   }
 
   public void set(CobolDataStorage other) {
     this.set(other.intValue());
+    this.flag_native = false;
   }
 
   /**
@@ -595,6 +628,7 @@ public class CobolDataStorage {
   public void set(int value, int index) {
     ByteBuffer buffer = ByteBuffer.wrap(this.data, this.index + index, 4);
     buffer.putInt(value);
+    this.flag_native = false;
   }
 
   public boolean isSame(CobolDataStorage other) {
@@ -607,7 +641,12 @@ public class CobolDataStorage {
    * @return this.dataから読み込んだ2バイトデータをshortに変換したデータ
    */
   public short shortValue() {
-    return ByteBuffer.wrap(this.data, this.index, Short.BYTES).getShort();
+    ByteBuffer buffer = ByteBuffer.wrap(this.data, this.index, Short.BYTES);
+    if (this.flag_native) {
+      System.out.println("dbg: shortValue");
+      buffer.order(ByteOrder.LITTLE_ENDIAN);
+    }
+    return buffer.getShort();
   }
 
   /**
@@ -616,7 +655,20 @@ public class CobolDataStorage {
    * @return this.dataから読み込んだ2バイトデータをintに変換したデータ
    */
   public int intValue() {
-    return ByteBuffer.wrap(this.data, this.index, Integer.BYTES).getInt();
+    if (this.flag_native) {
+      ByteBuffer buffer1 = ByteBuffer.wrap(this.data, this.index, Integer.BYTES);
+      buffer1.order(ByteOrder.LITTLE_ENDIAN);
+      return buffer1.getInt(this.index);
+    } else {
+      ByteBuffer buffer2 = ByteBuffer.allocate(8).put(this.data, this.index, 4);
+      int val = 0;
+      int j = 6;
+      for (int i = 0; i < 4; i++) {
+        val += (buffer2.array()[i] & 0xff) * (int) Math.pow(16, j);
+        j -= 2;
+      }
+      return val;
+    }
   }
 
   /**
@@ -625,11 +677,21 @@ public class CobolDataStorage {
    * @return this.dataから読み込んだ4バイトデータをlongに変換したデータ
    */
   public long longValue() {
-    return ByteBuffer.wrap(this.data, this.index, Long.BYTES).getLong();
+    ByteBuffer buffer = ByteBuffer.wrap(this.data, this.index, Long.BYTES);
+    if (this.flag_native) {
+      System.out.println("dbg: longValue");
+      buffer.order(ByteOrder.LITTLE_ENDIAN);
+    }
+    return buffer.getLong();
   }
 
   public double doubleValue() {
-    return ByteBuffer.wrap(this.data, this.index, Double.BYTES).getDouble();
+    ByteBuffer buffer = ByteBuffer.wrap(this.data, this.index, Double.BYTES);
+    if (this.flag_native) {
+      System.out.println("dbg: doubleValue");
+      buffer.order(ByteOrder.LITTLE_ENDIAN);
+    }
+    return buffer.getDouble();
   }
 
   /**
@@ -1367,10 +1429,17 @@ public class CobolDataStorage {
 
   public void setSwpU64Binary(int n) {
     this.fromLong(8, true, n);
+    this.flag_native = false;
   }
 
   public void setSwpS64Binary(int n) {
     this.fromLong(8, true, n);
+  }
+
+  public void setNative(long n, int size) {
+    System.out.println("dbg:setNative");
+    this.flag_native = true;
+    this.fromLong(size, false, n);
   }
 
   /**

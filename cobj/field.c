@@ -845,15 +845,22 @@ static int compute_size(struct cb_field *f) {
         break;
       }
       size = f->pic->size;
-      f->size = ((size <= 2)    ? 1
-                 : (size <= 4)  ? 2
-                 : (size <= 7)  ? 3
-                 : (size <= 9)  ? 4
-                 : (size <= 12) ? 5
-                 : (size <= 14) ? 6
-                 : (size <= 16) ? 7
-                 : (size <= 18) ? 8
-                                : 16);
+      f->size =
+          ((size <= 2)
+               ? 1
+               : (size <= 4)
+                     ? 2
+                     : (size <= 7)
+                           ? 3
+                           : (size <= 9)
+                                 ? 4
+                                 : (size <= 12)
+                                       ? 5
+                                       : (size <= 14)
+                                             ? 6
+                                             : (size <= 16)
+                                                   ? 7
+                                                   : (size <= 18) ? 8 : 16);
       break;
     case CB_USAGE_BINARY:
     case CB_USAGE_COMP_5:
@@ -873,33 +880,46 @@ static int compute_size(struct cb_field *f) {
         }
         break;
       case CB_BINARY_SIZE_1_2_4_8:
-        f->size = ((size <= 2)    ? 1
-                   : (size <= 4)  ? 2
-                   : (size <= 9)  ? 4
-                   : (size <= 18) ? 8
-                                  : 16);
+        f->size =
+            ((size <= 2)
+                 ? 1
+                 : (size <= 4) ? 2 : (size <= 9) ? 4 : (size <= 18) ? 8 : 16);
         break;
       case CB_BINARY_SIZE_1__8:
         if (f->pic->have_sign) {
-          f->size = ((size <= 2)    ? 1
-                     : (size <= 4)  ? 2
-                     : (size <= 6)  ? 3
-                     : (size <= 9)  ? 4
-                     : (size <= 11) ? 5
-                     : (size <= 14) ? 6
-                     : (size <= 16) ? 7
-                     : (size <= 18) ? 8
-                                    : 16);
+          f->size =
+              ((size <= 2)
+                   ? 1
+                   : (size <= 4)
+                         ? 2
+                         : (size <= 6)
+                               ? 3
+                               : (size <= 9)
+                                     ? 4
+                                     : (size <= 11)
+                                           ? 5
+                                           : (size <= 14)
+                                                 ? 6
+                                                 : (size <= 16)
+                                                       ? 7
+                                                       : (size <= 18) ? 8 : 16);
         } else {
-          f->size = ((size <= 2)    ? 1
-                     : (size <= 4)  ? 2
-                     : (size <= 7)  ? 3
-                     : (size <= 9)  ? 4
-                     : (size <= 12) ? 5
-                     : (size <= 14) ? 6
-                     : (size <= 16) ? 7
-                     : (size <= 18) ? 8
-                                    : 16);
+          f->size =
+              ((size <= 2)
+                   ? 1
+                   : (size <= 4)
+                         ? 2
+                         : (size <= 7)
+                               ? 3
+                               : (size <= 9)
+                                     ? 4
+                                     : (size <= 12)
+                                           ? 5
+                                           : (size <= 14)
+                                                 ? 6
+                                                 : (size <= 16)
+                                                       ? 7
+                                                       : (size <= 18) ? 8 : 16);
         }
         break;
       }
