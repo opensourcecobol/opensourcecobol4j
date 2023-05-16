@@ -91,15 +91,6 @@ public class CobolTerminal {
       if (attr.isTypeNumericBinary() && CobolModule.getCurrentModule().flag_pretty_display == 0) {
         stream.print(field);
       } else if (attr.isTypeNumeric()) {
-        // // System.out.println("dbg:getInt " + field.getInt());
-        // if (field.getAttribute().getScale() > 0) {
-        // ByteBuffer buffer = ByteBuffer.wrap(field.getDataStorage().getData());
-        // int i;
-        // byte[] array = new byte[buffer.array().length];
-
-        // field.setDataStorage(new CobolDataStorage(array));
-        // }
-
         stream.print(field);
       } else {
         displayAlnum(field, stream);

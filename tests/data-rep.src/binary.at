@@ -218,7 +218,7 @@ AT_CLEANUP
 # 2-4-8 native
 
 AT_SETUP([BINARY: 2-4-8 native])
-AT_CHECK([${SKIP_TEST}])
+#AT_CHECK([${SKIP_TEST}])
 
 if test "x$COB_BIGENDIAN" = "xyes"; then
 AT_CHECK([true])

@@ -1079,7 +1079,9 @@ public class CobolNumericField extends AbstractCobolField {
     } else {
       size -= scale;
       for (; i < size; ++i) {
-        val = val * 10 + (data.getByte(i) - '0');
+        if (0 <= (data.getByte(i) - '0') && (data.getByte(i) - '0') <= 9) {
+          val = val * 10 + (data.getByte(i) - '0');
+        }
       }
     }
     if (sign < 0) {

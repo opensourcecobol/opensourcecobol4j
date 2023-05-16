@@ -574,26 +574,6 @@ public class CobolDataStorage {
     this.flag_native = false;
   }
 
-  public void set_comp(int value) {
-    // ByteBuffer buffer1 = ByteBuffer.allocate(4).putInt(value);
-    // // byte[] b = buffer1.array();
-    // // for (int i = 0; i < 2; i++) {
-    // // buffer1.array()[i] = b[i + 2];
-    // // }
-
-    // System.out.println();
-    // ByteBuffer buffer = ByteBuffer.wrap(this.data);
-    // System.out.println("dbg:index " + this.index);
-    // buffer.wrap(this.data).put(buffer1.array());
-    ByteBuffer buffer = ByteBuffer.wrap(this.data, this.index, 4).putInt(value);
-    for (byte b1 : buffer.array()) {
-      System.out.printf("%02x ", b1);
-    }
-    System.out.println();
-
-    this.flag_native = false;
-  }
-
   /**
    * this.dataにlong型のvalueを8バイトで書き込む
    *
@@ -1437,7 +1417,6 @@ public class CobolDataStorage {
   }
 
   public void setNative(long n, int size) {
-    System.out.println("dbg:setNative");
     this.flag_native = true;
     this.fromLong(size, false, n);
   }

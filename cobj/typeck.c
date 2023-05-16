@@ -4964,6 +4964,10 @@ static cb_tree cb_build_move_call(cb_tree src, cb_tree dst) {
   return cb_build_method_call_2("moveFrom", dst, src);
 }
 
+static cb_tree cb_build_move_call_native(cb_tree src, cb_tree dst) {
+  return cb_build_method_call_2("moveFrom_native", dst, src);
+}
+
 static cb_tree cb_build_move_num_zero(cb_tree x) {
   struct cb_field *f;
 
@@ -5404,7 +5408,11 @@ static cb_tree cb_build_move_literal(cb_tree src, cb_tree dst) {
     }
     return cb_build_method_call_2("moveFrom", dst, cb_int(val));
   } else {
-    return cb_build_move_call(src, dst);
+    if (f->flag_binary_swap || f->usage != CB_USAGE_BINARY) {
+      return cb_build_move_call(src, dst);
+    } else {
+      return cb_build_move_call_native(src, dst);
+    }
   }
 }
 

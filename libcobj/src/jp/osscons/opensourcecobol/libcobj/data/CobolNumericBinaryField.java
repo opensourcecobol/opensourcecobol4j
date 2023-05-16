@@ -20,6 +20,7 @@ package jp.osscons.opensourcecobol.libcobj.data;
 
 import java.math.BigDecimal;
 import java.nio.ByteBuffer;
+import java.nio.ByteOrder;
 import jp.osscons.opensourcecobol.libcobj.common.CobolConstant;
 import jp.osscons.opensourcecobol.libcobj.common.CobolModule;
 import jp.osscons.opensourcecobol.libcobj.exceptions.CobolRuntimeException;
@@ -62,28 +63,16 @@ public class CobolNumericBinaryField extends AbstractCobolField {
     }
   }
 
-  private void setBinaryValue(long n, int scale) {
+  private void setBinaryValue(long n) {
     CobolDataStorage storage = this.getDataStorage();
-    if (scale > 0) {
-      if (this.size == 1) {
-        storage.setByte(0, (byte) n);
-      } else if (this.size == 2) {
-        storage.set((short) n);
-      } else if (this.size == 4) {
-        storage.set_comp((int) n);
-      } else {
-        storage.set((long) n);
-      }
+    if (this.size == 1) {
+      storage.setByte(0, (byte) n);
+    } else if (this.size == 2) {
+      storage.set((short) n);
+    } else if (this.size == 4) {
+      storage.set((int) n);
     } else {
-      if (this.size == 1) {
-        storage.setByte(0, (byte) n);
-      } else if (this.size == 2) {
-        storage.set((short) n);
-      } else if (this.size == 4) {
-        storage.set((int) n);
-      } else {
-        storage.set((long) n);
-      }
+      storage.set((long) n);
     }
   }
 
@@ -94,7 +83,7 @@ public class CobolNumericBinaryField extends AbstractCobolField {
 
   @Override
   public void setLongValue(long n) {
-    this.setBinaryValue(n, 0);
+    this.setBinaryValue(n);
   }
 
   /**
@@ -116,7 +105,6 @@ public class CobolNumericBinaryField extends AbstractCobolField {
     CobolDataStorage storage = new CobolDataStorage(thisAttr.getDigits());
     CobolNumericField numericField = new CobolNumericField(thisAttr.getDigits(), storage, attr);
     numericField.moveFrom(this);
-    // System.out.println("dbg:numericfield " + numericField);
     return numericField.getString();
   }
 
@@ -155,8 +143,7 @@ public class CobolNumericBinaryField extends AbstractCobolField {
     }
     switch (src1.getAttribute().getType()) {
       case CobolFieldAttribute.COB_TYPE_NUMERIC_DISPLAY:
-        // System.out.println("dbg:COB_TYPE_NUMERIC_DISPLAY");
-        this.moveDisplayToBinary(src1);
+        this.moveDisplayToBinary(src1, false);
         break;
       case CobolFieldAttribute.COB_TYPE_NUMERIC_PACKED:
       case CobolFieldAttribute.COB_TYPE_ALPHANUMERIC:
@@ -177,12 +164,22 @@ public class CobolNumericBinaryField extends AbstractCobolField {
     }
   }
 
+  @Override
+  public void moveFrom_native(AbstractCobolField src) {
+    AbstractCobolField src1 = this.preprocessOfMoving(src);
+    boolean isNative = true;
+    if (src1 == null) {
+      return;
+    }
+    this.moveDisplayToBinary(src1, isNative);
+  }
+
   /**
    * CobolNumericFieldからからthisへの代入
    *
    * @param field 代入元のデータ(AbstractCobolField型)
    */
-  private void moveDisplayToBinary(AbstractCobolField field) {
+  private void moveDisplayToBinary(AbstractCobolField field, boolean isNative) {
     int size1 = field.getFieldSize();
     int data1Index = field.getFirstDataIndex();
     int sign = field.getSign();
@@ -223,8 +220,16 @@ public class CobolNumericBinaryField extends AbstractCobolField {
       val %= CobolConstant.exp10LL[this.getAttribute().getDigits()];
     }
 
-    this.setBinaryValue(val, field.getAttribute().getScale());
-    field.putSign(sign);
+    if (this.attribute.isFlagBinarySwap() || !isNative) {
+      this.setBinaryValue(val);
+      field.putSign(sign);
+    } else {
+      ByteBuffer buffer = ByteBuffer.wrap(field.getDataStorage().getData());
+      buffer.order(ByteOrder.LITTLE_ENDIAN);
+      buffer.putLong(field.getLong());
+      this.setBinaryValue(ByteBuffer.wrap(buffer.array()).getLong());
+      field.putSign(sign);
+    }
   }
 
   /**

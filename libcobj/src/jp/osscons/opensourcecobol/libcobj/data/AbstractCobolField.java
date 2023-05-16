@@ -592,6 +592,8 @@ public abstract class AbstractCobolField {
    */
   public abstract void moveFrom(AbstractCobolField field);
 
+  public void moveFrom_native(AbstractCobolField field) {}
+
   /**
    * 引数で与えらえられたデータからthisへの代入を行う
    *
