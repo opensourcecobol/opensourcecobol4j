@@ -341,8 +341,16 @@ public class CobolNumericField extends AbstractCobolField {
    * @param field 代入元のデータ(AbstractCobolField型)
    */
   private void moveBinaryToDisplay(AbstractCobolField field) {
+
     int sign = 1;
-    long val = field.getLongValue();
+    boolean isBig = true;
+    if (field.getAttribute().getFlagNative() == true) {
+      isBig = false;
+    }
+    long val = field.getLongValue(isBig);
+    // if (val > 0) {
+    // this.getAttribute().setFlags(0);
+    // }
 
     if (this.getAttribute().isFlagHaveSign() && val < 0) {
       sign = -1;

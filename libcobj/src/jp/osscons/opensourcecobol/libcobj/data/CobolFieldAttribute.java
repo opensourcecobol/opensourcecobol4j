@@ -65,6 +65,8 @@ public class CobolFieldAttribute {
   /** PICTURE句の文字列 */
   private String pic;
 
+  private boolean flag_native;
+
   /**
    * コンストラクタ
    *
@@ -178,6 +180,14 @@ public class CobolFieldAttribute {
    */
   public void setPic(String pic) {
     this.pic = pic;
+  }
+
+  public boolean getFlagNative() {
+    return this.flag_native;
+  }
+
+  public void setFlagNative(boolean flag_native) {
+    this.flag_native = flag_native;
   }
 
   public boolean isTypeUnknown() {

@@ -63,6 +63,19 @@ public class CobolNumericBinaryField extends AbstractCobolField {
     }
   }
 
+  private long getBinaryValue(boolean flags) {
+    CobolDataStorage storage = this.getDataStorage();
+    if (this.size == 1) {
+      return storage.getByte(0);
+    } else if (this.size == 2) {
+      return storage.shortValue();
+    } else if (this.size == 4) {
+      return storage.intValue();
+    } else {
+      return storage.longValue(flags);
+    }
+  }
+
   private void setBinaryValue(long n) {
     CobolDataStorage storage = this.getDataStorage();
     if (this.size == 1) {
@@ -77,8 +90,8 @@ public class CobolNumericBinaryField extends AbstractCobolField {
   }
 
   @Override
-  public long getLongValue() {
-    return this.getBinaryValue();
+  public long getLongValue(boolean flags) {
+    return this.getBinaryValue(flags);
   }
 
   @Override
@@ -168,6 +181,7 @@ public class CobolNumericBinaryField extends AbstractCobolField {
   public void moveFrom_native(AbstractCobolField src) {
     AbstractCobolField src1 = this.preprocessOfMoving(src);
     boolean isNative = true;
+    this.attribute.setFlagNative(true);
     if (src1 == null) {
       return;
     }

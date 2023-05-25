@@ -888,6 +888,7 @@ public class CobolIntrinsic {
     }
     return currField;
   }
+
   /**
    * libcob/intrinsicのcob_intr_numval_cの実装
    *

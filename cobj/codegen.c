@@ -986,7 +986,6 @@ static void joutput_integer(cb_tree x) {
         joutput(".intValue()");
       }
       return;
-
     case CB_USAGE_POINTER:
 #ifdef COB_NON_ALIGNED
       joutput("(cob_get_pointer (");
@@ -3513,8 +3512,9 @@ static void joutput_stmt(cb_tree x) {
     integer_reference_flag = tmp_flag;
 
     f = cb_field(ap->var);
-    if (f->flag_binary_swap != 1) {
+    if (f->flag_binary_swap != 1 && (f->usage == CB_USAGE_BINARY)) {
       joutput(".setNative(");
+      int flag_native = 1;
     } else {
       joutput(".set(");
     }
@@ -3537,7 +3537,7 @@ static void joutput_stmt(cb_tree x) {
     joutput_integer(ap->val);
     --index_read_flag;
 #ifdef __GNUC__
-    if (f->flag_binary_swap != 1) {
+    if (f->flag_binary_swap != 1 && f->usage == CB_USAGE_BINARY) {
       joutput(",%d);\n", f->size);
     } else {
       joutput(");\n");

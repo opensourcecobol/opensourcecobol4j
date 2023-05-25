@@ -1490,7 +1490,7 @@ public abstract class AbstractCobolField {
     return ByteBuffer.wrap(data).getLong();
   }
 
-  public long getLongValue() {
+  public long getLongValue(boolean flags) {
     return 0;
   }
 

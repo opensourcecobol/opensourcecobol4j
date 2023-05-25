@@ -1041,6 +1041,7 @@ public class CobolFile {
     if (key != null) {
       ret = this.read_(key, read_opts);
     } else {
+      System.out.println("dbg: readnext");
       ret = this.readNext(read_opts);
     }
 
