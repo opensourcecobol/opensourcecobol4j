@@ -52,7 +52,7 @@ AT_DATA([prog.cob], [
            STOP RUN.
 ])
 
-AT_CHECK([${COMPILE} -o prog prog.cob])
+AT_CHECK([${COMPILE} prog.cob])
 AT_CHECK([java prog], [0],
 [(999999  )
 (99999999)
