@@ -18,15 +18,15 @@ COBOL = cobj -std=cobol85
 COB85DIR = "`cd $(srcdir) && pwd`"
 
 test: $(MODULES_MAKEFILES)
+	@for m in $(MODULES); do \
+	  (cd $$m && make test) \
+	done
+	perl $(srcdir)/summary.pl $(MODULES) > summary.log
+	@for MODULE in $(MODULES); do\
+		(cat $$MODULE/report.txt) \
+	done
 	cat summary.log
 	cat summary.log | tail -n 1 | awk '$$4 != 0 || $$5 != 0 || $$2 != $$3 {exit 1}'
-#@for m in $(MODULES); do \
-#  (cd $$m && make test) \
-#done
-#perl $(srcdir)/summary.pl $(MODULES) > summary.log
-#@for MODULE in $(MODULES); do\
-#	(cat $$MODULE/report.txt) \
-#done
 
 save:
 	@for m in $(MODULES); do \

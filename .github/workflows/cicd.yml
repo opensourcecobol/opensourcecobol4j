@@ -90,7 +90,9 @@ jobs:
       - name: Run NIST test
         run: |
           export CLASSPATH=":/usr/lib/opensourcecobol4j/libcobj.jar:$HOME/.java_lib/sqlite.jar"
-          cd tests/cobol85/
+          cd tests/cobol85
+          make IX/Makefile
+          cd IX
           make test
 
           #- name: Run tests "i18n_utf8"
