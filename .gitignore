@@ -60,7 +60,7 @@ tests/cobol85/*/*.log
 tests/cobol85/*/tmp.cbl
 tests/cobol85/*/report.txt
 tests/cobol85/*/XXXXX*
-tests/cobol85/summary.log
+#tests/cobol85/summary.log
 texi/Makefile
 bin/.deps/
 bin/cob-config
