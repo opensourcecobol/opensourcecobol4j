@@ -54,7 +54,6 @@ $skip{SG202A} = 1;
 $skip{SG203A} = 1;
 $skip{OBNC1M} = 1;
 $skip{OBNC2M} = 1;
-#$skip{IX106A} = 1;
 $skip{NC127A} = 1;
 $skip{NC219A} = 1;
 $skip{IC222A} = 1;

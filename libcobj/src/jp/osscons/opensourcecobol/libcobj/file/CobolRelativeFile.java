@@ -19,6 +19,7 @@
 package jp.osscons.opensourcecobol.libcobj.file;
 
 import java.io.*;
+import java.nio.ByteBuffer;
 import java.nio.channels.*;
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -283,7 +284,7 @@ public class CobolRelativeFile extends CobolFile {
         return COB_STATUS_23_KEY_NOT_EXISTS;
       }
 
-      if (this.record.getSize() == 0) {
+      if (ByteBuffer.wrap(size).getLong() == 0) {
         this.fp.seek(this.fp.getFilePointer() - size.length);
         return COB_STATUS_23_KEY_NOT_EXISTS;
       }
