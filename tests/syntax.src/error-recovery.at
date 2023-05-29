@@ -11,7 +11,7 @@ AT_DATA([prog.cob], [
        PROCEDURE        DIVISION.
 ])
 
-AT_CHECK([${COMPILE} -o prog prog.cob], [1], ,
+AT_CHECK([${COMPILE} prog.cob], [1], ,
 [prog.cob:6: Error: syntax error, unexpected '.'
 prog.cob:7: Error: PICTURE clause required for 'X'
 ])
@@ -34,7 +34,7 @@ AT_DATA([prog.cob], [
            END-IF.
 ])
 
-AT_CHECK([${COMPILE} -o prog prog.cob], [1], ,
+AT_CHECK([${COMPILE} prog.cob], [1], ,
 [prog.cob:8: Error: syntax error, unexpected SECTION, expecting '.'
 prog.cob:10: Error: 'NOWHERE' undefined in SPECIAL-NAMES
 prog.cob:11: Error: 'ZZ' undefined

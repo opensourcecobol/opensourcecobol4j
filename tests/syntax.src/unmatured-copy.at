@@ -15,7 +15,7 @@ AT_DATA([prog.cob], [
 
 AT_CHECK([echo -n '       01 TEST-VAR PIC X(2) VALUE "OK".' > copy.inc
 ])
-AT_CHECK([${COMPILE} -o prog prog.cob], [0], ,
+AT_CHECK([${COMPILE} prog.cob], [0], ,
 [copy.inc:1: Warning: Line not terminated by a newline
 ])
 AT_CHECK([java prog], [0], [OK])

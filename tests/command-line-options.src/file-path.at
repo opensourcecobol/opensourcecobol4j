@@ -1,0 +1,125 @@
+AT_SETUP([file-path options])
+
+AT_DATA([prog.cbl], [
+       IDENTIFICATION              DIVISION.
+       PROGRAM-ID.                 prog.
+       DATA                        DIVISION.
+       WORKING-STORAGE             SECTION.
+       PROCEDURE                   DIVISION.
+           DISPLAY "HELLO".
+])
+
+AT_CHECK([mkdir class_dir java_dir sub])
+
+AT_CHECK([${COBJ} -j java_dir prog.cbl])
+AT_CHECK([test -e java_dir/prog.java])
+AT_CHECK([test -e prog.class])
+AT_CHECK([test ! -e prog.java])
+AT_CHECK([rm -f *.java *.class class_dir/* java_dir/*])
+
+AT_CHECK([${COBJ} -java-source-dir=java_dir prog.cbl])
+AT_CHECK([test -e java_dir/prog.java])
+AT_CHECK([test -e prog.class])
+AT_CHECK([test ! -e prog.java])
+AT_CHECK([rm -f *.java *.class class_dir/* java_dir/*])
+
+AT_CHECK([${COBJ} -o class_dir prog.cbl])
+AT_CHECK([test -e prog.java])
+AT_CHECK([test -e class_dir/prog.class])
+AT_CHECK([test ! -e prog.class])
+AT_CHECK([rm -f *.java *.class class_dir/* java_dir/*])
+
+AT_CHECK([${COBJ} -class-file-dir=class_dir prog.cbl])
+AT_CHECK([test -e prog.java])
+AT_CHECK([test -e class_dir/prog.class])
+AT_CHECK([test ! -e prog.class])
+AT_CHECK([rm -f *.java *.class class_dir/* java_dir/*])
+
+AT_CHECK(${COBJ} -j java_dir -o class_dir prog.cbl)
+AT_CHECK([test -e java_dir/prog.java])
+AT_CHECK([test ! -e prog.java])
+AT_CHECK([test -e class_dir/prog.class])
+AT_CHECK([test ! -e prog.class])
+AT_CHECK([rm -f *.java *.class class_dir/* java_dir/*])
+
+# compile in sub/
+AT_CHECK([cd sub && ${COBJ} -j ../java_dir ../prog.cbl])
+AT_CHECK([test -e java_dir/prog.java])
+AT_CHECK([test -e sub/prog.class])
+AT_CHECK([test ! -e sub/prog.java])
+AT_CHECK([test ! -e prog.java])
+AT_CHECK([rm -f *.java *.class class_dir/* java_dir/* sub/*])
+
+AT_CHECK([cd sub && ${COBJ} -java-source-dir=../java_dir ../prog.cbl])
+AT_CHECK([test -e java_dir/prog.java])
+AT_CHECK([test -e sub/prog.class])
+AT_CHECK([test ! -e prog.java])
+AT_CHECK([test ! -e sub/prog.java])
+AT_CHECK([rm -f *.java *.class class_dir/* java_dir/* sub/*])
+
+AT_CHECK([cd sub && ${COBJ} -o ../class_dir ../prog.cbl])
+AT_CHECK([test -e sub/prog.java])
+AT_CHECK([test -e class_dir/prog.class])
+AT_CHECK([test ! -e prog.class])
+AT_CHECK([test ! -e sub/prog.class])
+AT_CHECK([rm -f *.java *.class class_dir/* java_dir/* sub/*])
+
+AT_CHECK([cd sub && ${COBJ} -class-file-dir=../class_dir ../prog.cbl])
+AT_CHECK([test -e sub/prog.java])
+AT_CHECK([test -e class_dir/prog.class])
+AT_CHECK([test ! -e prog.class])
+AT_CHECK([test ! -e sub/prog.class])
+AT_CHECK([rm -f *.java *.class class_dir/* java_dir/* sub/*])
+
+AT_CHECK([cd sub && ${COBJ} -j ../java_dir -o ../class_dir ../prog.cbl])
+AT_CHECK([test -e java_dir/prog.java])
+AT_CHECK([test ! -e prog.java])
+AT_CHECK([test ! -e sub/prog.java])
+AT_CHECK([test -e class_dir/prog.class])
+AT_CHECK([test ! -e prog.class])
+AT_CHECK([test ! -e sub/prog.class])
+AT_CHECK([rm -f *.java *.class class_dir/* java_dir/* sub/*])
+
+# with -C option
+
+AT_CHECK([${COBJ} -C -j java_dir prog.cbl])
+AT_CHECK([test -e java_dir/prog.java])
+AT_CHECK([test ! -e prog.class])
+AT_CHECK([test ! -e prog.java])
+AT_CHECK([rm -f *.java *.class class_dir/* java_dir/*])
+
+AT_CHECK([${COBJ} -C -java-source-dir=java_dir prog.cbl])
+AT_CHECK([test -e java_dir/prog.java])
+AT_CHECK([test ! -e prog.class])
+AT_CHECK([test ! -e prog.java])
+AT_CHECK([rm -f *.java *.class class_dir/* java_dir/*])
+
+AT_CHECK([${COBJ} -C -j java_dir -o class_dir prog.cbl])
+AT_CHECK([test -e java_dir/prog.java])
+AT_CHECK([test ! -e prog.class])
+AT_CHECK([test ! -e class_dir/prog.class])
+AT_CHECK([test ! -e prog.java])
+AT_CHECK([rm -f *.java *.class class_dir/* java_dir/*])
+
+AT_CHECK([${COBJ} -C -java-source-dir=java_dir -o class_dir prog.cbl])
+AT_CHECK([test -e java_dir/prog.java])
+AT_CHECK([test ! -e prog.class])
+AT_CHECK([test ! -e class_dir/prog.class])
+AT_CHECK([test ! -e prog.java])
+AT_CHECK([rm -f *.java *.class class_dir/* java_dir/*])
+
+AT_CHECK([${COBJ} -C -j java_dir -class-file-dir=class_dir prog.cbl])
+AT_CHECK([test -e java_dir/prog.java])
+AT_CHECK([test ! -e prog.class])
+AT_CHECK([test ! -e class_dir/prog.class])
+AT_CHECK([test ! -e prog.java])
+AT_CHECK([rm -f *.java *.class class_dir/* java_dir/*])
+
+AT_CHECK([${COBJ} -C -java-source-dir=java_dir -class-file-dir=class_dir prog.cbl])
+AT_CHECK([test -e java_dir/prog.java])
+AT_CHECK([test ! -e prog.class])
+AT_CHECK([test ! -e class_dir/prog.class])
+AT_CHECK([test ! -e prog.java])
+AT_CHECK([rm -f *.java *.class class_dir/* java_dir/*])
+
+AT_CLEANUP
