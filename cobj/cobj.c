@@ -230,6 +230,7 @@ static int strip_output = 0;
 static int gflag_set = 0;
 
 static char *output_name = NULL;
+static char *java_source_dir = NULL;
 
 static const char *cob_tmpdir; /* /tmp */
 
@@ -248,7 +249,7 @@ static cob_sighandler_t intsig = NULL;
 static cob_sighandler_t qutsig = NULL;
 #endif
 
-static const char short_options[] = "hVvECbmxgwo:t:I:L:l:D:";
+static const char short_options[] = "hVvECbmxgwoj:t:I:L:l:D:";
 
 static const struct option long_options[] = {
     {"help", no_argument, NULL, 'h'},
@@ -265,6 +266,7 @@ static const struct option long_options[] = {
     {"conf", required_argument, NULL, '&'},
     {"debug", no_argument, NULL, 'd'},
     {"class-file-dir", optional_argument, NULL, 'o'},
+    {"java-source-dir", optional_argument, NULL, 'j'},
     {"ext", required_argument, NULL, 'e'},
     {"free", no_argument, &cb_source_format, CB_FORMAT_FREE},
     {"free_1col_aster", no_argument, &cb_source_format,
@@ -922,6 +924,10 @@ static int process_command_line(const int argc, char *argv[]) {
       /* -o : Output file */
       /* -class-path : Output file*/
       output_name = strdup(optarg);
+      break;
+
+    case 'j':
+      java_source_dir = strdup(optarg);
       break;
 
     case 'g':
@@ -1597,7 +1603,8 @@ static int process_translate(struct filename *fn) {
   for (int i = 0; i < PROGRAM_ID_LIST_MAX_LEN; ++i) {
     program_id_list[i] = NULL;
   }
-  codegen(p, 0, program_id_list);
+  codegen(p, 0, program_id_list,
+          java_source_dir == NULL ? "./" : java_source_dir);
 
   return 0;
 }
@@ -1620,8 +1627,11 @@ static int process_compile(struct filename *fn) {
   }
 
   for (char **program_id = program_id_list; *program_id; ++program_id) {
-    sprintf(buff, "javac %s -encoding SJIS -d %s %s.java", cob_java_flags,
-            output_name == NULL ? "." : output_name, *program_id);
+    char *java_source_dir_a = java_source_dir == NULL ? "./" : java_source_dir;
+    char *output_name_a = output_name == NULL ? "./" : output_name;
+    sprintf(buff, "javac %s -encoding SJIS -sourcepath %s -d %s %s/%s.java",
+            cob_java_flags, java_source_dir_a, output_name_a, java_source_dir_a,
+            *program_id);
     ret = process(buff);
   }
   return ret;
