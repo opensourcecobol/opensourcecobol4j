@@ -60,7 +60,7 @@ AT_DATA([prog.cob], [
            STOP RUN.
 ])
 
-AT_CHECK([${COMPILE} -fsign-ascii -o prog prog.cob])
+AT_CHECK([${COMPILE} -fsign-ascii prog.cob])
 AT_CHECK([java prog], [0],
 [12340
 12340
@@ -116,7 +116,7 @@ AT_DATA([prog.cob], [
            STOP RUN.
 ])
 
-AT_CHECK([${COMPILE} -fsign-ascii  -o prog prog.cob])
+AT_CHECK([${COMPILE} -fsign-ascii prog.cob])
 AT_CHECK([java prog], [0], [0123456789pqrstuvwxy])
 
 AT_CLEANUP
@@ -162,7 +162,7 @@ AT_DATA([prog.cob], [
            STOP RUN.
 ])
 
-AT_CHECK([${COMPILE} -fsign-ebcdic -o prog prog.cob])
+AT_CHECK([${COMPILE} -fsign-ebcdic prog.cob])
 AT_CHECK([java prog], [0], [{ABCDEFGHI}JKLMNOPQR])
 
 AT_CLEANUP
@@ -197,7 +197,7 @@ AT_DATA([prog.cob], [
            STOP RUN.
 ])
 
-AT_CHECK([${COMPILE} -fsign-ascii -o prog prog.cob])
+AT_CHECK([${COMPILE} -fsign-ascii prog.cob])
 AT_CHECK([java prog], [0],
 [+0000 0000+
 +0000 0000+
@@ -230,7 +230,7 @@ AT_DATA([prog.cob], [
            STOP RUN.
 ])
 
-AT_CHECK([${COMPILE} -fsign-ascii -o prog prog.cob])
+AT_CHECK([${COMPILE} -fsign-ascii prog.cob])
 AT_CHECK([java prog], [0],
 [0000
 0000
@@ -263,7 +263,7 @@ AT_DATA([prog.cob], [
            STOP RUN.
 ])
 
-AT_CHECK([${COMPILE} -fsign-ebcdic -o prog prog.cob])
+AT_CHECK([${COMPILE} -fsign-ebcdic prog.cob])
 AT_CHECK([java prog], [0],
 [000{
 000{
