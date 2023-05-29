@@ -249,7 +249,7 @@ static cob_sighandler_t intsig = NULL;
 static cob_sighandler_t qutsig = NULL;
 #endif
 
-static const char short_options[] = "hVvECbmxgwoj:t:I:L:l:D:";
+static const char short_options[] = "hVvECbmxgwo:j:t:I:L:l:D:";
 
 static const struct option long_options[] = {
     {"help", no_argument, NULL, 'h'},
@@ -767,6 +767,8 @@ static void cobc_print_usage(void) {
   puts(_("  -g                                Enable Java compiler debug"));
   puts(_("  -o <dir>                          Place class files into <dir>"));
   puts(_("  -class-file-dir=<dir>             Place class files into <dir>"));
+  puts(_("  -j <dir>                          Place java files into <dir>"));
+  puts(_("  -java-source-dir=<dir>            Place java files into <dir>"));
   puts(_("  -E                                Preprocess only; do not compile "
          "or link"));
   puts(_("  -C                                Translation only; convert COBOL "
@@ -831,6 +833,18 @@ static int process_command_line(const int argc, char *argv[]) {
       argv[argnum - 1][0] = '-';
     }
   }
+
+  /*while(c = getopt(argc, argv, short_options)) {
+    switch(c) {
+    case 'o':
+      output_name = strdup(optarg);
+      break;
+
+    case 'j':
+      java_source_dir = strdup(optarg);
+      break;
+    }
+  }*/
 
   while ((c = getopt_long_only(argc, argv, short_options, long_options,
                                &idx)) >= 0) {
@@ -921,12 +935,14 @@ static int process_command_line(const int argc, char *argv[]) {
       break;
 
     case 'o':
-      /* -o : Output file */
-      /* -class-path : Output file*/
+      /* -o : the directory where class files are stored */
+      /* -class-file-dir : the directory where class files are stored */
       output_name = strdup(optarg);
       break;
 
     case 'j':
+      /* -j : the directory where java files are stored */
+      /* -java-file-dir : the directory where java files are stored */
       java_source_dir = strdup(optarg);
       break;
 
