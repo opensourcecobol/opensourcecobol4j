@@ -834,18 +834,6 @@ static int process_command_line(const int argc, char *argv[]) {
     }
   }
 
-  /*while(c = getopt(argc, argv, short_options)) {
-    switch(c) {
-    case 'o':
-      output_name = strdup(optarg);
-      break;
-
-    case 'j':
-      java_source_dir = strdup(optarg);
-      break;
-    }
-  }*/
-
   while ((c = getopt_long_only(argc, argv, short_options, long_options,
                                &idx)) >= 0) {
     switch (c) {
