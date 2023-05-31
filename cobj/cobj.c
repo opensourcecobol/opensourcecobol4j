@@ -765,10 +765,8 @@ static void cobc_print_usage(void) {
   puts(_("  -free_1col_aster                  Use free(1col_aster) source "
          "format"));
   puts(_("  -g                                Enable Java compiler debug"));
-  puts(_("  -o <dir>                          Place class files into <dir>"));
-  puts(_("  -class-file-dir=<dir>             Place class files into <dir>"));
-  puts(_("  -j <dir>                          Place java files into <dir>"));
-  puts(_("  -java-source-dir=<dir>            Place java files into <dir>"));
+  puts(_("  -o <dir>, -class-file-dir=<dir>   Place class files into <dir>"));
+  puts(_("  -j <dir>, -java-source-dir=<dir>  Place Java files into <dir>"));
   puts(_("  -E                                Preprocess only; do not compile "
          "or link"));
   puts(_("  -C                                Translation only; convert COBOL "
@@ -930,7 +928,7 @@ static int process_command_line(const int argc, char *argv[]) {
 
     case 'j':
       /* -j : the directory where java files are stored */
-      /* -java-file-dir : the directory where java files are stored */
+      /* -java-source-dir : the directory where java files are stored */
       java_source_dir = strdup(optarg);
       break;
 

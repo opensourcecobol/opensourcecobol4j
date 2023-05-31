@@ -5,11 +5,12 @@ NEWS - user visible changes				-*- outline -*-
 * opensource COBOL 4J 1.0.11
 
 ** New Features
-  (1) Add -j, -o, -java-file-dir, -class-file-dir to control the file paths of generated files
+  (1) Add -j and -java-source-dir options to control the file paths where Java files are generated
+  (2) Add -o and -class-file-dir options to control the file paths where class files are generated
 
 ** Bug fixes
   (1) Fix a bug related to RELATIVE files
-  (2) Fix a bug of the computation of signs of numbers
+  (2) Fix a minor bug
 
 -----------------------------------------------------------------------
 
