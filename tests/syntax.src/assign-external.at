@@ -25,7 +25,7 @@ AT_DATA([prog.cob], [
            STOP RUN.
 ])
 
-AT_CHECK([${COMPILE_MODULE} --assign_external -o prog prog.cob])
+AT_CHECK([${COMPILE_MODULE} --assign_external prog.cob])
 AT_CHECK([export TEST_FILE=TEST-ext && ${COBCRUN} prog])
 AT_CHECK([if test -f TEST-dyn ; then echo -n OK ; else echo -n NG ; fi], [0], [OK])
 

@@ -5512,8 +5512,8 @@ void joutput_execution_entry_func() {
   joutput_line("}");
 }
 
-void codegen(struct cb_program *prog, const int nested,
-             char **program_id_list) {
+void codegen(struct cb_program *prog, const int nested, char **program_id_list,
+             char *java_source_dir) {
   int i;
   cb_tree l;
   struct field_list *k;
@@ -5545,8 +5545,8 @@ void codegen(struct cb_program *prog, const int nested,
 
   // modify 8/29 11:00
   joutput_target = yyout;
-  char java_file_name[64];
-  sprintf(java_file_name, "%s.java", prog->program_id);
+  char java_file_name[1024];
+  sprintf(java_file_name, "%s/%s.java", java_source_dir, prog->program_id);
   *program_id_list = (char *)prog->program_id;
   joutput_target = fopen(java_file_name, "w");
 
@@ -5834,7 +5834,7 @@ void codegen(struct cb_program *prog, const int nested,
     joutput_line("}");
     fclose(joutput_target);
     ++program_id_list;
-    codegen(prog->next_program, 1, program_id_list);
+    codegen(prog->next_program, 1, program_id_list, java_source_dir);
     return;
   }
 

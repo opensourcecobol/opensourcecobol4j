@@ -1454,6 +1454,7 @@ public abstract class AbstractCobolField {
         } else if (sign < 0) {
           p.setByte(0, (byte) (b + 0x40));
         }
+        return;
       case CobolFieldAttribute.COB_TYPE_NUMERIC_PACKED:
         p = this.getDataStorage().getSubDataStorage(this.size - 1);
         if (sign < 0) {

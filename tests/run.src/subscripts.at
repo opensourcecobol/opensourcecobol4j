@@ -112,7 +112,7 @@ AT_DATA([prog.cob], [
            STOP RUN.
 ])
 
-AT_CHECK([${COMPILE} -o prog prog.cob])
+AT_CHECK([${COMPILE} prog.cob])
 AT_CHECK([java prog], [1], ,
 [prog.cob:10: libcob: Subscript of 'X' out of bounds: 0
 ])
@@ -137,7 +137,7 @@ AT_DATA([prog.cob], [
            STOP RUN.
 ])
 
-AT_CHECK([${COMPILE} -o prog prog.cob])
+AT_CHECK([${COMPILE} prog.cob])
 AT_CHECK([java prog], [1], ,
 [prog.cob:10: libcob: Subscript of 'X' out of bounds: 11
 ])
@@ -161,7 +161,7 @@ AT_DATA([prog.cob], [
            STOP RUN.
 ])
 
-AT_CHECK([${COMPILE} -o prog prog.cob])
+AT_CHECK([${COMPILE} prog.cob])
 AT_CHECK([java prog], [1], ,
 [prog.cob:10: libcob: Subscript of 'X' out of bounds: 11
 ])
@@ -185,7 +185,7 @@ AT_DATA([prog.cob], [
            STOP RUN.
 ])
 
-AT_CHECK([${COMPILE} -o prog prog.cob])
+AT_CHECK([${COMPILE} prog.cob])
 AT_CHECK([java prog], [1], ,
 [prog.cob:10: libcob: Subscript of 'X' out of bounds: 11
 ])
@@ -209,7 +209,7 @@ AT_DATA([prog.cob], [
            STOP RUN.
 ])
 
-AT_CHECK([${COMPILE} -o prog prog.cob])
+AT_CHECK([${COMPILE} prog.cob])
 AT_CHECK([java prog], [1], ,
 [prog.cob:10: libcob: Subscript of 'X' out of bounds: 11
 ])
@@ -233,7 +233,7 @@ AT_DATA([prog.cob], [
            STOP RUN.
 ])
 
-AT_CHECK([${COMPILE} -o prog prog.cob])
+AT_CHECK([${COMPILE} prog.cob])
 AT_CHECK([java prog], [1], ,
 [prog.cob:10: libcob: Subscript of 'X' out of bounds: 11
 ])
@@ -257,7 +257,7 @@ AT_DATA([prog.cob], [
            STOP RUN.
 ])
 
-AT_CHECK([${COMPILE} -o prog prog.cob])
+AT_CHECK([${COMPILE} prog.cob])
 AT_CHECK([java prog], [1], ,
 [prog.cob:10: libcob: OCCURS DEPENDING ON 'N' out of bounds: 3
 ])
@@ -282,7 +282,7 @@ AT_DATA([prog.cob], [
            STOP RUN.
 ])
 
-AT_CHECK([${COMPILE} -o prog prog.cob])
+AT_CHECK([${COMPILE} prog.cob])
 AT_CHECK([java prog], [1], ,
 [prog.cob:10: libcob: OCCURS DEPENDING ON 'N' out of bounds: 7
 ])
@@ -306,7 +306,7 @@ AT_DATA([prog.cob], [
            STOP RUN.
 ])
 
-AT_CHECK([${COMPILE} -o prog prog.cob], [1], ,
+AT_CHECK([${COMPILE} prog.cob], [1], ,
 [prog.cob:10: Error: Subscript of 'X' out of bounds: 0
 ])
 
@@ -329,7 +329,7 @@ AT_DATA([prog.cob], [
            STOP RUN.
 ])
 
-AT_CHECK([${COMPILE} -o prog prog.cob], [1], ,
+AT_CHECK([${COMPILE} prog.cob], [1], ,
 [prog.cob:10: Error: Subscript of 'X' out of bounds: 7
 ])
 
@@ -353,7 +353,7 @@ AT_DATA([prog.cob], [
            STOP RUN.
 ])
 
-AT_CHECK([${COMPILE} -o prog prog.cob])
+AT_CHECK([${COMPILE} prog.cob])
 AT_CHECK([java prog], [1], ,
 [prog.cob:10: libcob: Subscript of 'X' out of bounds: 5
 ])
@@ -381,7 +381,7 @@ AT_DATA([prog.cob], [
            STOP RUN.
 ])
 
-AT_CHECK([${COMPILE} -o prog prog.cob])
+AT_CHECK([${COMPILE} prog.cob])
 AT_CHECK([java prog], [0], [24])
 
 AT_CLEANUP
@@ -404,7 +404,7 @@ AT_DATA([prog.cob], [
            STOP RUN.
 ])
 
-AT_CHECK([${COMPILE} -o prog prog.cob])
+AT_CHECK([${COMPILE} prog.cob])
 AT_CHECK([java prog], [1], ,
 [prog.cob:11: libcob: Subscript of 'X' out of bounds: 0
 ])
@@ -429,7 +429,7 @@ AT_DATA([prog.cob], [
            STOP RUN.
 ])
 
-AT_CHECK([${COMPILE} -o prog prog.cob])
+AT_CHECK([${COMPILE} prog.cob])
 AT_CHECK([java prog], [1], ,
 [prog.cob:11: libcob: Subscript of 'X' out of bounds: 0
 ])
@@ -454,7 +454,7 @@ AT_DATA([prog.cob], [
            STOP RUN.
 ])
 
-AT_CHECK([${COMPILE_DEFAULT} -o prog prog.cob])
+AT_CHECK([${COMPILE_DEFAULT} prog.cob])
 AT_CHECK([java prog], [0])
 
 AT_CLEANUP
@@ -477,7 +477,7 @@ AT_DATA([prog.cob], [
            STOP RUN.
 ])
 
-AT_CHECK([${COMPILE_JP_COMPAT_DEFAULT} -o prog prog.cob])
+AT_CHECK([${COMPILE_JP_COMPAT_DEFAULT} prog.cob])
 AT_CHECK([java prog], [1], ,
 [libcob: Subscript of 'X' out of bounds: 0
 ])

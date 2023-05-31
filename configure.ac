@@ -19,7 +19,7 @@
 
 AC_PREREQ(2.59)
 
-AC_INIT([opensource COBOL 4J],[1.0.10],[ws-opensource-cobol-contact@osscons.jp],[opensource-cobol-4j-1.0.10])
+AC_INIT([opensource COBOL 4J],[1.0.11],[ws-opensource-cobol-contact@osscons.jp],[opensource-cobol-4j-1.0.11])
 AC_CONFIG_SRCDIR([libcob.h])
 AC_CONFIG_HEADERS([config.h])
 AC_CONFIG_TESTDIR([tests])
