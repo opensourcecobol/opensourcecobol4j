@@ -40,7 +40,7 @@ public abstract class AbstractCobolField {
   static CobolDataStorage lastdata = null;
 
   static final int[] cobExp10 = {
-      1, 10, 100, 1000, 10000, 100000, 1000000, 10000000, 100000000, 1000000000
+    1, 10, 100, 1000, 10000, 100000, 1000000, 10000000, 100000000, 1000000000
   };
 
   /**
@@ -48,15 +48,14 @@ public abstract class AbstractCobolField {
    *
    * @author y-sakamoto
    */
-  protected class GotoException extends Exception {
-  }
+  protected class GotoException extends Exception {}
 
   /**
    * コンストラクタ
    *
-   * @param size        データを格納するバイト配列の長さ
+   * @param size データを格納するバイト配列の長さ
    * @param dataStorage データを格納するバイト配列を扱うオブジェクト
-   * @param attribute   変数に関する様々な情報を保持するオブジェクト(符号付か,COMP-3指定かなど)
+   * @param attribute 変数に関する様々な情報を保持するオブジェクト(符号付か,COMP-3指定かなど)
    */
   public AbstractCobolField(int size, CobolDataStorage dataStorage, CobolFieldAttribute attribute) {
     this.size = size;
@@ -64,8 +63,7 @@ public abstract class AbstractCobolField {
     this.attribute = attribute;
   }
 
-  public AbstractCobolField() {
-  }
+  public AbstractCobolField() {}
 
   /**
    * メンバ変数dataStorageのgetter
@@ -131,8 +129,7 @@ public abstract class AbstractCobolField {
   }
 
   /**
-   * opensource COBOLのCOB_FIELD_DATAに相当するメソッド
-   * バイト配列の中で(符号データではなく)数値データの格納されている最小の添え字を返す opensource
+   * opensource COBOLのCOB_FIELD_DATAに相当するメソッド バイト配列の中で(符号データではなく)数値データの格納されている最小の添え字を返す opensource
    * COBOLではポインタを返しているが,このメソッドは添え字を返す
    *
    * @return SIGN_LEADINGかつSIGN_SEPARATEなら1,それ以外は0
@@ -142,12 +139,13 @@ public abstract class AbstractCobolField {
   }
 
   public byte[] getBytes() {
-    CobolFieldAttribute attr = new CobolFieldAttribute(
-        CobolFieldAttribute.COB_TYPE_NUMERIC_BINARY,
-        9,
-        0,
-        CobolFieldAttribute.COB_FLAG_HAVE_SIGN,
-        null);
+    CobolFieldAttribute attr =
+        new CobolFieldAttribute(
+            CobolFieldAttribute.COB_TYPE_NUMERIC_BINARY,
+            9,
+            0,
+            CobolFieldAttribute.COB_FLAG_HAVE_SIGN,
+            null);
     CobolDataStorage n = new CobolDataStorage(new byte[4], 0);
     AbstractCobolField temp = CobolFieldFactory.makeCobolField(4, n, attr);
     temp.moveFrom(this);
@@ -165,12 +163,13 @@ public abstract class AbstractCobolField {
    * @return
    */
   public int getInt() {
-    CobolFieldAttribute attr = new CobolFieldAttribute(
-        CobolFieldAttribute.COB_TYPE_NUMERIC_BINARY,
-        9,
-        0,
-        CobolFieldAttribute.COB_FLAG_HAVE_SIGN,
-        null);
+    CobolFieldAttribute attr =
+        new CobolFieldAttribute(
+            CobolFieldAttribute.COB_TYPE_NUMERIC_BINARY,
+            9,
+            0,
+            CobolFieldAttribute.COB_FLAG_HAVE_SIGN,
+            null);
     CobolDataStorage n = new CobolDataStorage(new byte[4], 0);
     AbstractCobolField temp = CobolFieldFactory.makeCobolField(4, n, attr);
     temp.moveFrom(this);
@@ -281,7 +280,7 @@ public abstract class AbstractCobolField {
    * libcob/numeric.cのcob_addの実装 thisの保持する数値データに,引数で与えられたフィールドの保持する数値データを加算する
    *
    * @param field 加算する数値を保持するフィールド
-   * @param opt   加算に関するオプション.詳しくはopensourceCOBOLを参照
+   * @param opt 加算に関するオプション.詳しくはopensourceCOBOLを参照
    * @return 加算後のthisの保持する数値データ
    */
   public int add(AbstractCobolField field, int opt) throws CobolStopRunException {
@@ -295,7 +294,7 @@ public abstract class AbstractCobolField {
    * libcob/numeric.cのcob_subの実装 thisの保持する数値データに,引数で与えられたフィールドの保持する数値データを減算する
    *
    * @param field 減算する数値を保持するフィールド
-   * @param opt   減算に関するオプション.詳しくはopensourceCOBOLを参照
+   * @param opt 減算に関するオプション.詳しくはopensourceCOBOLを参照
    * @return 減算後のthisの保持する数値データ
    */
   public int sub(AbstractCobolField field, int opt) throws CobolStopRunException {
@@ -620,12 +619,13 @@ public abstract class AbstractCobolField {
     CobolDataStorage storage = new CobolDataStorage(bytes.length);
     storage.memcpy(bytes);
 
-    CobolFieldAttribute attr = new CobolFieldAttribute(
-        CobolFieldAttribute.COB_TYPE_ALPHANUMERIC,
-        bytes.length,
-        0,
-        0,
-        String.format("X(%d)", bytes.length));
+    CobolFieldAttribute attr =
+        new CobolFieldAttribute(
+            CobolFieldAttribute.COB_TYPE_ALPHANUMERIC,
+            bytes.length,
+            0,
+            0,
+            String.format("X(%d)", bytes.length));
 
     AbstractCobolField tmp = CobolFieldFactory.makeCobolField(bytes.length, storage, attr);
     this.moveFrom(tmp);
@@ -647,12 +647,13 @@ public abstract class AbstractCobolField {
       storage.setByte(length - 1, (byte) (storage.getByte(length - 1) + 0x40));
     }
 
-    CobolFieldAttribute attr = new CobolFieldAttribute(
-        CobolFieldAttribute.COB_TYPE_NUMERIC_DISPLAY,
-        length,
-        0,
-        CobolFieldAttribute.COB_FLAG_HAVE_SIGN,
-        "S9(10)");
+    CobolFieldAttribute attr =
+        new CobolFieldAttribute(
+            CobolFieldAttribute.COB_TYPE_NUMERIC_DISPLAY,
+            length,
+            0,
+            CobolFieldAttribute.COB_FLAG_HAVE_SIGN,
+            "S9(10)");
 
     AbstractCobolField tmp = CobolFieldFactory.makeCobolField(length, storage, attr);
     this.moveFrom(tmp);
@@ -679,12 +680,13 @@ public abstract class AbstractCobolField {
     CobolDataStorage storage = new CobolDataStorage(ss.length());
     storage.memcpy(ss, ss.length());
 
-    CobolFieldAttribute attr = new CobolFieldAttribute(
-        CobolFieldAttribute.COB_TYPE_NUMERIC_DISPLAY,
-        ss.length(),
-        scale,
-        CobolFieldAttribute.COB_FLAG_HAVE_SIGN,
-        "");
+    CobolFieldAttribute attr =
+        new CobolFieldAttribute(
+            CobolFieldAttribute.COB_TYPE_NUMERIC_DISPLAY,
+            ss.length(),
+            scale,
+            CobolFieldAttribute.COB_FLAG_HAVE_SIGN,
+            "");
 
     AbstractCobolField tmp = CobolFieldFactory.makeCobolField(ss.length(), storage, attr);
     if (number < 0) {
@@ -705,8 +707,7 @@ public abstract class AbstractCobolField {
    *
    * @param s
    */
-  public void checkNumeric(String s) {
-  }
+  public void checkNumeric(String s) {}
 
   // TODO abstract指定
   /**
@@ -839,22 +840,24 @@ public abstract class AbstractCobolField {
     CobolDataStorage data = new CobolDataStorage(48);
     if (attr.isTypeNumeric()) {
       if (!attr.isTypeNumericDisplay()) {
-        CobolFieldAttribute newAttr = new CobolFieldAttribute(
-            CobolFieldAttribute.COB_TYPE_NUMERIC_DISPLAY,
-            attr.getDigits(),
-            attr.getScale(),
-            attr.getFlags() & (~CobolFieldAttribute.COB_FLAG_HAVE_SIGN),
-            attr.getPic());
+        CobolFieldAttribute newAttr =
+            new CobolFieldAttribute(
+                CobolFieldAttribute.COB_TYPE_NUMERIC_DISPLAY,
+                attr.getDigits(),
+                attr.getScale(),
+                attr.getFlags() & (~CobolFieldAttribute.COB_FLAG_HAVE_SIGN),
+                attr.getPic());
         CobolNumericField temp = new CobolNumericField(attr.getDigits(), data, newAttr);
         temp.moveFrom(field);
         field = temp;
       } else if (attr.isFlagHaveSign()) {
-        CobolFieldAttribute newAttr = new CobolFieldAttribute(
-            CobolFieldAttribute.COB_TYPE_NUMERIC_DISPLAY,
-            attr.getDigits(),
-            attr.getScale(),
-            CobolFieldAttribute.COB_FLAG_HAVE_SIGN,
-            attr.getPic());
+        CobolFieldAttribute newAttr =
+            new CobolFieldAttribute(
+                CobolFieldAttribute.COB_TYPE_NUMERIC_DISPLAY,
+                attr.getDigits(),
+                attr.getScale(),
+                CobolFieldAttribute.COB_FLAG_HAVE_SIGN,
+                attr.getPic());
         CobolNumericField temp = new CobolNumericField(attr.getDigits(), data, newAttr);
         temp.moveFrom(field);
         field = temp;
@@ -1018,8 +1021,7 @@ public abstract class AbstractCobolField {
   }
 
   /**
-   * libcob/common.cのcob_field_to_stringの実装 TODO
-   * CobolNationalFieldでオーバーライドしなくても済むように修正する.
+   * libcob/common.cのcob_field_to_stringの実装 TODO CobolNationalFieldでオーバーライドしなくても済むように修正する.
    *
    * @return this.dataの保持するデータを文字列にして返す.
    */
@@ -1036,12 +1038,13 @@ public abstract class AbstractCobolField {
 
   /** libcob/move.cのcob_set_intの実装 */
   public void setInt(int n) {
-    CobolFieldAttribute attr = new CobolFieldAttribute(
-        CobolFieldAttribute.COB_TYPE_NUMERIC_BINARY,
-        9,
-        0,
-        CobolFieldAttribute.COB_FLAG_HAVE_SIGN,
-        null);
+    CobolFieldAttribute attr =
+        new CobolFieldAttribute(
+            CobolFieldAttribute.COB_TYPE_NUMERIC_BINARY,
+            9,
+            0,
+            CobolFieldAttribute.COB_FLAG_HAVE_SIGN,
+            null);
     CobolDataStorage data = new CobolDataStorage(ByteBuffer.allocate(4).putInt(n).array());
     AbstractCobolField temp = CobolFieldFactory.makeCobolField(4, data, attr);
     this.moveFrom(temp);
@@ -1059,8 +1062,10 @@ public abstract class AbstractCobolField {
    * @param size
    */
   public void memcpy(byte[] src, int size) {
-    CobolFieldAttribute attr = new CobolFieldAttribute(CobolFieldAttribute.COB_TYPE_ALPHANUMERIC, 0, 0, 0, null);
-    AbstractCobolField temp = CobolFieldFactory.makeCobolField(size, new CobolDataStorage(src), attr);
+    CobolFieldAttribute attr =
+        new CobolFieldAttribute(CobolFieldAttribute.COB_TYPE_ALPHANUMERIC, 0, 0, 0, null);
+    AbstractCobolField temp =
+        CobolFieldFactory.makeCobolField(size, new CobolDataStorage(src), attr);
     this.moveFrom(temp);
   }
 
@@ -1257,13 +1262,14 @@ public abstract class AbstractCobolField {
     int sign = 0;
 
     if ((this.getAttribute().getType() == CobolFieldAttribute.COB_TYPE_ALPHANUMERIC_ALL
-        || this.getAttribute().getType() == CobolFieldAttribute.COB_TYPE_NATIONAL_ALL)
+            || this.getAttribute().getType() == CobolFieldAttribute.COB_TYPE_NATIONAL_ALL)
         && this.getSize() < other.getSize()) {
       int size = other.getSize();
       CobolDataStorage data = other.getDataStorage();
       sign = other.getSign();
       CobolDataStorage s = CobolModule.getCurrentModule().collating_sequence;
-      OUTSIDE: do {
+      OUTSIDE:
+      do {
         while (size >= this.getSize()) {
           ret = comparator.compare(this.getDataStorage(), data, this.getSize(), s);
           if (ret != 0) {
@@ -1281,7 +1287,8 @@ public abstract class AbstractCobolField {
       CobolDataStorage data = this.getDataStorage();
       sign = this.getSign();
       CobolDataStorage s = CobolModule.getCurrentModule().collating_sequence;
-      OUTSIDE: do {
+      OUTSIDE:
+      do {
         while (size >= other.getSize()) {
           ret = comparator.compare(data, other.getDataStorage(), other.getSize(), s);
           if (ret != 0) {
@@ -1323,13 +1330,15 @@ public abstract class AbstractCobolField {
     if (ret == 0) {
       if (lf.getSize() > sf.getSize()) {
         if ((lf.getAttribute().getType() & CobolFieldAttribute.COB_TYPE_NATIONAL) != 0) {
-          ret = CobolUtil.isNationalPadding(
-              lf.getDataStorage().getSubDataStorage(sf.getSize()), lf.getSize() - sf.getSize());
+          ret =
+              CobolUtil.isNationalPadding(
+                  lf.getDataStorage().getSubDataStorage(sf.getSize()), lf.getSize() - sf.getSize());
         } else {
-          ret = CobolUtil.commonCmpc(
-              lf.getDataStorage().getSubDataStorage(sf.getSize()),
-              (byte) ' ',
-              lf.getSize() - sf.getSize());
+          ret =
+              CobolUtil.commonCmpc(
+                  lf.getDataStorage().getSubDataStorage(sf.getSize()),
+                  (byte) ' ',
+                  lf.getSize() - sf.getSize());
         }
         if (this.getSize() < other.getSize()) {
           ret = -ret;
@@ -1466,12 +1475,13 @@ public abstract class AbstractCobolField {
    */
   public long getLong() {
     long n;
-    CobolFieldAttribute attr = new CobolFieldAttribute(
-        CobolFieldAttribute.COB_TYPE_NUMERIC_BINARY,
-        18,
-        0,
-        CobolFieldAttribute.COB_FLAG_HAVE_SIGN,
-        null);
+    CobolFieldAttribute attr =
+        new CobolFieldAttribute(
+            CobolFieldAttribute.COB_TYPE_NUMERIC_BINARY,
+            18,
+            0,
+            CobolFieldAttribute.COB_FLAG_HAVE_SIGN,
+            null);
     byte[] data = new byte[8];
     CobolDataStorage storage = new CobolDataStorage(data);
     AbstractCobolField field = CobolFieldFactory.makeCobolField(8, storage, attr);
@@ -1483,8 +1493,7 @@ public abstract class AbstractCobolField {
     return 0;
   }
 
-  public void setLongValue(long n) {
-  }
+  public void setLongValue(long n) {}
 
   /**
    * libcob/move.cのcob_hankaku_moveの実装
