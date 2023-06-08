@@ -117,6 +117,7 @@ public class CobolDecimal {
     this(new BigDecimal(n));
     this.setScale(0);
   }
+
   /**
    * コンストラクタ. this.valueを指定されたint型の値に対応する値に設定する
    *
@@ -227,50 +228,52 @@ public class CobolDecimal {
    *
    * @param f
    */
-  /*public void decimalSetDisplay(AbstractCobolField f) {
-  	int firstIndex = f.getFirstDataIndex();
-  	int p = 0;
-  	int size = f.getFieldSize();
-
-  	CobolDataStorage data = f.getDataStorage();
-  	if(data.getByte(firstIndex + p) == 255) {
-  		this.value = BigDecimal.TEN.pow(size);
-  		this.setScale(f.getAttribute().getScale());
-  		return;
-  	}
-  	if(data.getByte(firstIndex + p) == 0) {
-  		this.value = BigDecimal.TEN.pow(size).negate();
-  		this.setScale(f.getAttribute().getScale());
-  		return;
-  	}
-  	int sign = f.getSign();
-  	// skip leading zeros
-  	while(size > 1 && data.getByte(p) == '0') {
-  		size--;
-  		p++;
-  	}
-
-  	// set value
-  	if(size < 10) {
-  		int n = 10;
-  		while(size-- != 0) {
-  			n = n * 10 + data.getByte(firstIndex + p++) - '0';
-  		}
-  		this.set(n);
-  	} else {
-  		byte[] numBuffPtr = new byte[size];
-  		for(int i=0; i<size; ++i) {
-  			numBuffPtr[i] = data.getByte(firstIndex + i);
-  		}
-  		this.value = new BigDecimal(new String(numBuffPtr));
-  	}
-
-  	if(sign < 0) {
-  		this.value = this.value.negate();
-  	}
-  	this.setScale(f.getAttribute().getScale());
-  	f.putSign(sign);
-  }*/
+  /*
+   * public void decimalSetDisplay(AbstractCobolField f) {
+   * int firstIndex = f.getFirstDataIndex();
+   * int p = 0;
+   * int size = f.getFieldSize();
+   *
+   * CobolDataStorage data = f.getDataStorage();
+   * if(data.getByte(firstIndex + p) == 255) {
+   * this.value = BigDecimal.TEN.pow(size);
+   * this.setScale(f.getAttribute().getScale());
+   * return;
+   * }
+   * if(data.getByte(firstIndex + p) == 0) {
+   * this.value = BigDecimal.TEN.pow(size).negate();
+   * this.setScale(f.getAttribute().getScale());
+   * return;
+   * }
+   * int sign = f.getSign();
+   * // skip leading zeros
+   * while(size > 1 && data.getByte(p) == '0') {
+   * size--;
+   * p++;
+   * }
+   *
+   * // set value
+   * if(size < 10) {
+   * int n = 10;
+   * while(size-- != 0) {
+   * n = n * 10 + data.getByte(firstIndex + p++) - '0';
+   * }
+   * this.set(n);
+   * } else {
+   * byte[] numBuffPtr = new byte[size];
+   * for(int i=0; i<size; ++i) {
+   * numBuffPtr[i] = data.getByte(firstIndex + i);
+   * }
+   * this.value = new BigDecimal(new String(numBuffPtr));
+   * }
+   *
+   * if(sign < 0) {
+   * this.value = this.value.negate();
+   * }
+   * this.setScale(f.getAttribute().getScale());
+   * f.putSign(sign);
+   * }
+   */
 
   /**
    * libcob/numeric.cのDECIMAL_CHECKマクロの代替
@@ -634,7 +637,7 @@ public class CobolDecimal {
     int q = 0;
     int diff = digits - size;
     if (diff < 0) {
-      // TODO  実装
+      // TODO 実装
       throw new CobolRuntimeException(0, "未実装のエラー");
     }
     data.fillBytes(0, f.getSize());
@@ -664,6 +667,7 @@ public class CobolDecimal {
   }
 
   class OverflowException extends Exception {}
+
   /**
    * libcob/numeric.cのcob_decimal_get_binaryの実装
    *
@@ -697,10 +701,9 @@ public class CobolDecimal {
         }
         overflow = 1;
         if ((opt & COB_STORE_TRUNC_ON_OVERFLOW) != 0) {
-          this.setValue(this.getValue().divide(cobMpze10[digits], RoundingMode.DOWN));
+          this.setValue(this.getValue().remainder(cobMpze10[digits]));
         } else {
-          this.setValue(
-              this.getValue().divide(new BigDecimal(2).pow(f.getSize() * 8), RoundingMode.DOWN));
+          this.setValue(this.getValue().remainder(new BigDecimal(2).pow(f.getSize() * 8)));
         }
       } else if ((opt != 0) && CobolModule.getCurrentModule().flag_binary_truncate != 0) {
         if (this.getValue().abs().compareTo(cobMpze10[digits].abs()) >= 0) {
@@ -709,11 +712,9 @@ public class CobolDecimal {
           }
           overflow = 1;
           if ((opt & COB_STORE_TRUNC_ON_OVERFLOW) != 0) {
-            this.setValue(this.getValue().divide(cobMpze10[digits], RoundingMode.DOWN));
+            this.setValue(this.getValue().remainder(cobMpze10[digits]));
           } else {
-            this.setValue(
-                this.getValue()
-                    .divide(new BigDecimal(2).pow(f.getFieldSize() * 8), RoundingMode.DOWN));
+            this.setValue(this.getValue().remainder(new BigDecimal(2).pow(f.getFieldSize() * 8)));
           }
         }
       }
