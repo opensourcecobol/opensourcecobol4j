@@ -233,7 +233,7 @@ public class CobolDecimal {
    * int firstIndex = f.getFirstDataIndex();
    * int p = 0;
    * int size = f.getFieldSize();
-   * 
+   *
    * CobolDataStorage data = f.getDataStorage();
    * if(data.getByte(firstIndex + p) == 255) {
    * this.value = BigDecimal.TEN.pow(size);
@@ -251,7 +251,7 @@ public class CobolDecimal {
    * size--;
    * p++;
    * }
-   * 
+   *
    * // set value
    * if(size < 10) {
    * int n = 10;
@@ -266,7 +266,7 @@ public class CobolDecimal {
    * }
    * this.value = new BigDecimal(new String(numBuffPtr));
    * }
-   * 
+   *
    * if(sign < 0) {
    * this.value = this.value.negate();
    * }
@@ -289,8 +289,7 @@ public class CobolDecimal {
     return false;
   }
 
-  private void decimalAdd(CobolDecimal d1, CobolDecimal d2) {
-  }
+  private void decimalAdd(CobolDecimal d1, CobolDecimal d2) {}
 
   /**
    * this.valueの値をthis.valueとnを加算した値にする
@@ -491,14 +490,15 @@ public class CobolDecimal {
       default:
         int digits = f.getAttribute().getDigits();
         CobolFieldAttribute attr = f.getAttribute();
-        CobolFieldAttribute newAttr = new CobolFieldAttribute(
-            CobolFieldAttribute.COB_TYPE_NUMERIC_DISPLAY,
-            digits,
-            attr.getScale(),
-            CobolFieldAttribute.COB_FLAG_HAVE_SIGN,
-            null);
-        AbstractCobolField displayField = CobolFieldFactory.makeCobolField(digits, new CobolDataStorage(digits),
-            newAttr);
+        CobolFieldAttribute newAttr =
+            new CobolFieldAttribute(
+                CobolFieldAttribute.COB_TYPE_NUMERIC_DISPLAY,
+                digits,
+                attr.getScale(),
+                CobolFieldAttribute.COB_FLAG_HAVE_SIGN,
+                null);
+        AbstractCobolField displayField =
+            CobolFieldFactory.makeCobolField(digits, new CobolDataStorage(digits), newAttr);
         if (d.getField(displayField, opt) == 0) {
           f.moveFrom(displayField);
         }
@@ -666,8 +666,7 @@ public class CobolDecimal {
     return 0;
   }
 
-  class OverflowException extends Exception {
-  }
+  class OverflowException extends Exception {}
 
   /**
    * libcob/numeric.cのcob_decimal_get_binaryの実装
@@ -704,8 +703,7 @@ public class CobolDecimal {
         if ((opt & COB_STORE_TRUNC_ON_OVERFLOW) != 0) {
           this.setValue(this.getValue().remainder(cobMpze10[digits]));
         } else {
-          this.setValue(
-              this.getValue().remainder(new BigDecimal(2).pow(f.getSize() * 8)));
+          this.setValue(this.getValue().remainder(new BigDecimal(2).pow(f.getSize() * 8)));
         }
       } else if ((opt != 0) && CobolModule.getCurrentModule().flag_binary_truncate != 0) {
         if (this.getValue().abs().compareTo(cobMpze10[digits].abs()) >= 0) {
@@ -716,9 +714,7 @@ public class CobolDecimal {
           if ((opt & COB_STORE_TRUNC_ON_OVERFLOW) != 0) {
             this.setValue(this.getValue().remainder(cobMpze10[digits]));
           } else {
-            this.setValue(
-                this.getValue()
-                    .remainder(new BigDecimal(2).pow(f.getFieldSize() * 8)));
+            this.setValue(this.getValue().remainder(new BigDecimal(2).pow(f.getFieldSize() * 8)));
           }
         }
       }
