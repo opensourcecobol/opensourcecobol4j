@@ -29,9 +29,9 @@ public class CobolNumericBinaryField extends AbstractCobolField {
   /**
    * コンストラクタ
    *
-   * @param size データを格納するバイト配列の長さ
+   * @param size        データを格納するバイト配列の長さ
    * @param dataStorage データを格納するバイト配列を扱うオブジェクト
-   * @param attribute 変数に関する様々な情報を保持するオブジェクト
+   * @param attribute   変数に関する様々な情報を保持するオブジェクト
    */
   public CobolNumericBinaryField(
       int size, CobolDataStorage dataStorage, CobolFieldAttribute attribute) {
@@ -41,7 +41,7 @@ public class CobolNumericBinaryField extends AbstractCobolField {
   /** TODO */
   @Override
   public byte[] getBytes() {
-    return null;
+    return new byte[0];
   }
 
   /** 実装しないメソッド */
@@ -94,13 +94,12 @@ public class CobolNumericBinaryField extends AbstractCobolField {
   public String getString() {
     CobolFieldAttribute thisAttr = this.getAttribute();
     int flag = thisAttr.isFlagHaveSign() ? CobolFieldAttribute.COB_FLAG_HAVE_SIGN : 0;
-    CobolFieldAttribute attr =
-        new CobolFieldAttribute(
-            CobolFieldAttribute.COB_TYPE_NUMERIC,
-            thisAttr.getDigits(),
-            thisAttr.getScale(),
-            flag,
-            thisAttr.getPic());
+    CobolFieldAttribute attr = new CobolFieldAttribute(
+        CobolFieldAttribute.COB_TYPE_NUMERIC,
+        thisAttr.getDigits(),
+        thisAttr.getScale(),
+        flag,
+        thisAttr.getPic());
     CobolDataStorage storage = new CobolDataStorage(thisAttr.getDigits());
     CobolNumericField numericField = new CobolNumericField(thisAttr.getDigits(), storage, attr);
     numericField.moveFrom(this);
@@ -127,7 +126,8 @@ public class CobolNumericBinaryField extends AbstractCobolField {
 
   /** TODO */
   @Override
-  public void setDecimal(BigDecimal decimal) {}
+  public void setDecimal(BigDecimal decimal) {
+  }
 
   /**
    * 引数で与えらえられたデータからthisへの代入を行う
@@ -234,7 +234,8 @@ public class CobolNumericBinaryField extends AbstractCobolField {
    * @param field 代入元のデータ(CobolDataStorage型)
    */
   @Override
-  public void moveFrom(CobolDataStorage dataStrage) {}
+  public void moveFrom(CobolDataStorage dataStrage) {
+  }
 
   /**
    * CobolNumericFieldからからthisへの代入
@@ -242,7 +243,8 @@ public class CobolNumericBinaryField extends AbstractCobolField {
    * @param field 代入元のデータ(byte[]型)
    */
   @Override
-  public void moveFrom(byte[] bytes) {}
+  public void moveFrom(byte[] bytes) {
+  }
 
   /**
    * CobolNumericFieldからからthisへの代入
@@ -250,7 +252,8 @@ public class CobolNumericBinaryField extends AbstractCobolField {
    * @param field 代入元のデータ(String型)
    */
   @Override
-  public void moveFrom(String string) {}
+  public void moveFrom(String string) {
+  }
 
   /**
    * CobolNumericFieldからからthisへの代入
@@ -268,7 +271,8 @@ public class CobolNumericBinaryField extends AbstractCobolField {
    * @param field 代入元のデータ(double型)
    */
   @Override
-  public void moveFrom(double number) {}
+  public void moveFrom(double number) {
+  }
 
   /**
    * CobolNumericFieldからからthisへの代入
@@ -276,7 +280,8 @@ public class CobolNumericBinaryField extends AbstractCobolField {
    * @param field 代入元のデータ(BigDecimal型)
    */
   @Override
-  public void moveFrom(BigDecimal number) {}
+  public void moveFrom(BigDecimal number) {
+  }
 
   /**
    * thisをCobolNumericFieldに変換する. indirect moveをするときに使用されることを想定している.
@@ -286,13 +291,12 @@ public class CobolNumericBinaryField extends AbstractCobolField {
   public CobolNumericField getNumericField() {
     int size = this.getAttribute().getDigits();
     int scale = this.getAttribute().getScale();
-    CobolFieldAttribute attr =
-        new CobolFieldAttribute(
-            CobolFieldAttribute.COB_TYPE_NUMERIC_DISPLAY,
-            size,
-            scale,
-            CobolFieldAttribute.COB_FLAG_HAVE_SIGN,
-            null);
+    CobolFieldAttribute attr = new CobolFieldAttribute(
+        CobolFieldAttribute.COB_TYPE_NUMERIC_DISPLAY,
+        size,
+        scale,
+        CobolFieldAttribute.COB_FLAG_HAVE_SIGN,
+        null);
     CobolDataStorage data = new CobolDataStorage(this.getAttribute().getDigits());
     CobolNumericField field = new CobolNumericField(size, data, attr);
     field.moveFrom(this);

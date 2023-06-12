@@ -40,7 +40,7 @@ public class CobolRuntimeException extends RuntimeException {
    * コンストラクタ
    *
    * @param errorCode this.errorCodeに設定する値
-   * @param message this.messageに設定する値
+   * @param message   this.messageに設定する値
    */
   public CobolRuntimeException(int errorCode, String message) {
     super();
@@ -79,14 +79,14 @@ public class CobolRuntimeException extends RuntimeException {
   /** libcob/common.cのcob_runtime_errorの実装 */
   public static void displayRuntimeError(String message) {
     if (hdlrs != null && !hdlrs.isEmpty()) {
-      String runtime_err_str;
+      String runtimeErrStr;
       if (source_file != null) {
-        runtime_err_str = String.format("%s:%d: %s", source_file, source_line, message);
+        runtimeErrStr = String.format("%s:%d: %s", source_file, source_line, message);
       } else {
-        runtime_err_str = message;
+        runtimeErrStr = message;
       }
       for (RuntimeErrorHandler h : hdlrs) {
-        h.proc(runtime_err_str);
+        h.proc(runtimeErrStr);
       }
       hdlrs = null;
     }

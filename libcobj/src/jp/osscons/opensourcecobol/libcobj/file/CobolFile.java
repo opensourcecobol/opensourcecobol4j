@@ -167,7 +167,7 @@ public class CobolFile {
   protected static String file_open_name;
   protected static byte[] file_open_buff = new byte[1024];
 
-  protected static final String[] prefix = {"DD_", "dd_", ""};
+  protected static final String[] prefix = { "DD_", "dd_", "" };
   protected static final int NUM_PREFIX = prefix.length;
 
   protected static int eop_status = 0;
@@ -176,16 +176,16 @@ public class CobolFile {
   private static List<CobolFile> file_cache = new ArrayList<CobolFile>();
 
   protected static int[] status_exception = {
-    0,
-    CobolExceptionId.COB_EC_I_O_AT_END,
-    CobolExceptionId.COB_EC_I_O_INVALID_KEY,
-    CobolExceptionId.COB_EC_I_O_PERMANENT_ERROR,
-    CobolExceptionId.COB_EC_I_O_LOGIC_ERROR,
-    CobolExceptionId.COB_EC_I_O_RECORD_OPERATION,
-    CobolExceptionId.COB_EC_I_O_FILE_SHARING,
-    CobolExceptionId.COB_EC_I_O,
-    CobolExceptionId.COB_EC_I_O,
-    CobolExceptionId.COB_EC_I_O_IMP
+      0,
+      CobolExceptionId.COB_EC_I_O_AT_END,
+      CobolExceptionId.COB_EC_I_O_INVALID_KEY,
+      CobolExceptionId.COB_EC_I_O_PERMANENT_ERROR,
+      CobolExceptionId.COB_EC_I_O_LOGIC_ERROR,
+      CobolExceptionId.COB_EC_I_O_RECORD_OPERATION,
+      CobolExceptionId.COB_EC_I_O_FILE_SHARING,
+      CobolExceptionId.COB_EC_I_O,
+      CobolExceptionId.COB_EC_I_O,
+      CobolExceptionId.COB_EC_I_O_IMP
   };
   protected String select_name;
   public byte[] file_status;
@@ -231,7 +231,8 @@ public class CobolFile {
     this.linorkeyptr = ptr;
   }
 
-  public CobolFile() {}
+  public CobolFile() {
+  }
 
   public CobolFile(
       String select_name,
@@ -288,7 +289,8 @@ public class CobolFile {
   }
 
   /**
-   * libcob/fileio.cのsave_statusの実装 RETURN_STATUSマクロは実装できないため,本メソッドの呼び出し後の次の文はreturn;を書くこと.
+   * libcob/fileio.cのsave_statusの実装
+   * RETURN_STATUSマクロは実装できないため,本メソッドの呼び出し後の次の文はreturn;を書くこと.
    *
    * @param status
    * @param fnstatus
@@ -496,7 +498,7 @@ public class CobolFile {
     int cs = 0;
     int ce = name.length - 1;
     int cp;
-    boolean flag_quoted = false;
+    boolean flagQuoted = false;
     int siz = 0;
     byte[] rt = null;
     int c;
@@ -505,7 +507,7 @@ public class CobolFile {
     if (name[cs] == '\'' && name[ce] == '\'') {
       cs++;
       --ce;
-      flag_quoted = true;
+      flagQuoted = true;
     }
 
     if (ce - cs >= 5
@@ -513,7 +515,7 @@ public class CobolFile {
         && !(name[ce - 2] == '_' && name[ce - 1] == '_' && name[ce] == '_')) {
       cs += 3;
       ce -= 3;
-      if (!flag_quoted) {
+      if (!flagQuoted) {
         siz = (ce - cs + 1) / 2 + 1;
       } else {
         siz = (ce - cs + 1) / 2 + 3;
@@ -531,7 +533,7 @@ public class CobolFile {
         }
         rt = jbuf;
       }
-      if (flag_quoted && siz > 2) {
+      if (flagQuoted && siz > 2) {
         rt[0] = rt[siz - 2] = (byte) '\'';
         p = 1;
       } else {
@@ -626,68 +628,68 @@ public class CobolFile {
       src = file_open_name.getBytes();
       dst = file_open_buff;
       simple = true;
-      int src_i = 0;
-      int dst_i = 0;
-      while (src_i < src.length) {
-        char c = (char) src[src_i];
+      int srcI = 0;
+      int dstI = 0;
+      while (srcI < src.length) {
+        char c = (char) src[srcI];
         if (!Character.isLetterOrDigit(c) && c != '_' && c != '-') {
           simple = false;
         }
         if (c == '$') {
           int i;
-          for (i = 1; src_i + i < src.length; i++) {
-            char d = (char) src[src_i + i];
+          for (i = 1; srcI + i < src.length; i++) {
+            char d = (char) src[srcI + i];
             if (!Character.isLetterOrDigit(d) && d != '_' && c != '-') {
               break;
             }
           }
           for (int j = 0; j < i - 1; ++j) {
-            file_open_env[j] = src[src_i + 1 + j];
+            file_open_env[j] = src[srcI + 1 + j];
           }
           file_open_env[i - 1] = 0;
           String p = CobolUtil.getEnv(new String(Arrays.copyOfRange(file_open_env, 0, i - 1)));
           if (p != null) {
             byte[] pbytes = p.getBytes();
             for (int j = 0; j < pbytes.length; ++j) {
-              dst[dst_i + j] = pbytes[j];
+              dst[dstI + j] = pbytes[j];
             }
-            dst_i += pbytes.length;
+            dstI += pbytes.length;
           }
-          src_i += i;
+          srcI += i;
         } else {
-          dst[dst_i++] = src[src_i++];
+          dst[dstI++] = src[srcI++];
         }
       }
 
-      file_open_name = new String(Arrays.copyOfRange(dst, 0, dst_i));
+      file_open_name = new String(Arrays.copyOfRange(dst, 0, dstI));
 
-      byte[] file_open_name_bytes = file_open_name.getBytes();
-      cb_get_jisword_buff(file_open_buff, file_open_name_bytes, COB_SMALL_BUFF);
+      byte[] fileOpenNameBytes = file_open_name.getBytes();
+      cb_get_jisword_buff(file_open_buff, fileOpenNameBytes, COB_SMALL_BUFF);
 
       if (simple) {
         int i;
         for (i = 0; i < NUM_PREFIX; i++) {
-          byte[] file_open_buff = String.format("%s%s", prefix[i], file_open_name).getBytes();
+          byte[] fileOpenBuff = String.format("%s%s", prefix[i], file_open_name).getBytes();
           String p;
-          if ((p = CobolUtil.getEnv(new String(file_open_buff))) != null) {
-            file_open_name_bytes = p.getBytes();
+          if ((p = CobolUtil.getEnv(new String(fileOpenBuff))) != null) {
+            fileOpenNameBytes = p.getBytes();
             break;
           }
         }
 
         if (i == NUM_PREFIX && cob_file_path != null) {
-          byte[] file_open_buff = String.format("%s/%s", cob_file_path, file_open_name).getBytes();
-          file_open_name_bytes = file_open_buff;
+          byte[] fileOpenBuff = String.format("%s/%s", cob_file_path, file_open_name).getBytes();
+          fileOpenNameBytes = fileOpenBuff;
         }
       }
 
-      file_open_name = new String(file_open_name_bytes);
+      file_open_name = new String(fileOpenNameBytes);
     }
 
-    boolean was_not_exist = false;
+    boolean wasNotExist = false;
     if (this.organization == COB_ORG_INDEXED) {
       if (!Files.exists(Paths.get(file_open_name))) {
-        was_not_exist = true;
+        wasNotExist = true;
         if (mode != COB_OPEN_OUTPUT
             && !this.flag_optional
             && (mode != COB_OPEN_I_O || !CobolUtil.getEnv(COB_IO_CREATES).equals("yes"))
@@ -697,7 +699,7 @@ public class CobolFile {
         }
       }
     } else if (Files.notExists(Paths.get(file_open_name))) {
-      was_not_exist = true;
+      wasNotExist = true;
       if (mode != COB_OPEN_OUTPUT
           && !this.flag_optional
           && (mode != COB_OPEN_I_O || CobolUtil.checkEnv(COB_IO_CREATES, "yes") == 0)
@@ -712,7 +714,7 @@ public class CobolFile {
       switch (this.open_(file_open_name, mode, sharing)) {
         case 0:
           this.open_mode = (char) mode;
-          if (this.flag_optional && was_not_exist) {
+          if (this.flag_optional && wasNotExist) {
             saveStatus(COB_STATUS_05_SUCCESS_OPTIONAL, fnstatus);
             return;
           } else {
@@ -773,25 +775,22 @@ public class CobolFile {
           fp = FileChannel.open(Paths.get(filename), StandardOpenOption.READ);
           break;
         case COB_OPEN_OUTPUT:
-          fp =
-              FileChannel.open(
-                  Paths.get(filename),
-                  StandardOpenOption.WRITE,
-                  StandardOpenOption.CREATE,
-                  StandardOpenOption.TRUNCATE_EXISTING);
+          fp = FileChannel.open(
+              Paths.get(filename),
+              StandardOpenOption.WRITE,
+              StandardOpenOption.CREATE,
+              StandardOpenOption.TRUNCATE_EXISTING);
           break;
         case COB_OPEN_I_O:
-          fp =
-              FileChannel.open(
-                  Paths.get(filename),
-                  StandardOpenOption.READ,
-                  StandardOpenOption.WRITE,
-                  StandardOpenOption.CREATE);
+          fp = FileChannel.open(
+              Paths.get(filename),
+              StandardOpenOption.READ,
+              StandardOpenOption.WRITE,
+              StandardOpenOption.CREATE);
           break;
         case COB_OPEN_EXTEND:
-          fp =
-              FileChannel.open(
-                  Paths.get(filename), StandardOpenOption.APPEND, StandardOpenOption.CREATE);
+          fp = FileChannel.open(
+              Paths.get(filename), StandardOpenOption.APPEND, StandardOpenOption.CREATE);
           break;
       }
     } catch (IOException e) {
@@ -812,13 +811,13 @@ public class CobolFile {
     FileLock fl = null;
     if (!filename.startsWith("/dev/")) {
       try {
-        boolean lock_flag;
+        boolean lockFlag;
         if (sharing != 0 || mode == COB_OPEN_OUTPUT) {
-          lock_flag = false;
+          lockFlag = false;
         } else {
-          lock_flag = true;
+          lockFlag = true;
         }
-        fl = fp.tryLock(0L, Long.MAX_VALUE, lock_flag);
+        fl = fp.tryLock(0L, Long.MAX_VALUE, lockFlag);
       } catch (NonWritableChannelException e) {
         fp.close();
         return EBADF;
@@ -964,11 +963,11 @@ public class CobolFile {
     return 0;
   }
 
-  public void read(AbstractCobolField key, AbstractCobolField fnstatus, int read_opts) {
+  public void read(AbstractCobolField key, AbstractCobolField fnstatus, int readOpts) {
     byte[] sbuff = new byte[3];
     String openMode = String.format("%02d", (int) this.last_open_mode);
-    String readOpts = String.format("%02d", (int) read_opts);
-    if (invokeFun(COB_IO_READ, this, key, null, fnstatus, openMode, null, readOpts) != 0) {
+    String readOptStr = String.format("%02d", (int) readOpts);
+    if (invokeFun(COB_IO_READ, this, key, null, fnstatus, openMode, null, readOptStr) != 0) {
       for (int i = 0; i < 3; ++i) {
         sbuff[i] = 0;
       }
@@ -998,11 +997,11 @@ public class CobolFile {
 
     /* sequential read at the end of file is an error */
     if (key == null) {
-      if (this.flag_end_of_file && (read_opts & COB_READ_PREVIOUS) == 0) {
+      if (this.flag_end_of_file && (readOpts & COB_READ_PREVIOUS) == 0) {
         saveStatus(COB_STATUS_46_READ_ERROR, fnstatus);
         return;
       }
-      if (this.flag_begin_of_file && (read_opts & COB_READ_PREVIOUS) != 0) {
+      if (this.flag_begin_of_file && (readOpts & COB_READ_PREVIOUS) != 0) {
         saveStatus(COB_STATUS_46_READ_ERROR, fnstatus);
         return;
       }
@@ -1017,31 +1016,31 @@ public class CobolFile {
 
     if (this.organization == COB_ORG_INDEXED) {
       if (this.open_mode != COB_OPEN_I_O || (this.lock_mode & COB_LOCK_EXCLUSIVE) != 0) {
-        read_opts &= ~COB_READ_LOCK;
+        readOpts &= ~COB_READ_LOCK;
       } else if ((this.lock_mode & COB_LOCK_AUTOMATIC) != 0
-          && (read_opts & COB_READ_NO_LOCK) == 0) {
-        read_opts |= COB_READ_LOCK;
+          && (readOpts & COB_READ_NO_LOCK) == 0) {
+        readOpts |= COB_READ_LOCK;
       }
     } else {
-      read_opts &= ~COB_READ_LOCK;
+      readOpts &= ~COB_READ_LOCK;
     }
 
     if (this.organization == COB_ORG_INDEXED /* && bdb_env != null */) {
       if (this.open_mode != COB_OPEN_I_O || (this.lock_mode & COB_LOCK_EXCLUSIVE) != 0) {
-        read_opts &= ~COB_READ_LOCK;
+        readOpts &= ~COB_READ_LOCK;
       } else if ((this.lock_mode & COB_LOCK_AUTOMATIC) != 0
-          && (read_opts & COB_READ_NO_LOCK) == 0) {
-        read_opts |= COB_READ_LOCK;
+          && (readOpts & COB_READ_NO_LOCK) == 0) {
+        readOpts |= COB_READ_LOCK;
       }
     } else {
-      read_opts &= ~COB_READ_LOCK;
+      readOpts &= ~COB_READ_LOCK;
     }
 
     int ret;
     if (key != null) {
-      ret = this.read_(key, read_opts);
+      ret = this.read_(key, readOpts);
     } else {
-      ret = this.readNext(read_opts);
+      ret = this.readNext(readOpts);
     }
 
     switch (ret) {
@@ -1055,7 +1054,7 @@ public class CobolFile {
         }
         break;
       case COB_STATUS_10_END_OF_FILE:
-        if ((read_opts & COB_READ_PREVIOUS) != 0) {
+        if ((readOpts & COB_READ_PREVIOUS) != 0) {
           this.flag_begin_of_file = true;
         } else {
           this.flag_end_of_file = true;
@@ -1095,8 +1094,7 @@ public class CobolFile {
     }
 
     String openMode = String.format("%02d", (int) this.last_open_mode);
-    if (invokeFun(COB_IO_WRITE, this, null, rec.getDataStorage(), fnstatus, openMode, null, null)
-        != 0) {
+    if (invokeFun(COB_IO_WRITE, this, null, rec.getDataStorage(), fnstatus, openMode, null, null) != 0) {
       return;
     }
 
@@ -1178,14 +1176,14 @@ public class CobolFile {
       return;
     }
 
-    boolean read_done = this.flag_read_done;
+    boolean readDone = this.flag_read_done;
     this.flag_read_done = false;
 
     if (this.open_mode == COB_OPEN_CLOSED || this.open_mode != COB_OPEN_I_O) {
       saveStatus(COB_STATUS_49_I_O_DENIED, fnstatus);
       return;
     }
-    if (this.access_mode == COB_ACCESS_SEQUENTIAL && !read_done) {
+    if (this.access_mode == COB_ACCESS_SEQUENTIAL && !readDone) {
       saveStatus(COB_STATUS_43_READ_NOT_DONE, fnstatus);
       return;
     }
@@ -1225,7 +1223,7 @@ public class CobolFile {
       return;
     }
 
-    boolean read_done = this.flag_read_done;
+    boolean readDone = this.flag_read_done;
     this.flag_read_done = false;
 
     if (this.open_mode == COB_OPEN_CLOSED || this.open_mode != COB_OPEN_I_O) {
@@ -1233,7 +1231,7 @@ public class CobolFile {
       return;
     }
 
-    if (this.access_mode == COB_ACCESS_SEQUENTIAL && !read_done) {
+    if (this.access_mode == COB_ACCESS_SEQUENTIAL && !readDone) {
       saveStatus(COB_STATUS_43_READ_NOT_DONE, fnstatus);
       return;
     }
@@ -1269,7 +1267,8 @@ public class CobolFile {
   public void unlock_() {
     if (this.open_mode != COB_OPEN_CLOSED && this.open_mode != COB_OPEN_LOCKED) {
       this.file.flush();
-      if ((this.lock_mode & COB_LOCK_EXCLUSIVE) == 0) {}
+      if ((this.lock_mode & COB_LOCK_EXCLUSIVE) == 0) {
+      }
     }
   }
 
@@ -1344,8 +1343,8 @@ public class CobolFile {
   }
 
   public static void defaultErrorHandle() {
-    byte[] file_status = CobolFile.errorFile.file_status;
-    int status = (file_status[0] - '0') * 10 + (file_status[1] - '0');
+    byte[] fileStatus = CobolFile.errorFile.file_status;
+    int status = (fileStatus[0] - '0') * 10 + (fileStatus[1] - '0');
     String msg;
     switch (status) {
       case COB_STATUS_10_END_OF_FILE:
@@ -1454,62 +1453,62 @@ public class CobolFile {
       src = file_open_name.getBytes();
       dst = file_open_buff;
       simple = true;
-      int src_i = 0;
-      int dst_i = 0;
-      while (src_i < src.length) {
-        char c = (char) src[src_i];
+      int srcI = 0;
+      int dstI = 0;
+      while (srcI < src.length) {
+        char c = (char) src[srcI];
         if (!Character.isLetterOrDigit(c) && c != '_' && c != '-') {
           simple = false;
         }
         if (c == '$') {
           int i;
-          for (i = 1; src_i + i < src.length; i++) {
-            char d = (char) src[src_i + i];
+          for (i = 1; srcI + i < src.length; i++) {
+            char d = (char) src[srcI + i];
             if (!Character.isLetterOrDigit(d) && d != '_' && c != '-') {
               break;
             }
           }
           for (int j = 0; j < i - 1; ++j) {
-            file_open_env[j] = src[src_i + 1 + j];
+            file_open_env[j] = src[srcI + 1 + j];
           }
           file_open_env[i - 1] = 0;
           String p = CobolUtil.getEnv(new String(Arrays.copyOfRange(file_open_env, 0, i - 1)));
           if (p != null) {
             byte[] pbytes = p.getBytes();
             for (int j = 0; j < pbytes.length; ++j) {
-              dst[dst_i + j] = pbytes[j];
+              dst[dstI + j] = pbytes[j];
             }
-            dst_i += pbytes.length;
+            dstI += pbytes.length;
           }
-          src_i += i;
+          srcI += i;
         } else {
-          dst[dst_i++] = src[src_i++];
+          dst[dstI++] = src[srcI++];
         }
       }
 
-      file_open_name = new String(Arrays.copyOfRange(dst, 0, dst_i));
+      file_open_name = new String(Arrays.copyOfRange(dst, 0, dstI));
 
-      byte[] file_open_name_bytes = file_open_name.getBytes();
-      cb_get_jisword_buff(file_open_buff, file_open_name_bytes, COB_SMALL_BUFF);
+      byte[] fileOpenNameBytes = file_open_name.getBytes();
+      cb_get_jisword_buff(file_open_buff, fileOpenNameBytes, COB_SMALL_BUFF);
 
       if (simple) {
         int i;
         for (i = 0; i < NUM_PREFIX; i++) {
-          byte[] file_open_buff = String.format("%s%s", prefix[i], file_open_name).getBytes();
+          byte[] fileOpenBuff = String.format("%s%s", prefix[i], file_open_name).getBytes();
           String p;
-          if ((p = CobolUtil.getEnv(new String(file_open_buff))) != null) {
-            file_open_name_bytes = p.getBytes();
+          if ((p = CobolUtil.getEnv(new String(fileOpenBuff))) != null) {
+            fileOpenNameBytes = p.getBytes();
             break;
           }
         }
 
         if (i == NUM_PREFIX && cob_file_path != null) {
-          byte[] file_open_buff = String.format("%s/%s", cob_file_path, file_open_name).getBytes();
-          file_open_name_bytes = file_open_buff;
+          byte[] fileOpenBuff = String.format("%s/%s", cob_file_path, file_open_name).getBytes();
+          fileOpenNameBytes = fileOpenBuff;
         }
       }
 
-      file_open_name = new String(file_open_name_bytes);
+      file_open_name = new String(fileOpenNameBytes);
     }
 
     Path filePath = Paths.get(this.assign.fieldToString());

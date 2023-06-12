@@ -27,9 +27,9 @@ public class CobolNumericEditedField extends AbstractCobolField {
   /**
    * コンストラクタ
    *
-   * @param size データを格納するバイト配列の長さ
+   * @param size        データを格納するバイト配列の長さ
    * @param dataStorage データを格納するバイト配列を扱うオブジェクト
-   * @param attribute 変数に関する様々な情報を保持するオブジェクト
+   * @param attribute   変数に関する様々な情報を保持するオブジェクト
    */
   public CobolNumericEditedField(
       int size, CobolDataStorage dataStorage, CobolFieldAttribute attribute) {
@@ -38,7 +38,7 @@ public class CobolNumericEditedField extends AbstractCobolField {
 
   @Override
   public byte[] getBytes() {
-    return null;
+    return new byte[0];
   }
 
   @Override
@@ -52,7 +52,8 @@ public class CobolNumericEditedField extends AbstractCobolField {
   }
 
   @Override
-  public void setDecimal(BigDecimal decimal) {}
+  public void setDecimal(BigDecimal decimal) {
+  }
 
   @Override
   public int addPackedInt(int n) {
@@ -93,8 +94,8 @@ public class CobolNumericEditedField extends AbstractCobolField {
     boolean neg = sign < 0;
     byte[] picBytes = dst.getAttribute().getPic().getBytes();
     int count = 0;
-    int count_sign = 1;
-    int count_curr = 1;
+    int countSign = 1;
+    int countCurr = 1;
     boolean pIsLeft = false;
 
     final int sizeOfInt = 4;
@@ -105,11 +106,11 @@ public class CobolNumericEditedField extends AbstractCobolField {
       int repeat = buf.getInt();
       if (c == '9' || c == 'Z' || c == '*') {
         count += repeat;
-        count_sign = 0;
-        count_curr = 0;
-      } else if (count_curr != 0 && c == CobolModule.getCurrentModule().currency_symbol) {
+        countSign = 0;
+        countCurr = 0;
+      } else if (countCurr != 0 && c == CobolModule.getCurrentModule().currency_symbol) {
         count += repeat;
-      } else if (count_sign != 0 && (c == '+' || c == '-')) {
+      } else if (countSign != 0 && (c == '+' || c == '-')) {
         count += repeat;
       } else if (c == 'P') {
         if (count == 0) {
@@ -117,8 +118,8 @@ public class CobolNumericEditedField extends AbstractCobolField {
           break;
         } else {
           count += repeat;
-          count_sign = 0;
-          count_curr = 0;
+          countSign = 0;
+          countCurr = 0;
         }
       } else if (c == 'V' || c == CobolModule.getCurrentModule().decimal_point) {
         break;
@@ -156,7 +157,7 @@ public class CobolNumericEditedField extends AbstractCobolField {
     byte signSymbol = 0;
     byte currSymbol = 0;
 
-    for (int p = 0; p < picBytes.length; ) {
+    for (int p = 0; p < picBytes.length;) {
       byte c = picBytes[p++];
       ByteBuffer buf = ByteBuffer.wrap(picBytes, p, sizeOfInt);
       buf.order(ByteOrder.LITTLE_ENDIAN);
@@ -346,22 +347,28 @@ public class CobolNumericEditedField extends AbstractCobolField {
   }
 
   @Override
-  public void moveFrom(CobolDataStorage dataStrage) {}
+  public void moveFrom(CobolDataStorage dataStrage) {
+  }
 
   @Override
-  public void moveFrom(byte[] bytes) {}
+  public void moveFrom(byte[] bytes) {
+  }
 
   @Override
-  public void moveFrom(String string) {}
+  public void moveFrom(String string) {
+  }
 
   @Override
-  public void moveFrom(int number) {}
+  public void moveFrom(int number) {
+  }
 
   @Override
-  public void moveFrom(double number) {}
+  public void moveFrom(double number) {
+  }
 
   @Override
-  public void moveFrom(BigDecimal number) {}
+  public void moveFrom(BigDecimal number) {
+  }
 
   /**
    * thisをCobolNumericFieldに変換する. indirect moveをするときに使用されることを想定している.
@@ -371,13 +378,12 @@ public class CobolNumericEditedField extends AbstractCobolField {
   public CobolNumericField getNumericField() {
     int size = 36;
     int scale = 18;
-    CobolFieldAttribute attr =
-        new CobolFieldAttribute(
-            CobolFieldAttribute.COB_TYPE_NUMERIC_DISPLAY,
-            size,
-            scale,
-            CobolFieldAttribute.COB_FLAG_HAVE_SIGN,
-            null);
+    CobolFieldAttribute attr = new CobolFieldAttribute(
+        CobolFieldAttribute.COB_TYPE_NUMERIC_DISPLAY,
+        size,
+        scale,
+        CobolFieldAttribute.COB_FLAG_HAVE_SIGN,
+        null);
     CobolDataStorage data = new CobolDataStorage(64);
     CobolNumericField field = new CobolNumericField(size, data, attr);
     field.moveFrom(this);
