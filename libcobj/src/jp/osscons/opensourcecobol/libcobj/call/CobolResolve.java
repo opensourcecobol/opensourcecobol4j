@@ -68,10 +68,10 @@ public class CobolResolve {
     String s;
     String buf;
 
-    //		//用途不明
-    //		call_filename_buff = cob_malloc (CALL_FILEBUFF_SIZE);
-    //		call_entry_buff = cob_malloc (COB_SMALL_BUFF);
-    //		call_entry2_buff = cob_malloc (COB_SMALL_BUFF);
+    // //用途不明
+    // call_filename_buff = cob_malloc (CALL_FILEBUFF_SIZE);
+    // call_entry_buff = cob_malloc (COB_SMALL_BUFF);
+    // call_entry2_buff = cob_malloc (COB_SMALL_BUFF);
 
     s = CobolUtil.getEnv("COB_LOAD_CASE");
     if (s != null) {
@@ -87,12 +87,11 @@ public class CobolResolve {
     if (s == null || s.equals("")) {
       buf = "." + System.getProperty("path.separator") + CobolConstant.COB_LIBRARY_PATH;
     } else {
-      buf =
-          s
-              + System.getProperty("path.separator")
-              + "."
-              + System.getProperty("path.separator")
-              + CobolConstant.COB_LIBRARY_PATH;
+      buf = s
+          + System.getProperty("path.separator")
+          + "."
+          + System.getProperty("path.separator")
+          + CobolConstant.COB_LIBRARY_PATH;
     }
     setLibraryPath(buf);
 
@@ -103,11 +102,12 @@ public class CobolResolve {
     s = CobolUtil.getEnv("COB_PRE_LOAD");
 
     // 用途不明
-    //		call_buffer = cob_malloc (CALL_BUFF_SIZE);
-    //		call_lastsize = CALL_BUFF_SIZE;
-    //		for (psyst = (struct system_table *)&system_tab[0]; psyst->syst_name; ++psyst) {
-    //			insert (psyst->syst_name, psyst->syst_call, NULL);
-    //		}
+    // call_buffer = cob_malloc (CALL_BUFF_SIZE);
+    // call_lastsize = CALL_BUFF_SIZE;
+    // for (psyst = (struct system_table *)&system_tab[0]; psyst->syst_name;
+    // ++psyst) {
+    // insert (psyst->syst_name, psyst->syst_call, NULL);
+    // }
   }
 
   /**
@@ -209,8 +209,8 @@ public class CobolResolve {
     }
 
     /* search external modules */
-    for (String package_path : package_paths) {
-      fullName = package_path + "." + name;
+    for (String packagePath : package_paths) {
+      fullName = packagePath + "." + name;
       runnable = getInstance(fullName);
       if (runnable != null) {
         callTable.put(name, runnable);
@@ -347,9 +347,9 @@ public class CobolResolve {
    * @param b_10 ポインタ(UUID)が格納されたCobolDataStorageのインスタンス
    * @return ポインタ(UUID)に対応するCobolRunnableのインスタンス
    */
-  public static CobolRunnable resolveFromPointer(CobolDataStorage b_10) {
+  public static CobolRunnable resolveFromPointer(CobolDataStorage d) {
     byte[] uuidBytes = new byte[Long.BYTES * 2];
-    System.arraycopy(b_10.getData(), 0, uuidBytes, 0, uuidBytes.length);
+    System.arraycopy(d.getData(), 0, uuidBytes, 0, uuidBytes.length);
     UUID uuid = uuidFromByteBuffer(uuidBytes);
     String name = pointerTable.get(uuid);
     try {
