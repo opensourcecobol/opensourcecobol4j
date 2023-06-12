@@ -235,57 +235,57 @@ public class CobolFile {
   }
 
   public CobolFile(
-      String select_name,
-      byte[] file_status,
+      String selectName,
+      byte[] fileStatus,
       AbstractCobolField assign,
       AbstractCobolField record,
-      AbstractCobolField record_size,
-      int record_min,
-      int record_max,
+      AbstractCobolField recordSize,
+      int recordMin,
+      int recordMax,
       int nkeys,
       CobolFileKey[] keys,
       char organization,
-      char access_mode,
-      char lock_mode,
-      char open_mode,
-      boolean flag_optional,
-      char last_open_mode,
+      char accessMode,
+      char lockMode,
+      char openMode,
+      boolean flagOptional,
+      char lastOpenMode,
       char special,
-      boolean flag_nonexistent,
-      boolean flag_end_of_file,
-      boolean flag_begin_of_file,
-      char flag_first_read,
-      boolean flag_read_done,
-      char flag_select_features,
-      boolean flag_needs_nl,
-      boolean flag_needs_top,
-      char file_version) {
+      boolean flagNonexistent,
+      boolean flagEndOfFile,
+      boolean flagBeginOfFile,
+      char flagFirstRead,
+      boolean flagReadDone,
+      char flagSelectFeatures,
+      boolean flagNeedsNl,
+      boolean flagNeedsTop,
+      char fileVersion) {
 
-    this.select_name = select_name;
-    this.file_status = file_status;
+    this.select_name = selectName;
+    this.file_status = fileStatus;
     this.assign = assign;
     this.record = record;
-    this.record_size = record_size;
-    this.record_min = record_min;
-    this.record_max = record_max;
+    this.record_size = recordSize;
+    this.record_min = recordMin;
+    this.record_max = recordMax;
     this.nkeys = nkeys;
     this.keys = keys;
     this.file = new FileIO();
     this.organization = organization;
-    this.access_mode = access_mode;
-    this.lock_mode = lock_mode;
-    this.open_mode = open_mode;
-    this.flag_optional = flag_optional;
+    this.access_mode = accessMode;
+    this.lock_mode = lockMode;
+    this.open_mode = openMode;
+    this.flag_optional = flagOptional;
     this.special = special;
-    this.flag_nonexistent = flag_nonexistent;
-    this.flag_end_of_file = flag_end_of_file;
-    this.flag_begin_of_file = flag_begin_of_file;
-    this.flag_first_read = flag_first_read;
-    this.flag_read_done = flag_read_done;
-    this.flag_select_features = flag_select_features;
-    this.flag_needs_nl = flag_needs_nl;
-    this.flag_needs_top = flag_needs_top;
-    this.file_version = file_version;
+    this.flag_nonexistent = flagNonexistent;
+    this.flag_end_of_file = flagEndOfFile;
+    this.flag_begin_of_file = flagBeginOfFile;
+    this.flag_first_read = flagFirstRead;
+    this.flag_read_done = flagReadDone;
+    this.flag_select_features = flagSelectFeatures;
+    this.flag_needs_nl = flagNeedsNl;
+    this.flag_needs_top = flagNeedsTop;
+    this.file_version = fileVersion;
   }
 
   /**
@@ -334,7 +334,6 @@ public class CobolFile {
     String oper = String.format("%02d", operate);
     byte[] tmpfnstatus = String.format("%02d", 0).getBytes();
     byte[] pTmpfnstatus = tmpfnstatus;
-    String p_excpcode = "";
     String s = CobolUtil.getEnv(TIS_DEFINE_USERFH);
     int iRet = 0;
     char ret = '0';
