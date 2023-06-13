@@ -25,6 +25,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Locale;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.UUID;
@@ -75,10 +76,10 @@ public class CobolResolve {
 
     s = CobolUtil.getEnv("COB_LOAD_CASE");
     if (s != null) {
-      String sU = s.toUpperCase();
-      if (sU.equals("LOWER")) {
+      String sU = s.toUpperCase(Locale.getDefault());
+      if ("LOWER".equals(sU)) {
         name_convert = 1;
-      } else if (sU.equals("UPPER")) {
+      } else if ("UPPER".equals(sU)) {
         name_convert = 2;
       }
     }
@@ -116,7 +117,7 @@ public class CobolResolve {
    * @param path 区切り文字で区切られた0個以上のパスを示す文字列
    */
   private static void setLibraryPath(String path) {
-    if (resolve_paths.size() > 0) {
+    if (!resolve_paths.isEmpty()) {
       resolve_paths.clear();
     }
 
@@ -135,7 +136,7 @@ public class CobolResolve {
    * @param path 区切り文字で区切られた0個以上のパスを示す文字列
    */
   private static void setPackagePath(String path) {
-    if (package_paths.size() > 0) {
+    if (!package_paths.isEmpty()) {
       package_paths.clear();
     }
 
@@ -146,13 +147,6 @@ public class CobolResolve {
         package_paths.add(path1);
       }
     }
-  }
-
-  public static void setCancel(String name, CobolRunnable runnable) {
-    if (callTable.containsKey(name)) {
-      // TODO 重複時の動作
-    }
-    callTable.put(name, runnable);
   }
 
   /**
@@ -335,7 +329,7 @@ public class CobolResolve {
         return uuidToByteBuffer(e.getKey());
       }
     }
-    CobolRunnable runnable = resolve(name);
+    resolve(name);
     UUID uuid = UUID.randomUUID();
     pointerTable.put(uuid, name);
     return uuidToByteBuffer(uuid);
@@ -358,7 +352,7 @@ public class CobolResolve {
       // TODO 自動生成された catch ブロック
       e.printStackTrace();
       throw new CobolRuntimeException(
-          CobolRuntimeException.COBOL_FITAL_ERROR, "Program Pointer adress Error'");
+          CobolRuntimeException.COBOL_FITAL_ERROR, "Program Pointer address Error'");
     }
   }
 
