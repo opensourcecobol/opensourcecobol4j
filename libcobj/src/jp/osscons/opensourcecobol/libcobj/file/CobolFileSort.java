@@ -110,10 +110,8 @@ public class CobolFileSort {
       CobolDataStorage d2 = k2.getItem().copy();
       d2.addIndex(f.keys[i].getOffset());
 
-      AbstractCobolField f1 =
-          CobolFieldFactory.makeCobolField(src.getSize(), d1, src.getAttribute());
-      AbstractCobolField f2 =
-          CobolFieldFactory.makeCobolField(src.getSize(), d2, src.getAttribute());
+      AbstractCobolField f1 = CobolFieldFactory.makeCobolField(src.getSize(), d1, src.getAttribute());
+      AbstractCobolField f2 = CobolFieldFactory.makeCobolField(src.getSize(), d2, src.getAttribute());
 
       if (f1.getAttribute().isTypeNumeric()) {
         cmp = f1.numericCompareTo(f2);
@@ -173,8 +171,7 @@ public class CobolFileSort {
       s = "/tmp";
     }
     if (cob_process_id.equals("")) {
-      cob_process_id =
-          java.lang.management.ManagementFactory.getRuntimeMXBean().getName().split("@")[0];
+      cob_process_id = java.lang.management.ManagementFactory.getRuntimeMXBean().getName().split("@")[0];
     }
     String filename = String.format("%s/cobsort_%s_%d", s, cob_process_id, cob_iteration);
     cob_iteration++;
@@ -184,13 +181,12 @@ public class CobolFileSort {
     }
     FileChannel fc = null;
     try {
-      fc =
-          FileChannel.open(
-              Paths.get(filename),
-              StandardOpenOption.READ,
-              StandardOpenOption.WRITE,
-              StandardOpenOption.CREATE,
-              StandardOpenOption.TRUNCATE_EXISTING);
+      fc = FileChannel.open(
+          Paths.get(filename),
+          StandardOpenOption.READ,
+          StandardOpenOption.WRITE,
+          StandardOpenOption.CREATE,
+          StandardOpenOption.TRUNCATE_EXISTING);
     } catch (IOException e) {
       return null;
     }
@@ -232,7 +228,7 @@ public class CobolFileSort {
     int destination;
     int move;
     int n;
-    int[] end_of_block = new int[2];
+    int[] endOfBlock = new int[2];
 
     while (hp.getQueue()[source + 1].getCount() != 0) {
       destination = source ^ 2;
@@ -240,32 +236,31 @@ public class CobolFileSort {
       hp.getQueue()[destination + 1].setCount(0);
       hp.getQueue()[destination].setFirst(null);
       hp.getQueue()[destination + 1].setFirst(null);
-      for (; ; ) {
-        end_of_block[0] = hp.getQueue()[source].getCount() == 0 ? 1 : 0;
-        end_of_block[1] = hp.getQueue()[source + 1].getCount() == 0 ? 1 : 0;
-        if (end_of_block[0] != 0 && end_of_block[1] != 0) {
+      for (;;) {
+        endOfBlock[0] = hp.getQueue()[source].getCount() == 0 ? 1 : 0;
+        endOfBlock[1] = hp.getQueue()[source + 1].getCount() == 0 ? 1 : 0;
+        if (endOfBlock[0] != 0 && endOfBlock[1] != 0) {
           break;
         }
-        while (end_of_block[0] == 0 || end_of_block[1] == 0) {
-          if (end_of_block[0] != 0) {
+        while (endOfBlock[0] == 0 || endOfBlock[1] == 0) {
+          if (endOfBlock[0] != 0) {
             move = 1;
-          } else if (end_of_block[1] != 0) {
+          } else if (endOfBlock[1] != 0) {
             move = 0;
           } else {
-            n =
-                sortCompare(
-                    hp.getQueue()[source].getFirst(),
-                    hp.getQueue()[source + 1].getFirst(),
-                    hp.getPointer());
+            n = sortCompare(
+                hp.getQueue()[source].getFirst(),
+                hp.getQueue()[source + 1].getFirst(),
+                hp.getPointer());
             move = n < 0 ? 0 : 1;
           }
           q = hp.getQueue()[source + move].getFirst();
           if (q.getEndOfBlock() != 0) {
-            end_of_block[move] = 1;
+            endOfBlock[move] = 1;
           }
           q = hp.getQueue()[source + move].getFirst();
           if (q.getEndOfBlock() != 0) {
-            end_of_block[move] = 1;
+            endOfBlock[move] = 1;
           }
           hp.getQueue()[source + move].setFirst(q.getNext());
           if (hp.getQueue()[destination].getFirst() == null) {
@@ -343,7 +338,7 @@ public class CobolFileSort {
    */
   private static int writeBlock(CobolSort hp, int n) {
     FileIO fp = hp.getFile()[hp.getDestinationFile()].getFp();
-    for (; ; ) {
+    for (;;) {
       CobolItem q = hp.getQueue()[n].getFirst();
       if (q == null) {
         break;
@@ -441,11 +436,10 @@ public class CobolFileSort {
           } else if (hp.getQueue()[source + 1].getFirst().getEndOfBlock() != 0) {
             move = 0;
           } else {
-            int res =
-                sortCompare(
-                    hp.getQueue()[source].getFirst(),
-                    hp.getQueue()[source + 1].getFirst(),
-                    hp.getPointer());
+            int res = sortCompare(
+                hp.getQueue()[source].getFirst(),
+                hp.getQueue()[source + 1].getFirst(),
+                hp.getPointer());
             move = res < 0 ? 0 : 1;
           }
           if (writeItem(
@@ -595,11 +589,10 @@ public class CobolFileSort {
       } else if (hp.getQueue()[source].getFirst().getEndOfBlock() != 0) {
         move = 0;
       } else {
-        int res =
-            sortCompare(
-                hp.getQueue()[source].getFirst(),
-                hp.getQueue()[source + 1].getFirst(),
-                hp.getPointer());
+        int res = sortCompare(
+            hp.getQueue()[source].getFirst(),
+            hp.getQueue()[source + 1].getFirst(),
+            hp.getPointer());
         move = res < 0 ? 0 : 1;
       }
       for (int i = 0; i < hp.getSize(); ++i) {
@@ -631,8 +624,6 @@ public class CobolFileSort {
     dataList.sort(
         new Comparator<CobolDataStorage>() {
           public int compare(CobolDataStorage data1, CobolDataStorage data2) {
-            long u1;
-            long u2;
             int cmp;
 
             for (int i = 0; i < f.nkeys; i++) {
@@ -644,17 +635,14 @@ public class CobolFileSort {
               CobolDataStorage d2 = data2.copy();
               d2.addIndex(f.keys[i].getOffset());
 
-              AbstractCobolField f1 =
-                  CobolFieldFactory.makeCobolField(src.getSize(), d1, src.getAttribute());
-              AbstractCobolField f2 =
-                  CobolFieldFactory.makeCobolField(src.getSize(), d2, src.getAttribute());
+              AbstractCobolField f1 = CobolFieldFactory.makeCobolField(src.getSize(), d1, src.getAttribute());
+              AbstractCobolField f2 = CobolFieldFactory.makeCobolField(src.getSize(), d2, src.getAttribute());
 
               if (f1.getAttribute().isTypeNumeric()) {
                 cmp = f1.numericCompareTo(f2);
               } else {
-                cmp =
-                    sortCmps(
-                        f1.getDataStorage(), f2.getDataStorage(), f1.getSize(), f.sort_collating);
+                cmp = sortCmps(
+                    f1.getDataStorage(), f2.getDataStorage(), f1.getSize(), f.sort_collating);
               }
               if (cmp != 0) {
                 return (f.keys[i].getFlag() == COB_ASCENDING) ? cmp : -cmp;
@@ -676,8 +664,8 @@ public class CobolFileSort {
   public static void sortInit(
       CobolFile f,
       int nkeys,
-      CobolDataStorage collating_sequence,
-      CobolDataStorage sort_return,
+      CobolDataStorage collatingSequence,
+      CobolDataStorage sortReturn,
       AbstractCobolField fnstatus) {
     int sizeOfSizeT = 8;
     CobolSort p = new CobolSort();
@@ -686,8 +674,8 @@ public class CobolFileSort {
     p.setrSize(f.record_max + sizeOfSizeT);
     p.setwSize(f.record_max + sizeOfSizeT + 1);
     p.setPointer(f);
-    p.setSortReturn(sort_return);
-    sort_return.set(0);
+    p.setSortReturn(sortReturn);
+    sortReturn.set(0);
     // opensource COBOLでsizeof(struct cobitem) == 32だっため,32を使用した
     p.setMemory(cob_sort_memory / (p.getSize() + 32));
     dataList = new ArrayList<CobolDataStorage>();
@@ -697,13 +685,12 @@ public class CobolFileSort {
       f.keys[i] = new CobolFileKey();
     }
     f.nkeys = 0;
-    if (collating_sequence != null) {
-      f.sort_collating = collating_sequence;
+    if (collatingSequence != null) {
+      f.sort_collating = collatingSequence;
     } else {
       f.sort_collating = CobolModule.getCurrentModule().collating_sequence;
     }
     f.saveStatus(CobolFile.COB_STATUS_00_SUCCESS, fnstatus);
-    return;
   }
 
   /**
@@ -717,10 +704,10 @@ public class CobolFileSort {
   public static void sortInit(
       CobolFile f,
       int nkeys,
-      int collating_sequence,
-      CobolDataStorage sort_return,
+      int collatingSequence,
+      CobolDataStorage sortReturn,
       AbstractCobolField fnstatus) {
-    sortInit(f, nkeys, null, sort_return, fnstatus);
+    sortInit(f, nkeys, null, sortReturn, fnstatus);
   }
 
   /**
@@ -742,20 +729,20 @@ public class CobolFileSort {
    *
    * @param data_file
    */
-  public static void sortUsing(CobolFile sort_file, CobolFile data_file) {
-    data_file.open(CobolFile.COB_OPEN_INPUT, 0, null);
-    for (; ; ) {
-      data_file.read(null, null, CobolFile.COB_READ_NEXT);
-      if (data_file.file_status[0] != (byte) '0') {
+  public static void sortUsing(CobolFile sortFile, CobolFile dataFile) {
+    dataFile.open(CobolFile.COB_OPEN_INPUT, 0, null);
+    for (;;) {
+      dataFile.read(null, null, CobolFile.COB_READ_NEXT);
+      if (dataFile.file_status[0] != (byte) '0') {
         break;
       }
-      copyCheck(sort_file, data_file);
-      int ret = sortSubmit(sort_file, sort_file.record.getDataStorage());
+      copyCheck(sortFile, dataFile);
+      int ret = sortSubmit(sortFile, sortFile.record.getDataStorage());
       if (ret != 0) {
         break;
       }
     }
-    data_file.close(CobolFile.COB_CLOSE_NORMAL, null);
+    dataFile.close(CobolFile.COB_CLOSE_NORMAL, null);
   }
 
   /**
@@ -765,15 +752,15 @@ public class CobolFileSort {
    * @param fbase
    * @throws CobolStopRunException
    */
-  public static void sortGiving(CobolFile sort_file, int varcnt, CobolFile... fbase)
+  public static void sortGiving(CobolFile sortFile, int varcnt, CobolFile... fbase)
       throws CobolStopRunException {
     if (SORT_STD_LIB) {
       for (int i = 0; i < varcnt; i++) {
         fbase[i].open(CobolFile.COB_OPEN_OUTPUT, 0, null);
       }
 
-      int cnt_rec = 0;
-      memorySort(sort_file);
+      int cntRec = 0;
+      memorySort(sortFile);
       for (CobolDataStorage d : dataList) {
         for (int i = 0; i < varcnt; i++) {
           int opt;
@@ -782,37 +769,37 @@ public class CobolFileSort {
           } else {
             opt = 0;
           }
-          sort_file.record.getDataStorage().memcpy(d, sort_file.record.getSize());
-          copyCheck(fbase[i], sort_file);
+          sortFile.record.getDataStorage().memcpy(d, sortFile.record.getSize());
+          copyCheck(fbase[i], sortFile);
           fbase[i].write(fbase[i].record, opt, null);
         }
-        cnt_rec++;
+        cntRec++;
       }
-      sort_file.file_status[0] = '1';
-      sort_file.file_status[1] = '0';
+      sortFile.file_status[0] = '1';
+      sortFile.file_status[1] = '0';
 
       for (int i = 0; i < varcnt; i++) {
         fbase[i].close(CobolFile.COB_CLOSE_NORMAL, null);
       }
-      CobolUtil.verboseOutput(String.format("END OF SORT/MERGE, RECORD %d.", cnt_rec));
+      CobolUtil.verboseOutput(String.format("END OF SORT/MERGE, RECORD %d.", cntRec));
 
     } else {
 
       for (int i = 0; i < varcnt; i++) {
         fbase[i].open(CobolFile.COB_OPEN_OUTPUT, 0, null);
       }
-      int cnt_rec = 0;
-      for (; ; ) {
-        int ret = sortRetrieve(sort_file, sort_file.record.getDataStorage());
+      int cntRec = 0;
+      for (;;) {
+        int ret = sortRetrieve(sortFile, sortFile.record.getDataStorage());
         if (ret != 0) {
           if (ret == COBSORTEND) {
-            sort_file.file_status[0] = '1';
-            sort_file.file_status[1] = '0';
+            sortFile.file_status[0] = '1';
+            sortFile.file_status[1] = '0';
           } else {
-            CobolSort hp = sort_file.filex;
+            CobolSort hp = sortFile.filex;
             hp.getSortReturn().set(16);
-            sort_file.file_status[0] = '3';
-            sort_file.file_status[1] = '0';
+            sortFile.file_status[0] = '3';
+            sortFile.file_status[1] = '0';
           }
           break;
         }
@@ -823,15 +810,15 @@ public class CobolFileSort {
           } else {
             opt = 0;
           }
-          copyCheck(fbase[i], sort_file);
+          copyCheck(fbase[i], sortFile);
           fbase[i].write(fbase[i].record, opt, null);
         }
-        cnt_rec++;
+        cntRec++;
       }
       for (int i = 0; i < varcnt; i++) {
         fbase[i].close(CobolFile.COB_CLOSE_NORMAL, null);
       }
-      CobolUtil.verboseOutput(String.format("END OF SORT/MERGE, RECORD %d.", cnt_rec));
+      CobolUtil.verboseOutput(String.format("END OF SORT/MERGE, RECORD %d.", cntRec));
     }
   }
 
@@ -852,7 +839,6 @@ public class CobolFileSort {
     }
     f.filex = null;
     f.saveStatus(CobolFile.COB_STATUS_00_SUCCESS, fnstatus);
-    return;
   }
 
   /** libcob/fileio.cのcob_file_releaseの実装 */

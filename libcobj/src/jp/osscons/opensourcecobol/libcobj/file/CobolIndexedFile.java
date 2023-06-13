@@ -50,57 +50,57 @@ public class CobolIndexedFile extends CobolFile {
   public static final int COB_NE = 6;
 
   public CobolIndexedFile(
-      String select_name,
-      byte[] file_status,
+      String selectName,
+      byte[] fileStatus,
       AbstractCobolField assign,
       AbstractCobolField record,
-      AbstractCobolField record_size,
-      int record_min,
-      int record_max,
+      AbstractCobolField recordSize,
+      int recordMin,
+      int recordMax,
       int nkeys,
       CobolFileKey[] keys,
       char organization,
-      char access_mode,
-      char lock_mode,
-      char open_mode,
-      boolean flag_optional,
-      char last_open_mode,
+      char accessMode,
+      char lockMode,
+      char openMode,
+      boolean flagOptional,
+      char lastOpenMode,
       char special,
-      boolean flag_nonexistent,
-      boolean flag_end_of_file,
-      boolean flag_begin_of_file,
-      char flag_first_read,
-      boolean flag_read_done,
-      char flag_select_features,
-      boolean flag_needs_nl,
-      boolean flag_needs_top,
-      char file_version) {
+      boolean flagNonexistent,
+      boolean flagEndOfFile,
+      boolean flagBeginOfFile,
+      char flagFirstRead,
+      boolean flagReadDone,
+      char flagSelectFeatures,
+      boolean flagNeedsNl,
+      boolean flagNeedsTop,
+      char fileVersion) {
     super(
-        select_name,
-        file_status,
+        selectName,
+        fileStatus,
         assign,
         record,
-        record_size,
-        record_min,
-        record_max,
+        recordSize,
+        recordMin,
+        recordMax,
         nkeys,
         keys,
         organization,
-        access_mode,
-        lock_mode,
-        open_mode,
-        flag_optional,
-        last_open_mode,
+        accessMode,
+        lockMode,
+        openMode,
+        flagOptional,
+        lastOpenMode,
         special,
-        flag_nonexistent,
-        flag_end_of_file,
-        flag_begin_of_file,
-        flag_first_read,
-        flag_read_done,
-        flag_select_features,
-        flag_needs_nl,
-        flag_needs_top,
-        file_version);
+        flagNonexistent,
+        flagEndOfFile,
+        flagBeginOfFile,
+        flagFirstRead,
+        flagReadDone,
+        flagSelectFeatures,
+        flagNeedsNl,
+        flagNeedsTop,
+        fileVersion);
   }
 
   private static String getIndexName(int index) {
@@ -244,7 +244,7 @@ public class CobolIndexedFile extends CobolFile {
 
   /** Equivalent to indexed_start_internal in libcob/fileio.c */
   public int indexed_start_internal(
-      int cond, AbstractCobolField key, int read_opts, boolean test_lock) {
+      int cond, AbstractCobolField key, int readOpts, boolean testLock) {
     IndexedFile p = this.filei;
     for (p.key_index = 0; p.key_index < this.nkeys; p.key_index++) {
       int size = this.keys[p.key_index].getField().getSize();
@@ -290,9 +290,9 @@ public class CobolIndexedFile extends CobolFile {
   /** Equivalent to indexed_read in libcob/fileio.c */
   public int read_(AbstractCobolField key, int readOpts) {
     IndexedFile p = this.filei;
-    boolean test_lock = false;
+    boolean testLock = false;
     this.callStart = false;
-    int ret = this.indexed_start_internal(COB_EQ, key, readOpts, test_lock);
+    int ret = this.indexed_start_internal(COB_EQ, key, readOpts, testLock);
     if (ret != COB_STATUS_00_SUCCESS) {
       return ret;
     }
@@ -317,15 +317,13 @@ public class CobolIndexedFile extends CobolFile {
 
     boolean isDuplicate = this.keys[p.key_index].getFlag() != 0;
     if (this.indexedFirstRead || this.flag_begin_of_file) {
-      this.cursor =
-          IndexedCursor.createCursor(p.connection, p.key, p.key_index, isDuplicate, COB_GE);
+      this.cursor = IndexedCursor.createCursor(p.connection, p.key, p.key_index, isDuplicate, COB_GE);
       if (this.cursor.isEmpty()) {
         return COB_STATUS_30_PERMANENT_ERROR;
       }
       this.cursor.get().moveToFirst();
     } else if (this.flag_end_of_file) {
-      this.cursor =
-          IndexedCursor.createCursor(p.connection, p.key, p.key_index, isDuplicate, COB_LE);
+      this.cursor = IndexedCursor.createCursor(p.connection, p.key, p.key_index, isDuplicate, COB_LE);
       if (this.cursor.isEmpty()) {
         return COB_STATUS_30_PERMANENT_ERROR;
       }
@@ -406,9 +404,8 @@ public class CobolIndexedFile extends CobolFile {
 
   private int getNextKeyDupNo(Connection conn, int index, byte[] key) {
     try {
-      PreparedStatement selectStatement =
-          conn.prepareStatement(
-              String.format("select ifnull(max(dupNo), -1) from %s", getTableName(index)));
+      PreparedStatement selectStatement = conn.prepareStatement(
+          String.format("select ifnull(max(dupNo), -1) from %s", getTableName(index)));
       ResultSet rs = selectStatement.executeQuery();
       return rs.getInt(1) + 1;
     } catch (SQLException e) {
@@ -416,8 +413,8 @@ public class CobolIndexedFile extends CobolFile {
     }
   }
 
-  private int returnWith(IndexedFile p, boolean close_cursor, int index, int returnCode) {
-    if (close_cursor) {
+  private int returnWith(IndexedFile p, boolean closeCursor, int index, int returnCode) {
+    if (closeCursor) {
       this.closeCursor();
       p.write_cursor_open = false;
     }
@@ -428,13 +425,13 @@ public class CobolIndexedFile extends CobolFile {
   private int indexed_write_internal(boolean rewrite, int opt) {
     IndexedFile p = this.filei;
 
-    boolean close_cursor;
+    boolean closeCursor;
     p.write_cursor_open = true;
-    close_cursor = true;
+    closeCursor = true;
 
     if (this.nkeys > 1 && !rewrite) {
       if (this.check_alt_keys(false)) {
-        return returnWith(p, close_cursor, 0, COB_STATUS_22_KEY_EXISTS);
+        return returnWith(p, closeCursor, 0, COB_STATUS_22_KEY_EXISTS);
       }
       p.key = DBT_SET(this.keys[0].getField());
     }
@@ -446,15 +443,14 @@ public class CobolIndexedFile extends CobolFile {
     // insert into the primary table
     p.data = DBT_SET(this.record);
     try {
-      PreparedStatement insertStatement =
-          p.connection.prepareStatement(
-              String.format("insert into %s values (?, ?)", getTableName(0)));
+      PreparedStatement insertStatement = p.connection.prepareStatement(
+          String.format("insert into %s values (?, ?)", getTableName(0)));
       insertStatement.setBytes(1, p.key);
       insertStatement.setBytes(2, p.data);
       insertStatement.execute();
       p.connection.commit();
     } catch (SQLException e) {
-      return returnWith(p, close_cursor, 0, COB_STATUS_51_RECORD_LOCKED);
+      return returnWith(p, closeCursor, 0, COB_STATUS_51_RECORD_LOCKED);
     }
 
     p.data = p.key;
@@ -465,35 +461,33 @@ public class CobolIndexedFile extends CobolFile {
       p.key = DBT_SET(this.keys[i].getField());
       try {
         if (!isDuplicateColumn(i) && keyExistsInTable(p, i, p.key)) {
-          return returnWith(p, close_cursor, 0, COB_STATUS_22_KEY_EXISTS);
+          return returnWith(p, closeCursor, 0, COB_STATUS_22_KEY_EXISTS);
         }
 
         PreparedStatement insertStatement;
         if (isDuplicateColumn(i)) {
           int dupNo = getNextKeyDupNo(p.connection, i, p.key);
-          insertStatement =
-              p.connection.prepareStatement(
-                  String.format("insert into %s values (?, ?, ?)", getTableName(i)));
+          insertStatement = p.connection.prepareStatement(
+              String.format("insert into %s values (?, ?, ?)", getTableName(i)));
           insertStatement.setBytes(1, p.key);
           insertStatement.setBytes(2, p.data);
           insertStatement.setInt(3, dupNo);
         } else {
-          insertStatement =
-              p.connection.prepareStatement(
-                  String.format("insert into %s values (?, ?)", getTableName(i)));
+          insertStatement = p.connection.prepareStatement(
+              String.format("insert into %s values (?, ?)", getTableName(i)));
           insertStatement.setBytes(1, p.key);
           insertStatement.setBytes(2, p.data);
         }
         insertStatement.execute();
         p.connection.commit();
       } catch (SQLException e) {
-        return returnWith(p, close_cursor, 0, COB_STATUS_51_RECORD_LOCKED);
+        return returnWith(p, closeCursor, 0, COB_STATUS_51_RECORD_LOCKED);
       }
     }
 
     this.updateWhileReading = true;
 
-    return returnWith(p, close_cursor, 0, COB_STATUS_00_SUCCESS);
+    return returnWith(p, closeCursor, 0, COB_STATUS_00_SUCCESS);
   }
 
   /** Equivalent to indexed_write in libcob/fileio.c */
@@ -542,8 +536,7 @@ public class CobolIndexedFile extends CobolFile {
 
   private static boolean checkTable(IndexedFile p, int index, byte[] key, byte[] primaryKey) {
     try {
-      String query =
-          String.format("select key from %s " + "where key = ? and value = ?", getTableName(index));
+      String query = String.format("select key from %s " + "where key = ? and value = ?", getTableName(index));
 
       PreparedStatement selectStatement = p.connection.prepareStatement(query);
       selectStatement.setBytes(1, key);
@@ -583,17 +576,17 @@ public class CobolIndexedFile extends CobolFile {
   /** Equivalent to indexed_delete_internal in libcob/fileio.c */
   private int indexed_delete_internal(boolean rewrite) {
     IndexedFile p = this.filei;
-    boolean close_cursor;
+    boolean closeCursor;
 
     p.write_cursor_open = true;
-    close_cursor = true;
+    closeCursor = true;
 
     if (this.access_mode != COB_ACCESS_SEQUENTIAL) {
       p.key = DBT_SET(this.keys[0].getField());
     }
 
     if (this.access_mode != COB_ACCESS_SEQUENTIAL && !keyExistsInTable(p, 0, p.key)) {
-      return returnWith(p, close_cursor, 0, COB_STATUS_23_KEY_NOT_EXISTS);
+      return returnWith(p, closeCursor, 0, COB_STATUS_23_KEY_NOT_EXISTS);
     }
 
     // delete data from the primary table
@@ -603,26 +596,25 @@ public class CobolIndexedFile extends CobolFile {
       statement.setBytes(1, p.key);
       statement.execute();
     } catch (SQLException e) {
-      return returnWith(p, close_cursor, 0, COB_STATUS_30_PERMANENT_ERROR);
+      return returnWith(p, closeCursor, 0, COB_STATUS_30_PERMANENT_ERROR);
     }
 
     // delete data from sub tables
     for (int i = 1; i < this.nkeys; ++i) {
       try {
-        PreparedStatement statement =
-            p.connection.prepareStatement(
-                String.format("delete from %s where value = ?", getTableName(i)));
+        PreparedStatement statement = p.connection.prepareStatement(
+            String.format("delete from %s where value = ?", getTableName(i)));
         statement.setBytes(1, p.key);
         statement.execute();
       } catch (SQLException e) {
-        return returnWith(p, close_cursor, 0, COB_STATUS_30_PERMANENT_ERROR);
+        return returnWith(p, closeCursor, 0, COB_STATUS_30_PERMANENT_ERROR);
       }
     }
 
     try {
       p.connection.commit();
     } catch (SQLException e) {
-      return returnWith(p, close_cursor, 0, COB_STATUS_30_PERMANENT_ERROR);
+      return returnWith(p, closeCursor, 0, COB_STATUS_30_PERMANENT_ERROR);
     }
 
     this.updateWhileReading = true;
