@@ -36,7 +36,7 @@ import jp.osscons.opensourcecobol.libcobj.file.CobolFile;
 public class CobolUtil {
   private static int cob_io_assume_rewrite = 0;
   private static boolean cob_verbose = false;
-  private static handlerlist hdlrs = null;
+  private static HandlerList hdlrs = null;
   private static String runtime_err_str = null;
 
   public static LocalDateTime cobLocalTm = null;
@@ -66,8 +66,8 @@ public class CobolUtil {
   private static String currentParagraph;
   private static String sourceStatement;
 
-  abstract class handlerlist {
-    public handlerlist next = null;
+  abstract class HandlerList {
+    public HandlerList next = null;
 
     public abstract int proc(String s);
   }
@@ -105,8 +105,8 @@ public class CobolUtil {
   }
 
   /** libcob/common.cのcob_initの実装 TODO 未完成 */
-  public static void cob_init(String[] argv, boolean cob_initialized) {
-    if (!cob_initialized) {
+  public static void cob_init(String[] argv, boolean cobInitialized) {
+    if (!cobInitialized) {
       CobolUtil.commandLineArgs = argv;
       CobolInspect.initString();
       CobolFile.cob_init_fileio();
@@ -131,8 +131,7 @@ public class CobolUtil {
       Pattern p = Pattern.compile("([0-9]{4})/([0-9]{2})/([0-9]{2})");
       Matcher m = p.matcher(s);
       if (m.matches()) {
-        date_time_block:
-        if (m.groupCount() != 3) {
+        date_time_block: if (m.groupCount() != 3) {
           System.err.println("Warning: COB_DATE format invalid, ignored.");
         } else {
           int year = Integer.parseInt(m.group(1));
@@ -168,15 +167,15 @@ public class CobolUtil {
   public static LocalDateTime localtime() {
     LocalDateTime rt = LocalDateTime.now();
     if (CobolUtil.cobLocalTm != null) {
-      CobolUtil.cobLocalTm =
-          CobolUtil.cobLocalTm
-              .withHour(rt.getHour())
-              .withMinute(rt.getMinute())
-              .withSecond(rt.getSecond());
+      CobolUtil.cobLocalTm = CobolUtil.cobLocalTm
+          .withHour(rt.getHour())
+          .withMinute(rt.getMinute())
+          .withSecond(rt.getSecond());
       rt = CobolUtil.cobLocalTm;
     }
     return rt;
   }
+
   /**
    * libcob/cob_verbose_outputの実装 opensourceCOBOLではprintfのように可変長引数を取るが,
    * こちらは呼び出し側で事前にString.format等を使用することを期待している.
@@ -197,7 +196,7 @@ public class CobolUtil {
    */
   public static void runtimeError(String s) {
     if (hdlrs != null) {
-      handlerlist h = hdlrs;
+      HandlerList h = hdlrs;
       if (runtime_err_str != null) {
         String p = runtime_err_str;
         if (sourceFile != null) {
@@ -556,8 +555,7 @@ public class CobolUtil {
   public static int isNationalPadding(CobolDataStorage s, int size) {
     int ret = 1;
     int i = 0;
-    OUTER_LOOP:
-    while (i < size && ret != 0) {
+    OUTER_LOOP: while (i < size && ret != 0) {
       if (s.getByte(i) == ' ') {
         i++;
       } else if (size - i >= CobolConstant.ZENCSIZ) {
@@ -695,8 +693,9 @@ public class CobolUtil {
   /**
    * Set environemnt variable
    *
-   * @param envVarName the name of an environment variable. The leading and trailing spaces are
-   *     ignored.
+   * @param envVarName  the name of an environment variable. The leading and
+   *                    trailing spaces are
+   *                    ignored.
    * @param envVarValue the value of an environment variable to be set.
    */
   public static void setEnv(AbstractCobolField envVarName, AbstractCobolField envVarValue) {
