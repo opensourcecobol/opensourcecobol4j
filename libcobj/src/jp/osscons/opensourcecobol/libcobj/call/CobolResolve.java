@@ -226,7 +226,7 @@ public class CobolResolve {
     try {
       p = resolve(name);
     } catch (CobolCallException e) {
-      // TODO cob_call_error()を書く
+      return null;
     }
     return p;
   }
@@ -242,29 +242,21 @@ public class CobolResolve {
 
     try {
       Class<?> c = Class.forName(name);
-      try {
-        Constructor<?> cons = c.getConstructor();
-        runnable = (CobolRunnable) cons.newInstance();
-        runnable = (CobolRunnable) c.newInstance();
-        callTable.put(name, runnable);
-        return runnable;
-      } catch (NoSuchMethodException
-          | SecurityException
-          | InstantiationException
-          | IllegalAccessException
-          | IllegalArgumentException
-          | InvocationTargetException e) {
-        // TODO 自動生成された catch ブロック
-        e.printStackTrace();
-        throw new CobolRuntimeException(CobolRuntimeException.COBOL_FITAL_ERROR, "型エラー");
-      }
-    } catch (ClassNotFoundException e) {
-      // TODO
-      // e.printStackTrace();
-      // Continue
+      Constructor<?> cons = c.getConstructor();
+      runnable = (CobolRunnable) cons.newInstance();
+      runnable = (CobolRunnable) c.getDeclaredConstructor().newInstance();
+      callTable.put(name, runnable);
+      return runnable;
+    } catch (NoSuchMethodException
+        | SecurityException
+        | InstantiationException
+        | IllegalAccessException
+        | IllegalArgumentException
+        | InvocationTargetException
+        | ClassNotFoundException e) {
+      // TODO 自動生成された catch ブロック
+      return null;
     }
-
-    return null;
   }
 
   /**
@@ -348,10 +340,7 @@ public class CobolResolve {
     try {
       return resolve(name);
     } catch (CobolCallException e) {
-      // TODO 自動生成された catch ブロック
-      e.printStackTrace();
-      throw new CobolRuntimeException(
-          CobolRuntimeException.COBOL_FITAL_ERROR, "Program Pointer address Error'");
+      return null;
     }
   }
 
