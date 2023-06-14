@@ -317,13 +317,15 @@ public class CobolIndexedFile extends CobolFile {
 
     boolean isDuplicate = this.keys[p.key_index].getFlag() != 0;
     if (this.indexedFirstRead || this.flag_begin_of_file) {
-      this.cursor = IndexedCursor.createCursor(p.connection, p.key, p.key_index, isDuplicate, COB_GE);
+      this.cursor =
+          IndexedCursor.createCursor(p.connection, p.key, p.key_index, isDuplicate, COB_GE);
       if (this.cursor.isEmpty()) {
         return COB_STATUS_30_PERMANENT_ERROR;
       }
       this.cursor.get().moveToFirst();
     } else if (this.flag_end_of_file) {
-      this.cursor = IndexedCursor.createCursor(p.connection, p.key, p.key_index, isDuplicate, COB_LE);
+      this.cursor =
+          IndexedCursor.createCursor(p.connection, p.key, p.key_index, isDuplicate, COB_LE);
       if (this.cursor.isEmpty()) {
         return COB_STATUS_30_PERMANENT_ERROR;
       }
@@ -404,8 +406,9 @@ public class CobolIndexedFile extends CobolFile {
 
   private int getNextKeyDupNo(Connection conn, int index, byte[] key) {
     try {
-      PreparedStatement selectStatement = conn.prepareStatement(
-          String.format("select ifnull(max(dupNo), -1) from %s", getTableName(index)));
+      PreparedStatement selectStatement =
+          conn.prepareStatement(
+              String.format("select ifnull(max(dupNo), -1) from %s", getTableName(index)));
       ResultSet rs = selectStatement.executeQuery();
       return rs.getInt(1) + 1;
     } catch (SQLException e) {
@@ -443,8 +446,9 @@ public class CobolIndexedFile extends CobolFile {
     // insert into the primary table
     p.data = DBT_SET(this.record);
     try {
-      PreparedStatement insertStatement = p.connection.prepareStatement(
-          String.format("insert into %s values (?, ?)", getTableName(0)));
+      PreparedStatement insertStatement =
+          p.connection.prepareStatement(
+              String.format("insert into %s values (?, ?)", getTableName(0)));
       insertStatement.setBytes(1, p.key);
       insertStatement.setBytes(2, p.data);
       insertStatement.execute();
@@ -467,14 +471,16 @@ public class CobolIndexedFile extends CobolFile {
         PreparedStatement insertStatement;
         if (isDuplicateColumn(i)) {
           int dupNo = getNextKeyDupNo(p.connection, i, p.key);
-          insertStatement = p.connection.prepareStatement(
-              String.format("insert into %s values (?, ?, ?)", getTableName(i)));
+          insertStatement =
+              p.connection.prepareStatement(
+                  String.format("insert into %s values (?, ?, ?)", getTableName(i)));
           insertStatement.setBytes(1, p.key);
           insertStatement.setBytes(2, p.data);
           insertStatement.setInt(3, dupNo);
         } else {
-          insertStatement = p.connection.prepareStatement(
-              String.format("insert into %s values (?, ?)", getTableName(i)));
+          insertStatement =
+              p.connection.prepareStatement(
+                  String.format("insert into %s values (?, ?)", getTableName(i)));
           insertStatement.setBytes(1, p.key);
           insertStatement.setBytes(2, p.data);
         }
@@ -536,7 +542,8 @@ public class CobolIndexedFile extends CobolFile {
 
   private static boolean checkTable(IndexedFile p, int index, byte[] key, byte[] primaryKey) {
     try {
-      String query = String.format("select key from %s " + "where key = ? and value = ?", getTableName(index));
+      String query =
+          String.format("select key from %s " + "where key = ? and value = ?", getTableName(index));
 
       PreparedStatement selectStatement = p.connection.prepareStatement(query);
       selectStatement.setBytes(1, key);
@@ -602,8 +609,9 @@ public class CobolIndexedFile extends CobolFile {
     // delete data from sub tables
     for (int i = 1; i < this.nkeys; ++i) {
       try {
-        PreparedStatement statement = p.connection.prepareStatement(
-            String.format("delete from %s where value = ?", getTableName(i)));
+        PreparedStatement statement =
+            p.connection.prepareStatement(
+                String.format("delete from %s where value = ?", getTableName(i)));
         statement.setBytes(1, p.key);
         statement.execute();
       } catch (SQLException e) {

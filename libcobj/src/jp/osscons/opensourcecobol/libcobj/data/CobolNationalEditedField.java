@@ -27,9 +27,9 @@ public class CobolNationalEditedField extends AbstractCobolField {
   /**
    * コンストラクタ
    *
-   * @param size        データを格納するバイト配列の長さ
+   * @param size データを格納するバイト配列の長さ
    * @param dataStorage データを格納するバイト配列を扱うオブジェクト
-   * @param attribute   変数に関する様々な情報を保持するオブジェクト
+   * @param attribute 変数に関する様々な情報を保持するオブジェクト
    */
   public CobolNationalEditedField(
       int size, CobolDataStorage dataStorage, CobolFieldAttribute attribute) {
@@ -52,8 +52,7 @@ public class CobolNationalEditedField extends AbstractCobolField {
   }
 
   @Override
-  public void setDecimal(BigDecimal decimal) {
-  }
+  public void setDecimal(BigDecimal decimal) {}
 
   @Override
   public int addPackedInt(int n) {
@@ -94,7 +93,7 @@ public class CobolNationalEditedField extends AbstractCobolField {
     final int sizeOfInt = 4;
 
     byte[] picBytes = this.getAttribute().getPic().getBytes();
-    for (int p = 0; p < picBytes.length;) {
+    for (int p = 0; p < picBytes.length; ) {
       byte c = picBytes[p++];
       ByteBuffer buf = ByteBuffer.wrap(picBytes, p, sizeOfInt);
       buf.order(ByteOrder.LITTLE_ENDIAN);
@@ -133,26 +132,20 @@ public class CobolNationalEditedField extends AbstractCobolField {
   }
 
   @Override
-  public void moveFrom(CobolDataStorage dataStrage) {
-  }
+  public void moveFrom(CobolDataStorage dataStrage) {}
 
   @Override
-  public void moveFrom(byte[] bytes) {
-  }
+  public void moveFrom(byte[] bytes) {}
 
   @Override
-  public void moveFrom(String string) {
-  }
+  public void moveFrom(String string) {}
 
   @Override
-  public void moveFrom(int number) {
-  }
+  public void moveFrom(int number) {}
 
   @Override
-  public void moveFrom(double number) {
-  }
+  public void moveFrom(double number) {}
 
   @Override
-  public void moveFrom(BigDecimal number) {
-  }
+  public void moveFrom(BigDecimal number) {}
 }

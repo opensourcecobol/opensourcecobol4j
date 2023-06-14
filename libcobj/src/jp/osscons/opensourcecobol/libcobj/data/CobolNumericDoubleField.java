@@ -47,12 +47,13 @@ public class CobolNumericDoubleField extends AbstractCobolField {
   public String getString() {
     CobolFieldAttribute thisAttr = this.getAttribute();
     int flag = thisAttr.isFlagHaveSign() ? CobolFieldAttribute.COB_FLAG_HAVE_SIGN : 0;
-    CobolFieldAttribute attr = new CobolFieldAttribute(
-        CobolFieldAttribute.COB_TYPE_NUMERIC,
-        thisAttr.getDigits(),
-        thisAttr.getScale(),
-        flag,
-        thisAttr.getPic());
+    CobolFieldAttribute attr =
+        new CobolFieldAttribute(
+            CobolFieldAttribute.COB_TYPE_NUMERIC,
+            thisAttr.getDigits(),
+            thisAttr.getScale(),
+            flag,
+            thisAttr.getPic());
     CobolDataStorage storage = new CobolDataStorage(thisAttr.getDigits());
     CobolNumericField numericField = new CobolNumericField(thisAttr.getDigits(), storage, attr);
     numericField.moveFrom(this);
@@ -145,12 +146,13 @@ public class CobolNumericDoubleField extends AbstractCobolField {
 
   @Override
   public CobolNumericField getNumericField() {
-    CobolFieldAttribute attr = new CobolFieldAttribute(
-        CobolFieldAttribute.COB_TYPE_NUMERIC_DISPLAY,
-        40,
-        20,
-        CobolFieldAttribute.COB_FLAG_HAVE_SIGN,
-        null);
+    CobolFieldAttribute attr =
+        new CobolFieldAttribute(
+            CobolFieldAttribute.COB_TYPE_NUMERIC_DISPLAY,
+            40,
+            20,
+            CobolFieldAttribute.COB_FLAG_HAVE_SIGN,
+            null);
     CobolDataStorage storage = new CobolDataStorage(40);
     double dval = Math.abs(this.getBinaryValue());
     String dataString = String.format("%041.20f", dval).replace(".", "");
@@ -170,26 +172,20 @@ public class CobolNumericDoubleField extends AbstractCobolField {
   }
 
   @Override
-  public void moveFrom(byte[] bytes) {
-  }
+  public void moveFrom(byte[] bytes) {}
 
   @Override
-  public void moveFrom(String string) {
-  }
+  public void moveFrom(String string) {}
 
   @Override
-  public void moveFrom(int number) {
-  }
+  public void moveFrom(int number) {}
 
   @Override
-  public void moveFrom(double number) {
-  }
+  public void moveFrom(double number) {}
 
   @Override
-  public void moveFrom(BigDecimal number) {
-  }
+  public void moveFrom(BigDecimal number) {}
 
   @Override
-  public void moveFrom(CobolDataStorage dataStrage) {
-  }
+  public void moveFrom(CobolDataStorage dataStrage) {}
 }

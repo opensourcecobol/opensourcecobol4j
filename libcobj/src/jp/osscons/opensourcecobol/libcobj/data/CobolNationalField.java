@@ -30,9 +30,9 @@ public class CobolNationalField extends AbstractCobolField {
   /**
    * コンストラクタ
    *
-   * @param size        データを格納するバイト配列の長さ
+   * @param size データを格納するバイト配列の長さ
    * @param dataStorage データを格納するバイト配列を扱うオブジェクト
-   * @param attribute   変数に関する様々な情報を保持するオブジェクト
+   * @param attribute 変数に関する様々な情報を保持するオブジェクト
    */
   public CobolNationalField(int size, CobolDataStorage dataStorage, CobolFieldAttribute attribute) {
     super(size, dataStorage, attribute);
@@ -108,7 +108,8 @@ public class CobolNationalField extends AbstractCobolField {
       size = workReturnSize;
       CobolDataStorage pTmpStorage = new CobolDataStorage(size);
       pTmpStorage.setBytes(pTmp, size);
-      CobolFieldAttribute attr = new CobolFieldAttribute(CobolFieldAttribute.COB_TYPE_ALPHANUMERIC, 0, 0, 0, null);
+      CobolFieldAttribute attr =
+          new CobolFieldAttribute(CobolFieldAttribute.COB_TYPE_ALPHANUMERIC, 0, 0, 0, null);
       src2 = new CobolAlphanumericField(size, pTmpStorage, attr);
     } else {
       src2 = src1;
@@ -131,7 +132,7 @@ public class CobolNationalField extends AbstractCobolField {
     int len;
     // TODO
     final int cobZenCSiz = 2;
-    final byte[] cobZenBlk = { (byte) 0x81, (byte) 0x40 };
+    final byte[] cobZenBlk = {(byte) 0x81, (byte) 0x40};
 
     data1 = field.getDataStorage();
     size1 = field.getSize();
@@ -1047,8 +1048,7 @@ public class CobolNationalField extends AbstractCobolField {
    * @param field 代入元のデータ(dataStorage型)
    */
   @Override
-  public void moveFrom(CobolDataStorage dataStrage) {
-  }
+  public void moveFrom(CobolDataStorage dataStrage) {}
 
   /**
    * 引数で与えらえられたデータからthisへの代入を行う
@@ -1070,7 +1070,8 @@ public class CobolNationalField extends AbstractCobolField {
     try {
       byte[] bytes = string.getBytes("SJIS");
       CobolDataStorage data = new CobolDataStorage(bytes);
-      CobolFieldAttribute a = new CobolFieldAttribute(CobolFieldAttribute.COB_TYPE_ALPHANUMERIC, 0, 0, 0, null);
+      CobolFieldAttribute a =
+          new CobolFieldAttribute(CobolFieldAttribute.COB_TYPE_ALPHANUMERIC, 0, 0, 0, null);
       CobolAlphanumericField f = new CobolAlphanumericField(bytes.length, data, a);
       this.moveFrom(f);
     } catch (UnsupportedEncodingException e) {
@@ -1085,8 +1086,7 @@ public class CobolNationalField extends AbstractCobolField {
    * @param field 代入元のデータ(int型)
    */
   @Override
-  public void moveFrom(int number) {
-  }
+  public void moveFrom(int number) {}
 
   /**
    * 引数で与えらえられたデータからthisへの代入を行う
@@ -1094,8 +1094,7 @@ public class CobolNationalField extends AbstractCobolField {
    * @param field 代入元のデータ(int型)
    */
   @Override
-  public void moveFrom(double number) {
-  }
+  public void moveFrom(double number) {}
 
   /**
    * 引数で与えらえられたデータからthisへの代入を行う
@@ -1103,8 +1102,7 @@ public class CobolNationalField extends AbstractCobolField {
    * @param field 代入元のデータ(int型)
    */
   @Override
-  public void moveFrom(BigDecimal number) {
-  }
+  public void moveFrom(BigDecimal number) {}
 
   /**
    * 引数で与えらえられたデータからthisへの代入を行う
@@ -1112,8 +1110,7 @@ public class CobolNationalField extends AbstractCobolField {
    * @param field 代入元のデータ(int型)
    */
   @Override
-  public void setDecimal(BigDecimal decimal) {
-  }
+  public void setDecimal(BigDecimal decimal) {}
 
   /**
    * thisをCobolNumericFieldに変換する. indirect moveをするときに使用されることを想定している.
@@ -1124,12 +1121,13 @@ public class CobolNationalField extends AbstractCobolField {
   public CobolNumericField getNumericField() {
     int size = this.getSize() / 2;
     int scale = this.getAttribute().getScale();
-    CobolFieldAttribute attr = new CobolFieldAttribute(
-        CobolFieldAttribute.COB_TYPE_NUMERIC_DISPLAY,
-        size,
-        scale,
-        CobolFieldAttribute.COB_FLAG_HAVE_SIGN,
-        null);
+    CobolFieldAttribute attr =
+        new CobolFieldAttribute(
+            CobolFieldAttribute.COB_TYPE_NUMERIC_DISPLAY,
+            size,
+            scale,
+            CobolFieldAttribute.COB_FLAG_HAVE_SIGN,
+            null);
     CobolDataStorage data = new CobolDataStorage(size);
     CobolNumericField field = new CobolNumericField(size, data, attr);
     field.moveFrom(this);

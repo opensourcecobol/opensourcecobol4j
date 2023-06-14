@@ -98,7 +98,7 @@ public class CobolLineSequentialFile extends CobolFile {
     int i = 0;
     CobolDataStorage data = this.record.getDataStorage();
 
-    for (;;) {
+    for (; ; ) {
       n = this.file.getc();
       if (n == -1) {
         if (i == 0) {

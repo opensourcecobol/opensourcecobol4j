@@ -70,15 +70,9 @@ public final class IndexedCursor {
   private boolean isDuplicate;
   /** a key */
   private byte[] key;
-  /**
-   * forwardBuffer stores data located to the bottom direction from the first read
-   * position
-   */
+  /** forwardBuffer stores data located to the bottom direction from the first read position */
   ArrayList<FetchResult> forwardBuffer;
-  /**
-   * bakckwardBuffer stores data located to the first direction from the first
-   * read position
-   */
+  /** bakckwardBuffer stores data located to the first direction from the first read position */
   ArrayList<FetchResult> backwardBuffer;
   /** the index of the table */
   private int tableIndex;
@@ -109,16 +103,14 @@ public final class IndexedCursor {
   /**
    * create a crusor
    *
-   * @param conn        a connection to the SQLite database
-   * @param key         a key data
-   * @param tableIndex  the index of the table in the SQLite database
+   * @param conn a connection to the SQLite database
+   * @param key a key data
+   * @param tableIndex the index of the table in the SQLite database
    * @param isDuplicate allows that the key data in the table is duplicate
-   * @param comparator  specifys the comparing type (one of COB_EQ, COB_LT,
-   *                    COB_LE, COB_GT, COB_GE in
-   *                    CobolIndexedFile.java)
-   * @return return the cursor wrapped by Optional if the cursor is successfully
-   *         created. Otherwise,
-   *         Optional.empty().
+   * @param comparator specifys the comparing type (one of COB_EQ, COB_LT, COB_LE, COB_GT, COB_GE in
+   *     CobolIndexedFile.java)
+   * @return return the cursor wrapped by Optional if the cursor is successfully created. Otherwise,
+   *     Optional.empty().
    */
   public static Optional<IndexedCursor> createCursor(
       Connection conn, byte[] key, int tableIndex, boolean isDuplicate, int comparator) {
@@ -152,26 +144,29 @@ public final class IndexedCursor {
       result = this.forwardBuffer.get(this.cursorIndex);
     }
 
-    IndexedCursor newCursor = new IndexedCursor(this.conn, this.key, this.tableIndex, this.isDuplicate,
-        this.comparator);
-    newCursor.forwardCursor = reloadedCursor(
-        this.conn,
-        this.tableIndex,
-        this.isDuplicate,
-        newComparator,
-        result,
-        this.comparator,
-        true);
-    newCursor.backwardCursor = reloadedCursor(
-        this.conn,
-        this.tableIndex,
-        this.isDuplicate,
-        newComparator,
-        result,
-        this.comparator,
-        false);
+    IndexedCursor newCursor =
+        new IndexedCursor(this.conn, this.key, this.tableIndex, this.isDuplicate, this.comparator);
+    newCursor.forwardCursor =
+        reloadedCursor(
+            this.conn,
+            this.tableIndex,
+            this.isDuplicate,
+            newComparator,
+            result,
+            this.comparator,
+            true);
+    newCursor.backwardCursor =
+        reloadedCursor(
+            this.conn,
+            this.tableIndex,
+            this.isDuplicate,
+            newComparator,
+            result,
+            this.comparator,
+            false);
 
-    Optional<FetchResult> reFetchResult = reFetch(this.conn, this.tableIndex, this.isDuplicate, result);
+    Optional<FetchResult> reFetchResult =
+        reFetch(this.conn, this.tableIndex, this.isDuplicate, result);
     if (!reFetchResult.isEmpty()) {
       FetchResult r = reFetchResult.get();
       newCursor.forwardBuffer.add(r);
@@ -195,25 +190,27 @@ public final class IndexedCursor {
     if (isPrimaryTable) {
       query = String.format("select key, value from %s where key == ?", primaryTable);
     } else if (isDuplicate) {
-      query = String.format(
-          "select %s.key, %s.value, %s.dupNo from "
-              + "%s join %s on %s.value = %s.key "
-              + "where %s.key == ? and %s.dupNo == ?",
-          subTable,
-          primaryTable,
-          subTable,
-          subTable,
-          primaryTable,
-          subTable,
-          primaryTable,
-          subTable,
-          subTable);
+      query =
+          String.format(
+              "select %s.key, %s.value, %s.dupNo from "
+                  + "%s join %s on %s.value = %s.key "
+                  + "where %s.key == ? and %s.dupNo == ?",
+              subTable,
+              primaryTable,
+              subTable,
+              subTable,
+              primaryTable,
+              subTable,
+              primaryTable,
+              subTable,
+              subTable);
     } else {
-      query = String.format(
-          "select %s.key, %s.value from "
-              + "%s join %s on %s.value = %s.key "
-              + "where %s.key == ?",
-          subTable, primaryTable, subTable, primaryTable, subTable, primaryTable, subTable);
+      query =
+          String.format(
+              "select %s.key, %s.value from "
+                  + "%s join %s on %s.value = %s.key "
+                  + "where %s.key == ?",
+              subTable, primaryTable, subTable, primaryTable, subTable, primaryTable, subTable);
     }
 
     try {
@@ -255,7 +252,8 @@ public final class IndexedCursor {
 
     final String sortOrder = forward ? "" : "desc";
 
-    final String queryPreffix = getReloadCursorQueryPrefix(tableIndex, isDuplicate, compOperator, sortOrder);
+    final String queryPreffix =
+        getReloadCursorQueryPrefix(tableIndex, isDuplicate, compOperator, sortOrder);
 
     final String querySuffix = getQuerySuffix(tableIndex, isDuplicate, sortOrder);
 
@@ -396,9 +394,8 @@ public final class IndexedCursor {
   /**
    * read a next data
    *
-   * @return return the read data wrapped by Optional when reading data
-   *         successfully. Otherwise,
-   *         return Optional.empty()
+   * @return return the read data wrapped by Optional when reading data successfully. Otherwise,
+   *     return Optional.empty()
    */
   public Optional<FetchResult> next() {
     if (this.forwardCursor.isEmpty()) {
@@ -446,9 +443,8 @@ public final class IndexedCursor {
   /**
    * read a previous data
    *
-   * @return return the read data wrapped by Optional when reading data
-   *         successfully. Otherwise,
-   *         return Optional.empty()
+   * @return return the read data wrapped by Optional when reading data successfully. Otherwise,
+   *     return Optional.empty()
    */
   public Optional<FetchResult> prev() {
     if (this.backwardCursor.isEmpty()) {
@@ -607,7 +603,8 @@ public final class IndexedCursor {
   }
 
   public boolean moveToFirst() {
-    Optional<ResultSet> cursor = getCursorForFirstLast(this.tableIndex, this.isDuplicate, CursorReadOption.FIRST);
+    Optional<ResultSet> cursor =
+        getCursorForFirstLast(this.tableIndex, this.isDuplicate, CursorReadOption.FIRST);
     if (cursor.isEmpty()) {
       return false;
     }
@@ -619,7 +616,8 @@ public final class IndexedCursor {
   }
 
   public boolean moveToLast() {
-    Optional<ResultSet> cursor = getCursorForFirstLast(this.tableIndex, this.isDuplicate, CursorReadOption.LAST);
+    Optional<ResultSet> cursor =
+        getCursorForFirstLast(this.tableIndex, this.isDuplicate, CursorReadOption.LAST);
     if (cursor.isEmpty()) {
       return false;
     }
@@ -652,19 +650,20 @@ public final class IndexedCursor {
       } else {
         optionColumn = "";
       }
-      String query = String.format(
-          "select %s.key, %s.value %s from "
-              + "%s join %s on %s.value = %s.key "
-              + "order by %s.key %s",
-          subTable,
-          primaryTable,
-          optionColumn,
-          subTable,
-          primaryTable,
-          subTable,
-          primaryTable,
-          subTable,
-          sortOrder);
+      String query =
+          String.format(
+              "select %s.key, %s.value %s from "
+                  + "%s join %s on %s.value = %s.key "
+                  + "order by %s.key %s",
+              subTable,
+              primaryTable,
+              optionColumn,
+              subTable,
+              primaryTable,
+              subTable,
+              primaryTable,
+              subTable,
+              sortOrder);
       if (isDuplicate) {
         return query + String.format(", dupNo %s", sortOrder);
       } else {

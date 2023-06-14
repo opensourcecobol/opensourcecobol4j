@@ -27,9 +27,9 @@ public class CobolNumericEditedField extends AbstractCobolField {
   /**
    * コンストラクタ
    *
-   * @param size        データを格納するバイト配列の長さ
+   * @param size データを格納するバイト配列の長さ
    * @param dataStorage データを格納するバイト配列を扱うオブジェクト
-   * @param attribute   変数に関する様々な情報を保持するオブジェクト
+   * @param attribute 変数に関する様々な情報を保持するオブジェクト
    */
   public CobolNumericEditedField(
       int size, CobolDataStorage dataStorage, CobolFieldAttribute attribute) {
@@ -52,8 +52,7 @@ public class CobolNumericEditedField extends AbstractCobolField {
   }
 
   @Override
-  public void setDecimal(BigDecimal decimal) {
-  }
+  public void setDecimal(BigDecimal decimal) {}
 
   @Override
   public int addPackedInt(int n) {
@@ -157,7 +156,7 @@ public class CobolNumericEditedField extends AbstractCobolField {
     byte signSymbol = 0;
     byte currSymbol = 0;
 
-    for (int p = 0; p < picBytes.length;) {
+    for (int p = 0; p < picBytes.length; ) {
       byte c = picBytes[p++];
       ByteBuffer buf = ByteBuffer.wrap(picBytes, p, sizeOfInt);
       buf.order(ByteOrder.LITTLE_ENDIAN);
@@ -347,28 +346,22 @@ public class CobolNumericEditedField extends AbstractCobolField {
   }
 
   @Override
-  public void moveFrom(CobolDataStorage dataStrage) {
-  }
+  public void moveFrom(CobolDataStorage dataStrage) {}
 
   @Override
-  public void moveFrom(byte[] bytes) {
-  }
+  public void moveFrom(byte[] bytes) {}
 
   @Override
-  public void moveFrom(String string) {
-  }
+  public void moveFrom(String string) {}
 
   @Override
-  public void moveFrom(int number) {
-  }
+  public void moveFrom(int number) {}
 
   @Override
-  public void moveFrom(double number) {
-  }
+  public void moveFrom(double number) {}
 
   @Override
-  public void moveFrom(BigDecimal number) {
-  }
+  public void moveFrom(BigDecimal number) {}
 
   /**
    * thisをCobolNumericFieldに変換する. indirect moveをするときに使用されることを想定している.
@@ -378,12 +371,13 @@ public class CobolNumericEditedField extends AbstractCobolField {
   public CobolNumericField getNumericField() {
     int size = 36;
     int scale = 18;
-    CobolFieldAttribute attr = new CobolFieldAttribute(
-        CobolFieldAttribute.COB_TYPE_NUMERIC_DISPLAY,
-        size,
-        scale,
-        CobolFieldAttribute.COB_FLAG_HAVE_SIGN,
-        null);
+    CobolFieldAttribute attr =
+        new CobolFieldAttribute(
+            CobolFieldAttribute.COB_TYPE_NUMERIC_DISPLAY,
+            size,
+            scale,
+            CobolFieldAttribute.COB_FLAG_HAVE_SIGN,
+            null);
     CobolDataStorage data = new CobolDataStorage(64);
     CobolNumericField field = new CobolNumericField(size, data, attr);
     field.moveFrom(this);

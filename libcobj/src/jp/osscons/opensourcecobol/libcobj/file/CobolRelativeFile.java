@@ -227,7 +227,7 @@ public class CobolRelativeFile extends CobolFile {
       kindex++;
     }
 
-    for (;;) {
+    for (; ; ) {
       off = kindex * relsize;
       try {
         this.fp.seek((long) off);
@@ -311,7 +311,7 @@ public class CobolRelativeFile extends CobolFile {
     try {
 
       relsize = this.record_max + size.length;
-      for (;;) {
+      for (; ; ) {
         if (this.fp.read(size, offset, size.length) != size.length) {
           return COB_STATUS_10_END_OF_FILE;
         }
@@ -327,7 +327,8 @@ public class CobolRelativeFile extends CobolFile {
             off = this.fp.getFilePointer();
             relnum = (int) ((off / relsize) + 1);
             this.keys[0].getField().setInt(relnum);
-            if (String.valueOf(relnum).length() > this.keys[0].getField().getAttribute().getDigits()) {
+            if (String.valueOf(relnum).length()
+                > this.keys[0].getField().getAttribute().getDigits()) {
               return COB_STATUS_14_OUT_OF_KEY_RANGE;
             }
           }

@@ -40,7 +40,7 @@ public class CobolRuntimeException extends RuntimeException {
    * コンストラクタ
    *
    * @param errorCode this.errorCodeに設定する値
-   * @param message   this.messageに設定する値
+   * @param message this.messageに設定する値
    */
   public CobolRuntimeException(int errorCode, String message) {
     super();

@@ -87,11 +87,12 @@ public class CobolResolve {
     if (s == null || s.equals("")) {
       buf = "." + System.getProperty("path.separator") + CobolConstant.COB_LIBRARY_PATH;
     } else {
-      buf = s
-          + System.getProperty("path.separator")
-          + "."
-          + System.getProperty("path.separator")
-          + CobolConstant.COB_LIBRARY_PATH;
+      buf =
+          s
+              + System.getProperty("path.separator")
+              + "."
+              + System.getProperty("path.separator")
+              + CobolConstant.COB_LIBRARY_PATH;
     }
     setLibraryPath(buf);
 

@@ -26,9 +26,9 @@ public class CobolAlphanumericEditedField extends AbstractCobolField {
   /**
    * コンストラクタ
    *
-   * @param size        データを格納するバイト配列の長さ
+   * @param size データを格納するバイト配列の長さ
    * @param dataStorage データを格納するバイト配列を扱うオブジェクト
-   * @param attribute   変数に関する様々な情報を保持するオブジェクト
+   * @param attribute 変数に関する様々な情報を保持するオブジェクト
    */
   public CobolAlphanumericEditedField(
       int size, CobolDataStorage dataStorage, CobolFieldAttribute attribute) {
@@ -78,10 +78,12 @@ public class CobolAlphanumericEditedField extends AbstractCobolField {
         int scale = src1.getAttribute().getScale();
         int digits = src1.getAttribute().getDigits();
         if (scale < 0 || scale > digits) {
-          CobolFieldAttribute newAttr = new CobolFieldAttribute(
-              CobolFieldAttribute.COB_TYPE_ALPHANUMERIC, attr.getDigits(), 0, 0, null);
+          CobolFieldAttribute newAttr =
+              new CobolFieldAttribute(
+                  CobolFieldAttribute.COB_TYPE_ALPHANUMERIC, attr.getDigits(), 0, 0, null);
           int newSize = scale < 0 ? digits - scale : scale;
-          AbstractCobolField newSrc = CobolFieldFactory.makeCobolField(newSize, new CobolDataStorage(newSize), newAttr);
+          AbstractCobolField newSrc =
+              CobolFieldFactory.makeCobolField(newSize, new CobolDataStorage(newSize), newAttr);
           newSrc.moveFrom(src1);
           this.moveFrom(newSrc);
         } else {
@@ -113,7 +115,7 @@ public class CobolAlphanumericEditedField extends AbstractCobolField {
     byte[] picBytes = dst.getAttribute().getPic().getBytes();
     final int sizeOfInt = 4;
 
-    for (int p = 0; p < picBytes.length;) {
+    for (int p = 0; p < picBytes.length; ) {
       byte c = picBytes[p++];
       ByteBuffer buf = ByteBuffer.wrap(picBytes, p, sizeOfInt);
       buf.order(ByteOrder.LITTLE_ENDIAN);

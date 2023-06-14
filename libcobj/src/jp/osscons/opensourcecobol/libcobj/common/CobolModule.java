@@ -127,8 +127,7 @@ public class CobolModule {
    *
    * @param m
    */
-  public void setNext(CobolModule m) {
-  }
+  public void setNext(CobolModule m) {}
 
   /**
    * TODO 実装
@@ -144,8 +143,7 @@ public class CobolModule {
    *
    * @param string
    */
-  public void setProgramID(String string) {
-  }
+  public void setProgramID(String string) {}
 
   /**
    * TODO 実装
@@ -161,8 +159,7 @@ public class CobolModule {
    *
    * @param programId
    */
-  public void setProgramId(String programId) {
-  }
+  public void setProgramId(String programId) {}
 
   /** パラメータリストのすべての要素を削除する */
   public void clearParameter() {
