@@ -25,7 +25,6 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
-import java.util.Locale;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.UUID;
@@ -76,7 +75,7 @@ public class CobolResolve {
 
     s = CobolUtil.getEnv("COB_LOAD_CASE");
     if (s != null) {
-      String sU = s.toUpperCase(Locale.getDefault());
+      String sU = s.toUpperCase();
       if ("LOWER".equals(sU)) {
         name_convert = 1;
       } else if ("UPPER".equals(sU)) {
