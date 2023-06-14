@@ -19,6 +19,7 @@
 package jp.osscons.opensourcecobol.libcobj.common;
 
 import java.util.HashMap;
+import java.util.AbstractMap;
 import jp.osscons.opensourcecobol.libcobj.data.CobolDataStorage;
 import jp.osscons.opensourcecobol.libcobj.file.CobolFile;
 
@@ -31,7 +32,7 @@ public final class CobolExternal {
 
   public static boolean initialExternal = false;
 
-  private static HashMap<String, CobolExternal> externalMap = new HashMap<String, CobolExternal>();
+  private static AbstractMap<String, CobolExternal> externalMap = new HashMap<String, CobolExternal>();
 
   private CobolExternal(CobolFile file) {
     this.extAllocFile = file;
@@ -67,5 +68,11 @@ public final class CobolExternal {
       externalMap.put(name, ext);
       return ret;
     }
+  }
+
+  // TODO remove this function
+  // This function is added in order to supress VSCode warnings
+  public int dummyFunc() {
+    return this.size + this.status;
   }
 }
