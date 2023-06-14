@@ -108,8 +108,9 @@ public class CobolInspect {
     if (type == INSPECT_TRAILING) {
       for (int i = len - f2.getSize(); i >= 0; i--) {
         if (inspectData
-            .getSubDataStorage(inspectStart + i)
-            .memcmp(f2.getDataStorage(), f2.getSize()) == 0) {
+                .getSubDataStorage(inspectStart + i)
+                .memcmp(f2.getDataStorage(), f2.getSize())
+            == 0) {
           int j;
           for (j = 0; j < f2.getSize(); ++j) {
             if (inspectMark[mark + i + j] != -1) {
@@ -118,7 +119,8 @@ public class CobolInspect {
           }
           if (j == f2.getSize()) {
             for (j = 0; j < f2.getSize(); ++j) {
-              inspectMark[mark + i + j] = inspectReplacing != 0 ? f1.getDataStorage().getByte(i) : 1;
+              inspectMark[mark + i + j] =
+                  inspectReplacing != 0 ? f1.getDataStorage().getByte(i) : 1;
             }
             i -= f2.getSize() - 1;
             n++;
@@ -130,8 +132,9 @@ public class CobolInspect {
     } else {
       for (int i = 0; i < (len - f2.getSize() + 1); ++i) {
         if (inspectData
-            .getSubDataStorage(inspectStart + i)
-            .memcmp(f2.getDataStorage(), f2.getSize()) == 0) {
+                .getSubDataStorage(inspectStart + i)
+                .memcmp(f2.getDataStorage(), f2.getSize())
+            == 0) {
           int j;
           for (j = 0; j < f2.getSize(); ++j) {
             if (inspectMark[mark + i + j] != -1) {
@@ -140,7 +143,8 @@ public class CobolInspect {
           }
           if (j == f2.getSize()) {
             for (j = 0; j < f2.getSize(); ++j) {
-              inspectMark[mark + i + j] = inspectReplacing != 0 ? f1.getDataStorage().getByte(j) : 1;
+              inspectMark[mark + i + j] =
+                  inspectReplacing != 0 ? f1.getDataStorage().getByte(j) : 1;
             }
             i += f2.getSize() - 1;
             n++;
@@ -363,8 +367,9 @@ public class CobolInspect {
           if (inspectMark[i] == -1
               && inspectMark[i + 1] == -1
               && f1.getDataStorage()
-                  .getSubDataStorage(j)
-                  .memcmp(inspectData.getSubDataStorage(inspectStart + i), 2) == 0) {
+                      .getSubDataStorage(j)
+                      .memcmp(inspectData.getSubDataStorage(inspectStart + i), 2)
+                  == 0) {
             inspectData.setByte(inspectStart + i, data.getByte(0));
             inspectData.setByte(inspectStart + i + 1, data.getByte(1));
           }

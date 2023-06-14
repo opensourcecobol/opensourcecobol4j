@@ -18,8 +18,8 @@
  */
 package jp.osscons.opensourcecobol.libcobj.common;
 
-import java.util.HashMap;
 import java.util.AbstractMap;
+import java.util.HashMap;
 import jp.osscons.opensourcecobol.libcobj.data.CobolDataStorage;
 import jp.osscons.opensourcecobol.libcobj.file.CobolFile;
 
@@ -32,7 +32,8 @@ public final class CobolExternal {
 
   public static boolean initialExternal = false;
 
-  private static AbstractMap<String, CobolExternal> externalMap = new HashMap<String, CobolExternal>();
+  private static AbstractMap<String, CobolExternal> externalMap =
+      new HashMap<String, CobolExternal>();
 
   private CobolExternal(CobolFile file) {
     this.extAllocFile = file;
