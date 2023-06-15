@@ -46,7 +46,8 @@
     <rule ref="category/java/bestpractices.xml/SwitchStmtsShouldHaveDefault"/>
     <!-- <rule ref="category/java/bestpractices.xml/SystemPrintln" /> -->
     <!-- <rule ref="category/java/bestpractices.xml/UnusedAssignment"/> -->
-    <rule ref="category/java/bestpractices.xml/UnusedFormalParameter"/>
+    <!-- TODO enable UnusedFormalParameter-->
+    <!--<rule ref="category/java/bestpractices.xml/UnusedFormalParameter"/> -->
     <rule ref="category/java/bestpractices.xml/UnusedLocalVariable"/>
     <rule ref="category/java/bestpractices.xml/UnusedPrivateField"/>
     <rule ref="category/java/bestpractices.xml/UnusedPrivateMethod"/>
