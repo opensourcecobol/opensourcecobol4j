@@ -124,7 +124,8 @@ public class CobolUtil {
       Pattern p = Pattern.compile("([0-9]{4})/([0-9]{2})/([0-9]{2})");
       Matcher m = p.matcher(s);
       if (m.matches()) {
-        date_time_block: if (m.groupCount() != 3) {
+        date_time_block:
+        if (m.groupCount() != 3) {
           System.err.println("Warning: COB_DATE format invalid, ignored.");
         } else {
           int year = Integer.parseInt(m.group(1));
@@ -160,10 +161,11 @@ public class CobolUtil {
   public static LocalDateTime localtime() {
     LocalDateTime rt = LocalDateTime.now();
     if (CobolUtil.cobLocalTm != null) {
-      CobolUtil.cobLocalTm = CobolUtil.cobLocalTm
-          .withHour(rt.getHour())
-          .withMinute(rt.getMinute())
-          .withSecond(rt.getSecond());
+      CobolUtil.cobLocalTm =
+          CobolUtil.cobLocalTm
+              .withHour(rt.getHour())
+              .withMinute(rt.getMinute())
+              .withSecond(rt.getSecond());
       rt = CobolUtil.cobLocalTm;
     }
     return rt;
@@ -545,7 +547,8 @@ public class CobolUtil {
   public static int isNationalPadding(CobolDataStorage s, int size) {
     int ret = 1;
     int i = 0;
-    OUTER_LOOP: while (i < size && ret != 0) {
+    OUTER_LOOP:
+    while (i < size && ret != 0) {
       if (s.getByte(i) == ' ') {
         i++;
       } else if (size - i >= CobolConstant.ZENCSIZ) {
@@ -677,9 +680,8 @@ public class CobolUtil {
   /**
    * Set environemnt variable
    *
-   * @param envVarName  the name of an environment variable. The leading and
-   *                    trailing spaces are
-   *                    ignored.
+   * @param envVarName the name of an environment variable. The leading and trailing spaces are
+   *     ignored.
    * @param envVarValue the value of an environment variable to be set.
    */
   public static void setEnv(AbstractCobolField envVarName, AbstractCobolField envVarValue) {

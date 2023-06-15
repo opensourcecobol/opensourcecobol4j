@@ -44,13 +44,6 @@ public abstract class AbstractCobolField {
   };
 
   /**
-   * moveAlphanumericToNumericで使用 C言語のgotoの代替機能を提供する
-   *
-   * @author y-sakamoto
-   */
-  protected class GotoException extends Exception {}
-
-  /**
    * コンストラクタ
    *
    * @param size データを格納するバイト配列の長さ
@@ -62,8 +55,6 @@ public abstract class AbstractCobolField {
     this.dataStorage = dataStorage;
     this.attribute = attribute;
   }
-
-  public AbstractCobolField() {}
 
   /**
    * メンバ変数dataStorageのgetter
@@ -535,12 +526,8 @@ public abstract class AbstractCobolField {
       byte[] pBytes = CobolNationalField.judge_hankakujpn_exist(src);
       pTmp = new CobolDataStorage(pBytes);
       size = CobolNationalField.workReturnSize;
-      if (pTmp != null) {
-        tmpSrcStorage = pTmp;
-        tmpSrcSize = size;
-      } else {
-        tmpSrcSize = 0;
-      }
+      tmpSrcStorage = pTmp;
+      tmpSrcSize = size;
       xToN = true;
     }
 
@@ -707,7 +694,9 @@ public abstract class AbstractCobolField {
    *
    * @param s
    */
-  public void checkNumeric(String s) {}
+  public void checkNumeric(String s) {
+    System.err.println("checkNumeric is not implemented");
+  }
 
   // TODO abstract指定
   /**
@@ -830,43 +819,6 @@ public abstract class AbstractCobolField {
   }
 
   /**
-   * 引数で与えられた数値データを保持するフィールドと同じ数値を保持するCobolNumericFieldに変換する
-   *
-   * @param field 変換するクラス
-   * @return 引数で与えられた数値データを保持するフィールドを同じ数値を保持するCobolNumericField型のフィールド
-   */
-  private AbstractCobolField numericFieldToNumericDisplayField(AbstractCobolField field) {
-    CobolFieldAttribute attr = field.getAttribute();
-    CobolDataStorage data = new CobolDataStorage(48);
-    if (attr.isTypeNumeric()) {
-      if (!attr.isTypeNumericDisplay()) {
-        CobolFieldAttribute newAttr =
-            new CobolFieldAttribute(
-                CobolFieldAttribute.COB_TYPE_NUMERIC_DISPLAY,
-                attr.getDigits(),
-                attr.getScale(),
-                attr.getFlags() & (~CobolFieldAttribute.COB_FLAG_HAVE_SIGN),
-                attr.getPic());
-        CobolNumericField temp = new CobolNumericField(attr.getDigits(), data, newAttr);
-        temp.moveFrom(field);
-        field = temp;
-      } else if (attr.isFlagHaveSign()) {
-        CobolFieldAttribute newAttr =
-            new CobolFieldAttribute(
-                CobolFieldAttribute.COB_TYPE_NUMERIC_DISPLAY,
-                attr.getDigits(),
-                attr.getScale(),
-                CobolFieldAttribute.COB_FLAG_HAVE_SIGN,
-                attr.getPic());
-        CobolNumericField temp = new CobolNumericField(attr.getDigits(), data, newAttr);
-        temp.moveFrom(field);
-        field = temp;
-      }
-    }
-    return field;
-  }
-
-  /**
    * libcob/common.cのcommon_cmpcの実装
    *
    * @param s1
@@ -879,7 +831,8 @@ public abstract class AbstractCobolField {
     // TODO moduleを参照するコードを書く
     int ret;
     for (int i = 0; i < size; ++i) {
-      if ((ret = s1.getByte(s1StartIndex + i) - c) != 0) {
+      ret = s1.getByte(s1StartIndex + i) - c;
+      if (ret != 0) {
         return ret;
       }
     }
@@ -898,11 +851,13 @@ public abstract class AbstractCobolField {
     int sign = this.getSign();
     int ret = 0;
     int p = 0;
-    try {
+    outer:
+    {
       while (size >= field.getSize()) {
         // TODO moduleを参照するコードにする
-        if ((ret = alnumCmps(data, p, field.getDataStorage(), 0, this.getSize(), null)) != 0) {
-          throw new GotoException();
+        ret = alnumCmps(data, p, field.getDataStorage(), 0, this.getSize(), null);
+        if (ret != 0) {
+          break outer;
         }
         size -= field.getSize();
         p += field.getSize();
@@ -911,9 +866,7 @@ public abstract class AbstractCobolField {
         // TODO moduleを参照するコードにする
         ret = alnumCmps(data, 0, field.getDataStorage(), 0, this.getSize(), null);
       }
-    } catch (Exception e) {
     }
-
     this.putSign(sign);
     return ret;
   }
@@ -942,7 +895,8 @@ public abstract class AbstractCobolField {
       throw new CobolRuntimeException(0, "未実装");
     } else {
       for (int i = 0; i < size; ++i) {
-        if ((ret = s1.getByte(i + s1Start) - s2.getByte(i + s2Start)) != 0) {
+        ret = s1.getByte(i + s1Start) - s2.getByte(i + s2Start);
+        if (ret != 0) {
           return ret;
         }
       }
@@ -992,7 +946,11 @@ public abstract class AbstractCobolField {
               }
             }
             break;
+          default:
+            break;
         }
+        break;
+      default:
         break;
     }
   }
@@ -1229,7 +1187,7 @@ public abstract class AbstractCobolField {
   }
 
   private interface DataComparator {
-    public int compare(CobolDataStorage s1, CobolDataStorage s2, int size, CobolDataStorage col);
+    int compare(CobolDataStorage s1, CobolDataStorage s2, int size, CobolDataStorage col);
   }
 
   private static DataComparator getComparator(AbstractCobolField f) {
@@ -1474,7 +1432,6 @@ public abstract class AbstractCobolField {
    * @return
    */
   public long getLong() {
-    long n;
     CobolFieldAttribute attr =
         new CobolFieldAttribute(
             CobolFieldAttribute.COB_TYPE_NUMERIC_BINARY,
@@ -1492,8 +1449,6 @@ public abstract class AbstractCobolField {
   public long getLongValue() {
     return 0;
   }
-
-  public void setLongValue(long n) {}
 
   /**
    * libcob/move.cのcob_hankaku_moveの実装

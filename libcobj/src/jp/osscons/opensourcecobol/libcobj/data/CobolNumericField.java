@@ -308,7 +308,8 @@ public class CobolNumericField extends AbstractCobolField {
 
     /* move */
     count = 0;
-    try {
+    outer:
+    {
       for (; s1 < e1 && s2 < e2; ++s1) {
         byte c = field.getDataStorage().getByte(s1);
         if (Character.isDigit(c)) {
@@ -316,23 +317,21 @@ public class CobolNumericField extends AbstractCobolField {
           // TODO Moduleの情報を参照するコードに編集する
         } else if (c == '.') {
           if (count++ > 0) {
-            throw new GotoException();
+            break outer;
           }
 
           // TODO Moduleの情報を参照するコードに編集する
         } else if (!Character.isWhitespace(c) || c == ',') {
-          throw new GotoException();
+          break outer;
         }
       }
       this.putSign(sign);
       return;
-
-    } catch (GotoException e) {
-      for (int i = 0; i < this.getSize(); ++i) {
-        this.getDataStorage().setByte(i, (byte) 0x30);
-      }
-      this.putSign(0);
     }
+    for (int i = 0; i < this.getSize(); ++i) {
+      this.getDataStorage().setByte(i, (byte) 0x30);
+    }
+    this.putSign(0);
   }
 
   /**

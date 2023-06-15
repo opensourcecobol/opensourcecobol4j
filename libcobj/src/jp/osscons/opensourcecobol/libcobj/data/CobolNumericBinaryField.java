@@ -80,7 +80,6 @@ public class CobolNumericBinaryField extends AbstractCobolField {
     return this.getBinaryValue();
   }
 
-  @Override
   public void setLongValue(long n) {
     this.setBinaryValue(n);
   }
