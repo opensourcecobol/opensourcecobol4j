@@ -132,7 +132,7 @@ jobs:
 
       - name: Run PMD
         run: |
-          pmd-bin-6.52.0/bin/run.sh pmd -d ${PWD}/libcobj/src -R ${PWD}/.github/ruleset.xml -f text || true
+          pmd-bin-6.52.0/bin/run.sh pmd -d ${PWD}/libcobj/src -R ${PWD}/.github/ruleset.xml -f text
 
       - name: Run cppcheck
         run: |
