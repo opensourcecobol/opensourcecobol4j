@@ -332,16 +332,6 @@ public class CobolNumericBinaryField extends AbstractCobolField {
     return n;
   }
 
-  private long binaryGetUint64() {
-    int fsiz = 8 - this.getSize();
-    long n = 0;
-    byte[] nBytes = ByteBuffer.allocate(8).putLong(n).array();
-    CobolDataStorage nStorage = new CobolDataStorage(nBytes);
-    CobolDecimal.numByteMemcpy(nStorage, fsiz, this.getDataStorage(), 0, this.getSize());
-    n = ByteBuffer.wrap(nStorage.getByteArray(0, 8), 0, 8).getLong();
-    return n;
-  }
-
   /** libcob/common.cのcob_get_long_longの実装 */
   @Override
   public long getLong() {
