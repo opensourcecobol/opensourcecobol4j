@@ -147,12 +147,6 @@ public class CobolRelativeFile extends CobolFile {
       } catch (NonWritableChannelException e) {
         this.fp.close();
         return EBADF;
-      } catch (ClosedChannelException e) {
-        this.fp.close();
-        return COB_STATUS_61_FILE_SHARING;
-      } catch (OverlappingFileLockException e) {
-        this.fp.close();
-        return COB_STATUS_61_FILE_SHARING;
       } catch (IOException e) {
         this.fp.close();
         return COB_STATUS_61_FILE_SHARING;
@@ -260,6 +254,8 @@ public class CobolRelativeFile extends CobolFile {
         case COB_GE:
           kindex++;
           break;
+        default:
+          break;
       }
     }
   }
@@ -294,8 +290,6 @@ public class CobolRelativeFile extends CobolFile {
       }
       this.record.getDataStorage().memcpy(bytes);
       return COB_STATUS_00_SUCCESS;
-    } catch (FileNotFoundException e) {
-      return COB_STATUS_30_PERMANENT_ERROR;
     } catch (IOException e) {
       return COB_STATUS_30_PERMANENT_ERROR;
     }
@@ -345,8 +339,6 @@ public class CobolRelativeFile extends CobolFile {
 
         this.fp.seek(this.fp.getFilePointer() + this.record_max);
       }
-    } catch (FileNotFoundException e) {
-      return COB_STATUS_30_PERMANENT_ERROR;
     } catch (IOException e) {
       return COB_STATUS_30_PERMANENT_ERROR;
     }
@@ -403,8 +395,6 @@ public class CobolRelativeFile extends CobolFile {
         }
       }
       return COB_STATUS_00_SUCCESS;
-    } catch (FileNotFoundException e) {
-      return COB_STATUS_30_PERMANENT_ERROR;
     } catch (IOException e) {
       return COB_STATUS_30_PERMANENT_ERROR;
     }
@@ -472,8 +462,6 @@ public class CobolRelativeFile extends CobolFile {
       this.fp.seek(this.fp.getFilePointer() + this.record_max);
       return COB_STATUS_00_SUCCESS;
 
-    } catch (FileNotFoundException e) {
-      return COB_STATUS_30_PERMANENT_ERROR;
     } catch (IOException e) {
       return COB_STATUS_30_PERMANENT_ERROR;
     }

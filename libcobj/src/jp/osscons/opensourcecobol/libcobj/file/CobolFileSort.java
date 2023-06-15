@@ -165,22 +165,28 @@ public class CobolFileSort {
    * @return
    */
   private static FileIO tmpfile() {
-    String s;
     FileIO fp = new FileIO();
-    if ((s = CobolUtil.getEnv("TMPDIR")) == null
-        && (s = CobolUtil.getEnv("TMP")) == null
-        && (s = CobolUtil.getEnv("TEMP")) == null) {
-      s = "/tmp";
+    String s = CobolUtil.getEnv("TMPDIR");
+    if (s == null) {
+      s = CobolUtil.getEnv("TMP");
+      if (s == null) {
+        s = CobolUtil.getEnv("TEMP");
+        if (s == null) {
+          s = "/tmp";
+        }
+      }
     }
-    if (cob_process_id.equals("")) {
+    if ("".equals(cob_process_id)) {
       cob_process_id =
           java.lang.management.ManagementFactory.getRuntimeMXBean().getName().split("@")[0];
     }
     String filename = String.format("%s/cobsort_%s_%d", s, cob_process_id, cob_iteration);
     cob_iteration++;
+    outer:
     try {
       Files.delete(Paths.get(filename));
     } catch (IOException e1) {
+      break outer;
     }
     FileChannel fc = null;
     try {

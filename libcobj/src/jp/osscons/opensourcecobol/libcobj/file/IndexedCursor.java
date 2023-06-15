@@ -24,6 +24,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.ArrayList;
+import java.util.List;
 import java.util.Optional;
 
 /** Represents a result of fetching a data from SQLite tables. */
@@ -71,9 +72,9 @@ public final class IndexedCursor {
   /** a key */
   private byte[] key;
   /** forwardBuffer stores data located to the bottom direction from the first read position */
-  ArrayList<FetchResult> forwardBuffer;
+  List<FetchResult> forwardBuffer;
   /** bakckwardBuffer stores data located to the first direction from the first read position */
-  ArrayList<FetchResult> backwardBuffer;
+  List<FetchResult> backwardBuffer;
   /** the index of the table */
   private int tableIndex;
 
@@ -490,6 +491,7 @@ public final class IndexedCursor {
         forwardCursor.get().close();
       }
     } catch (SQLException e) {
+      return;
     }
   }
 
