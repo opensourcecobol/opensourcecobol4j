@@ -22,14 +22,12 @@ import java.time.DateTimeException;
 import java.time.LocalDateTime;
 import java.util.Calendar;
 import java.util.Properties;
-import java.util.Scanner;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import jp.osscons.opensourcecobol.libcobj.data.AbstractCobolField;
 import jp.osscons.opensourcecobol.libcobj.data.CobolDataStorage;
 import jp.osscons.opensourcecobol.libcobj.exceptions.CobolException;
 import jp.osscons.opensourcecobol.libcobj.exceptions.CobolExceptionId;
-import jp.osscons.opensourcecobol.libcobj.exceptions.CobolRuntimeException;
 import jp.osscons.opensourcecobol.libcobj.exceptions.CobolStopRunException;
 import jp.osscons.opensourcecobol.libcobj.file.CobolFile;
 
@@ -59,12 +57,8 @@ public class CobolUtil {
 
   private static boolean lineTrace = false;
 
-  private static String currentProgramId;
   private static String sourceFile;
   private static int sourceLine;
-  private static String currentSection;
-  private static String currentParagraph;
-  private static String sourceStatement;
 
   abstract class HandlerList {
     public HandlerList next = null;
@@ -119,7 +113,7 @@ public class CobolUtil {
         if (envValue == null) {
           CobolUtil.cobSwitch[i] = false;
         } else {
-          CobolUtil.cobSwitch[i] = envValue.equals("ON");
+          CobolUtil.cobSwitch[i] = "ON".equals(envValue);
         }
       }
     }
@@ -127,12 +121,10 @@ public class CobolUtil {
     cal = Calendar.getInstance();
     String s = CobolUtil.getEnv("COB_DATE");
     if (s != null) {
-      Scanner scan = new Scanner(s);
       Pattern p = Pattern.compile("([0-9]{4})/([0-9]{2})/([0-9]{2})");
       Matcher m = p.matcher(s);
       if (m.matches()) {
-        date_time_block:
-        if (m.groupCount() != 3) {
+        date_time_block: if (m.groupCount() != 3) {
           System.err.println("Warning: COB_DATE format invalid, ignored.");
         } else {
           int year = Integer.parseInt(m.group(1));
@@ -168,11 +160,10 @@ public class CobolUtil {
   public static LocalDateTime localtime() {
     LocalDateTime rt = LocalDateTime.now();
     if (CobolUtil.cobLocalTm != null) {
-      CobolUtil.cobLocalTm =
-          CobolUtil.cobLocalTm
-              .withHour(rt.getHour())
-              .withMinute(rt.getMinute())
-              .withSecond(rt.getSecond());
+      CobolUtil.cobLocalTm = CobolUtil.cobLocalTm
+          .withHour(rt.getHour())
+          .withMinute(rt.getMinute())
+          .withSecond(rt.getSecond());
       rt = CobolUtil.cobLocalTm;
     }
     return rt;
@@ -200,11 +191,9 @@ public class CobolUtil {
     if (hdlrs != null) {
       HandlerList h = hdlrs;
       if (runtime_err_str != null) {
-        String p = runtime_err_str;
         if (sourceFile != null) {
           runtime_err_str = String.format("%s:%d: ", sourceFile, sourceLine);
         }
-        p += s;
       }
       while (h != null) {
         if (runtime_err_str != null) {
@@ -247,12 +236,7 @@ public class CobolUtil {
    * @throws CobolStopRunException
    */
   public static void COB_CHK_PARMS(String funcName, int numParams) throws CobolStopRunException {
-    // TODO ifの条件式の改修
-    if (false) {
-      String message = String.format("CALL to %s requires %d parameters", funcName, numParams);
-      CobolRuntimeException.displayRuntimeError(message);
-      CobolStopRunException.stopRunAndThrow(1);
-    }
+    System.err.println("COB_CHK_PARMS not implemented");
   }
 
   /**
@@ -315,6 +299,8 @@ public class CobolUtil {
         return;
       case 'y':
         p.setByte(0, (byte) '9');
+        return;
+      default:
         return;
     }
   }
@@ -430,6 +416,8 @@ public class CobolUtil {
         return;
       case '9':
         p.setByte(0, (byte) 'v');
+        return;
+      default:
         return;
     }
   }
@@ -557,8 +545,7 @@ public class CobolUtil {
   public static int isNationalPadding(CobolDataStorage s, int size) {
     int ret = 1;
     int i = 0;
-    OUTER_LOOP:
-    while (i < size && ret != 0) {
+    OUTER_LOOP: while (i < size && ret != 0) {
       if (s.getByte(i) == ' ') {
         i++;
       } else if (size - i >= CobolConstant.ZENCSIZ) {
@@ -657,14 +644,8 @@ public class CobolUtil {
 
   public static void setLocation(
       String progId, String sfile, int sline, String csect, String cpara, String cstatement) {
-    CobolUtil.currentProgramId = progId;
     CobolUtil.sourceFile = sfile;
     CobolUtil.sourceLine = sline;
-    CobolUtil.currentSection = csect;
-    CobolUtil.currentParagraph = cpara;
-    if (cstatement != null) {
-      CobolUtil.sourceStatement = cstatement;
-    }
     if (CobolUtil.lineTrace) {
       System.err.println(
           String.format(
@@ -696,8 +677,9 @@ public class CobolUtil {
   /**
    * Set environemnt variable
    *
-   * @param envVarName the name of an environment variable. The leading and trailing spaces are
-   *     ignored.
+   * @param envVarName  the name of an environment variable. The leading and
+   *                    trailing spaces are
+   *                    ignored.
    * @param envVarValue the value of an environment variable to be set.
    */
   public static void setEnv(AbstractCobolField envVarName, AbstractCobolField envVarValue) {
