@@ -88,6 +88,9 @@ public class CobolString {
       case CobolFieldAttribute.COB_TYPE_NATIONAL:
       case CobolFieldAttribute.COB_TYPE_NATIONAL_EDITED:
         stringOffset *= 2;
+        break;
+      default:
+        break;
     }
   }
 
@@ -106,6 +109,9 @@ public class CobolString {
         } else if (dlm == CobolConstant.zero) {
           dlm = CobolConstant.zenZero;
         }
+        break;
+      default:
+        break;
     }
     stringDlm = null;
     if (dlm != null) {
@@ -152,10 +158,11 @@ public class CobolString {
   }
 
   public static void stringFinish() {
-    switch (stringDst.getAttribute().getType()) {
-      case CobolFieldAttribute.COB_TYPE_NATIONAL:
-      case CobolFieldAttribute.COB_TYPE_NATIONAL_EDITED:
-        stringOffset /= 2;
+    int type = stringDst.getAttribute().getType();
+    if (type == CobolFieldAttribute.COB_TYPE_NATIONAL ||
+        type == CobolFieldAttribute.COB_TYPE_NATIONAL_EDITED) {
+
+      stringOffset /= 2;
     }
     if (stringPtr != null) {
       stringPtr.setInt(stringOffset + 1);
@@ -218,6 +225,9 @@ public class CobolString {
       case CobolFieldAttribute.COB_TYPE_NATIONAL:
       case CobolFieldAttribute.COB_TYPE_NATIONAL_EDITED:
         unstringOffset *= 2;
+        break;
+      default:
+        break;
     }
   }
 
@@ -239,6 +249,9 @@ public class CobolString {
         } else if (dlm == CobolConstant.zero) {
           dlm = CobolConstant.zenZero;
         }
+        break;
+      default:
+        break;
     }
 
     dlmList[unstringNdlms].dlm = dlm;
@@ -343,6 +356,9 @@ public class CobolString {
           case CobolFieldAttribute.COB_TYPE_NATIONAL:
           case CobolFieldAttribute.COB_TYPE_NATIONAL_EDITED:
             p++;
+            break;
+          default:
+            break;
         }
 
         if (brkpt) {
@@ -380,6 +396,9 @@ public class CobolString {
       case CobolFieldAttribute.COB_TYPE_NATIONAL:
       case CobolFieldAttribute.COB_TYPE_NATIONAL_EDITED:
         matchSize /= 2;
+        break;
+      default:
+        break;
     }
 
     if (cnt != null) {
@@ -404,6 +423,9 @@ public class CobolString {
       case CobolFieldAttribute.COB_TYPE_NATIONAL:
       case CobolFieldAttribute.COB_TYPE_NATIONAL_EDITED:
         unstringOffset /= 2;
+        break;
+      default:
+        break;
     }
 
     if (unstringPtr != null) {

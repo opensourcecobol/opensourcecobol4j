@@ -25,7 +25,7 @@ public abstract class CobolControl {
   public enum LabelType {
     label,
     section,
-  };
+  }
 
   public abstract Optional<CobolControl> run()
       throws CobolRuntimeException, CobolGoBackException, CobolStopRunException;
