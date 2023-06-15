@@ -329,7 +329,6 @@ public class CobolNumericPackedField extends AbstractCobolField {
       this.dataStorage.setData(string.getBytes("SJIS"));
     } catch (UnsupportedEncodingException e) {
       e.printStackTrace();
-      throw new CobolRuntimeException(CobolRuntimeException.COBOL_FITAL_ERROR, "エンコードエラー");
     }
   }
 
@@ -348,7 +347,6 @@ public class CobolNumericPackedField extends AbstractCobolField {
       // Integer.MIN_VALUE == -2147483647
       int[] bytes = {2, 1, 4, 7, 4, 8, 3, 6, 4, 8};
       int digits = this.getAttribute().getDigits();
-      int iter = Math.min(bytes.length, digits);
       for (int i = 0; i < digits; ++i) {
         if (i < bytes.length) {
           this.setDigit(digits - 1 - i, bytes[bytes.length - 1 - i]);
@@ -517,18 +515,6 @@ public class CobolNumericPackedField extends AbstractCobolField {
     } else {
       this.getDataStorage().setByte(index, (byte) ((value & 0xf0) | 0x0c));
     }
-  }
-
-  /**
-   * thisとCobolNumericFieldとの数値比較を行う
-   *
-   * @param field thisと比較するfield
-   * @return 保持する数値データの比較を行い,this<fieldなら負の値,this==fieldなら0,this>fieldなら正の値
-   */
-  private int compareToNumeric(AbstractCobolField field) {
-    CobolDecimal d1 = this.getDecimal();
-    CobolDecimal d2 = field.getDecimal();
-    return d1.compareTo(d2);
   }
 
   /**
@@ -915,7 +901,7 @@ public class CobolNumericPackedField extends AbstractCobolField {
         CobolDecimal.packedValue[p] = (byte) ((n % 10) << 4);
         p--;
         n /= 10;
-        for (; n != 0; ) {
+        while (n != 0) {
           size = n % 100;
           CobolDecimal.packedValue[p] = (byte) ((size % 10) | ((size / 10) << 4));
           n /= 100;

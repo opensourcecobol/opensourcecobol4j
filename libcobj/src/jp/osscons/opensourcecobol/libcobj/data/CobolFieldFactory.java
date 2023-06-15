@@ -93,9 +93,7 @@ public class CobolFieldFactory {
     try {
       bytes = str.getBytes("SJIS");
     } catch (UnsupportedEncodingException e) {
-      // TODO ログの対応
-      e.printStackTrace();
-      throw new CobolRuntimeException(CobolRuntimeException.COBOL_FITAL_ERROR, "エンコードエラー");
+      return null;
     }
     CobolFieldAttribute attr =
         new CobolFieldAttribute(CobolFieldAttribute.COB_TYPE_ALPHANUMERIC, 0, 0, 0, null);

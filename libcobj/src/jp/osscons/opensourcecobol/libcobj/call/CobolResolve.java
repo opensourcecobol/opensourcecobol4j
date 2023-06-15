@@ -68,17 +68,17 @@ public class CobolResolve {
     String s;
     String buf;
 
-    //		//用途不明
-    //		call_filename_buff = cob_malloc (CALL_FILEBUFF_SIZE);
-    //		call_entry_buff = cob_malloc (COB_SMALL_BUFF);
-    //		call_entry2_buff = cob_malloc (COB_SMALL_BUFF);
+    // //用途不明
+    // call_filename_buff = cob_malloc (CALL_FILEBUFF_SIZE);
+    // call_entry_buff = cob_malloc (COB_SMALL_BUFF);
+    // call_entry2_buff = cob_malloc (COB_SMALL_BUFF);
 
     s = CobolUtil.getEnv("COB_LOAD_CASE");
     if (s != null) {
       String sU = s.toUpperCase();
-      if (sU.equals("LOWER")) {
+      if ("LOWER".equals(sU)) {
         name_convert = 1;
-      } else if (sU.equals("UPPER")) {
+      } else if ("UPPER".equals(sU)) {
         name_convert = 2;
       }
     }
@@ -103,11 +103,12 @@ public class CobolResolve {
     s = CobolUtil.getEnv("COB_PRE_LOAD");
 
     // 用途不明
-    //		call_buffer = cob_malloc (CALL_BUFF_SIZE);
-    //		call_lastsize = CALL_BUFF_SIZE;
-    //		for (psyst = (struct system_table *)&system_tab[0]; psyst->syst_name; ++psyst) {
-    //			insert (psyst->syst_name, psyst->syst_call, NULL);
-    //		}
+    // call_buffer = cob_malloc (CALL_BUFF_SIZE);
+    // call_lastsize = CALL_BUFF_SIZE;
+    // for (psyst = (struct system_table *)&system_tab[0]; psyst->syst_name;
+    // ++psyst) {
+    // insert (psyst->syst_name, psyst->syst_call, NULL);
+    // }
   }
 
   /**
@@ -116,7 +117,7 @@ public class CobolResolve {
    * @param path 区切り文字で区切られた0個以上のパスを示す文字列
    */
   private static void setLibraryPath(String path) {
-    if (resolve_paths.size() > 0) {
+    if (!resolve_paths.isEmpty()) {
       resolve_paths.clear();
     }
 
@@ -135,7 +136,7 @@ public class CobolResolve {
    * @param path 区切り文字で区切られた0個以上のパスを示す文字列
    */
   private static void setPackagePath(String path) {
-    if (package_paths.size() > 0) {
+    if (!package_paths.isEmpty()) {
       package_paths.clear();
     }
 
@@ -146,13 +147,6 @@ public class CobolResolve {
         package_paths.add(path1);
       }
     }
-  }
-
-  public static void setCancel(String name, CobolRunnable runnable) {
-    if (callTable.containsKey(name)) {
-      // TODO 重複時の動作
-    }
-    callTable.put(name, runnable);
   }
 
   /**
@@ -209,8 +203,8 @@ public class CobolResolve {
     }
 
     /* search external modules */
-    for (String package_path : package_paths) {
-      fullName = package_path + "." + name;
+    for (String packagePath : package_paths) {
+      fullName = packagePath + "." + name;
       runnable = getInstance(fullName);
       if (runnable != null) {
         callTable.put(name, runnable);
@@ -233,7 +227,7 @@ public class CobolResolve {
     try {
       p = resolve(name);
     } catch (CobolCallException e) {
-      // TODO cob_call_error()を書く
+      return null;
     }
     return p;
   }
@@ -249,29 +243,21 @@ public class CobolResolve {
 
     try {
       Class<?> c = Class.forName(name);
-      try {
-        Constructor<?> cons = c.getConstructor();
-        runnable = (CobolRunnable) cons.newInstance();
-        runnable = (CobolRunnable) c.newInstance();
-        callTable.put(name, runnable);
-        return runnable;
-      } catch (NoSuchMethodException
-          | SecurityException
-          | InstantiationException
-          | IllegalAccessException
-          | IllegalArgumentException
-          | InvocationTargetException e) {
-        // TODO 自動生成された catch ブロック
-        e.printStackTrace();
-        throw new CobolRuntimeException(CobolRuntimeException.COBOL_FITAL_ERROR, "型エラー");
-      }
-    } catch (ClassNotFoundException e) {
-      // TODO
-      // e.printStackTrace();
-      // Continue
+      Constructor<?> cons = c.getConstructor();
+      runnable = (CobolRunnable) cons.newInstance();
+      runnable = (CobolRunnable) c.getDeclaredConstructor().newInstance();
+      callTable.put(name, runnable);
+      return runnable;
+    } catch (NoSuchMethodException
+        | SecurityException
+        | InstantiationException
+        | IllegalAccessException
+        | IllegalArgumentException
+        | InvocationTargetException
+        | ClassNotFoundException e) {
+      // TODO 自動生成された catch ブロック
+      return null;
     }
-
-    return null;
   }
 
   /**
@@ -335,7 +321,7 @@ public class CobolResolve {
         return uuidToByteBuffer(e.getKey());
       }
     }
-    CobolRunnable runnable = resolve(name);
+    resolve(name);
     UUID uuid = UUID.randomUUID();
     pointerTable.put(uuid, name);
     return uuidToByteBuffer(uuid);
@@ -347,18 +333,15 @@ public class CobolResolve {
    * @param b_10 ポインタ(UUID)が格納されたCobolDataStorageのインスタンス
    * @return ポインタ(UUID)に対応するCobolRunnableのインスタンス
    */
-  public static CobolRunnable resolveFromPointer(CobolDataStorage b_10) {
+  public static CobolRunnable resolveFromPointer(CobolDataStorage d) {
     byte[] uuidBytes = new byte[Long.BYTES * 2];
-    System.arraycopy(b_10.getData(), 0, uuidBytes, 0, uuidBytes.length);
+    System.arraycopy(d.getData(), 0, uuidBytes, 0, uuidBytes.length);
     UUID uuid = uuidFromByteBuffer(uuidBytes);
     String name = pointerTable.get(uuid);
     try {
       return resolve(name);
     } catch (CobolCallException e) {
-      // TODO 自動生成された catch ブロック
-      e.printStackTrace();
-      throw new CobolRuntimeException(
-          CobolRuntimeException.COBOL_FITAL_ERROR, "Program Pointer adress Error'");
+      return null;
     }
   }
 

@@ -79,6 +79,8 @@ public class CobolGoBackException extends Exception {
    * @throws CobolGoBackException
    */
   public static void dummy() throws CobolGoBackException {
-    if (false) throw new CobolGoBackException(0);
+    if (false) {
+      throw new CobolGoBackException(0);
+    }
   }
 }

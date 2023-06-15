@@ -49,10 +49,6 @@ public class CobolNumericField extends AbstractCobolField {
     return dataStorage.getData();
   }
 
-  private char removeSign(byte v) {
-    return (char) (v >= 0x70 ? v - 0x40 : v);
-  }
-
   /**
    * thisの文字列表現をかえす.(toStringだけで十分か?)
    *
@@ -308,31 +304,31 @@ public class CobolNumericField extends AbstractCobolField {
 
     /* move */
     count = 0;
-    try {
+    outer:
+    {
       for (; s1 < e1 && s2 < e2; ++s1) {
         byte c = field.getDataStorage().getByte(s1);
         if (Character.isDigit(c)) {
           this.getDataStorage().setByte(s2++, c);
           // TODO Moduleの情報を参照するコードに編集する
-        } else if (c == '.') {
-          if (count++ > 0) {
-            throw new GotoException();
+        } else if (c == (byte) '.') {
+          ++count;
+          if (count > 0) {
+            break outer;
           }
 
           // TODO Moduleの情報を参照するコードに編集する
         } else if (!Character.isWhitespace(c) || c == ',') {
-          throw new GotoException();
+          break outer;
         }
       }
       this.putSign(sign);
       return;
-
-    } catch (GotoException e) {
-      for (int i = 0; i < this.getSize(); ++i) {
-        this.getDataStorage().setByte(i, (byte) 0x30);
-      }
-      this.putSign(0);
     }
+    for (int i = 0; i < this.getSize(); ++i) {
+      this.getDataStorage().setByte(i, (byte) 0x30);
+    }
+    this.putSign(0);
   }
 
   /**
@@ -412,6 +408,8 @@ public class CobolNumericField extends AbstractCobolField {
         case 'C':
           sign = -1;
           break;
+        default:
+          break;
       }
     }
 
@@ -444,56 +442,6 @@ public class CobolNumericField extends AbstractCobolField {
 
     storeCommonRegion(this, new CobolDataStorage(buff), p, scale);
     this.putSign(sign);
-  }
-
-  /**
-   * libcob/move.cのcob_binary_mget_int64の実装
-   *
-   * @param field
-   */
-  private long binaryMgetInt64(AbstractCobolField field) {
-    long n = 0;
-    int fsiz = 8 - field.getSize();
-
-    byte bytes[] = new byte[8];
-    for (int i = 0; i < 8; ++i) {
-      bytes[i] = 0;
-    }
-    CobolDataStorage nData = new CobolDataStorage(bytes, 0);
-
-    if (field.getAttribute().isFlagHaveSign()) {
-      this.ownByteMemcpy(nData, 0, field.getDataStorage(), 0, field.getSize());
-      n = this.dataStorageToLong(nData);
-      n = (n >> (8 * fsiz));
-    } else {
-      this.ownByteMemcpy(nData, fsiz, field.getDataStorage(), 0, field.getSize());
-      n = this.dataStorageToLong(nData);
-    }
-
-    return n;
-  }
-
-  /**
-   * CobolDataStorageに格納された値をlongに変換する
-   *
-   * @param storage 変換元データ
-   * @return lっ変換後のlong型の値
-   */
-  private long dataStorageToLong(CobolDataStorage storage) {
-    long n = 0;
-    for (int i = 0; i < 8; ++i) {
-      long x = storage.getByte(i);
-
-      if (x == 0) {
-        n <<= 8;
-      } else if (x < 0) {
-        n = (n << 8) | (0xFFL - (~x));
-      } else {
-        n = (n << 8) | x;
-      }
-    }
-
-    return n;
   }
 
   /**
@@ -540,75 +488,6 @@ public class CobolNumericField extends AbstractCobolField {
     }
   }
 
-  private int getSignEbcdic(int p) {
-    CobolDataStorage data = this.getDataStorage();
-    switch (data.getByte(p)) {
-      case '{':
-        data.setByte(p, (byte) '0');
-        return 1;
-      case 'A':
-        data.setByte(p, (byte) '1');
-        return 1;
-      case 'B':
-        data.setByte(p, (byte) '2');
-        return 1;
-      case 'C':
-        data.setByte(p, (byte) '3');
-        return 1;
-      case 'D':
-        data.setByte(p, (byte) '4');
-        return 1;
-      case 'E':
-        data.setByte(p, (byte) '5');
-        return 1;
-      case 'F':
-        data.setByte(p, (byte) '6');
-        return 1;
-      case 'G':
-        data.setByte(p, (byte) '7');
-        return 1;
-      case 'H':
-        data.setByte(p, (byte) '8');
-        return 1;
-      case 'I':
-        data.setByte(p, (byte) '9');
-        return 1;
-      case '}':
-        data.setByte(p, (byte) '0');
-        return 1;
-      case 'J':
-        data.setByte(p, (byte) '1');
-        return 1;
-      case 'K':
-        data.setByte(p, (byte) '2');
-        return 1;
-      case 'L':
-        data.setByte(p, (byte) '3');
-        return 1;
-      case 'M':
-        data.setByte(p, (byte) '4');
-        return 1;
-      case 'N':
-        data.setByte(p, (byte) '5');
-        return 1;
-      case 'O':
-        data.setByte(p, (byte) '6');
-        return 1;
-      case 'P':
-        data.setByte(p, (byte) '7');
-        return 1;
-      case 'Q':
-        data.setByte(p, (byte) '8');
-        return 1;
-      case 'R':
-        data.setByte(p, (byte) '9');
-        return 1;
-      default:
-        data.setByte(p, (byte) '0');
-        return 1;
-    }
-  }
-
   /**
    * thisの保持する数値データの符号を設定する
    *
@@ -644,82 +523,6 @@ public class CobolNumericField extends AbstractCobolField {
     else {
       value = (byte) (value >= 0x70 ? value - 0x40 : value);
       this.getDataStorage().setByte(p, (byte) (sign < 0 ? value + 0x40 : value));
-    }
-  }
-
-  private void putSignEbcdic(int p, int sign) {
-    CobolDataStorage data = this.getDataStorage();
-    if (sign < 0) {
-      switch (data.getByte(p)) {
-        case '0':
-          data.setByte(p, (byte) '}');
-          return;
-        case '1':
-          data.setByte(p, (byte) 'J');
-          return;
-        case '2':
-          data.setByte(p, (byte) 'K');
-          return;
-        case '3':
-          data.setByte(p, (byte) 'L');
-          return;
-        case '4':
-          data.setByte(p, (byte) 'M');
-          return;
-        case '5':
-          data.setByte(p, (byte) 'N');
-          return;
-        case '6':
-          data.setByte(p, (byte) 'O');
-          return;
-        case '7':
-          data.setByte(p, (byte) 'P');
-          return;
-        case '8':
-          data.setByte(p, (byte) 'Q');
-          return;
-        case '9':
-          data.setByte(p, (byte) 'R');
-          return;
-        default:
-          data.setByte(p, (byte) '}');
-          return;
-      }
-    }
-    switch (data.getByte(p)) {
-      case '0':
-        data.setByte(p, (byte) '{');
-        return;
-      case '1':
-        data.setByte(p, (byte) 'A');
-        return;
-      case '2':
-        data.setByte(p, (byte) 'B');
-        return;
-      case '3':
-        data.setByte(p, (byte) 'C');
-        return;
-      case '4':
-        data.setByte(p, (byte) 'D');
-        return;
-      case '5':
-        data.setByte(p, (byte) 'E');
-        return;
-      case '6':
-        data.setByte(p, (byte) 'F');
-        return;
-      case '7':
-        data.setByte(p, (byte) 'G');
-        return;
-      case '8':
-        data.setByte(p, (byte) 'H');
-        return;
-      case '9':
-        data.setByte(p, (byte) 'I');
-        return;
-      default:
-        data.setByte(p, (byte) '{');
-        return;
     }
   }
 
@@ -794,7 +597,6 @@ public class CobolNumericField extends AbstractCobolField {
       this.dataStorage.setData(string.getBytes("SJIS"));
     } catch (UnsupportedEncodingException e) {
       e.printStackTrace();
-      throw new CobolRuntimeException(CobolRuntimeException.COBOL_FITAL_ERROR, "エンコードエラー");
     }
   }
 
@@ -818,18 +620,6 @@ public class CobolNumericField extends AbstractCobolField {
     if (number < 0 && this.getAttribute().isFlagHaveSign()) {
       this.putSign(-1);
     }
-  }
-
-  /**
-   * thisとCobolNumericFieldを比較する
-   *
-   * @param field 比較するデータ
-   * @return thisのほうが大きいときは正数,thisのほうが小さいときは負数,それ以外は0を返す
-   */
-  private int compareToNumeric(AbstractCobolField field) {
-    CobolDecimal d1 = this.getDecimal();
-    CobolDecimal d2 = field.getDecimal();
-    return d1.compareTo(d2);
   }
 
   // addInt内のgotoの代替として使用する
@@ -927,7 +717,8 @@ public class CobolNumericField extends AbstractCobolField {
       n /= 10;
 
       /* check for overflow */
-      if (--sp < firstDataIndex) {
+      --sp;
+      if (sp < firstDataIndex) {
         if (CobolModule.getCurrentModule().flag_binary_truncate == 0) {
           return 0;
         }
@@ -982,7 +773,8 @@ public class CobolNumericField extends AbstractCobolField {
       n /= 10;
 
       /* check for overflow */
-      if (--sp < firstDataIndex) {
+      --sp;
+      if (sp < firstDataIndex) {
         return 1;
       }
 

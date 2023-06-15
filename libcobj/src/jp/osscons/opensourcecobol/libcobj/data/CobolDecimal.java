@@ -20,7 +20,6 @@ package jp.osscons.opensourcecobol.libcobj.data;
 
 import java.math.BigDecimal;
 import java.math.RoundingMode;
-import java.nio.ByteBuffer;
 import jp.osscons.opensourcecobol.libcobj.common.CobolModule;
 import jp.osscons.opensourcecobol.libcobj.common.CobolUtil;
 import jp.osscons.opensourcecobol.libcobj.exceptions.CobolException;
@@ -37,10 +36,7 @@ public class CobolDecimal {
 
   public static final int COB_MAX_BINARY = 36;
 
-  private static byte[] numBuffPtr = new byte[2048];
-
-  private static BigDecimal cobMexp = new BigDecimal(0);
-  private static BigDecimal cobMpzt = new BigDecimal(0);
+  private static BigDecimal cobMexp = BigDecimal.ZERO;
   public static CobolDecimal cobD1 = new CobolDecimal();
   public static CobolDecimal cobD2 = new CobolDecimal();
   public static CobolDecimal cobD3 = new CobolDecimal();
@@ -53,13 +49,11 @@ public class CobolDecimal {
     cobD2 = new CobolDecimal();
     cobD3 = new CobolDecimal();
     cobD4 = new CobolDecimal();
-    cobMexp = new BigDecimal(0);
-    cobMpzt = new BigDecimal(0);
+    cobMexp = BigDecimal.ZERO;
     for (int i = 0; i < COB_MAX_BINARY; ++i) {
       cobMpze10[i] = BigDecimal.ZERO;
       cobMpze10[i] = BigDecimal.TEN.pow(i);
     }
-    numBuffPtr = new byte[2048];
     for (int i = 0; i < packedValue.length; ++i) {
       packedValue[i] = 0;
     }
@@ -288,8 +282,6 @@ public class CobolDecimal {
     }
     return false;
   }
-
-  private void decimalAdd(CobolDecimal d1, CobolDecimal d2) {}
 
   /**
    * this.valueの値をthis.valueとnを加算した値にする
@@ -600,7 +592,6 @@ public class CobolDecimal {
       byte[] numBuff = numString.replace(".", "").getBytes();
       int d = f.getFieldSize() - f.getAttribute().getScale() - pointIndex;
       for (int i = 0; i < f.getFieldSize(); ++i) {
-        char c;
         if (0 <= i - d && i - d < numBuff.length) {
           data.setByte(i + firstDataIndex, numBuff[i - d]);
         } else {
@@ -694,10 +685,11 @@ public class CobolDecimal {
       }
     }
     int bitnum = f.getSize() * 8 - sign;
-    try {
+    outer:
+    {
       if (this.getValue().compareTo(new BigDecimal(2).pow(bitnum).subtract(BigDecimal.ONE)) > 0) {
         if ((opt & COB_STORE_KEEP_ON_OVERFLOW) != 0) {
-          throw new OverflowException();
+          break outer;
         }
         overflow = 1;
         if ((opt & COB_STORE_TRUNC_ON_OVERFLOW) != 0) {
@@ -708,7 +700,7 @@ public class CobolDecimal {
       } else if ((opt != 0) && CobolModule.getCurrentModule().flag_binary_truncate != 0) {
         if (this.getValue().abs().compareTo(cobMpze10[digits].abs()) >= 0) {
           if ((opt & COB_STORE_KEEP_ON_OVERFLOW) != 0) {
-            throw new OverflowException();
+            break outer;
           }
           overflow = 1;
           if ((opt & COB_STORE_TRUNC_ON_OVERFLOW) != 0) {
@@ -718,38 +710,13 @@ public class CobolDecimal {
           }
         }
       }
-      f.setLongValue(this.getValue().longValue());
+      ((CobolNumericBinaryField) f).setLongValue(this.getValue().longValue());
       if (overflow == 0) {
         return 0;
       }
-    } catch (OverflowException e) {
     }
     CobolRuntimeException.setException(CobolExceptionId.COB_EC_SIZE_OVERFLOW);
     return CobolException.code;
-  }
-
-  /**
-   * libcob/numeric.cのcob_binary_set_uint64の実装
-   *
-   * @param f
-   * @param n
-   */
-  private void binarySetUint64(AbstractCobolField f, long n) {
-    byte[] nBytes = ByteBuffer.allocate(8).putLong(n).array();
-    CobolDataStorage nStorage = new CobolDataStorage(nBytes);
-    this.numByteMemcpy(f.getDataStorage(), 0, nStorage, 8 - f.getSize(), f.getSize());
-  }
-
-  /**
-   * libcob/numeric.cのcob_binary_set_int64の実装
-   *
-   * @param f
-   * @param n
-   */
-  private void binarySetInt64(AbstractCobolField f, long n) {
-    byte[] nBytes = ByteBuffer.allocate(8).putLong(n).array();
-    CobolDataStorage nStorage = new CobolDataStorage(nBytes);
-    this.numByteMemcpy(f.getDataStorage(), 0, nStorage, 8 - f.getSize(), f.getSize());
   }
 
   /**

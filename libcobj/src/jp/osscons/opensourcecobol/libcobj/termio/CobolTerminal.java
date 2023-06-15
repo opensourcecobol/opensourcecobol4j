@@ -90,6 +90,7 @@ public class CobolTerminal {
   }
 
   private static Scanner scan = null;
+
   /**
    * cob_acceptの実装(暫定)
    *
@@ -217,8 +218,6 @@ public class CobolTerminal {
       CobolException.setException(CobolExceptionId.COB_EC_IMP_DISPLAY);
       return;
     }
-    String env2 = f.fieldToString();
-    // javaでは環境変数を変更できない？
   }
 
   /**

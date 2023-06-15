@@ -38,7 +38,7 @@ public class CobolNationalEditedField extends AbstractCobolField {
 
   @Override
   public byte[] getBytes() {
-    return null;
+    return new byte[0];
   }
 
   @Override
@@ -100,7 +100,6 @@ public class CobolNationalEditedField extends AbstractCobolField {
       int n = buf.getInt();
       p += sizeOfInt;
       for (; n > 0; --n) {
-        byte x;
         switch (c) {
           case 'N':
             if (srcp < max) {
