@@ -23,7 +23,6 @@ import java.nio.channels.ClosedChannelException;
 import java.nio.channels.FileChannel;
 import java.nio.channels.FileLock;
 import java.nio.channels.NonWritableChannelException;
-import java.nio.channels.OverlappingFileLockException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
@@ -31,8 +30,6 @@ import java.nio.file.StandardOpenOption;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
-import jp.osscons.opensourcecobol.libcobj.call.CobolResolve;
-import jp.osscons.opensourcecobol.libcobj.call.CobolRunnable;
 import jp.osscons.opensourcecobol.libcobj.common.CobolModule;
 import jp.osscons.opensourcecobol.libcobj.common.CobolUtil;
 import jp.osscons.opensourcecobol.libcobj.data.AbstractCobolField;
@@ -328,42 +325,6 @@ public class CobolFile {
       String openMode,
       String startCond,
       String readOpts) {
-    String excpcode = String.format("%05d", 0);
-    String oper = String.format("%02d", operate);
-    byte[] tmpfnstatus = String.format("%02d", 0).getBytes();
-    byte[] pTmpfnstatus = tmpfnstatus;
-    String s = CobolUtil.getEnv(TIS_DEFINE_USERFH);
-    int iRet = 0;
-    char ret = '0';
-    int status1 = 0;
-
-    if (s != null) {
-      String funname = s;
-      CobolRunnable funcint = CobolResolve.resolve1(funname);
-      if (funcint != null) {
-        if (fnstatus == null) {
-          // TODO 実装方法を考える
-        } else {
-          // TODO 実装方法を考える
-        }
-      }
-      if (ret == '1') {
-        iRet = 1;
-      } else if (ret == '0') {
-        iRet = 0;
-      }
-      // TODO 例外処理の方法を考える
-      // CobolRuntimeException.code = Integer.parseInt(p_excpcode);
-      if (fnstatus != null) {
-        status1 = fnstatus.getDataStorage().getByte(0) - 0x30;
-      } else {
-        status1 = pTmpfnstatus[0] - 0x30;
-      }
-
-      if ((status1 > 0 && status1 <= 9) && CobolRuntimeException.code == 0) {
-        CobolRuntimeException.setException(status_exception[status1]);
-      }
-    }
     return 0;
   }
 
@@ -388,14 +349,15 @@ public class CobolFile {
     Linage lingptr = getLinorkeyptr();
     lingptr.setLinLines(lingptr.getLinage().getInt());
 
-    do {
+    outer:
+    {
       if (lingptr.getLinLines() < 1) {
-        break;
+        break outer;
       }
       if (lingptr.getLatfoot() != null) {
         lingptr.setLinFoot(lingptr.getLatfoot().getInt());
         if (lingptr.getLinFoot() < 1 || lingptr.getLinFoot() > lingptr.getLinLines()) {
-          break;
+          break outer;
         }
       } else {
         lingptr.setLinFoot(0);
@@ -403,7 +365,7 @@ public class CobolFile {
       if (lingptr.getLattop() != null) {
         lingptr.setLinTop(lingptr.getLattop().getInt());
         if (lingptr.getLinTop() < 0) {
-          break;
+          break outer;
         }
       } else {
         lingptr.setLinTop(0);
@@ -411,13 +373,13 @@ public class CobolFile {
       if (lingptr.getLatbot() != null) {
         lingptr.setLinBot(lingptr.getLatbot().getInt());
         if (lingptr.getLinBot() < 0) {
-          break;
+          break outer;
         }
       } else {
         lingptr.setLinBot(0);
       }
       return false;
-    } while (false);
+    }
 
     lingptr.getLinageCtr().setInt(0);
     return true;
@@ -525,9 +487,12 @@ public class CobolFile {
           siz -= c;
           ce -= c * 2;
         }
-        for (int i = 0; i < n; ++i) {
-          jbuf[i] = 0;
-        }
+        /*
+         * TODO fix
+         * for (int i = 0; i < n; ++i) {
+         * jbuf[i] = 0;
+         * }
+         */
         rt = jbuf;
       }
       if (flagQuoted && siz > 2) {
@@ -551,12 +516,15 @@ public class CobolFile {
       if (jbuf != null) {
         rt = name.clone();
       } else {
-        for (int i = 0; i < n; ++i) {
-          jbuf[i] = 0;
-        }
-        for (int i = 0; i < n - 1; ++i) {
-          jbuf[i] = name[i];
-        }
+        /*
+         * TODO fix
+         * for (int i = 0; i < n; ++i) {
+         * jbuf[i] = 0;
+         * }
+         * for (int i = 0; i < n - 1; ++i) {
+         * jbuf[i] = name[i];
+         * }
+         */
         rt = jbuf;
       }
     }
@@ -667,8 +635,8 @@ public class CobolFile {
         int i;
         for (i = 0; i < NUM_PREFIX; i++) {
           byte[] fileOpenBuff = String.format("%s%s", prefix[i], file_open_name).getBytes();
-          String p;
-          if ((p = CobolUtil.getEnv(new String(fileOpenBuff))) != null) {
+          String p = CobolUtil.getEnv(new String(fileOpenBuff));
+          if (p != null) {
             fileOpenNameBytes = p.getBytes();
             break;
           }
@@ -689,8 +657,8 @@ public class CobolFile {
         wasNotExist = true;
         if (mode != COB_OPEN_OUTPUT
             && !this.flag_optional
-            && (mode != COB_OPEN_I_O || !CobolUtil.getEnv(COB_IO_CREATES).equals("yes"))
-            && (mode != COB_OPEN_EXTEND || !CobolUtil.getEnv(COB_EXTEND_CREATES).equals("yes"))) {
+            && (mode != COB_OPEN_I_O || !"yes".equals(CobolUtil.getEnv(COB_IO_CREATES)))
+            && (mode != COB_OPEN_EXTEND || !"yes".equals(CobolUtil.getEnv(COB_EXTEND_CREATES)))) {
           saveStatus(COB_STATUS_35_NOT_EXISTS, fnstatus);
           return;
         }
@@ -792,20 +760,15 @@ public class CobolFile {
               FileChannel.open(
                   Paths.get(filename), StandardOpenOption.APPEND, StandardOpenOption.CREATE);
           break;
+        default:
+          break;
       }
     } catch (IOException e) {
-      if (fp != null) {
-        this.file.setChannel(fp, null);
-      }
       if (Files.notExists(Paths.get(filename))) {
         return ENOENT;
       } else {
         return EACCESS;
       }
-    }
-
-    if (mode == COB_OPEN_EXTEND) {
-      // ここは何もしない
     }
 
     FileLock fl = null;
@@ -822,12 +785,6 @@ public class CobolFile {
         fp.close();
         return EBADF;
       } catch (ClosedChannelException e) {
-        fp.close();
-        return COB_STATUS_61_FILE_SHARING;
-      } catch (OverlappingFileLockException e) {
-        fp.close();
-        return COB_STATUS_61_FILE_SHARING;
-      } catch (IOException e) {
         fp.close();
         return COB_STATUS_61_FILE_SHARING;
       }
@@ -887,7 +844,6 @@ public class CobolFile {
       }
     }
     saveStatus(ret, fnstatus);
-    return;
   }
 
   // public void closeEx(int opt, AbstractCobolField fnstatus) {
@@ -951,7 +907,6 @@ public class CobolFile {
     }
 
     saveStatus(ret, fnstatus);
-    return;
   }
 
   public void startEx(int cond, AbstractCobolField key, AbstractCobolField fnstatus) {
@@ -1058,10 +1013,11 @@ public class CobolFile {
           this.flag_end_of_file = true;
         }
         break;
+      default:
+        break;
     }
 
     saveStatus(ret, fnstatus);
-    return;
   }
 
   public void read(int key, AbstractCobolField fnstatus, int readOpts) {
@@ -1134,7 +1090,6 @@ public class CobolFile {
 
     this.record.setSize(tmpsize);
     saveStatus(ret, fnstatus);
-    return;
   }
 
   public void writeEx(AbstractCobolField rec, int opt, AbstractCobolField fnstatus)
@@ -1204,7 +1159,6 @@ public class CobolFile {
     }
 
     saveStatus(ret, fnstatus);
-    return;
   }
 
   public void rewriteEx(AbstractCobolField rec, int opt, AbstractCobolField fnstatus) {
@@ -1241,7 +1195,6 @@ public class CobolFile {
       cob_sync(this, cob_do_sync);
     }
     saveStatus(ret, fnstatus);
-    return;
   }
 
   public void deleteEx(AbstractCobolField fnstatus) {
@@ -1260,13 +1213,11 @@ public class CobolFile {
     }
     this.unlock_();
     saveStatus(COB_STATUS_00_SUCCESS, fnstatus);
-    return;
   }
 
   public void unlock_() {
     if (this.open_mode != COB_OPEN_CLOSED && this.open_mode != COB_OPEN_LOCKED) {
       this.file.flush();
-      if ((this.lock_mode & COB_LOCK_EXCLUSIVE) == 0) {}
     }
   }
 
@@ -1301,10 +1252,10 @@ public class CobolFile {
 
   /** libcob/fileio.cのcob_syncの実装 */
   protected void cob_sync(CobolFile f, int mode) {
-    if (f.organization == COB_ORG_INDEXED) {
-      // TODO
-      // INDEXEDファイル実装時にやる
-    }
+    // TODO
+    // INDEXEDファイル実装時にやる
+    // if (f.organization == COB_ORG_INDEXED) {
+    // }
     if (f.organization != COB_ORG_SORT) {
       this.file.flush();
       if (mode == 2) {
@@ -1493,8 +1444,8 @@ public class CobolFile {
         int i;
         for (i = 0; i < NUM_PREFIX; i++) {
           byte[] fileOpenBuff = String.format("%s%s", prefix[i], file_open_name).getBytes();
-          String p;
-          if ((p = CobolUtil.getEnv(new String(fileOpenBuff))) != null) {
+          String p = CobolUtil.getEnv(new String(fileOpenBuff));
+          if (p != null) {
             fileOpenNameBytes = p.getBytes();
             break;
           }
