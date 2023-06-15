@@ -54,8 +54,7 @@ public class CobolNationalField extends AbstractCobolField {
     try {
       return new String(dataStorage.getData(), "SJIS");
     } catch (UnsupportedEncodingException e) {
-      e.printStackTrace();
-      throw new CobolRuntimeException(CobolRuntimeException.COBOL_FITAL_ERROR, "エンコードエラー");
+      return "";
     }
   }
 
@@ -98,6 +97,8 @@ public class CobolNationalField extends AbstractCobolField {
       case CobolFieldAttribute.COB_TYPE_NUMERIC_DOUBLE:
       case CobolFieldAttribute.COB_TYPE_NUMERIC_FLOAT:
         src1 = src1.getNumericField();
+        break;
+      default:
         break;
     }
 
@@ -1075,8 +1076,7 @@ public class CobolNationalField extends AbstractCobolField {
       CobolAlphanumericField f = new CobolAlphanumericField(bytes.length, data, a);
       this.moveFrom(f);
     } catch (UnsupportedEncodingException e) {
-      e.printStackTrace();
-      throw new CobolRuntimeException(CobolRuntimeException.COBOL_FITAL_ERROR, "エンコードエラー");
+      return;
     }
   }
 

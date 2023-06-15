@@ -53,9 +53,7 @@ public class CobolAlphanumericField extends AbstractCobolField {
     try {
       return new String(dataStorage.getByteArray(0, this.getSize()), "SJIS");
     } catch (UnsupportedEncodingException e) {
-      // TODO ログの対応
-      e.printStackTrace();
-      throw new CobolRuntimeException(CobolRuntimeException.COBOL_FITAL_ERROR, "エンコードエラー");
+      return "";
     }
   }
 
@@ -218,9 +216,7 @@ public class CobolAlphanumericField extends AbstractCobolField {
         data.setByte(i, bytes[i]);
       }
     } catch (UnsupportedEncodingException e) {
-      // TODO ログの対応
-      e.printStackTrace();
-      throw new CobolRuntimeException(CobolRuntimeException.COBOL_FITAL_ERROR, "エンコードエラー");
+      return;
     }
   }
 

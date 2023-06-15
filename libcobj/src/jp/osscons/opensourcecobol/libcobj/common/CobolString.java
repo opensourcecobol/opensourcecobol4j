@@ -159,8 +159,8 @@ public class CobolString {
 
   public static void stringFinish() {
     int type = stringDst.getAttribute().getType();
-    if (type == CobolFieldAttribute.COB_TYPE_NATIONAL ||
-        type == CobolFieldAttribute.COB_TYPE_NATIONAL_EDITED) {
+    if (type == CobolFieldAttribute.COB_TYPE_NATIONAL
+        || type == CobolFieldAttribute.COB_TYPE_NATIONAL_EDITED) {
 
       stringOffset /= 2;
     }
