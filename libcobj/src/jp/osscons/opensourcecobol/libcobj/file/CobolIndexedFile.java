@@ -35,8 +35,6 @@ import org.sqlite.SQLiteConfig;
 import org.sqlite.SQLiteErrorCode;
 
 public class CobolIndexedFile extends CobolFile {
-  private static int rlo_size = 0;
-  private static byte[] record_lock_object;
   private Optional<IndexedCursor> cursor;
   private boolean updateWhileReading = false;
   private boolean indexedFirstRead = true;
@@ -204,6 +202,7 @@ public class CobolIndexedFile extends CobolFile {
           }
           statement.execute(
               String.format("create index %s on %s(key)", getIndexName(i), tableName));
+          statement.close();
         } catch (SQLException e) {
           return COB_STATUS_30_PERMANENT_ERROR;
         }
@@ -247,7 +246,6 @@ public class CobolIndexedFile extends CobolFile {
       int cond, AbstractCobolField key, int readOpts, boolean testLock) {
     IndexedFile p = this.filei;
     for (p.key_index = 0; p.key_index < this.nkeys; p.key_index++) {
-      int size = this.keys[p.key_index].getField().getSize();
       if (this.keys[p.key_index].getField().getDataStorage().isSame(key.getDataStorage())) {
         break;
       }
@@ -256,7 +254,6 @@ public class CobolIndexedFile extends CobolFile {
     p.key = DBT_SET(key);
 
     boolean isDuplicate = this.keys[p.key_index].getFlag() != 0;
-    boolean isPrimary = p.key_index == 0;
 
     this.cursor = IndexedCursor.createCursor(p.connection, p.key, p.key_index, isDuplicate, cond);
     if (this.cursor.isEmpty()) {
@@ -638,6 +635,6 @@ public class CobolIndexedFile extends CobolFile {
 
   @Override
   public void unlock_() {
-    IndexedFile p = this.filei;
+    System.err.println("Unlocking INDEXED file is not implemented");
   }
 }
