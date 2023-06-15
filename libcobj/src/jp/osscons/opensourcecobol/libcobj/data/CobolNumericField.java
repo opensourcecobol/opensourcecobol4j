@@ -296,8 +296,8 @@ public class CobolNumericField extends AbstractCobolField {
       s2 += size - count;
     } else {
       while (count-- > size) {
-        while (!Character.isDigit(field.getDataStorage().getByte(s1))) {
-          s1++;
+        while (!Character.isDigit(field.getDataStorage().getByte(s1++))) {
+          ;
         }
       }
     }
