@@ -27,6 +27,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#include <errno.h>
 #ifdef HAVE_SYS_TYPES_H
 #include <sys/types.h>
 #endif
@@ -135,6 +136,10 @@ int cb_literal_id = 1;
 int cb_field_id = 1;
 int cb_storage_id = 1;
 int cb_flag_main = 0;
+
+int cb_default_byte_specified = 0;
+unsigned char cb_default_byte = 0;
+#define OPTION_ID_DEFAULT_BYTE (1024)
 
 int external_flg = 0;
 int errorcount = 0;
@@ -280,6 +285,7 @@ static const struct option long_options[] = {
     {"assign_external", no_argument, NULL, 'A'},
     {"reference_check", no_argument, NULL, 'K'},
     {"constant", optional_argument, NULL, '3'},
+    {"fdefaultbyte", required_argument, NULL, OPTION_ID_DEFAULT_BYTE},
     {"edit-code-command", optional_argument, NULL, '['},
 #undef CB_FLAG
 #define CB_FLAG(var, name, doc)                                                \
@@ -782,6 +788,10 @@ static void cobc_print_usage(void) {
       _("  -assign_external                  Set the file assign to external"));
   puts(_("  -constant                         Define <name> to <value> for $IF "
          "statement"));
+  puts(_("  -fdefaultbyte=<value>             default initialization for fields without VALUE, may be one of"));
+  puts(_("                                    * decimal 0..255 representing a character"));
+  puts(_("                                    * hexdecimal 0x00..0xFF representing a character"));
+  puts(_("                                    * octodecimal 00..0377 representing a character"));
   puts(_("  -java-package(=<package name>)    Specify the package name of the "
          "generated source code"));
   // puts(_("  -edit-code-command(=<command>)    Specify the command to edit
@@ -988,6 +998,21 @@ static int process_command_line(const int argc, char *argv[]) {
       if (optarg) {
         cb_java_package_name = optarg;
       }
+	  break;
+
+	case OPTION_ID_DEFAULT_BYTE:
+		if(optarg) {
+			char* e;
+			unsigned long byte = strtoul(optarg, &e, 0);
+			if(*e == '\0' && errno != EINVAL && errno != ERANGE && 0 <= byte && byte <= 0xFF) {
+				cb_default_byte = byte;
+				cb_default_byte_specified = 1;
+				break;
+			}
+		}
+		fprintf(stderr, "Warning - '%s' is an invalid 1-byte value\n", optarg);
+		fflush(stderr);
+		break;
 
     case '3': /* --constant */
       if (optarg) {
