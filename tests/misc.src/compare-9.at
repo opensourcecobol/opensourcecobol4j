@@ -1,0 +1,59 @@
+AT_SETUP([compare 9(n), 9(m)V9(n), PP9(n) 9(n)PP])
+
+AT_DATA([prog.cbl], [
+	   IDENTIFICATION   DIVISION.
+       PROGRAM-ID.      prog.
+       DATA             DIVISION.
+       WORKING-STORAGE SECTION.
+       01 N4 PIC 9(4) VALUE 0.
+
+       01 V5-1-X PIC 9(5)V9 VALUE 0.
+       01 V5-1-Y PIC 9(5)V9 VALUE 0.
+
+       01 V5-2-X PIC 9(5)V99 VALUE 0.
+       01 V5-2-Y PIC 9(5)V99 VALUE 0.
+
+       01 PL-1-1-X PIC P9 VALUE 0.
+       01 PL-1-1-Y PIC P9 VALUE 0.
+
+       01 PL-2-2-X PIC PP99 VALUE 0.
+       01 PL-2-2-Y PIC PP99 VALUE 0.
+
+       01 PT-2-1-X PIC 9PP VALUE 0.
+       01 PT-2-1-Y PIC 9PP VALUE 0.
+
+       01 PT-2-2-X PIC 99PP VALUE 0.
+       01 PT-2-2-Y PIC 99PP VALUE 0.
+
+       PROCEDURE        DIVISION.
+       MAIN-PROC.
+      *************************************************************
+          MOVE 0.0002 TO PL-2-2-X.
+          MOVE 100 TO PT-2-2-X.
+          IF PL-2-2-X >= PT-2-2-X
+              DISPLAY "NG (PL-2-2-X >= PT-2-2-X)"
+          END-IF.
+
+          MOVE 0.0099 TO PL-2-2-X.
+          MOVE 9800 TO PT-2-2-X.
+          IF PL-2-2-X >= PT-2-2-X
+              DISPLAY "NG (PL-2-2-X >= PT-2-2-X)"
+          END-IF.
+
+          MOVE 0 TO PL-2-2-X.
+          MOVE 0 TO PT-2-2-X.
+          IF PL-2-2-X IS NOT = PT-2-2-X
+              DISPLAY "NG (PL-2-2-X != PT-2-2-X)"
+          END-IF.
+
+          MOVE 0.0099 TO PL-2-2-X.
+          MOVE 9900 TO PT-2-2-X.
+          IF PL-2-2-X IS = PT-2-2-X
+              DISPLAY "NG (PL-2-2-X = PT-2-2-X)"
+          END-IF.
+])
+
+AT_CHECK([${COBJ} prog.cbl])
+AT_CHECK([java prog])
+
+AT_CLEANUP

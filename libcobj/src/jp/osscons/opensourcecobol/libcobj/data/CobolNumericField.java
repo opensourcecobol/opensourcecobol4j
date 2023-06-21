@@ -880,4 +880,38 @@ public class CobolNumericField extends AbstractCobolField {
     this.putSign(sign);
     return val;
   }
+
+  public int numericCompareTo(AbstractCobolField field) {
+    CobolFieldAttribute attr1 = this.getAttribute();
+    CobolFieldAttribute attr2 = field.getAttribute();
+    if (!attr1.isFlagHaveSign() && !attr2.isFlagHaveSign() && attr2.isTypeNumericDisplay()) {
+      final int scale1 = attr1.getScale();
+      final int scale2 = attr2.getScale();
+      final int size1 = this.getSize();
+      final int size2 = field.getSize();
+      final int pointIndex1 = size1 - scale1;
+      final int pointIndex2 = size2 - scale2;
+
+      final int l1 = -pointIndex1;
+      final int l2 = -pointIndex2;
+      final int r1 = size1 - pointIndex1;
+      final int r2 = size2 - pointIndex2;
+      final int left = Math.min(l1, l2);
+      final int right = Math.max(r1, r2);
+      CobolDataStorage d1 = this.getDataStorage();
+      CobolDataStorage d2 = field.getDataStorage();
+      for (int i = left; i < right; ++i) {
+        final int i1 = i + pointIndex1;
+        final int i2 = i + pointIndex2;
+        byte b1 = i1 < 0 || i1 >= size1 ? (byte) '0' : d1.getByte(i1);
+        byte b2 = i2 < 0 || i2 >= size2 ? (byte) '0' : d2.getByte(i2);
+        if (b1 != b2) {
+          return ((int) b1) - ((int) b2);
+        }
+      }
+      return 0;
+    } else {
+      return super.numericCompareTo(field);
+    }
+  }
 }
