@@ -1,0 +1,126 @@
+AT_SETUP([-fdefaultbyte])
+
+AT_DATA([prog.cbl], [
+       IDENTIFICATION   DIVISION.
+       PROGRAM-ID.      prog.
+       ENVIRONMENT DIVISION.
+       INPUT-OUTPUT SECTION.
+       FILE-CONTROL.
+         SELECT F ASSIGN TO 'f.txt'
+           ORGANIZATION IS SEQUENTIAL
+           FILE STATUS IS F-STATUS.
+         SELECT G ASSIGN TO 'g.txt'
+           ORGANIZATION SEQUENTIAL
+           FILE STATUS IS G-STATUS.
+       DATA             DIVISION.
+       FILE SECTION.
+       FD F.
+       01 F-REC.
+           03 FILLER PIC X(5).
+           03 F-REC-X PIC X(5) VALUE "F-REC".
+           03 FILLER PIC 9(5).
+           03 F-REC-9 PIC 9(5) VALUE 54321.
+       FD G.
+       01 G-REC.
+           03 FILLER PIC X(5) VALUE "G-REC".
+           03 G-REC-X PIC X(5).
+           03 FILLER PIC 9(5) VALUE 12345.
+           03 G-REC-9 PIC 9(5).
+       WORKING-STORAGE  SECTION.
+       01 F-DATA.
+           03 FILLER PIC X(5).
+           03 F-DATA-X PIC X(5) VALUE "DATAF".
+           03 FILLER PIC 9(5).
+           03 F-DATA-9 PIC 9(5) VALUE 67890.
+       01 G-DATA.
+           03 FILLER PIC X(5) VALUE "DATAG".
+           03 G-DATA-X PIC X(5).
+           03 FILLER PIC 9(5) VALUE 98760.
+           03 G-DATA-9 PIC 9(5).
+       01 F-STATUS PIC 9(2).
+       01 G-STATUS PIC 9(2).
+       PROCEDURE        DIVISION.
+       MAIN-PROC.
+           OPEN OUTPUT F.
+           OPEN OUTPUT G.
+
+           WRITE F-REC.
+           WRITE G-REC.
+
+           INITIALIZE F-REC.
+           INITIALIZE G-REC.
+
+           WRITE F-REC.
+           WRITE G-REC.
+
+           WRITE F-REC FROM F-DATA.
+           WRITE G-REC FROM G-DATA.
+
+           INITIALIZE F-DATA.
+           INITIALIZE G-DATA.
+
+           WRITE F-REC FROM F-DATA.
+           WRITE G-REC FROM G-DATA.
+
+           CLOSE F.
+           CLOSE G.
+           STOP RUN.
+])
+
+AT_CHECK([${COBJ} -fdefaultbyte=0 prog.cbl])
+AT_CHECK([java prog])
+AT_CHECK([diff f.txt ../../command-line-options.src/fdefaultbyte-f-0.txt])
+AT_CHECK([diff g.txt ../../command-line-options.src/fdefaultbyte-g-0.txt])
+
+AT_CHECK([${COBJ} -fdefaultbyte=48 prog.cbl])
+AT_CHECK([java prog])
+AT_CHECK([diff f.txt ../../command-line-options.src/fdefaultbyte-f-48.txt])
+AT_CHECK([diff g.txt ../../command-line-options.src/fdefaultbyte-g-48.txt])
+
+AT_CHECK([${COBJ} -fdefaultbyte=255 prog.cbl])
+AT_CHECK([java prog])
+AT_CHECK([diff f.txt ../../command-line-options.src/fdefaultbyte-f-255.txt])
+AT_CHECK([diff g.txt ../../command-line-options.src/fdefaultbyte-g-255.txt])
+
+AT_CHECK([${COBJ} -fdefaultbyte=000 prog.cbl])
+AT_CHECK([java prog])
+AT_CHECK([diff f.txt ../../command-line-options.src/fdefaultbyte-f-0.txt])
+AT_CHECK([diff g.txt ../../command-line-options.src/fdefaultbyte-g-0.txt])
+
+
+AT_CHECK([${COBJ} -fdefaultbyte=060 prog.cbl])
+AT_CHECK([java prog])
+AT_CHECK([diff f.txt ../../command-line-options.src/fdefaultbyte-f-48.txt])
+AT_CHECK([diff g.txt ../../command-line-options.src/fdefaultbyte-g-48.txt])
+
+AT_CHECK([${COBJ} -fdefaultbyte=0377 prog.cbl])
+AT_CHECK([java prog])
+AT_CHECK([diff f.txt ../../command-line-options.src/fdefaultbyte-f-255.txt])
+AT_CHECK([diff g.txt ../../command-line-options.src/fdefaultbyte-g-255.txt])
+
+AT_CHECK([${COBJ} -fdefaultbyte=0x00 prog.cbl])
+AT_CHECK([java prog])
+AT_CHECK([diff f.txt ../../command-line-options.src/fdefaultbyte-f-0.txt])
+AT_CHECK([diff g.txt ../../command-line-options.src/fdefaultbyte-g-0.txt])
+
+AT_CHECK([${COBJ} -fdefaultbyte=0x30 prog.cbl])
+AT_CHECK([java prog])
+AT_CHECK([diff f.txt ../../command-line-options.src/fdefaultbyte-f-48.txt])
+AT_CHECK([diff g.txt ../../command-line-options.src/fdefaultbyte-g-48.txt])
+
+AT_CHECK([${COBJ} -fdefaultbyte=0xFF prog.cbl])
+AT_CHECK([java prog])
+AT_CHECK([diff f.txt ../../command-line-options.src/fdefaultbyte-f-255.txt])
+AT_CHECK([diff g.txt ../../command-line-options.src/fdefaultbyte-g-255.txt])
+
+AT_CHECK([${COBJ} -fdefaultbyte=-1 prog.cbl], [0],[],
+[Warning - '-1' is an invalid 1-byte value
+])
+AT_CHECK([${COBJ} -fdefaultbyte=256 prog.cbl], [0],[],
+[Warning - '256' is an invalid 1-byte value
+])
+AT_CHECK([${COBJ} -fdefaultbyte=stu prog.cbl], [0],[],
+[Warning - 'stu' is an invalid 1-byte value
+])
+
+AT_CLEANUP

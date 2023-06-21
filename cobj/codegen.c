@@ -77,6 +77,9 @@ static const char *excp_current_section = NULL;
 static const char *excp_current_paragraph = NULL;
 static struct cb_program *current_prog;
 
+extern int cb_default_byte_specified;
+extern unsigned char cb_default_byte;
+
 // OCCURS指定したときのIDNEXに対応するCobolDataStorage型変数を扱うときに必要なフラグ
 static int index_read_flag = 0;
 
@@ -1807,14 +1810,18 @@ static int initialize_type(struct cb_initialize *p, struct cb_field *f,
   return INITIALIZE_NONE;
 }
 
-static int initialize_uniform_char(struct cb_field *f) {
+static int initialize_uniform_char(struct cb_field *f, int flag_statement) {
   int c;
 
+  if(!flag_statement && cb_default_byte_specified) {
+      return cb_default_byte;
+  }
+
   if (f->children) {
-    c = initialize_uniform_char(f->children);
+    c = initialize_uniform_char(f->children, flag_statement);
     for (f = f->children->sister; f; f = f->sister) {
       if (!f->redefines) {
-        if (c != initialize_uniform_char(f)) {
+        if (c != initialize_uniform_char(f, flag_statement)) {
           return -1;
         }
       }
@@ -2203,7 +2210,7 @@ static void joutput_initialize_compound(struct cb_initialize *p, cb_tree x) {
       break;
     case INITIALIZE_DEFAULT: {
       last_field = f;
-      last_char = initialize_uniform_char(f);
+      last_char = initialize_uniform_char(f, p->flag_statement);
 
       if (last_char != -1) {
         if (f->flag_occurs) {
@@ -2213,7 +2220,7 @@ static void joutput_initialize_compound(struct cb_initialize *p, cb_tree x) {
         for (; f->sister; f = f->sister) {
           if (!f->sister->redefines) {
             if (initialize_type(p, f->sister, 0) != INITIALIZE_DEFAULT ||
-                initialize_uniform_char(f->sister) != last_char ||
+                initialize_uniform_char(f->sister, p->flag_statement) != last_char ||
                 CB_TREE_CATEGORY(f->sister) != CB_TREE_CATEGORY(last_field)) {
               break;
             }
@@ -2280,7 +2287,7 @@ static void joutput_initialize(struct cb_initialize *p) {
     joutput_initialize_one(p, p->var);
     break;
   case INITIALIZE_DEFAULT:
-    c = initialize_uniform_char(f);
+    c = initialize_uniform_char(f, p->flag_statement);
     if (c != -1) {
       joutput_initialize_uniform(p->var, c, f->size);
     } else {
