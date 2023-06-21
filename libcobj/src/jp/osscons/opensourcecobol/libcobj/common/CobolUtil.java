@@ -551,9 +551,10 @@ public class CobolUtil {
     while (i < size && ret != 0) {
       if (s.getByte(i) == ' ') {
         i++;
-      } else if (size - i >= CobolConstant.ZENCSIZ) {
+      } else if (size - i > CobolConstant.ZENCSIZ) {
         for (int j = 0; j < CobolConstant.ZENCSIZ; ++j) {
-          if (s.getByte(i + j) != CobolConstant.ZENSPC[i]) {
+          if (s.getByte(i + j) != CobolConstant.ZENSPC[j]) {
+            i += CobolConstant.ZENCSIZ;
             continue OUTER_LOOP;
           }
         }

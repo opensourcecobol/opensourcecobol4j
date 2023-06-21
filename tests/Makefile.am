@@ -168,7 +168,8 @@ misc_DEPENDENCIES = \
 	misc.src/comp3-int.at \
 	misc.src/env.at \
 	misc.src/exit-perform.at \
-	misc.src/comp-overflow.at
+	misc.src/comp-overflow.at \
+	misc.src/compare-national-diff-size.at
 
 EXTRA_DIST = $(srcdir)/package.m4 \
 	$(TESTS) \
