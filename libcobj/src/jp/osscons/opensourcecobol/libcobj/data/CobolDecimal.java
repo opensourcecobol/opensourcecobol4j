@@ -108,7 +108,15 @@ public class CobolDecimal {
    * @param n
    */
   public CobolDecimal(long n) {
-    this(new BigDecimal(n));
+    if (n == 0L) {
+      this.setValue(BigDecimal.ZERO);
+    } else if (n == 1L) {
+      this.setValue(BigDecimal.ONE);
+    } else if (n == 10L) {
+      this.setValue(BigDecimal.TEN);
+    } else {
+      this.setValue(new BigDecimal(n));
+    }
     this.setScale(0);
   }
 
@@ -118,7 +126,15 @@ public class CobolDecimal {
    * @param n
    */
   public CobolDecimal(int n) {
-    this(new BigDecimal(n));
+    if (n == 0) {
+      this.setValue(BigDecimal.ZERO);
+    } else if (n == 1) {
+      this.setValue(BigDecimal.ONE);
+    } else if (n == 10) {
+      this.setValue(BigDecimal.TEN);
+    } else {
+      this.setValue(new BigDecimal(n));
+    }
     this.setScale(0);
   }
 

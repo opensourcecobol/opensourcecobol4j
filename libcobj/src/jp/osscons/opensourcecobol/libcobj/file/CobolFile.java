@@ -531,8 +531,30 @@ public class CobolFile {
     return rt;
   }
 
+  // assert 0 <= openMode < 10
+  private static String openModeToString(int openMode) {
+    StringBuilder sb = new StringBuilder();
+    return sb.append("0").append(openMode).toString();
+  }
+
+  private static String readOptsToString(int readOpts) {
+    StringBuilder sb = new StringBuilder();
+    if (readOpts < 10) {
+      sb.append("0");
+    }
+    return sb.append(readOpts).toString();
+  }
+
+  private static String concatString(String... strs) {
+    StringBuilder sb = new StringBuilder();
+    for (String s : strs) {
+      sb.append(s);
+    }
+    return sb.toString();
+  }
+
   public void open(int mode, int sharing, AbstractCobolField fnstatus) {
-    String openMode = String.format("%02d", mode);
+    String openMode = openModeToString(mode);
     if (invokeFun(COB_IO_OPEN, this, null, null, fnstatus, openMode, null, null) != 0) {
       this.last_open_mode = (char) Integer.parseInt(openMode);
       return;
@@ -634,7 +656,7 @@ public class CobolFile {
       if (simple) {
         int i;
         for (i = 0; i < NUM_PREFIX; i++) {
-          byte[] fileOpenBuff = String.format("%s%s", prefix[i], file_open_name).getBytes();
+          byte[] fileOpenBuff = concatString(prefix[i], file_open_name).getBytes();
           String p = CobolUtil.getEnv(new String(fileOpenBuff));
           if (p != null) {
             fileOpenNameBytes = p.getBytes();
@@ -643,7 +665,7 @@ public class CobolFile {
         }
 
         if (i == NUM_PREFIX && cob_file_path != null) {
-          byte[] fileOpenBuff = String.format("%s/%s", cob_file_path, file_open_name).getBytes();
+          byte[] fileOpenBuff = concatString(cob_file_path, "/", file_open_name).getBytes();
           fileOpenNameBytes = fileOpenBuff;
         }
       }
@@ -809,7 +831,7 @@ public class CobolFile {
   }
 
   public void close(int opt, AbstractCobolField fnstatus) {
-    String openMode = String.format("%02d", (int) this.last_open_mode);
+    String openMode = openModeToString(this.last_open_mode);
     if (invokeFun(COB_IO_CLOSE, this, null, null, fnstatus, openMode, null, null) != 0) {
       this.last_open_mode = (char) Integer.parseInt(openMode);
       return;
@@ -877,7 +899,7 @@ public class CobolFile {
   }
 
   public void start(int cond, AbstractCobolField key, AbstractCobolField fnstatus) {
-    String openMode = String.format("%02d", (int) this.last_open_mode);
+    String openMode = openModeToString(this.last_open_mode);
     String startCond = String.format("%01d", cond);
     if (invokeFun(COB_IO_START, this, null, null, fnstatus, openMode, startCond, null) != 0) {
       return;
@@ -920,8 +942,8 @@ public class CobolFile {
 
   public void read(AbstractCobolField key, AbstractCobolField fnstatus, int readOpts) {
     byte[] sbuff = new byte[3];
-    String openMode = String.format("%02d", (int) this.last_open_mode);
-    String readOptStr = String.format("%02d", (int) readOpts);
+    String openMode = openModeToString(this.last_open_mode);
+    String readOptStr = readOptsToString(readOpts);
     if (invokeFun(COB_IO_READ, this, key, null, fnstatus, openMode, null, readOptStr) != 0) {
       for (int i = 0; i < 3; ++i) {
         sbuff[i] = 0;
@@ -1047,7 +1069,7 @@ public class CobolFile {
       return;
     }
 
-    String openMode = String.format("%02d", (int) this.last_open_mode);
+    String openMode = openModeToString(this.last_open_mode);
     if (invokeFun(COB_IO_WRITE, this, null, rec.getDataStorage(), fnstatus, openMode, null, null)
         != 0) {
       return;
@@ -1124,7 +1146,7 @@ public class CobolFile {
   }
 
   public void rewrite(AbstractCobolField rec, int opt, AbstractCobolField fnstatus) {
-    String openMode = String.format("%02d", (int) this.last_open_mode);
+    String openMode = openModeToString(this.last_open_mode);
     if (invokeFun(COB_IO_REWRITE, this, null, null, fnstatus, openMode, null, null) != 0) {
       this.last_open_mode = (char) Integer.parseInt(openMode);
       return;
@@ -1171,7 +1193,7 @@ public class CobolFile {
   }
 
   public void delete(AbstractCobolField fnstatus) {
-    String openMode = String.format("%02d", (int) this.last_open_mode);
+    String openMode = openModeToString(this.last_open_mode);
     if (invokeFun(COB_IO_DELETE, this, null, null, fnstatus, openMode, null, null) != 0) {
       return;
     }
@@ -1207,7 +1229,7 @@ public class CobolFile {
   }
 
   public void unlock(AbstractCobolField fnstatus) {
-    String openMode = String.format("%02d", (int) this.last_open_mode);
+    String openMode = openModeToString(this.last_open_mode);
     if (invokeFun(COB_IO_UNLOCK, this, null, null, fnstatus, openMode, null, null) != 0) {
       return;
     }
@@ -1368,7 +1390,7 @@ public class CobolFile {
   }
 
   public void cob_delete_file(AbstractCobolField fnstatus) {
-    String openMode = String.format("%02d", (int) this.last_open_mode);
+    String openMode = openModeToString(this.last_open_mode);
     if (invokeFun(COB_IO_DELETE_FILE, this, null, null, fnstatus, openMode, null, null) != 0) {
       return;
     }
@@ -1443,7 +1465,7 @@ public class CobolFile {
       if (simple) {
         int i;
         for (i = 0; i < NUM_PREFIX; i++) {
-          byte[] fileOpenBuff = String.format("%s%s", prefix[i], file_open_name).getBytes();
+          byte[] fileOpenBuff = concatString(prefix[i], file_open_name).getBytes();
           String p = CobolUtil.getEnv(new String(fileOpenBuff));
           if (p != null) {
             fileOpenNameBytes = p.getBytes();
@@ -1452,7 +1474,7 @@ public class CobolFile {
         }
 
         if (i == NUM_PREFIX && cob_file_path != null) {
-          byte[] fileOpenBuff = String.format("%s/%s", cob_file_path, file_open_name).getBytes();
+          byte[] fileOpenBuff = concatString(cob_file_path, "/", file_open_name).getBytes();
           fileOpenNameBytes = fileOpenBuff;
         }
       }
