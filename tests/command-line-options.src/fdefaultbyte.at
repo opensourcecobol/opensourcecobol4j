@@ -69,50 +69,49 @@ AT_DATA([prog.cbl], [
 
 AT_CHECK([${COBJ} -fdefaultbyte=0 prog.cbl])
 AT_CHECK([java prog])
-AT_CHECK([diff f.txt ../../misc.src/fdefaultbyte-f-0.txt])
-AT_CHECK([diff g.txt ../../misc.src/fdefaultbyte-g-0.txt])
-
+AT_CHECK([diff f.txt ../../command-line-options.src/fdefaultbyte-f-0.txt])
+AT_CHECK([diff g.txt ../../command-line-options.src/fdefaultbyte-g-0.txt])
 
 AT_CHECK([${COBJ} -fdefaultbyte=48 prog.cbl])
 AT_CHECK([java prog])
-AT_CHECK([diff f.txt ../../misc.src/fdefaultbyte-f-48.txt])
-AT_CHECK([diff g.txt ../../misc.src/fdefaultbyte-g-48.txt])
+AT_CHECK([diff f.txt ../../command-line-options.src/fdefaultbyte-f-48.txt])
+AT_CHECK([diff g.txt ../../command-line-options.src/fdefaultbyte-g-48.txt])
 
 AT_CHECK([${COBJ} -fdefaultbyte=255 prog.cbl])
 AT_CHECK([java prog])
-AT_CHECK([diff f.txt ../../misc.src/fdefaultbyte-f-255.txt])
-AT_CHECK([diff g.txt ../../misc.src/fdefaultbyte-g-255.txt])
+AT_CHECK([diff f.txt ../../command-line-options.src/fdefaultbyte-f-255.txt])
+AT_CHECK([diff g.txt ../../command-line-options.src/fdefaultbyte-g-255.txt])
 
 AT_CHECK([${COBJ} -fdefaultbyte=000 prog.cbl])
 AT_CHECK([java prog])
-AT_CHECK([diff f.txt ../../misc.src/fdefaultbyte-f-0.txt])
-AT_CHECK([diff g.txt ../../misc.src/fdefaultbyte-g-0.txt])
+AT_CHECK([diff f.txt ../../command-line-options.src/fdefaultbyte-f-0.txt])
+AT_CHECK([diff g.txt ../../command-line-options.src/fdefaultbyte-g-0.txt])
 
 
 AT_CHECK([${COBJ} -fdefaultbyte=060 prog.cbl])
 AT_CHECK([java prog])
-AT_CHECK([diff f.txt ../../misc.src/fdefaultbyte-f-48.txt])
-AT_CHECK([diff g.txt ../../misc.src/fdefaultbyte-g-48.txt])
+AT_CHECK([diff f.txt ../../command-line-options.src/fdefaultbyte-f-48.txt])
+AT_CHECK([diff g.txt ../../command-line-options.src/fdefaultbyte-g-48.txt])
 
 AT_CHECK([${COBJ} -fdefaultbyte=0377 prog.cbl])
 AT_CHECK([java prog])
-AT_CHECK([diff f.txt ../../misc.src/fdefaultbyte-f-255.txt])
-AT_CHECK([diff g.txt ../../misc.src/fdefaultbyte-g-255.txt])
+AT_CHECK([diff f.txt ../../command-line-options.src/fdefaultbyte-f-255.txt])
+AT_CHECK([diff g.txt ../../command-line-options.src/fdefaultbyte-g-255.txt])
 
 AT_CHECK([${COBJ} -fdefaultbyte=0x00 prog.cbl])
 AT_CHECK([java prog])
-AT_CHECK([diff f.txt ../../misc.src/fdefaultbyte-f-0.txt])
-AT_CHECK([diff g.txt ../../misc.src/fdefaultbyte-g-0.txt])
+AT_CHECK([diff f.txt ../../command-line-options.src/fdefaultbyte-f-0.txt])
+AT_CHECK([diff g.txt ../../command-line-options.src/fdefaultbyte-g-0.txt])
 
 AT_CHECK([${COBJ} -fdefaultbyte=0x30 prog.cbl])
 AT_CHECK([java prog])
-AT_CHECK([diff f.txt ../../misc.src/fdefaultbyte-f-48.txt])
-AT_CHECK([diff g.txt ../../misc.src/fdefaultbyte-g-48.txt])
+AT_CHECK([diff f.txt ../../command-line-options.src/fdefaultbyte-f-48.txt])
+AT_CHECK([diff g.txt ../../command-line-options.src/fdefaultbyte-g-48.txt])
 
 AT_CHECK([${COBJ} -fdefaultbyte=0xFF prog.cbl])
 AT_CHECK([java prog])
-AT_CHECK([diff f.txt ../../misc.src/fdefaultbyte-f-255.txt])
-AT_CHECK([diff g.txt ../../misc.src/fdefaultbyte-g-255.txt])
+AT_CHECK([diff f.txt ../../command-line-options.src/fdefaultbyte-f-255.txt])
+AT_CHECK([diff g.txt ../../command-line-options.src/fdefaultbyte-g-255.txt])
 
 AT_CHECK([${COBJ} -fdefaultbyte=-1 prog.cbl], [0],[],
 [Warning - '-1' is an invalid 1-byte value
