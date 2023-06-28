@@ -476,6 +476,8 @@ static void joutput_string_write(const unsigned char *s, int size, int printable
   if (printable) {
     if (param_wrap_string_flag) {
       joutput("new CobolDataStorage(");
+    } else {
+      joutput("CobolUtil.stringToBytes(");
     }
 
     joutput("\"");
@@ -493,13 +495,7 @@ static void joutput_string_write(const unsigned char *s, int size, int printable
                          ((0x81 <= c && c <= 0x9f) || (0xe0 <= c && c <= 0xef));
     }
 
-    joutput("\"");
-
-    if (param_wrap_string_flag) {
-      joutput(")");
-    } else if(flag_convert_to_byte == CONVERT_STRING_TO_BYTES) {
-      joutput(".getBytes()");
-    }
+    joutput("\")");
   } else {
     joutput("makeCobolDataStorage(");
 
@@ -554,22 +550,19 @@ joutput_string(const unsigned char *s, int size, int flag_convert_to_byte) {
 static void joutput_all_string_literals() {
   const char* data_type_storage = "CobolDataStorage";
   const char* data_type_bytes = "byte[]";
-  const char* data_type_string = "String";
 	const char* data_type;
 	struct string_literal_cache* l = string_literal_list;
 	int tmp_param_wrap_string_flag = param_wrap_string_flag;
 
 	while(l != NULL) {
 	  if(l->printable) {
-      if(l->param_wrap_string_flag) {
-        data_type = data_type_storage;
-      } else if(l->flag_convert_to_byte == CONVERT_STRING_TO_BYTES) {
-        data_type = data_type_bytes;
-      } else {
-        data_type = data_type_string;
-      }
+        if(l->param_wrap_string_flag) {
+          data_type = data_type_storage;
+        } else {
+          data_type = data_type_bytes;
+        }
 	  } else {
-      data_type = data_type_storage;
+        data_type = data_type_storage;
 	  }
 		joutput_prefix();
 		joutput("public static final %s %s = ", data_type, l->var_name);
@@ -2245,7 +2238,7 @@ static void joutput_initialize_one(struct cb_initialize *p, cb_tree x) {
           }
           joutput_data(x);
           joutput(".setBytes (");
-          joutput_string((ucharptr)buff, f->size, DO_NOT_CONVERT_STRING_TO_BYTES);
+          joutput_string((ucharptr)buff, f->size, CONVERT_STRING_TO_BYTES);
           joutput(", %d);\n", f->size);
         }
       }
