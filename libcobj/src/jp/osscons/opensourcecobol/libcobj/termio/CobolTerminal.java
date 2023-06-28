@@ -39,8 +39,8 @@ public class CobolTerminal {
    * cob_displayの実装 TODO 暫定実装
    *
    * @param outorerr trueなら標準出力に,それ以外は標準エラー出力に出力する.
-   * @param newline trueなら出力後に改行しない,それ以外の場合は改行する
-   * @param fields 出力する変数(可変長)
+   * @param newline  trueなら出力後に改行しない,それ以外の場合は改行する
+   * @param fields   出力する変数(可変長)
    */
   public static void display(boolean dispStdout, boolean newline, AbstractCobolField... fields) {
     PrintStream stream = dispStdout ? System.out : System.err;
@@ -68,9 +68,9 @@ public class CobolTerminal {
    * cob_displayの実装 TODO 暫定実装
    *
    * @param outorerr 0なら標準出力に,それ以外は標準エラー出力に出力する.
-   * @param newline 0なら出力後に改行しない,それ以外の場合は改行する
-   * @param varcnt 出力する変数の数
-   * @param fields 出力する変数(可変長)
+   * @param newline  0なら出力後に改行しない,それ以外の場合は改行する
+   * @param varcnt   出力する変数の数
+   * @param fields   出力する変数(可変長)
    */
   public static void display(int outorerr, int newline, int varcnt, AbstractCobolField... fields) {
     PrintStream stream = outorerr == 0 ? System.out : System.err;
@@ -275,11 +275,9 @@ public class CobolTerminal {
    * @param f
    */
   public static void displayArgNumber(AbstractCobolField f) {
-    CobolFieldAttribute attr =
-        new CobolFieldAttribute(CobolFieldAttribute.COB_TYPE_NUMERIC_BINARY, 9, 0, 0, null);
+    CobolFieldAttribute attr = new CobolFieldAttribute(CobolFieldAttribute.COB_TYPE_NUMERIC_BINARY, 9, 0, 0, null);
     byte[] data = new byte[4];
-    AbstractCobolField temp =
-        CobolFieldFactory.makeCobolField(data.length, new CobolDataStorage(data), attr);
+    AbstractCobolField temp = CobolFieldFactory.makeCobolField(data.length, new CobolDataStorage(data), attr);
     temp.moveFrom(f);
     int n = ByteBuffer.wrap(data).getInt();
     if (n < 0 || n > CobolUtil.commandLineArgs.length) {
@@ -295,12 +293,10 @@ public class CobolTerminal {
    * @param f
    */
   public static void acceptArgNumber(AbstractCobolField f) {
-    CobolFieldAttribute attr =
-        new CobolFieldAttribute(CobolFieldAttribute.COB_TYPE_NUMERIC_BINARY, 9, 0, 0, null);
+    CobolFieldAttribute attr = new CobolFieldAttribute(CobolFieldAttribute.COB_TYPE_NUMERIC_BINARY, 9, 0, 0, null);
     byte[] data = new byte[4];
     ByteBuffer.wrap(data).putInt(CobolUtil.commandLineArgs.length);
-    AbstractCobolField temp =
-        CobolFieldFactory.makeCobolField(data.length, new CobolDataStorage(data), attr);
+    AbstractCobolField temp = CobolFieldFactory.makeCobolField(data.length, new CobolDataStorage(data), attr);
     f.moveFrom(temp);
   }
 
@@ -310,8 +306,6 @@ public class CobolTerminal {
    * @param f
    */
   public static void acceptArgValue(AbstractCobolField f) {
-    // System.out.println("[dbg]CobolUtil.currentArgIndex=" +
-    // CobolUtil.currentArgIndex);
     if (CobolUtil.currentArgIndex > CobolUtil.commandLineArgs.length) {
       CobolException.setException(CobolExceptionId.COB_EC_IMP_ACCEPT);
       return;
