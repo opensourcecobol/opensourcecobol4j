@@ -493,7 +493,11 @@ static void joutput_string_write(const unsigned char *s, int size, int printable
 
     joutput("\")");
   } else {
-    joutput("makeCobolDataStorage(");
+    if (param_wrap_string_flag) {
+      joutput("makeCobolDataStorage(");
+    } else {
+      joutput("CobolUtil.stringToBytes(");
+    }
 
     for (i = 0; i < size; i++) {
       joutput("(byte)0x%02x", s[i]);
@@ -550,15 +554,11 @@ static void joutput_all_string_literals() {
 	int tmp_param_wrap_string_flag = param_wrap_string_flag;
 
 	while(l != NULL) {
-	  if(l->printable) {
-        if(l->param_wrap_string_flag) {
-          data_type = data_type_storage;
-        } else {
-          data_type = data_type_bytes;
-        }
-	  } else {
-        data_type = data_type_storage;
-	  }
+    if(l->param_wrap_string_flag) {
+      data_type = data_type_storage;
+    } else {
+      data_type = data_type_bytes;
+    }
 		joutput_prefix();
 		joutput("public static final %s %s = ", data_type, l->var_name);
 		param_wrap_string_flag = l->param_wrap_string_flag;
