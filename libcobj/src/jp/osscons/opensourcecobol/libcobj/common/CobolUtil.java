@@ -698,7 +698,7 @@ public class CobolUtil {
     }
   }
 
-  public static byte[] stringToBytes(byte... bytes) {
+  public static byte[] toBytes(byte... bytes) {
     return bytes;
   }
 }

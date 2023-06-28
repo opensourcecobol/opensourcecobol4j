@@ -496,7 +496,7 @@ static void joutput_string_write(const unsigned char *s, int size, int printable
     if (param_wrap_string_flag) {
       joutput("makeCobolDataStorage(");
     } else {
-      joutput("CobolUtil.stringToBytes(");
+      joutput("CobolUtil.toBytes(");
     }
 
     for (i = 0; i < size; i++) {
