@@ -282,7 +282,7 @@ public class CobolTerminal {
         CobolFieldFactory.makeCobolField(data.length, new CobolDataStorage(data), attr);
     temp.moveFrom(f);
     int n = ByteBuffer.wrap(data).getInt();
-    if (n < 0 || n >= CobolUtil.commandLineArgs.length) {
+    if (n < 0 || n > CobolUtil.commandLineArgs.length) {
       CobolException.setException(CobolExceptionId.COB_EC_IMP_DISPLAY);
       return;
     }

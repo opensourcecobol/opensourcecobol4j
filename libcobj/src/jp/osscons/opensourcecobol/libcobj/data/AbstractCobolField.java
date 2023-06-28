@@ -694,9 +694,7 @@ public abstract class AbstractCobolField {
    *
    * @param s
    */
-  public void checkNumeric(String s) {
-    System.err.println("checkNumeric is not implemented");
-  }
+  public void checkNumeric(byte[] s) {}
 
   // TODO abstract指定
   /**
