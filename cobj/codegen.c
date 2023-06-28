@@ -424,7 +424,6 @@ struct string_literal_cache {
   unsigned char* string_value;
   int size;
   int param_wrap_string_flag;
-  int flag_convert_to_byte;
   int printable;
   char* var_name;
   struct string_literal_cache* next;
@@ -465,10 +464,7 @@ static int is_string_printable(const unsigned char *s, int size) {
   return 1;
 }
 
-const int CONVERT_STRING_TO_BYTES = 1;
-const int DO_NOT_CONVERT_STRING_TO_BYTES = 0;
-
-static void joutput_string_write(const unsigned char *s, int size, int printable, int flag_convert_to_byte) {
+static void joutput_string_write(const unsigned char *s, int size, int printable) {
   int i;
   int c;
   int output_multibyte = 0;
@@ -511,13 +507,12 @@ static void joutput_string_write(const unsigned char *s, int size, int printable
 }
 
 static void
-joutput_string(const unsigned char *s, int size, int flag_convert_to_byte) {
+joutput_string(const unsigned char *s, int size) {
   int i;
 	struct string_literal_cache* new_literal_cache = malloc(sizeof(struct string_literal_cache));
 
 	new_literal_cache->size = size;
 	new_literal_cache->param_wrap_string_flag = param_wrap_string_flag;
-  new_literal_cache->flag_convert_to_byte = flag_convert_to_byte;
   new_literal_cache->printable = is_string_printable(s, size);
 
 	new_literal_cache->string_value = malloc(size);
@@ -570,8 +565,7 @@ static void joutput_all_string_literals() {
 		joutput_string_write(
 			l->string_value,
 			l->size,
-			l->printable,
-      l->flag_convert_to_byte);
+			l->printable);
 		joutput(";\n");
 		l = l->next;
 	}
@@ -719,7 +713,7 @@ static void joutput_data(cb_tree x) {
                               : "");
 
     } else {
-      joutput_string(l->data, (int)l->size, DO_NOT_CONVERT_STRING_TO_BYTES);
+      joutput_string(l->data, (int)l->size);
     }
     break;
   case CB_TAG_REFERENCE:
@@ -1267,7 +1261,7 @@ static void joutput_param(cb_tree x, int id) {
     joutput_integer(x);
     break;
   case CB_TAG_STRING:
-    joutput_string(CB_STRING(x)->data, (int)CB_STRING(x)->size, DO_NOT_CONVERT_STRING_TO_BYTES);
+    joutput_string(CB_STRING(x)->data, (int)CB_STRING(x)->size);
     break;
   case CB_TAG_LOCALE_NAME:
     joutput_param(CB_LOCALE_NAME(x)->list, id);
@@ -1986,7 +1980,7 @@ static void joutput_initialize_literal(cb_tree x, struct cb_field *f,
     joutput_prefix();
     joutput_data(x);
     joutput("memcpy (");
-    joutput_string(l->data, f->size, CONVERT_STRING_TO_BYTES);
+    joutput_string(l->data, f->size);
     joutput(", %d);\n", f->size);
     return;
   }
@@ -1998,7 +1992,7 @@ static void joutput_initialize_literal(cb_tree x, struct cb_field *f,
   joutput_prefix();
   joutput_data(x);
   joutput(".getSubDataStorage(i0 * %u).memcpy(", (unsigned int)l->size);
-  joutput_string(l->data, l->size, CONVERT_STRING_TO_BYTES);
+  joutput_string(l->data, l->size);
   joutput(", %u);\n", (unsigned int)l->size);
   joutput_indent("  }");
 
@@ -2007,7 +2001,7 @@ static void joutput_initialize_literal(cb_tree x, struct cb_field *f,
     joutput_prefix();
     joutput_data(x);
     joutput(".getSubDataStorage(i0 * %u).memcpy(", (unsigned int)l->size);
-    joutput_string(l->data, n, CONVERT_STRING_TO_BYTES);
+    joutput_string(l->data, n);
     joutput(", %u);\n", (unsigned int)n);
   }
 }
@@ -2227,7 +2221,7 @@ static void joutput_initialize_one(struct cb_initialize *p, cb_tree x) {
             if (n > 2) {
               joutput_data(x);
               joutput(".memcpy(");
-              joutput_string((ucharptr)buff, f->size - n, CONVERT_STRING_TO_BYTES);
+              joutput_string((ucharptr)buff, f->size - n);
               joutput(", %d);\n", f->size - n);
               joutput_prefix();
               joutput_data(x);
@@ -2238,7 +2232,7 @@ static void joutput_initialize_one(struct cb_initialize *p, cb_tree x) {
           }
           joutput_data(x);
           joutput(".setBytes (");
-          joutput_string((ucharptr)buff, f->size, CONVERT_STRING_TO_BYTES);
+          joutput_string((ucharptr)buff, f->size);
           joutput(", %d);\n", f->size);
         }
       }
