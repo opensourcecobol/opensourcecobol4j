@@ -13,7 +13,7 @@ name: "CodeQL"
 
 on:
   push:
-    branches: [ "develop" ]
+    #branches: [ "develop" ]
   pull_request:
     # The branches below must be a subset of the branches above
     branches: [ "develop" ]
@@ -51,27 +51,6 @@ jobs:
 
         # For more details on CodeQL's query packs, refer to: https://docs.github.com/en/code-security/code-scanning/automatically-scanning-your-code-for-vulnerabilities-and-errors/configuring-code-scanning#using-queries-in-ql-packs
         # queries: security-extended,security-and-quality
-
-
-    # Autobuild attempts to build any compiled languages  (C/C++, C#, Go, or Java).
-    # If this step fails, then you should remove it and run the build manually (see below)
-    # - name: Autobuild
-    #   uses: github/codeql-action/autobuild@v2
-
-    - name: Install dependencies on Ubuntu 22.04
-      run: |
-        sudo apt-get update -y
-        sudo apt-get install -y default-jdk build-essential bison flex gettext texinfo automake autoconf
-      
-    - name: Install opensource COBOL 4J
-      run: |
-        mkdir ~/.java_lib
-        curl -L -o ~/.java_lib/sqlite.jar https://github.com/xerial/sqlite-jdbc/releases/download/3.36.0.3/sqlite-jdbc-3.36.0.3.jar
-        export CLASSPATH=":$HOME/.java_lib/sqlite.jar"
-        ./configure --prefix=/usr/
-        make
-        sudo make install
-        export CLASSPATH=":/usr/lib/opensourcecobol4j/libcobj.jar:$HOME/.java_lib/sqlite.jar"
 
     # ℹ️ Command-line programs to run using the OS shell.
     # 📚 See https://docs.github.com/en/actions/using-workflows/workflow-syntax-for-github-actions#jobsjob_idstepsrun
