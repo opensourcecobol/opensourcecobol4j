@@ -2,6 +2,25 @@ NEWS - user visible changes				-*- outline -*-
 
 -----------------------------------------------------------------------
 
+* opensource COBOL 4J 1.0.12
+
+** New Features
+  (1) Add -fdefaultbyte option
+
+** Improve Performance
+  (1) Improve the performance of converting String and comparision of 9(m)V9(n)
+  (2) Improve the performance of file processing slightly
+
+** Bug fixes
+  (1) Fix the bugs of USAGE COMP, USAGE COMP-3 and PIC N(m)
+  (2) Fix CANCEL statement
+
+** Miscellaneous
+  (1) Run NIST85 tests for Relative files and add the test status to README.md
+  (2) Refactor Java files in libcobj/ in order to pass static analysis
+
+-----------------------------------------------------------------------
+
 * opensource COBOL 4J 1.0.11
 
 ** New Features

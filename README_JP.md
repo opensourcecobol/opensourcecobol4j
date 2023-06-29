@@ -40,10 +40,6 @@ java [PROGRAM-ID]
 * SORT文
 * 組み込み関数 (ACOS, LENGTH, MAX, ...)
 
-既知の不具合
-
-* 同一ソースコード内の別プログラムのCALLができない.
-
 # テストのステータス
 
 ## NIST COBOL85 test suite

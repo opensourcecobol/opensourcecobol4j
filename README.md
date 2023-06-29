@@ -44,10 +44,6 @@ Implemented.
 * Sort statements
 * Embedded functions (ACOS, LENGTH, MAX, ...)
 
-Known bugs
-
-* Cannot call inline programs.
-
 ## The status of NIST85 test
 
 opensource COBOL 4J is tested using [NIST COBOL85 test suite](https://www.itl.nist.gov/div897/ctg/cobol_form.htm)

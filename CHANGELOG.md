@@ -3,15 +3,17 @@
 All notable changes to this project will be documented in this file.
 
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
-## [Unreleased]
+
+## [1.0.12]
 ### Added
-- Improve the performance of converting Strings to byte arrays (#117)
 - Run NIST85 tests for Relative files and add the test status to README.md
 - Add CHANGELOG.md (#119)
 ### Fixed
 - Fix overflows of USAGE COMP data (#105)
 - Fix the bug related to overflows of USAGE COMP (Issue #105) #107
 - Fix the bug of comparison process for national strings of different lengths (#113)
+- Fix overflows of USAGE COMP-3 data (#118)
+- Fix CANCEL statement (#121)
 ### Changed
 - Refactor Java files in libcobj/ (#111)
 - Improve the performance of File processing and comparision of 9(m)V9(n) (#114)
