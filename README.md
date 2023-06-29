@@ -5,6 +5,7 @@
 "opensource COBOL 4J" is a COBOL compiler that translates COBOL programs to Java programs.
 This compiler is deeply inspired by ["opensource COBOL"](https://github.com/opensourcecobol/opensource-cobol) which translates COBOL programs to C programs.
 (In fact, this repository contains a lot of source files of ["opensource COBOL"](https://github.com/opensourcecobol/opensource-cobol))
+[CHANGELOG.md](./CHANGELOG.md) contains all notable changes.
 
 ## LICENSE
 
