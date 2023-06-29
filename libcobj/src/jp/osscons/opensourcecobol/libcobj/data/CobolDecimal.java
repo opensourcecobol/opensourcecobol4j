@@ -644,8 +644,12 @@ public class CobolDecimal {
     int q = 0;
     int diff = digits - size;
     if (diff < 0) {
-      // TODO 実装
-      throw new CobolRuntimeException(0, "未実装のエラー");
+      CobolRuntimeException.setException(CobolExceptionId.COB_EC_SIZE_OVERFLOW);
+      if ((opt & CobolDecimal.COB_STORE_KEEP_ON_OVERFLOW) > 0) {
+        return CobolRuntimeException.code;
+      }
+      q += size - digits;
+      size = digits;
     }
     data.fillBytes(0, f.getSize());
     int p = (digits / 2) - (size / 2);
