@@ -172,7 +172,8 @@ misc_DEPENDENCIES = \
 	misc.src/comp-overflow.at \
 	misc.src/compare-national-diff-size.at \
 	misc.src/compare-9.at \
-	misc.src/comp3-overflow.at
+	misc.src/comp3-overflow.at \
+	misc.src/cancel-hyphen.at
 
 EXTRA_DIST = $(srcdir)/package.m4 \
 	$(TESTS) \
