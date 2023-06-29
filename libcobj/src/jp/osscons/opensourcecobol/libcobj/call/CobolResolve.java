@@ -388,9 +388,11 @@ public class CobolResolve {
       CobolStopRunException.stopRunAndThrow(1);
     }
 
+    name = name.replaceAll("-", "__");
     CobolRunnable runner = callTable.get(name);
     if (runner != null) {
       runner.cancel();
+    } else {
     }
   }
 }
