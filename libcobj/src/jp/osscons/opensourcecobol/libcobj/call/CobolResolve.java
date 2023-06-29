@@ -392,7 +392,6 @@ public class CobolResolve {
     CobolRunnable runner = callTable.get(name);
     if (runner != null) {
       runner.cancel();
-    } else {
     }
   }
 }
