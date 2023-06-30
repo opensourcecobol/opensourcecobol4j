@@ -8,7 +8,7 @@ NEWS - user visible changes				-*- outline -*-
   (1) Add -fdefaultbyte option
 
 ** Improve Performance
-  (1) Improve the performance of converting String and comparision of 9(m)V9(n)
+  (1) Improve the performance of converting String to a byte array and comparision of 9(m)V9(n)
   (2) Improve the performance of file processing slightly
 
 ** Bug fixes
@@ -17,7 +17,7 @@ NEWS - user visible changes				-*- outline -*-
 
 ** Miscellaneous
   (1) Run NIST85 tests for Relative files and add the test status to README.md
-  (2) Refactor Java files in libcobj/ in order to pass static analysis
+  (2) Refactor Java files in libcobj/ in order to pass static analysis "PMD"
 
 -----------------------------------------------------------------------
 
