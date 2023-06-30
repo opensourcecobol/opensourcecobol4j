@@ -18,25 +18,24 @@
  */
 package jp.osscons.opensourcecobol.libcobj.common;
 
+import java.io.UnsupportedEncodingException;
 import java.time.DateTimeException;
 import java.time.LocalDateTime;
 import java.util.Calendar;
 import java.util.Properties;
-import java.util.Scanner;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import jp.osscons.opensourcecobol.libcobj.data.AbstractCobolField;
 import jp.osscons.opensourcecobol.libcobj.data.CobolDataStorage;
 import jp.osscons.opensourcecobol.libcobj.exceptions.CobolException;
 import jp.osscons.opensourcecobol.libcobj.exceptions.CobolExceptionId;
-import jp.osscons.opensourcecobol.libcobj.exceptions.CobolRuntimeException;
 import jp.osscons.opensourcecobol.libcobj.exceptions.CobolStopRunException;
 import jp.osscons.opensourcecobol.libcobj.file.CobolFile;
 
 public class CobolUtil {
   private static int cob_io_assume_rewrite = 0;
   private static boolean cob_verbose = false;
-  private static handlerlist hdlrs = null;
+  private static HandlerList hdlrs = null;
   private static String runtime_err_str = null;
 
   public static LocalDateTime cobLocalTm = null;
@@ -59,15 +58,11 @@ public class CobolUtil {
 
   private static boolean lineTrace = false;
 
-  private static String currentProgramId;
   private static String sourceFile;
   private static int sourceLine;
-  private static String currentSection;
-  private static String currentParagraph;
-  private static String sourceStatement;
 
-  abstract class handlerlist {
-    public handlerlist next = null;
+  abstract class HandlerList {
+    public HandlerList next = null;
 
     public abstract int proc(String s);
   }
@@ -105,8 +100,8 @@ public class CobolUtil {
   }
 
   /** libcob/common.cのcob_initの実装 TODO 未完成 */
-  public static void cob_init(String[] argv, boolean cob_initialized) {
-    if (!cob_initialized) {
+  public static void cob_init(String[] argv, boolean cobInitialized) {
+    if (!cobInitialized) {
       CobolUtil.commandLineArgs = argv;
       CobolInspect.initString();
       CobolFile.cob_init_fileio();
@@ -119,7 +114,7 @@ public class CobolUtil {
         if (envValue == null) {
           CobolUtil.cobSwitch[i] = false;
         } else {
-          CobolUtil.cobSwitch[i] = envValue.equals("ON");
+          CobolUtil.cobSwitch[i] = "ON".equals(envValue);
         }
       }
     }
@@ -127,7 +122,6 @@ public class CobolUtil {
     cal = Calendar.getInstance();
     String s = CobolUtil.getEnv("COB_DATE");
     if (s != null) {
-      Scanner scan = new Scanner(s);
       Pattern p = Pattern.compile("([0-9]{4})/([0-9]{2})/([0-9]{2})");
       Matcher m = p.matcher(s);
       if (m.matches()) {
@@ -177,6 +171,7 @@ public class CobolUtil {
     }
     return rt;
   }
+
   /**
    * libcob/cob_verbose_outputの実装 opensourceCOBOLではprintfのように可変長引数を取るが,
    * こちらは呼び出し側で事前にString.format等を使用することを期待している.
@@ -197,13 +192,11 @@ public class CobolUtil {
    */
   public static void runtimeError(String s) {
     if (hdlrs != null) {
-      handlerlist h = hdlrs;
+      HandlerList h = hdlrs;
       if (runtime_err_str != null) {
-        String p = runtime_err_str;
         if (sourceFile != null) {
           runtime_err_str = String.format("%s:%d: ", sourceFile, sourceLine);
         }
-        p += s;
       }
       while (h != null) {
         if (runtime_err_str != null) {
@@ -246,12 +239,7 @@ public class CobolUtil {
    * @throws CobolStopRunException
    */
   public static void COB_CHK_PARMS(String funcName, int numParams) throws CobolStopRunException {
-    // TODO ifの条件式の改修
-    if (false) {
-      String message = String.format("CALL to %s requires %d parameters", funcName, numParams);
-      CobolRuntimeException.displayRuntimeError(message);
-      CobolStopRunException.stopRunAndThrow(1);
-    }
+    System.err.println("COB_CHK_PARMS not implemented");
   }
 
   /**
@@ -314,6 +302,8 @@ public class CobolUtil {
         return;
       case 'y':
         p.setByte(0, (byte) '9');
+        return;
+      default:
         return;
     }
   }
@@ -429,6 +419,8 @@ public class CobolUtil {
         return;
       case '9':
         p.setByte(0, (byte) 'v');
+        return;
+      default:
         return;
     }
   }
@@ -560,9 +552,10 @@ public class CobolUtil {
     while (i < size && ret != 0) {
       if (s.getByte(i) == ' ') {
         i++;
-      } else if (size - i >= CobolConstant.ZENCSIZ) {
+      } else if (size - i > CobolConstant.ZENCSIZ) {
         for (int j = 0; j < CobolConstant.ZENCSIZ; ++j) {
-          if (s.getByte(i + j) != CobolConstant.ZENSPC[i]) {
+          if (s.getByte(i + j) != CobolConstant.ZENSPC[j]) {
+            i += CobolConstant.ZENCSIZ;
             continue OUTER_LOOP;
           }
         }
@@ -656,14 +649,8 @@ public class CobolUtil {
 
   public static void setLocation(
       String progId, String sfile, int sline, String csect, String cpara, String cstatement) {
-    CobolUtil.currentProgramId = progId;
     CobolUtil.sourceFile = sfile;
     CobolUtil.sourceLine = sline;
-    CobolUtil.currentSection = csect;
-    CobolUtil.currentParagraph = cpara;
-    if (cstatement != null) {
-      CobolUtil.sourceStatement = cstatement;
-    }
     if (CobolUtil.lineTrace) {
       System.err.println(
           String.format(
@@ -701,5 +688,17 @@ public class CobolUtil {
    */
   public static void setEnv(AbstractCobolField envVarName, AbstractCobolField envVarValue) {
     CobolUtil.envVarTable.setProperty(envVarName.getString().trim(), envVarValue.getString());
+  }
+
+  public static byte[] stringToBytes(String s) {
+    try {
+      return s.getBytes("Shift_JIS");
+    } catch (UnsupportedEncodingException e) {
+      return null;
+    }
+  }
+
+  public static byte[] toBytes(byte... bytes) {
+    return bytes;
   }
 }

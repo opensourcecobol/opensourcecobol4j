@@ -1,3 +1,2 @@
 #!/bin/bash
 cd libcobj && ./format
-cd ../cobj && ./format

@@ -1,0 +1,54 @@
+AT_SETUP([Compare national of different sizes])
+
+AT_DATA([prog.cbl],[
+       IDENTIFICATION              DIVISION.
+       PROGRAM-ID.                 prog.
+       ENVIRONMENT                 DIVISION.
+       DATA                        DIVISION.
+       WORKING-STORAGE             SECTION.
+       01  WK-STR1-1      PIC N(04) value "”L".
+       01  WK-STR1-2      PIC N(02) value "”L".
+       01  WK-STR2-1      PIC N(04) value "”LŒ¢".
+       01  WK-STR2-2      PIC N(02) value "”LŒ¢".
+       01  WK-STR3-1      PIC N(04).
+       01  WK-STR3-2      PIC N(02).
+       01  WK-STR4-1      PIC N(04) VALUE SPACE.
+       01  WK-STR4-2      PIC N(02) VALUE SPACE.
+       01  WK-STR5-1      PIC N(100) value "”L".
+       01  WK-STR5-2      PIC N(1) value "”L".
+       PROCEDURE                   DIVISION.
+       IF  WK-STR1-1 NOT = WK-STR1-2
+          DISPLAY "NG"
+       END-IF.
+       IF  WK-STR1-2 NOT = WK-STR1-1
+          DISPLAY "NG"
+       END-IF.
+       IF  WK-STR2-1 NOT = WK-STR2-2
+          DISPLAY "NG"
+       END-IF.
+       IF  WK-STR2-2 NOT = WK-STR2-1
+          DISPLAY "NG"
+       END-IF.
+       IF  WK-STR3-1 NOT = WK-STR3-2
+          DISPLAY "NG"
+       END-IF.
+       IF  WK-STR3-2 NOT = WK-STR3-1
+          DISPLAY "NG"
+       END-IF.
+       IF  WK-STR4-1 NOT = WK-STR4-2
+          DISPLAY "NG"
+       END-IF.
+       IF  WK-STR4-2 NOT = WK-STR4-1
+          DISPLAY "NG"
+       END-IF.
+       IF  WK-STR5-1 NOT = WK-STR5-2
+          DISPLAY "NG"
+       END-IF.
+       IF  WK-STR5-2 NOT = WK-STR5-1
+          DISPLAY "NG"
+       END-IF.
+])
+AT_CHECK([cobj prog.cbl])
+AT_CHECK([java prog])
+
+AT_CLEANUP

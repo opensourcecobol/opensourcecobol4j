@@ -38,57 +38,57 @@ public class CobolRelativeFile extends CobolFile {
   byte[] size = new byte[8];
 
   public CobolRelativeFile(
-      String select_name,
-      byte[] file_status,
+      String selectName,
+      byte[] fileStatus,
       AbstractCobolField assign,
       AbstractCobolField record,
-      AbstractCobolField record_size,
-      int record_min,
-      int record_max,
+      AbstractCobolField recordSize,
+      int recordMin,
+      int recordMax,
       int nkeys,
       CobolFileKey[] keys,
       char organization,
-      char access_mode,
-      char lock_mode,
-      char open_mode,
-      boolean flag_optional,
-      char last_open_mode,
+      char accessMode,
+      char lockMode,
+      char openMode,
+      boolean flagOptional,
+      char lastOpenMode,
       char special,
-      boolean flag_nonexistent,
-      boolean flag_end_of_file,
-      boolean flag_begin_of_file,
-      char flag_first_read,
-      boolean flag_read_done,
-      char flag_select_features,
-      boolean flag_needs_nl,
-      boolean flag_needs_top,
-      char file_version) {
+      boolean flagNonexistent,
+      boolean flagEndOfFile,
+      boolean flagBeginOfFile,
+      char flagFirstRead,
+      boolean flagReadDone,
+      char flagSelectFeatures,
+      boolean flagNeedsNl,
+      boolean flagNeedsTop,
+      char fileVersion) {
     super(
-        select_name,
-        file_status,
+        selectName,
+        fileStatus,
         assign,
         record,
-        record_size,
-        record_min,
-        record_max,
+        recordSize,
+        recordMin,
+        recordMax,
         nkeys,
         keys,
         organization,
-        access_mode,
-        lock_mode,
-        open_mode,
-        flag_optional,
-        last_open_mode,
+        accessMode,
+        lockMode,
+        openMode,
+        flagOptional,
+        lastOpenMode,
         special,
-        flag_nonexistent,
-        flag_end_of_file,
-        flag_begin_of_file,
-        flag_first_read,
-        flag_read_done,
-        flag_select_features,
-        flag_needs_nl,
-        flag_needs_top,
-        file_version);
+        flagNonexistent,
+        flagEndOfFile,
+        flagBeginOfFile,
+        flagFirstRead,
+        flagReadDone,
+        flagSelectFeatures,
+        flagNeedsNl,
+        flagNeedsTop,
+        fileVersion);
   }
 
   @Override
@@ -137,22 +137,16 @@ public class CobolRelativeFile extends CobolFile {
     FileLock fl = null;
     if (!filename.startsWith("/dev/")) {
       try {
-        boolean lock_flag;
+        boolean lockFlag;
         if (sharing != 0 || mode == COB_OPEN_OUTPUT) {
-          lock_flag = false;
+          lockFlag = false;
         } else {
-          lock_flag = true;
+          lockFlag = true;
         }
-        fl = ch.tryLock(0L, Long.MAX_VALUE, lock_flag);
+        fl = ch.tryLock(0L, Long.MAX_VALUE, lockFlag);
       } catch (NonWritableChannelException e) {
         this.fp.close();
         return EBADF;
-      } catch (ClosedChannelException e) {
-        this.fp.close();
-        return COB_STATUS_61_FILE_SHARING;
-      } catch (OverlappingFileLockException e) {
-        this.fp.close();
-        return COB_STATUS_61_FILE_SHARING;
       } catch (IOException e) {
         this.fp.close();
         return COB_STATUS_61_FILE_SHARING;
@@ -260,6 +254,8 @@ public class CobolRelativeFile extends CobolFile {
         case COB_GE:
           kindex++;
           break;
+        default:
+          break;
       }
     }
   }
@@ -294,8 +290,6 @@ public class CobolRelativeFile extends CobolFile {
       }
       this.record.getDataStorage().memcpy(bytes);
       return COB_STATUS_00_SUCCESS;
-    } catch (FileNotFoundException e) {
-      return COB_STATUS_30_PERMANENT_ERROR;
     } catch (IOException e) {
       return COB_STATUS_30_PERMANENT_ERROR;
     }
@@ -306,7 +300,7 @@ public class CobolRelativeFile extends CobolFile {
     long off;
     int relsize;
     int relnum;
-    int record_size;
+    int recordSize;
     final int offset = 0;
     try {
 
@@ -316,8 +310,8 @@ public class CobolRelativeFile extends CobolFile {
           return COB_STATUS_10_END_OF_FILE;
         }
         this.fp.seek(this.fp.getFilePointer() - 8);
-        record_size = (int) this.fp.readLong();
-        this.record.setSize(record_size);
+        recordSize = (int) this.fp.readLong();
+        this.record.setSize(recordSize);
 
         if (this.keys[0].getField() != null) {
           if (this.flag_first_read != 0) {
@@ -335,7 +329,7 @@ public class CobolRelativeFile extends CobolFile {
         }
 
         byte[] bytes = new byte[this.record_max];
-        if (record_size > 0) {
+        if (recordSize > 0) {
           if (this.fp.read(bytes, offset, this.record_max) != this.record_max) {
             return COB_STATUS_30_PERMANENT_ERROR;
           }
@@ -345,8 +339,6 @@ public class CobolRelativeFile extends CobolFile {
 
         this.fp.seek(this.fp.getFilePointer() + this.record_max);
       }
-    } catch (FileNotFoundException e) {
-      return COB_STATUS_30_PERMANENT_ERROR;
     } catch (IOException e) {
       return COB_STATUS_30_PERMANENT_ERROR;
     }
@@ -403,8 +395,6 @@ public class CobolRelativeFile extends CobolFile {
         }
       }
       return COB_STATUS_00_SUCCESS;
-    } catch (FileNotFoundException e) {
-      return COB_STATUS_30_PERMANENT_ERROR;
     } catch (IOException e) {
       return COB_STATUS_30_PERMANENT_ERROR;
     }
@@ -472,8 +462,6 @@ public class CobolRelativeFile extends CobolFile {
       this.fp.seek(this.fp.getFilePointer() + this.record_max);
       return COB_STATUS_00_SUCCESS;
 
-    } catch (FileNotFoundException e) {
-      return COB_STATUS_30_PERMANENT_ERROR;
     } catch (IOException e) {
       return COB_STATUS_30_PERMANENT_ERROR;
     }

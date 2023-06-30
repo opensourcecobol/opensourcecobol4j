@@ -44,7 +44,6 @@ public class CobolInspect {
   private static AbstractCobolField inspectVarCopy;
 
   private static AbstractCobolField figurative(AbstractCobolField f1, AbstractCobolField f2) {
-    int figsize = 0;
     int size1 = 0;
     int size2 = f2.getSize();
     byte[] figptr = new byte[size2];
@@ -230,6 +229,7 @@ public class CobolInspect {
       default:
         fig = str.getSize();
         p2 = str.getDataStorage();
+        break;
     }
 
     for (int p = inspectStart; p < inspectEnd - fig + 1; ++p) {
@@ -306,6 +306,7 @@ public class CobolInspect {
       throws CobolStopRunException {
     common(f1, f2, INSPECT_ALL);
   }
+
   /**
    * libcob/strings.cのcob_inspect_leadingの実装
    *
@@ -317,6 +318,7 @@ public class CobolInspect {
       throws CobolStopRunException {
     common(f1, f2, INSPECT_LEADING);
   }
+
   /**
    * libcob/strings.cのcob_inspect_firstの実装
    *
@@ -328,6 +330,7 @@ public class CobolInspect {
       throws CobolStopRunException {
     common(f1, f2, INSPECT_FIRST);
   }
+
   /**
    * libcob/strings.cのcob_inspect_trailingの実装
    *
@@ -339,6 +342,7 @@ public class CobolInspect {
       throws CobolStopRunException {
     common(f1, f2, INSPECT_TRAILING);
   }
+
   /**
    * libcob/strings.cのcob_inspect_convertingの実装
    *
@@ -391,6 +395,7 @@ public class CobolInspect {
       }
     }
   }
+
   /** libcob/strings.cのcob_inspect_finishの実装 */
   public static void finish() {
     if (inspectReplacing != 0) {

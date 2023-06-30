@@ -33,14 +33,9 @@ public class CobolNumericDoubleField extends AbstractCobolField {
     return storage.doubleValue();
   }
 
-  private void setBinaryValue(double value) {
-    CobolDataStorage storage = this.getDataStorage();
-    storage.set(value);
-  }
-
   @Override
   public byte[] getBytes() {
-    return null;
+    return new byte[0];
   }
 
   @Override
@@ -119,7 +114,6 @@ public class CobolNumericDoubleField extends AbstractCobolField {
   }
 
   public void moveDisplayToDouble(AbstractCobolField src) {
-    int sign = src.getSign();
     double dval = 0;
     CobolDataStorage storage = src.getDataStorage();
     for (int i = 0; i < src.getSize(); ++i) {

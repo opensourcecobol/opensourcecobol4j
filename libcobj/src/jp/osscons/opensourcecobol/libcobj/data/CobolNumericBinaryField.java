@@ -41,7 +41,7 @@ public class CobolNumericBinaryField extends AbstractCobolField {
   /** TODO */
   @Override
   public byte[] getBytes() {
-    return null;
+    return new byte[0];
   }
 
   /** 実装しないメソッド */
@@ -80,7 +80,6 @@ public class CobolNumericBinaryField extends AbstractCobolField {
     return this.getBinaryValue();
   }
 
-  @Override
   public void setLongValue(long n) {
     this.setBinaryValue(n);
   }
@@ -330,16 +329,6 @@ public class CobolNumericBinaryField extends AbstractCobolField {
       CobolDecimal.numByteMemcpy(nStorage, fsiz, this.getDataStorage(), 0, this.getSize());
       n = ByteBuffer.wrap(nStorage.getByteArray(0, 8)).getLong();
     }
-    return n;
-  }
-
-  private long binaryGetUint64() {
-    int fsiz = 8 - this.getSize();
-    long n = 0;
-    byte[] nBytes = ByteBuffer.allocate(8).putLong(n).array();
-    CobolDataStorage nStorage = new CobolDataStorage(nBytes);
-    CobolDecimal.numByteMemcpy(nStorage, fsiz, this.getDataStorage(), 0, this.getSize());
-    n = ByteBuffer.wrap(nStorage.getByteArray(0, 8), 0, 8).getLong();
     return n;
   }
 

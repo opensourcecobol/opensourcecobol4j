@@ -93,31 +93,31 @@ public class CobolModule {
    */
   public CobolModule(
       CobolModule next,
-      CobolDataStorage collating_sequence,
-      AbstractCobolField cut_status,
-      AbstractCobolField cursor_pos,
-      int display_sign,
-      char decimal_point,
-      char currency_symbol,
-      char numeric_separator,
-      int flag_filename_mapping,
-      int flag_binary_truncate,
-      int flag_pretty_display,
+      CobolDataStorage collatingSequence,
+      AbstractCobolField cutStatus,
+      AbstractCobolField cursorPos,
+      int displaySign,
+      char decimalPoint,
+      char currencySymbol,
+      char numericSeparator,
+      int flagFilenameMapping,
+      int flagBinaryTruncate,
+      int flagPrettyDisplay,
       int spare8,
-      String program_id) {
+      String programId) {
     this.next = next;
-    this.collating_sequence = collating_sequence;
-    this.cut_status = cut_status;
-    this.cursor_pos = cursor_pos;
-    this.display_sign = display_sign;
-    this.decimal_point = decimal_point;
-    this.currency_symbol = currency_symbol;
-    this.numeric_separator = numeric_separator;
-    this.flag_filename_mapping = flag_filename_mapping;
-    this.flag_binary_truncate = flag_binary_truncate;
-    this.flag_pretty_display = flag_pretty_display;
+    this.collating_sequence = collatingSequence;
+    this.cut_status = cutStatus;
+    this.cursor_pos = cursorPos;
+    this.display_sign = displaySign;
+    this.decimal_point = decimalPoint;
+    this.currency_symbol = currencySymbol;
+    this.numeric_separator = numericSeparator;
+    this.flag_filename_mapping = flagFilenameMapping;
+    this.flag_binary_truncate = flagBinaryTruncate;
+    this.flag_pretty_display = flagPrettyDisplay;
     this.spare8 = spare8;
-    this.program_id = program_id;
+    this.program_id = programId;
 
     this.cob_procedure_parameters = new ArrayList<AbstractCobolField>();
   }

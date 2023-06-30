@@ -42,9 +42,7 @@ public class CobolIntrinsic {
   private static final int sizeOfDouble = 8;
   private static int currEntry = 0;
   private static AbstractCobolField currField = null;
-  private static CobolFieldAttribute currAttr = null;
   private static AbstractCobolField[] calcField = new AbstractCobolField[DEPTH_LEVEL];
-  private static CobolFieldAttribute[] calcAttr = new CobolFieldAttribute[DEPTH_LEVEL];
   private static Random random = new Random();
 
   /** libcob/intrinsicのmake_double_entryの実装 */
@@ -60,11 +58,10 @@ public class CobolIntrinsic {
             null);
     AbstractCobolField newField = CobolFieldFactory.makeCobolField(sizeOfDouble, s, newAttr);
 
-    calcAttr[currEntry] = newAttr;
     calcField[currEntry] = newField;
-    currAttr = newAttr;
     currField = newField;
-    if (++currEntry >= DEPTH_LEVEL) {
+    ++currEntry;
+    if (currEntry >= DEPTH_LEVEL) {
       currEntry = 0;
     }
   }
@@ -75,11 +72,10 @@ public class CobolIntrinsic {
         CobolFieldFactory.makeCobolField(
             f.getSize(), new CobolDataStorage(f.getSize() + 1), f.getAttribute());
     calcField[currEntry] = newField;
-    calcAttr[currEntry] = f.getAttribute();
     currField = calcField[currEntry];
-    currAttr = calcAttr[currEntry];
 
-    if (++currEntry >= DEPTH_LEVEL) {
+    ++currEntry;
+    if (currEntry >= DEPTH_LEVEL) {
       currEntry = 0;
     }
   }
@@ -177,13 +173,10 @@ public class CobolIntrinsic {
     }
 
     int attrsign = 0;
-    int sign = 0;
     if (d1.getValue().signum() < 0) {
       attrsign = CobolFieldAttribute.COB_FLAG_HAVE_SIGN;
-      sign = 1;
     } else {
       attrsign = 0;
-      sign = 0;
     }
 
     int size = sizeInBase10(d1.getValue());
@@ -238,6 +231,7 @@ public class CobolIntrinsic {
       try {
         d1.getField(currField, 0);
       } catch (CobolStopRunException e) {
+        return null;
       }
       return currField;
     }
@@ -261,6 +255,7 @@ public class CobolIntrinsic {
     try {
       new CobolDecimal(vals[0], 0).getField(currField, 0);
     } catch (CobolStopRunException e) {
+      return null;
     }
     return currField;
   }
@@ -652,13 +647,14 @@ public class CobolIntrinsic {
       currField.setInt(0);
       return currField;
     }
-    BigDecimal d = new BigDecimal(1);
+    BigDecimal d = BigDecimal.ONE;
     for (int i = 2; i <= srcval; ++i) {
       d = d.multiply(new BigDecimal(i));
     }
     try {
       new CobolDecimal(d, 0).getField(currField, 0);
     } catch (CobolStopRunException e) {
+      return null;
     }
     return currField;
   }
@@ -738,6 +734,7 @@ public class CobolIntrinsic {
     try {
       d1.getField(currField, 0);
     } catch (CobolStopRunException e) {
+      return null;
     }
     return currField;
   }
@@ -888,6 +885,7 @@ public class CobolIntrinsic {
     }
     return currField;
   }
+
   /**
    * libcob/intrinsicのcob_intr_numval_cの実装
    *
@@ -905,7 +903,6 @@ public class CobolIntrinsic {
             null);
     AbstractCobolField field = CobolFieldFactory.makeCobolField(8, (CobolDataStorage) null, attr);
 
-    CobolDataStorage s = srcfield.getDataStorage();
     boolean sign = false;
     boolean decimalSeen = false;
     long llval = 0;
@@ -1092,6 +1089,7 @@ public class CobolIntrinsic {
     try {
       d1.getField(currField, 0);
     } catch (CobolStopRunException e) {
+      return null;
     }
     return currField;
   }
@@ -1229,6 +1227,7 @@ public class CobolIntrinsic {
       d1.div(d2);
       d1.getField(currField, 0);
     } catch (CobolStopRunException e) {
+      return null;
     }
     return currField;
   }
@@ -1267,6 +1266,7 @@ public class CobolIntrinsic {
         d1.div(d2);
         d1.getField(currField, 0);
       } catch (CobolStopRunException e) {
+        return null;
       }
       return currField;
     }
@@ -1300,6 +1300,7 @@ public class CobolIntrinsic {
     try {
       d1.div(d2);
     } catch (CobolStopRunException e) {
+      return null;
     }
 
     CobolDataStorage storage = new CobolDataStorage(8);
@@ -1307,11 +1308,14 @@ public class CobolIntrinsic {
     try {
       d1.getField(field, 0);
     } catch (CobolStopRunException e) {
+      return null;
     }
     long n = storage.longValue();
-    int i;
-    for (i = 0; n != 0; n /= 10, ++i)
-      ;
+    int i = 0;
+    while (n != 0) {
+      n /= 10;
+      ++i;
+    }
     field.setDataStorage(null);
     if (i <= 18) {
       attr.setScale(18 - i);
@@ -1320,6 +1324,7 @@ public class CobolIntrinsic {
     try {
       d1.getField(currField, 0);
     } catch (CobolStopRunException e) {
+      return null;
     }
     return currField;
   }
@@ -1355,6 +1360,7 @@ public class CobolIntrinsic {
     try {
       d1.getField(currField, 0);
     } catch (CobolStopRunException e) {
+      return null;
     }
     return currField;
   }
@@ -1511,7 +1517,7 @@ public class CobolIntrinsic {
       return currField;
     }
 
-    CobolDecimal d1 = new CobolDecimal(new BigDecimal(0), 0);
+    CobolDecimal d1 = new CobolDecimal(BigDecimal.ZERO, 0);
     CobolDecimal d2 = new CobolDecimal();
 
     for (AbstractCobolField f : fields) {
@@ -1524,9 +1530,10 @@ public class CobolIntrinsic {
     try {
       d1.div(d2);
     } catch (CobolStopRunException e) {
+      return null;
     }
 
-    CobolDecimal d4 = new CobolDecimal(new BigDecimal(0), 0);
+    CobolDecimal d4 = new CobolDecimal(BigDecimal.ZERO, 0);
 
     for (AbstractCobolField f : fields) {
       d2.setField(f);
@@ -1539,14 +1546,17 @@ public class CobolIntrinsic {
     try {
       d4.div(d3);
     } catch (CobolStopRunException e) {
+      return null;
     }
     CobolDataStorage data = new CobolDataStorage(8);
     field.setDataStorage(data);
     d4.getDisplayField(field, 0);
     long n = data.longValue();
     int i = 0;
-    for (i = 0; n != 0; n /= 10, ++i)
-      ;
+    while (n != 0) {
+      n /= 10;
+      ++i;
+    }
     field.setDataStorage(null);
     if (i <= 18) {
       attr.setScale(18 - i);
@@ -1583,7 +1593,7 @@ public class CobolIntrinsic {
       return currField;
     }
 
-    CobolDecimal d1 = new CobolDecimal(new BigDecimal(0), 0);
+    CobolDecimal d1 = new CobolDecimal(BigDecimal.ZERO, 0);
     CobolDecimal d2 = new CobolDecimal();
 
     for (AbstractCobolField f : fields) {
@@ -1596,9 +1606,10 @@ public class CobolIntrinsic {
     try {
       d1.div(d2);
     } catch (CobolStopRunException e) {
+      return null;
     }
 
-    CobolDecimal d4 = new CobolDecimal(new BigDecimal(0), 0);
+    CobolDecimal d4 = new CobolDecimal(BigDecimal.ZERO, 0);
 
     for (AbstractCobolField f : fields) {
       d2.setField(f);
@@ -1611,6 +1622,7 @@ public class CobolIntrinsic {
     try {
       d4.div(d3);
     } catch (CobolStopRunException e) {
+      return null;
     }
     d4.getField(currField, 0);
     return funcSqrt(currField);
@@ -1636,9 +1648,9 @@ public class CobolIntrinsic {
     AbstractCobolField f = fields[0];
     CobolDecimal d1 = new CobolDecimal();
     d1.setField(f);
-    CobolDecimal d2 = new CobolDecimal(new BigDecimal(1), 0);
+    CobolDecimal d2 = new CobolDecimal(BigDecimal.ONE, 0);
     d1.add(d2);
-    CobolDecimal d4 = new CobolDecimal(new BigDecimal(0), 0);
+    CobolDecimal d4 = new CobolDecimal(BigDecimal.ZERO, 0);
 
     for (int i = 1; i < fields.length; ++i) {
       f = fields[i];

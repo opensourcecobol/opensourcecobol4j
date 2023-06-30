@@ -1,0 +1,66 @@
+AT_SETUP([COMP overflow])
+
+AT_DATA([prog.cbl], [
+       identification              division.
+      ******************************************************************
+       program-id.                 prog.
+      ******************************************************************
+       data                        division.
+       WORKING-STORAGE SECTION.
+       01 U03 PIC 9(3) COMP.
+       01 U05 PIC 9(5) COMP.
+       01 U10 PIC 9(10) COMP.
+       01 U15 PIC 9(15) COMP.
+       01 S03 PIC S9(3) COMP.
+       01 S05 PIC S9(5) COMP.
+       01 S10 PIC S9(10) COMP.
+       01 S15 PIC S9(15) COMP.
+       PROCEDURE DIVISION.
+           COMPUTE U03 = 1233 + 1 .
+           COMPUTE U05 = 123455 + 1 .
+           COMPUTE U10 = 12345678900 + 1 .
+           COMPUTE U15 = 1234567890123450 + 1 .
+
+           DISPLAY U03.
+           DISPLAY U05.
+           DISPLAY U10.
+           DISPLAY U15.
+
+           COMPUTE S03 = 1233 + 1 .
+           COMPUTE S05 = 123455 + 1 .
+           COMPUTE S10 = 12345678900 + 1 .
+           COMPUTE S15 = 1234567890123450 + 1 .
+
+           DISPLAY S03.
+           DISPLAY S05.
+           DISPLAY S10.
+           DISPLAY S15.
+
+           COMPUTE S03 = -1233 - 1 .
+           COMPUTE S05 = -123455 - 1 .
+           COMPUTE S10 = -12345678900 - 1 .
+           COMPUTE S15 = -1234567890123450 - 1 .
+
+           DISPLAY S03.
+           DISPLAY S05.
+           DISPLAY S10.
+           DISPLAY S15.
+])
+
+AT_CHECK([${COBJ} prog.cbl])
+AT_CHECK([java prog], [0],
+[234
+23456
+2345678901
+234567890123451
++234
++23456
++2345678901
++234567890123451
+-234
+-23456
+-2345678901
+-234567890123451
+])
+
+AT_CLEANUP

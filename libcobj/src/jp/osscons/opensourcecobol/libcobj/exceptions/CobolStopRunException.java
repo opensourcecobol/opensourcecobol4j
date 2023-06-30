@@ -83,7 +83,9 @@ public class CobolStopRunException extends Exception {
    * @throws CobolGoBackException
    */
   public static void dummy() throws CobolStopRunException {
-    if (false) throw new CobolStopRunException(0);
+    if (false) {
+      throw new CobolStopRunException(0);
+    }
   }
 
   /** libcob/common.cのcob_stop_runの実装 */
