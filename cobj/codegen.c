@@ -494,7 +494,7 @@ static void joutput_string_write(const unsigned char *s, int size, int printable
     joutput("\")");
   } else {
     if (param_wrap_string_flag) {
-      joutput("makeCobolDataStorage(");
+      joutput("CobolDataStorage.makeCobolDataStorage(");
     } else {
       joutput("CobolUtil.toBytes(");
     }
@@ -552,6 +552,10 @@ static void joutput_all_string_literals() {
 	const char* data_type;
 	struct string_literal_cache* l = string_literal_list;
 	int tmp_param_wrap_string_flag = param_wrap_string_flag;
+
+  if(l != NULL) {
+	  joutput_line("/* String literals */");
+  }
 
 	while(l != NULL) {
     if(l->param_wrap_string_flag) {
@@ -5737,10 +5741,6 @@ void codegen(struct cb_program *prog, const int nested, char **program_id_list,
   joutput_line("private boolean initialized = false;");
   joutput_line("private CobolModule cobolCurrentModule;");
   joutput_line("private CobolModule module;");
-  joutput_line("private CobolFrame frame;");
-  joutput_line("private static boolean cobolInitialized = false;");
-  joutput_line("private CobolCallParams cobolSaveCallParams = null;");
-  joutput_line("private CobolCallParams cobolCallParams = null;");
   joutput_line("private boolean cobolErrorOnExitFlag;");
   joutput_line("private int entry;");
   joutput("\n");
@@ -5832,7 +5832,7 @@ void codegen(struct cb_program *prog, const int nested, char **program_id_list,
   joutput_indent_level += 2;
 
   // if (prog->flag_main) {
-  joutput_line("CobolUtil.cob_init(args, cobolInitialized);");
+  joutput_line("CobolUtil.cob_init(args, false);");
   //}
 
   joutput_line("CobolDecimal.cobInitNumeric();");
@@ -5865,7 +5865,6 @@ void codegen(struct cb_program *prog, const int nested, char **program_id_list,
   joutput("\n");
 
 	//Output the declarations of string literals
-	joutput_line("/* String literals */");
 	joutput_all_string_literals();
 	free_string_literal_list();
 
@@ -5880,34 +5879,6 @@ void codegen(struct cb_program *prog, const int nested, char **program_id_list,
     }
   }
   joutput("\n");
-
-  //未実装のメソッド群の出力
-  joutput_line("private void cobolPushCallStackList(String programId)");
-  joutput_line("{");
-  joutput_line("}\n");
-
-  joutput_line("private void cobolFatalError(int errorCode)");
-  joutput_line("{");
-  joutput_line("}\n");
-
-  joutput_line("private void cobolCheckVersion(String sourceFile, int "
-               "packageVersion, int patchVersion)");
-  joutput_line("{");
-  joutput_line("}\n");
-
-  joutput_line(
-      "private void cobolSetCancel(String programId, Object a, Object b)");
-  joutput_line("{");
-  joutput_line("}\n");
-
-  joutput_line("private void cobolPopCallStackList()");
-  joutput_line("{");
-  joutput_line("}\n");
-
-  joutput_line(
-      "private static CobolDataStorage makeCobolDataStorage(byte ...bytes) {");
-  joutput_line("  return new CobolDataStorage(bytes);");
-  joutput_line("}");
 
   /* CALL cache */
   if (call_cache) {

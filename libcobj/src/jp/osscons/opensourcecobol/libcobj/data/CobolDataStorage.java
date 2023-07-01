@@ -61,6 +61,10 @@ public class CobolDataStorage {
     this(data, 0);
   }
 
+  public static CobolDataStorage makeCobolDataStorage(byte... bytes) {
+    return new CobolDataStorage(bytes);
+  }
+
   public CobolDataStorage() {
     this.index = 0;
     this.data = null;
