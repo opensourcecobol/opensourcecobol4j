@@ -553,6 +553,10 @@ static void joutput_all_string_literals() {
 	struct string_literal_cache* l = string_literal_list;
 	int tmp_param_wrap_string_flag = param_wrap_string_flag;
 
+  if(l != NULL) {
+	  joutput_line("/* String literals */");
+  }
+
 	while(l != NULL) {
     if(l->param_wrap_string_flag) {
       data_type = data_type_storage;
@@ -5861,7 +5865,6 @@ void codegen(struct cb_program *prog, const int nested, char **program_id_list,
   joutput("\n");
 
 	//Output the declarations of string literals
-	joutput_line("/* String literals */");
 	joutput_all_string_literals();
 	free_string_literal_list();
 
