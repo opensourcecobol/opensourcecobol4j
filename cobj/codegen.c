@@ -494,7 +494,7 @@ static void joutput_string_write(const unsigned char *s, int size, int printable
     joutput("\")");
   } else {
     if (param_wrap_string_flag) {
-      joutput("makeCobolDataStorage(");
+      joutput("CobolDataStorage.makeCobolDataStorage(");
     } else {
       joutput("CobolUtil.toBytes(");
     }
@@ -5876,11 +5876,6 @@ void codegen(struct cb_program *prog, const int nested, char **program_id_list,
     }
   }
   joutput("\n");
-
-  joutput_line(
-      "private static CobolDataStorage makeCobolDataStorage(byte ...bytes) {");
-  joutput_line("  return new CobolDataStorage(bytes);");
-  joutput_line("}");
 
   /* CALL cache */
   if (call_cache) {
