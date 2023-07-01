@@ -5737,10 +5737,6 @@ void codegen(struct cb_program *prog, const int nested, char **program_id_list,
   joutput_line("private boolean initialized = false;");
   joutput_line("private CobolModule cobolCurrentModule;");
   joutput_line("private CobolModule module;");
-  joutput_line("private CobolFrame frame;");
-  joutput_line("private static boolean cobolInitialized = false;");
-  joutput_line("private CobolCallParams cobolSaveCallParams = null;");
-  joutput_line("private CobolCallParams cobolCallParams = null;");
   joutput_line("private boolean cobolErrorOnExitFlag;");
   joutput_line("private int entry;");
   joutput("\n");
@@ -5832,7 +5828,7 @@ void codegen(struct cb_program *prog, const int nested, char **program_id_list,
   joutput_indent_level += 2;
 
   // if (prog->flag_main) {
-  joutput_line("CobolUtil.cob_init(args, cobolInitialized);");
+  joutput_line("CobolUtil.cob_init(args, false);");
   //}
 
   joutput_line("CobolDecimal.cobInitNumeric();");
