@@ -5877,29 +5877,6 @@ void codegen(struct cb_program *prog, const int nested, char **program_id_list,
   }
   joutput("\n");
 
-  //未実装のメソッド群の出力
-  joutput_line("private void cobolPushCallStackList(String programId)");
-  joutput_line("{");
-  joutput_line("}\n");
-
-  joutput_line("private void cobolFatalError(int errorCode)");
-  joutput_line("{");
-  joutput_line("}\n");
-
-  joutput_line("private void cobolCheckVersion(String sourceFile, int "
-               "packageVersion, int patchVersion)");
-  joutput_line("{");
-  joutput_line("}\n");
-
-  joutput_line(
-      "private void cobolSetCancel(String programId, Object a, Object b)");
-  joutput_line("{");
-  joutput_line("}\n");
-
-  joutput_line("private void cobolPopCallStackList()");
-  joutput_line("{");
-  joutput_line("}\n");
-
   joutput_line(
       "private static CobolDataStorage makeCobolDataStorage(byte ...bytes) {");
   joutput_line("  return new CobolDataStorage(bytes);");
