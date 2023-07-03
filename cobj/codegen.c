@@ -2839,7 +2839,10 @@ static void joutput_call(struct cb_call *p) {
       } else if (CB_CAST_P(x)) {
         joutput("&ptr_%d", (int)n);
       } else {
+        int tmp_param_wrap_string_flag = param_wrap_string_flag;
+        param_wrap_string_flag = 1;
         joutput_data(x);
+        param_wrap_string_flag = tmp_param_wrap_string_flag;
       }
       break;
     case CB_CALL_BY_CONTENT:
@@ -2850,7 +2853,10 @@ static void joutput_call(struct cb_call *p) {
           joutput("content_%d.data", (int)n);
         }
       } else {
+        int tmp_param_wrap_string_flag = param_wrap_string_flag;
+        param_wrap_string_flag = 1;
         joutput_data(x);
+        param_wrap_string_flag = tmp_param_wrap_string_flag;
       }
       break;
     case CB_CALL_BY_VALUE:
@@ -2968,7 +2974,10 @@ static void joutput_call(struct cb_call *p) {
           break;
         }
       } else {
+        int tmp_param_wrap_string_flag = param_wrap_string_flag;
+        param_wrap_string_flag = 1;
         joutput_data(x);
+        param_wrap_string_flag = tmp_param_wrap_string_flag;
       }
       break;
     }
