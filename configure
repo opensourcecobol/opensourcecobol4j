@@ -626,7 +626,7 @@ PACKAGE_STRING='opensource COBOL 4J 1.0.12'
 PACKAGE_BUGREPORT='ws-opensource-cobol-contact@osscons.jp'
 PACKAGE_URL=''
 
-ac_unique_file="libcob.h"
+ac_unique_file="libcobj.h"
 # Factoring default headers for most tests.
 ac_includes_default="\
 #include <stddef.h>
