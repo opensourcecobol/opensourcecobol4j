@@ -25,7 +25,7 @@
 #include <stdio.h>
 
 #include "lib/gettext.h"
-#include "libcob.h"
+#include "libcobj.h"
 
 #if !defined(__i386__) && !defined(__x86_64__) && !defined(__powerpc__) &&     \
     !defined(__powerpc64__) && !defined(__ppc__) && !defined(__amd64__)
