@@ -24,7 +24,9 @@ import java.nio.ByteBuffer;
 import java.nio.ByteOrder;
 import jp.osscons.opensourcecobol.libcobj.common.CobolConstant;
 import jp.osscons.opensourcecobol.libcobj.common.CobolModule;
+import jp.osscons.opensourcecobol.libcobj.exceptions.CobolExceptionId;
 import jp.osscons.opensourcecobol.libcobj.exceptions.CobolRuntimeException;
+import jp.osscons.opensourcecobol.libcobj.exceptions.CobolStopRunException;
 
 /** PIC 文字列が9(5)や9(9)の変数を表現するクラス. */
 public class CobolNumericField extends AbstractCobolField {
@@ -622,16 +624,26 @@ public class CobolNumericField extends AbstractCobolField {
     }
   }
 
-  // addInt内のgotoの代替として使用する
-  class OverflowException extends Exception {}
+  @Override
+  public int subInt(int in) {
+    return this.addInt(-in, CobolDecimal.COB_STORE_KEEP_ON_OVERFLOW);
+  }
+
+  public int subInt(int in, int opt) {
+    return this.addInt(-in, opt);
+  }
+
+  @Override
+  public int addInt(int in) {
+    return this.addInt(in, CobolDecimal.COB_STORE_KEEP_ON_OVERFLOW);
+  }
 
   /**
    * thisの保持する数値データに加算する
    *
    * @param in thisの保持する数値データに加算する値
    */
-  @Override
-  public int addInt(int in) {
+  public int addInt(int in, int opt) {
     if (in == 0) {
       return 0;
     }
@@ -670,33 +682,30 @@ public class CobolNumericField extends AbstractCobolField {
       size -= scale;
     }
 
-    try {
-      if (n > 0) {
-        if (displayAddInt(data, firstDataIndex, size, n) != 0) {
-          for (int i = 0; i < osize; ++i) {
-            data.setByte(firstDataIndex + i, tfield[i]);
-          }
-          throw new OverflowException();
+    if (n > 0) {
+      if (displayAddInt(data, firstDataIndex, size, n) != 0) {
+        for (int i = 0; i < osize; ++i) {
+          data.setByte(firstDataIndex + i, tfield[i]);
         }
-      } else if (n < 0) {
-        if (displaySubInt(data, firstDataIndex, size, -n) != 0) {
-          for (int i = 0; i < size; ++i) {
-            byte val = data.getByte(firstDataIndex + i);
-            data.setByte(firstDataIndex + i, (byte) (9 - (val - 0x30) + 0x30));
-          }
-          displayAddInt(data, firstDataIndex, size, 1);
-          sign = -sign;
+        CobolRuntimeException.setException(CobolExceptionId.COB_EC_SIZE_OVERFLOW);
+        if ((opt & CobolDecimal.COB_STORE_KEEP_ON_OVERFLOW) > 0) {
+          this.putSign(sign);
+          return CobolRuntimeException.code;
         }
       }
-
-      this.putSign(sign);
-      return 0;
-
-    } catch (OverflowException e) {
-      this.putSign(sign);
-      // TODO set exception code
-      return 0;
+    } else if (n < 0) {
+      if (displaySubInt(data, firstDataIndex, size, -n) != 0) {
+        for (int i = 0; i < size; ++i) {
+          byte val = data.getByte(firstDataIndex + i);
+          data.setByte(firstDataIndex + i, (byte) (9 - (val - 0x30) + 0x30));
+        }
+        displayAddInt(data, firstDataIndex, size, 1);
+        sign = -sign;
+      }
     }
+
+    this.putSign(sign);
+    return 0;
   }
 
   /**
@@ -802,6 +811,32 @@ public class CobolNumericField extends AbstractCobolField {
       data.setByte(sp, (byte) '9');
     }
     return 1;
+  }
+
+  @Override
+  public int add(AbstractCobolField field, int opt) throws CobolStopRunException {
+    CobolFieldAttribute attr = field.getAttribute();
+    if (attr.isTypeNumeric()
+        && attr.getDigits() <= 9
+        && attr.getScale() == 0
+        && this.getAttribute().getScale() == 0) {
+      return this.addInt(field.getInt(), opt);
+    } else {
+      return super.add(field, opt);
+    }
+  }
+
+  @Override
+  public int sub(AbstractCobolField field, int opt) throws CobolStopRunException {
+    CobolFieldAttribute attr = field.getAttribute();
+    if (attr.isTypeNumeric()
+        && attr.getDigits() <= 9
+        && attr.getScale() == 0
+        && this.getAttribute().getScale() == 0) {
+      return this.subInt(field.getInt(), opt);
+    } else {
+      return super.sub(field, opt);
+    }
   }
 
   /**
