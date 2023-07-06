@@ -24,9 +24,9 @@ import java.nio.ByteBuffer;
 import java.nio.ByteOrder;
 import jp.osscons.opensourcecobol.libcobj.common.CobolConstant;
 import jp.osscons.opensourcecobol.libcobj.common.CobolModule;
+import jp.osscons.opensourcecobol.libcobj.exceptions.CobolExceptionId;
 import jp.osscons.opensourcecobol.libcobj.exceptions.CobolRuntimeException;
 import jp.osscons.opensourcecobol.libcobj.exceptions.CobolStopRunException;
-import jp.osscons.opensourcecobol.libcobj.exceptions.CobolExceptionId;
 
 /** PIC 文字列が9(5)や9(9)の変数を表現するクラス. */
 public class CobolNumericField extends AbstractCobolField {
