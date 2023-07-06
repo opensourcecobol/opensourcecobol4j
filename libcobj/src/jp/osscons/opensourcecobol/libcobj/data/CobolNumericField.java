@@ -25,8 +25,6 @@ import java.nio.ByteOrder;
 import jp.osscons.opensourcecobol.libcobj.common.CobolConstant;
 import jp.osscons.opensourcecobol.libcobj.common.CobolModule;
 import jp.osscons.opensourcecobol.libcobj.exceptions.CobolRuntimeException;
-import jp.osscons.opensourcecobol.libcobj.exceptions.CobolStopRunException;
-import jp.osscons.opensourcecobol.libcobj.exceptions.CobolExceptionId;
 
 /** PIC 文字列が9(5)や9(9)の変数を表現するクラス. */
 public class CobolNumericField extends AbstractCobolField {
@@ -34,17 +32,16 @@ public class CobolNumericField extends AbstractCobolField {
   /**
    * コンストラクタ
    *
-   * @param size        データを格納するバイト配列の長さ
+   * @param size データを格納するバイト配列の長さ
    * @param dataStorage データを格納するバイト配列を扱うオブジェクト
-   * @param attribute   変数に関する様々な情報を保持するオブジェクト
+   * @param attribute 変数に関する様々な情報を保持するオブジェクト
    */
   public CobolNumericField(int size, CobolDataStorage dataStorage, CobolFieldAttribute attribute) {
     super(size, dataStorage, attribute);
   }
 
   /** TODO実装 */
-  public void checkNumeric(String s) {
-  }
+  public void checkNumeric(String s) {}
 
   /** this.dataの保持するバイト配列のコピーを返す */
   @Override
@@ -74,9 +71,10 @@ public class CobolNumericField extends AbstractCobolField {
 
     int signIndex = attr.isFlagSignLeading() ? 0 : this.getSize() - 1;
     int i = 0;
-    int dataLastIndex = attr.isFlagHaveSign() && !attr.isFlagSignLeading() && attr.isFlagSignSeparate()
-        ? this.getSize() - 2
-        : this.getSize() - 1;
+    int dataLastIndex =
+        attr.isFlagHaveSign() && !attr.isFlagSignLeading() && attr.isFlagSignSeparate()
+            ? this.getSize() - 2
+            : this.getSize() - 1;
 
     for (; i + getFirstDataIndex() <= dataLastIndex; ++i) {
       if (scale > 0 && i - 1 == pointIndex) {
@@ -306,7 +304,8 @@ public class CobolNumericField extends AbstractCobolField {
 
     /* move */
     count = 0;
-    outer: {
+    outer:
+    {
       for (; s1 < e1 && s2 < e2; ++s1) {
         byte c = field.getDataStorage().getByte(s1);
         if (Character.isDigit(c)) {
@@ -839,8 +838,7 @@ public class CobolNumericField extends AbstractCobolField {
    * @param field 代入元のデータ(BigDecimal型)
    */
   @Override
-  public void moveFrom(BigDecimal number) {
-  }
+  public void moveFrom(BigDecimal number) {}
 
   /**
    * 引数で与えらえられたデータからthisへの代入を行う
@@ -848,8 +846,7 @@ public class CobolNumericField extends AbstractCobolField {
    * @param field 代入元のデータ(CobolDataStorage型)
    */
   @Override
-  public void moveFrom(CobolDataStorage dataStrage) {
-  }
+  public void moveFrom(CobolDataStorage dataStrage) {}
 
   /** 実装しないメソッド */
   public int addPackedInt(int n) {
