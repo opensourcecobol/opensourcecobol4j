@@ -73,16 +73,16 @@ public class CobolNumericField extends AbstractCobolField {
 
     int scale = attr.getScale();
     int fieldSize = this.getFieldSize();
-    if(scale >= fieldSize) {
+    if (scale >= fieldSize) {
       sb.append(".");
-      for(int i=0; i<scale-fieldSize; ++i) {
+      for (int i = 0; i < scale - fieldSize; ++i) {
         sb.append('0');
       }
       int firstIndex = this.getFirstDataIndex();
       int signIndex = attr.isFlagSignLeading() ? 0 : this.getSize() - 1;
-      for(int i=0; i<fieldSize; ++i) {
-        char c = (char)data.getByte(firstIndex + i);
-        if(firstIndex + i == signIndex && c >= 0x70) {
+      for (int i = 0; i < fieldSize; ++i) {
+        char c = (char) data.getByte(firstIndex + i);
+        if (firstIndex + i == signIndex && c >= 0x70) {
           c -= 0x40;
         }
         sb.append(c);
