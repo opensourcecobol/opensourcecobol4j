@@ -90,7 +90,7 @@ public class CobolNumericField extends AbstractCobolField {
       return sb.toString();
     }
 
-    int pointIndex = scale > 0 ? attr.getDigits() - scale - 1 : attr.getDigits() - 1;
+    int pointIndex = scale > 0 ? digits - scale - 1 : digits - 1;
 
     int signIndex = attr.isFlagSignLeading() ? 0 : this.getSize() - 1;
     int i = 0;
@@ -110,7 +110,7 @@ public class CobolNumericField extends AbstractCobolField {
       sb.append(c);
     }
 
-    for (; i < attr.getDigits(); ++i) {
+    for (; i < digits; ++i) {
       if (scale > 0 && i - 1 == pointIndex) {
         sb.append('.');
       }
