@@ -1,3 +1,4 @@
+TARGET_JAR = libcobj.jar
 SRC_FILES = \
 	./src/jp/osscons/opensourcecobol/libcobj/Const.java \
 	./src/jp/osscons/opensourcecobol/libcobj/call/CobolCallDataContent.java \
@@ -69,7 +70,7 @@ SRC_FILES = \
 	./src/jp/osscons/opensourcecobol/libcobj/ui/CobolResultString.java \
 	./src/jp/osscons/opensourcecobol/libcobj/ui/CobolResultDouble.java
 
-all: libcobj.jar
+all: $(TARGET_JAR)
 
 libcobj.jar: $(SRC_FILES)
 	javac -encoding UTF8 -d . $^
@@ -78,6 +79,6 @@ libcobj.jar: $(SRC_FILES)
 clean:
 	rm -rf jp/
 
-install:
+install: $(TARGET_JAR)
 	mkdir -p $(DESTDIR)$(prefix)/lib/opensourcecobol4j/
 	install libcobj.jar $(DESTDIR)$(prefix)/lib/opensourcecobol4j/
