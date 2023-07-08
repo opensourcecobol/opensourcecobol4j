@@ -1,6 +1,4 @@
 AT_SETUP([free_1col_aster OPTION])
-AT_CHECK([${SKIP_TEST}])
-
 AT_DATA([prog.cob], [
        IDENTIFICATION   DIVISION.
        PROGRAM-ID.      prog.
@@ -9,7 +7,7 @@ AT_DATA([prog.cob], [
            STOP RUN.
 ])
 
-AT_CHECK([${COMPILE} -x -free_1col_aster prog.cob], [0], [])
+AT_CHECK([${COMPILE} -free_1col_aster prog.cob], [0], [])
 
 AT_CLEANUP
 
@@ -24,7 +22,7 @@ AT_DATA([prog.cob], [
            STOP RUN.
 ])
 
-AT_CHECK([${COMPILE} -x -free_1col_aster prog.cob], [1], [],
+AT_CHECK([${COMPILE} -free_1col_aster prog.cob], [1], [],
 [prog.cob:6: Error: 'A' undefined
 ])
 
