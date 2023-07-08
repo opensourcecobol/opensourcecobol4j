@@ -947,8 +947,8 @@ public class CobolNumericField extends AbstractCobolField {
       final int firstIndex2 = field.getFirstDataIndex();
       final int fieldSize1 = this.getFieldSize();
       final int fieldSize2 = field.getFieldSize();
-      final int size1 = this.getFieldSize();
-      final int size2 = field.getFieldSize();
+      final int size1 = this.getSize();
+      final int size2 = field.getSize();
       final int pointIndex1 = fieldSize1 - scale1;
       final int pointIndex2 = fieldSize2 - scale2;
       int sign1 = this.getSign();
