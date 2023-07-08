@@ -1,5 +1,4 @@
 AT_SETUP([Value clause])
-AT_CHECK([${SKIP_TEST}])
 
 AT_DATA([prog.cob], [
        IDENTIFICATION   DIVISION.
@@ -12,13 +11,12 @@ AT_DATA([prog.cob], [
            STOP RUN.
 ])
 
-AT_CHECK([cobc -m prog.cob && cp prog.class /root])
+AT_CHECK([cobj prog.cob])
 AT_CHECK([java prog], [0], [ì˙ñ{åÍÇÃï∂éöóÒ])
 
 AT_CLEANUP
 
 AT_SETUP([Move])
-AT_CHECK([${SKIP_TEST}])
 
 AT_DATA([prog.cob], [
        IDENTIFICATION   DIVISION.
@@ -32,13 +30,12 @@ AT_DATA([prog.cob], [
            STOP RUN.
 ])
 
-AT_CHECK([cobc -m prog.cob])
+AT_CHECK([cobj prog.cob])
 AT_CHECK([java prog], [0], [ì˙ñ{åÍÇÃï∂éöóÒ])
 
 AT_CLEANUP
 
 AT_SETUP([Move with trunc])
-AT_CHECK([${SKIP_TEST}])
 
 AT_DATA([prog.cob], [
        IDENTIFICATION   DIVISION.
@@ -53,17 +50,16 @@ AT_DATA([prog.cob], [
 ])
 
 #TODO fix
-#AT_CHECK([cobc -m prog.cob], [0], [],
+#AT_CHECK([cobj prog.cob], [0], [],
 #[prog.cob:8: Warning: Value size exceeds data size
 #prog.cob:6: Warning: 'F0' defined here as PIC X(6)
 #])
-AT_CHECK([cobc -m prog.cob])
+AT_CHECK([cobj prog.cob])
 AT_CHECK([java prog], [0], [ì˙ñ{åÍ])
 
 AT_CLEANUP
 
 AT_SETUP([Move ALL with trunc and trimming])
-AT_CHECK([${SKIP_TEST}])
 
 AT_DATA([prog.cob], [
        IDENTIFICATION   DIVISION.
@@ -77,7 +73,7 @@ AT_DATA([prog.cob], [
            STOP RUN.
 ])
 
-AT_CHECK([cobc -m prog.cob], [0])
+AT_CHECK([cobj prog.cob], [0])
 AT_CHECK([java prog | od -tx1 -An | sed -e 's/  */ /g' -e 's/ *$//'], [0], [ 8a ec 8a ec 8a ec 20
 ])
 
@@ -99,18 +95,17 @@ AT_DATA([prog.cob], [
 ])
 
 #TODO fix
-#AT_CHECK([cobc -m prog.cob], [0], [],
+#AT_CHECK([cobj prog.cob], [0], [],
 #[prog.cob:8: Warning: Value size exceeds data size
 #prog.cob:6: Warning: 'F0' defined here as PIC X(7)
 #])
-AT_CHECK([cobc -m prog.cob])
+AT_CHECK([cobj prog.cob])
 AT_CHECK([java prog | od -tx1 -An | sed -e 's/  */ /g' -e 's/ *$//'], [0], [ 93 fa 96 7b 8c ea 82
 ])
 
 AT_CLEANUP
 
 AT_SETUP([Move from field with trunc and trimming 1])
-AT_CHECK([${SKIP_TEST}])
 
 AT_DATA([prog.cob], [
        IDENTIFICATION   DIVISION.
@@ -125,14 +120,13 @@ AT_DATA([prog.cob], [
            STOP RUN.
 ])
 
-AT_CHECK([cobc -m prog.cob], [0])
+AT_CHECK([cobj prog.cob], [0])
 AT_CHECK([java prog | od -tx1 -An | sed -e 's/  */ /g' -e 's/ *$//'], [0], [ 93 fa 96 7b 8c ea 82
 ])
 
 AT_CLEANUP
 
 AT_SETUP([Move with padding])
-AT_CHECK([${SKIP_TEST}])
 
 AT_DATA([prog.cob], [
        IDENTIFICATION   DIVISION.
@@ -146,13 +140,12 @@ AT_DATA([prog.cob], [
            STOP RUN.
 ])
 
-AT_CHECK([cobc -m prog.cob], [0])
+AT_CHECK([cobj prog.cob], [0])
 AT_CHECK([java prog], [0], [ì˙ñ{åÍÇÃï∂éöóÒ  ])
 
 AT_CLEANUP
 
 AT_SETUP([Move with justify])
-AT_CHECK([${SKIP_TEST}])
 
 AT_DATA([prog.cob], [
        IDENTIFICATION   DIVISION.
@@ -166,13 +159,12 @@ AT_DATA([prog.cob], [
            STOP RUN.
 ])
 
-AT_CHECK([cobc -m prog.cob], [0])
+AT_CHECK([cobj prog.cob], [0])
 AT_CHECK([java prog], [0], [ ì˙ñ{åÍÇÃï∂éöóÒ])
 
 AT_CLEANUP
 
 AT_SETUP([Move to alnum EDITED])
-AT_CHECK([${SKIP_TEST}])
 
 AT_DATA([prog.cob], [
        IDENTIFICATION   DIVISION.
@@ -186,13 +178,12 @@ AT_DATA([prog.cob], [
            STOP RUN.
 ])
 
-AT_CHECK([cobc -m prog.cob], [0])
+AT_CHECK([cobj prog.cob], [0])
 AT_CHECK([java prog], [0], [ì˙ñ{/íÜçë ï∂éö0])
 
 AT_CLEANUP
 
 AT_SETUP([Move to alnum EDITED (pic too short)])
-AT_CHECK([${SKIP_TEST}])
 
 AT_DATA([prog.cob], [
        IDENTIFICATION   DIVISION.
@@ -206,17 +197,16 @@ AT_DATA([prog.cob], [
            STOP RUN.
 ])
 
-#AT_CHECK([cobc -m prog.cob], [0], [], 
+#AT_CHECK([cobj prog.cob], [0], [], 
 #[prog.cob:8: Warning: Value size exceeds data size
 #prog.cob:6: Warning: 'F0' defined here as PIC XX/XXBXX0
 #])
-AT_CHECK([cobc -m prog.cob], [0])
+AT_CHECK([cobj prog.cob], [0])
 AT_CHECK([java prog], [0], [ì˙/ñ{ íÜ0])
 
 AT_CLEANUP
 
 AT_SETUP([Move to alnum EDITED (pic too long)])
-AT_CHECK([${SKIP_TEST}])
 
 AT_DATA([prog.cob], [
        IDENTIFICATION   DIVISION.
@@ -230,13 +220,12 @@ AT_DATA([prog.cob], [
            STOP RUN.
 ])
 
-AT_CHECK([cobc -m prog.cob], [0])
+AT_CHECK([cobj prog.cob], [0])
 AT_CHECK([java prog], [0], [ì˙/ñ{   0])
 
 AT_CLEANUP
 
 AT_SETUP([Move to alnum EDITED (No char break)])
-AT_CHECK([${SKIP_TEST}])
 
 AT_DATA([prog.cob], [
        IDENTIFICATION   DIVISION.
@@ -250,13 +239,12 @@ AT_DATA([prog.cob], [
            STOP RUN.
 ])
 
-AT_CHECK([cobc -m prog.cob], [0])
+AT_CHECK([cobj prog.cob], [0])
 AT_CHECK([java prog], [0], [ì˙ ñ{])
 
 AT_CLEANUP
 
 AT_SETUP([Move to alnum EDITED (char break & junk chars)])
-AT_CHECK([${SKIP_TEST}])
 
 AT_DATA([prog.cob], [
        IDENTIFICATION   DIVISION.
@@ -270,14 +258,13 @@ AT_DATA([prog.cob], [
            STOP RUN.
 ])
 
-AT_CHECK([cobc -m prog.cob], [0])
+AT_CHECK([cobj prog.cob], [0])
 AT_CHECK([java prog | od -tx1 -An | sed -e 's/  */ /g' -e 's/ *$//'], [0], [ 93 20 fa 96 7b
 ])
 
 AT_CLEANUP
 
 AT_SETUP([Move group to group in bad alignment])
-AT_CHECK([${SKIP_TEST}])
 
 AT_DATA([prog.cob], [
        IDENTIFICATION   DIVISION.
@@ -296,14 +283,13 @@ AT_DATA([prog.cob], [
            STOP RUN.
 ])
 
-AT_CHECK([cobc -m prog.cob], [0])
+AT_CHECK([cobj prog.cob], [0])
 AT_CHECK([java prog | od -tx1 -An | sed -e 's/  */ /g' -e 's/ *$//'], [0], [ 93 fa 96
 ])
 
 AT_CLEANUP
 
 AT_SETUP([Redifinition breaking char pos.])
-AT_CHECK([${SKIP_TEST}])
 
 AT_DATA([prog.cob], [
        IDENTIFICATION   DIVISION.
@@ -321,7 +307,7 @@ AT_DATA([prog.cob], [
            STOP RUN.
 ])
 
-AT_CHECK([cobc -m prog.cob], [0])
+AT_CHECK([cobj prog.cob], [0])
 AT_CHECK([java prog | od -tx1 -An | sed -e 's/  */ /g' -e 's/ *$//'], [0], [ 93 fa 96
 ])
 
@@ -329,7 +315,6 @@ AT_CLEANUP
 
 
 AT_SETUP([Ref mod(n:)])
-AT_CHECK([${SKIP_TEST}])
 
 AT_DATA([prog.cob], [
        IDENTIFICATION   DIVISION.
@@ -343,13 +328,12 @@ AT_DATA([prog.cob], [
            STOP RUN.
 ])
 
-AT_CHECK([cobc -m prog.cob], [0])
+AT_CHECK([cobj prog.cob], [0])
 AT_CHECK([java prog], [0], [ï∂éöóÒ])
 
 AT_CLEANUP
 
 AT_SETUP([Ref mod(n:m)])
-AT_CHECK([${SKIP_TEST}])
 
 AT_DATA([prog.cob], [
        IDENTIFICATION   DIVISION.
@@ -363,13 +347,12 @@ AT_DATA([prog.cob], [
            STOP RUN.
 ])
 
-AT_CHECK([cobc -m prog.cob], [0])
+AT_CHECK([cobj prog.cob], [0])
 AT_CHECK([java prog], [0], [ï∂éö])
 
 AT_CLEANUP
 
 AT_SETUP([STRING by size])
-AT_CHECK([${SKIP_TEST}])
 
 AT_DATA([prog.cob], [
        IDENTIFICATION   DIVISION.
@@ -387,13 +370,12 @@ AT_DATA([prog.cob], [
            STOP RUN.
 ])
 
-AT_CHECK([cobc -m prog.cob], [0])
+AT_CHECK([cobj prog.cob], [0])
 AT_CHECK([java prog], [0], [éÑÇÃñºëOÇÕÇ†ÇËÇ‹ÇπÇÒ])
 
 AT_CLEANUP
 
 AT_SETUP([STRING with delimiter])
-AT_CHECK([${SKIP_TEST}])
 
 AT_DATA([prog.cob], [
        IDENTIFICATION   DIVISION.
@@ -411,7 +393,7 @@ AT_DATA([prog.cob], [
            STOP RUN.
 ])
 
-AT_CHECK([cobc -m prog.cob], [0], [],
+AT_CHECK([cobj prog.cob], [0], [],
 [prog.cob:12: Warning: F0 and 'Å¢' and FF have not same national type!
 prog.cob:12: Warning: F1 and 'Å¢' and FF have not same national type!
 prog.cob:12: Warning: F2 and 'Å¢' and FF have not same national type!
@@ -421,7 +403,6 @@ AT_CHECK([java prog], [0], [éÑÇÃñºëO])
 AT_CLEANUP
 
 AT_SETUP([STRING with pointer])
-AT_CHECK([${SKIP_TEST}])
 
 AT_DATA([prog.cob], [
        IDENTIFICATION   DIVISION.
@@ -440,13 +421,12 @@ AT_DATA([prog.cob], [
            STOP RUN.
 ])
 
-AT_CHECK([cobc -m prog.cob], [0])
+AT_CHECK([cobj prog.cob], [0])
 AT_CHECK([java prog], [0], [åæÇ¶Ç‹ÇπÇÒéÑÇÃñºëOÇÕ])
 
 AT_CLEANUP
 
 AT_SETUP([INSPECT REPLACING])
-AT_CHECK([${SKIP_TEST}])
 
 AT_DATA([prog.cob], [
        IDENTIFICATION   DIVISION.
@@ -460,13 +440,12 @@ AT_DATA([prog.cob], [
            STOP RUN.
 ])
 
-AT_CHECK([cobc -m prog.cob], [0])
+AT_CHECK([cobj prog.cob], [0])
 AT_CHECK([java prog], [0], [ÇPÇQÇRÇSÇOÇPÇQÇRÇSÇO])
 
 AT_CLEANUP
 
 AT_SETUP([INSPECT REPLACING by ZERO])
-AT_CHECK([${SKIP_TEST}])
 
 AT_DATA([prog.cob], [
        IDENTIFICATION   DIVISION.
@@ -480,13 +459,12 @@ AT_DATA([prog.cob], [
            STOP RUN.
 ])
 
-AT_CHECK([cobc -m prog.cob], [0])
+AT_CHECK([cobj prog.cob], [0])
 AT_CHECK([java prog], [0], [ÇPÇQÇRÇSÇOÇPÇQÇRÇSÇO])
 
 AT_CLEANUP
 
 AT_SETUP([INSPECT TALLYING])
-AT_CHECK([${SKIP_TEST}])
 
 AT_DATA([prog.cob], [
        IDENTIFICATION   DIVISION.
@@ -501,7 +479,7 @@ AT_DATA([prog.cob], [
            STOP RUN.
 ])
 
-AT_CHECK([cobc -m prog.cob], [0])
+AT_CHECK([cobj prog.cob], [0])
 AT_CHECK([java prog], [0], [02])
 
 AT_CLEANUP
