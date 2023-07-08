@@ -967,13 +967,13 @@ public class CobolNumericField extends AbstractCobolField {
       final int left = Math.min(l1, l2);
       final int right = Math.max(r1, r2);
       final int lastIndex1;
-      if(attr1.isFlagHaveSign() && !attr1.isFlagSignLeading() && attr1.isFlagSignSeparate()) {
+      if (attr1.isFlagHaveSign() && !attr1.isFlagSignLeading() && attr1.isFlagSignSeparate()) {
         lastIndex1 = size1 - 2;
       } else {
         lastIndex1 = size1 - 1;
       }
       final int lastIndex2;
-      if(attr2.isFlagHaveSign() && !attr2.isFlagSignLeading() && attr2.isFlagSignSeparate()) {
+      if (attr2.isFlagHaveSign() && !attr2.isFlagSignLeading() && attr2.isFlagSignSeparate()) {
         lastIndex2 = size2 - 2;
       } else {
         lastIndex2 = size2 - 1;
