@@ -984,7 +984,7 @@ public class CobolNumericField extends AbstractCobolField {
         if (i2 < 0 || i2 >= size2) {
           b2 = (byte) '0';
         } else {
-          b2 = d2.getByte(i1);
+          b2 = d2.getByte(i2);
           if (i2 == signIndex2 && b2 >= 0x70) {
             b2 -= 0x40;
           }
