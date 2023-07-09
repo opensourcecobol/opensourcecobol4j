@@ -530,10 +530,12 @@ clean-all:
 $(MODULES_MAKEFILES):
 	@echo "test:"               > $@
 	@echo "	. ../../atconfig; . ../../atlocal; export PATH; perl $(COB85DIR)/report.pl" >> $@
+	@echo "	@cat report.txt" >> $@
 
 $(EXTRA_MODULES_MAKEFILES):
 	@echo "test:"               > $@
 	@echo "	. ../../atconfig; . ../../atlocal; export PATH; perl $(COB85DIR)/report.pl" >> $@
+	@echo "	@cat report.txt" >> $@
 
 # Tell versions [3.59,3.63) of GNU make to not export all variables.
 # Otherwise a system limit (for SysV at least) may be exceeded.

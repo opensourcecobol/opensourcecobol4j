@@ -940,32 +940,79 @@ public class CobolNumericField extends AbstractCobolField {
   public int numericCompareTo(AbstractCobolField field) {
     CobolFieldAttribute attr1 = this.getAttribute();
     CobolFieldAttribute attr2 = field.getAttribute();
-    if (!attr1.isFlagHaveSign() && !attr2.isFlagHaveSign() && attr2.isTypeNumericDisplay()) {
+    if (attr2.isTypeNumericDisplay()) {
       final int scale1 = attr1.getScale();
       final int scale2 = attr2.getScale();
+      final int firstIndex1 = this.getFirstDataIndex();
+      final int firstIndex2 = field.getFirstDataIndex();
+      final int fieldSize1 = this.getFieldSize();
+      final int fieldSize2 = field.getFieldSize();
       final int size1 = this.getSize();
       final int size2 = field.getSize();
-      final int pointIndex1 = size1 - scale1;
-      final int pointIndex2 = size2 - scale2;
+      final int pointIndex1 = fieldSize1 - scale1;
+      final int pointIndex2 = fieldSize2 - scale2;
+      int sign1 = this.getSign();
+      int sign2 = field.getSign();
+      sign1 = sign1 > 0 ? 1 : sign1 < 0 ? -1 : 1;
+      sign2 = sign2 > 0 ? 1 : sign2 < 0 ? -1 : 1;
 
+      final int signIndex1 =
+          attr1.isFlagHaveSign() && !attr1.isFlagSignLeading() ? size1 - 1 : firstIndex1;
+      final int signIndex2 =
+          attr2.isFlagHaveSign() && !attr2.isFlagSignLeading() ? size2 - 1 : firstIndex2;
       final int l1 = -pointIndex1;
       final int l2 = -pointIndex2;
-      final int r1 = size1 - pointIndex1;
-      final int r2 = size2 - pointIndex2;
+      final int r1 = fieldSize1 - pointIndex1;
+      final int r2 = fieldSize2 - pointIndex2;
       final int left = Math.min(l1, l2);
       final int right = Math.max(r1, r2);
+      final int lastIndex1;
+      if (attr1.isFlagHaveSign() && !attr1.isFlagSignLeading() && attr1.isFlagSignSeparate()) {
+        lastIndex1 = size1 - 2;
+      } else {
+        lastIndex1 = size1 - 1;
+      }
+      final int lastIndex2;
+      if (attr2.isFlagHaveSign() && !attr2.isFlagSignLeading() && attr2.isFlagSignSeparate()) {
+        lastIndex2 = size2 - 2;
+      } else {
+        lastIndex2 = size2 - 1;
+      }
       CobolDataStorage d1 = this.getDataStorage();
       CobolDataStorage d2 = field.getDataStorage();
       for (int i = left; i < right; ++i) {
-        final int i1 = i + pointIndex1;
-        final int i2 = i + pointIndex2;
-        byte b1 = i1 < 0 || i1 >= size1 ? (byte) '0' : d1.getByte(i1);
-        byte b2 = i2 < 0 || i2 >= size2 ? (byte) '0' : d2.getByte(i2);
+        final int i1 = firstIndex1 + i + pointIndex1;
+        final int i2 = firstIndex2 + i + pointIndex2;
+        byte b1;
+        if (i1 < 0 || i1 > lastIndex1) {
+          b1 = (byte) '0';
+        } else {
+          b1 = d1.getByte(i1);
+          if (i1 == signIndex1 && b1 >= 0x70) {
+            b1 -= 0x40;
+          }
+        }
+        byte b2;
+        if (i2 < 0 || i2 > lastIndex2) {
+          b2 = (byte) '0';
+        } else {
+          b2 = d2.getByte(i2);
+          if (i2 == signIndex2 && b2 >= 0x70) {
+            b2 -= 0x40;
+          }
+        }
         if (b1 != b2) {
-          return ((int) b1) - ((int) b2);
+          return (sign1 * (int) b1) - (sign2 * (int) b2);
         }
       }
-      return 0;
+
+      if (sign1 * sign2 >= 0) {
+        return 0;
+      } else if (sign1 > 0) {
+        return 1;
+      } else {
+        return -1;
+      }
     } else {
       return super.numericCompareTo(field);
     }
