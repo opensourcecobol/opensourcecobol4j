@@ -1,5 +1,4 @@
 AT_SETUP([FUNCTION LENG (fixed)])
-AT_CHECK([${SKIP_TEST}])
 
 AT_DATA([prog.cob], [
        IDENTIFICATION   DIVISION.
@@ -14,13 +13,12 @@ AT_DATA([prog.cob], [
            STOP RUN.
 ])
 
-AT_CHECK([${COMPILE_JP_COMPAT} -x prog.cob])
+AT_CHECK([${COMPILE_JP_COMPAT} prog.cob])
 AT_CHECK([java prog], [0], [08])
 
 AT_CLEANUP
 
 AT_SETUP([FUNCTION LENG (occur. depending)])
-AT_CHECK([${SKIP_TEST}])
 
 AT_DATA([prog.cob], [
        IDENTIFICATION   DIVISION.
@@ -38,13 +36,12 @@ AT_DATA([prog.cob], [
            STOP RUN.
 ])
 
-AT_CHECK([${COMPILE_JP_COMPAT} -x prog.cob])
+AT_CHECK([${COMPILE_JP_COMPAT} prog.cob])
 AT_CHECK([java prog], [0], [04])
 
 AT_CLEANUP
 
 AT_SETUP([FUNCTION LENGTH-AN (fixed)])
-AT_CHECK([${SKIP_TEST}])
 
 AT_DATA([prog.cob], [
        IDENTIFICATION   DIVISION.
@@ -59,13 +56,12 @@ AT_DATA([prog.cob], [
            STOP RUN.
 ])
 
-AT_CHECK([${COMPILE_JP_COMPAT} -x prog.cob])
+AT_CHECK([${COMPILE_JP_COMPAT} prog.cob])
 AT_CHECK([java prog], [0], [08])
 
 AT_CLEANUP
 
 AT_SETUP([FUNCTION LENGTH-AN (occur. depending)])
-AT_CHECK([${SKIP_TEST}])
 
 AT_DATA([prog.cob], [
        IDENTIFICATION   DIVISION.
@@ -83,7 +79,7 @@ AT_DATA([prog.cob], [
            STOP RUN.
 ])
 
-AT_CHECK([${COMPILE_JP_COMPAT} -x prog.cob])
+AT_CHECK([${COMPILE_JP_COMPAT} prog.cob])
 AT_CHECK([java prog], [0], [04])
 
 AT_CLEANUP
