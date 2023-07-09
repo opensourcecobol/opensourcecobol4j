@@ -88,7 +88,6 @@ d:d
 AT_CLEANUP
 
 AT_SETUP([Dynamic reference modification])
-AT_CHECK([${SKIP_TEST}])
 
 AT_DATA([prog.cob], [
        IDENTIFICATION   DIVISION.

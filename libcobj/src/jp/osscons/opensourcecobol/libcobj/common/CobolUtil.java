@@ -30,6 +30,7 @@ import jp.osscons.opensourcecobol.libcobj.data.CobolDataStorage;
 import jp.osscons.opensourcecobol.libcobj.exceptions.CobolException;
 import jp.osscons.opensourcecobol.libcobj.exceptions.CobolExceptionId;
 import jp.osscons.opensourcecobol.libcobj.exceptions.CobolStopRunException;
+import jp.osscons.opensourcecobol.libcobj.exceptions.CobolRuntimeException;
 import jp.osscons.opensourcecobol.libcobj.file.CobolFile;
 
 public class CobolUtil {
@@ -99,6 +100,40 @@ public class CobolUtil {
     return cob_io_assume_rewrite;
   }
 
+  public static void cobCheckRefModNational(int offset, int length, int size, byte[] name)
+      throws CobolStopRunException {
+    CobolUtil.cobCheckRefMod(offset, length, size, name);
+  }
+
+  public static void cobCheckRefModNational(int offset, int length, int size, String name)
+      throws CobolStopRunException {
+    CobolUtil.cobCheckRefMod(offset, length, size, name);
+  }
+
+  public static void cobCheckRefMod(int offset, int length, int size, byte[] name) throws CobolStopRunException {
+    try {
+      CobolUtil.cobCheckRefMod(offset, length, size, new String(name, "Shift_JIS"));
+    } catch (UnsupportedEncodingException e) {
+      CobolUtil.cobCheckRefMod(offset, length, size, "");
+    }
+  }
+
+  public static void cobCheckRefMod(int offset, int length, int size, String name) throws CobolStopRunException {
+    /* check the offset */
+    if (offset < 1 || offset > size) {
+      CobolRuntimeException.setException(CobolExceptionId.COB_EC_BOUND_REF_MOD);
+      CobolRuntimeException.displayRuntimeError(String.format("Offset of '%s' out of bounds: %d", name, offset));
+      CobolStopRunException.stopRunAndThrow(1);
+    }
+
+    /* check the length */
+    if (length < 1 || offset + length - 1 > size) {
+      CobolRuntimeException.setException(CobolExceptionId.COB_EC_BOUND_REF_MOD);
+      CobolRuntimeException.displayRuntimeError(String.format("Length of '%s' out of bounds: %d", name, length));
+      CobolStopRunException.stopRunAndThrow(1);
+    }
+  }
+
   /** libcob/common.cのcob_initの実装 TODO 未完成 */
   public static void cob_init(String[] argv, boolean cobInitialized) {
     if (!cobInitialized) {
@@ -125,8 +160,7 @@ public class CobolUtil {
       Pattern p = Pattern.compile("([0-9]{4})/([0-9]{2})/([0-9]{2})");
       Matcher m = p.matcher(s);
       if (m.matches()) {
-        date_time_block:
-        if (m.groupCount() != 3) {
+        date_time_block: if (m.groupCount() != 3) {
           System.err.println("Warning: COB_DATE format invalid, ignored.");
         } else {
           int year = Integer.parseInt(m.group(1));
@@ -162,11 +196,10 @@ public class CobolUtil {
   public static LocalDateTime localtime() {
     LocalDateTime rt = LocalDateTime.now();
     if (CobolUtil.cobLocalTm != null) {
-      CobolUtil.cobLocalTm =
-          CobolUtil.cobLocalTm
-              .withHour(rt.getHour())
-              .withMinute(rt.getMinute())
-              .withSecond(rt.getSecond());
+      CobolUtil.cobLocalTm = CobolUtil.cobLocalTm
+          .withHour(rt.getHour())
+          .withMinute(rt.getMinute())
+          .withSecond(rt.getSecond());
       rt = CobolUtil.cobLocalTm;
     }
     return rt;
@@ -548,8 +581,7 @@ public class CobolUtil {
   public static int isNationalPadding(CobolDataStorage s, int size) {
     int ret = 1;
     int i = 0;
-    OUTER_LOOP:
-    while (i < size && ret != 0) {
+    OUTER_LOOP: while (i < size && ret != 0) {
       if (s.getByte(i) == ' ') {
         i++;
       } else if (size - i > CobolConstant.ZENCSIZ) {
@@ -682,8 +714,9 @@ public class CobolUtil {
   /**
    * Set environemnt variable
    *
-   * @param envVarName the name of an environment variable. The leading and trailing spaces are
-   *     ignored.
+   * @param envVarName  the name of an environment variable. The leading and
+   *                    trailing spaces are
+   *                    ignored.
    * @param envVarValue the value of an environment variable to be set.
    */
   public static void setEnv(AbstractCobolField envVarName, AbstractCobolField envVarValue) {
