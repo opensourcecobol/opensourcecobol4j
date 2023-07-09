@@ -582,7 +582,13 @@ public class CobolDecimal {
     int sign = this.value.signum();
     this.value = this.value.abs();
     String numString = this.value.toPlainString();
+    int dPointIndex = numString.indexOf('.');
+    numString = numString.replace(".", "");
     byte[] numBuffPtr = numString.getBytes();
+    if (dPointIndex < 0) {
+      dPointIndex = numBuffPtr.length;
+    }
+    dPointIndex -= this.scale;
     int size = numBuffPtr.length;
 
     CobolDataStorage data = f.getDataStorage();
@@ -594,7 +600,6 @@ public class CobolDecimal {
         return CobolRuntimeException.code;
       }
 
-      // TODO else でもこのような処理に書き変えなくていいのか考える
       BigDecimal val = this.value;
       for (int i = 0; i < Math.abs(this.scale); ++i) {
         if (this.scale < 0) {
@@ -615,11 +620,17 @@ public class CobolDecimal {
         }
       }
     } else {
-      for (int i = 0; i < diff; ++i) {
-        data.setByte(firstDataIndex + i, (byte) '0');
-      }
-      for (int i = 0; i < size; ++i) {
-        data.setByte(firstDataIndex + i + diff, numBuffPtr[i]);
+      int fFirstIndex = f.getFirstDataIndex();
+      int fFieldSize = f.getFieldSize();
+      int fPointIndex = fFieldSize - f.getAttribute().getScale();
+      for (int i = 0; i < fFieldSize; i++) {
+        int fIndex = fFirstIndex + i;
+        int dIndex = i + dPointIndex - fPointIndex;
+        if (0 <= dIndex && dIndex < numBuffPtr.length) {
+          data.setByte(fIndex, numBuffPtr[dIndex]);
+        } else {
+          data.setByte(fIndex, (byte) '0');
+        }
       }
     }
     f.putSign(sign);
