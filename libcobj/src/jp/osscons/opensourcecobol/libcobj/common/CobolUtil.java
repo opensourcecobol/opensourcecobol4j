@@ -100,17 +100,17 @@ public class CobolUtil {
     return cob_io_assume_rewrite;
   }
 
-  public static void cobCheckRefModNational(int offset, int length, int size, byte[] name)
+  public static void cobCheckRefModNational(int offset, long length, int size, byte[] name)
       throws CobolStopRunException {
     CobolUtil.cobCheckRefMod(offset, length, size, name);
   }
 
-  public static void cobCheckRefModNational(int offset, int length, int size, String name)
+  public static void cobCheckRefModNational(int offset, long length, int size, String name)
       throws CobolStopRunException {
     CobolUtil.cobCheckRefMod(offset, length, size, name);
   }
 
-  public static void cobCheckRefMod(int offset, int length, int size, byte[] name)
+  public static void cobCheckRefMod(int offset, long length, int size, byte[] name)
       throws CobolStopRunException {
     try {
       CobolUtil.cobCheckRefMod(offset, length, size, new String(name, "Shift_JIS"));
@@ -119,7 +119,7 @@ public class CobolUtil {
     }
   }
 
-  public static void cobCheckRefMod(int offset, int length, int size, String name)
+  public static void cobCheckRefMod(int offset, long length, int size, String name)
       throws CobolStopRunException {
     /* check the offset */
     if (offset < 1 || offset > size) {
