@@ -62,7 +62,9 @@ clean-all:
 $(MODULES_MAKEFILES):
 	@echo "test:"               > $@
 	@echo "	. ../../atconfig; . ../../atlocal; export PATH; perl $(COB85DIR)/report.pl" >> $@
+	@echo "	@cat report.txt" >> $@
 
 $(EXTRA_MODULES_MAKEFILES):
 	@echo "test:"               > $@
 	@echo "	. ../../atconfig; . ../../atlocal; export PATH; perl $(COB85DIR)/report.pl" >> $@
+	@echo "	@cat report.txt" >> $@
