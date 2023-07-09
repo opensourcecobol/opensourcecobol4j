@@ -592,45 +592,25 @@ public class CobolDecimal {
     int size = numBuffPtr.length;
 
     CobolDataStorage data = f.getDataStorage();
-    int firstDataIndex = f.getFirstDataIndex();
     int diff = f.getFieldSize() - size;
+
     if (diff < 0) {
       CobolRuntimeException.setException(CobolExceptionId.COB_EC_SIZE_OVERFLOW);
       if ((opt & CobolDecimal.COB_STORE_KEEP_ON_OVERFLOW) > 0) {
         return CobolRuntimeException.code;
       }
+    }
 
-      BigDecimal val = this.value;
-      for (int i = 0; i < Math.abs(this.scale); ++i) {
-        if (this.scale < 0) {
-          val = val.multiply(BigDecimal.TEN);
-        } else {
-          val = val.divide(BigDecimal.TEN);
-        }
-      }
-      numString = val.toPlainString();
-      int pointIndex = numString.indexOf('.');
-      byte[] numBuff = numString.replace(".", "").getBytes();
-      int d = f.getFieldSize() - f.getAttribute().getScale() - pointIndex;
-      for (int i = 0; i < f.getFieldSize(); ++i) {
-        if (0 <= i - d && i - d < numBuff.length) {
-          data.setByte(i + firstDataIndex, numBuff[i - d]);
-        } else {
-          data.setByte(i + firstDataIndex, (byte) '0');
-        }
-      }
-    } else {
-      int fFirstIndex = f.getFirstDataIndex();
-      int fFieldSize = f.getFieldSize();
-      int fPointIndex = fFieldSize - f.getAttribute().getScale();
-      for (int i = 0; i < fFieldSize; i++) {
-        int fIndex = fFirstIndex + i;
-        int dIndex = i + dPointIndex - fPointIndex;
-        if (0 <= dIndex && dIndex < numBuffPtr.length) {
-          data.setByte(fIndex, numBuffPtr[dIndex]);
-        } else {
-          data.setByte(fIndex, (byte) '0');
-        }
+    int fFirstIndex = f.getFirstDataIndex();
+    int fFieldSize = f.getFieldSize();
+    int fPointIndex = fFieldSize - f.getAttribute().getScale();
+    for (int i = 0; i < fFieldSize; i++) {
+      int fIndex = fFirstIndex + i;
+      int dIndex = i + dPointIndex - fPointIndex;
+      if (0 <= dIndex && dIndex < numBuffPtr.length) {
+        data.setByte(fIndex, numBuffPtr[dIndex]);
+      } else {
+        data.setByte(fIndex, (byte) '0');
       }
     }
     f.putSign(sign);
