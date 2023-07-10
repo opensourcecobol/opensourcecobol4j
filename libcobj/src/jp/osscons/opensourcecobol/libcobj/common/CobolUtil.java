@@ -29,6 +29,7 @@ import jp.osscons.opensourcecobol.libcobj.data.AbstractCobolField;
 import jp.osscons.opensourcecobol.libcobj.data.CobolDataStorage;
 import jp.osscons.opensourcecobol.libcobj.exceptions.CobolException;
 import jp.osscons.opensourcecobol.libcobj.exceptions.CobolExceptionId;
+import jp.osscons.opensourcecobol.libcobj.exceptions.CobolRuntimeException;
 import jp.osscons.opensourcecobol.libcobj.exceptions.CobolStopRunException;
 import jp.osscons.opensourcecobol.libcobj.file.CobolFile;
 
@@ -97,6 +98,44 @@ public class CobolUtil {
 
   public static int cob_io_rewwrite_assumed() {
     return cob_io_assume_rewrite;
+  }
+
+  public static void cobCheckRefModNational(int offset, long length, int size, byte[] name)
+      throws CobolStopRunException {
+    CobolUtil.cobCheckRefMod(offset, length, size, name);
+  }
+
+  public static void cobCheckRefModNational(int offset, long length, int size, String name)
+      throws CobolStopRunException {
+    CobolUtil.cobCheckRefMod(offset, length, size, name);
+  }
+
+  public static void cobCheckRefMod(int offset, long length, int size, byte[] name)
+      throws CobolStopRunException {
+    try {
+      CobolUtil.cobCheckRefMod(offset, length, size, new String(name, "Shift_JIS"));
+    } catch (UnsupportedEncodingException e) {
+      CobolUtil.cobCheckRefMod(offset, length, size, "");
+    }
+  }
+
+  public static void cobCheckRefMod(int offset, long length, int size, String name)
+      throws CobolStopRunException {
+    /* check the offset */
+    if (offset < 1 || offset > size) {
+      CobolRuntimeException.setException(CobolExceptionId.COB_EC_BOUND_REF_MOD);
+      CobolRuntimeException.displayRuntimeError(
+          String.format("Offset of '%s' out of bounds: %d", name, offset));
+      CobolStopRunException.stopRunAndThrow(1);
+    }
+
+    /* check the length */
+    if (length < 1 || offset + length - 1 > size) {
+      CobolRuntimeException.setException(CobolExceptionId.COB_EC_BOUND_REF_MOD);
+      CobolRuntimeException.displayRuntimeError(
+          String.format("Length of '%s' out of bounds: %d", name, length));
+      CobolStopRunException.stopRunAndThrow(1);
+    }
   }
 
   /** libcob/common.cのcob_initの実装 TODO 未完成 */
