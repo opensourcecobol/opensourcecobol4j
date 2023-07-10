@@ -197,7 +197,7 @@ AT_DATA([prog.cob], [
 
 AT_CHECK([${COMPILE} -debug prog.cob])
 AT_CHECK([java prog], [1], [],
-[prog.cob:11: libcob: 'U€–Ú' not numeric: 'ABCD'
+[prog.cob:11: libcobj: 'U€–Ú' not numeric: 'ABCD'
 ])
 
 AT_CLEANUP
@@ -219,7 +219,7 @@ AT_DATA([prog.cob], [
 
 AT_CHECK([${COMPILE} -debug prog.cob])
 AT_CHECK([java prog], [1], [],
-[prog.cob:9: libcob: BASED/LINKAGE item 'Y€–Ú' has NULL address
+[prog.cob:9: libcobj: BASED/LINKAGE item 'Y€–Ú' has NULL address
 ])
 
 AT_CLEANUP
@@ -242,7 +242,7 @@ AT_DATA([prog.cob], [
 
 AT_CHECK([${COMPILE} -debug prog.cob])
 AT_CHECK([java prog], [1], [],
-[prog.cob:10: libcob: OCCURS DEPENDING ON 'I€–Ú' out of bounds: 4
+[prog.cob:10: libcobj: OCCURS DEPENDING ON 'I€–Ú' out of bounds: 4
 ])
 
 AT_CLEANUP
@@ -265,7 +265,7 @@ AT_DATA([prog.cob], [
 
 AT_CHECK([${COMPILE} -debug prog.cob])
 AT_CHECK([java prog], [1], [],
-[prog.cob:10: libcob: Subscript of 'Y€–Ú' out of bounds: 3
+[prog.cob:10: libcobj: Subscript of 'Y€–Ú' out of bounds: 3
 ])
 
 AT_CLEANUP
@@ -288,7 +288,7 @@ AT_DATA([prog.cob], [
 
 AT_CHECK([${COMPILE} -debug prog.cob])
 AT_CHECK([java prog], [1], [],
-[prog.cob:10: libcob: Length of 'X€–Ú' out of bounds: 6
+[prog.cob:10: libcobj: Length of 'X€–Ú' out of bounds: 6
 ])
 
 AT_CLEANUP
@@ -311,7 +311,7 @@ AT_DATA([prog.cob], [
 
 AT_CHECK([${COMPILE} -debug prog.cob])
 AT_CHECK([java prog], [1], [],
-[prog.cob:10: libcob: Offset of 'X€–Ú' out of bounds: 6
+[prog.cob:10: libcobj: Offset of 'X€–Ú' out of bounds: 6
 ])
 
 AT_CLEANUP
@@ -334,7 +334,7 @@ AT_DATA([prog.cob], [
 
 AT_CHECK([${COMPILE} -debug prog.cob])
 AT_CHECK([java prog], [1], [],
-[prog.cob:10: libcob: Length of 'X€–Ú' out of bounds: 18
+[prog.cob:10: libcobj: Length of 'X€–Ú' out of bounds: 18
 ])
 
 AT_CLEANUP
@@ -357,7 +357,7 @@ AT_DATA([prog.cob], [
 
 AT_CHECK([${COMPILE} -debug prog.cob])
 AT_CHECK([java prog], [1], [],
-[prog.cob:10: libcob: Offset of 'X€–Ú' out of bounds: 18
+[prog.cob:10: libcobj: Offset of 'X€–Ú' out of bounds: 18
 ])
 
 AT_CLEANUP
@@ -386,7 +386,7 @@ AT_DATA([prog.cob], [
 
 AT_CHECK([${COMPILE} -debug prog.cob])
 AT_CHECK([java prog], [1], [],
-[prog.cob:8: libcob: EXTERNAL item 'X€–Ú' has size > 6
+[prog.cob:8: libcobj: EXTERNAL item 'X€–Ú' has size > 6
 ])
 
 AT_CLEANUP

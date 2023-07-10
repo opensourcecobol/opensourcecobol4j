@@ -576,7 +576,7 @@ AT_DATA([prog.cob], [
 
 AT_CHECK([cobc -m prog.cob], [0])
 AT_CHECK([java prog], [1], [],
-[prog.cob:9: libcob: 'β' char width (2) mismatch
+[prog.cob:9: libcobj: 'β' char width (2) mismatch
 ])
 
 AT_CLEANUP
@@ -600,7 +600,7 @@ AT_DATA([prog.cob], [
 
 AT_CHECK([cobc -m prog.cob], [0])
 AT_CHECK([java prog], [1], [],
-[prog.cob:11: libcob: 'Ａ' char width (3) to 'α' char width (2) mismatch
+[prog.cob:11: libcobj: 'Ａ' char width (3) to 'α' char width (2) mismatch
 ])
 
 AT_CLEANUP

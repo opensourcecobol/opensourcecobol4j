@@ -165,7 +165,7 @@ AT_DATA([prog.cob], [
 
 AT_CHECK([${COMPILE} prog.cob])
 AT_CHECK([java prog], [1], ,
-[prog.cob:9: libcob: Offset of 'X' out of bounds: 0
+[prog.cob:9: libcobj: Offset of 'X' out of bounds: 0
 ])
 
 AT_CLEANUP
@@ -188,7 +188,7 @@ AT_DATA([prog.cob], [
 
 AT_CHECK([${COMPILE} prog.cob])
 AT_CHECK([java prog], [1], ,
-[prog.cob:9: libcob: Offset of 'X' out of bounds: 5
+[prog.cob:9: libcobj: Offset of 'X' out of bounds: 5
 ])
 
 AT_CLEANUP
@@ -211,7 +211,7 @@ AT_DATA([prog.cob], [
 
 AT_CHECK([${COMPILE} prog.cob])
 AT_CHECK([java prog], [1], ,
-[prog.cob:9: libcob: Length of 'X' out of bounds: 0
+[prog.cob:9: libcobj: Length of 'X' out of bounds: 0
 ])
 
 AT_CLEANUP
@@ -234,7 +234,7 @@ AT_DATA([prog.cob], [
 
 AT_CHECK([${COMPILE} prog.cob])
 AT_CHECK([java prog], [1], ,
-[prog.cob:9: libcob: Length of 'X' out of bounds: 5
+[prog.cob:9: libcobj: Length of 'X' out of bounds: 5
 ])
 
 AT_CLEANUP
@@ -260,7 +260,7 @@ AT_DATA([prog.cob], [
 
 AT_CHECK([${COMPILE} prog.cob])
 AT_CHECK([java prog], [1], ,
-[prog.cob:10: libcob: Offset of 'X' out of bounds: 0
+[prog.cob:10: libcobj: Offset of 'X' out of bounds: 0
 ])
 
 AT_CLEANUP
@@ -284,7 +284,7 @@ AT_DATA([prog.cob], [
 
 AT_CHECK([${COMPILE} prog.cob])
 AT_CHECK([java prog], [1], ,
-[prog.cob:10: libcob: Offset of 'X' out of bounds: 0
+[prog.cob:10: libcobj: Offset of 'X' out of bounds: 0
 ])
 
 AT_CLEANUP
