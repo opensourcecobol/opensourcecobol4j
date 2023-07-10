@@ -2068,7 +2068,7 @@ AT_DATA([prog.cob], [
 
 AT_CHECK([${COMPILE_JP_COMPAT} prog.cob], [0])
 AT_CHECK([java prog], [1], [],
-[prog.cob:9: libcob: Numeric value is expected
+[prog.cob:9: libcobj: Numeric value is expected
 ])
 
 AT_CLEANUP
@@ -2093,7 +2093,7 @@ AT_DATA([prog.cob], [
 
 AT_CHECK([${COMPILE_JP_COMPAT_DEFAULT} prog.cob], [0])
 AT_CHECK([java prog], [1], [],
-[libcob: 'X-ABC' not numeric: 'abc'
+[libcobj: 'X-ABC' not numeric: 'abc'
 ])
 
 AT_CLEANUP

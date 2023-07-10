@@ -349,7 +349,7 @@ AT_DATA([prog.cob], [
 AT_CHECK([echo -n 030303020301020302020201010301020101 >input.txt], [0])
 AT_CHECK([${COMPILE_JP_COMPAT} prog.cob])
 AT_CHECK([java prog], [1], [],
-[prog.cob:42: libcob: SORT-STATUS is set to 16.
+[prog.cob:42: libcobj: SORT-STATUS is set to 16.
 WARNING - Implicit CLOSE of OUTPUT-FILE1 ("./output.txt")
 ])
 AT_CHECK([cat output.txt], [0], [0103])

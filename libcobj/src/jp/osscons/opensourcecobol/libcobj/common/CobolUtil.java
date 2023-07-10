@@ -219,7 +219,7 @@ public class CobolUtil {
    */
   public static void verboseOutput(String s) {
     if (cob_verbose) {
-      System.out.println("libcob: " + s);
+      System.out.println("libcobj: " + s);
     }
   }
 
@@ -251,7 +251,7 @@ public class CobolUtil {
     if (sourceFile != null) {
       System.err.print(String.format("%s:%d: ", sourceFile, sourceLine));
     }
-    System.err.println("libcob: " + s);
+    System.err.println("libcobj: " + s);
     System.err.flush();
   }
 

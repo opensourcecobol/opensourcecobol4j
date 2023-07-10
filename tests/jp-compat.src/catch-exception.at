@@ -67,7 +67,7 @@ AT_DATA([prog.cob], [
 
 AT_CHECK([${COMPILE_JP_COMPAT} prog.cob])
 AT_CHECK([java prog], [1], ,
-[prog.cob:11: libcob: Detected division by zero.
+[prog.cob:11: libcobj: Detected division by zero.
 ])
 
 AT_CLEANUP
@@ -168,7 +168,7 @@ AT_DATA([prog.cob], [
 
 AT_CHECK([${COMPILE_JP_COMPAT} prog.cob])
 AT_CHECK([java prog], [1], ,
-[prog.cob:11: libcob: Detected division by zero.
+[prog.cob:11: libcobj: Detected division by zero.
 ])
 
 AT_CLEANUP
