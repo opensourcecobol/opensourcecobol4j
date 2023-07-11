@@ -3650,7 +3650,9 @@ static void joutput_stmt(cb_tree x, enum joutput_stmt_type output_type) {
     ++index_read_flag;
     joutput_integer(ap->val);
     --index_read_flag;
-    if(output_type != JOUTPUT_STMT_TRIM) {
+    if(output_type == JOUTPUT_STMT_TRIM) {
+      joutput(")\n");
+    } else {
       joutput(");\n");
     }
 #endif /* Nonaligned */
