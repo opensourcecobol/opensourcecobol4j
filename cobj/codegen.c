@@ -140,6 +140,11 @@ struct system_table {
   const char *syst_call;
 };
 
+enum joutput_stmt_type {
+  JOUTPUT_STMT_DEFAULT,
+  JOUTPUT_STMT_TRIM,
+};
+
 static const struct system_table system_tab[] = {
 #undef COB_SYSTEM_GEN
 #define COB_SYSTEM_GEN(x, y, z) {x, #z},
@@ -157,7 +162,7 @@ static void joutput_index(cb_tree x);
 static void joutput_integer(cb_tree x);
 static void joutput_param(cb_tree x, int id);
 static void joutput_func_1(const char *name, cb_tree x);
-static void joutput_stmt(cb_tree x);
+static void joutput_stmt(cb_tree x, enum joutput_stmt_type output_type);
 static void joutput_figurative(cb_tree x, struct cb_field *f, const int value);
 static void joutput_alphabet_name_initialization(struct cb_alphabet_name *p);
 const int L_initextern_addr = 2000000000;
@@ -1347,7 +1352,7 @@ static void joutput_param(cb_tree x, int id) {
               "throws CobolStopRunException { ");
       for (l = r->check; l; l = CB_CHAIN(l)) {
         sav_stack_id = stack_id;
-        joutput_stmt(CB_VALUE(l));
+        joutput_stmt(CB_VALUE(l), JOUTPUT_STMT_DEFAULT);
         stack_id = sav_stack_id;
       }
       joutput("return ");
@@ -1789,7 +1794,7 @@ static void joutput_cond(cb_tree x, int save_flag) {
       if (!CB_CHAIN(x)) {
         joutput_indent("return ");
       }
-      joutput_stmt(CB_VALUE(x));
+      joutput_stmt(CB_VALUE(x), JOUTPUT_STMT_DEFAULT);
     }
     //#ifdef __GNUC__
     //		joutput_indent ("})");
@@ -1819,7 +1824,7 @@ static void joutput_cond(cb_tree x, int save_flag) {
 static void joutput_move(cb_tree src, cb_tree dst) {
   /* suppress warnings */
   suppress_warn = 1;
-  joutput_stmt(cb_build_move(src, dst));
+  joutput_stmt(cb_build_move(src, dst), JOUTPUT_STMT_DEFAULT);
   suppress_warn = 0;
 }
 
@@ -2449,13 +2454,13 @@ static void joutput_search_whens(cb_tree table, cb_tree var, cb_tree stmt,
   joutput(")\n");
   joutput_indent("  {");
   if (stmt) {
-    joutput_stmt(stmt);
+    joutput_stmt(stmt, JOUTPUT_STMT_DEFAULT);
   }
   joutput_line("break;");
   joutput_indent("  }");
 
   /* WHEN test */
-  joutput_stmt(whens);
+  joutput_stmt(whens, JOUTPUT_STMT_DEFAULT);
   joutput_line("else");
   joutput_indent("  {");
   joutput_prefix();
@@ -2502,7 +2507,7 @@ static void joutput_search_all(cb_tree table, cb_tree stmt, cb_tree cond,
   joutput_line("if (head >= tail - 1)");
   joutput_indent("  {");
   if (stmt) {
-    joutput_stmt(stmt);
+    joutput_stmt(stmt, JOUTPUT_STMT_DEFAULT);
   }
   joutput_line("break;");
   joutput_indent("  }");
@@ -2521,7 +2526,7 @@ static void joutput_search_all(cb_tree table, cb_tree stmt, cb_tree cond,
   joutput_cond(cond, 1);
   joutput(")\n");
   joutput_indent_level += 2;
-  joutput_stmt(when);
+  joutput_stmt(when, JOUTPUT_STMT_DEFAULT);
   joutput_indent_level -= 2;
   joutput_line("else");
   joutput_indent("  {");
@@ -3004,7 +3009,7 @@ static void joutput_call(struct cb_call *p) {
     if (!retptr) {
       /* suppress warnings */
       suppress_warn = 1;
-      joutput_stmt(cb_build_move(current_prog->cb_return_code, p->returning));
+      joutput_stmt(cb_build_move(current_prog->cb_return_code, p->returning), JOUTPUT_STMT_DEFAULT);
       suppress_warn = 0;
 #ifdef COB_NON_ALIGNED
     } else {
@@ -3016,14 +3021,14 @@ static void joutput_call(struct cb_call *p) {
     }
   }
   if (p->stmt2) {
-    joutput_stmt(p->stmt2);
+    joutput_stmt(p->stmt2, JOUTPUT_STMT_DEFAULT);
   }
   if (dynamic_link) {
     joutput_prefix();
     joutput("} catch (CobolCallException cce) {\n");
     if (p->stmt1) {
       joutput_indent_level += 2;
-      joutput_stmt(p->stmt1);
+      joutput_stmt(p->stmt1, JOUTPUT_STMT_DEFAULT);
       joutput_indent_level -= 2;
     } else {
       joutput_prefix();
@@ -3106,10 +3111,10 @@ static void joutput_perform_once(struct cb_perform *p) {
     joutput_perform_call(CB_LABEL(cb_ref(CB_PAIR_X(p->body))),
                          CB_LABEL(cb_ref(CB_PAIR_Y(p->body))));
   } else {
-    joutput_stmt(p->body);
+    joutput_stmt(p->body, JOUTPUT_STMT_DEFAULT);
   }
   if (p->cycle_label) {
-    joutput_stmt(cb_ref(p->cycle_label));
+    joutput_stmt(cb_ref(p->cycle_label), JOUTPUT_STMT_DEFAULT);
   }
 }
 
@@ -3126,7 +3131,14 @@ static void joutput_perform_until(struct cb_perform *p, cb_tree l) {
   v = CB_PERFORM_VARYING(CB_VALUE(l));
   next = CB_CHAIN(l);
 
-  joutput_line("for (;;)");
+  if (v->step) {
+    joutput_prefix();
+    joutput("for(;;");
+    joutput_stmt(v->step, JOUTPUT_STMT_TRIM);
+    joutput(")\n");
+  } else {
+    joutput_line("for (;;)");
+  }
   joutput_indent("  {");
 
   if (next && CB_PERFORM_VARYING(CB_VALUE(next))->name) {
@@ -3150,10 +3162,6 @@ static void joutput_perform_until(struct cb_perform *p, cb_tree l) {
 
   if (p->test == CB_BEFORE) {
     joutput_perform_until(p, next);
-  }
-
-  if (v->step) {
-    joutput_stmt(v->step);
   }
 
   joutput_indent("  }");
@@ -3197,7 +3205,7 @@ static void joutput_perform(struct cb_perform *p) {
     break;
   }
   if (p->exit_label) {
-    joutput_stmt(cb_ref(p->exit_label));
+    joutput_stmt(cb_ref(p->exit_label), JOUTPUT_STMT_DEFAULT);
   }
 }
 
@@ -3323,7 +3331,7 @@ static void joutput_ferror_stmt(struct cb_statement *p, int code) {
       joutput_line("if (CobolRuntimeException.code == 0x%04x)", code);
     }
     joutput_indent("  {");
-    joutput_stmt(p->handler1);
+    joutput_stmt(p->handler1, JOUTPUT_STMT_DEFAULT);
     joutput_indent("  }");
     joutput_line("else");
     joutput_indent("  {");
@@ -3337,16 +3345,16 @@ static void joutput_ferror_stmt(struct cb_statement *p, int code) {
     joutput_line("else");
     joutput_indent("  {");
     if (p->handler3) {
-      joutput_stmt(p->handler3);
+      joutput_stmt(p->handler3, JOUTPUT_STMT_DEFAULT);
     }
     if (p->handler2) {
-      joutput_stmt(p->handler2);
+      joutput_stmt(p->handler2, JOUTPUT_STMT_DEFAULT);
     }
     joutput_indent("  }");
   }
 }
 
-static void joutput_stmt(cb_tree x) {
+static void joutput_stmt(cb_tree x, enum joutput_stmt_type output_type) {
   struct cb_statement *p;
   struct cb_label *lp;
   struct cb_assign *ap;
@@ -3417,11 +3425,11 @@ static void joutput_stmt(cb_tree x) {
     }
 
     if (p->null_check) {
-      joutput_stmt(p->null_check);
+      joutput_stmt(p->null_check, output_type);
     }
 
     if (p->body) {
-      joutput_stmt(p->body);
+      joutput_stmt(p->body, output_type);
     }
 
     if (p->handler1 || p->handler2 ||
@@ -3438,7 +3446,7 @@ static void joutput_stmt(cb_tree x) {
             joutput_line("if (CobolRuntimeException.code == 0x%04x)", code);
           }
           joutput_indent("  {");
-          joutput_stmt(p->handler1);
+          joutput_stmt(p->handler1, output_type);
           joutput_indent("  }");
           if (p->handler2) {
             joutput_line("else");
@@ -3449,7 +3457,7 @@ static void joutput_stmt(cb_tree x) {
             joutput_line("if (CobolRuntimeException.code == 0)");
           }
           joutput_indent("  {");
-          joutput_stmt(p->handler2);
+          joutput_stmt(p->handler2, output_type);
           joutput_indent("  }");
         }
       }
@@ -3532,17 +3540,13 @@ static void joutput_stmt(cb_tree x) {
     }
     break;
   case CB_TAG_FUNCALL:
-    joutput_prefix();
-    joutput_funcall(x);
-#ifdef __GNUC__
-    joutput(";\n");
-#else
-    if (inside_check == 0) {
-      joutput(";\n");
-    } else {
-      inside_stack[inside_check - 1] = 1;
+    if(output_type != JOUTPUT_STMT_TRIM) {
+      joutput_prefix();
     }
-#endif
+    joutput_funcall(x);
+    if(output_type != JOUTPUT_STMT_TRIM) {
+      joutput(";\n");
+    }
     break;
   case CB_TAG_ASSIGN:
     ap = CB_ASSIGN(x);
@@ -3613,16 +3617,11 @@ static void joutput_stmt(cb_tree x) {
       ++index_read_flag;
       joutput_integer(ap->val);
       --index_read_flag;
+    if(output_type == JOUTPUT_STMT_TRIM) {
+      joutput(")\n");
+    } else {
       joutput(");\n");
-      //#ifdef __GNUC__
-      //			joutput (";\n");
-      //#else
-      //			if (inside_check == 0) {
-      //				joutput (";\n");
-      //			} else {
-      //				inside_stack[inside_check -1] = 1;
-      //			}
-      //#endif
+    }
     }
 #else /* Nonaligned */
     joutput_prefix();
@@ -3651,15 +3650,11 @@ static void joutput_stmt(cb_tree x) {
     ++index_read_flag;
     joutput_integer(ap->val);
     --index_read_flag;
-#ifdef __GNUC__
-    joutput(");\n");
-#else
-    if (inside_check == 0) {
-      joutput(");\n");
+    if(output_type == JOUTPUT_STMT_TRIM) {
+      joutput(")\n");
     } else {
-      inside_stack[inside_check - 1] = 1;
+      joutput(");\n");
     }
-#endif
 #endif /* Nonaligned */
     break;
   case CB_TAG_INITIALIZE:
@@ -3692,7 +3687,7 @@ static void joutput_stmt(cb_tree x) {
     joutput(")\n");
     if (ip->stmt1) {
       joutput_indent_level += 2;
-      joutput_stmt(ip->stmt1);
+      joutput_stmt(ip->stmt1, output_type);
       joutput_indent_level -= 2;
     } else {
       joutput_line("  /* nothing */;");
@@ -3700,7 +3695,7 @@ static void joutput_stmt(cb_tree x) {
     if (ip->stmt2) {
       joutput_line("else");
       joutput_indent_level += 2;
-      joutput_stmt(ip->stmt2);
+      joutput_stmt(ip->stmt2, output_type);
       joutput_indent_level -= 2;
     }
     break;
@@ -3735,7 +3730,7 @@ static void joutput_stmt(cb_tree x) {
     }
 
     for (; x; x = CB_CHAIN(x)) {
-      joutput_stmt(CB_VALUE(x));
+      joutput_stmt(CB_VALUE(x), output_type);
     }
 
     if (putParen) {
@@ -4047,7 +4042,7 @@ static void joutput_initial_values(struct cb_field *p) {
     }
     int tmp_flag = integer_reference_flag;
     integer_reference_flag = 1;
-    joutput_stmt(cb_build_initialize(x, cb_true, NULL, def, 0));
+    joutput_stmt(cb_build_initialize(x, cb_true, NULL, def, 0), JOUTPUT_STMT_DEFAULT);
     integer_reference_flag = tmp_flag;
   }
 }
@@ -5519,7 +5514,7 @@ void joutput_execution_list(struct cb_program *prog) {
   flag_execution_begin = EXECUTION_NORMAL;
   flag_execution_end = EXECUTION_NORMAL;
   for (l = prog->exec_list; l; l = CB_CHAIN(l)) {
-    joutput_stmt(CB_VALUE(l));
+    joutput_stmt(CB_VALUE(l), JOUTPUT_STMT_DEFAULT);
   }
 
   flag_execution_end = EXECUTION_LAST;
@@ -5534,7 +5529,7 @@ void joutput_execution_list(struct cb_program *prog) {
         break;
       }
     }
-    joutput_stmt(cb_standard_error_handler);
+    joutput_stmt(cb_standard_error_handler, JOUTPUT_STMT_DEFAULT);
     joutput_newline();
     if (seen) {
       joutput_line("switch (CobolFile.errorFile.last_open_mode)");

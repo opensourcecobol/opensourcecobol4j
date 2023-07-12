@@ -1,0 +1,40 @@
+AT_SETUP([EXIT PERFORM CYCLE])
+
+AT_DATA([prog.cbl], [
+       IDENTIFICATION              DIVISION.
+       PROGRAM-ID.                 prog.
+       DATA                        DIVISION.
+       WORKING-STORAGE             SECTION.
+       01  I                  PIC 9(01).
+       PROCEDURE                   DIVISION.
+       MAIN-RTN.
+           PERFORM VARYING I FROM 1 BY 1 UNTIL I > 8
+              DISPLAY "I:" I UPON CONSOLE
+              IF  I  =  7
+                 EXIT PERFORM CYCLE
+              END-IF
+              DISPLAY "I:" I UPON CONSOLE
+           END-PERFORM.
+           STOP RUN.
+])
+
+AT_CHECK([${COBJ} prog.cbl prog.cbl])
+AT_CHECK([java prog], [0],
+[I:1
+I:1
+I:2
+I:2
+I:3
+I:3
+I:4
+I:4
+I:5
+I:5
+I:6
+I:6
+I:7
+I:8
+I:8
+])
+
+AT_CLEANUP
