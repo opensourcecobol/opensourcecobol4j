@@ -176,7 +176,8 @@ misc_DEPENDENCIES = \
 	misc.src/comp3-overflow.at \
 	misc.src/cancel-hyphen.at \
 	misc.src/string-call-parameter.at \
-	misc.src/display-numeric.at
+	misc.src/display-numeric.at \
+	misc.src/version-string-in-java.at
 
 EXTRA_DIST = $(srcdir)/package.m4 \
 	$(TESTS) \
