@@ -145,6 +145,8 @@ enum joutput_stmt_type {
   JOUTPUT_STMT_TRIM,
 };
 
+static cb_tree call_parameters = NULL;
+
 static const struct system_table system_tab[] = {
 #undef COB_SYSTEM_GEN
 #define COB_SYSTEM_GEN(x, y, z) {x, #z},
@@ -619,45 +621,177 @@ void joutput_edit_code_command(const char *target) {
  * Field
  */
 
+struct data_storage_list {
+    struct cb_field* f;
+    struct cb_field* top;
+    struct data_storage_list* next;
+};
+
+#define DATA_STORAGE_CACHE_BUFF_SIZE (1024)
+static struct data_storage_list*  data_storage_cache[DATA_STORAGE_CACHE_BUFF_SIZE];
+static unsigned int data_storage_cache_count = 0;
+
+static void init_data_storage_list() {
+    int i;
+    for(i=0; i<DATA_STORAGE_CACHE_BUFF_SIZE; ++i) {
+        data_storage_cache[i] = NULL;
+    }
+    data_storage_cache_count = 0;
+}
+
+static void register_data_storage_list(struct cb_field* f, struct cb_field* top) {
+    if(f->offset == 0 && strcmp(f->name, top->name) == 0) {
+        return;
+    }
+    unsigned int index = (((unsigned int)f) + ((unsigned int)top)) % DATA_STORAGE_CACHE_BUFF_SIZE;
+    struct data_storage_list* entry = data_storage_cache[index];
+    while(entry != NULL) {
+        if(entry->f == f && entry->top == top) {
+            return;
+        }
+        entry = entry->next;
+    }
+    struct data_storage_list* new_entry = malloc(sizeof(struct data_storage_list));
+    new_entry->f = f;
+    new_entry->top = top;
+    new_entry->next = data_storage_cache[index];
+    data_storage_cache[index] = new_entry;
+    ++data_storage_cache_count;
+}
+
+static void free_data_storage_list() {
+    int i;
+    for(i=0; i<DATA_STORAGE_CACHE_BUFF_SIZE; ++i) {
+        struct data_storage_list* entry = data_storage_cache[i];
+        while(entry != NULL) {
+            struct data_storage_list* next = entry->next;
+            free(entry);
+            entry = next;
+        }
+    }
+    data_storage_cache_count = 0;
+}
+
+struct data_storage_list** sorted_data_storage_cache = NULL;
+static int comp_data_storage_cache(const struct data_storage_list** a, const struct data_storage_list** b) {
+    int ret;
+    if((ret = strcmp((*a)->top->name, (*b)->top->name)) != 0) {
+        return ret;
+    }
+    if((ret = strcmp((*a)->f->name, (*b)->f->name)) != 0) {
+        return ret;
+    }
+    return 0;
+}
+
+static void create_sorted_data_storage_cache() {
+    sorted_data_storage_cache = malloc(data_storage_cache_count * sizeof(struct data_storage_list*));
+    int i, j=0;
+    for(i=0; i<DATA_STORAGE_CACHE_BUFF_SIZE; ++i) {
+        struct data_storage_list* entry = data_storage_cache[i];
+        while(entry != NULL) {
+            sorted_data_storage_cache[j++] = entry;
+            entry = entry->next;
+        }
+    }
+    qsort(sorted_data_storage_cache, data_storage_cache_count, sizeof(struct data_storage_list*), comp_data_storage_cache);
+}
+
+static void destroy_sorted_data_storage_cache() {
+    free(sorted_data_storage_cache);
+}
+
+int is_call_parameter(struct cb_field* f) {
+    cb_tree l;
+    for (l = call_parameters; l; l = CB_CHAIN(l)) {
+      if(f == cb_field(CB_VALUE(l))) {
+          return 1;
+      }
+    }
+    return 0;
+}
+
+static int joutput_field_storage(struct cb_field* f, struct cb_field* top) {
+    int flag_call_parameter = is_call_parameter(top);
+    if(flag_call_parameter || (f->offset == 0 && strcmp(f->name, top->name) == 0)) {
+        char* base_name = get_java_identifier_base(top);
+        joutput(base_name);
+        free(base_name);
+        return flag_call_parameter;
+    } else if(cb_flag_short_variable) {
+        joutput("sub_storage$");
+        char *p;
+        for(p=top->name; *p!='\0'; ++p) {
+            if(*p == '-') {
+                joutput("_");
+            } else {
+                joutput("%c", *p);
+            }
+        }
+        joutput("$");
+        for(p=f->name; *p!='\0'; ++p) {
+            if(*p == '-') {
+                joutput("_");
+            } else {
+                joutput("%c", *p);
+            }
+        }
+    } else {
+        joutput("sub_storage");
+        struct cb_field* field = f;
+        while(field) {
+            char *p;
+            joutput("$");
+            for(p=field->name; *p!='\0'; ++p) {
+                if(*p == '-') {
+                    joutput("_");
+                } else {
+                    joutput("%c", *p);
+                }
+            }
+            field = field->parent;
+        }
+    }
+    return 0;
+}
+
 static void joutput_base(struct cb_field *f) {
-  struct cb_field *f01;
+  struct cb_field *top;
   struct cb_field *p;
   struct cb_field *v;
   struct base_list *bl;
   char *nmp;
   char name[COB_SMALL_BUFF];
   char *base_name = NULL;
-
-  f01 = cb_field_founder(f);
+  top = cb_field_founder(f);
 
   if (f->flag_item_78) {
     fprintf(stderr, "Unexpected CONSTANT item\n");
     ABORT();
   }
 
-  if (f01->redefines) {
-    f01 = f01->redefines;
+  if (top->redefines) {
+    top = top->redefines;
   }
 
   // EDIT
   /* Base name */
-  if (f01->flag_external) {
-    strcpy(name, f01->name);
+  if (top->flag_external) {
+    strcpy(name, top->name);
     for (nmp = name; *nmp; nmp++) {
       if (*nmp == '-') {
         *nmp = '_';
       }
     }
   } else {
-    base_name = get_java_identifier_base(f01);
-    strcpy(name, base_name);
+    register_data_storage_list(f, top);
   }
 
-  if (!f01->flag_base) {
-    if (!f01->flag_external) {
-      if (!f01->flag_local || f01->flag_is_global) {
+  if (!top->flag_base) {
+    if (!top->flag_external) {
+      if (!top->flag_local || top->flag_is_global) {
         bl = cobc_malloc(sizeof(struct base_list));
-        bl->f = f01;
+        bl->f = top;
         bl->curr_prog = excp_current_program_id;
         bl->next = base_cache;
         base_cache = bl;
@@ -665,24 +799,23 @@ static void joutput_base(struct cb_field *f) {
         if (current_prog->flag_global_use) {
           joutput_local("unsigned char\t\t*%s%s = NULL;", CB_PREFIX_BASE, name);
           joutput_local("unsigned char\t\t*%s%s = NULL;", CB_PREFIX_BASE, name);
-          joutput_local("\t/* %s */\n", f01->name);
+          joutput_local("\t/* %s */\n", top->name);
           joutput_local("static unsigned char\t*save_%s%s;\n", CB_PREFIX_BASE,
                         name);
         } else {
           joutput_local("unsigned char\t*%s%s = NULL;", CB_PREFIX_BASE, name);
-          joutput_local("\t/* %s */\n", f01->name);
+          joutput_local("\t/* %s */\n", top->name);
         }
       }
     }
-    f01->flag_base = 1;
+    top->flag_base = 1;
   }
 
-  if (f01->flag_external) {
+  if (top->flag_external) {
     joutput("%s%s", CB_PREFIX_BASE, name);
   } else {
-    joutput(name);
-    if (base_name != NULL) {
-      free(base_name);
+    if(joutput_field_storage(f, top) && f->offset != 0) {
+        joutput(".getSubDataStorage(%d)", f->offset);
     }
   }
 
@@ -701,8 +834,6 @@ static void joutput_base(struct cb_field *f) {
         }
       }
     }
-  } else if (f->offset > 0) {
-    joutput(".getSubDataStorage(%d)", f->offset);
   }
 }
 
@@ -750,11 +881,13 @@ static void joutput_data(cb_tree x) {
           lsub = CB_CHAIN(lsub);
         }
       }
+      if(r->offset) {
+          joutput("+ (");
+          joutput_index(r->offset);
+          joutput(")");
+      }
       joutput(")");
-    }
-
-    /* Offset */
-    if (r->offset) {
+    } else if (r->offset) {
       joutput(".getSubDataStorage(");
       joutput_index(r->offset);
       joutput(")");
@@ -2000,7 +2133,7 @@ static void joutput_initialize_literal(cb_tree x, struct cb_field *f,
   joutput_indent("  {");
   joutput_prefix();
   joutput_data(x);
-  joutput(".getSubDataStorage(i0 * %u).memcpy(", (unsigned int)l->size);
+  joutput(".memcpy(i0 * %u, ", (unsigned int)l->size);
   joutput_string(l->data, l->size);
   joutput(", %u);\n", (unsigned int)l->size);
   joutput_indent("  }");
@@ -2009,7 +2142,7 @@ static void joutput_initialize_literal(cb_tree x, struct cb_field *f,
   if (n) {
     joutput_prefix();
     joutput_data(x);
-    joutput(".getSubDataStorage(i0 * %u).memcpy(", (unsigned int)l->size);
+    joutput(".memcpy(i0 * %u, ", (unsigned int)l->size);
     joutput_string(l->data, n);
     joutput(", %u);\n", (unsigned int)n);
   }
@@ -2234,8 +2367,7 @@ static void joutput_initialize_one(struct cb_initialize *p, cb_tree x) {
               joutput(", %d);\n", f->size - n);
               joutput_prefix();
               joutput_data(x);
-              joutput(".getSubDataStorage(%d)", f->size - n);
-              joutput(".memset(%d, %d);", buffchar, n);
+              joutput(".memset(%d, %d, %d);", f->size - n, buffchar, n);
               return;
             }
           }
@@ -4842,6 +4974,23 @@ void joutput_init_method(struct cb_program *prog) {
       free(base_name);
       joutput("\t/* %s */\n", blp->f->name);
     }
+    int i;
+    for(i=0; i<data_storage_cache_count; ++i) {
+        struct data_storage_list* entry = sorted_data_storage_cache[i];
+        if(is_call_parameter(entry->top) && entry->f != entry->top) {
+            continue;
+        }
+        joutput_prefix();
+        joutput_field_storage(entry->f, entry->top);
+        joutput(" = ");
+        char *base_name = get_java_identifier_base(entry->top);
+        joutput("%s", base_name);
+        free(base_name);
+        if(entry->f->offset != 0) {
+            joutput(".getSubDataStorage(%d)", entry->f->offset);
+        }
+        joutput(";\n");
+    }
     joutput("\n");
     joutput_line("/* End of data storage */\n\n");
   }
@@ -5250,6 +5399,20 @@ void joutput_declare_member_variables(struct cb_program *prog,
       free(base_name);
       joutput("\t/* %s */\n", blp->f->name);
     }
+
+    int i;
+
+    for(i=0; i<data_storage_cache_count; ++i) {
+        struct data_storage_list* entry = sorted_data_storage_cache[i];
+        if(is_call_parameter(entry->top) && entry->f != entry->top) {
+            continue;
+        }
+        joutput_prefix();
+        joutput("private CobolDataStorage ");
+        joutput_field_storage(entry->f, entry->top);
+        joutput(";\n");
+    }
+
     joutput("\n");
     joutput_line("/* End of data storage */\n\n");
   }
@@ -5622,6 +5785,7 @@ void joutput_execution_entry_func() {
   joutput_line("}");
 }
 
+
 void codegen(struct cb_program *prog, const int nested, char **program_id_list,
              char *java_source_dir) {
   int i;
@@ -5709,6 +5873,7 @@ void codegen(struct cb_program *prog, const int nested, char **program_id_list,
     // output ("\n");
   }
 
+  call_parameters = prog->parameter_list;
   joutput_line("/* Generated by %s %s */", PACKAGE_NAME, PACKAGE_VERSION);
 
   if (cb_java_package_name) {
@@ -5796,6 +5961,7 @@ void codegen(struct cb_program *prog, const int nested, char **program_id_list,
   //}
 
   create_label_id_map(prog);
+  init_data_storage_list();
   joutput_java_entrypoint(prog, prog->parameter_list);
   joutput_internal_function(prog, prog->parameter_list);
 
@@ -5863,8 +6029,10 @@ void codegen(struct cb_program *prog, const int nested, char **program_id_list,
   joutput_newline();
 
   //メンバ変数の初期化メソッドを出力
+  create_sorted_data_storage_cache();
   joutput_init_method(prog);
   joutput_newline();
+
 
   //メンバ変数の出力
   joutput_declare_member_variables(prog, prog->parameter_list);
@@ -5873,7 +6041,8 @@ void codegen(struct cb_program *prog, const int nested, char **program_id_list,
 	//Output the declarations of string literals
 	joutput_all_string_literals();
 	free_string_literal_list();
-
+  destroy_sorted_data_storage_cache();
+  free_data_storage_list();
   /* Files */
   if (prog->file_list) {
     i = 0;
