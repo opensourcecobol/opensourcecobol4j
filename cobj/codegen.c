@@ -2002,7 +2002,7 @@ static void joutput_initialize_literal(cb_tree x, struct cb_field *f,
   joutput_indent("  {");
   joutput_prefix();
   joutput_data(x);
-  joutput(".getSubDataStorage(i0 * %u).memcpy(", (unsigned int)l->size);
+  joutput(".memcpy(i0 * %u, ", (unsigned int)l->size);
   joutput_string(l->data, l->size);
   joutput(", %u);\n", (unsigned int)l->size);
   joutput_indent("  }");
@@ -2011,7 +2011,7 @@ static void joutput_initialize_literal(cb_tree x, struct cb_field *f,
   if (n) {
     joutput_prefix();
     joutput_data(x);
-    joutput(".getSubDataStorage(i0 * %u).memcpy(", (unsigned int)l->size);
+    joutput(".memcpy(i0 * %u, ", (unsigned int)l->size);
     joutput_string(l->data, n);
     joutput(", %u);\n", (unsigned int)n);
   }
@@ -2236,8 +2236,7 @@ static void joutput_initialize_one(struct cb_initialize *p, cb_tree x) {
               joutput(", %d);\n", f->size - n);
               joutput_prefix();
               joutput_data(x);
-              joutput(".getSubDataStorage(%d)", f->size - n);
-              joutput(".memset(%d, %d);", buffchar, n);
+              joutput(".memset(%d, %d, %d);", f->size - n, buffchar, n);
               return;
             }
           }

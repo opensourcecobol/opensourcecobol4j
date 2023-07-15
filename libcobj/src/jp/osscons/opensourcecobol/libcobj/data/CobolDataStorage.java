@@ -208,6 +208,12 @@ public class CobolDataStorage {
     }
   }
 
+  public void memcpy(int offset, CobolDataStorage buf, int size) {
+    for (int i = 0; i < size; ++i) {
+      this.setByte(offset + i, buf.getByte(i));
+    }
+  }
+
   public void memcpy(byte[] buf) {
     this.memcpy(buf, buf.length);
   }
@@ -232,6 +238,28 @@ public class CobolDataStorage {
    */
   public void memset(int ch, int size) {
     this.memset((byte) ch, size);
+  }
+
+  /**
+   * C言語のmemset
+   *
+   * @param ch
+   * @param size
+   */
+  public void memset(int offset, byte ch, int size) {
+    for (int i = 0; i < size; ++i) {
+      this.setByte(offset + i, ch);
+    }
+  }
+
+  /**
+   * C言語のmemset
+   *
+   * @param ch
+   * @param size
+   */
+  public void memset(int offset, int ch, int size) {
+    this.memset(offset, (byte) ch, size);
   }
 
   /**
