@@ -750,11 +750,13 @@ static void joutput_data(cb_tree x) {
           lsub = CB_CHAIN(lsub);
         }
       }
+      if(r->offset) {
+          joutput("+ (");
+          joutput_index(r->offset);
+          joutput(")");
+      }
       joutput(")");
-    }
-
-    /* Offset */
-    if (r->offset) {
+    } else if (r->offset) {
       joutput(".getSubDataStorage(");
       joutput_index(r->offset);
       joutput(")");
