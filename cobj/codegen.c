@@ -619,6 +619,79 @@ void joutput_edit_code_command(const char *target) {
  * Field
  */
 
+struct data_storage_list {
+    struct cb_field* f;
+    struct cb_field* f01;
+    struct data_storage_list* next;
+};
+
+#define DATA_STORAGE_CACHE_BUFF_SIZE (1024)
+static struct data_storage_list*  data_storage_cache[DATA_STORAGE_CACHE_BUFF_SIZE];
+
+static void init_data_storage_list() {
+    int i;
+    for(i=0; i<DATA_STORAGE_CACHE_BUFF_SIZE; ++i) {
+        data_storage_cache[i] = NULL;
+    }
+}
+
+static void register_data_storage_list(struct cb_field* f, struct cb_field* f01) {
+    if(f->offset == 0 && strcmp(f->name, f01->name) == 0) {
+        return;
+    }
+    unsigned int index = (((unsigned int)f) + ((unsigned int)f01)) % DATA_STORAGE_CACHE_BUFF_SIZE;
+    struct data_storage_list* entry = data_storage_cache[index];
+    while(entry != NULL) {
+        if(entry->f == f && entry->f01 == f01) {
+            return;
+        }
+        entry = entry->next;
+    }
+    struct data_storage_list* new_entry = malloc(sizeof(struct data_storage_list));
+    new_entry->f = f;
+    new_entry->f01 = f01;
+    new_entry->next = data_storage_cache[index];
+    data_storage_cache[index] = new_entry;
+}
+
+static void free_data_storage_list() {
+    int i;
+    for(i=0; i<DATA_STORAGE_CACHE_BUFF_SIZE; ++i) {
+        struct data_storage_list* entry = data_storage_cache[i];
+        while(entry != NULL) {
+            struct data_storage_list* next = entry->next;
+            free(entry);
+            entry = next;
+        }
+    }
+}
+
+static void joutput_field_storage(struct cb_field* f, struct cb_field* f01) {
+    if(f->offset == 0 && strcmp(f->name, f01->name) == 0) {
+        char* base_name = get_java_identifier_base(f01);
+        joutput(base_name);
+        free(base_name);
+    } else {
+        joutput("sub_storage$");
+        char *p;
+        for(p=f01->name; *p!='\0'; ++p) {
+            if(*p == '-') {
+                joutput("_");
+            } else {
+                joutput("%c", *p);
+            }
+        }
+        joutput("$");
+        for(p=f->name; *p!='\0'; ++p) {
+            if(*p == '-') {
+                joutput("_");
+            } else {
+                joutput("%c", *p);
+            }
+        }
+    }
+}
+
 static void joutput_base(struct cb_field *f) {
   struct cb_field *f01;
   struct cb_field *p;
@@ -627,7 +700,6 @@ static void joutput_base(struct cb_field *f) {
   char *nmp;
   char name[COB_SMALL_BUFF];
   char *base_name = NULL;
-
   f01 = cb_field_founder(f);
 
   if (f->flag_item_78) {
@@ -649,8 +721,9 @@ static void joutput_base(struct cb_field *f) {
       }
     }
   } else {
-    base_name = get_java_identifier_base(f01);
-    strcpy(name, base_name);
+    //base_name = get_java_identifier_base(f01);
+    register_data_storage_list(f, f01);
+    //strcpy(name, base_name);
   }
 
   if (!f01->flag_base) {
@@ -680,10 +753,11 @@ static void joutput_base(struct cb_field *f) {
   if (f01->flag_external) {
     joutput("%s%s", CB_PREFIX_BASE, name);
   } else {
-    joutput(name);
-    if (base_name != NULL) {
-      free(base_name);
-    }
+    joutput_field_storage(f, f01);
+    //joutput(name);
+    //if (base_name != NULL) {
+    //  free(base_name);
+    //}
   }
 
   if (cb_field_variable_address(f)) {
@@ -701,9 +775,9 @@ static void joutput_base(struct cb_field *f) {
         }
       }
     }
-  } else if (f->offset > 0) {
+  } /*else if (f->offset > 0) {
     joutput(".getSubDataStorage(%d)", f->offset);
-  }
+  }*/
 }
 
 static void joutput_data(cb_tree x) {
@@ -4843,6 +4917,23 @@ void joutput_init_method(struct cb_program *prog) {
       free(base_name);
       joutput("\t/* %s */\n", blp->f->name);
     }
+    int i;
+    for(i=0; i<DATA_STORAGE_CACHE_BUFF_SIZE; ++i) {
+        struct data_storage_list* entry = data_storage_cache[i];
+        while(entry != NULL) {
+            joutput_prefix();
+            joutput_field_storage(entry->f, entry->f01);
+            joutput(" = ");
+            char *base_name = get_java_identifier_base(entry->f01);
+            joutput("%s", base_name);
+            free(base_name);
+            if(entry->f->offset != 0) {
+                joutput(".getSubDataStorage(%d)", entry->f->offset);
+            }
+            joutput(";\n");
+            entry = entry->next;
+        }
+    }
     joutput("\n");
     joutput_line("/* End of data storage */\n\n");
   }
@@ -5250,6 +5341,18 @@ void joutput_declare_member_variables(struct cb_program *prog,
       }
       free(base_name);
       joutput("\t/* %s */\n", blp->f->name);
+    }
+
+    int i;
+    for(i=0; i<DATA_STORAGE_CACHE_BUFF_SIZE; ++i) {
+        struct data_storage_list* entry = data_storage_cache[i];
+        while(entry != NULL) {
+            joutput_prefix();
+            joutput("private CobolDataStorage ");
+            joutput_field_storage(entry->f, entry->f01);
+            joutput(";\n");
+            entry = entry->next;
+        }
     }
     joutput("\n");
     joutput_line("/* End of data storage */\n\n");
@@ -5797,6 +5900,7 @@ void codegen(struct cb_program *prog, const int nested, char **program_id_list,
   //}
 
   create_label_id_map(prog);
+  init_data_storage_list();
   joutput_java_entrypoint(prog, prog->parameter_list);
   joutput_internal_function(prog, prog->parameter_list);
 
@@ -5867,6 +5971,7 @@ void codegen(struct cb_program *prog, const int nested, char **program_id_list,
   joutput_init_method(prog);
   joutput_newline();
 
+
   //メンバ変数の出力
   joutput_declare_member_variables(prog, prog->parameter_list);
   joutput("\n");
@@ -5875,6 +5980,7 @@ void codegen(struct cb_program *prog, const int nested, char **program_id_list,
 	joutput_all_string_literals();
 	free_string_literal_list();
 
+  free_data_storage_list();
   /* Files */
   if (prog->file_list) {
     i = 0;
