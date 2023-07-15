@@ -4966,21 +4966,18 @@ void joutput_init_method(struct cb_program *prog) {
       joutput("\t/* %s */\n", blp->f->name);
     }
     int i;
-    for(i=0; i<DATA_STORAGE_CACHE_BUFF_SIZE; ++i) {
-        struct data_storage_list* entry = data_storage_cache[i];
-        while(entry != NULL) {
-            joutput_prefix();
-            joutput_field_storage(entry->f, entry->f01);
-            joutput(" = ");
-            char *base_name = get_java_identifier_base(entry->f01);
-            joutput("%s", base_name);
-            free(base_name);
-            if(entry->f->offset != 0) {
-                joutput(".getSubDataStorage(%d)", entry->f->offset);
-            }
-            joutput(";\n");
-            entry = entry->next;
+    for(i=0; i<data_storage_cache_count; ++i) {
+        struct data_storage_list* entry = sorted_data_storage_cache[i];
+        joutput_prefix();
+        joutput_field_storage(entry->f, entry->f01);
+        joutput(" = ");
+        char *base_name = get_java_identifier_base(entry->f01);
+        joutput("%s", base_name);
+        free(base_name);
+        if(entry->f->offset != 0) {
+            joutput(".getSubDataStorage(%d)", entry->f->offset);
         }
+        joutput(";\n");
     }
     joutput("\n");
     joutput_line("/* End of data storage */\n\n");
@@ -5392,16 +5389,15 @@ void joutput_declare_member_variables(struct cb_program *prog,
     }
 
     int i;
-    for(i=0; i<DATA_STORAGE_CACHE_BUFF_SIZE; ++i) {
-        struct data_storage_list* entry = data_storage_cache[i];
-        while(entry != NULL) {
-            joutput_prefix();
-            joutput("private CobolDataStorage ");
-            joutput_field_storage(entry->f, entry->f01);
-            joutput(";\n");
-            entry = entry->next;
-        }
+
+    for(i=0; i<data_storage_cache_count; ++i) {
+        struct data_storage_list* entry = sorted_data_storage_cache[i];
+        joutput_prefix();
+        joutput("private CobolDataStorage ");
+        joutput_field_storage(entry->f, entry->f01);
+        joutput(";\n");
     }
+
     joutput("\n");
     joutput_line("/* End of data storage */\n\n");
   }
