@@ -277,9 +277,7 @@ public class CobolUtil {
    * @param numParams
    * @throws CobolStopRunException
    */
-  public static void COB_CHK_PARMS(String funcName, int numParams) throws CobolStopRunException {
-    System.err.println("COB_CHK_PARMS not implemented");
-  }
+  public static void COB_CHK_PARMS(String funcName, int numParams) throws CobolStopRunException {}
 
   /**
    * libcob/common.cのcob_get_switchの実装
