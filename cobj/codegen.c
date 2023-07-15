@@ -627,12 +627,14 @@ struct data_storage_list {
 
 #define DATA_STORAGE_CACHE_BUFF_SIZE (1024)
 static struct data_storage_list*  data_storage_cache[DATA_STORAGE_CACHE_BUFF_SIZE];
+static unsigned int data_storage_cache_count = 0;
 
 static void init_data_storage_list() {
     int i;
     for(i=0; i<DATA_STORAGE_CACHE_BUFF_SIZE; ++i) {
         data_storage_cache[i] = NULL;
     }
+    data_storage_cache_count = 0;
 }
 
 static void register_data_storage_list(struct cb_field* f, struct cb_field* f01) {
@@ -652,6 +654,7 @@ static void register_data_storage_list(struct cb_field* f, struct cb_field* f01)
     new_entry->f01 = f01;
     new_entry->next = data_storage_cache[index];
     data_storage_cache[index] = new_entry;
+    ++data_storage_cache_count;
 }
 
 static void free_data_storage_list() {
@@ -664,6 +667,36 @@ static void free_data_storage_list() {
             entry = next;
         }
     }
+    data_storage_cache_count = 0;
+}
+
+struct data_storage_list** sorted_data_storage_cache = NULL;
+static int comp_data_storage_cache(const struct data_storage_list** a, const struct data_storage_list** b) {
+    int ret;
+    if((ret = strcmp((*a)->f01->name, (*b)->f01->name)) != 0) {
+        return ret;
+    }
+    if((ret = strcmp((*a)->f->name, (*b)->f->name)) != 0) {
+        return ret;
+    }
+    return 0;
+}
+
+static void create_sorted_data_storage_cache() {
+    sorted_data_storage_cache = malloc(data_storage_cache_count * sizeof(struct data_storage_list*));
+    int i, j=0;
+    for(i=0; i<DATA_STORAGE_CACHE_BUFF_SIZE; ++i) {
+        struct data_storage_list* entry = data_storage_cache[i];
+        while(entry != NULL) {
+            sorted_data_storage_cache[j++] = entry;
+            entry = entry->next;
+        }
+    }
+    qsort(sorted_data_storage_cache, data_storage_cache_count, sizeof(struct data_storage_list*), comp_data_storage_cache);
+}
+
+static void destroy_sorted_data_storage_cache() {
+    free(sorted_data_storage_cache);
 }
 
 static void joutput_field_storage(struct cb_field* f, struct cb_field* f01) {
@@ -671,7 +704,7 @@ static void joutput_field_storage(struct cb_field* f, struct cb_field* f01) {
         char* base_name = get_java_identifier_base(f01);
         joutput(base_name);
         free(base_name);
-    } else {
+    } else if(cb_flag_short_variable) {
         joutput("sub_storage$");
         char *p;
         for(p=f01->name; *p!='\0'; ++p) {
@@ -688,6 +721,21 @@ static void joutput_field_storage(struct cb_field* f, struct cb_field* f01) {
             } else {
                 joutput("%c", *p);
             }
+        }
+    } else {
+        joutput("sub_storage");
+        struct cb_field* field = f;
+        while(field) {
+            char *p;
+            joutput("$");
+            for(p=field->name; *p!='\0'; ++p) {
+                if(*p == '-') {
+                    joutput("_");
+                } else {
+                    joutput("%c", *p);
+                }
+            }
+            field = field->parent;
         }
     }
 }
@@ -5968,6 +6016,7 @@ void codegen(struct cb_program *prog, const int nested, char **program_id_list,
   joutput_newline();
 
   //メンバ変数の初期化メソッドを出力
+  create_sorted_data_storage_cache();
   joutput_init_method(prog);
   joutput_newline();
 
@@ -5979,7 +6028,7 @@ void codegen(struct cb_program *prog, const int nested, char **program_id_list,
 	//Output the declarations of string literals
 	joutput_all_string_literals();
 	free_string_literal_list();
-
+  destroy_sorted_data_storage_cache();
   free_data_storage_list();
   /* Files */
   if (prog->file_list) {
