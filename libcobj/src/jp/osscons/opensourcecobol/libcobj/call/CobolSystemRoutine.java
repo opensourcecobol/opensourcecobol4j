@@ -20,10 +20,8 @@ package jp.osscons.opensourcecobol.libcobj.call;
 
 import java.io.IOException;
 import java.lang.ProcessBuilder.Redirect;
-import java.util.Arrays;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
-import jp.osscons.opensourcecobol.libcobj.common.CobolConstant;
 import jp.osscons.opensourcecobol.libcobj.common.CobolModule;
 import jp.osscons.opensourcecobol.libcobj.common.CobolUtil;
 import jp.osscons.opensourcecobol.libcobj.data.AbstractCobolField;
@@ -32,6 +30,7 @@ import jp.osscons.opensourcecobol.libcobj.exceptions.CobolRuntimeException;
 import jp.osscons.opensourcecobol.libcobj.exceptions.CobolStopRunException;
 
 public class CobolSystemRoutine {
+  private static final boolean runsOnWindows = "\\".equals(System.getProperty("file.separator"));
 
   public static int CBL_EXIT_PROC(CobolDataStorage x, CobolDataStorage pptr) {
     // TODO 実装
@@ -43,6 +42,12 @@ public class CobolSystemRoutine {
     return 0;
   }
 
+  public static int SYSTEM(CobolDataStorage cmd) throws CobolStopRunException {
+    int size = SYSTEM_getParameterSize();
+    String cmdStr = new String(cmd.getByteArray(0, size));
+    return SYSTEM_main(cmdStr);
+  }
+
   /**
    * libcob/common.cのSYSTEMの実装
    *
@@ -51,45 +56,46 @@ public class CobolSystemRoutine {
    * @throws CobolStopRunException
    */
   public static int SYSTEM(String cmd) throws CobolStopRunException {
+    return SYSTEM_main(cmd);
+  }
+
+  private static int SYSTEM_getParameterSize() throws CobolStopRunException {
     CobolUtil.COB_CHK_PARMS("SYSTEM", 1);
     List<AbstractCobolField> paramaters = CobolModule.getCurrentModule().cob_procedure_parameters;
     if (!paramaters.isEmpty() && paramaters.get(0) != null) {
       AbstractCobolField paramater = paramaters.get(0);
-      int i = paramater.getSize();
-      if (i > CobolConstant.COB_MEDIUM_MAX) {
+      int size = paramater.getSize();
+      if (size <= 0) {
         CobolRuntimeException.displayRuntimeError(
-            "Paramater to SYSTEM call is larger than 8192 characters");
+            "The size of the paramater to SYSTEM call is less than 1");
         CobolStopRunException.stopRunAndThrow(1);
       }
-      i--;
-      for (; i >= 0; i--) {
-        if (cmd.charAt(i) != ' ') {
-          break;
-        }
-      }
-
-      if (i >= 0) {
-        // TODO sccreen関連処理の追加
-        List<String> cmdList = Arrays.asList(cmd.substring(0, i + 1).split("\\s+"));
-        ProcessBuilder pb = new ProcessBuilder(cmdList);
-        pb.redirectInput(Redirect.INHERIT)
-            .redirectOutput(Redirect.INHERIT)
-            .redirectError(Redirect.INHERIT);
-        Process process;
-        try {
-          process = pb.start();
-        } catch (IOException e) {
-          return 1;
-        }
-        try {
-          return process.waitFor();
-          // TODO sccreen関連処理の追加
-        } catch (InterruptedException e) {
-          return 1;
-        }
-      }
+      return size;
+    } else {
+      CobolRuntimeException.displayRuntimeError("The size of the paramater is not specified");
+      CobolStopRunException.stopRunAndThrow(1);
+      // not reached
+      return -1;
     }
-    return 1;
+  }
+
+  private static int SYSTEM_main(String cmd) throws CobolStopRunException {
+    ProcessBuilder pb;
+    if (runsOnWindows) {
+      pb = new ProcessBuilder("cmd", "/c", cmd);
+    } else {
+      pb = new ProcessBuilder("sh", "-c", cmd);
+    }
+    pb.redirectInput(Redirect.INHERIT)
+        .redirectOutput(Redirect.INHERIT)
+        .redirectError(Redirect.INHERIT);
+    try {
+      Process process = pb.start();
+      return process.waitFor();
+    } catch (InterruptedException | IOException e) {
+      e.printStackTrace();
+      return 1;
+    }
   }
 
   /**
