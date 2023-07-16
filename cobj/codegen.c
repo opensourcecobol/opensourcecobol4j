@@ -1508,25 +1508,25 @@ static void joutput_param(cb_tree x, int id) {
       case CB_ALPHABET_STANDARD_2:
 #ifdef COB_EBCDIC_MACHINE
         gen_ebcdic_ascii = 1;
-        joutput("f_ebcdic_ascii");
+        joutput("field$ebcdic_ascii");
         break;
 #endif
       case CB_ALPHABET_NATIVE:
         gen_native = 1;
-        joutput("f_native");
+        joutput("field$native");
         break;
       case CB_ALPHABET_EBCDIC:
 #ifdef COB_EBCDIC_MACHINE
         gen_native = 1;
-        joutput("f_native");
+        joutput("field$native");
 #else
         gen_full_ebcdic = 1;
-        joutput("f_ebcdic");
+        joutput("field$ebcdic");
 #endif
         break;
       case CB_ALPHABET_CUSTOM:
         gen_custom = 1;
-        joutput("&f_%s", rbp->cname);
+        joutput("&field$%s", rbp->cname);
         break;
       }
       if (r->check) {
@@ -5111,7 +5111,7 @@ void joutput_init_method(struct cb_program *prog) {
 
   if (gen_native) {
     int index = lookup_attr(COB_TYPE_ALPHANUMERIC, 0, 0, 0, NULL, 0);
-    joutput_line("f_native = CobolFieldFactory.makeCobolField(256, new "
+    joutput_line("field$native = CobolFieldFactory.makeCobolField(256, new "
                  "CobolDataStorage(cob_native), %s%d);\n",
                  CB_PREFIX_ATTR, index);
   }
@@ -5224,7 +5224,7 @@ static void joutput_alphabet_name_initialization(struct cb_alphabet_name *p) {
   joutput("%s%s = new CobolDataStorage(%s_byte_array_%s);", CB_PREFIX_SEQUENCE,
           p->cname, CB_PREFIX_SEQUENCE, p->cname);
   i = lookup_attr(COB_TYPE_ALPHANUMERIC, 0, 0, 0, NULL, 0);
-  joutput("f_%s = CobolFieldFactory.makeCobolField(256, %s%s, %s%d);\n",
+  joutput("field$%s = CobolFieldFactory.makeCobolField(256, %s%s, %s%d);\n",
           p->cname, CB_PREFIX_SEQUENCE, p->cname, CB_PREFIX_ATTR, i);
   joutput("\n");
 }
@@ -5305,7 +5305,7 @@ static void joutput_alphabet_name_definition(struct cb_alphabet_name *p) {
   joutput("};\n");
   joutput("CobolDataStorage %s%s;", CB_PREFIX_SEQUENCE, p->cname);
   i = lookup_attr(COB_TYPE_ALPHANUMERIC, 0, 0, 0, NULL, 0);
-  joutput("AbstractCobolField f_%s;\n", p->cname, CB_PREFIX_SEQUENCE, p->cname,
+  joutput("AbstractCobolField field$%s;\n", p->cname, CB_PREFIX_SEQUENCE, p->cname,
           CB_PREFIX_ATTR, i);
   joutput("\n");
 }
@@ -5489,7 +5489,7 @@ void joutput_declare_member_variables(struct cb_program *prog,
     joutput_line("/* End of fields */\n\n");
   }
 
-  joutput_line("private static AbstractCobolField f_native;\n");
+  joutput_line("private static AbstractCobolField field$native;\n");
 
   /* AbstractCobolField型変数の宣言(定数) */
   if (literal_cache) {
@@ -6309,7 +6309,7 @@ void codegen(struct cb_program *prog, const int nested, char **program_id_list,
 
     i = lookup_attr(COB_TYPE_ALPHANUMERIC, 0, 0, 0, NULL, 0);
     joutput("  ");
-    joutput("private static AbstractCobolField f_ebcdic = "
+    joutput("private static AbstractCobolField field$ebcdic = "
             "CobolFieldFactori.makeField(256, new "
             "CobolDataStorage(cob_ebcdic), %s%d);\n",
             CB_PREFIX_ATTR, i);
@@ -6389,7 +6389,7 @@ void codegen(struct cb_program *prog, const int nested, char **program_id_list,
 
     i = lookup_attr(COB_TYPE_ALPHANUMERIC, 0, 0, 0, NULL, 0);
     joutput("  ");
-    joutput("private static AbstractCobolField f_ebcdic_ascii = "
+    joutput("private static AbstractCobolField field$ebcdic_ascii = "
             "CobolFieldFactory.makeField(256, new "
             "CobolDataStorage(cob_ebcdic_ascii), %s%d);\n",
             CB_PREFIX_ATTR, i);
