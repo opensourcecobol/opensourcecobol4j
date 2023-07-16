@@ -34,7 +34,7 @@ import jp.osscons.opensourcecobol.libcobj.exceptions.CobolStopRunException;
 import jp.osscons.opensourcecobol.libcobj.file.CobolFile;
 
 public class CobolUtil {
-  private static int cob_io_assume_rewrite = 0;
+  private static boolean cob_io_assume_rewrite = false;
   private static boolean cob_verbose = false;
   private static HandlerList hdlrs = null;
   private static String runtime_err_str = null;
@@ -96,7 +96,7 @@ public class CobolUtil {
     return 0;
   }
 
-  public static int cob_io_rewwrite_assumed() {
+  public static boolean cob_io_rewwrite_assumed() {
     return cob_io_assume_rewrite;
   }
 
@@ -190,6 +190,11 @@ public class CobolUtil {
     s = CobolUtil.getEnv("COB_VERBOSE");
     if (s != null && s.length() > 0 && (s.charAt(0) == 'y' || s.charAt(0) == 'Y')) {
       CobolUtil.cob_verbose = true;
+    }
+
+    s = CobolUtil.getEnv("COB_IO_ASSUME_REWRITE");
+    if (s != null && s.length() > 0 && (s.charAt(0) == 'y' || s.charAt(0) == 'Y')) {
+      CobolUtil.cob_io_assume_rewrite = true;
     }
   }
 
