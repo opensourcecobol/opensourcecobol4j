@@ -19,7 +19,6 @@
 package jp.osscons.opensourcecobol.libcobj.exceptions;
 
 import java.util.List;
-import jp.osscons.opensourcecobol.libcobj.common.CobolUtil;
 
 /** 実行時エラーを示す例外 */
 public class CobolRuntimeException extends RuntimeException {
@@ -38,7 +37,7 @@ public class CobolRuntimeException extends RuntimeException {
    * コンストラクタ
    *
    * @param errorCode this.errorCodeに設定する値
-   * @param message   this.messageに設定する値
+   * @param message this.messageに設定する値
    */
   public CobolRuntimeException(int errorCode, String message) {
     super();

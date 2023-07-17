@@ -26,7 +26,6 @@ import jp.osscons.opensourcecobol.libcobj.common.CobolModule;
 import jp.osscons.opensourcecobol.libcobj.common.CobolUtil;
 import jp.osscons.opensourcecobol.libcobj.data.AbstractCobolField;
 import jp.osscons.opensourcecobol.libcobj.data.CobolDataStorage;
-import jp.osscons.opensourcecobol.libcobj.exceptions.CobolRuntimeException;
 import jp.osscons.opensourcecobol.libcobj.exceptions.CobolStopRunException;
 
 public class CobolSystemRoutine {
@@ -66,8 +65,7 @@ public class CobolSystemRoutine {
       AbstractCobolField paramater = paramaters.get(0);
       int size = paramater.getSize();
       if (size <= 0) {
-        CobolUtil.runtimeError(
-            "The size of the paramater to SYSTEM call is less than 1");
+        CobolUtil.runtimeError("The size of the paramater to SYSTEM call is less than 1");
         CobolStopRunException.stopRunAndThrow(1);
       }
       return size;
@@ -508,7 +506,7 @@ public class CobolSystemRoutine {
 
     for (int n = 0; n < length; ++n) {
       byte b = data.getByte(n);
-      byte[] bytes = { b };
+      byte[] bytes = {b};
       byte result = new String(bytes).toLowerCase().getBytes()[0];
       data.setByte(n, result);
     }
@@ -535,7 +533,7 @@ public class CobolSystemRoutine {
 
     for (int n = 0; n < length; ++n) {
       byte b = data.getByte(n);
-      byte[] bytes = { b };
+      byte[] bytes = {b};
       byte result = new String(bytes).toUpperCase().getBytes()[0];
       data.setByte(n, result);
     }
