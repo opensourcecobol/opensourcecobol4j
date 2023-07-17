@@ -66,13 +66,13 @@ public class CobolSystemRoutine {
       AbstractCobolField paramater = paramaters.get(0);
       int size = paramater.getSize();
       if (size <= 0) {
-        CobolRuntimeException.displayRuntimeError(
+        CobolUtil.runtimeError(
             "The size of the paramater to SYSTEM call is less than 1");
         CobolStopRunException.stopRunAndThrow(1);
       }
       return size;
     } else {
-      CobolRuntimeException.displayRuntimeError("The size of the paramater is not specified");
+      CobolUtil.runtimeError("The size of the paramater is not specified");
       CobolStopRunException.stopRunAndThrow(1);
       // not reached
       return -1;
@@ -508,7 +508,7 @@ public class CobolSystemRoutine {
 
     for (int n = 0; n < length; ++n) {
       byte b = data.getByte(n);
-      byte[] bytes = {b};
+      byte[] bytes = { b };
       byte result = new String(bytes).toLowerCase().getBytes()[0];
       data.setByte(n, result);
     }
@@ -535,7 +535,7 @@ public class CobolSystemRoutine {
 
     for (int n = 0; n < length; ++n) {
       byte b = data.getByte(n);
-      byte[] bytes = {b};
+      byte[] bytes = { b };
       byte result = new String(bytes).toUpperCase().getBytes()[0];
       data.setByte(n, result);
     }
