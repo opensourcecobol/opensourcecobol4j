@@ -263,7 +263,6 @@ AT_CHECK([java prog], [0], [1000])
 AT_CLEANUP
 
 AT_SETUP([MOVE with refmod (variable)])
-AT_CHECK([${SKIP_TEST}])
 
 AT_DATA([prog.cob], [
        IDENTIFICATION   DIVISION.
@@ -1330,7 +1329,6 @@ AT_CLEANUP
 
 
 AT_SETUP([REWRITE a RELATIVE file with RANDOM access])
-AT_CHECK([${SKIP_TEST}])
 
 AT_DATA([prog.cob], [
        IDENTIFICATION   DIVISION.
