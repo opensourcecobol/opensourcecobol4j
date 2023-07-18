@@ -22,7 +22,7 @@ AT_CHECK([${COBJ} -debug prog.cbl])
 AT_CHECK([java prog], [1],
 [<01234     >
 ],
-[libcobj: Length of 'SRC' out of bounds: 15
+[prog.cbl:14: libcobj: Length of 'SRC' out of bounds: 15
 ])
 
 AT_CLEANUP

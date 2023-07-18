@@ -26,7 +26,6 @@ import jp.osscons.opensourcecobol.libcobj.common.CobolModule;
 import jp.osscons.opensourcecobol.libcobj.common.CobolUtil;
 import jp.osscons.opensourcecobol.libcobj.data.AbstractCobolField;
 import jp.osscons.opensourcecobol.libcobj.data.CobolDataStorage;
-import jp.osscons.opensourcecobol.libcobj.exceptions.CobolRuntimeException;
 import jp.osscons.opensourcecobol.libcobj.exceptions.CobolStopRunException;
 
 public class CobolSystemRoutine {
@@ -66,13 +65,12 @@ public class CobolSystemRoutine {
       AbstractCobolField paramater = paramaters.get(0);
       int size = paramater.getSize();
       if (size <= 0) {
-        CobolRuntimeException.displayRuntimeError(
-            "The size of the paramater to SYSTEM call is less than 1");
+        CobolUtil.runtimeError("The size of the paramater to SYSTEM call is less than 1");
         CobolStopRunException.stopRunAndThrow(1);
       }
       return size;
     } else {
-      CobolRuntimeException.displayRuntimeError("The size of the paramater is not specified");
+      CobolUtil.runtimeError("The size of the paramater is not specified");
       CobolStopRunException.stopRunAndThrow(1);
       // not reached
       return -1;

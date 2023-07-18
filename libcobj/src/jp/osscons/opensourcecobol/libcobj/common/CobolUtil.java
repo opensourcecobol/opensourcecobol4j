@@ -59,8 +59,8 @@ public class CobolUtil {
 
   private static boolean lineTrace = false;
 
-  private static String sourceFile;
-  private static int sourceLine;
+  public static String sourceFile;
+  public static int sourceLine;
 
   abstract class HandlerList {
     public HandlerList next = null;
@@ -124,16 +124,14 @@ public class CobolUtil {
     /* check the offset */
     if (offset < 1 || offset > size) {
       CobolRuntimeException.setException(CobolExceptionId.COB_EC_BOUND_REF_MOD);
-      CobolRuntimeException.displayRuntimeError(
-          String.format("Offset of '%s' out of bounds: %d", name, offset));
+      CobolUtil.runtimeError(String.format("Offset of '%s' out of bounds: %d", name, offset));
       CobolStopRunException.stopRunAndThrow(1);
     }
 
     /* check the length */
     if (length < 1 || offset + length - 1 > size) {
       CobolRuntimeException.setException(CobolExceptionId.COB_EC_BOUND_REF_MOD);
-      CobolRuntimeException.displayRuntimeError(
-          String.format("Length of '%s' out of bounds: %d", name, length));
+      CobolUtil.runtimeError(String.format("Length of '%s' out of bounds: %d", name, length));
       CobolStopRunException.stopRunAndThrow(1);
     }
   }
