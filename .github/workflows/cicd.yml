@@ -31,11 +31,11 @@ jobs:
           dnf install -y java-17-openjdk-devel gcc gcc-c++ make bison flex automake autoconf diffutils gettext
 
       - name: Checkout opensource COBOL 4J
-        uses: actions/checkout@v2
+        uses: actions/checkout@v3
       
       - name: Install opensource COBOL 4J
         run: |
-          curl -L -o /usr/lib/sqlite.jar https://github.com/xerial/sqlite-jdbc/releases/download/3.36.0.3/sqlite-jdbc-3.36.0.3.jar
+          curl -L -o /usr/lib/sqlite.jar -k https://github.com/xerial/sqlite-jdbc/releases/download/3.36.0.3/sqlite-jdbc-3.36.0.3.jar
           ./configure --prefix=/usr/
           make
           make install
@@ -98,7 +98,7 @@ jobs:
     steps:
       # Checkout opensource COBOL
       - name: Checkout opensource COBOL 4J
-        uses: actions/checkout@v2
+        uses: actions/checkout@v3
 
       - uses: actions/setup-java@v3
         with:
