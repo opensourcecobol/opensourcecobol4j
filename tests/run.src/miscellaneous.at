@@ -328,19 +328,29 @@ AT_CHECK([java prog], [0], [0])
 AT_CLEANUP
 
 AT_SETUP([MOVE X'00'])
-AT_CHECK([${SKIP_TEST}])
 
-AT_DATA([dump.c], [
-#include <stdio.h>
-int dump (unsigned char *data);
-int dump (unsigned char *data)
-{
-  printf ("%02x%02x%02x", data[[0]], data[[1]], data[[2]]);
-  return 0;
+AT_DATA([dump.java], [
+import jp.osscons.opensourcecobol.libcobj.data.*;
+import jp.osscons.opensourcecobol.libcobj.call.*;
+
+public class dump implements CobolRunnable {
+  @Override
+  public int run(CobolDataStorage... argStorages) {
+      CobolDataStorage s = argStorages@<:@0@:>@;
+      System.out.printf("%02x%02x%02x", s.getByte(0), s.getByte(1), s.getByte(2));
+      return 0;
+  }
+  @Override
+  public void cancel() {
+  }
+  @Override
+  public boolean isActive() {
+      return false;
+  }
 }
 ])
 
-AT_CHECK([${CC} ${SHROPT} -o dump.${SHREXT} dump.c])
+AT_CHECK([javac dump.java])
 
 AT_DATA([prog.cob], [
        IDENTIFICATION   DIVISION.
