@@ -23,11 +23,15 @@ my $compile;
 my $compile_module;
 
 if ($opt) {
-	$compile = "cobj -std=cobol85 $opt";
-	$compile_module = "cobj -std=cobol85 $opt";
+	$compile = "cobj --conf=../big_endian.conf $opt"; #-stdをつけるとデフォルトのbig-endianが設定されるので外す
+	$compile_module = "cobj --conf=../big_endian.conf $opt";
+	$compile = "cobj --conf=../native.conf $opt"; 
+	$compile_module = "cobj --conf=../native.conf $opt";
 } else {
-	$compile = "cobj -std=cobol85 ";
-	$compile_module = "cobj -std=cobol85 ";
+	$compile = "cobj --conf=../big_endian.conf ";
+	$compile_module = "cobj --conf=../big_endian.conf ";
+	$compile = "cobj --conf=../native.conf "; 
+	$compile_module = "cobj --conf=../native.conf ";
 }
 
 my $num_progs = 0;

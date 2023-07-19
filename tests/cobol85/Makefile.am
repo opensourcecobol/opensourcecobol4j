@@ -5,8 +5,8 @@
 ##
 
 #MODULES = NC SM IC SQ IX ST SG OB IF RL
-MODULES = NC SM IC SQ IX ST SG OB IF
-#MODULES = IF
+#MODULES = NC SM IC SQ IX ST SG OB IF
+MODULES = SQ
 MODULES_MAKEFILES = NC/Makefile SM/Makefile IC/Makefile SQ/Makefile IX/Makefile ST/Makefile SG/Makefile OB/Makefile IF/Makefile RL/Makefile
 
 
