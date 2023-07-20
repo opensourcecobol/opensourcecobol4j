@@ -64,7 +64,10 @@ public class CobolDataStorage {
     this(data, 0);
   }
 
-  public CobolDataStorage() {}
+  public CobolDataStorage() {
+    this.index = 0;
+    this.data = null;
+  }
 
   public int getIndex() {
     return this.index;
@@ -536,7 +539,9 @@ public class CobolDataStorage {
    *
    * @param pointer
    */
-  public void setPointer(int pointer) {}
+  public void setPointer(int pointer) {
+    System.err.println("setPointer is not implemented");
+  }
 
   /**
    * this.dataにバイト配列を書き込む
@@ -727,7 +732,7 @@ public class CobolDataStorage {
   }
 
   private interface Cmpr {
-    public int run(long a, long b);
+    int run(long a, long b);
   }
 
   private static final Cmpr compareS =
@@ -769,24 +774,6 @@ public class CobolDataStorage {
       buffer.putLong(this.index, n);
     }
   }
-
-  private interface Calc {
-    public long run(long a, long b);
-  }
-
-  private static final Calc AddS =
-      new Calc() {
-        public long run(long a, long b) {
-          return a + b;
-        }
-      };
-
-  private static final Calc SubS =
-      new Calc() {
-        public long run(long a, long b) {
-          return a - b;
-        }
-      };
 
   public void addBinary(long n, int numOfBytes, boolean signed, boolean isBigEndian) {
     long x = this.toLong(numOfBytes, signed, isBigEndian);
@@ -1548,7 +1535,6 @@ public class CobolDataStorage {
       last = b;
     }
   }
-  ;
 
   public PairInt getEbcdicSign(int p, int val) {
     switch (this.getByte(p)) {
@@ -1592,8 +1578,9 @@ public class CobolDataStorage {
         return new PairInt(val + 8, 1);
       case 'R':
         return new PairInt(val + 9, 1);
+      default:
+        return new PairInt(val, 0);
     }
-    return new PairInt(val, 0);
   }
 
   public PairInt getLongEbcdicSign(int p, int val) {
@@ -1638,8 +1625,9 @@ public class CobolDataStorage {
         return new PairInt(val + 8, 1);
       case 'R':
         return new PairInt(val + 9, 1);
+      default:
+        return new PairInt(val, 0);
     }
-    return new PairInt(val, 0);
   }
 
   // TODO 修正

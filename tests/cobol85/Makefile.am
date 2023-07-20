@@ -5,8 +5,7 @@
 ##
 
 #MODULES = NC SM IC SQ IX ST SG OB IF RL
-#MODULES = NC SM IC SQ IX ST SG OB IF
-MODULES = SQ
+MODULES = NC SM IC SQ IX ST SG OB IF
 MODULES_MAKEFILES = NC/Makefile SM/Makefile IC/Makefile SQ/Makefile IX/Makefile ST/Makefile SG/Makefile OB/Makefile IF/Makefile RL/Makefile
 
 
@@ -24,10 +23,10 @@ test: $(MODULES_MAKEFILES)
 	done
 	perl $(srcdir)/summary.pl $(MODULES) > summary.log
 	@for MODULE in $(MODULES); do\
-  		(cat $$MODULE/report.txt) \
+		(cat $$MODULE/report.txt) \
 	done
 	cat summary.log
-	head -n -2 summary.log | tail -n +4 | awk '$$4 != 0 || $$5 != 0 {exit 1}'
+	cat summary.log | tail -n 1 | awk '$$4 != 0 || $$5 != 0 || $$2 != $$3 {exit 1}'
 
 save:
 	@for m in $(MODULES); do \

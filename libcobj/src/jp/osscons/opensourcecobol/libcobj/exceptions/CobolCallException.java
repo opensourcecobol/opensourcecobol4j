@@ -22,7 +22,4 @@ package jp.osscons.opensourcecobol.libcobj.exceptions;
 public class CobolCallException extends Exception {
 
   public static CobolCallException ex;
-
-  /** コンストラクタ */
-  public CobolCallException() {}
 }

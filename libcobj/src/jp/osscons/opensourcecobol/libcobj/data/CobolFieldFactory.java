@@ -37,6 +37,11 @@ public class CobolFieldFactory {
     return CobolFieldFactory.makeCobolField(size, new CobolDataStorage(str), attr);
   }
 
+  public static AbstractCobolField makeCobolField(
+      int size, byte[] bytes, CobolFieldAttribute attr) {
+    return CobolFieldFactory.makeCobolField(size, new CobolDataStorage(bytes), attr);
+  }
+
   /**
    * attrに設定された値に応じて適切なAbstractCobolFieldクラスのサブクラスの コンストラクタを呼びだす。
    *
@@ -93,9 +98,7 @@ public class CobolFieldFactory {
     try {
       bytes = str.getBytes("SJIS");
     } catch (UnsupportedEncodingException e) {
-      // TODO ログの対応
-      e.printStackTrace();
-      throw new CobolRuntimeException(CobolRuntimeException.COBOL_FITAL_ERROR, "エンコードエラー");
+      return null;
     }
     CobolFieldAttribute attr =
         new CobolFieldAttribute(CobolFieldAttribute.COB_TYPE_ALPHANUMERIC, 0, 0, 0, null);

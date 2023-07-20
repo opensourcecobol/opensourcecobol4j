@@ -153,7 +153,9 @@ command_line_options_DEPENDENCIES = \
 	command-line-options.src/fserial-variable.at \
 	command-line-options.src/fshort-variable.at \
 	command-line-options.src/java-package.at \
-	command-line-options.src/edit-code-command.at
+	command-line-options.src/edit-code-command.at \
+	command-line-options.src/file-path.at \
+	command-line-options.src/fdefaultbyte.at
 
 misc_DEPENDENCIES = \
 	misc.src/signed-comp3.at \
@@ -166,7 +168,12 @@ misc_DEPENDENCIES = \
 	misc.src/java-interface.at \
 	misc.src/comp3-int.at \
 	misc.src/env.at \
-	misc.src/exit-perform.at
+	misc.src/exit-perform.at \
+	misc.src/comp-overflow.at \
+	misc.src/compare-national-diff-size.at \
+	misc.src/compare-9.at \
+	misc.src/comp3-overflow.at \
+	misc.src/cancel-hyphen.at
 
 EXTRA_DIST = $(srcdir)/package.m4 \
 	$(TESTS) \

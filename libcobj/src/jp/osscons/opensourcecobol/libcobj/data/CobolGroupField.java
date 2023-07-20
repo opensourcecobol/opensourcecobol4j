@@ -52,8 +52,7 @@ public class CobolGroupField extends AbstractCobolField {
     try {
       return new String(dataStorage.getData(), "SJIS");
     } catch (UnsupportedEncodingException e) {
-      e.printStackTrace();
-      throw new CobolRuntimeException(CobolRuntimeException.COBOL_FITAL_ERROR, "エンコードエラー");
+      return "";
     }
   }
 
@@ -122,8 +121,7 @@ public class CobolGroupField extends AbstractCobolField {
     try {
       bytes = string.getBytes("SJIS");
     } catch (UnsupportedEncodingException e) {
-      e.printStackTrace();
-      throw new CobolRuntimeException(CobolRuntimeException.COBOL_FITAL_ERROR, "エンコードエラー");
+      return;
     }
 
     this.moveFrom(bytes);

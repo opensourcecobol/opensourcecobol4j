@@ -26,20 +26,14 @@ import java.io.PrintStream;
 import java.io.RandomAccessFile;
 import java.nio.ByteBuffer;
 import java.nio.channels.Channels;
-import java.nio.channels.ClosedChannelException;
 import java.nio.channels.FileChannel;
 import java.nio.channels.FileLock;
-import java.nio.channels.NonReadableChannelException;
-import java.nio.channels.NonWritableChannelException;
 import jp.osscons.opensourcecobol.libcobj.data.CobolDataStorage;
 
 public class FileIO {
 
   private FileChannel fc;
-  private RandomAccessFile ra;
   private FileLock fl = null;
-  private PrintStream out = System.out;
-  private InputStream in = System.in;
   private boolean useStdOut = true;
   private boolean useStdIn = true;
   private BufferedInputStream bis;
@@ -47,7 +41,6 @@ public class FileIO {
   private boolean atEnd = false;
 
   private static final boolean USE_STD_BUFFER = false;
-  private static final int STD_DEFAULT_BUFFER_SIZE = 1024;
 
   private static final boolean USE_READ_BUFFER = false;
   private static final int READ_BUFFER_SIZE = 1024;
@@ -56,8 +49,6 @@ public class FileIO {
   private int readBufferEndIndex;
 
   public FileIO() {
-    this.out = System.out;
-    this.in = System.in;
     this.useStdOut = true;
     this.useStdIn = true;
 
@@ -82,7 +73,6 @@ public class FileIO {
   }
 
   public void setRandomAccessFile(RandomAccessFile ra, FileLock fl) {
-    this.ra = ra;
     this.useStdOut = false;
     this.useStdIn = false;
     this.fc = ra.getChannel();
@@ -94,12 +84,10 @@ public class FileIO {
   }
 
   public void setOut(PrintStream out) {
-    this.out = out;
     this.useStdOut = true;
   }
 
   public void setIn(InputStream in) {
-    this.in = in;
     this.useStdIn = true;
   }
 
@@ -113,22 +101,14 @@ public class FileIO {
       if (USE_STD_BUFFER) {
         try {
           readSize = this.bis.read(bytes, 0, size);
-        } catch (ClosedChannelException e) {
-          return 0;
         } catch (IOException e) {
-          return 0;
-        } catch (NonReadableChannelException e) {
           return 0;
         }
       } else {
         ByteBuffer data = ByteBuffer.wrap(bytes);
         try {
           readSize = this.fc.read(data);
-        } catch (ClosedChannelException e) {
-          return 0;
         } catch (IOException e) {
-          return 0;
-        } catch (NonReadableChannelException e) {
           return 0;
         }
       }
@@ -155,11 +135,7 @@ public class FileIO {
             }
             storage.setByte(i, b[0]);
           }
-        } catch (ClosedChannelException e) {
-          return i;
         } catch (IOException e) {
-          return i;
-        } catch (NonReadableChannelException e) {
           return i;
         }
         return size;
@@ -177,12 +153,8 @@ public class FileIO {
             }
             storage.setByte(i, b[0]);
           }
-        } catch (ClosedChannelException e) {
-          throw new IOException();
         } catch (IOException e) {
-          throw new IOException();
-        } catch (NonReadableChannelException e) {
-          throw new IOException();
+          throw e;
         }
         return size;
       }
@@ -194,11 +166,6 @@ public class FileIO {
   }
 
   public int write(byte[] bytes) {
-    if (useStdOut) {
-      // 標準を使う
-    } else {
-      // 通常のファイル書き込み
-    }
     return 0;
   }
 
@@ -212,11 +179,7 @@ public class FileIO {
           for (i = 0; i < n; ++i) {
             this.bos.write(bytes, 0, size);
           }
-        } catch (ClosedChannelException e) {
-          return i;
         } catch (IOException e) {
-          return i;
-        } catch (NonWritableChannelException e) {
           return i;
         }
         return i;
@@ -230,11 +193,7 @@ public class FileIO {
           for (i = 0; i < n; ++i) {
             this.fc.write(bb);
           }
-        } catch (ClosedChannelException e) {
-          return i;
         } catch (IOException e) {
-          return i;
-        } catch (NonWritableChannelException e) {
           return i;
         }
         return i;
@@ -253,11 +212,7 @@ public class FileIO {
           for (i = 0; i < n; ++i) {
             this.bos.write(data, 0, size);
           }
-        } catch (ClosedChannelException e) {
-          return i;
         } catch (IOException e) {
-          return i;
-        } catch (NonWritableChannelException e) {
           return i;
         }
         return i;
@@ -268,11 +223,7 @@ public class FileIO {
           for (i = 0; i < n; ++i) {
             this.fc.write(data);
           }
-        } catch (ClosedChannelException e) {
-          return i;
         } catch (IOException e) {
-          return i;
-        } catch (NonWritableChannelException e) {
           return i;
         }
         return i;
@@ -296,11 +247,7 @@ public class FileIO {
       try {
         byte[] arr = {val};
         this.fc.write(ByteBuffer.wrap(arr));
-      } catch (ClosedChannelException e) {
-        return -1;
       } catch (IOException e) {
-        return -1;
-      } catch (NonWritableChannelException e) {
         return -1;
       }
       return val;
@@ -328,11 +275,7 @@ public class FileIO {
             } else {
               this.readBufferEndIndex = readBytes;
             }
-          } catch (ClosedChannelException e) {
-            return -1;
           } catch (IOException e) {
-            return -1;
-          } catch (NonReadableChannelException e) {
             return -1;
           }
         }
@@ -352,11 +295,7 @@ public class FileIO {
           } else {
             return -1;
           }
-        } catch (ClosedChannelException e) {
-          return -1;
         } catch (IOException e) {
-          return -1;
-        } catch (NonReadableChannelException e) {
           return -1;
         }
       }
@@ -365,30 +304,33 @@ public class FileIO {
 
   public void close() {
     if (!useStdOut && !useStdIn && this.fc != null) {
+      outer:
       if (USE_STD_BUFFER) {
         try {
           this.bos.flush();
           this.bis.close();
           this.bos.close();
         } catch (IOException e) {
+          break outer;
         }
       }
       try {
         this.fc.close();
       } catch (IOException e) {
+        return;
       }
     }
   }
 
   public void flush() {
-    if (useStdOut) {
-    } else {
+    if (!useStdOut) {
       try {
         if (USE_STD_BUFFER) {
           this.bos.flush();
         }
         this.fc.force(false);
       } catch (IOException e) {
+        return;
       }
     }
   }
@@ -416,22 +358,14 @@ public class FileIO {
     return true;
   }
 
-  public void seekInit() {
-    if (!useStdOut && !useStdIn) {
-      /*
-       * try {
-       * this.fc.position(this.fc.position() + 0);
-       * } catch (IOException e) {
-       * }
-       */
-    }
-  }
+  public void seekInit() {}
 
   public void rewind() {
     if (!useStdOut && !useStdIn) {
       try {
         this.fc.position(0L);
       } catch (IOException e) {
+        return;
       }
     }
   }
@@ -441,6 +375,7 @@ public class FileIO {
       try {
         this.fl.release();
       } catch (IOException e) {
+        return;
       }
     }
   }

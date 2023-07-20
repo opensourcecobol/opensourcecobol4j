@@ -27,6 +27,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#include <errno.h>
 #ifdef HAVE_SYS_TYPES_H
 #include <sys/types.h>
 #endif
@@ -136,6 +137,10 @@ int cb_field_id = 1;
 int cb_storage_id = 1;
 int cb_flag_main = 0;
 
+int cb_default_byte_specified = 0;
+unsigned char cb_default_byte = 0;
+#define OPTION_ID_DEFAULT_BYTE (1024)
+
 int external_flg = 0;
 int errorcount = 0;
 int warningcount = 0;
@@ -229,7 +234,8 @@ static pid_t cob_process_id = 0;
 static int strip_output = 0;
 static int gflag_set = 0;
 
-static char *output_name;
+static char *output_name = NULL;
+static char *java_source_dir = NULL;
 
 static const char *cob_tmpdir; /* /tmp */
 
@@ -248,7 +254,7 @@ static cob_sighandler_t intsig = NULL;
 static cob_sighandler_t qutsig = NULL;
 #endif
 
-static const char short_options[] = "hVvECbmxgwo:t:I:L:l:D:";
+static const char short_options[] = "hVvECbmxgwo:j:t:I:L:l:D:";
 
 static const struct option long_options[] = {
     {"help", no_argument, NULL, 'h'},
@@ -264,6 +270,8 @@ static const struct option long_options[] = {
     {"std", required_argument, NULL, '$'},
     {"conf", required_argument, NULL, '&'},
     {"debug", no_argument, NULL, 'd'},
+    {"class-file-dir", optional_argument, NULL, 'o'},
+    {"java-source-dir", optional_argument, NULL, 'j'},
     {"ext", required_argument, NULL, 'e'},
     {"free", no_argument, &cb_source_format, CB_FORMAT_FREE},
     {"free_1col_aster", no_argument, &cb_source_format,
@@ -277,6 +285,7 @@ static const struct option long_options[] = {
     {"assign_external", no_argument, NULL, 'A'},
     {"reference_check", no_argument, NULL, 'K'},
     {"constant", optional_argument, NULL, '3'},
+    {"fdefaultbyte", required_argument, NULL, OPTION_ID_DEFAULT_BYTE},
     {"edit-code-command", optional_argument, NULL, '['},
 #undef CB_FLAG
 #define CB_FLAG(var, name, doc)                                                \
@@ -766,6 +775,8 @@ static void cobc_print_usage(void) {
   puts(_("  -free_1col_aster                  Use free(1col_aster) source "
          "format"));
   puts(_("  -g                                Enable Java compiler debug"));
+  puts(_("  -o <dir>, -class-file-dir=<dir>   Place class files into <dir>"));
+  puts(_("  -j <dir>, -java-source-dir=<dir>  Place Java files into <dir>"));
   puts(_("  -E                                Preprocess only; do not compile "
          "or link"));
   puts(_("  -C                                Translation only; convert COBOL "
@@ -781,6 +792,10 @@ static void cobc_print_usage(void) {
       _("  -assign_external                  Set the file assign to external"));
   puts(_("  -constant                         Define <name> to <value> for $IF "
          "statement"));
+  puts(_("  -fdefaultbyte=<value>             default initialization for fields without VALUE, may be one of"));
+  puts(_("                                    * decimal 0..255 representing a character"));
+  puts(_("                                    * hexdecimal 0x00..0xFF representing a character"));
+  puts(_("                                    * octodecimal 00..0377 representing a character"));
   puts(_("  -java-package(=<package name>)    Specify the package name of the "
          "generated source code"));
   // puts(_("  -edit-code-command(=<command>)    Specify the command to edit
@@ -920,8 +935,15 @@ static int process_command_line(const int argc, char *argv[]) {
       break;
 
     case 'o':
-      /* -o : Output file */
+      /* -o : the directory where class files are stored */
+      /* -class-file-dir : the directory where class files are stored */
       output_name = strdup(optarg);
+      break;
+
+    case 'j':
+      /* -j : the directory where java files are stored */
+      /* -java-source-dir : the directory where java files are stored */
+      java_source_dir = strdup(optarg);
       break;
 
     case 'g':
@@ -980,6 +1002,21 @@ static int process_command_line(const int argc, char *argv[]) {
       if (optarg) {
         cb_java_package_name = optarg;
       }
+	  break;
+
+	case OPTION_ID_DEFAULT_BYTE:
+		if(optarg) {
+			char* e;
+			unsigned long byte = strtoul(optarg, &e, 0);
+			if(*e == '\0' && errno != EINVAL && errno != ERANGE && 0 <= byte && byte <= 0xFF) {
+				cb_default_byte = byte;
+				cb_default_byte_specified = 1;
+				break;
+			}
+		}
+		fprintf(stderr, "Warning - '%s' is an invalid 1-byte value\n", optarg);
+		fflush(stderr);
+		break;
 
     case '3': /* --constant */
       if (optarg) {
@@ -1597,7 +1634,8 @@ static int process_translate(struct filename *fn) {
   for (int i = 0; i < PROGRAM_ID_LIST_MAX_LEN; ++i) {
     program_id_list[i] = NULL;
   }
-  codegen(p, 0, program_id_list);
+  codegen(p, 0, program_id_list,
+          java_source_dir == NULL ? "./" : java_source_dir);
 
   return 0;
 }
@@ -1620,7 +1658,10 @@ static int process_compile(struct filename *fn) {
   }
 
   for (char **program_id = program_id_list; *program_id; ++program_id) {
-    sprintf(buff, "javac %s -encoding SJIS -d . %s.java", cob_java_flags,
+    char *java_source_dir_a = java_source_dir == NULL ? "./" : java_source_dir;
+    char *output_name_a = output_name == NULL ? "./" : output_name;
+    sprintf(buff, "javac %s -encoding SJIS -sourcepath %s -d %s %s/%s.java",
+            cob_java_flags, java_source_dir_a, output_name_a, java_source_dir_a,
             *program_id);
     ret = process(buff);
   }

@@ -38,7 +38,7 @@ public class CobolAlphanumericEditedField extends AbstractCobolField {
   @Override
   public byte[] getBytes() {
     // TODO Auto-generated method stub
-    return null;
+    return new byte[0];
   }
 
   @Override

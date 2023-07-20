@@ -25,11 +25,11 @@ import jp.osscons.opensourcecobol.libcobj.exceptions.CobolStopRunException;
 
 /** TODO 暫定的に作ったクラス ここに実装されたメソッドは別の適切なクラスに実装する、または適切なクラス名に変更する */
 public class CobolCheck {
-  public static void checkSubscript(int i, int min, int max, String name) {
+  public static void checkSubscript(int i, int min, int max, byte[] name) {
     // TODO 実装 (libcob/common.c)
   }
 
-  public static void checkSubscript(long i, int min, int max, String name) {
+  public static void checkSubscript(long i, int min, int max, byte[] name) {
     CobolCheck.checkSubscript((int) i, min, max, name);
   }
 
@@ -37,7 +37,7 @@ public class CobolCheck {
     // TODO 実装
   }
 
-  public static void checkSubscript(CobolDataStorage i, int min, int max, String name) {
+  public static void checkSubscript(CobolDataStorage i, int min, int max, byte[] name) {
     // TODO 実装 (libcob/common.c)
   }
 

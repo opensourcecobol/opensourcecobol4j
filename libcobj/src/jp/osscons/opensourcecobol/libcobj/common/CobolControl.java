@@ -19,13 +19,15 @@
 package jp.osscons.opensourcecobol.libcobj.common;
 
 import java.util.Optional;
-import jp.osscons.opensourcecobol.libcobj.exceptions.*;
+import jp.osscons.opensourcecobol.libcobj.exceptions.CobolGoBackException;
+import jp.osscons.opensourcecobol.libcobj.exceptions.CobolRuntimeException;
+import jp.osscons.opensourcecobol.libcobj.exceptions.CobolStopRunException;
 
 public abstract class CobolControl {
   public enum LabelType {
     label,
     section,
-  };
+  }
 
   public abstract Optional<CobolControl> run()
       throws CobolRuntimeException, CobolGoBackException, CobolStopRunException;

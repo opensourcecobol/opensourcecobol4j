@@ -38,7 +38,7 @@ public class CobolNumericEditedField extends AbstractCobolField {
 
   @Override
   public byte[] getBytes() {
-    return null;
+    return new byte[0];
   }
 
   @Override
@@ -93,8 +93,8 @@ public class CobolNumericEditedField extends AbstractCobolField {
     boolean neg = sign < 0;
     byte[] picBytes = dst.getAttribute().getPic().getBytes();
     int count = 0;
-    int count_sign = 1;
-    int count_curr = 1;
+    int countSign = 1;
+    int countCurr = 1;
     boolean pIsLeft = false;
 
     final int sizeOfInt = 4;
@@ -105,11 +105,11 @@ public class CobolNumericEditedField extends AbstractCobolField {
       int repeat = buf.getInt();
       if (c == '9' || c == 'Z' || c == '*') {
         count += repeat;
-        count_sign = 0;
-        count_curr = 0;
-      } else if (count_curr != 0 && c == CobolModule.getCurrentModule().currency_symbol) {
+        countSign = 0;
+        countCurr = 0;
+      } else if (countCurr != 0 && c == CobolModule.getCurrentModule().currency_symbol) {
         count += repeat;
-      } else if (count_sign != 0 && (c == '+' || c == '-')) {
+      } else if (countSign != 0 && (c == '+' || c == '-')) {
         count += repeat;
       } else if (c == 'P') {
         if (count == 0) {
@@ -117,8 +117,8 @@ public class CobolNumericEditedField extends AbstractCobolField {
           break;
         } else {
           count += repeat;
-          count_sign = 0;
-          count_curr = 0;
+          countSign = 0;
+          countCurr = 0;
         }
       } else if (c == 'V' || c == CobolModule.getCurrentModule().decimal_point) {
         break;

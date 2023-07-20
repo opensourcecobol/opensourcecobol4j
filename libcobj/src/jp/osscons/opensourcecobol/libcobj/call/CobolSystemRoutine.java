@@ -75,15 +75,18 @@ public class CobolSystemRoutine {
         pb.redirectInput(Redirect.INHERIT)
             .redirectOutput(Redirect.INHERIT)
             .redirectError(Redirect.INHERIT);
+        Process process;
         try {
-          Process process = pb.start();
-          return process.waitFor();
+          process = pb.start();
         } catch (IOException e) {
-          e.printStackTrace();
-        } catch (InterruptedException e) {
-          e.printStackTrace();
+          return 1;
         }
-        // TODO sccreen関連処理の追加
+        try {
+          return process.waitFor();
+          // TODO sccreen関連処理の追加
+        } catch (InterruptedException e) {
+          return 1;
+        }
       }
     }
     return 1;
@@ -101,7 +104,7 @@ public class CobolSystemRoutine {
   }
 
   private interface Calculater {
-    public byte calc(byte b1, byte b2);
+    byte calc(byte b1, byte b2);
   }
 
   public static int CBL_COMMON_OPERATION(
@@ -426,7 +429,6 @@ public class CobolSystemRoutine {
     CobolUtil.COB_CHK_PARMS("CBL_XF5", 2);
     byte b1 = data1.getByte(0);
     for (int n = 0; n < 8; ++n) {
-      byte b2 = data2.getByte(n);
       data2.setByte(n, (byte) ((b1 & (1 << (7 - n))) != 0 ? 1 : 0));
     }
     return 0;
@@ -456,7 +458,6 @@ public class CobolSystemRoutine {
    * @return
    */
   public static int CBL_X91(CobolDataStorage result, CobolDataStorage func, CobolDataStorage parm) {
-    CobolDataStorage p;
     switch (func.getByte(0)) {
       case 11:
         for (int i = 0; i < 8; ++i) {

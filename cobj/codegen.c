@@ -77,6 +77,9 @@ static const char *excp_current_section = NULL;
 static const char *excp_current_paragraph = NULL;
 static struct cb_program *current_prog;
 
+extern int cb_default_byte_specified;
+extern unsigned char cb_default_byte;
+
 // OCCURS指定したときのIDNEXに対応するCobolDataStorage型変数を扱うときに必要なフラグ
 static int index_read_flag = 0;
 
@@ -416,27 +419,60 @@ static void joutput_indent(const char *str) {
   }
 }
 
-static void joutput_string(const unsigned char *s, int size) {
-  int i;
-  int c;
-  int output_multibyte = 0;
-  int printable = 1;
+struct string_literal_cache {
+  unsigned char* string_value;
+  int size;
+  int param_wrap_string_flag;
+  int printable;
+  char* var_name;
+  struct string_literal_cache* next;
+};
 
+int string_literal_id = 0;
+struct string_literal_cache* string_literal_list = NULL;
+
+static void init_string_literal_list() {
+	string_literal_id = 0;
+	string_literal_list = NULL;
+}
+
+static void free_string_literal_list() {
+	string_literal_id = 0;
+	struct string_literal_cache* l = string_literal_list;
+	while(l != NULL) {
+		struct string_literal_cache* next = l->next;
+		free(l->string_value);
+		free(l->var_name);
+		free(l);
+		l = next;
+	}
+}
+
+static int is_string_printable(const unsigned char *s, int size) {
+  int i;
   for (i = 0; i < size;) {
-    c = s[i];
+    int c = s[i];
     if (0x20 <= c && c <= 0x7e) {
       i += 1;
     } else if ((0x81 <= c && c <= 0x9f) || (0xe0 <= c && c <= 0xef)) {
       i += 2;
     } else {
-      printable = 0;
-      break;
+      return 0;
     }
   }
+  return 1;
+}
+
+static void joutput_string_write(const unsigned char *s, int size, int printable) {
+  int i;
+  int c;
+  int output_multibyte = 0;
 
   if (printable) {
     if (param_wrap_string_flag) {
       joutput("new CobolDataStorage(");
+    } else {
+      joutput("CobolUtil.stringToBytes(");
     }
 
     joutput("\"");
@@ -454,13 +490,13 @@ static void joutput_string(const unsigned char *s, int size) {
                          ((0x81 <= c && c <= 0x9f) || (0xe0 <= c && c <= 0xef));
     }
 
-    joutput("\"");
-
-    if (param_wrap_string_flag) {
-      joutput(")");
-    }
+    joutput("\")");
   } else {
-    joutput("makeCobolDataStorage(");
+    if (param_wrap_string_flag) {
+      joutput("makeCobolDataStorage(");
+    } else {
+      joutput("CobolUtil.toBytes(");
+    }
 
     for (i = 0; i < size; i++) {
       joutput("(byte)0x%02x", s[i]);
@@ -471,6 +507,68 @@ static void joutput_string(const unsigned char *s, int size) {
 
     joutput(")");
   }
+}
+
+static void
+joutput_string(const unsigned char *s, int size) {
+  int i;
+	struct string_literal_cache* new_literal_cache = malloc(sizeof(struct string_literal_cache));
+
+	new_literal_cache->size = size;
+	new_literal_cache->param_wrap_string_flag = param_wrap_string_flag;
+  new_literal_cache->printable = is_string_printable(s, size);
+
+	new_literal_cache->string_value = malloc(size);
+	memcpy(new_literal_cache->string_value, s, size);
+
+	new_literal_cache->var_name = malloc(128);
+	int var_name_length = sprintf(new_literal_cache->var_name, "str_literal_%d", string_literal_id++);
+	
+	// append the initial string value to the variable name if possible
+	for(i=0; i<size && i<64; ++i) {
+		char c = s[i];
+		if(!(('0' <= c && c <= '9') || ('a' <= c && c <= 'z') || ('A' <= c && c <= 'Z') || c == '_')) {
+			break;
+		}
+	}
+
+	if(i > 0) {
+		new_literal_cache->var_name[var_name_length] = '_';
+		memcpy(new_literal_cache->var_name + var_name_length + 1, s, i);
+		new_literal_cache->var_name[var_name_length + 1 + i] = '\0';
+	}
+
+	// add the new cache to string_literal_list
+	new_literal_cache->next = string_literal_list;
+	string_literal_list = new_literal_cache;
+
+	joutput("%s", new_literal_cache->var_name);
+}
+
+static void joutput_all_string_literals() {
+  const char* data_type_storage = "CobolDataStorage";
+  const char* data_type_bytes = "byte[]";
+	const char* data_type;
+	struct string_literal_cache* l = string_literal_list;
+	int tmp_param_wrap_string_flag = param_wrap_string_flag;
+
+	while(l != NULL) {
+    if(l->param_wrap_string_flag) {
+      data_type = data_type_storage;
+    } else {
+      data_type = data_type_bytes;
+    }
+		joutput_prefix();
+		joutput("public static final %s %s = ", data_type, l->var_name);
+		param_wrap_string_flag = l->param_wrap_string_flag;
+		joutput_string_write(
+			l->string_value,
+			l->size,
+			l->printable);
+		joutput(";\n");
+		l = l->next;
+	}
+	param_wrap_string_flag = tmp_param_wrap_string_flag;
 }
 
 static void joutput_local(const char *fmt, ...) {
@@ -1802,14 +1900,18 @@ static int initialize_type(struct cb_initialize *p, struct cb_field *f,
   return INITIALIZE_NONE;
 }
 
-static int initialize_uniform_char(struct cb_field *f) {
+static int initialize_uniform_char(struct cb_field *f, int flag_statement) {
   int c;
 
+  if(!flag_statement && cb_default_byte_specified) {
+      return cb_default_byte;
+  }
+
   if (f->children) {
-    c = initialize_uniform_char(f->children);
+    c = initialize_uniform_char(f->children, flag_statement);
     for (f = f->children->sister; f; f = f->sister) {
       if (!f->redefines) {
-        if (c != initialize_uniform_char(f)) {
+        if (c != initialize_uniform_char(f, flag_statement)) {
           return -1;
         }
       }
@@ -1874,7 +1976,7 @@ static void joutput_initialize_literal(cb_tree x, struct cb_field *f,
     joutput_data(x);
     joutput("memcpy (");
     joutput_string(l->data, f->size);
-    joutput(".getBytes(), %d);\n", f->size);
+    joutput(", %d);\n", f->size);
     return;
   }
   i = f->size / l->size;
@@ -1886,7 +1988,7 @@ static void joutput_initialize_literal(cb_tree x, struct cb_field *f,
   joutput_data(x);
   joutput(".getSubDataStorage(i0 * %u).memcpy(", (unsigned int)l->size);
   joutput_string(l->data, l->size);
-  joutput(".getBytes(), %u);\n", (unsigned int)l->size);
+  joutput(", %u);\n", (unsigned int)l->size);
   joutput_indent("  }");
 
   n = f->size % l->size;
@@ -1895,7 +1997,7 @@ static void joutput_initialize_literal(cb_tree x, struct cb_field *f,
     joutput_data(x);
     joutput(".getSubDataStorage(i0 * %u).memcpy(", (unsigned int)l->size);
     joutput_string(l->data, n);
-    joutput(".getBytes(), %u);\n", (unsigned int)n);
+    joutput(", %u);\n", (unsigned int)n);
   }
 }
 
@@ -2197,7 +2299,7 @@ static void joutput_initialize_compound(struct cb_initialize *p, cb_tree x) {
       break;
     case INITIALIZE_DEFAULT: {
       last_field = f;
-      last_char = initialize_uniform_char(f);
+      last_char = initialize_uniform_char(f, p->flag_statement);
 
       if (last_char != -1) {
         if (f->flag_occurs) {
@@ -2207,7 +2309,7 @@ static void joutput_initialize_compound(struct cb_initialize *p, cb_tree x) {
         for (; f->sister; f = f->sister) {
           if (!f->sister->redefines) {
             if (initialize_type(p, f->sister, 0) != INITIALIZE_DEFAULT ||
-                initialize_uniform_char(f->sister) != last_char ||
+                initialize_uniform_char(f->sister, p->flag_statement) != last_char ||
                 CB_TREE_CATEGORY(f->sister) != CB_TREE_CATEGORY(last_field)) {
               break;
             }
@@ -2274,7 +2376,7 @@ static void joutput_initialize(struct cb_initialize *p) {
     joutput_initialize_one(p, p->var);
     break;
   case INITIALIZE_DEFAULT:
-    c = initialize_uniform_char(f);
+    c = initialize_uniform_char(f, p->flag_statement);
     if (c != -1) {
       joutput_initialize_uniform(p->var, c, f->size);
     } else {
@@ -5516,8 +5618,8 @@ void joutput_execution_entry_func() {
   joutput_line("}");
 }
 
-void codegen(struct cb_program *prog, const int nested,
-             char **program_id_list) {
+void codegen(struct cb_program *prog, const int nested, char **program_id_list,
+             char *java_source_dir) {
   int i;
   cb_tree l;
   struct field_list *k;
@@ -5549,10 +5651,12 @@ void codegen(struct cb_program *prog, const int nested,
 
   // modify 8/29 11:00
   joutput_target = yyout;
-  char java_file_name[64];
-  sprintf(java_file_name, "%s.java", prog->program_id);
+  char java_file_name[1024];
+  sprintf(java_file_name, "%s/%s.java", java_source_dir, prog->program_id);
   *program_id_list = (char *)prog->program_id;
   joutput_target = fopen(java_file_name, "w");
+
+  init_string_literal_list();
 
   if (!nested) {
     gen_ebcdic = 0;
@@ -5764,6 +5868,11 @@ void codegen(struct cb_program *prog, const int nested,
   joutput_declare_member_variables(prog, prog->parameter_list);
   joutput("\n");
 
+	//Output the declarations of string literals
+	joutput_line("/* String literals */");
+	joutput_all_string_literals();
+	free_string_literal_list();
+
   /* Files */
   if (prog->file_list) {
     i = 0;
@@ -5838,7 +5947,7 @@ void codegen(struct cb_program *prog, const int nested,
     joutput_line("}");
     fclose(joutput_target);
     ++program_id_list;
-    codegen(prog->next_program, 1, program_id_list);
+    codegen(prog->next_program, 1, program_id_list, java_source_dir);
     return;
   }
 

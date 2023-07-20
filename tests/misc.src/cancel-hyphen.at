@@ -1,0 +1,48 @@
+AT_SETUP([CANCEL hyphen])
+
+AT_DATA([TEST18.cbl], [
+       IDENTIFICATION              DIVISION.
+       PROGRAM-ID. TEST18.
+       DATA                        DIVISION.
+       WORKING-STORAGE             SECTION.
+       01  WK-X         PIC X(02).
+       PROCEDURE                   DIVISION.
+       MAIN-RTN.
+           MOVE  "AA"  TO  WK-X.
+           CALL "TEST18-1" USING WK-X.
+           MOVE  "BB"  TO  WK-X.
+           CALL "TEST18-1" USING WK-X.
+           CALL "TEST18-1" USING WK-X.
+           CANCEL "TEST18-1".
+           CALL "TEST18-1" USING WK-X.
+])
+
+AT_DATA([TEST18-1.cbl], [
+       IDENTIFICATION              DIVISION.
+       PROGRAM-ID.                 TEST18-1.
+       ENVIRONMENT                 DIVISION.
+       DATA                        DIVISION.
+       WORKING-STORAGE             SECTION.
+       01  WK-9         PIC 9(02) VALUE ZERO.
+       LINKAGE                     SECTION.
+       01  LK-X         PIC X(02).
+       PROCEDURE                   DIVISION USING LK-X.
+       MAIN-RTN.
+           EVALUATE  LK-X
+            WHEN "AA"
+              MOVE  ZERO  TO  WK-9
+            WHEN "BB"
+              ADD  1  TO  WK-9
+              DISPLAY WK-9 UPON CONSOLE
+           END-EVALUATE.
+           GOBACK.
+])
+
+AT_CHECK([${COBJ} TEST18.cbl TEST18-1.cbl])
+AT_CHECK([java TEST18], [0],
+[01
+02
+01
+])
+
+AT_CLEANUP
