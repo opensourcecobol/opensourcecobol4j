@@ -1118,7 +1118,7 @@ static void joutput_field(cb_tree x) {
  * Literal
  */
 
-static int lookup_literal(cb_tree x) {
+static struct literal_list* lookup_literal(cb_tree x) {
 
   struct cb_literal *literal;
   struct literal_list *l;
@@ -1132,7 +1132,7 @@ static int lookup_literal(cb_tree x) {
         literal->sign == l->literal->sign &&
         literal->scale == l->literal->scale &&
         memcmp(literal->data, l->literal->data, literal->size) == 0) {
-      return l->id;
+      return l;
     }
   }
 
@@ -1147,13 +1147,34 @@ static int lookup_literal(cb_tree x) {
 
   /* Cache it */
   l = cobc_malloc(sizeof(struct literal_list));
-  l->id = cb_literal_id;
+  l->id = cb_literal_id++;
   l->literal = literal;
   l->x = x;
   l->next = literal_cache;
   literal_cache = l;
 
-  return cb_literal_id++;
+  return l;
+}
+
+void joutput_const_identifier(struct literal_list* l) {
+    const int MAX_LITERAL_SIZE = 64;
+    char s[MAX_LITERAL_SIZE + 1];
+    memset(s, 0, MAX_LITERAL_SIZE + 1);
+    int i = 0;
+    for(i=0;i<MAX_LITERAL_SIZE;i++) {
+        char c = l->literal->data[i];
+        if(('a' <= c && c <= 'z') || ('A' <= c && c <= 'Z') || ('0' <= c && c <= '9') || c == '_' || c == '$') {
+            s[i] = c;
+        } else {
+            break;
+        }
+    }
+
+    if(i == 0) {
+        joutput("%s%d", CB_PREFIX_CONST, l->id);
+    } else {
+        joutput("%s%d$%s", CB_PREFIX_CONST, l->id, s);
+    }
 }
 
 /*
@@ -1464,7 +1485,8 @@ static void joutput_param(cb_tree x, int id) {
     joutput("%s%s", CB_PREFIX_FILE, CB_FILE(x)->cname);
     break;
   case CB_TAG_LITERAL:
-    joutput("%s%d", CB_PREFIX_CONST, lookup_literal(x));
+    struct literal_list* l = lookup_literal(x);
+    joutput_const_identifier(l);
     break;
   case CB_TAG_FIELD:
     /* TODO: remove me */
@@ -5069,7 +5091,8 @@ void joutput_init_method(struct cb_program *prog) {
     literal_cache = literal_list_reverse(literal_cache);
     for (m = literal_cache; m; m = m->next) {
       joutput_prefix();
-      joutput("%s%d\t= ", CB_PREFIX_CONST, m->id);
+      joutput_const_identifier(m);
+      joutput("\t= ");
       joutput_field(m->x);
       joutput(";\n");
     }
@@ -5496,7 +5519,10 @@ void joutput_declare_member_variables(struct cb_program *prog,
     joutput_line("/* Constants */\n");
     literal_cache = literal_list_reverse(literal_cache);
     for (m = literal_cache; m; m = m->next) {
-      joutput_line("private AbstractCobolField %s%d;", CB_PREFIX_CONST, m->id);
+      joutput_prefix();
+      joutput("private AbstractCobolField ");
+      joutput_const_identifier(m);
+      joutput(";\n");
     }
     joutput("\n");
   }
