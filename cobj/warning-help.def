@@ -23,5 +23,8 @@
 
 /* CB_WARNDEF (var, name, wall, doc) */
 
+CB_WARNDEF (cb_warn_parentheses, "parentheses", 1,
+	    N_("Warn lack of parentheses around AND within OR"))
+
 CB_WARNDEF (cb_warn_unreachable, "unreachable", 0,
 	    N_("Warn unreachable statements"))
