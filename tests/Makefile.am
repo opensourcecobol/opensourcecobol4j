@@ -148,6 +148,7 @@ command_line_options_DEPENDENCIES = \
 	command-line-options.src/list-reserved.at \
 	command-line-options.src/assign_external.at \
 	command-line-options.src/Wparentheses.at \
+	command-line-options.src/Wcolumn-overflow.at \
 	command-line-options.src/Wterminator.at \
 	command-line-options.src/Wunreachable.at \
 	command-line-options.src/ftrace-ftraceall.at \
