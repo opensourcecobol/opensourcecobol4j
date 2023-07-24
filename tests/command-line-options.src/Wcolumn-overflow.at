@@ -1,0 +1,30 @@
+AT_SETUP([-Wcolumn-overflow])
+
+AT_DATA([prog.cbl], [
+       IDENTIFICATION              DIVISION.                            test
+       PROGRAM-ID.                 prog.	
+       DATA DIVISION.
+       WORKING-STORAGE             SECTION.	
+       01 I PIC 9.
+       PROCEDURE                   DIVISION.	
+       MAIN-RTN.
+      ***************************************************************************
+*********************************************************************************
+                                                         DISPLAY"hello".world
+                                                                        1
+                                                                        1234567890123456789012345678901234567890
+       COPY "12345.cpy".                                                12
+])
+
+AT_DATA([12345.cpy], [
+        display "hello".
+])
+
+AT_CHECK([${COBJ} -Wcolumn-overflow prog.cbl], [0], [],
+[prog.cbl:1: Warning: Source text after column 72
+prog.cbl:8: Warning: Source text after column 72
+prog.cbl:11: Warning: Source text after column 72
+])
+
+AT_CHECK([${COBJ} --help | grep '\-Wcolumn-overflow' > /dev/null], [0])
+AT_CLEANUP
