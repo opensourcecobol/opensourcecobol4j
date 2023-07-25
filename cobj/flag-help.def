@@ -39,3 +39,6 @@ CB_FLAG (cb_flag_serial_variable, "serial-variable",
 
 CB_FLAG (cb_flag_short_variable, "short-variable",
 	 N_("Use short variable names in Java source code. This feature may cause compilation errors"))
+
+CB_FLAG (cb_flag_mfcomment, "mfcomment",
+	 N_("'*' or '/' in column 1 treated as comment (FIXED only)"))
