@@ -1,0 +1,19 @@
+AT_SETUP([-ffunctions-all])
+
+AT_DATA([prog.cbl], [
+       IDENTIFICATION   DIVISION.
+       PROGRAM-ID.      prog.
+       DATA             DIVISION.
+       WORKING-STORAGE  SECTION.
+       01  X   PIC   X(9) VALUE "ABCabc123".
+       PROCEDURE        DIVISION.
+           DISPLAY UPPER-CASE ( X ).
+])
+
+AT_CHECK([${COBJ} -ffunctions-all prog.cbl])
+AT_CHECK([java prog], [0],
+[ABCABC123
+])
+
+AT_CHECK([${COBJ} --help | grep '\-ffunctions-all' > /dev/null], [0])
+AT_CLEANUP
