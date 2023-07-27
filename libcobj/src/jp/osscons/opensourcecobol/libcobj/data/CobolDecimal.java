@@ -20,6 +20,8 @@ package jp.osscons.opensourcecobol.libcobj.data;
 
 import java.math.BigDecimal;
 import java.math.RoundingMode;
+import java.nio.ByteOrder;
+
 import jp.osscons.opensourcecobol.libcobj.common.CobolModule;
 import jp.osscons.opensourcecobol.libcobj.common.CobolUtil;
 import jp.osscons.opensourcecobol.libcobj.exceptions.CobolException;
@@ -318,6 +320,12 @@ public class CobolDecimal {
       return;
     }
     alignDecimal(this, decimal);
+    ByteBuffer buffer = ByteBuffer.allocate(4).putInt(decimal.getValue().intValue());
+    buffer.order(ByteOrder.LITTLE_ENDIAN);
+    System.out.println("dbg: this=" + buffer.getInt());
+    System.out.println("dbg: decimal=" + decimal.getValue().intValue());
+    //this.setValue(this.getValue().add(decimal.getValue()));
+    decimal.setValue()
     this.setValue(this.getValue().add(decimal.getValue()));
   }
 
@@ -498,15 +506,14 @@ public class CobolDecimal {
       default:
         int digits = f.getAttribute().getDigits();
         CobolFieldAttribute attr = f.getAttribute();
-        CobolFieldAttribute newAttr =
-            new CobolFieldAttribute(
-                CobolFieldAttribute.COB_TYPE_NUMERIC_DISPLAY,
-                digits,
-                attr.getScale(),
-                CobolFieldAttribute.COB_FLAG_HAVE_SIGN,
-                null);
-        AbstractCobolField displayField =
-            CobolFieldFactory.makeCobolField(digits, new CobolDataStorage(digits), newAttr);
+        CobolFieldAttribute newAttr = new CobolFieldAttribute(
+            CobolFieldAttribute.COB_TYPE_NUMERIC_DISPLAY,
+            digits,
+            attr.getScale(),
+            CobolFieldAttribute.COB_FLAG_HAVE_SIGN,
+            null);
+        AbstractCobolField displayField = CobolFieldFactory.makeCobolField(digits, new CobolDataStorage(digits),
+            newAttr);
         if (d.getField(displayField, opt) == 0) {
           f.moveFrom(displayField);
         }
@@ -677,7 +684,8 @@ public class CobolDecimal {
     return 0;
   }
 
-  class OverflowException extends Exception {}
+  class OverflowException extends Exception {
+  }
 
   /**
    * libcob/numeric.cのcob_decimal_get_binaryの実装
@@ -686,7 +694,7 @@ public class CobolDecimal {
    * @param opt
    * @return
    */
-  private int getBinaryField(AbstractCobolField f, int opt) {
+  public int getBinaryField(AbstractCobolField f, int opt) {
     CobolDataStorage data = f.getDataStorage();
     CobolFieldAttribute attr = f.getAttribute();
     if (this.getValue().signum() == 0) {
@@ -705,8 +713,7 @@ public class CobolDecimal {
       }
     }
     int bitnum = f.getSize() * 8 - sign;
-    outer:
-    {
+    outer: {
       if (this.getValue().compareTo(new BigDecimal(2).pow(bitnum).subtract(BigDecimal.ONE)) > 0) {
         if ((opt & COB_STORE_KEEP_ON_OVERFLOW) != 0) {
           break outer;
