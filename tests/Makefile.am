@@ -159,6 +159,7 @@ command_line_options_DEPENDENCIES = \
 	command-line-options.src/edit-code-command.at \
 	command-line-options.src/file-path.at \
 	command-line-options.src/fdefaultbyte.at \
+	command-line-options.src/ffunctions-all.at \
 	command-line-options.src/fmfcomment.at \
 	command-line-options.src/debug.at
 
