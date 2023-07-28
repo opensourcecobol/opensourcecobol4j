@@ -33,16 +33,16 @@ cc
 ee
 00005
 ])
-AT_CHECK([cat prog.java | grep 'field\$bb' > /dev/null], [0])
-AT_CHECK([cat prog.java | grep 'field\$cc' > /dev/null], [0])
-AT_CHECK([cat prog.java | grep 'field\$ee' > /dev/null], [0])
-AT_CHECK([cat prog.java | grep 'field\$ff' > /dev/null], [0])
-AT_CHECK([cat prog.java | grep 'field\$gg' > /dev/null], [0])
+AT_CHECK([cat prog.java | grep 'f_bb' > /dev/null], [0])
+AT_CHECK([cat prog.java | grep 'f_cc' > /dev/null], [0])
+AT_CHECK([cat prog.java | grep 'f_ee' > /dev/null], [0])
+AT_CHECK([cat prog.java | grep 'f_ff' > /dev/null], [0])
+AT_CHECK([cat prog.java | grep 'f_gg' > /dev/null], [0])
 
-AT_CHECK([cat prog.java | grep 'field\$bb_of' > /dev/null], [1])
-AT_CHECK([cat prog.java | grep 'field\$cc_of' > /dev/null], [1])
-AT_CHECK([cat prog.java | grep 'field\$ee_of' > /dev/null], [1])
-AT_CHECK([cat prog.java | grep 'field\$ff_of' > /dev/null], [1])
-AT_CHECK([cat prog.java | grep 'field\$gg_of' > /dev/null], [1])
+AT_CHECK([cat prog.java | grep 'f_bb__' > /dev/null], [1])
+AT_CHECK([cat prog.java | grep 'f_cc__' > /dev/null], [1])
+AT_CHECK([cat prog.java | grep 'f_ee__' > /dev/null], [1])
+AT_CHECK([cat prog.java | grep 'f_ff__' > /dev/null], [1])
+AT_CHECK([cat prog.java | grep 'f_gg__' > /dev/null], [1])
 
 AT_CLEANUP

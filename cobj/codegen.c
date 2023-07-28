@@ -220,12 +220,12 @@ static char *get_java_identifier_base(struct cb_field *f) {
 }
 
 static void get_java_identifier_helper(struct cb_field *f, char *buf) {
-  static const char *of = "_of_";
+  static const char *delimitor = "__";
   strcpy_identifier_cobol_to_java(buf, f->name);
   buf += strlen(f->name);
   if (f->parent != NULL) {
-    strcpy(buf, of);
-    buf += strlen(of);
+    strcpy(buf, delimitor);
+    buf += strlen(delimitor);
     get_java_identifier_helper(f->parent, buf);
   }
 }
