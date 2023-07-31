@@ -30,16 +30,16 @@ A
 3
 B
 ])
-AT_CHECK([grep 'field\$AAA' prog.java], [1])
-AT_CHECK([grep 'storage\$AAA' prog.java], [1])
-AT_CHECK([grep 'field\$BBB' prog.java], [1])
-AT_CHECK([grep 'storage\$BBB' prog.java], [1])
-AT_CHECK([grep 'field\$CCC' prog.java], [1])
-AT_CHECK([grep 'storage\$CCC' prog.java], [1])
-AT_CHECK([grep 'field\$DDD' prog.java], [1])
-AT_CHECK([grep 'field\$EEE' prog.java], [1])
-AT_CHECK([grep 'field\$FFF' prog.java], [1])
-AT_CHECK([grep 'storage\$GRP' prog.java], [1])
+AT_CHECK([grep 'f_AAA' prog.java], [1])
+AT_CHECK([grep 'b_AAA' prog.java], [1])
+AT_CHECK([grep 'f_BBB' prog.java], [1])
+AT_CHECK([grep 'b_BBB' prog.java], [1])
+AT_CHECK([grep 'f_CCC' prog.java], [1])
+AT_CHECK([grep 'b_CCC' prog.java], [1])
+AT_CHECK([grep 'f_DDD' prog.java], [1])
+AT_CHECK([grep 'f_EEE' prog.java], [1])
+AT_CHECK([grep 'f_FFF' prog.java], [1])
+AT_CHECK([grep 'b_GRP' prog.java], [1])
 
 AT_CHECK([${COMPILE} prog.cbl])
 AT_CHECK([${RUN_MODULE} prog], [0],
@@ -50,15 +50,15 @@ A
 3
 B
 ])
-AT_CHECK([grep 'field\$AAA' prog.java > /dev/null], [0])
-AT_CHECK([grep 'storage\$AAA' prog.java > /dev/null], [0])
-AT_CHECK([grep 'field\$BBB' prog.java > /dev/null], [0])
-AT_CHECK([grep 'storage\$BBB' prog.java > /dev/null], [0])
-AT_CHECK([grep 'field\$CCC' prog.java > /dev/null], [0])
-AT_CHECK([grep 'storage\$CCC' prog.java > /dev/null], [0])
-AT_CHECK([grep 'field\$DDD' prog.java > /dev/null], [0])
-AT_CHECK([grep 'field\$EEE' prog.java > /dev/null], [0])
-AT_CHECK([grep 'field\$FFF' prog.java > /dev/null], [0])
-AT_CHECK([grep 'storage\$GRP' prog.java > /dev/null], [0])
+AT_CHECK([grep 'f_AAA' prog.java > /dev/null], [0])
+AT_CHECK([grep 'b_AAA' prog.java > /dev/null], [0])
+AT_CHECK([grep 'f_BBB' prog.java > /dev/null], [0])
+AT_CHECK([grep 'b_BBB' prog.java > /dev/null], [0])
+AT_CHECK([grep 'f_CCC' prog.java > /dev/null], [0])
+AT_CHECK([grep 'b_CCC' prog.java > /dev/null], [0])
+AT_CHECK([grep 'f_DDD' prog.java > /dev/null], [0])
+AT_CHECK([grep 'f_EEE' prog.java > /dev/null], [0])
+AT_CHECK([grep 'f_FFF' prog.java > /dev/null], [0])
+AT_CHECK([grep 'b_GRP' prog.java > /dev/null], [0])
 
 AT_CLEANUP
