@@ -1,3 +1,4 @@
+OUTPUT_DIR = output
 TARGET_JAR = libcobj.jar
 SQLITE_JDBC_JAR = sqlite-jdbc/sqlite.jar
 SRC_FILES = \	
@@ -75,11 +76,14 @@ SRC_FILES = \
 all: $(TARGET_JAR) $(SQLITE_JDBC_JAR)
 
 $(TARGET_JAR): $(SRC_FILES) $(SQLITE_JDBC_JAR)
-	javac -encoding UTF8 -p sqlite-jdbc -d . $(SRC_FILES)
-	jar cf $(TARGET_JAR) jp
+	javac -encoding UTF8 -p sqlite-jdbc -d $(OUTPUT_DIR) $(SRC_FILES)
+	cd $(OUTPUT_DIR) && jar cf ../$(TARGET_JAR) .
 
 clean:
-	rm -rf jp/
+	rm -rf $(OUTPUT_DIR)
+
+$(OUTPUT_DIR):
+	mkdir -p $(OUTPUT_DIR)
 
 install: $(TARGET_JAR) $(SQLITE_JDBC_JAR)
 	mkdir -p $(DESTDIR)$(prefix)/lib/opensourcecobol4j/

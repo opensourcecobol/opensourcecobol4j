@@ -1655,8 +1655,10 @@ static int process_translate(struct filename *fn) {
   return 0;
 }
 
-static void create_module_info_java(char* package_name) {
-  FILE *f = fopen("module-info.java", "w");
+static void create_module_info_java(char* source_dir, char* package_name) {
+  char path[COB_MEDIUM_BUFF];
+  sprintf(path, "%s/module-info.java", source_dir);
+  FILE *f = fopen(path, "w");
   fprintf(f, "module %s {\n", package_name);
   fprintf(f, "  requires transitive jp.osscons.opensourcecobol.libcobj;\n");
   fprintf(f, "  exports %s;\n", package_name);
@@ -1691,11 +1693,11 @@ static int process_compile(struct filename *fn) {
   char *output_name_a = output_name == NULL ? "./" : output_name;
   char *java_source_dir_a = java_source_dir == NULL ? "./" : java_source_dir;
 
-  create_module_info_java(cb_java_package_name ? cb_java_package_name : DEFAULT_JAVA_MODULE_NAME);
+  create_module_info_java(java_source_dir_a, cb_java_package_name ? cb_java_package_name : DEFAULT_JAVA_MODULE_NAME);
 
   for (char **program_id = program_id_list; *program_id; ++program_id) {
-    sprintf(buff, "javac %s -p /usr/lib/opensourcecobo4j -encoding SJIS -d %s %s/%s.java",
-            cob_java_flags, output_name_a, java_source_dir_a, *program_id);
+    sprintf(buff, "javac %s -p /usr/lib/opensourcecobo4j/libcobj.jar -encoding SJIS -d %s %s/module-info.java %s/%s.java",
+            cob_java_flags, output_name_a, java_source_dir_a, java_source_dir_a, *program_id);
     ret = process(buff);
 
     if(ret) {
