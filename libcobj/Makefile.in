@@ -280,7 +280,9 @@ top_build_prefix = @top_build_prefix@
 top_builddir = @top_builddir@
 top_srcdir = @top_srcdir@
 TARGET_JAR = libcobj.jar
+SQLITE_JDBC_JAR = sqlite-jdbc/sqlite.jar
 SRC_FILES = \
+	./src/jp/osscons/opensourcecobol/libcobj/module-info.java \
 	./src/jp/osscons/opensourcecobol/libcobj/Const.java \
 	./src/jp/osscons/opensourcecobol/libcobj/call/CobolCallDataContent.java \
 	./src/jp/osscons/opensourcecobol/libcobj/call/CobolResolve.java \
@@ -542,18 +544,19 @@ uninstall-am:
 .PRECIOUS: Makefile
 
 
-all: $(TARGET_JAR)
+all: $(TARGET_JAR) $(SQLITE_JDBC_JAR)
 
-libcobj.jar: $(SRC_FILES)
-	javac -encoding UTF8 -d . $^
-	jar cf libcobj.jar jp
+$(TARGET_JAR): $(SRC_FILES) $(SQLITE_JDBC_JAR)
+	javac -encoding UTF8 -p sqlite-jdbc -d . $(SRC_FILES)
+	jar cf $(TARGET_JAR) jp
 
 clean:
 	rm -rf jp/
 
-install: $(TARGET_JAR)
+install: $(TARGET_JAR) $(SQLITE_JDBC_JAR)
 	mkdir -p $(DESTDIR)$(prefix)/lib/opensourcecobol4j/
-	install libcobj.jar $(DESTDIR)$(prefix)/lib/opensourcecobol4j/
+	install $(TARGET_JAR) $(DESTDIR)$(prefix)/lib/opensourcecobol4j/
+	install $(SQLITE_JDBC_JAR) $(DESTDIR)$(prefix)/lib/opensourcecobol4j/
 
 # Tell versions [3.59,3.63) of GNU make to not export all variables.
 # Otherwise a system limit (for SysV at least) may be exceeded.
