@@ -2862,6 +2862,12 @@ static void joutput_call(struct cb_call *p) {
   /* Function name */
   joutput_prefix();
   joutput("CobolModule.getCurrentModule ().clearParameter ();\n");
+  if(cb_java_package_name) {
+    joutput_prefix();
+    joutput("CobolModule.getCurrentModule ().setPackageName (\"");
+    joutput(cb_java_package_name);
+    joutput("\");\n");
+  }
   n = 0;
   for (l = p->args; l; l = CB_CHAIN(l), n++) {
     x = CB_VALUE(l);

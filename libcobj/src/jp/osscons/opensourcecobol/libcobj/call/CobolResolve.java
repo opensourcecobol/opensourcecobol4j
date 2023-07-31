@@ -29,6 +29,7 @@ import java.util.Map;
 import java.util.Map.Entry;
 import java.util.UUID;
 import jp.osscons.opensourcecobol.libcobj.common.CobolConstant;
+import jp.osscons.opensourcecobol.libcobj.common.CobolModule;
 import jp.osscons.opensourcecobol.libcobj.common.CobolUtil;
 import jp.osscons.opensourcecobol.libcobj.data.AbstractCobolField;
 import jp.osscons.opensourcecobol.libcobj.data.CobolDataStorage;
@@ -45,8 +46,6 @@ public class CobolResolve {
   private static Map<UUID, String> pointerTable;
   /** 名前の変換方法(小文字か大文字)を示す変数 */
   private static int name_convert;
-  /** デフォルトのパッケージ名 */
-  private static String defaultPackageName;
   // TODO resolve_pathsの利用方法
   /** システムで設定された区切り文字で区切られた0個以上のパス 動的に読み込むクラスファイルを検索する場所を示す. */
   private static List<String> resolve_paths;
@@ -57,7 +56,6 @@ public class CobolResolve {
     callTable = new HashMap<>();
     pointerTable = new HashMap<>();
     name_convert = 0;
-    defaultPackageName = null;
     resolve_paths = new ArrayList<String>();
     package_paths = new ArrayList<String>();
   }
@@ -189,8 +187,9 @@ public class CobolResolve {
       name = name.toUpperCase();
     }
 
-    if (defaultPackageName != null) {
-      fullName = defaultPackageName + "." + name;
+    String callerPackageName = CobolModule.getCurrentModule().getPackageName();
+    if (callerPackageName != null) {
+      fullName = callerPackageName + "." + name;
     } else {
       fullName = name;
     }
