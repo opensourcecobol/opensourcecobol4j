@@ -2,6 +2,38 @@ NEWS - user visible changes				-*- outline -*-
 
 -----------------------------------------------------------------------
 
+* opensource COBOL 4J 1.0.13
+
+** New Features
+  (1) Add -debug option
+  (2) Add -Wparentheses option
+  (3) Add -Wcolumn-overflow option
+  (4) Add -fmfcomment option
+  (5) Add -ffunctions-all option
+  (6) Implement COB_IO_ASSUME_REWRITE
+  (7) Output version strings in generated Java files
+
+** Improve Performance
+  (1) Optimize ADD statement and SUBTRACT statement
+  (2) Optimize comparison of PIC S9(n)V(m)
+  (3) Implement the precomputation for CobolDataStorage
+
+** Bug fixes
+  (1) Fix non-NIST tests
+  (2) Fix CALL parameter
+  (3) Fix COMPUTE statement
+  (4) Fix SORT statement
+  (5) Fix EXIT PERFORM CYCLE
+  (6) Fix functions CURRENT-DATE and SYSTEM
+  (1) Fix displaying numbers
+
+** Miscellaneous
+  (1) Improve the variable names in generated Java files
+  (2) Update tests for NIST COBOL85 tests
+  (3) Refactor generated Java files
+
+-----------------------------------------------------------------------
+
 * opensource COBOL 4J 1.0.12
 
 ** New Features
