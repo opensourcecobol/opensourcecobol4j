@@ -1,5 +1,6 @@
 TARGET_JAR = libcobj.jar
-SRC_FILES = \
+SRC_FILES = \	
+	./src/jp/osscons/opensourcecobol/libcobj/module-info.java \
 	./src/jp/osscons/opensourcecobol/libcobj/Const.java \
 	./src/jp/osscons/opensourcecobol/libcobj/call/CobolCallDataContent.java \
 	./src/jp/osscons/opensourcecobol/libcobj/call/CobolResolve.java \
@@ -72,8 +73,8 @@ SRC_FILES = \
 
 all: $(TARGET_JAR)
 
-libcobj.jar: $(SRC_FILES)
-	javac -encoding UTF8 -d . $^
+$(TARGET_JAR): $(SRC_FILES)
+	javac -encoding UTF8 -p sqlite-jdbc -d . $^
 	jar cf libcobj.jar jp
 
 clean:
@@ -82,3 +83,4 @@ clean:
 install: $(TARGET_JAR)
 	mkdir -p $(DESTDIR)$(prefix)/lib/opensourcecobol4j/
 	install libcobj.jar $(DESTDIR)$(prefix)/lib/opensourcecobol4j/
+	install sqlite-jdbc/sqlite.jar $(DESTDIR)$(prefix)/lib/opensourcecobol4j/
