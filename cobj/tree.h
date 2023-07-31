@@ -38,6 +38,7 @@
 #define CB_PREFIX_KEYS "k_"     /* file keys (struct cob_file_key []) */
 #define CB_PREFIX_LABEL "l_"    /* label */
 #define CB_PREFIX_SEQUENCE "s_" /* collating sequence */
+#define CB_PREFIX_STRING_LITERAL "str_" /* string literal */
 
 #define CB_PROGRAM_TYPE 0
 #define CB_FUNCTION_TYPE 1

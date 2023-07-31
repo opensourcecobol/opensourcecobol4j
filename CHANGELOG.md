@@ -4,7 +4,38 @@ All notable changes to this project will be documented in this file.
 
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 
-## [1.0.12]
+## [1.0.13] - 2023-07-31
+### Added
+- Add new options
+  - Add `-debug` option (#146)
+  - Add `-Wparentheses` (#182)
+  - Add `-Wcolumn-overflow` (#184)
+  - Add `-fmfcomment` (#185)
+  - Add `-ffunctions-all` (#188)
+- Implement `COB_IO_ASSUME_REWRITE` (#166)
+- Output version strings in generated Java files (#153)
+### Fixed
+- Allow string literals to be used as a call parameter (#127)
+- Fix displaying numbers (#138)
+- Fix the bug of COMPUTE statement (#143)
+- Fix `EXIT PERFORM CYCLE` (#150)
+- Fix SORT statement (#151)
+- Fix functions `CURRENT-DATE` and `SYSTEM` (#162)
+- Fix the bug of COMPUTE statement for `COMP-3` (#186)
+- Fix non-NIST tests
+  - Fix `i18n_sjis`and `data-rep` (#141)
+  - Fix `syntax` (#142, #172)
+  - Fix `jp-compat` (#141, #149, #161)
+  - Fix `run` (#169, #172, #180)
+### Optimized
+- Optimize ADD statement and SUBTRACT statement (#133)
+- Optimize comparison of `PIC S9(n)V(m)` (#143)
+- Implement the precomputation for `CobolDataStorage` (#163)
+### Changed
+- Improve the variable names in generated Java files
+- Update tests for NIST COBOL85 tests (#135)
+- Refactor generated Java files (#125)
+## [1.0.12] - 2023-06-30
 ### Added
 - Run NIST85 tests for Relative files and add the test status to README.md
 - Add CHANGELOG.md (#119)

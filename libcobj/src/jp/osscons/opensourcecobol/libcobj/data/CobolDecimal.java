@@ -582,44 +582,35 @@ public class CobolDecimal {
     int sign = this.value.signum();
     this.value = this.value.abs();
     String numString = this.value.toPlainString();
+    int dPointIndex = numString.indexOf('.');
+    numString = numString.replace(".", "");
     byte[] numBuffPtr = numString.getBytes();
+    if (dPointIndex < 0) {
+      dPointIndex = numBuffPtr.length;
+    }
+    dPointIndex -= this.scale;
     int size = numBuffPtr.length;
 
     CobolDataStorage data = f.getDataStorage();
-    int firstDataIndex = f.getFirstDataIndex();
     int diff = f.getFieldSize() - size;
+
     if (diff < 0) {
       CobolRuntimeException.setException(CobolExceptionId.COB_EC_SIZE_OVERFLOW);
       if ((opt & CobolDecimal.COB_STORE_KEEP_ON_OVERFLOW) > 0) {
         return CobolRuntimeException.code;
       }
+    }
 
-      // TODO else でもこのような処理に書き変えなくていいのか考える
-      BigDecimal val = this.value;
-      for (int i = 0; i < Math.abs(this.scale); ++i) {
-        if (this.scale < 0) {
-          val = val.multiply(BigDecimal.TEN);
-        } else {
-          val = val.divide(BigDecimal.TEN);
-        }
-      }
-      numString = val.toPlainString();
-      int pointIndex = numString.indexOf('.');
-      byte[] numBuff = numString.replace(".", "").getBytes();
-      int d = f.getFieldSize() - f.getAttribute().getScale() - pointIndex;
-      for (int i = 0; i < f.getFieldSize(); ++i) {
-        if (0 <= i - d && i - d < numBuff.length) {
-          data.setByte(i + firstDataIndex, numBuff[i - d]);
-        } else {
-          data.setByte(i + firstDataIndex, (byte) '0');
-        }
-      }
-    } else {
-      for (int i = 0; i < diff; ++i) {
-        data.setByte(firstDataIndex + i, (byte) '0');
-      }
-      for (int i = 0; i < size; ++i) {
-        data.setByte(firstDataIndex + i + diff, numBuffPtr[i]);
+    int fFirstIndex = f.getFirstDataIndex();
+    int fFieldSize = f.getFieldSize();
+    int fPointIndex = fFieldSize - f.getAttribute().getScale();
+    for (int i = 0; i < fFieldSize; i++) {
+      int fIndex = fFirstIndex + i;
+      int dIndex = i + dPointIndex - fPointIndex;
+      if (0 <= dIndex && dIndex < numBuffPtr.length) {
+        data.setByte(fIndex, numBuffPtr[dIndex]);
+      } else {
+        data.setByte(fIndex, (byte) '0');
       }
     }
     f.putSign(sign);
@@ -636,35 +627,48 @@ public class CobolDecimal {
   public int getPackedField(AbstractCobolField f, int opt) {
     int sign = this.value.signum();
     this.value = this.value.abs();
-    String numBuffPtr = this.value.toPlainString();
-    int size = numBuffPtr.length();
+    String numString = this.value.toPlainString();
+    int dPointIndex = numString.indexOf('.');
+    numString = numString.replace(".", "");
+    byte[] numBuffPtr = numString.getBytes();
+    if (dPointIndex < 0) {
+      dPointIndex = numBuffPtr.length;
+    }
+    dPointIndex -= this.scale;
+    int size = numBuffPtr.length;
+    int fPointIndex = f.getAttribute().getDigits() - f.getAttribute().getScale();
 
     CobolDataStorage data = f.getDataStorage();
     int digits = f.getAttribute().getDigits();
-    int q = 0;
     int diff = digits - size;
     if (diff < 0) {
       CobolRuntimeException.setException(CobolExceptionId.COB_EC_SIZE_OVERFLOW);
       if ((opt & CobolDecimal.COB_STORE_KEEP_ON_OVERFLOW) > 0) {
         return CobolRuntimeException.code;
       }
-      q += size - digits;
-      size = digits;
     }
     data.fillBytes(0, f.getSize());
-    int p = (digits / 2) - (size / 2);
-    diff = 1 - (size % 2);
-    for (int i = diff, n = 0; i < size + diff; i++, n++) {
-      byte x = (byte) (numBuffPtr.charAt(q + n) - '0');
-      if (i % 2 == 0) {
-        data.setByte(p, (byte) (x << 4));
+    for (int i = 0; i < digits; ++i) {
+      int j = i - fPointIndex + dPointIndex;
+      if (j < 0 || numBuffPtr.length <= j) {
+        continue;
+      }
+      byte val = (byte) ((int) numBuffPtr[j] - '0');
+      int index;
+      if (digits % 2 == 1) {
+        index = i / 2;
       } else {
-        data.setByte(p, (byte) (data.getByte(p) | x));
-        p++;
+        index = (i + 1) / 2;
+      }
+      byte b = data.getByte(index);
+      if ((digits + i) % 2 == 1) {
+        data.setByte(index, (val << 4) | (b & 0x0F));
+      } else {
+        data.setByte(index, (b & 0xF0) | val);
       }
     }
 
-    p = f.getSize() - 1;
+    int p = f.getSize() - 1;
     byte x = data.getByte(p);
     if (!f.getAttribute().isFlagHaveSign()) {
       data.setByte(p, (byte) ((x & 0xF0) | 0x0F));

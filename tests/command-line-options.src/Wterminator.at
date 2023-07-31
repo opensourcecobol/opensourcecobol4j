@@ -1,0 +1,34 @@
+AT_SETUP([-Wterminator])
+
+AT_DATA([prog.cbl], [
+       IDENTIFICATION              DIVISION.	
+       PROGRAM-ID.                 prog.	
+       DATA DIVISION.
+       WORKING-STORAGE             SECTION.	
+       01 I PIC 9 VALUE 1.
+       01 J PIC 9 VALUE 1.
+       PROCEDURE                   DIVISION.	
+       MAIN-RTN.
+           DISPLAY "AA".
+           IF 1 = 1 THEN
+                  DISPLAY "hello" END-DISPLAY.
+           ADD 1 TO I.
+           SUBTRACT 1 FROM I.
+           MULTIPLY 1 BY I.
+           DIVIDE I INTO J.
+           CALL "AA".
+])
+
+AT_CHECK([${COBJ} -Wterminator prog.cbl], [0], [],
+[prog.cbl: In paragraph 'MAIN-RTN':
+prog.cbl:10: Warning: DISPLAY statement not terminated by END-DISPLAY
+prog.cbl:11: Warning: IF statement not terminated by END-IF
+prog.cbl:13: Warning: ADD statement not terminated by END-ADD
+prog.cbl:14: Warning: SUBTRACT statement not terminated by END-SUBTRACT
+prog.cbl:15: Warning: MULTIPLY statement not terminated by END-MULTIPLY
+prog.cbl:16: Warning: DIVIDE statement not terminated by END-DIVIDE
+prog.cbl:17: Warning: CALL statement not terminated by END-CALL
+])
+
+AT_CHECK([${COBJ} --help | grep '\-Wterminator' > /dev/null], [0])
+AT_CLEANUP

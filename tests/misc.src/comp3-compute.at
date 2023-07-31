@@ -1,0 +1,23 @@
+AT_SETUP([COMP-3 COMPUTE])
+
+AT_DATA([prog.cbl], [
+       IDENTIFICATION   DIVISION.
+       PROGRAM-ID.      prog.
+       DATA             DIVISION.
+       WORKING-STORAGE SECTION.
+       01  A1              PIC S9(5)V9(6) USAGE COMP-3.
+       01  A2              PIC S9(4)V9(6) USAGE COMP-3.
+       PROCEDURE        DIVISION.
+           COMPUTE A1 = FUNCTION ANNUITY(0, 4).
+           DISPLAY A1.
+           COMPUTE A2 = FUNCTION ANNUITY(0, 4).
+           DISPLAY A2.
+])
+
+AT_CHECK([${COBJ} prog.cbl])
+AT_CHECK([java prog], [0],
+[+00000.250000
++0000.250000
+])
+
+AT_CLEANUP

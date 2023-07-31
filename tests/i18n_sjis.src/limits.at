@@ -1,5 +1,4 @@
 AT_SETUP([Field length limit PIC A/VALID])
-AT_CHECK([${SKIP_TEST}])
 
 AT_DATA([prog.cob], [
        IDENTIFICATION   DIVISION.
@@ -11,7 +10,7 @@ AT_DATA([prog.cob], [
            STOP RUN.
 ])
 
-AT_CHECK([cobc -m prog.cob], [0])
+AT_CHECK([cobj prog.cob], [0])
 
 AT_CLEANUP
 
@@ -28,14 +27,13 @@ AT_DATA([prog.cob], [
            STOP RUN.
 ])
 
-AT_CHECK([cobc -m prog.cob], [1], [],
+AT_CHECK([cobj prog.cob], [1], [],
 [prog.cob:6: Error: Alphabetic field cannot be larger than 16777216 digits
 ])
 
 AT_CLEANUP
 
 AT_SETUP([Field length limit PIC X/VALID])
-AT_CHECK([${SKIP_TEST}])
 
 AT_DATA([prog.cob], [
        IDENTIFICATION   DIVISION.
@@ -47,7 +45,7 @@ AT_DATA([prog.cob], [
            STOP RUN.
 ])
 
-AT_CHECK([cobc -m prog.cob], [0])
+AT_CHECK([cobj prog.cob], [0])
 
 AT_CLEANUP
 
@@ -64,14 +62,13 @@ AT_DATA([prog.cob], [
            STOP RUN.
 ])
 
-AT_CHECK([cobc -m prog.cob], [1], [],
+AT_CHECK([cobj prog.cob], [1], [],
 [prog.cob:6: Error: AlphaNumeric field cannot be larger than 16777216 digits
 ])
 
 AT_CLEANUP
 
 AT_SETUP([Field length limit PIC B9/VALID])
-AT_CHECK([${SKIP_TEST}])
 
 AT_DATA([prog.cob], [
        IDENTIFICATION   DIVISION.
@@ -83,12 +80,11 @@ AT_DATA([prog.cob], [
            STOP RUN.
 ])
 
-AT_CHECK([cobc -m prog.cob], [0])
+AT_CHECK([cobj prog.cob], [0])
 
 AT_CLEANUP
 
 AT_SETUP([Field length limit PIC B9/TOO LONG])
-AT_CHECK([${SKIP_TEST}])
 
 AT_DATA([prog.cob], [
        IDENTIFICATION   DIVISION.
@@ -100,14 +96,13 @@ AT_DATA([prog.cob], [
            STOP RUN.
 ])
 
-AT_CHECK([cobc -m prog.cob], [1], [],
+AT_CHECK([cobj prog.cob], [1], [],
 [prog.cob:6: Error: NumericEdit field cannot be larger than 160 digits
 ])
 
 AT_CLEANUP
 
 AT_SETUP([Field length limit PIC B/VALID])
-AT_CHECK([${SKIP_TEST}])
 
 AT_DATA([prog.cob], [
        IDENTIFICATION   DIVISION.
@@ -119,7 +114,7 @@ AT_DATA([prog.cob], [
            STOP RUN.
 ])
 
-AT_CHECK([cobc -m prog.cob], [0])
+AT_CHECK([cobj prog.cob], [0])
 
 AT_CLEANUP
 
@@ -136,14 +131,13 @@ AT_DATA([prog.cob], [
            STOP RUN.
 ])
 
-AT_CHECK([cobc -m prog.cob], [1], [],
+AT_CHECK([cobj prog.cob], [1], [],
 [prog.cob:6: Error: AlphaNumericEdit field cannot be larger than 16777216 digits
 ])
 
 AT_CLEANUP
 
 AT_SETUP([Field length limit PIC BA/VALID])
-AT_CHECK([${SKIP_TEST}])
 
 AT_DATA([prog.cob], [
        IDENTIFICATION   DIVISION.
@@ -155,7 +149,7 @@ AT_DATA([prog.cob], [
            STOP RUN.
 ])
 
-AT_CHECK([cobc -m prog.cob], [0])
+AT_CHECK([cobj prog.cob], [0])
 
 AT_CLEANUP
 
@@ -172,14 +166,13 @@ AT_DATA([prog.cob], [
            STOP RUN.
 ])
 
-AT_CHECK([cobc -m prog.cob], [1], [],
+AT_CHECK([cobj prog.cob], [1], [],
 [prog.cob:6: Error: AlphaNumericEdit field cannot be larger than 16777216 digits
 ])
 
 AT_CLEANUP
 
 AT_SETUP([Field length limit PIC BX/VALID])
-AT_CHECK([${SKIP_TEST}])
 
 AT_DATA([prog.cob], [
        IDENTIFICATION   DIVISION.
@@ -191,7 +184,7 @@ AT_DATA([prog.cob], [
            STOP RUN.
 ])
 
-AT_CHECK([cobc -m prog.cob], [0])
+AT_CHECK([cobj prog.cob], [0])
 
 AT_CLEANUP
 
@@ -208,14 +201,13 @@ AT_DATA([prog.cob], [
            STOP RUN.
 ])
 
-AT_CHECK([cobc -m prog.cob], [1], [],
+AT_CHECK([cobj prog.cob], [1], [],
 [prog.cob:6: Error: AlphaNumericEdit field cannot be larger than 16777216 digits
 ])
 
 AT_CLEANUP
 
 AT_SETUP([Field length limit PIC N/VALID (SJIS)])
-AT_CHECK([${SKIP_TEST}])
 
 AT_DATA([prog.cob], [
        IDENTIFICATION   DIVISION.
@@ -227,7 +219,7 @@ AT_DATA([prog.cob], [
            STOP RUN.
 ])
 
-AT_CHECK([cobc -m prog.cob], [0])
+AT_CHECK([cobj prog.cob], [0])
 
 AT_CLEANUP
 
@@ -244,14 +236,13 @@ AT_DATA([prog.cob], [
            STOP RUN.
 ])
 
-AT_CHECK([cobc -m prog.cob], [1], [],
+AT_CHECK([cobj prog.cob], [1], [],
 [prog.cob:6: Error: National field cannot be larger than 8388608 digits
 ])
 
 AT_CLEANUP
 
 AT_SETUP([Field length limit PIC BN/VALID (SJIS)])
-AT_CHECK([${SKIP_TEST}])
 
 AT_DATA([prog.cob], [
        IDENTIFICATION   DIVISION.
@@ -263,7 +254,7 @@ AT_DATA([prog.cob], [
            STOP RUN.
 ])
 
-AT_CHECK([cobc -m prog.cob], [0])
+AT_CHECK([cobj prog.cob], [0])
 
 AT_CLEANUP
 
@@ -280,7 +271,7 @@ AT_DATA([prog.cob], [
            STOP RUN.
 ])
 
-AT_CHECK([cobc -m prog.cob], [1], [],
+AT_CHECK([cobj prog.cob], [1], [],
 [prog.cob:6: Error: NationalEdit field cannot be larger than 8388608 digits
 ])
 

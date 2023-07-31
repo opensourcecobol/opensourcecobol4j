@@ -1,0 +1,51 @@
+AT_SETUP([-Wparentheses])
+
+AT_DATA([prog.cbl], [
+       IDENTIFICATION              DIVISION.	
+       PROGRAM-ID.                 prog.	
+       DATA DIVISION.
+       WORKING-STORAGE             SECTION.	
+       01 I PIC 9.
+       PROCEDURE                   DIVISION.	
+       MAIN-RTN.
+           IF 1 NOT = 1 OR 1 = 1 OR 1 = 2
+                  DISPLAY "OK".
+           IF 1 NOT = 1 AND 1 = 1 AND 1 = 2
+                  DISPLAY "OK".
+           IF 1 NOT = 1 OR 1 = 1 AND 1 = 2
+                  DISPLAY "OK".
+           IF 1 NOT = 1 AND 1 = 1 OR 1 = 2
+                  DISPLAY "OK".
+
+           IF 1 NOT = 1 AND 1 = 1 AND 1 = 2 AND 1 = 1
+                  DISPLAY "OK".
+           IF 1 NOT = 1 AND 1 = 1 AND 1 = 2 OR 1 = 1
+                  DISPLAY "OK".
+           IF 1 NOT = 1 AND 1 = 1 OR 1 = 2 AND 1 = 1
+                  DISPLAY "OK".
+           IF 1 NOT = 1 AND 1 = 1 OR 1 = 2 OR 1 = 1
+                  DISPLAY "OK".
+           IF 1 NOT = 1 OR 1 = 1 AND 1 = 2 AND 1 = 1
+                  DISPLAY "OK".
+           IF 1 NOT = 1 OR 1 = 1 AND 1 = 2 OR 1 = 1
+                  DISPLAY "OK".
+           IF 1 NOT = 1 OR 1 = 1 OR 1 = 2 AND 1 = 1
+                  DISPLAY "OK".
+           IF 1 NOT = 1 OR 1 = 1 OR 1 = 2 OR 1 = 1
+                  DISPLAY "OK".
+])
+
+AT_CHECK([${COBJ} -Wparentheses prog.cbl], [0], [],
+[prog.cbl: In paragraph 'MAIN-RTN':
+prog.cbl:14: Warning: Suggest parentheses around AND within OR
+prog.cbl:16: Warning: Suggest parentheses around AND within OR
+prog.cbl:21: Warning: Suggest parentheses around AND within OR
+prog.cbl:23: Warning: Suggest parentheses around AND within OR
+prog.cbl:25: Warning: Suggest parentheses around AND within OR
+prog.cbl:27: Warning: Suggest parentheses around AND within OR
+prog.cbl:29: Warning: Suggest parentheses around AND within OR
+prog.cbl:31: Warning: Suggest parentheses around AND within OR
+])
+
+AT_CHECK([${COBJ} --help | grep '\-Wparentheses' > /dev/null], [0])
+AT_CLEANUP

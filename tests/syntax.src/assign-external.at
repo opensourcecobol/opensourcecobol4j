@@ -1,5 +1,4 @@
 AT_SETUP([ASSIGN TO DYNAMIC create file (assign_external)])
-AT_CHECK([${SKIP_TEST}])
 
 AT_DATA([prog.cob], [
        IDENTIFICATION   DIVISION.
@@ -26,7 +25,7 @@ AT_DATA([prog.cob], [
 ])
 
 AT_CHECK([${COMPILE_MODULE} --assign_external prog.cob])
-AT_CHECK([export TEST_FILE=TEST-ext && ${COBCRUN} prog])
+AT_CHECK([export TEST_FILE=TEST-ext && java prog])
 AT_CHECK([if test -f TEST-dyn ; then echo -n OK ; else echo -n NG ; fi], [0], [OK])
 
 AT_CLEANUP

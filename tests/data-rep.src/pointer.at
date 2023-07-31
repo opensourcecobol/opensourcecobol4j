@@ -37,7 +37,7 @@ AT_DATA([prog.cob], [
            STOP RUN.
 ])
 
-AT_CHECK([${COMPILE} -o prog prog.cob])
-AT_CHECK([./prog], [0], [ignore])
+AT_CHECK([${COMPILE} prog.cob])
+AT_CHECK([java prog], [0], [ignore])
 
 AT_CLEANUP
