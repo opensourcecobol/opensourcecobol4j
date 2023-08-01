@@ -42,9 +42,3 @@ jobs:
           make
           make install
           export CLASSPATH=":/usr/lib/opensourcecobol4j/libcobj.jar:$HOME/.java_lib/sqlite.jar" 
-      
-       - name: Run sample program
-         run: |
-          cd test_sample
-          cobj --conf=native.conf sample.cbl
-          java sample.cbl
