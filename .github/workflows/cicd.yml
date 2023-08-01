@@ -13,7 +13,6 @@ jobs:
     container:
       image: ${{ matrix.os }}
     steps:
-        
       - name: Install dependencies on Ubuntu 22.04
         if: matrix.os == 'ubuntu:22.04'
         run: |
