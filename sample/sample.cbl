@@ -14,10 +14,9 @@
        procedure division.
        main.
            MOVE ZERO TO COUNT-OF-RECORDS.
-           ADD 1 TO COUNT-OF-RECORDS.                                   SQ1154.2
-041600     IF COUNT-OF-RECORDS EQUAL TO    5                             SQ1154.2
-               go to main-end.
-           display "counter=" COUNT-OF-RECORDS
-           go to main.
-       main-end.
+           perform test-run 10 times.
            stop run.
+       test-run.
+           ADD 1 TO COUNT-OF-RECORDS.
+           display "counter=" COUNT-OF-RECORDS.
+       
