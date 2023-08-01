@@ -29,6 +29,9 @@ import jp.osscons.opensourcecobol.libcobj.exceptions.CobolExceptionId;
 import jp.osscons.opensourcecobol.libcobj.exceptions.CobolRuntimeException;
 import jp.osscons.opensourcecobol.libcobj.exceptions.CobolStopRunException;
 
+import java.nio.ByteBuffer;
+import java.nio.ByteOrder;
+
 /** BigDecimalを扱うクラス COMPUTE等で計算をするときに使用する */
 public class CobolDecimal {
   public static final int DECIMAL_NAN = -128;
@@ -320,14 +323,17 @@ public class CobolDecimal {
       return;
     }
     alignDecimal(this, decimal);
-    ByteBuffer buffer = ByteBuffer.allocate(4).putInt(decimal.getValue().intValue());
-    buffer.order(ByteOrder.LITTLE_ENDIAN);
-    System.out.println("dbg: this=" + buffer.getInt());
-    System.out.println("dbg: decimal=" + decimal.getValue().intValue());
-    //this.setValue(this.getValue().add(decimal.getValue()));
-    decimal.setValue()
     this.setValue(this.getValue().add(decimal.getValue()));
   }
+
+  public void addNative(CobolDecimal decimal) {
+    if (DECIMAL_CHECK(this, decimal)) {
+      return;
+    }
+    alignDecimal(this, decimal);
+    this.setValue(this.getValue().add(decimal.getValue()));
+  }
+
 
   /**
    * this.valueの値をthis.valueからotherを減算した値にする

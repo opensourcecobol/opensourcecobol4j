@@ -281,8 +281,9 @@ top_build_prefix = @top_build_prefix@
 top_builddir = @top_builddir@
 top_srcdir = @top_srcdir@
 
-MODULES = NC SM IC SQ IX ST SG OB IF RL
+#MODULES = NC SM IC SQ IX ST SG OB IF RL
 #MODULES = NC SM IC SQ IX ST SG OB IF
+MODULES = NC
 MODULES_MAKEFILES = NC/Makefile SM/Makefile IC/Makefile SQ/Makefile IX/Makefile ST/Makefile SG/Makefile OB/Makefile IF/Makefile RL/Makefile
 EXTRA_DIST = EXEC85.conf.in expand.pl report.pl summary.pl summary.txt \
 	NC.txt SM.txt IC.txt SQ.txt RL.txt IX.txt ST.txt SG.txt OB.txt IF.txt ifedit.sh

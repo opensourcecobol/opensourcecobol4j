@@ -6713,13 +6713,13 @@ static cb_tree cb_build_move_literal(cb_tree src, cb_tree dst)
   }
   else
   {
-    if (f->flag_binary_swap || f->usage != CB_USAGE_BINARY)
-    {
-      return cb_build_move_call(src, dst);
-    }
-    else
+    if (!f->flag_binary_swap && f->usage == CB_USAGE_BINARY)
     {
       return cb_build_move_call_native(src, dst);
+    }
+    else
+    {//printf("flag_binary_swap:%d, usage:%d\n", f->flag_binary_swap, f->usage);
+      return cb_build_move_call(src, dst);
     }
   }
 }

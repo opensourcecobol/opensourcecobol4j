@@ -160,6 +160,13 @@ public class CobolDataStorage {
     return result;
   }
 
+  public byte[] getByteArray(int index) {
+    int length = this.data.length;
+    byte[] result = new byte[length];
+    System.arraycopy(this.data, this.index + index, result, 0, length);
+    return result;
+  }
+
   /**
    * C言語のmemcpy
    *
@@ -645,6 +652,17 @@ public class CobolDataStorage {
     }
   }
 
+  // public int intValue_native() {
+  //   // if (this.isFlagNative()) {
+  //   //   ByteBuffer buffer1 = ByteBuffer.wrap(this.data, this.index, Integer.BYTES);
+  //   //   buffer1.order(ByteOrder.LITTLE_ENDIAN);
+  //   //   return buffer1.getInt();
+  //   // } else {
+  //     ByteBuffer buffer2 = ByteBuffer.wrap(this.data, this.index, Integer.BYTES);
+  //     return buffer2.getInt();
+  //   //}
+  // }
+
   /**
    * this.dataから2バイトを読み込んでlong型として返す
    *
@@ -710,23 +728,19 @@ public class CobolDataStorage {
   }
 
   private long toLong(int numOfBytes, boolean signed, boolean isBigEndian) {
+    // for(int i=0; i<this.data.length; i++){
+    //     System.out.printf("%2x ",this.data[i]);
+    // }
+    // System.out.println();
     ByteBuffer buffer = ByteBuffer.wrap(this.data);
     buffer.order(isBigEndian ? ByteOrder.BIG_ENDIAN : ByteOrder.LITTLE_ENDIAN);
-    // if (!isBigEndian) {
-    // ByteBuffer buffer1 = ByteBuffer.wrap(this.data);// , this.index,
-    // Integer.BYTES);
-    // buffer1.order(ByteOrder.BIG_ENDIAN);
-    // int i = buffer1.getInt();
-    // System.out.printf("dbg: getInt()=%2x\n", i);
-    // return i;
-    // // return buffer1.getInt();
-    // }
 
     if (numOfBytes == 1) {
       return buffer.get(this.index);
     } else if (numOfBytes == 2) {
       return buffer.getShort(this.index);
     } else if (numOfBytes == 4) {
+     // System.out.println("dbg: this.index="+this.index);
       return buffer.getInt(this.index);
     } else {
       return buffer.getLong(this.index);
@@ -762,7 +776,7 @@ public class CobolDataStorage {
     // System.out.println();
     long val = this.toLong(numOfBytes, signed, isBigEndian);
     Cmpr comparator = signed ? compareS : compareU;
-    System.out.println("dbg: val=" + val);
+   // System.out.printf("dbg: val=%2x\n" , val);
     return comparator.run(val, n);
   }
 
@@ -826,7 +840,7 @@ public class CobolDataStorage {
   }
 
   public int cmpS32NativeBinary(long n) {
-    return compareToBinary(n, 4, true, false);
+    return compareToBinary(n, 4, true, true);
   }
 
   public int cmpU40Binary(long n) {

@@ -278,9 +278,8 @@ public abstract class AbstractCobolField {
   public int add(AbstractCobolField field, int opt) throws CobolStopRunException {
     CobolDecimal d1 = this.getDecimal();
     CobolDecimal d2 = field.getDecimal();
-    // ByteBuffer buffer = ByteBuffer.allocate(4).putInt(this.getInt());
-    // for (int i = 0; i < 4; i++) {
-    // System.out.printf("dbg: %2x ", buffer.array()[i]);
+    // for (int i = 0; i < this.getDataStorage().getData().length; i++) {
+    //   System.out.printf("dbg: %2x ", this.getDataStorage().getData()[i]);
     // }
     // System.out.println();
     d1.add(d2);
@@ -290,13 +289,21 @@ public abstract class AbstractCobolField {
   public int addNative(AbstractCobolField field, int opt) throws CobolStopRunException {
     CobolDecimal d1 = this.getDecimal();
     CobolDecimal d2 = field.getDecimal();
-    System.out.printf("dbg: addNative this.getInt()=%2x\n", this.getInt());
-    ByteBuffer buffer = ByteBuffer.allocate(4).putInt(this.getInt());
-    for (int i = 0; i < 4; i++) {
-      System.out.printf("dbg: %2x ", buffer.array()[i]);
-    }
-    System.out.println();
-    d1.add(d2);
+
+    // System.out.printf("dbg: addNative this.getInt()=%d\n", this.getInt());
+    // for (int i = 0; i < this.getDataStorage().getData().length; i++) {
+    //   System.out.printf("dbg: %2x ", this.getDataStorage().getData()[i]);
+    // }
+    // System.out.println();
+    
+    // ByteBuffer buffer = ByteBuffer.wrap(field.getDataStorage().getByteArray(0));
+    // buffer.order(ByteOrder.BIG_ENDIAN);
+    // AbstractCobolField field2 = this;
+    // // //field2.setBytes(buffer.array());
+    // field2.setDataStorage(new CobolDataStorage(buffer.array()));
+    // d1 = field2.getDecimal();
+
+    d1.addNative(d2);
     return d1.getField(this, opt);
   }
 
@@ -1024,6 +1031,20 @@ public abstract class AbstractCobolField {
     AbstractCobolField temp = CobolFieldFactory.makeCobolField(4, data, attr);
     this.moveFrom(temp);
   }
+
+  public void setBytes(byte[] b) {
+    CobolFieldAttribute attr = new CobolFieldAttribute(
+        CobolFieldAttribute.COB_TYPE_NUMERIC_BINARY,
+        9,
+        0,
+        CobolFieldAttribute.COB_FLAG_HAVE_SIGN,
+        null);
+    CobolDataStorage data = new CobolDataStorage(ByteBuffer.allocate(4).put(b).array());
+    AbstractCobolField temp = CobolFieldFactory.makeCobolField(4, data, attr);
+    this.moveFrom(temp);
+  }
+
+
 
   /** libcob/move.cのcob_set_intの実装 */
   public void setInt(CobolDataStorage data) {
