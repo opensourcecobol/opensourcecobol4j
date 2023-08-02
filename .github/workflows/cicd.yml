@@ -41,6 +41,7 @@ jobs:
 
       - name: run sample program
         run: |
+          export CLASSPATH=":/usr/lib/opensourcecobol4j/libcobj.jar:$HOME/.java_lib/sqlite.jar"
           cd sample
           cobj --conf=native.conf sample.cbl
           java sample
