@@ -32,7 +32,7 @@ public class CobolDataStorage {
   /** このクラスの扱うデータが保存する領域のバイト配列中での相対位置 */
   private int index;
 
-  private boolean flag_native;
+  private boolean flagNative;
 
   /**
    * コンストラクタ.引数で指定された長さ分のバイト配列を確保する.
@@ -144,7 +144,7 @@ public class CobolDataStorage {
   }
 
   public boolean isFlagNative() {
-    return this.flag_native;
+    return this.flagNative;
   }
 
   /**
@@ -624,7 +624,7 @@ public class CobolDataStorage {
    */
   public short shortValue() {
     ByteBuffer buffer = ByteBuffer.wrap(this.data, this.index, Short.BYTES);
-    if (this.flag_native) {
+    if (this.flagNative) {
       buffer.order(ByteOrder.LITTLE_ENDIAN);
     }
     return buffer.getShort();
@@ -689,7 +689,7 @@ public class CobolDataStorage {
 
   public double doubleValue() {
     ByteBuffer buffer = ByteBuffer.wrap(this.data, this.index, Double.BYTES);
-    if (this.flag_native) {
+    if (this.flagNative) {
       buffer.order(ByteOrder.LITTLE_ENDIAN);
     }
     return buffer.getDouble();
@@ -1434,12 +1434,12 @@ public class CobolDataStorage {
   }
 
   public void setSwpS64Binary(int n) {
-    this.flag_native = false;
+    this.flagNative = false;
     this.fromLong(8, true, n);
   }
 
   public void setNative(long n, int size) {
-    this.flag_native = true;
+    this.flagNative = true;
     this.fromLong(size, false, n);
   }
 
