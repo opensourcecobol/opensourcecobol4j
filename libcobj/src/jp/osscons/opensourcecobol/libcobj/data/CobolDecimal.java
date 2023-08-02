@@ -320,12 +320,12 @@ public class CobolDecimal {
       return;
     }
     alignDecimal(this, decimal);
-    ByteBuffer buffer = ByteBuffer.allocate(4).putInt(decimal.getValue().intValue());
-    buffer.order(ByteOrder.LITTLE_ENDIAN);
-    System.out.println("dbg: this=" + buffer.getInt());
-    System.out.println("dbg: decimal=" + decimal.getValue().intValue());
-    //this.setValue(this.getValue().add(decimal.getValue()));
-    decimal.setValue()
+    // ByteBuffer buffer = ByteBuffer.allocate(4).putInt(decimal.getValue().intValue());
+    // buffer.order(ByteOrder.LITTLE_ENDIAN);
+    // System.out.println("dbg: this=" + buffer.getInt());
+    // System.out.println("dbg: decimal=" + decimal.getValue().intValue());
+    // //this.setValue(this.getValue().add(decimal.getValue()));
+    // decimal.setValue()
     this.setValue(this.getValue().add(decimal.getValue()));
   }
 

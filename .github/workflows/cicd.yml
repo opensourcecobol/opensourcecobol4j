@@ -13,6 +13,12 @@ jobs:
     container:
       image: ${{ matrix.os }}
     steps:
+
+      - name: run sample program
+        run: |
+          cd sample
+          cobj --conf=native.conf sample.cbl
+          java sample
         
       - name: Install dependencies on Ubuntu 22.04
         if: matrix.os == 'ubuntu:22.04'
