@@ -1,0 +1,26 @@
+AT_SETUP([-fmfcomment])
+
+AT_DATA([prog.cbl], [
+       IDENTIFICATION              DIVISION.	
+       PROGRAM-ID.                 prog.	
+       DATA DIVISION.
+       WORKING-STORAGE             SECTION.	
+       PROCEDURE                   DIVISION.	
+       MAIN-RTN.
+*          DISPLAY "COMMENT".
+/          DISPLAY "COMMENT".
+ *****     DISPLAY "OK".
+ /////     DISPLAY "OK".
+      *    DISPLAY "COMMENT".
+      /    DISPLAY "COMMENT".
+           STOP RUN.	
+])
+
+AT_CHECK([${COBJ} -fmfcomment prog.cbl])
+AT_CHECK([java prog], [0],
+[OK
+OK
+])
+
+AT_CHECK([${COBJ} --help | grep '\-fmfcomment' > /dev/null], [0])
+AT_CLEANUP

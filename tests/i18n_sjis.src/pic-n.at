@@ -1,5 +1,4 @@
 AT_SETUP([PIC N Value clause])
-AT_CHECK([${SKIP_TEST}])
 
 AT_DATA([prog.cob], [
        IDENTIFICATION   DIVISION.
@@ -12,13 +11,12 @@ AT_DATA([prog.cob], [
            STOP RUN.
 ])
 
-AT_CHECK([cobc -m prog.cob])
+AT_CHECK([cobj prog.cob])
 AT_CHECK([java prog], [0], [ì˙ñ{åÍÇÃï∂éöóÒ])
 
 AT_CLEANUP
 
 AT_SETUP([PIC N Move])
-AT_CHECK([${SKIP_TEST}])
 
 AT_DATA([prog.cob], [
        IDENTIFICATION   DIVISION.
@@ -32,13 +30,12 @@ AT_DATA([prog.cob], [
            STOP RUN.
 ])
 
-AT_CHECK([cobc -m prog.cob])
+AT_CHECK([cobj prog.cob])
 AT_CHECK([java prog], [0], [ì˙ñ{åÍÇÃï∂éöóÒ])
 
 AT_CLEANUP
 
 AT_SETUP([PIC N Move with trunc])
-AT_CHECK([${SKIP_TEST}])
 
 AT_DATA([prog.cob], [
        IDENTIFICATION   DIVISION.
@@ -53,17 +50,16 @@ AT_DATA([prog.cob], [
 ])
 
 #TODO fix
-#AT_CHECK([cobc -m prog.cob], [0], [],
+#AT_CHECK([cobj prog.cob], [0], [],
 #[prog.cob:8: Warning: Value size exceeds data size
 #prog.cob:6: Warning: 'F0' defined here as PIC N(3)
 #])
-AT_CHECK([cobc -m prog.cob])
+AT_CHECK([cobj prog.cob])
 AT_CHECK([java prog], [0], [ì˙ñ{åÍ])
 
 AT_CLEANUP
 
 AT_SETUP([PIC N Move with padding by full-width SPC])
-AT_CHECK([${SKIP_TEST}])
 
 AT_DATA([prog.cob], [
        IDENTIFICATION   DIVISION.
@@ -77,13 +73,12 @@ AT_DATA([prog.cob], [
            STOP RUN.
 ])
 
-AT_CHECK([cobc -m prog.cob], [0])
+AT_CHECK([cobj prog.cob], [0])
 AT_CHECK([java prog], [0], [ì˙ñ{åÍÇÃï∂éöóÒÅ@Å@])
 
 AT_CLEANUP
 
 AT_SETUP([PIC N Move with justify])
-AT_CHECK([${SKIP_TEST}])
 
 AT_DATA([prog.cob], [
        IDENTIFICATION   DIVISION.
@@ -97,13 +92,12 @@ AT_DATA([prog.cob], [
            STOP RUN.
 ])
 
-AT_CHECK([cobc -m prog.cob], [0])
+AT_CHECK([cobj prog.cob], [0])
 AT_CHECK([java prog], [0], [Å@Å@ì˙ñ{åÍÇÃï∂éöóÒ])
 
 AT_CLEANUP
 
 AT_SETUP([PIC N EDITED w/ VALUE])
-AT_CHECK([${SKIP_TEST}])
 
 AT_DATA([prog.cob], [
        IDENTIFICATION   DIVISION.
@@ -116,13 +110,12 @@ AT_DATA([prog.cob], [
            STOP RUN.
 ])
 
-AT_CHECK([cobc -m prog.cob], [0])
+AT_CHECK([cobj prog.cob], [0])
 AT_CHECK([java prog], [0], [ì˙ñ{Å^íÜçëÅ@ï∂éöÇO])
 
 AT_CLEANUP
 
 AT_SETUP([INITIALIZE PIC N EDITED])
-AT_CHECK([${SKIP_TEST}])
 
 AT_DATA([prog.cob], [
        IDENTIFICATION   DIVISION.
@@ -137,13 +130,12 @@ AT_DATA([prog.cob], [
            STOP RUN.
 ])
 
-AT_CHECK([cobc -m prog.cob], [0])
+AT_CHECK([cobj prog.cob], [0])
 AT_CHECK([java prog], [0], [Å@Å@Å^Å@Å@Å@Å@Å@ÇO])
 
 AT_CLEANUP
 
 AT_SETUP([INITIALIZE PIC N EDITED TO VALUE])
-AT_CHECK([${SKIP_TEST}])
 
 AT_DATA([prog.cob], [
        IDENTIFICATION   DIVISION.
@@ -158,13 +150,12 @@ AT_DATA([prog.cob], [
            STOP RUN.
 ])
 
-AT_CHECK([cobc -m prog.cob], [0])
+AT_CHECK([cobj prog.cob], [0])
 AT_CHECK([java prog], [0], [ì˙ñ{Å^íÜçëÅ@ï∂éöÇO])
 
 AT_CLEANUP
 
 AT_SETUP([PIC N Move to NATIONAL EDITED])
-AT_CHECK([${SKIP_TEST}])
 
 AT_DATA([prog.cob], [
        IDENTIFICATION   DIVISION.
@@ -178,13 +169,12 @@ AT_DATA([prog.cob], [
            STOP RUN.
 ])
 
-AT_CHECK([cobc -m prog.cob], [0])
+AT_CHECK([cobj prog.cob], [0])
 AT_CHECK([java prog], [0], [ì˙ñ{Å^íÜçëÅ@ï∂éöÇO])
 
 AT_CLEANUP
 
 AT_SETUP([PIC N Move with half-width alnum conv.])
-AT_CHECK([${SKIP_TEST}])
 
 AT_DATA([prog.cob], [
        IDENTIFICATION   DIVISION.
@@ -198,13 +188,12 @@ AT_DATA([prog.cob], [
            STOP RUN.
 ])
 
-AT_CHECK([cobc -m prog.cob], [0])
+AT_CHECK([cobj prog.cob], [0])
 AT_CHECK([java prog], [0], [Ç`ÇaÇbÇOÇPÇQÇR])
 
 AT_CLEANUP
 
 AT_SETUP([PIC N Move with half-width kana conv.])
-AT_CHECK([${SKIP_TEST}])
 
 AT_DATA([prog.cob], [
        IDENTIFICATION   DIVISION.
@@ -218,14 +207,13 @@ AT_DATA([prog.cob], [
            STOP RUN.
 ])
 
-AT_CHECK([cobc -m prog.cob], [0])
+AT_CHECK([cobj prog.cob], [0])
 AT_CHECK([java prog | od -tx1 -An | sed -e 's/  */ /g' -e 's/ *$//'], [0], [ 83 52 83 81 83 5f 83 52 81 5b 83 71 81 5b
 ])
 
 AT_CLEANUP
 
 AT_SETUP([PIC N Ref mod(n:)])
-AT_CHECK([${SKIP_TEST}])
 
 AT_DATA([prog.cob], [
        IDENTIFICATION   DIVISION.
@@ -239,13 +227,12 @@ AT_DATA([prog.cob], [
            STOP RUN.
 ])
 
-AT_CHECK([cobc -m prog.cob], [0])
+AT_CHECK([cobj prog.cob], [0])
 AT_CHECK([java prog], [0], [ï∂éöóÒ])
 
 AT_CLEANUP
 
 AT_SETUP([PIC N Ref mod(n:m)])
-AT_CHECK([${SKIP_TEST}])
 
 AT_DATA([prog.cob], [
        IDENTIFICATION   DIVISION.
@@ -259,13 +246,12 @@ AT_DATA([prog.cob], [
            STOP RUN.
 ])
 
-AT_CHECK([cobc -m prog.cob], [0])
+AT_CHECK([cobj prog.cob], [0])
 AT_CHECK([java prog], [0], [ï∂éö])
 
 AT_CLEANUP
 
 AT_SETUP([PIC N STRING by size])
-AT_CHECK([${SKIP_TEST}])
 
 AT_DATA([prog.cob], [
        IDENTIFICATION   DIVISION.
@@ -283,13 +269,12 @@ AT_DATA([prog.cob], [
            STOP RUN.
 ])
 
-AT_CHECK([cobc -m prog.cob], [0])
+AT_CHECK([cobj prog.cob], [0])
 AT_CHECK([java prog], [0], [éÑÇÃñºëOÇÕÇ†ÇËÇ‹ÇπÇÒ])
 
 AT_CLEANUP
 
 AT_SETUP([PIC N STRING with delimiter (causes warn)])
-AT_CHECK([${SKIP_TEST}])
 
 AT_DATA([prog.cob], [
        IDENTIFICATION   DIVISION.
@@ -307,13 +292,12 @@ AT_DATA([prog.cob], [
            STOP RUN.
 ])
 
-AT_CHECK([cobc -m prog.cob])
+AT_CHECK([cobj prog.cob])
 AT_CHECK([java prog], [0], [éÑÇÃñºëO])
 
 AT_CLEANUP
 
 AT_SETUP([PIC N STRING with NATIONAL delimiter])
-AT_CHECK([${SKIP_TEST}])
 
 AT_DATA([prog.cob], [
        IDENTIFICATION   DIVISION.
@@ -331,13 +315,12 @@ AT_DATA([prog.cob], [
            STOP RUN.
 ])
 
-AT_CHECK([cobc -m prog.cob], [0])
+AT_CHECK([cobj prog.cob], [0])
 AT_CHECK([java prog], [0], [éÑÇÃñºëO])
 
 AT_CLEANUP
 
 AT_SETUP([PIC N STRING with pointer])
-AT_CHECK([${SKIP_TEST}])
 
 AT_DATA([prog.cob], [
        IDENTIFICATION   DIVISION.
@@ -356,13 +339,12 @@ AT_DATA([prog.cob], [
            STOP RUN.
 ])
 
-AT_CHECK([cobc -m prog.cob])
+AT_CHECK([cobj prog.cob])
 AT_CHECK([java prog], [0], [åæÇ¶Ç‹ÇπÇÒéÑÇÃñºëOÇÕ])
 
 AT_CLEANUP
 
 AT_SETUP([PIC N INSPECT REPLACING])
-AT_CHECK([${SKIP_TEST}])
 
 AT_DATA([prog.cob], [
        IDENTIFICATION   DIVISION.
@@ -376,13 +358,12 @@ AT_DATA([prog.cob], [
            STOP RUN.
 ])
 
-AT_CHECK([cobc -m prog.cob], [0])
+AT_CHECK([cobj prog.cob], [0])
 AT_CHECK([java prog], [0], [ÇPÇQÇRÇSÇOÇPÇQÇRÇSÇO])
 
 AT_CLEANUP
 
 AT_SETUP([PIC N INSPECT REPLACING by ZERO])
-AT_CHECK([${SKIP_TEST}])
 
 AT_DATA([prog.cob], [
        IDENTIFICATION   DIVISION.
@@ -396,13 +377,12 @@ AT_DATA([prog.cob], [
            STOP RUN.
 ])
 
-AT_CHECK([cobc -m prog.cob], [0])
+AT_CHECK([cobj prog.cob], [0])
 AT_CHECK([java prog], [0], [ÇPÇQÇRÇSÇOÇPÇQÇRÇSÇO])
 
 AT_CLEANUP
 
 AT_SETUP([PIC N INSPECT REPLACING by NATIONAL ZERO])
-AT_CHECK([${SKIP_TEST}])
 
 AT_DATA([prog.cob], [
        IDENTIFICATION   DIVISION.
@@ -416,13 +396,12 @@ AT_DATA([prog.cob], [
            STOP RUN.
 ])
 
-AT_CHECK([cobc -m prog.cob], [0])
+AT_CHECK([cobj prog.cob], [0])
 AT_CHECK([java prog], [0], [ÇPÇQÇRÇSÇOÇPÇQÇRÇSÇO])
 
 AT_CLEANUP
 
 AT_SETUP([PIC N INSPECT TALLYING])
-AT_CHECK([${SKIP_TEST}])
 
 AT_DATA([prog.cob], [
        IDENTIFICATION   DIVISION.
@@ -437,13 +416,12 @@ AT_DATA([prog.cob], [
            STOP RUN.
 ])
 
-AT_CHECK([cobc -m prog.cob], [0])
+AT_CHECK([cobj prog.cob], [0])
 AT_CHECK([java prog], [0], [02])
 
 AT_CLEANUP
 
 AT_SETUP([PIC N Move with half-width dakuten kana.])
-AT_CHECK([${SKIP_TEST}])
 
 AT_DATA([prog.cob], [
        IDENTIFICATION   DIVISION.
@@ -457,13 +435,12 @@ AT_DATA([prog.cob], [
            STOP RUN.
 ])
 
-AT_CHECK([cobc -m prog.cob], [0])
+AT_CHECK([cobj prog.cob], [0])
 AT_CHECK([java prog], [0], [ÅJÉ_ÅEÉîÉBÉìÉ`])
 
 AT_CLEANUP
 
 AT_SETUP([PIC N Move with half-width han-dakuten kana.])
-AT_CHECK([${SKIP_TEST}])
 
 AT_DATA([prog.cob], [
        IDENTIFICATION   DIVISION.
@@ -477,7 +454,7 @@ AT_DATA([prog.cob], [
            STOP RUN.
 ])
 
-AT_CHECK([cobc -m prog.cob], [0])
+AT_CHECK([cobj prog.cob], [0])
 AT_CHECK([java prog], [0], [ÅKÉ|ÉìÉfÉäÉìÉO])
 
 AT_CLEANUP

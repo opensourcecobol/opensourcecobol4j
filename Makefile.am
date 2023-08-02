@@ -24,7 +24,7 @@
 
 bin_SCRIPTS =
 
-include_HEADERS = libcob.h
+include_HEADERS = libcobj.h
 
 #SUBDIRS = lib cobj config copy po texi tests libcobj
 SUBDIRS = lib cobj bin config copy texi tests libcobj

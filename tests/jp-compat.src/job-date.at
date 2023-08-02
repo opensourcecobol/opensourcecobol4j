@@ -195,9 +195,6 @@ AT_CHECK([diff out1.txt out2.txt], [0])
 AT_CLEANUP
 
 AT_SETUP([COB_DATE FUNC. CURRENT-DATE of time])
-AT_CHECK([${SKIP_TEST}])
-
-AT_CHECK([test $SHREXT != "dll" || exit 77])
 
 AT_DATA([prog.cob], [
        IDENTIFICATION   DIVISION.

@@ -24,7 +24,9 @@ import java.nio.ByteBuffer;
 import java.nio.ByteOrder;
 import jp.osscons.opensourcecobol.libcobj.common.CobolConstant;
 import jp.osscons.opensourcecobol.libcobj.common.CobolModule;
+import jp.osscons.opensourcecobol.libcobj.exceptions.CobolExceptionId;
 import jp.osscons.opensourcecobol.libcobj.exceptions.CobolRuntimeException;
+import jp.osscons.opensourcecobol.libcobj.exceptions.CobolStopRunException;
 
 /** PIC 文字列が9(5)や9(9)の変数を表現するクラス. */
 public class CobolNumericField extends AbstractCobolField {
@@ -58,8 +60,8 @@ public class CobolNumericField extends AbstractCobolField {
   public String getString() {
     CobolDataStorage data = this.getDataStorage();
     CobolFieldAttribute attr = this.getAttribute();
-    int scale = attr.getScale();
-    int pointIndex = scale > 0 ? attr.getDigits() - scale - 1 : attr.getDigits() - 1;
+    int digits = attr.getDigits();
+
     StringBuilder sb = new StringBuilder();
     if (attr.isFlagHaveSign()) {
       if (this.getSign() < 0) {
@@ -68,6 +70,27 @@ public class CobolNumericField extends AbstractCobolField {
         sb.append('+');
       }
     }
+
+    int scale = attr.getScale();
+    int fieldSize = this.getFieldSize();
+    if (scale >= fieldSize) {
+      sb.append(".");
+      for (int i = 0; i < scale - fieldSize; ++i) {
+        sb.append('0');
+      }
+      int firstIndex = this.getFirstDataIndex();
+      int signIndex = attr.isFlagSignLeading() ? 0 : this.getSize() - 1;
+      for (int i = 0; i < fieldSize; ++i) {
+        char c = (char) data.getByte(firstIndex + i);
+        if (firstIndex + i == signIndex && c >= 0x70) {
+          c -= 0x40;
+        }
+        sb.append(c);
+      }
+      return sb.toString();
+    }
+
+    int pointIndex = scale > 0 ? digits - scale - 1 : digits - 1;
 
     int signIndex = attr.isFlagSignLeading() ? 0 : this.getSize() - 1;
     int i = 0;
@@ -87,7 +110,7 @@ public class CobolNumericField extends AbstractCobolField {
       sb.append(c);
     }
 
-    for (; i < attr.getDigits(); ++i) {
+    for (; i < digits; ++i) {
       if (scale > 0 && i - 1 == pointIndex) {
         sb.append('.');
       }
@@ -630,16 +653,26 @@ public class CobolNumericField extends AbstractCobolField {
     }
   }
 
-  // addInt内のgotoの代替として使用する
-  class OverflowException extends Exception {}
+  @Override
+  public int subInt(int in) {
+    return this.addInt(-in, CobolDecimal.COB_STORE_KEEP_ON_OVERFLOW);
+  }
+
+  public int subInt(int in, int opt) {
+    return this.addInt(-in, opt);
+  }
+
+  @Override
+  public int addInt(int in) {
+    return this.addInt(in, CobolDecimal.COB_STORE_KEEP_ON_OVERFLOW);
+  }
 
   /**
    * thisの保持する数値データに加算する
    *
    * @param in thisの保持する数値データに加算する値
    */
-  @Override
-  public int addInt(int in) {
+  public int addInt(int in, int opt) {
     if (in == 0) {
       return 0;
     }
@@ -678,33 +711,30 @@ public class CobolNumericField extends AbstractCobolField {
       size -= scale;
     }
 
-    try {
-      if (n > 0) {
-        if (displayAddInt(data, firstDataIndex, size, n) != 0) {
-          for (int i = 0; i < osize; ++i) {
-            data.setByte(firstDataIndex + i, tfield[i]);
-          }
-          throw new OverflowException();
+    if (n > 0) {
+      if (displayAddInt(data, firstDataIndex, size, n) != 0) {
+        for (int i = 0; i < osize; ++i) {
+          data.setByte(firstDataIndex + i, tfield[i]);
         }
-      } else if (n < 0) {
-        if (displaySubInt(data, firstDataIndex, size, -n) != 0) {
-          for (int i = 0; i < size; ++i) {
-            byte val = data.getByte(firstDataIndex + i);
-            data.setByte(firstDataIndex + i, (byte) (9 - (val - 0x30) + 0x30));
-          }
-          displayAddInt(data, firstDataIndex, size, 1);
-          sign = -sign;
+        CobolRuntimeException.setException(CobolExceptionId.COB_EC_SIZE_OVERFLOW);
+        if ((opt & CobolDecimal.COB_STORE_KEEP_ON_OVERFLOW) > 0) {
+          this.putSign(sign);
+          return CobolRuntimeException.code;
         }
       }
-
-      this.putSign(sign);
-      return 0;
-
-    } catch (OverflowException e) {
-      this.putSign(sign);
-      // TODO set exception code
-      return 0;
+    } else if (n < 0) {
+      if (displaySubInt(data, firstDataIndex, size, -n) != 0) {
+        for (int i = 0; i < size; ++i) {
+          byte val = data.getByte(firstDataIndex + i);
+          data.setByte(firstDataIndex + i, (byte) (9 - (val - 0x30) + 0x30));
+        }
+        displayAddInt(data, firstDataIndex, size, 1);
+        sign = -sign;
+      }
     }
+
+    this.putSign(sign);
+    return 0;
   }
 
   /**
@@ -812,6 +842,32 @@ public class CobolNumericField extends AbstractCobolField {
     return 1;
   }
 
+  @Override
+  public int add(AbstractCobolField field, int opt) throws CobolStopRunException {
+    CobolFieldAttribute attr = field.getAttribute();
+    if (attr.isTypeNumeric()
+        && attr.getDigits() <= 9
+        && attr.getScale() == 0
+        && this.getAttribute().getScale() == 0) {
+      return this.addInt(field.getInt(), opt);
+    } else {
+      return super.add(field, opt);
+    }
+  }
+
+  @Override
+  public int sub(AbstractCobolField field, int opt) throws CobolStopRunException {
+    CobolFieldAttribute attr = field.getAttribute();
+    if (attr.isTypeNumeric()
+        && attr.getDigits() <= 9
+        && attr.getScale() == 0
+        && this.getAttribute().getScale() == 0) {
+      return this.subInt(field.getInt(), opt);
+    } else {
+      return super.sub(field, opt);
+    }
+  }
+
   /**
    * thisをCobolNumericFieldに変換する. indirect moveをするときに使用されることを想定している.
    *
@@ -894,32 +950,79 @@ public class CobolNumericField extends AbstractCobolField {
   public int numericCompareTo(AbstractCobolField field) {
     CobolFieldAttribute attr1 = this.getAttribute();
     CobolFieldAttribute attr2 = field.getAttribute();
-    if (!attr1.isFlagHaveSign() && !attr2.isFlagHaveSign() && attr2.isTypeNumericDisplay()) {
+    if (attr2.isTypeNumericDisplay()) {
       final int scale1 = attr1.getScale();
       final int scale2 = attr2.getScale();
+      final int firstIndex1 = this.getFirstDataIndex();
+      final int firstIndex2 = field.getFirstDataIndex();
+      final int fieldSize1 = this.getFieldSize();
+      final int fieldSize2 = field.getFieldSize();
       final int size1 = this.getSize();
       final int size2 = field.getSize();
-      final int pointIndex1 = size1 - scale1;
-      final int pointIndex2 = size2 - scale2;
+      final int pointIndex1 = fieldSize1 - scale1;
+      final int pointIndex2 = fieldSize2 - scale2;
+      int sign1 = this.getSign();
+      int sign2 = field.getSign();
+      sign1 = sign1 > 0 ? 1 : sign1 < 0 ? -1 : 1;
+      sign2 = sign2 > 0 ? 1 : sign2 < 0 ? -1 : 1;
 
+      final int signIndex1 =
+          attr1.isFlagHaveSign() && !attr1.isFlagSignLeading() ? size1 - 1 : firstIndex1;
+      final int signIndex2 =
+          attr2.isFlagHaveSign() && !attr2.isFlagSignLeading() ? size2 - 1 : firstIndex2;
       final int l1 = -pointIndex1;
       final int l2 = -pointIndex2;
-      final int r1 = size1 - pointIndex1;
-      final int r2 = size2 - pointIndex2;
+      final int r1 = fieldSize1 - pointIndex1;
+      final int r2 = fieldSize2 - pointIndex2;
       final int left = Math.min(l1, l2);
       final int right = Math.max(r1, r2);
+      final int lastIndex1;
+      if (attr1.isFlagHaveSign() && !attr1.isFlagSignLeading() && attr1.isFlagSignSeparate()) {
+        lastIndex1 = size1 - 2;
+      } else {
+        lastIndex1 = size1 - 1;
+      }
+      final int lastIndex2;
+      if (attr2.isFlagHaveSign() && !attr2.isFlagSignLeading() && attr2.isFlagSignSeparate()) {
+        lastIndex2 = size2 - 2;
+      } else {
+        lastIndex2 = size2 - 1;
+      }
       CobolDataStorage d1 = this.getDataStorage();
       CobolDataStorage d2 = field.getDataStorage();
       for (int i = left; i < right; ++i) {
-        final int i1 = i + pointIndex1;
-        final int i2 = i + pointIndex2;
-        byte b1 = i1 < 0 || i1 >= size1 ? (byte) '0' : d1.getByte(i1);
-        byte b2 = i2 < 0 || i2 >= size2 ? (byte) '0' : d2.getByte(i2);
+        final int i1 = firstIndex1 + i + pointIndex1;
+        final int i2 = firstIndex2 + i + pointIndex2;
+        byte b1;
+        if (i1 < 0 || i1 > lastIndex1) {
+          b1 = (byte) '0';
+        } else {
+          b1 = d1.getByte(i1);
+          if (i1 == signIndex1 && b1 >= 0x70) {
+            b1 -= 0x40;
+          }
+        }
+        byte b2;
+        if (i2 < 0 || i2 > lastIndex2) {
+          b2 = (byte) '0';
+        } else {
+          b2 = d2.getByte(i2);
+          if (i2 == signIndex2 && b2 >= 0x70) {
+            b2 -= 0x40;
+          }
+        }
         if (b1 != b2) {
-          return ((int) b1) - ((int) b2);
+          return (sign1 * (int) b1) - (sign2 * (int) b2);
         }
       }
-      return 0;
+
+      if (sign1 * sign2 >= 0) {
+        return 0;
+      } else if (sign1 > 0) {
+        return 1;
+      } else {
+        return -1;
+      }
     } else {
       return super.numericCompareTo(field);
     }

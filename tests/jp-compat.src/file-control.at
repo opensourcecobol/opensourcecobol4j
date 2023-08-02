@@ -61,7 +61,6 @@ AT_CHECK([export OC_IO_CREATES=yes && ${RUN_MODULE} prog], [0], [00
 AT_CLEANUP
 
 AT_SETUP([Allow no file open (I-O, RELATIVE)])
-AT_CHECK([${SKIP_TEST}])
 
 AT_DATA([prog.cob], [
        IDENTIFICATION   DIVISION.
@@ -190,7 +189,6 @@ AT_CHECK([export OC_EXTEND_CREATES=yes && ${RUN_MODULE} prog], [0], [00
 AT_CLEANUP
 
 AT_SETUP([Allow no file open (EXTEND, RELATIVE)])
-AT_CHECK([${SKIP_TEST}])
 
 AT_DATA([prog.cob], [
        IDENTIFICATION   DIVISION.
@@ -321,7 +319,6 @@ AT_CHECK([${RUN_MODULE} prog], [0], [00
 AT_CLEANUP
 
 AT_SETUP([Allow file delete (RELATIVE)])
-AT_CHECK([${SKIP_TEST}])
 
 AT_DATA([prog.cob], [
        IDENTIFICATION   DIVISION.
@@ -356,7 +353,6 @@ AT_CHECK([${RUN_MODULE} prog], [0], [00
 AT_CLEANUP
 
 AT_SETUP([Allow file delete (INDEXED)])
-AT_CHECK([${SKIP_TEST}])
 
 AT_CHECK([test $COB_SPLITKEY_FLAGS = "yes" || exit 77])
 
@@ -429,7 +425,6 @@ AT_CHECK([${RUN_MODULE} prog], [0], [91
 AT_CLEANUP
 
 AT_SETUP([Assume REWRITE for WRITE on OPEN I-O])
-AT_CHECK([${SKIP_TEST}])
 
 AT_DATA([prog.cob], [
        IDENTIFICATION   DIVISION.

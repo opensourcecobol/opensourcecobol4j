@@ -29,11 +29,12 @@ import jp.osscons.opensourcecobol.libcobj.data.AbstractCobolField;
 import jp.osscons.opensourcecobol.libcobj.data.CobolDataStorage;
 import jp.osscons.opensourcecobol.libcobj.exceptions.CobolException;
 import jp.osscons.opensourcecobol.libcobj.exceptions.CobolExceptionId;
+import jp.osscons.opensourcecobol.libcobj.exceptions.CobolRuntimeException;
 import jp.osscons.opensourcecobol.libcobj.exceptions.CobolStopRunException;
 import jp.osscons.opensourcecobol.libcobj.file.CobolFile;
 
 public class CobolUtil {
-  private static int cob_io_assume_rewrite = 0;
+  private static boolean cob_io_assume_rewrite = false;
   private static boolean cob_verbose = false;
   private static HandlerList hdlrs = null;
   private static String runtime_err_str = null;
@@ -58,8 +59,8 @@ public class CobolUtil {
 
   private static boolean lineTrace = false;
 
-  private static String sourceFile;
-  private static int sourceLine;
+  public static String sourceFile;
+  public static int sourceLine;
 
   abstract class HandlerList {
     public HandlerList next = null;
@@ -95,8 +96,44 @@ public class CobolUtil {
     return 0;
   }
 
-  public static int cob_io_rewwrite_assumed() {
+  public static boolean cob_io_rewwrite_assumed() {
     return cob_io_assume_rewrite;
+  }
+
+  public static void cobCheckRefModNational(int offset, long length, int size, byte[] name)
+      throws CobolStopRunException {
+    CobolUtil.cobCheckRefMod(offset, length, size, name);
+  }
+
+  public static void cobCheckRefModNational(int offset, long length, int size, String name)
+      throws CobolStopRunException {
+    CobolUtil.cobCheckRefMod(offset, length, size, name);
+  }
+
+  public static void cobCheckRefMod(int offset, long length, int size, byte[] name)
+      throws CobolStopRunException {
+    try {
+      CobolUtil.cobCheckRefMod(offset, length, size, new String(name, "Shift_JIS"));
+    } catch (UnsupportedEncodingException e) {
+      CobolUtil.cobCheckRefMod(offset, length, size, "");
+    }
+  }
+
+  public static void cobCheckRefMod(int offset, long length, int size, String name)
+      throws CobolStopRunException {
+    /* check the offset */
+    if (offset < 1 || offset > size) {
+      CobolRuntimeException.setException(CobolExceptionId.COB_EC_BOUND_REF_MOD);
+      CobolUtil.runtimeError(String.format("Offset of '%s' out of bounds: %d", name, offset));
+      CobolStopRunException.stopRunAndThrow(1);
+    }
+
+    /* check the length */
+    if (length < 1 || offset + length - 1 > size) {
+      CobolRuntimeException.setException(CobolExceptionId.COB_EC_BOUND_REF_MOD);
+      CobolUtil.runtimeError(String.format("Length of '%s' out of bounds: %d", name, length));
+      CobolStopRunException.stopRunAndThrow(1);
+    }
   }
 
   /** libcob/common.cのcob_initの実装 TODO 未完成 */
@@ -152,6 +189,11 @@ public class CobolUtil {
     if (s != null && s.length() > 0 && (s.charAt(0) == 'y' || s.charAt(0) == 'Y')) {
       CobolUtil.cob_verbose = true;
     }
+
+    s = CobolUtil.getEnv("COB_IO_ASSUME_REWRITE");
+    if (s != null && s.length() > 0 && (s.charAt(0) == 'y' || s.charAt(0) == 'Y')) {
+      CobolUtil.cob_io_assume_rewrite = true;
+    }
   }
 
   /**
@@ -180,7 +222,7 @@ public class CobolUtil {
    */
   public static void verboseOutput(String s) {
     if (cob_verbose) {
-      System.out.println("libcob: " + s);
+      System.out.println("libcobj: " + s);
     }
   }
 
@@ -212,7 +254,7 @@ public class CobolUtil {
     if (sourceFile != null) {
       System.err.print(String.format("%s:%d: ", sourceFile, sourceLine));
     }
-    System.err.println("libcob: " + s);
+    System.err.println("libcobj: " + s);
     System.err.flush();
   }
 
@@ -238,9 +280,7 @@ public class CobolUtil {
    * @param numParams
    * @throws CobolStopRunException
    */
-  public static void COB_CHK_PARMS(String funcName, int numParams) throws CobolStopRunException {
-    System.err.println("COB_CHK_PARMS not implemented");
-  }
+  public static void COB_CHK_PARMS(String funcName, int numParams) throws CobolStopRunException {}
 
   /**
    * libcob/common.cのcob_get_switchの実装
