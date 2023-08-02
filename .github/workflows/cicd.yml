@@ -13,12 +13,6 @@ jobs:
     container:
       image: ${{ matrix.os }}
     steps:
-
-      - name: run sample program
-        run: |
-          cd sample
-          cobj --conf=native.conf sample.cbl
-          java sample
         
       - name: Install dependencies on Ubuntu 22.04
         if: matrix.os == 'ubuntu:22.04'
@@ -45,6 +39,12 @@ jobs:
           make install
           export CLASSPATH=":/usr/lib/opensourcecobol4j/libcobj.jar:$HOME/.java_lib/sqlite.jar" 
 
+      - name: run sample program
+        run: |
+          cd sample
+          cobj --conf=native.conf sample.cbl
+          java sample
+      
       - name: Run tests "command-line-options"
         run: |
           export CLASSPATH=":/usr/lib/opensourcecobol4j/libcobj.jar:$HOME/.java_lib/sqlite.jar"
