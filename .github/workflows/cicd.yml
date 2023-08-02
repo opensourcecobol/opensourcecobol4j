@@ -12,7 +12,7 @@ jobs:
   run-tests:
     strategy:
       matrix:
-        os: ["ubuntu:22.04"]
+        os: ["ubuntu:22.04", "almalinux:9"]
     runs-on: ubuntu-latest
     container:
       image: ${{ matrix.os }}
@@ -24,21 +24,111 @@ jobs:
           apt update -y
           apt install -y default-jdk build-essential bison flex gettext texinfo automake autoconf
 
+      - name: Install dependencies on AlmaLinux 9
+        if: matrix.os == 'almalinux:9'
+        run: |
+          dnf -y update
+          dnf install -y java-17-openjdk-devel gcc gcc-c++ make bison flex automake autoconf diffutils gettext
+
       - name: Checkout opensource COBOL 4J
-        uses: actions/checkout@v2
+        uses: actions/checkout@v3
       
       - name: Install opensource COBOL 4J
         run: |
-          mkdir ~/.java_lib
-          curl -L -o ~/.java_lib/sqlite.jar https://github.com/xerial/sqlite-jdbc/releases/download/3.36.0.3/sqlite-jdbc-3.36.0.3.jar
-          export CLASSPATH=":$HOME/.java_lib/sqlite.jar"
           ./configure --prefix=/usr/
           make
           make install
-          export CLASSPATH=":/usr/lib/opensourcecobol4j/libcobj.jar:$HOME/.java_lib/sqlite.jar" 
-      
+
       - name: run sample program
         run: |
           cd sample
           cobj --conf=native.conf sample.cbl
           java sample
+          
+      - name: Run tests "command-line-options"
+        run: |
+          cd tests/
+          ./command-line-options
+
+      - name: Run tests "misc"
+        run: |
+          cd tests/
+          ./misc
+
+      - name: Run tests "data-rep"
+        run: |
+          cd tests/
+          ./data-rep
+
+      - name: Run tests "i18n_sjis"
+        run: |
+          cd tests/
+          ./i18n_sjis
+
+      - name: Run tests "jp-compat"
+        run: |
+          cd tests/
+          ./jp-compat
+
+      - name: Run tests "run"
+        run: |
+          cd tests/
+          ./run
+
+      - name: Run tests "syntax"
+        run: |
+          cd tests/
+          ./syntax
+
+      - name: Run NIST test
+        run: |
+          cd tests/cobol85
+          make test
+
+      - name: Run Extra NIST test
+        run: |
+          cd tests/cobol85
+          make test-extra
+
+          #- name: Run tests "i18n_utf8"
+          #  run: |
+          #    ./configure --prefix=/usr/ --with-vbisam --enable-utf8
+          #    make
+          #    make install
+          #    ./i18n_utf8 || true
+          #    cd ../
+
+  static_analysis:
+    runs-on: ubuntu-latest
+    steps:
+      # Checkout opensource COBOL
+      - name: Checkout opensource COBOL 4J
+        uses: actions/checkout@v3
+
+      - uses: actions/setup-java@v3
+        with:
+          distribution: 'temurin'
+          java-version: '17'
+
+      # Download code formatters and static analyzers
+      - name: Install dependencies
+        run: |
+          sudo apt-get update -y
+          sudo apt-get install -y clang-format cppcheck
+          curl -L -o google-java-format.jar https://github.com/google/google-java-format/releases/download/v1.15.0/google-java-format-1.15.0-all-deps.jar
+          curl -L -o pmd-bin-6.52.0.zip https://github.com/pmd/pmd/releases/download/pmd_releases%2F6.52.0/pmd-bin-6.52.0.zip
+          unzip pmd-bin-6.52.0.zip
+
+      - name: Check format with google-java-format and clang-format
+        run: |
+          export PATH_GOOGLE_JAVA_FORMAT=${PWD}/google-java-format.jar
+          ./check-format
+          echo $?
+
+      - name: Run PMD
+        run: |
+          pmd-bin-6.52.0/bin/run.sh pmd -d ${PWD}/libcobj/src -R ${PWD}/.github/ruleset.xml -f text
+
+      - name: Run cppcheck
+        run: |
+          cd cobj && cppcheck cobj.c cobj.h codegen.c config.c error.c field.c pplex.c ppparse.c ppparse.h reserved.c tree.c tree.h typeck.c
