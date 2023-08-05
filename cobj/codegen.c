@@ -2746,7 +2746,6 @@ static void joutput_call(struct cb_call *p) {
   }
 
   /* Local variables */
-  joutput_indent("{");
 #ifdef COB_NON_ALIGNED
   if (dynamic_link && retptr) {
     // output_line ("void *temptr;");
@@ -2795,7 +2794,6 @@ static void joutput_call(struct cb_call *p) {
       break;
     }
   }
-  joutput("\n");
   for (l = p->args, n = 1; l; l = CB_CHAIN(l), n++) {
     x = CB_VALUE(l);
     switch (CB_PURPOSE_INT(l)) {
@@ -2861,13 +2859,11 @@ static void joutput_call(struct cb_call *p) {
 
   /* Function name */
   joutput_prefix();
-  joutput("CobolModule.getCurrentModule ().clearParameter ();\n");
+  joutput("CobolModule.getCurrentModule ().setParameters (");
   n = 0;
   for (l = p->args; l; l = CB_CHAIN(l), n++) {
     x = CB_VALUE(l);
     field_iteration = (int)n;
-    joutput_prefix();
-    joutput("CobolModule.getCurrentModule ().addParameter (");
     switch (CB_TREE_TAG(x)) {
     case CB_TAG_LITERAL:
     case CB_TAG_FIELD:
@@ -2890,8 +2886,11 @@ static void joutput_call(struct cb_call *p) {
       joutput("null");
       break;
     }
-    joutput(");\n");
+    if(CB_CHAIN(l)) {
+      joutput(", ");
+    }
   }
+  joutput(");\n");
 
   if (!dynamic_link) {
     if (CB_REFERENCE_P(p->name) && CB_FIELD_P(CB_REFERENCE(p->name)->value) &&
@@ -2933,19 +2932,11 @@ static void joutput_call(struct cb_call *p) {
     }
   } else {
     /* Dynamic link */
-    joutput_prefix();
-    joutput("try {\n");
     if (CB_LITERAL_P(p->name)) {
       callp = cb_encode_program_id((char *)(CB_LITERAL(p->name)->data));
       lookup_call(callp);
-      joutput_prefix();
-      joutput("  if (call_%s == null) {\n", callp);
-      joutput_prefix();
-      joutput("    call_%s = ", callp);
-      joutput("CobolResolve.resolve(\"%s\");\n",
-              (char *)(CB_LITERAL(p->name)->data));
-      joutput_prefix();
-      joutput("  }\n");
+      joutput_line("call_%s = CobolResolve.resolve(\"%s\", call_%s);",
+        callp, (char *)(CB_LITERAL(p->name)->data), callp);
     } else {
       callp = NULL;
       joutput_prefix();
@@ -2953,16 +2944,6 @@ static void joutput_call(struct cb_call *p) {
       joutput_funcall(cb_build_funcall_1("CobolResolve.resolve", p->name));
       joutput(";\n");
     }
-    // joutput_prefix ();
-    // joutput ("} catch (CobolCallException cce) {\n");
-    // if (p->stmt1) {
-    // 	joutput_indent_level += 2;
-    // 	joutput_stmt (p->stmt1);
-    // 	joutput_indent_level -= 2;
-    // } else {
-    // 	joutput_prefix ();
-    // 	joutput ("  throw new CobolRuntimeException(cce);\n");
-    // }
     joutput_prefix();
     if (retptr) {
       // TODO in case of RETURNING POINTER
@@ -2975,7 +2956,6 @@ static void joutput_call(struct cb_call *p) {
       }
     } else {
       // joutput_data (cb_field (current_prog->cb_return_code));
-      joutput("  ");
       joutput_data(current_prog->cb_return_code);
       if (callp) {
         joutput(".set (call_%s.run", callp);
@@ -3173,21 +3153,6 @@ static void joutput_call(struct cb_call *p) {
   if (p->stmt2) {
     joutput_stmt(p->stmt2, JOUTPUT_STMT_DEFAULT);
   }
-  if (dynamic_link) {
-    joutput_prefix();
-    joutput("} catch (CobolCallException cce) {\n");
-    if (p->stmt1) {
-      joutput_indent_level += 2;
-      joutput_stmt(p->stmt1, JOUTPUT_STMT_DEFAULT);
-      joutput_indent_level -= 2;
-    } else {
-      joutput_prefix();
-      joutput("  throw new CobolRuntimeException(cce);\n");
-    }
-    joutput_prefix();
-    joutput("}\n");
-  }
-  joutput_indent("}");
 }
 
 /*
