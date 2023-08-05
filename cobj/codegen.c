@@ -2746,7 +2746,6 @@ static void joutput_call(struct cb_call *p) {
   }
 
   /* Local variables */
-  joutput_indent("{");
 #ifdef COB_NON_ALIGNED
   if (dynamic_link && retptr) {
     // output_line ("void *temptr;");
@@ -3154,7 +3153,6 @@ static void joutput_call(struct cb_call *p) {
   if (p->stmt2) {
     joutput_stmt(p->stmt2, JOUTPUT_STMT_DEFAULT);
   }
-  joutput_indent("}");
 }
 
 /*
