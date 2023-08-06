@@ -141,6 +141,7 @@ int cb_default_byte_specified = 0;
 unsigned char cb_default_byte = 0;
 #define OPTION_ID_DEFAULT_BYTE (1024)
 #define OPTION_ID_SINGLE_JAR (1025)
+#define OPTION_ID_JAR (1026)
 
 int external_flg = 0;
 int errorcount = 0;
@@ -170,8 +171,8 @@ char **cb_saveargv;
 
 const char *cob_config_dir;
 
-#define DEFAULT_JAVA_MODULE_NAME "jp.osscons.opensourcecobol.compile_default"
-char *cb_java_package_name = DEFAULT_JAVA_MODULE_NAME;
+char *cb_java_package_name = NULL;
+int cb_flag_jar = 0;
 char *cb_single_jar_name = NULL;
 
 char edit_code_command[512];
@@ -276,6 +277,7 @@ static const struct option long_options[] = {
     {"debug", no_argument, NULL, 'd'},
     {"class-file-dir", optional_argument, NULL, 'o'},
     {"java-source-dir", optional_argument, NULL, 'j'},
+    {"jar", no_argument, NULL, OPTION_ID_JAR},
     {"single-jar", required_argument, NULL, OPTION_ID_SINGLE_JAR},
     {"ext", required_argument, NULL, 'e'},
     {"free", no_argument, &cb_source_format, CB_FORMAT_FREE},
@@ -1006,7 +1008,12 @@ static int process_command_line(const int argc, char *argv[]) {
       }
 	  break;
 
+	case OPTION_ID_JAR:
+    cb_flag_jar = 1;
+    break;
+
 	case OPTION_ID_SINGLE_JAR:
+    cb_flag_jar = 1;
 		if(optarg) {
 			int len = strlen(optarg);
       if(len != 0) {
@@ -1693,38 +1700,42 @@ static int process_compile(struct filename *fn) {
   char *output_name_a = output_name == NULL ? "./" : output_name;
   char *java_source_dir_a = java_source_dir == NULL ? "./" : java_source_dir;
 
-  create_module_info_java(java_source_dir_a, cb_java_package_name ? cb_java_package_name : DEFAULT_JAVA_MODULE_NAME);
+  if(cb_flag_jar && cb_java_package_name) {
+    create_module_info_java(java_source_dir_a, cb_java_package_name);
+  }
 
-  for (char **program_id = program_id_list; *program_id; ++program_id) {
-    sprintf(buff, "javac %s -p /usr/lib/opensourcecobo4j/libcobj.jar -encoding SJIS -d %s %s/module-info.java %s/%s.java",
-            cob_java_flags, output_name_a, java_source_dir_a, java_source_dir_a, *program_id);
-    ret = process(buff);
-
-    if(ret) {
-      return ret;
-    }
-
-    if(!cb_single_jar_name) {
-      char *package_dir;
-      if(cb_java_package_name) {
-        package_name_to_path(buff2, cb_java_package_name);
-        package_dir = buff2;
-      } else {
-        package_dir = ".";
-      }
-      sprintf(buff, "jar --create --main-class=%s --file=%s/%s.jar %s/%s/*.class",
-        *program_id, output_name_a, *program_id,
-        output_name_a, package_dir);
+  if(cb_single_jar_name) {
+  } else {
+    char **program_id;
+    for (program_id = program_id_list; *program_id; ++program_id) {
+      sprintf(buff, "javac %s -p /usr/lib/opensourcecobo4j/libcobj.jar -encoding SJIS -d %s %s/module-info.java %s/%s.java",
+              cob_java_flags, output_name_a, java_source_dir_a, java_source_dir_a, *program_id);
       ret = process(buff);
+
       if(ret) {
         return ret;
       }
-      sprintf(buff, "rm -rf %s.class %s$*.class", *program_id, *program_id);
-      process(buff);
+      if(cb_flag_jar) {
+        char *package_dir;
+        if(cb_java_package_name) {
+          package_name_to_path(buff2, cb_java_package_name);
+          package_dir = buff2;
+        } else {
+          package_dir = ".";
+        }
+        sprintf(buff, "jar --create --main-class=%s --file=%s/%s.jar %s/%s/*.class",
+          *program_id, output_name_a, *program_id,
+          output_name_a, package_dir);
+        ret = process(buff);
+        if(ret) {
+          return ret;
+        }
+        sprintf(buff, "rm -rf %s.class %s$*.class", *program_id, *program_id);
+        process(buff);
+      }
     }
-  }
-
-  return ret;
+    return ret;
+  } 
 }
 
 static int process_build_module(struct filename *fn) {
@@ -1950,14 +1961,36 @@ static int process_link(struct filename *l) {
 
 int process_build_single_jar() {
   char buff[COB_MEDIUM_BUFF];
+  char buff2[COB_MEDIUM_BUFF];
+  int ret;
 
   char *output_name_a = output_name == NULL ? "./" : output_name;
   char *java_source_dir_a = java_source_dir == NULL ? "./" : java_source_dir;
-  sprintf(buff, "jar --create --file=%s/%s.jar %s/*.class", output_name_a, cb_single_jar_name,
-    output_name_a);
-  int ret = process(buff);
-  process("rm -rf *.class");
-  return ret;
+
+  if(cb_java_package_name) {
+    sprintf(buff, "javac %s -p /usr/lib/opensourcecobo4j/libcobj.jar -encoding SJIS -d %s %s/module-info.java %s/*.java",
+      cob_java_flags, output_name_a, java_source_dir_a, java_source_dir_a);
+  } else {
+    sprintf(buff, "javac %s -p /usr/lib/opensourcecobo4j/libcobj.jar -encoding SJIS -d %s %s/*.java",
+      cob_java_flags, output_name_a, java_source_dir_a);
+  }
+  printf("[dbg] (single-jar) %s\n", buff);
+  ret = process(buff);
+  if(ret) {
+    return ret;
+  }
+
+  char *package_dir;
+  if(cb_java_package_name) {
+    package_name_to_path(buff2, cb_java_package_name);
+    package_dir = buff2;
+  } else {
+    package_dir = ".";
+  }
+
+  sprintf(buff, "jar --create --file=%s/prog.jar %s/%s/*.class",
+    output_name_a, output_name_a, package_dir);
+  return process(buff);
 }
 
 int main(int argc, char *argv[]) {
@@ -2209,8 +2242,7 @@ int main(int argc, char *argv[]) {
     }
 
     /* Compile */
-    if (cb_compile_level == CB_LEVEL_COMPILE ||
-        cb_compile_level == CB_LEVEL_MODULE) {
+    if (!cb_single_jar_name && (cb_compile_level == CB_LEVEL_COMPILE || cb_compile_level == CB_LEVEL_MODULE)) {
       if (process_compile(fn) != 0) {
         cobc_clean_up(status);
         return status;
