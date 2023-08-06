@@ -176,6 +176,13 @@ public class CobolModule {
     cob_procedure_parameters.add(field);
   }
 
+  public void setParameters(AbstractCobolField... field) {
+    cob_procedure_parameters.clear();
+    for (AbstractCobolField f : field) {
+      cob_procedure_parameters.add(f);
+    }
+  }
+
   /**
    * パラメータリストの長さを返す
    *

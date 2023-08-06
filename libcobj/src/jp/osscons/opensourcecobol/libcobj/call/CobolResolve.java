@@ -33,7 +33,7 @@ import jp.osscons.opensourcecobol.libcobj.common.CobolModule;
 import jp.osscons.opensourcecobol.libcobj.common.CobolUtil;
 import jp.osscons.opensourcecobol.libcobj.data.AbstractCobolField;
 import jp.osscons.opensourcecobol.libcobj.data.CobolDataStorage;
-import jp.osscons.opensourcecobol.libcobj.exceptions.CobolCallException;
+import jp.osscons.opensourcecobol.libcobj.exceptions.CobolExceptionId;
 import jp.osscons.opensourcecobol.libcobj.exceptions.CobolRuntimeException;
 import jp.osscons.opensourcecobol.libcobj.exceptions.CobolStopRunException;
 
@@ -147,14 +147,32 @@ public class CobolResolve {
     }
   }
 
+  public static CobolRunnable resolve(AbstractCobolField cobolField, CobolRunnable runner)
+      throws CobolRuntimeException {
+    if (runner == null) {
+      return resolve(cobolField.fieldToString());
+    } else {
+      return runner;
+    }
+  }
+
+  public static CobolRunnable resolve(String name, CobolRunnable runner)
+      throws CobolRuntimeException {
+    if (runner == null) {
+      return resolve(name);
+    } else {
+      return runner;
+    }
+  }
+
   /**
    * プログラム名に対応するCobolRunnableインスタンスを返す
    *
    * @param name プログラム名の格納されたCOBOLの変数
    * @return nameに対応するCobolRunnableインスタンス
-   * @throws CobolCallException
+   * @throws CobolRuntimeException
    */
-  public static CobolRunnable resolve(AbstractCobolField cobolField) throws CobolCallException {
+  public static CobolRunnable resolve(AbstractCobolField cobolField) throws CobolRuntimeException {
     return resolve(cobolField.fieldToString());
   }
 
@@ -163,9 +181,9 @@ public class CobolResolve {
    *
    * @param name プログラム名
    * @return nameに対応するCobolRunnableインスタンス
-   * @throws CobolCallException
+   * @throws CobolRuntimeException
    */
-  public static CobolRunnable resolve(String name) throws CobolCallException {
+  public static CobolRunnable resolve(String name) throws CobolRuntimeException {
     String fullName;
     CobolRunnable runnable = null;
 
@@ -212,7 +230,8 @@ public class CobolResolve {
     }
 
     // Not found
-    throw new CobolCallException();
+    String msg = "Program not found: " + name;
+    throw new CobolRuntimeException(CobolExceptionId.COB_EC_PROGRAM_NOT_FOUND, msg);
   }
 
   /**
@@ -221,11 +240,11 @@ public class CobolResolve {
    * @param name
    * @return
    */
-  public static CobolRunnable resolve1(String name) {
+  public static CobolRunnable resolve1(String name) throws CobolRuntimeException {
     CobolRunnable p = null;
     try {
       p = resolve(name);
-    } catch (CobolCallException e) {
+    } catch (CobolRuntimeException e) {
       return null;
     }
     return p;
@@ -299,9 +318,9 @@ public class CobolResolve {
    *
    * @param name プログラム名
    * @return プログラム名に対応するCobolRunnableのインスタンスに対応するポインタ(UUID)
-   * @throws CobolCallException
+   * @throws CobolRuntimeException
    */
-  public static byte[] resolveToPointer(AbstractCobolField field) throws CobolCallException {
+  public static byte[] resolveToPointer(AbstractCobolField field) throws CobolRuntimeException {
     return resolveToPointer(field.getString());
   }
 
@@ -310,9 +329,9 @@ public class CobolResolve {
    *
    * @param name プログラム名
    * @return プログラム名に対応するCobolRunnableのインスタンスに対応するポインタ(UUID)
-   * @throws CobolCallException
+   * @throws CobolRuntimeException
    */
-  public static byte[] resolveToPointer(String name) throws CobolCallException {
+  public static byte[] resolveToPointer(String name) throws CobolRuntimeException {
     Iterator<Entry<UUID, String>> i = pointerTable.entrySet().iterator();
     while (i.hasNext()) {
       Entry<UUID, String> e = i.next();
@@ -339,7 +358,7 @@ public class CobolResolve {
     String name = pointerTable.get(uuid);
     try {
       return resolve(name);
-    } catch (CobolCallException e) {
+    } catch (CobolRuntimeException e) {
       return null;
     }
   }
