@@ -183,7 +183,9 @@ misc_DEPENDENCIES = \
 	misc.src/string-call-parameter.at \
 	misc.src/display-numeric.at \
 	misc.src/version-string-in-java.at \
-	misc.src/comp3-compute.at
+	misc.src/comp3-compute.at \
+	misc.src/index-file-status.at
+	
 
 EXTRA_DIST = $(srcdir)/package.m4 \
 	$(TESTS) \
