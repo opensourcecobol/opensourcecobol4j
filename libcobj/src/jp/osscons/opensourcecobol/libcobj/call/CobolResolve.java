@@ -29,7 +29,6 @@ import java.util.Map;
 import java.util.Map.Entry;
 import java.util.UUID;
 import jp.osscons.opensourcecobol.libcobj.common.CobolConstant;
-import jp.osscons.opensourcecobol.libcobj.common.CobolModule;
 import jp.osscons.opensourcecobol.libcobj.common.CobolUtil;
 import jp.osscons.opensourcecobol.libcobj.data.AbstractCobolField;
 import jp.osscons.opensourcecobol.libcobj.data.CobolDataStorage;
@@ -85,11 +84,12 @@ public class CobolResolve {
     if (s == null || s.equals("")) {
       buf = "." + System.getProperty("path.separator") + CobolConstant.COB_LIBRARY_PATH;
     } else {
-      buf = s
-          + System.getProperty("path.separator")
-          + "."
-          + System.getProperty("path.separator")
-          + CobolConstant.COB_LIBRARY_PATH;
+      buf =
+          s
+              + System.getProperty("path.separator")
+              + "."
+              + System.getProperty("path.separator")
+              + CobolConstant.COB_LIBRARY_PATH;
     }
     setLibraryPath(buf);
 
@@ -146,7 +146,8 @@ public class CobolResolve {
     }
   }
 
-  public static CobolRunnable resolve(String package_name, AbstractCobolField cobolField, CobolRunnable runner)
+  public static CobolRunnable resolve(
+      String package_name, AbstractCobolField cobolField, CobolRunnable runner)
       throws CobolRuntimeException {
     if (runner == null) {
       return resolve(package_name, cobolField.fieldToString());
@@ -171,7 +172,8 @@ public class CobolResolve {
    * @return nameに対応するCobolRunnableインスタンス
    * @throws CobolRuntimeException
    */
-  public static CobolRunnable resolve(String package_name, AbstractCobolField cobolField) throws CobolRuntimeException {
+  public static CobolRunnable resolve(String package_name, AbstractCobolField cobolField)
+      throws CobolRuntimeException {
     return resolve(package_name, cobolField.fieldToString());
   }
 
@@ -182,7 +184,8 @@ public class CobolResolve {
    * @return nameに対応するCobolRunnableインスタンス
    * @throws CobolRuntimeException
    */
-  public static CobolRunnable resolve(String package_name, String name) throws CobolRuntimeException {
+  public static CobolRunnable resolve(String package_name, String name)
+      throws CobolRuntimeException {
     String fullName;
     CobolRunnable runnable = null;
 
@@ -339,7 +342,7 @@ public class CobolResolve {
     UUID uuid = uuidFromByteBuffer(uuidBytes);
     String name = pointerTable.get(uuid);
     try {
-      return resolve(null, name); //TODO
+      return resolve(null, name); // TODO
     } catch (CobolRuntimeException e) {
       return null;
     }
