@@ -161,7 +161,8 @@ command_line_options_DEPENDENCIES = \
 	command-line-options.src/fdefaultbyte.at \
 	command-line-options.src/ffunctions-all.at \
 	command-line-options.src/fmfcomment.at \
-	command-line-options.src/debug.at
+	command-line-options.src/debug.at \
+	command-line-options.src/jar.at
 
 misc_DEPENDENCIES = \
 	misc.src/signed-comp3.at \
