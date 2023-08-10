@@ -45,8 +45,6 @@ public class CobolResolve {
   private static Map<UUID, String> pointerTable;
   /** 名前の変換方法(小文字か大文字)を示す変数 */
   private static int name_convert;
-  /** デフォルトのパッケージ名 */
-  private static String defaultPackageName;
   // TODO resolve_pathsの利用方法
   /** システムで設定された区切り文字で区切られた0個以上のパス 動的に読み込むクラスファイルを検索する場所を示す. */
   private static List<String> resolve_paths;
@@ -57,7 +55,6 @@ public class CobolResolve {
     callTable = new HashMap<>();
     pointerTable = new HashMap<>();
     name_convert = 0;
-    defaultPackageName = null;
     resolve_paths = new ArrayList<String>();
     package_paths = new ArrayList<String>();
   }
@@ -149,19 +146,20 @@ public class CobolResolve {
     }
   }
 
-  public static CobolRunnable resolve(AbstractCobolField cobolField, CobolRunnable runner)
+  public static CobolRunnable resolve(
+      String packageName, AbstractCobolField cobolField, CobolRunnable runner)
       throws CobolRuntimeException {
     if (runner == null) {
-      return resolve(cobolField.fieldToString());
+      return resolve(packageName, cobolField.fieldToString());
     } else {
       return runner;
     }
   }
 
-  public static CobolRunnable resolve(String name, CobolRunnable runner)
+  public static CobolRunnable resolve(String packageName, String name, CobolRunnable runner)
       throws CobolRuntimeException {
     if (runner == null) {
-      return resolve(name);
+      return resolve(packageName, name);
     } else {
       return runner;
     }
@@ -174,8 +172,9 @@ public class CobolResolve {
    * @return nameに対応するCobolRunnableインスタンス
    * @throws CobolRuntimeException
    */
-  public static CobolRunnable resolve(AbstractCobolField cobolField) throws CobolRuntimeException {
-    return resolve(cobolField.fieldToString());
+  public static CobolRunnable resolve(String packageName, AbstractCobolField cobolField)
+      throws CobolRuntimeException {
+    return resolve(packageName, cobolField.fieldToString());
   }
 
   /**
@@ -185,7 +184,8 @@ public class CobolResolve {
    * @return nameに対応するCobolRunnableインスタンス
    * @throws CobolRuntimeException
    */
-  public static CobolRunnable resolve(String name) throws CobolRuntimeException {
+  public static CobolRunnable resolve(String packageName, String name)
+      throws CobolRuntimeException {
     String fullName;
     CobolRunnable runnable = null;
 
@@ -207,8 +207,8 @@ public class CobolResolve {
       name = name.toUpperCase();
     }
 
-    if (defaultPackageName != null) {
-      fullName = defaultPackageName + "." + name;
+    if (packageName != null) {
+      fullName = packageName + "." + name;
     } else {
       fullName = name;
     }
@@ -233,22 +233,6 @@ public class CobolResolve {
     // Not found
     String msg = "Program not found: " + name;
     throw new CobolRuntimeException(CobolExceptionId.COB_EC_PROGRAM_NOT_FOUND, msg);
-  }
-
-  /**
-   * libcob/call.cのcob_resolve_1の実装
-   *
-   * @param name
-   * @return
-   */
-  public static CobolRunnable resolve1(String name) throws CobolRuntimeException {
-    CobolRunnable p = null;
-    try {
-      p = resolve(name);
-    } catch (CobolRuntimeException e) {
-      return null;
-    }
-    return p;
   }
 
   /**
@@ -340,7 +324,7 @@ public class CobolResolve {
         return uuidToByteBuffer(e.getKey());
       }
     }
-    resolve(name);
+    resolve(null, name); // TODO
     UUID uuid = UUID.randomUUID();
     pointerTable.put(uuid, name);
     return uuidToByteBuffer(uuid);
@@ -358,7 +342,7 @@ public class CobolResolve {
     UUID uuid = uuidFromByteBuffer(uuidBytes);
     String name = pointerTable.get(uuid);
     try {
-      return resolve(name);
+      return resolve(null, name); // TODO
     } catch (CobolRuntimeException e) {
       return null;
     }

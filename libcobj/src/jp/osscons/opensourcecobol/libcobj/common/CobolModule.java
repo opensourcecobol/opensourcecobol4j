@@ -71,6 +71,7 @@ public class CobolModule {
   public int flag_pretty_display;
   public int spare8;
   public String program_id;
+  public String packageName;
 
   public List<AbstractCobolField> cob_procedure_parameters;
 
@@ -189,6 +190,14 @@ public class CobolModule {
    */
   public int lengthParameter() {
     return cob_procedure_parameters.size();
+  }
+
+  public void setPackageName(String packageName) {
+    this.packageName = packageName;
+  }
+
+  public String getPackageName() {
+    return packageName;
   }
 
   /**

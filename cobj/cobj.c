@@ -140,6 +140,8 @@ int cb_flag_main = 0;
 int cb_default_byte_specified = 0;
 unsigned char cb_default_byte = 0;
 #define OPTION_ID_DEFAULT_BYTE (1024)
+#define OPTION_ID_SINGLE_JAR (1025)
+#define OPTION_ID_JAR (1026)
 
 int external_flg = 0;
 int errorcount = 0;
@@ -168,7 +170,10 @@ int cb_saveargc;
 char **cb_saveargv;
 
 const char *cob_config_dir;
+
 char *cb_java_package_name = NULL;
+int cb_flag_jar = 0;
+char *cb_single_jar_name = NULL;
 
 char edit_code_command[512];
 char edit_code_command_is_set = 0;
@@ -272,6 +277,8 @@ static const struct option long_options[] = {
     {"debug", no_argument, NULL, 'd'},
     {"class-file-dir", optional_argument, NULL, 'o'},
     {"java-source-dir", optional_argument, NULL, 'j'},
+    {"jar", no_argument, NULL, OPTION_ID_JAR},
+    {"single-jar", required_argument, NULL, OPTION_ID_SINGLE_JAR},
     {"ext", required_argument, NULL, 'e'},
     {"free", no_argument, &cb_source_format, CB_FORMAT_FREE},
     {"free_1col_aster", no_argument, &cb_source_format,
@@ -795,6 +802,9 @@ static void cobc_print_usage(void) {
   puts(_("                                    * octodecimal 00..0377 representing a character"));
   puts(_("  -java-package(=<package name>)    Specify the package name of the "
          "generated source code"));
+  puts(_("  -jar                              Create <PROGRAM-ID>.jar and remove class files"));
+  puts(_("  -single-jar=<JAR file name>       Create <JAR file name>.jar and remove class files"));
+  puts(_("                                    The JAR file contains all class files of all specified COBOL programs"));
   // puts(_("  -edit-code-command(=<command>)    Specify the command to edit
   // java " "source code. See script/spring_batch_tasklet.sh in opensource COBOL
   //" "4J for details."));
@@ -1000,6 +1010,24 @@ static int process_command_line(const int argc, char *argv[]) {
         cb_java_package_name = optarg;
       }
 	  break;
+
+	case OPTION_ID_JAR:
+    cb_flag_jar = 1;
+    break;
+
+	case OPTION_ID_SINGLE_JAR:
+    cb_flag_jar = 1;
+		if(optarg) {
+			int len = strlen(optarg);
+      if(len != 0) {
+          cb_single_jar_name = malloc(len + 1);
+          strcpy(cb_single_jar_name, optarg);
+          break;
+      }
+		}
+		fprintf(stderr, "Warning - An invalid name for a jar file\n");
+		fflush(stderr);
+		break;
 
 	case OPTION_ID_DEFAULT_BYTE:
 		if(optarg) {
@@ -1637,32 +1665,74 @@ static int process_translate(struct filename *fn) {
   return 0;
 }
 
+static void create_module_info_java(char* source_dir, char* package_name) {
+  char path[COB_MEDIUM_BUFF];
+  sprintf(path, "%s/module-info.java", source_dir);
+  FILE *f = fopen(path, "w");
+  fprintf(f, "module %s {\n", package_name);
+  fprintf(f, "  requires transitive jp.osscons.opensourcecobol.libcobj;\n");
+  fprintf(f, "  exports %s;\n", package_name);
+  fprintf(f, "}\n");
+  fclose(f);
+}
+
+static package_name_to_path(char* buff, char* package_name) {
+  char* b_p = buff;
+  char* p_p = package_name;
+  for(; *p_p; ++p_p, ++b_p) {
+    if(*p_p == '.') {
+      *b_p = '/';
+    } else {
+      *b_p = *p_p;
+    }
+  }
+}
+
 static int process_compile(struct filename *fn) {
   char buff[COB_MEDIUM_BUFF];
+  char buff2[COB_MEDIUM_BUFF];
   char name[COB_MEDIUM_BUFF];
   int ret = 0;
 
   if (output_name) {
     strcpy(name, output_name);
-#ifdef _MSC_VER
-    file_stripext(name);
-#endif
   } else {
     file_basename(fn->source, name);
-#ifndef _MSC_VER
-    strcat(name, ".s");
-#endif
   }
 
-  for (char **program_id = program_id_list; *program_id; ++program_id) {
-    char *java_source_dir_a = java_source_dir == NULL ? "./" : java_source_dir;
-    char *output_name_a = output_name == NULL ? "./" : output_name;
-    sprintf(buff, "javac %s -encoding SJIS -sourcepath %s -d %s %s/%s.java",
-            cob_java_flags, java_source_dir_a, output_name_a, java_source_dir_a,
-            *program_id);
-    ret = process(buff);
-  }
-  return ret;
+  char *output_name_a = output_name == NULL ? "./" : output_name;
+  char *java_source_dir_a = java_source_dir == NULL ? "./" : java_source_dir;
+
+  if(!cb_single_jar_name) {
+    char **program_id;
+    for (program_id = program_id_list; *program_id; ++program_id) {
+      sprintf(buff, "javac %s -encoding SJIS -d %s %s/%s.java",
+              cob_java_flags, output_name_a, java_source_dir_a, *program_id);
+      ret = process(buff);
+
+      if(ret) {
+        return ret;
+      }
+      if(cb_flag_jar) {
+        char *package_dir;
+        if(cb_java_package_name) {
+          package_name_to_path(buff2, cb_java_package_name);
+          package_dir = buff2;
+        } else {
+          package_dir = ".";
+        }
+        sprintf(buff, "cd %s && jar --create --main-class=%s --file=%s.jar %s/*.class",
+          output_name_a, *program_id, *program_id, package_dir);
+        ret = process(buff);
+        if(ret) {
+          return ret;
+        }
+        sprintf(buff, "rm -rf %s/%s.class %s/%s$*.class", output_name_a, *program_id, output_name_a, *program_id);
+        process(buff);
+      }
+    }
+    return ret;
+  } 
 }
 
 static int process_build_module(struct filename *fn) {
@@ -1886,6 +1956,38 @@ static int process_link(struct filename *l) {
   return ret;
 }
 
+int process_build_single_jar() {
+  char buff[COB_MEDIUM_BUFF];
+  char buff2[COB_MEDIUM_BUFF];
+  int ret;
+
+  char *output_name_a = output_name == NULL ? "./" : output_name;
+  char *java_source_dir_a = java_source_dir == NULL ? "./" : java_source_dir;
+
+  sprintf(buff, "javac %s -encoding SJIS -d %s %s/*.java",
+    cob_java_flags, output_name_a, java_source_dir_a);
+
+  ret = process(buff);
+  if(ret) {
+    return ret;
+  }
+
+  char *package_dir;
+  if(cb_java_package_name) {
+    package_name_to_path(buff2, cb_java_package_name);
+    package_dir = buff2;
+  } else {
+    package_dir = ".";
+  }
+
+  sprintf(buff, "cd %s && jar --create --file=%s %s/*.class",
+    output_name_a, cb_single_jar_name, package_dir);
+  ret = process(buff);
+  sprintf(buff, "rm -f %s/%s/*.class #aaa", output_name_a, package_dir);
+  process(buff);
+  return ret;
+}
+
 int main(int argc, char *argv[]) {
   struct filename *fn;
   char *p;
@@ -2073,11 +2175,11 @@ int main(int argc, char *argv[]) {
     cb_compile_level = CB_LEVEL_TRANSLATE;
   }
 
-  if (output_name && cb_compile_level < CB_LEVEL_LIBRARY &&
+  /*if (output_name && cb_compile_level < CB_LEVEL_LIBRARY &&
       (argc - iargs) > 1) {
     fprintf(stderr, "cobj: -o option invalid in this combination\n");
     exit(1);
-  }
+  }*/
   if (cb_flag_sign_ascii && cb_flag_sign_ebcdic) {
     fprintf(stderr,
             "Only one of -fsign-ascii or -fsign-ebcdic may be specified\n");
@@ -2135,8 +2237,7 @@ int main(int argc, char *argv[]) {
     }
 
     /* Compile */
-    if (cb_compile_level == CB_LEVEL_COMPILE ||
-        cb_compile_level == CB_LEVEL_MODULE) {
+    if (!cb_single_jar_name && (cb_compile_level == CB_LEVEL_COMPILE || cb_compile_level == CB_LEVEL_MODULE)) {
       if (process_compile(fn) != 0) {
         cobc_clean_up(status);
         return status;
@@ -2153,6 +2254,10 @@ int main(int argc, char *argv[]) {
     } else if (cb_compile_level == CB_LEVEL_EXECUTABLE) {
       fprintf(stderr, "Building executable files is not supported");
     }
+  }
+
+  if(cb_single_jar_name) {
+    process_build_single_jar();
   }
 
   if (!cb_flag_syntax_only) {
