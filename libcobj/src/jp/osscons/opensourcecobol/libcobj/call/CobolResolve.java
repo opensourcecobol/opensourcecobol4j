@@ -147,19 +147,19 @@ public class CobolResolve {
   }
 
   public static CobolRunnable resolve(
-      String package_name, AbstractCobolField cobolField, CobolRunnable runner)
+      String packageName, AbstractCobolField cobolField, CobolRunnable runner)
       throws CobolRuntimeException {
     if (runner == null) {
-      return resolve(package_name, cobolField.fieldToString());
+      return resolve(packageName, cobolField.fieldToString());
     } else {
       return runner;
     }
   }
 
-  public static CobolRunnable resolve(String package_name, String name, CobolRunnable runner)
+  public static CobolRunnable resolve(String packageName, String name, CobolRunnable runner)
       throws CobolRuntimeException {
     if (runner == null) {
-      return resolve(package_name, name);
+      return resolve(packageName, name);
     } else {
       return runner;
     }
@@ -172,9 +172,9 @@ public class CobolResolve {
    * @return nameに対応するCobolRunnableインスタンス
    * @throws CobolRuntimeException
    */
-  public static CobolRunnable resolve(String package_name, AbstractCobolField cobolField)
+  public static CobolRunnable resolve(String packageName, AbstractCobolField cobolField)
       throws CobolRuntimeException {
-    return resolve(package_name, cobolField.fieldToString());
+    return resolve(packageName, cobolField.fieldToString());
   }
 
   /**
@@ -184,7 +184,7 @@ public class CobolResolve {
    * @return nameに対応するCobolRunnableインスタンス
    * @throws CobolRuntimeException
    */
-  public static CobolRunnable resolve(String package_name, String name)
+  public static CobolRunnable resolve(String packageName, String name)
       throws CobolRuntimeException {
     String fullName;
     CobolRunnable runnable = null;
@@ -207,8 +207,8 @@ public class CobolResolve {
       name = name.toUpperCase();
     }
 
-    if (package_name != null) {
-      fullName = package_name + "." + name;
+    if (packageName != null) {
+      fullName = packageName + "." + name;
     } else {
       fullName = name;
     }

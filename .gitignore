@@ -57,6 +57,7 @@ tests/cobol85/*/*.class
 tests/cobol85/*/*.java
 tests/cobol85/*/*.out
 tests/cobol85/*/*.log
+tests/cobol85/*/*.jar
 tests/cobol85/*/tmp.cbl
 tests/cobol85/*/report.txt
 tests/cobol85/*/XXXXX*

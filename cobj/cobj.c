@@ -802,6 +802,9 @@ static void cobc_print_usage(void) {
   puts(_("                                    * octodecimal 00..0377 representing a character"));
   puts(_("  -java-package(=<package name>)    Specify the package name of the "
          "generated source code"));
+  puts(_("  -jar                              Create <PROGRAM-ID>.jar and remove class files"));
+  puts(_("  -single-jar=<JAR file name>       Create <JAR file name>.jar and remove class files"));
+  puts(_("                                    The JAR file contains all class files of all specified COBOL programs"));
   // puts(_("  -edit-code-command(=<command>)    Specify the command to edit
   // java " "source code. See script/spring_batch_tasklet.sh in opensource COBOL
   //" "4J for details."));
