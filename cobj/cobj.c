@@ -1719,16 +1719,15 @@ static int process_compile(struct filename *fn) {
           package_name_to_path(buff2, cb_java_package_name);
           package_dir = buff2;
         } else {
-          package_dir = "";
+          package_dir = ".";
         }
-        sprintf(buff, "jar --create --main-class=%s --file=%s/%s.jar %s/%s/*.class",
-          *program_id, output_name_a, *program_id,
-          output_name_a, package_dir);
+        sprintf(buff, "cd %s && jar --create --main-class=%s --file=%s.jar %s/*.class",
+          output_name_a, *program_id, *program_id, package_dir);
         ret = process(buff);
         if(ret) {
           return ret;
         }
-        sprintf(buff, "rm -rf %s.class %s$*.class", *program_id, *program_id);
+        sprintf(buff, "rm -rf %s/%s.class %s/%s$*.class", output_name_a, *program_id, output_name_a, *program_id);
         process(buff);
       }
     }
@@ -1978,13 +1977,13 @@ int process_build_single_jar() {
     package_name_to_path(buff2, cb_java_package_name);
     package_dir = buff2;
   } else {
-    package_dir = "";
+    package_dir = ".";
   }
 
-  sprintf(buff, "jar --create --file=%s/%s %s/%s/*.class",
-    output_name_a, cb_single_jar_name, output_name_a, package_dir);
+  sprintf(buff, "cd %s && jar --create --file=%s %s/*.class",
+    output_name_a, cb_single_jar_name, package_dir);
   ret = process(buff);
-  sprintf(buff, "rm -f %s/%s/*.class", output_name_a, package_dir);
+  sprintf(buff, "rm -f %s/%s/*.class #aaa", output_name_a, package_dir);
   process(buff);
   return ret;
 }
@@ -2176,11 +2175,11 @@ int main(int argc, char *argv[]) {
     cb_compile_level = CB_LEVEL_TRANSLATE;
   }
 
-  if (output_name && cb_compile_level < CB_LEVEL_LIBRARY &&
+  /*if (output_name && cb_compile_level < CB_LEVEL_LIBRARY &&
       (argc - iargs) > 1) {
     fprintf(stderr, "cobj: -o option invalid in this combination\n");
     exit(1);
-  }
+  }*/
   if (cb_flag_sign_ascii && cb_flag_sign_ebcdic) {
     fprintf(stderr,
             "Only one of -fsign-ascii or -fsign-ebcdic may be specified\n");
