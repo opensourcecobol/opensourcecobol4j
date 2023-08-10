@@ -2946,8 +2946,14 @@ static void joutput_call(struct cb_call *p) {
       callp = NULL;
       joutput_prefix();
       joutput("  cob_unifunc = ");
-      joutput_funcall(cb_build_funcall_1("CobolResolve.resolve", p->name));
-      joutput(";\n");
+      joutput("CobolResolve.resolve(");
+      if(cb_java_package_name) {
+        joutput("\"%s\", ", cb_java_package_name);
+      } else {
+        joutput("null, ");
+      }
+      joutput_param(p->name, -1);
+      joutput(");\n");
     }
     joutput_prefix();
     if (retptr) {
