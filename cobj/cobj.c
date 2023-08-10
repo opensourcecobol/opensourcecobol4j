@@ -1700,16 +1700,11 @@ static int process_compile(struct filename *fn) {
   char *output_name_a = output_name == NULL ? "./" : output_name;
   char *java_source_dir_a = java_source_dir == NULL ? "./" : java_source_dir;
 
-  if(cb_flag_jar && cb_java_package_name) {
-    create_module_info_java(java_source_dir_a, cb_java_package_name);
-  }
-
-  if(cb_single_jar_name) {
-  } else {
+  if(!cb_single_jar_name) {
     char **program_id;
     for (program_id = program_id_list; *program_id; ++program_id) {
-      sprintf(buff, "javac %s -p /usr/lib/opensourcecobo4j/libcobj.jar -encoding SJIS -d %s %s/module-info.java %s/%s.java",
-              cob_java_flags, output_name_a, java_source_dir_a, java_source_dir_a, *program_id);
+      sprintf(buff, "javac %s -encoding SJIS -d %s %s/%s.java",
+              cob_java_flags, output_name_a, java_source_dir_a, *program_id);
       ret = process(buff);
 
       if(ret) {
@@ -1721,7 +1716,7 @@ static int process_compile(struct filename *fn) {
           package_name_to_path(buff2, cb_java_package_name);
           package_dir = buff2;
         } else {
-          package_dir = ".";
+          package_dir = "";
         }
         sprintf(buff, "jar --create --main-class=%s --file=%s/%s.jar %s/%s/*.class",
           *program_id, output_name_a, *program_id,
@@ -1967,14 +1962,9 @@ int process_build_single_jar() {
   char *output_name_a = output_name == NULL ? "./" : output_name;
   char *java_source_dir_a = java_source_dir == NULL ? "./" : java_source_dir;
 
-  if(cb_java_package_name) {
-    sprintf(buff, "javac %s -p /usr/lib/opensourcecobo4j/libcobj.jar -encoding SJIS -d %s %s/module-info.java %s/*.java",
-      cob_java_flags, output_name_a, java_source_dir_a, java_source_dir_a);
-  } else {
-    sprintf(buff, "javac %s -p /usr/lib/opensourcecobo4j/libcobj.jar -encoding SJIS -d %s %s/*.java",
-      cob_java_flags, output_name_a, java_source_dir_a);
-  }
-  printf("[dbg] (single-jar) %s\n", buff);
+  sprintf(buff, "javac %s -encoding SJIS -d %s %s/*.java",
+    cob_java_flags, output_name_a, java_source_dir_a);
+
   ret = process(buff);
   if(ret) {
     return ret;
@@ -1985,12 +1975,15 @@ int process_build_single_jar() {
     package_name_to_path(buff2, cb_java_package_name);
     package_dir = buff2;
   } else {
-    package_dir = ".";
+    package_dir = "";
   }
 
-  sprintf(buff, "jar --create --file=%s/prog.jar %s/%s/*.class",
-    output_name_a, output_name_a, package_dir);
-  return process(buff);
+  sprintf(buff, "jar --create --file=%s/%s %s/%s/*.class",
+    output_name_a, cb_single_jar_name, output_name_a, package_dir);
+  ret = process(buff);
+  sprintf(buff, "rm -f %s/%s/*.class", output_name_a, package_dir);
+  process(buff);
+  return ret;
 }
 
 int main(int argc, char *argv[]) {
