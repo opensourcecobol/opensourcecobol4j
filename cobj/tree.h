@@ -29,15 +29,15 @@
 
 #define COB_MAX_SUBSCRIPTS 16
 
-#define CB_PREFIX_ATTR "a_"     /* field attribute (cob_field_attr) */
-#define CB_PREFIX_BASE "b_"     /* base address (unsigned char *) */
-#define CB_PREFIX_CONST "c_"    /* constant or literal (cob_field) */
-#define CB_PREFIX_DECIMAL "d_"  /* decimal number (cob_decimal) */
-#define CB_PREFIX_FIELD "f_"    /* field (cob_field) */
-#define CB_PREFIX_FILE "h_"     /* file (cob_file) */
-#define CB_PREFIX_KEYS "k_"     /* file keys (struct cob_file_key []) */
-#define CB_PREFIX_LABEL "l_"    /* label */
-#define CB_PREFIX_SEQUENCE "s_" /* collating sequence */
+#define CB_PREFIX_ATTR "a_"             /* field attribute (cob_field_attr) */
+#define CB_PREFIX_BASE "b_"             /* base address (unsigned char *) */
+#define CB_PREFIX_CONST "c_"            /* constant or literal (cob_field) */
+#define CB_PREFIX_DECIMAL "d_"          /* decimal number (cob_decimal) */
+#define CB_PREFIX_FIELD "f_"            /* field (cob_field) */
+#define CB_PREFIX_FILE "h_"             /* file (cob_file) */
+#define CB_PREFIX_KEYS "k_"             /* file keys (struct cob_file_key []) */
+#define CB_PREFIX_LABEL "l_"            /* label */
+#define CB_PREFIX_SEQUENCE "s_"         /* collating sequence */
 #define CB_PREFIX_STRING_LITERAL "str_" /* string literal */
 
 #define CB_PROGRAM_TYPE 0
