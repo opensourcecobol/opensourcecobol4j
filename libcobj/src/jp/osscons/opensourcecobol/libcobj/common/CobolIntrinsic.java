@@ -1717,7 +1717,9 @@ public class CobolIntrinsic {
     str = String.format("%7d%5d", srdays, srtime);
     buff = str.getBytes();
     for (int i = 0; i < 12; i++) {
-      if (buff[i] == 32) buff[i] = 48;
+      if (buff[i] == 32) {
+        buff[i] = 48;
+      }
     }
     currField.getDataStorage().memcpy(buff);
     return currField;
