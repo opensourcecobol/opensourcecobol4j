@@ -19,6 +19,7 @@
 package jp.osscons.opensourcecobol.libcobj.common;
 
 import java.math.BigDecimal;
+import java.nio.ByteBuffer;
 import java.util.Arrays;
 import java.util.Calendar;
 import java.util.Random;
@@ -1687,6 +1688,40 @@ public class CobolIntrinsic {
         CobolFieldFactory.makeCobolField(ndata, (CobolDataStorage) null, attr);
     makeFieldEntry(field);
     currField.getDataStorage().memcpy(pdata, ndata);
+    return currField;
+  }
+
+  public static AbstractCobolField funcCombinedDatetime(AbstractCobolField srcdays, AbstractCobolField srctime){
+    int		srdays;
+	  int		srtime;
+    String str;
+    byte[]  buff = new byte[12];
+
+    CobolFieldAttribute attr =
+        new CobolFieldAttribute(CobolFieldAttribute.COB_TYPE_NUMERIC_DISPLAY, 12, 5, 0, null);
+    AbstractCobolField field =
+        CobolFieldFactory.makeCobolField(12, (CobolDataStorage) null, attr);
+    makeFieldEntry(field);
+    CobolRuntimeException.setException(0);
+    srdays = srcdays.getInt();
+    if(srdays < 1 || srdays > 3067671){
+      CobolRuntimeException.setException(CobolExceptionId.COB_EC_ARGUMENT_FUNCTION);
+      currField.getDataStorage().memset(0, 12);
+      return currField;
+    }
+    srtime = srctime.getInt();
+    if(srtime < 1 || srtime > 86400){
+      CobolRuntimeException.setException(CobolExceptionId.COB_EC_ARGUMENT_FUNCTION);
+      currField.getDataStorage().memset(0, 12);
+      return currField;
+    }
+    str = String.format("%7d%5d", srdays, srtime);
+    buff = str.getBytes();
+    for(int i=0; i<12; i++){
+      if(buff[i] == 32)
+        buff[i] = 48;
+    }
+    currField.getDataStorage().memcpy(buff);
     return currField;
   }
 }
