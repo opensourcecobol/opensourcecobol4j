@@ -69,3 +69,7 @@ bin/cob-config
 bin/cobcrun
 bin/cobcrun-cobcrun.o
 configure~
+*.gcov
+*.gcda
+*.gcno
+report.html
