@@ -104,8 +104,7 @@ jobs:
           distribution: 'temurin'
           java-version: '17'
 
-      # Download code formatters and static analyzers
-      - name: Install dependencies
+      - name: Install static analysis tools
         run: |
           sudo apt-get update -y
           sudo apt-get install -y clang-format cppcheck
@@ -115,6 +114,13 @@ jobs:
           unzip pmd-bin-6.52.0.zip
           unzip spotbugs-4.7.3.zip
 
+      - name: Install opensource COBOL 4J
+        run: |
+          sudo apt install -y build-essential bison flex gettext texinfo automake autoconf
+          ./configure --prefix=/usr/
+          make
+          sudo make install
+
       - name: Check format with google-java-format and clang-format
         run: |
           export PATH_GOOGLE_JAVA_FORMAT=${PWD}/google-java-format.jar
@@ -123,7 +129,7 @@ jobs:
 
       - name: Run SpotBugs
         run: |
-          java -jar spotbugs-4.7.3/lib/spotbugs.jar -textui libcobj/
+          java -jar spotbugs-4.7.3/lib/spotbugs.jar -textui libcobj/output
 
       - name: Run PMD
         run: |
