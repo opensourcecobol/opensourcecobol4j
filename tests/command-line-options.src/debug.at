@@ -1,0 +1,28 @@
+AT_SETUP([-debug])
+
+AT_DATA([prog.cbl], [
+       IDENTIFICATION              DIVISION.
+       PROGRAM-ID.                 prog.
+       DATA                        DIVISION.
+       WORKING-STORAGE             SECTION.
+       01   IDX  PIC 9(04) COMP VALUE 5.
+       01   SRC  PIC X(10) VALUE "0123456789".
+       01   DST  PIC X(10) VALUE "          ".
+       PROCEDURE                   DIVISION.
+       MAIN.
+           MOVE  SRC(1:IDX)  TO  DST.
+           DISPLAY "<" DST ">".
+           MOVE 15 TO IDX.
+           MOVE  SRC(1:IDX)  TO  DST.
+           DISPLAY "<" DST ">".
+           STOP RUN.
+])
+
+AT_CHECK([${COBJ} -debug prog.cbl])
+AT_CHECK([java prog], [1],
+[<01234     >
+],
+[prog.cbl:14: libcobj: Length of 'SRC' out of bounds: 15
+])
+
+AT_CLEANUP

@@ -1,0 +1,33 @@
+AT_SETUP([String literal as a call parameter <Issue #126>])
+
+AT_DATA([prog.cbl], [
+       IDENTIFICATION              DIVISION.	
+       PROGRAM-ID.                 prog.	
+       DATA DIVISION.
+       WORKING-STORAGE             SECTION.	
+       PROCEDURE                   DIVISION.	
+       MAIN-RTN.	
+           CALL "sub" USING "AB" "cde".
+])
+
+AT_DATA([sub.cbl], [
+       IDENTIFICATION              DIVISION.	
+       PROGRAM-ID.                 sub.	
+       DATA DIVISION.
+       LINKAGE             SECTION.	
+       01 ARG1 PIC XX.
+       01 ARG2 PIC XXX.
+       PROCEDURE                   DIVISION
+         USING ARG1 ARG2.	
+       MAIN-RTN.	
+           DISPLAY ARG1.
+           DISPLAY ARG2.
+])
+
+AT_CHECK([${COBJ} prog.cbl sub.cbl])
+AT_CHECK([java prog], [0],
+[AB
+cde
+])
+
+AT_CLEANUP

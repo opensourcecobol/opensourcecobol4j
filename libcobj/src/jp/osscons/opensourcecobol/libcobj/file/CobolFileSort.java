@@ -65,14 +65,14 @@ public class CobolFileSort {
       CobolDataStorage s1, CobolDataStorage s2, int size, CobolDataStorage col) {
     if (col != null) {
       for (int i = 0; i < size; ++i) {
-        int ret = col.getByte(s1.getByte(i)) - col.getByte(s2.getByte(i));
+        int ret = (col.getByte(s1.getByte(i)) & 0xff) - (col.getByte(s2.getByte(i)) & 0xff);
         if (ret != 0) {
           return ret;
         }
       }
     } else {
       for (int i = 0; i < size; ++i) {
-        int ret = s1.getByte(i) - s2.getByte(i);
+        int ret = (s1.getByte(i) & 0xff) - (s2.getByte(i) & 0xff);
         if (ret != 0) {
           return ret;
         }

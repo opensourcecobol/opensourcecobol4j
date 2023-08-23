@@ -49,24 +49,37 @@ Implemented.
 
 opensource COBOL 4J is tested using [NIST COBOL85 test suite](https://www.itl.nist.gov/div897/ctg/cobol_form.htm)
 
-The result of NIST COBOL85 test suite
+The result of NIST COBOL85 main test suites
 
 ```
 ------ Directory Information -------   --- Total Tests Information ---
 Module Programs Executed Error Crash   Pass Fail Deleted Inspect Total
 ------ -------- -------- ----- -----  ----- ---- ------- ------- -----
-NC           90       90     0     0   4352    0       6      11  4369
-SM           15       15     0     0    290    0       3       1   294
-IC           13       13     0     0     97    0       0       0    97
-SQ           81       81     0     0    512    0       6      81   599
-IX           39       39     0     0    507    0       1       0   508
-ST           39       39     0     0    278    0       0       0   278
-SG            5        5     0     0    193    0       0       0   193
-OB            5        5     0     0     16    0       0       0    16
-IF           42       42     0     0    732    0       0       0   732
-RL           32       32     0     0   1827    0       5       0  1832
+NC           90       90     0     0   4352    0       6      11  4369   COBOL nucleus tests
+SM           15       15     0     0    290    0       3       1   294   COPY sentence tests
+IC           13       13     0     0     97    0       0       0    97   CALL sentence tests
+SQ           81       81     0     0    512    0       6      81   599   Sequential file I-O tests
+IX           39       39     0     0    507    0       1       0   508   Indexed file I-O tests
+ST           39       39     0     0    278    0       0       0   278   SORT sentence tests
+SG            5        5     0     0    193    0       0       0   193   Segment tests
+OB            5        5     0     0     16    0       0       0    16   Obsolete facilities tests
+IF           42       42     0     0    732    0       0       0   732   Intrinsic Function tests
+RL           32       32     0     0   1827    0       5       0  1832   Relative file I-O tests
 ------ -------- -------- ----- -----  ----- ---- ------- ------- -----
 Total       361      361     0     0   8804    0      21      93  8918
+```
+
+The result of nist cobol85 extra test suites
+
+```
+------ directory information -------   --- total tests information ---
+module programs executed error crash   pass fail deleted inspect total
+------ -------- -------- ----- -----  ----- ---- ------- ------- -----
+cm            7        0     7     0      0    0       0       0     0   COMMUNICATION SECTION tests
+db           10        0    10     0      0    0       0       0     0   Debugging facilities tests
+rw            4        0     4     0      0    0       0       0     0   REPORT SECTION tests
+------ -------- -------- ----- -----  ----- ---- ------- ------- -----
+total        21        0    21     0      0    0       0       0     0
 ```
 
 # Contributors

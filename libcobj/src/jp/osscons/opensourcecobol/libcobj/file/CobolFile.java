@@ -1064,7 +1064,7 @@ public class CobolFile {
       throws CobolStopRunException {
     if (this.access_mode == COB_ACCESS_SEQUENTIAL
         && this.last_open_mode == COB_OPEN_I_O
-        && CobolUtil.cob_io_rewwrite_assumed() != 0) {
+        && CobolUtil.cob_io_rewwrite_assumed()) {
       this.rewrite(rec, opt, fnstatus);
       return;
     }

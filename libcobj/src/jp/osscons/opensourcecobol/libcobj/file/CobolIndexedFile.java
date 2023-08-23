@@ -317,7 +317,7 @@ public class CobolIndexedFile extends CobolFile {
       this.cursor =
           IndexedCursor.createCursor(p.connection, p.key, p.key_index, isDuplicate, COB_GE);
       if (this.cursor.isEmpty()) {
-        return COB_STATUS_30_PERMANENT_ERROR;
+        return COB_STATUS_10_END_OF_FILE;
       }
       this.cursor.get().moveToFirst();
     } else if (this.flag_end_of_file) {

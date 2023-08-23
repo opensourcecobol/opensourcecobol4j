@@ -147,6 +147,9 @@ command_line_options_DEPENDENCIES = \
 	command-line-options.src/B.at \
 	command-line-options.src/list-reserved.at \
 	command-line-options.src/assign_external.at \
+	command-line-options.src/Wparentheses.at \
+	command-line-options.src/Wcolumn-overflow.at \
+	command-line-options.src/Wterminator.at \
 	command-line-options.src/Wunreachable.at \
 	command-line-options.src/ftrace-ftraceall.at \
 	command-line-options.src/fsyntax-only.at \
@@ -155,7 +158,11 @@ command_line_options_DEPENDENCIES = \
 	command-line-options.src/java-package.at \
 	command-line-options.src/edit-code-command.at \
 	command-line-options.src/file-path.at \
-	command-line-options.src/fdefaultbyte.at
+	command-line-options.src/fdefaultbyte.at \
+	command-line-options.src/ffunctions-all.at \
+	command-line-options.src/fmfcomment.at \
+	command-line-options.src/debug.at \
+	command-line-options.src/jar.at
 
 misc_DEPENDENCIES = \
 	misc.src/signed-comp3.at \
@@ -173,7 +180,14 @@ misc_DEPENDENCIES = \
 	misc.src/compare-national-diff-size.at \
 	misc.src/compare-9.at \
 	misc.src/comp3-overflow.at \
-	misc.src/cancel-hyphen.at
+	misc.src/cancel-hyphen.at \
+	misc.src/string-call-parameter.at \
+	misc.src/display-numeric.at \
+	misc.src/version-string-in-java.at \
+	misc.src/comp3-compute.at \
+	misc.src/index-file-status.at \
+	misc.src/comp-n.at
+	
 
 EXTRA_DIST = $(srcdir)/package.m4 \
 	$(TESTS) \

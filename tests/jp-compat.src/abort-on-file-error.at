@@ -92,7 +92,7 @@ AT_DATA([prog.cob], [
 
 AT_CHECK([${COMPILE} prog.cob], [0])
 AT_CHECK([java prog], [1], [],
-[prog.cob:18: libcob: File does not exist (STATUS = 35) File : 'nowhere'
+[prog.cob:18: libcobj: File does not exist (STATUS = 35) File : 'nowhere'
 ])
 
 AT_CLEANUP
@@ -123,7 +123,7 @@ AT_DATA([prog.cob], [
 
 AT_CHECK([${COMPILE_JP_COMPAT} prog.cob], [0])
 AT_CHECK([java prog], [1], [],
-[prog.cob:18: libcob: File does not exist (STATUS = 35) File : 'nowhere'
+[prog.cob:18: libcobj: File does not exist (STATUS = 35) File : 'nowhere'
 ])
 
 AT_CLEANUP

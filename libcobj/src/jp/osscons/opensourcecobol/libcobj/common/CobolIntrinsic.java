@@ -381,7 +381,7 @@ public class CobolIntrinsic {
             CobolUtil.cal.get(Calendar.YEAR),
             CobolUtil.cal.get(Calendar.MONTH) + 1,
             CobolUtil.cal.get(Calendar.DAY_OF_MONTH),
-            CobolUtil.cal.get(Calendar.HOUR),
+            CobolUtil.cal.get(Calendar.HOUR_OF_DAY),
             CobolUtil.cal.get(Calendar.MINUTE),
             CobolUtil.cal.get(Calendar.SECOND),
             CobolUtil.cal.get(Calendar.MILLISECOND) / 10);

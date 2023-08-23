@@ -1,6 +1,5 @@
 AT_SETUP([PROGRAM-STATUS])
 AT_CHECK([${SKIP_TEST}])
-AT_CHECK([${SKIP_TEST}])
 
 AT_DATA([prog.cob], [
        IDENTIFICATION   DIVISION.
@@ -10,13 +9,12 @@ AT_DATA([prog.cob], [
            EXIT PROGRAM.
 ])
 
-AT_CHECK([${COMPILE_JP_COMPAT} -o prog prog.cob])
+AT_CHECK([${COMPILE_JP_COMPAT} prog.cob])
 AT_CHECK([java prog], [99])
 
 AT_CLEANUP
 
 AT_SETUP([SORT-STATUS (alias SORT-RETURN)])
-AT_CHECK([${SKIP_TEST}])
 
 AT_DATA([prog.cob], [
        IDENTIFICATION       DIVISION.
@@ -27,13 +25,12 @@ AT_DATA([prog.cob], [
           STOP RUN.
 ])
 
-AT_CHECK([${COMPILE_JP_COMPAT} -o prog prog.cob])
+AT_CHECK([${COMPILE_JP_COMPAT} prog.cob])
 AT_CHECK([java prog], [0], [+000000016])
 
 AT_CLEANUP
 
 AT_SETUP([SORT-STATUS (Break in input section)])
-AT_CHECK([${SKIP_TEST}])
 AT_CHECK([${SKIP_TEST}])
 
 AT_DATA([prog.cob], [
@@ -90,7 +87,7 @@ AT_DATA([prog.cob], [
 ])
 
 AT_CHECK([echo -n 030303020301020302020201010301020101 >input.txt], [0])
-AT_CHECK([${COMPILE_JP_COMPAT} -o prog prog.cob])
+AT_CHECK([${COMPILE_JP_COMPAT} prog.cob])
 AT_CHECK([java prog], [0], [],
 [WARNING - Implicit CLOSE of INPUT-FILE1 ("./input.txt")
 ])
@@ -100,7 +97,6 @@ AT_CLEANUP
 
 AT_SETUP([SORT-STATUS (Break in output section)])
 AT_CHECK([${SKIP_TEST}])
-AT_CHECK([${SKIP_TEST}])
 
 AT_DATA([prog.cob], [
        IDENTIFICATION       DIVISION.
@@ -156,7 +152,7 @@ AT_DATA([prog.cob], [
 ])
 
 AT_CHECK([echo -n 030303020301020302020201010301020101 >input.txt], [0])
-AT_CHECK([${COMPILE_JP_COMPAT} -o prog prog.cob])
+AT_CHECK([${COMPILE_JP_COMPAT} prog.cob])
 AT_CHECK([java prog], [0], [],
 [WARNING - Implicit CLOSE of OUTPUT-FILE1 ("./output.txt")
 ])
@@ -165,7 +161,6 @@ AT_CHECK([cat output.txt], [0], [0103])
 AT_CLEANUP
 
 AT_SETUP([SORT-STATUS (Break in section with THRU)])
-AT_CHECK([${SKIP_TEST}])
 AT_CHECK([${SKIP_TEST}])
 
 AT_DATA([prog.cob], [
@@ -226,7 +221,7 @@ AT_DATA([prog.cob], [
 ])
 
 AT_CHECK([echo -n 030303020301020302020201010301020101 >input.txt], [0])
-AT_CHECK([${COMPILE_JP_COMPAT} -o prog prog.cob])
+AT_CHECK([${COMPILE_JP_COMPAT} prog.cob])
 AT_CHECK([java prog], [0], [],
 [WARNING - Implicit CLOSE of OUTPUT-FILE1 ("./output.txt")
 ])
@@ -235,7 +230,6 @@ AT_CHECK([cat output.txt], [0], [0103])
 AT_CLEANUP
 
 AT_SETUP([SORT-STATUS break in MERGE])
-AT_CHECK([${SKIP_TEST}])
 AT_CHECK([${SKIP_TEST}])
 
 AT_DATA([prog.cob], [
@@ -288,7 +282,7 @@ AT_DATA([prog.cob], [
 
 AT_CHECK([echo -n 030303020301020302020201010301020101 >input.txt], [0])
 AT_CHECK([echo -n 030603040305020502060204010601040104 >input2.txt], [0])
-AT_CHECK([${COMPILE_JP_COMPAT} -o prog prog.cob])
+AT_CHECK([${COMPILE_JP_COMPAT} prog.cob])
 AT_CHECK([java prog], [0], [],
 [WARNING - Implicit CLOSE of OUTPUT-FILE1 ("./output.txt")
 ])
@@ -297,7 +291,6 @@ AT_CHECK([cat output.txt], [0], [0103])
 AT_CLEANUP
 
 AT_SETUP([SORT-STATUS break with No SORT-STATUS in pgm])
-AT_CHECK([${SKIP_TEST}])
 AT_CHECK([${SKIP_TEST}])
 
 AT_DATA([prog.cob], [
@@ -354,9 +347,9 @@ AT_DATA([prog.cob], [
 ])
 
 AT_CHECK([echo -n 030303020301020302020201010301020101 >input.txt], [0])
-AT_CHECK([${COMPILE_JP_COMPAT} -o prog prog.cob])
+AT_CHECK([${COMPILE_JP_COMPAT} prog.cob])
 AT_CHECK([java prog], [1], [],
-[prog.cob:42: libcob: SORT-STATUS is set to 16.
+[prog.cob:42: libcobj: SORT-STATUS is set to 16.
 WARNING - Implicit CLOSE of OUTPUT-FILE1 ("./output.txt")
 ])
 AT_CHECK([cat output.txt], [0], [0103])

@@ -1,0 +1,49 @@
+AT_SETUP([Compare N characters])
+
+AT_DATA([prog.cbl], [
+       IDENTIFICATION DIVISION.
+       PROGRAM-ID.            prog.
+       DATA DIVISION.
+       WORKING-STORAGE SECTION.
+
+       01 C1-GRP.
+         03 C1 PIC N(1).
+       01 C1-VALUE-GRP.
+         03 C1-1-VALUE PIC X VALUE LOW-VALUE.
+         03 C1-2-VALUE PIC X VALUE LOW-VALUE.
+       01 C2-GRP.
+         03 C2 PIC N(1).
+       01 C2-VALUE-GRP.
+         03 C2-1-VALUE PIC X VALUE LOW-VALUE.
+         03 C2-2-VALUE PIC X VALUE HIGH-VALUE.
+       01 C3-GRP.
+         03 C3 PIC N(1).
+       01 C3-VALUE-GRP.
+         03 C3-1-VALUE PIC X VALUE HIGH-VALUE.
+         03 C3-2-VALUE PIC X VALUE LOW-VALUE.
+       01 C4-GRP.
+         03 C4 PIC N(1).
+       01 C4-VALUE-GRP.
+         03 C4-1-VALUE PIC X VALUE HIGH-VALUE.
+         03 C4-2-VALUE PIC X VALUE HIGH-VALUE.
+       PROCEDURE DIVISION.
+       MOVE C1-VALUE-GRP TO C1-GRP.
+       MOVE C2-VALUE-GRP TO C2-GRP.
+       MOVE C3-VALUE-GRP TO C3-GRP.
+       MOVE C4-VALUE-GRP TO C4-GRP.
+       IF C1 NOT = C1 THEN DISPLAY "NG C1, C1".
+       IF C1 = C2 THEN DISPLAY "NG C1, C2".
+       IF C1 = C3 THEN DISPLAY "NG C1, C3".
+       IF C1 = C4 THEN DISPLAY "NG C1, C4".
+       IF C2 NOT = C2 THEN DISPLAY "NG C2, C2".
+       IF C2 = C3 THEN DISPLAY "NG C2, C3".
+       IF C2 = C4 THEN DISPLAY "NG C2, C4".
+       IF C3 NOT = C3 THEN DISPLAY "NG C3, C3".
+       IF C3 = C4 THEN DISPLAY "NG C3, C4".
+       IF C4 NOT = C4 THEN DISPLAY "NG C4, C4".
+])
+
+AT_CHECK([${COBJ} prog.cbl])
+AT_CHECK([java prog])
+
+AT_CLEANUP
