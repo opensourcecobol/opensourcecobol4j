@@ -89,6 +89,10 @@ public class CobolDataStorage {
     this.index += n;
   }
 
+  public void zeroIndex() {
+    this.index = 0;
+  }
+
   public static CobolDataStorage primitiveToDataStorage(int n) {
     byte[] bytes = new byte[4];
     ByteBuffer buffer = ByteBuffer.wrap(bytes);

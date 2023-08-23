@@ -1690,6 +1690,13 @@ public class CobolIntrinsic {
     return currField;
   }
 
+  /**
+   * cob_intr_combined_datetimeの実装
+   *
+   * @param srcdays
+   * @param srctime
+   * @return
+   */
   public static AbstractCobolField funcCombinedDatetime(
       AbstractCobolField srcdays, AbstractCobolField srctime) {
     int srdays;
@@ -1722,6 +1729,39 @@ public class CobolIntrinsic {
       }
     }
     currField.getDataStorage().memcpy(buff);
+    return currField;
+  }
+
+  /**
+   * cob_intr_concatenateの実装
+   *
+   * @param offset
+   * @param length
+   * @param params
+   * @param fields
+   * @return
+   */
+  public static AbstractCobolField funcConcatenate(
+      int offset, int length, int params, AbstractCobolField... fields) {
+    int calcsize = 0;
+    int i;
+
+    for (i = 0; i < params; i++) {
+      calcsize += fields[i].getSize();
+    }
+    CobolFieldAttribute attr =
+        new CobolFieldAttribute(CobolFieldAttribute.COB_TYPE_ALPHANUMERIC, 0, 0, 0, null);
+    AbstractCobolField field =
+        CobolFieldFactory.makeCobolField(calcsize, (CobolDataStorage) null, attr);
+    makeFieldEntry(field);
+    for (i = 0; i < params; i++) {
+      currField.getDataStorage().memcpy(fields[i].getDataStorage().getData(), fields[i].getSize());
+      currField.getDataStorage().addIndex(fields[i].getSize());
+    }
+    currField.getDataStorage().zeroIndex();
+    if (offset > 0) {
+      calcRefMod(currField, offset, length);
+    }
     return currField;
   }
 }
