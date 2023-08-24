@@ -1745,6 +1745,9 @@ public class CobolIntrinsic {
       int offset, int length, int params, AbstractCobolField... fields) {
     int calcsize = 0;
     int i;
+    int index = 0;
+    int size;
+    byte[] data;
 
     for (i = 0; i < params; i++) {
       calcsize += fields[i].getSize();
@@ -1754,11 +1757,13 @@ public class CobolIntrinsic {
     AbstractCobolField field =
         CobolFieldFactory.makeCobolField(calcsize, (CobolDataStorage) null, attr);
     makeFieldEntry(field);
+    data = new byte[calcsize];
     for (i = 0; i < params; i++) {
-      currField.getDataStorage().memcpy(fields[i].getDataStorage().getData(), fields[i].getSize());
-      currField.getDataStorage().addIndex(fields[i].getSize());
+      size = fields[i].getSize();
+      System.arraycopy(fields[i].getDataStorage().getByteArray(0, size), 0, data, index, size);
+      index += size;
     }
-    currField.getDataStorage().zeroIndex();
+    currField.getDataStorage().memcpy(data, calcsize);
     if (offset > 0) {
       calcRefMod(currField, offset, length);
     }
