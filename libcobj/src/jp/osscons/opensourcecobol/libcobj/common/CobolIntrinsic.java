@@ -1732,7 +1732,7 @@ public class CobolIntrinsic {
     return currField;
   }
 
-/**
+  /**
    * cob_intr_concatenateの実装
    *
    * @param offset
@@ -1741,7 +1741,7 @@ public class CobolIntrinsic {
    * @param fields
    * @return
    */
-public static AbstractCobolField funcConcatenate(
+  public static AbstractCobolField funcConcatenate(
       int offset, int length, int params, AbstractCobolField... fields) {
     int calcsize = 0;
     int i;
@@ -1760,10 +1760,10 @@ public static AbstractCobolField funcConcatenate(
     data = new byte[calcsize];
     for (i = 0; i < params; i++) {
       size = fields[i].getSize();
-      System.arraycopy(fields[i].getDataStorage().getByteArray(0, size), 0, data, index, size);
+      System.arraycopy(fields[i].getDataStorage().getRefOfData(), 0, data, index, size);
       index += size;
     }
-    currField.getDataStorage().memcpy(data, calcsize);
+    currField.setDataStorage(new CobolDataStorage(data));
     if (offset > 0) {
       calcRefMod(currField, offset, length);
     }
