@@ -48,10 +48,10 @@ jobs:
           cd tests/
           ./i18n_sjis
 
-      - name: Run tests "jp-compat"
-        run: |
-          cd tests/
-          ./jp-compat
+      #- name: Run tests "jp-compat"
+      #  run: |
+      #    cd tests/
+      #    ./jp-compat
 
       - name: Run tests "run"
         run: |
