@@ -125,7 +125,6 @@ jobs:
         run: |
           export PATH_GOOGLE_JAVA_FORMAT=${PWD}/google-java-format.jar
           ./check-format
-          echo $?
 
       - name: Run SpotBugs
         run: |
