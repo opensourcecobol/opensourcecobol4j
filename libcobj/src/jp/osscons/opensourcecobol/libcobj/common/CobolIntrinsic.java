@@ -1833,6 +1833,8 @@ public class CobolIntrinsic {
 
   /**
    * cob_intr_day_to_yyyydddの実装
+   * @param params
+   * @param fields
    * @return
    */
   public static AbstractCobolField funcDayToYyyyddd(int params, AbstractCobolField... fields){
@@ -1841,6 +1843,7 @@ public class CobolIntrinsic {
 	  int		interval;
 	  int		xqtyear;
 	  int		maxyear;
+    LocalDateTime timeptr;
 
     CobolFieldAttribute attr =
         new CobolFieldAttribute(CobolFieldAttribute.COB_TYPE_NUMERIC_BINARY, 8, 0, 0, null);
@@ -1852,6 +1855,40 @@ public class CobolIntrinsic {
     year /= 1000;
     if(params > 1){
       interval = fields[1].getInt();
+    }else{
+      interval = 50;
     }
+    if(params > 2){
+      xqtyear = fields[2].getInt();
+    }else{
+      timeptr = CobolUtil.localtime();
+      xqtyear = 1900 + timeptr.getDayOfYear();
+    }
+
+    if(year < 0 || year > 999999){
+      CobolRuntimeException.setException(CobolExceptionId.COB_EC_ARGUMENT_FUNCTION);
+      currField.setInt(0);
+      return currField;
+    }
+    if(xqtyear < 1601 || xqtyear > 9999) {
+      CobolRuntimeException.setException(CobolExceptionId.COB_EC_ARGUMENT_FUNCTION);
+      currField.setInt(0);
+      return currField;
+    }
+    maxyear = xqtyear + interval;
+	  if (maxyear < 1700 || maxyear > 9999) {
+      CobolRuntimeException.setException(CobolExceptionId.COB_EC_ARGUMENT_FUNCTION);
+      currField.setInt(0);
+      return currField;
+    }
+    if (maxyear % 100 >= year) {
+      year += 100 * (maxyear / 100);
+    } else {
+      year += 100 * ((maxyear / 100) - 1);
+    }
+    year *= 1000;
+    year += days;
+    currField.setInt(year);
+    return currField;
   }
 }
