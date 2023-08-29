@@ -8,6 +8,7 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 ### Added
 - Add `-jar` and `-single-jar` option (#171)
 - Add FUNCTION COMBINED-DATETIM (#207)
+- Add FUNCTION CONCATENATE (#212)
 ### Fixed
 - Fix INDEXED files (#203)
 - Fix comparison of PIC N (#208)

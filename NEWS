@@ -7,6 +7,7 @@ NEWS - user visible changes				-*- outline -*-
 ** New Features
   (1) Add `-jar` and `-single-jar` option
   (2) Add FUNCTION COMBINED-DATETIM
+  (3) Add FUNCTION CONCATENATE
 
 ** Bug fixes
   (1) Fix INDEXED files
