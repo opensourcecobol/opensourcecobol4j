@@ -1774,26 +1774,26 @@ public class CobolIntrinsic {
 
   /**
    * cob_intr_date_to_yyyymmddの実装
+   *
    * @param params
    * @param fields
    * @return
    */
-  public static AbstractCobolField funcDateToYyyymmdd(int params, AbstractCobolField... fields){
-    int		year;
-	  int		mmdd;
-	  int		interval;
-	  int		xqtyear;
-	  int		maxyear;
+  public static AbstractCobolField funcDateToYyyymmdd(int params, AbstractCobolField... fields) {
+    int year;
+    int mmdd;
+    int interval;
+    int xqtyear;
+    int maxyear;
     LocalDateTime timeptr;
 
     CobolFieldAttribute attr =
         new CobolFieldAttribute(CobolFieldAttribute.COB_TYPE_NUMERIC_BINARY, 8, 0, 0, null);
-    AbstractCobolField field =
-        CobolFieldFactory.makeCobolField(4, (CobolDataStorage) null, attr);
+    AbstractCobolField field = CobolFieldFactory.makeCobolField(4, (CobolDataStorage) null, attr);
     makeFieldEntry(field);
     year = fields[0].getInt();
     mmdd = year % 10000;
-	  year /= 10000;
+    year /= 10000;
     if (params > 1) {
       interval = fields[1].getInt();
     } else {
@@ -1805,22 +1805,22 @@ public class CobolIntrinsic {
       timeptr = CobolUtil.localtime();
       xqtyear = 1900 + timeptr.getDayOfYear();
     }
-    if(year < 0 || year > 999999){
+    if (year < 0 || year > 999999) {
       CobolRuntimeException.setException(CobolExceptionId.COB_EC_ARGUMENT_FUNCTION);
       currField.setInt(0);
       return currField;
     }
-    if(xqtyear < 1601 || xqtyear > 9999) {
+    if (xqtyear < 1601 || xqtyear > 9999) {
       CobolRuntimeException.setException(CobolExceptionId.COB_EC_ARGUMENT_FUNCTION);
       currField.setInt(0);
       return currField;
     }
     maxyear = xqtyear + interval;
-	  if (maxyear < 1700 || maxyear > 9999) {
-		  CobolRuntimeException.setException(CobolExceptionId.COB_EC_ARGUMENT_FUNCTION);
+    if (maxyear < 1700 || maxyear > 9999) {
+      CobolRuntimeException.setException(CobolExceptionId.COB_EC_ARGUMENT_FUNCTION);
       currField.setInt(0);
-		  return currField;
-	  }
+      return currField;
+    }
     if (maxyear % 100 >= year) {
       year += 100 * (maxyear / 100);
     } else {
@@ -1834,50 +1834,50 @@ public class CobolIntrinsic {
 
   /**
    * cob_intr_day_to_yyyydddの実装
+   *
    * @param params
    * @param fields
    * @return
    */
-  public static AbstractCobolField funcDayToYyyyddd(int params, AbstractCobolField... fields){
-    int		year;
-	  int		days;
-	  int		interval;
-	  int		xqtyear;
-	  int		maxyear;
+  public static AbstractCobolField funcDayToYyyyddd(int params, AbstractCobolField... fields) {
+    int year;
+    int days;
+    int interval;
+    int xqtyear;
+    int maxyear;
     LocalDateTime timeptr;
 
     CobolFieldAttribute attr =
         new CobolFieldAttribute(CobolFieldAttribute.COB_TYPE_NUMERIC_BINARY, 8, 0, 0, null);
-    AbstractCobolField field =
-        CobolFieldFactory.makeCobolField(4, (CobolDataStorage) null, attr);
+    AbstractCobolField field = CobolFieldFactory.makeCobolField(4, (CobolDataStorage) null, attr);
     makeFieldEntry(field);
     year = fields[0].getInt();
     days = year % 1000;
     year /= 1000;
-    if(params > 1){
+    if (params > 1) {
       interval = fields[1].getInt();
-    }else{
+    } else {
       interval = 50;
     }
-    if(params > 2){
+    if (params > 2) {
       xqtyear = fields[2].getInt();
-    }else{
+    } else {
       timeptr = CobolUtil.localtime();
       xqtyear = 1900 + timeptr.getDayOfYear();
     }
 
-    if(year < 0 || year > 999999){
+    if (year < 0 || year > 999999) {
       CobolRuntimeException.setException(CobolExceptionId.COB_EC_ARGUMENT_FUNCTION);
       currField.setInt(0);
       return currField;
     }
-    if(xqtyear < 1601 || xqtyear > 9999) {
+    if (xqtyear < 1601 || xqtyear > 9999) {
       CobolRuntimeException.setException(CobolExceptionId.COB_EC_ARGUMENT_FUNCTION);
       currField.setInt(0);
       return currField;
     }
     maxyear = xqtyear + interval;
-	  if (maxyear < 1700 || maxyear > 9999) {
+    if (maxyear < 1700 || maxyear > 9999) {
       CobolRuntimeException.setException(CobolExceptionId.COB_EC_ARGUMENT_FUNCTION);
       currField.setInt(0);
       return currField;
