@@ -1760,7 +1760,8 @@ public class CobolIntrinsic {
     data = new byte[calcsize];
     for (i = 0; i < params; i++) {
       size = fields[i].getSize();
-      System.arraycopy(fields[i].getDataStorage().getRefOfData(), 0, data, index, size);
+      System.arraycopy(
+          fields[i].getDataStorage().getByteBuffer(size).array(), 0, data, index, size);
       index += size;
     }
     currField.setDataStorage(new CobolDataStorage(data));
