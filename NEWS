@@ -2,6 +2,22 @@ NEWS - user visible changes				-*- outline -*-
 
 -----------------------------------------------------------------------
 
+* opensource COBOL 4J 1.0.14
+
+** New Features
+  (1) Add `-jar` and `-single-jar` option
+  (2) Add FUNCTION COMBINED-DATETIM
+
+** Bug fixes
+  (1) Fix INDEXED files
+  (2) Fix comparison of PIC N
+
+** Miscellaneous
+  (1) Improve the readability of CALL statements
+  (2) Bundle SQLite JDBC Driver (a jar file)
+
+-----------------------------------------------------------------------
+
 * opensource COBOL 4J 1.0.13
 
 ** New Features
