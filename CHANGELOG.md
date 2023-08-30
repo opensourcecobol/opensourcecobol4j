@@ -14,7 +14,6 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 - Fix comparison of PIC N (#208)
 ### Changed
 - Improve the readability of CALL statements (#202)
-- Bundle SQLite JDBC Driver (a jar file) (#197)
 ## [1.0.13] - 2023-07-31
 ### Added
 - Add new options

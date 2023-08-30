@@ -15,7 +15,6 @@ NEWS - user visible changes				-*- outline -*-
 
 ** Miscellaneous
   (1) Improve the readability of CALL statements
-  (2) Bundle SQLite JDBC Driver (a jar file)
 
 -----------------------------------------------------------------------
 
