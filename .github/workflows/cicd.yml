@@ -35,6 +35,7 @@ jobs:
       
       - name: Install opensource COBOL 4J
         run: |
+          curl -L -k -o libcobj/sqlite-jdbc/sqlite.jar https://github.com/xerial/sqlite-jdbc/releases/download/3.36.0.3/sqlite-jdbc-3.36.0.3.jar
           ./configure --prefix=/usr/
           make
           make install
@@ -117,6 +118,7 @@ jobs:
       - name: Install opensource COBOL 4J
         run: |
           sudo apt install -y build-essential bison flex gettext texinfo automake autoconf
+          curl -L -k -o libcobj/sqlite-jdbc/sqlite.jar https://github.com/xerial/sqlite-jdbc/releases/download/3.36.0.3/sqlite-jdbc-3.36.0.3.jar
           ./configure --prefix=/usr/
           make
           sudo make install
@@ -125,7 +127,6 @@ jobs:
         run: |
           export PATH_GOOGLE_JAVA_FORMAT=${PWD}/google-java-format.jar
           ./check-format
-          echo $?
 
       - name: Run SpotBugs
         run: |
