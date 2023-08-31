@@ -4,6 +4,16 @@ All notable changes to this project will be documented in this file.
 
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 
+## [1.0.14] - 2023-08-31
+### Added
+- Add `-jar` and `-single-jar` option (#171)
+- Add FUNCTION COMBINED-DATETIM (#207)
+- Add FUNCTION CONCATENATE (#212)
+### Fixed
+- Fix INDEXED files (#203)
+- Fix comparison of PIC N (#208)
+### Changed
+- Improve the readability of CALL statements (#202)
 ## [1.0.13] - 2023-07-31
 ### Added
 - Add new options

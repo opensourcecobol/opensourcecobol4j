@@ -8,6 +8,7 @@ cobj/Makefile
 cobj/cobj
 cobj/*.o
 config.h
+config.h.in~
 config.log
 config.status
 config/Makefile
@@ -57,6 +58,7 @@ tests/cobol85/*/*.class
 tests/cobol85/*/*.java
 tests/cobol85/*/*.out
 tests/cobol85/*/*.log
+tests/cobol85/*/*.jar
 tests/cobol85/*/tmp.cbl
 tests/cobol85/*/report.txt
 tests/cobol85/*/XXXXX*
@@ -67,3 +69,7 @@ bin/cob-config
 bin/cobcrun
 bin/cobcrun-cobcrun.o
 configure~
+*.gcov
+*.gcda
+*.gcno
+report.html

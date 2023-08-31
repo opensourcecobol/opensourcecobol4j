@@ -1,2 +1,3 @@
 #!/bin/bash
 cd libcobj && ./check-format
+cd ../cobj && ./check-format

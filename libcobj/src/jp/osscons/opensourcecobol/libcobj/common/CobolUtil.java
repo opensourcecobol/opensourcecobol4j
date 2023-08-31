@@ -649,11 +649,11 @@ public class CobolUtil {
       CobolDataStorage s1, CobolDataStorage s2, int size, CobolDataStorage col) {
     int ret = 0;
     for (int i = 0; i < size && ret == 0; i += 2) {
-      int b11 = s1.getByte(i);
-      int b12 = s1.getByte(i + 1);
-      int b21 = s2.getByte(i);
-      int b22 = s2.getByte(i + 1);
-      ret = (b11 << 8 | b12) - (b21 << 8 | b22);
+      int b11 = Byte.toUnsignedInt(s1.getByte(i));
+      int b12 = Byte.toUnsignedInt(s1.getByte(i + 1));
+      int b21 = Byte.toUnsignedInt(s2.getByte(i));
+      int b22 = Byte.toUnsignedInt(s2.getByte(i + 1));
+      ret = ((b11 << 8) | b12) - ((b21 << 8) | b22);
     }
     return ret;
   }

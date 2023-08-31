@@ -853,7 +853,8 @@ cb_tree cb_build_identifier(cb_tree x) {
         if (cb_tree_category(CB_TREE(r)) == CB_CATEGORY_NATIONAL ||
             cb_tree_category(CB_TREE(r)) == CB_CATEGORY_NATIONAL_EDITED) {
           e1 = cb_build_funcall_4(
-              "CobolUtil.cobCheckRefModNational", cb_build_cast_integer(r->offset),
+              "CobolUtil.cobCheckRefModNational",
+              cb_build_cast_integer(r->offset),
               r->length ? cb_build_cast_integer(r->length) : cb_int2,
               cb_int(f->size), cb_build_string0((ucharptr)f->name));
         } else {

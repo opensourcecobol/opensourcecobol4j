@@ -1,1 +1,4 @@
 /bin/
+output/
+sqlite/sqlite.jar
+*.class

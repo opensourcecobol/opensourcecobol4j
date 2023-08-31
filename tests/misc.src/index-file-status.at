@@ -1,0 +1,37 @@
+AT_SETUP([READ indexed file with no data])
+
+AT_DATA([prog.cbl], [		
+       IDENTIFICATION              DIVISION.		
+       PROGRAM-ID.                 prog.			
+       ENVIRONMENT                 DIVISION.		
+       INPUT-OUTPUT                SECTION.		
+       FILE-CONTROL.		
+       SELECT OUT-FILE1  ASSIGN  "OUT_FILE10"		
+           ORGANIZATION INDEXED		
+           ACCESS MODE  DYNAMIC
+           FILE STATUS  OUT-STATUS	
+           RECORD KEY   OUT1-KEY.		
+       DATA                        DIVISION.				
+       FILE SECTION.		
+       FD  OUT-FILE1.		
+       01  OUT1-REC.
+           03  OUT1-KEY            PIC  X(06).		
+           03  OUT1-DATA           PIC  N(03).
+       WORKING-STORAGE             SECTION.	
+       01  OUT-STATUS              PIC  99.	
+       PROCEDURE                   DIVISION.			
+       MAIN-RTN.
+           OPEN OUTPUT OUT-FILE1.	
+           CLOSE OUT-FILE1.
+           OPEN  INPUT  OUT-FILE1.
+           READ  OUT-FILE1  NEXT.	
+           DISPLAY OUT-STATUS.
+           CLOSE OUT-FILE1.
+])
+
+AT_CHECK([cobj prog.cbl])
+AT_CHECK([java prog], [0], 
+[10
+])
+
+AT_CLEANUP

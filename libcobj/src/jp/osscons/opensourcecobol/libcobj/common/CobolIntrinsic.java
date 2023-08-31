@@ -1689,4 +1689,85 @@ public class CobolIntrinsic {
     currField.getDataStorage().memcpy(pdata, ndata);
     return currField;
   }
+
+  /**
+   * cob_intr_combined_datetimeの実装
+   *
+   * @param srcdays
+   * @param srctime
+   * @return
+   */
+  public static AbstractCobolField funcCombinedDatetime(
+      AbstractCobolField srcdays, AbstractCobolField srctime) {
+    int srdays;
+    int srtime;
+    String str;
+    byte[] buff = new byte[12];
+
+    CobolFieldAttribute attr =
+        new CobolFieldAttribute(CobolFieldAttribute.COB_TYPE_NUMERIC_DISPLAY, 12, 5, 0, null);
+    AbstractCobolField field = CobolFieldFactory.makeCobolField(12, (CobolDataStorage) null, attr);
+    makeFieldEntry(field);
+    CobolRuntimeException.setException(0);
+    srdays = srcdays.getInt();
+    if (srdays < 1 || srdays > 3067671) {
+      CobolRuntimeException.setException(CobolExceptionId.COB_EC_ARGUMENT_FUNCTION);
+      currField.getDataStorage().memset(0, 12);
+      return currField;
+    }
+    srtime = srctime.getInt();
+    if (srtime < 1 || srtime > 86400) {
+      CobolRuntimeException.setException(CobolExceptionId.COB_EC_ARGUMENT_FUNCTION);
+      currField.getDataStorage().memset(0, 12);
+      return currField;
+    }
+    str = String.format("%7d%5d", srdays, srtime);
+    buff = str.getBytes();
+    for (int i = 0; i < 12; i++) {
+      if (buff[i] == 32) {
+        buff[i] = 48;
+      }
+    }
+    currField.getDataStorage().memcpy(buff);
+    return currField;
+  }
+
+  /**
+   * cob_intr_concatenateの実装
+   *
+   * @param offset
+   * @param length
+   * @param params
+   * @param fields
+   * @return
+   */
+  public static AbstractCobolField funcConcatenate(
+      int offset, int length, int params, AbstractCobolField... fields) {
+    int calcsize = 0;
+    int i;
+    int index = 0;
+    int size;
+    byte[] data;
+
+    for (i = 0; i < params; i++) {
+      calcsize += fields[i].getSize();
+    }
+    CobolFieldAttribute attr =
+        new CobolFieldAttribute(CobolFieldAttribute.COB_TYPE_ALPHANUMERIC, 0, 0, 0, null);
+    AbstractCobolField field =
+        CobolFieldFactory.makeCobolField(calcsize, (CobolDataStorage) null, attr);
+    makeFieldEntry(field);
+    data = new byte[calcsize];
+    for (i = 0; i < params; i++) {
+      size = fields[i].getSize();
+      System.arraycopy(
+          fields[i].getDataStorage().getByteBuffer(size).array(), 0, data, index, size);
+      index += size;
+    }
+    currField.setDataStorage(new CobolDataStorage(data));
+    if (offset > 0) {
+      calcRefMod(currField, offset, length);
+    }
+    return currField;
+  }
 }

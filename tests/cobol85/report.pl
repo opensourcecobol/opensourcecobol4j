@@ -23,11 +23,11 @@ my $compile;
 my $compile_module;
 
 if ($opt) {
-	$compile = "cobj -std=cobol85 $opt";
-	$compile_module = "cobj -std=cobol85 $opt";
+	$compile = "cobj -jar -std=cobol85 $opt";
+	$compile_module = "cobj -jar -std=cobol85 $opt";
 } else {
-	$compile = "cobj -std=cobol85 ";
-	$compile_module = "cobj -std=cobol85 ";
+	$compile = "cobj -jar -std=cobol85 ";
+	$compile_module = "cobj -jar -std=cobol85 ";
 }
 
 my $num_progs = 0;
@@ -86,9 +86,9 @@ foreach $in (sort (glob("*.{CBL,SUB}"))) {
   $cmd = "";
 
   if (-e "./$exe.DAT") {
-    $cmd = "java $exe < $exe.DAT";
+    $cmd = "java -cp \"\$CLASSPATH\":./* $exe < $exe.DAT";
   } else {
-    $cmd = "java $exe";
+    $cmd = "java -cp \"\$CLASSPATH\":./* $exe";
   }
   printf LOG "%-12s", $in;
   if ($skip{$exe} || $exe =~ /^..[34]0/) {

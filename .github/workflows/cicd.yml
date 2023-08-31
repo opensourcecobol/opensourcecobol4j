@@ -6,7 +6,7 @@ on:
     types: [opened, reopened, review_requested, synchronize]
 
 env:
-  CLASSPATH: ":/usr/lib/opensourcecobol4j/libcobj.jar:/usr/lib/sqlite.jar"
+  CLASSPATH: ":/usr/lib/opensourcecobol4j/libcobj.jar:/usr/lib/opensourcecobol4j/sqlite.jar"
 
 jobs:
   run-tests:
@@ -35,7 +35,7 @@ jobs:
       
       - name: Install opensource COBOL 4J
         run: |
-          curl -L -o /usr/lib/sqlite.jar -k https://github.com/xerial/sqlite-jdbc/releases/download/3.36.0.3/sqlite-jdbc-3.36.0.3.jar
+          curl -L -k -o libcobj/sqlite-jdbc/sqlite.jar https://github.com/xerial/sqlite-jdbc/releases/download/3.36.0.3/sqlite-jdbc-3.36.0.3.jar
           ./configure --prefix=/usr/
           make
           make install
@@ -105,20 +105,32 @@ jobs:
           distribution: 'temurin'
           java-version: '17'
 
-      # Download code formatters and static analyzers
-      - name: Install dependencies
+      - name: Install static analysis tools
         run: |
           sudo apt-get update -y
           sudo apt-get install -y clang-format cppcheck
           curl -L -o google-java-format.jar https://github.com/google/google-java-format/releases/download/v1.15.0/google-java-format-1.15.0-all-deps.jar
           curl -L -o pmd-bin-6.52.0.zip https://github.com/pmd/pmd/releases/download/pmd_releases%2F6.52.0/pmd-bin-6.52.0.zip
+          curl -L -o spotbugs-4.7.3.zip https://github.com/spotbugs/spotbugs/releases/download/4.7.3/spotbugs-4.7.3.zip
           unzip pmd-bin-6.52.0.zip
+          unzip spotbugs-4.7.3.zip
+
+      - name: Install opensource COBOL 4J
+        run: |
+          sudo apt install -y build-essential bison flex gettext texinfo automake autoconf
+          curl -L -k -o libcobj/sqlite-jdbc/sqlite.jar https://github.com/xerial/sqlite-jdbc/releases/download/3.36.0.3/sqlite-jdbc-3.36.0.3.jar
+          ./configure --prefix=/usr/
+          make
+          sudo make install
 
       - name: Check format with google-java-format and clang-format
         run: |
           export PATH_GOOGLE_JAVA_FORMAT=${PWD}/google-java-format.jar
           ./check-format
-          echo $?
+
+      - name: Run SpotBugs
+        run: |
+          java -jar spotbugs-4.7.3/lib/spotbugs.jar -textui libcobj/output
 
       - name: Run PMD
         run: |
