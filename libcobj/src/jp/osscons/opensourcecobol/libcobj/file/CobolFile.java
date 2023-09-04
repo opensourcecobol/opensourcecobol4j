@@ -257,8 +257,6 @@ public class CobolFile {
       boolean flagNeedsTop,
       char fileVersion) {
 
-    this.select_name = selectName;
-    this.file_status = fileStatus;
     this.assign = assign;
     this.record = record;
     this.record_size = recordSize;
