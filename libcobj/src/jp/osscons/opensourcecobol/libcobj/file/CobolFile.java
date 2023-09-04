@@ -184,8 +184,8 @@ public class CobolFile {
     CobolExceptionId.COB_EC_I_O,
     CobolExceptionId.COB_EC_I_O_IMP
   };
-  protected String select_name;
-  public byte[] file_status;
+  public static String select_name;
+  public static byte[] file_status;
   protected AbstractCobolField assign;
   protected AbstractCobolField record;
   protected AbstractCobolField record_size;
@@ -257,8 +257,8 @@ public class CobolFile {
       boolean flagNeedsTop,
       char fileVersion) {
 
-    this.select_name = selectName;
-    this.file_status = fileStatus;
+    CobolFile.select_name = selectName;
+    CobolFile.file_status = fileStatus;
     this.assign = assign;
     this.record = record;
     this.record_size = recordSize;
@@ -294,8 +294,8 @@ public class CobolFile {
   protected void saveStatus(int status, AbstractCobolField fnstatus) {
     CobolFile.errorFile = this;
     if (status == 0) {
-      this.file_status[0] = '0';
-      this.file_status[1] = '0';
+      CobolFile.file_status[0] = '0';
+      CobolFile.file_status[1] = '0';
       if (fnstatus != null) {
         fnstatus.getDataStorage().setByte(0, (byte) '0');
         fnstatus.getDataStorage().setByte(1, (byte) '0');
@@ -307,8 +307,8 @@ public class CobolFile {
     if (status != COB_STATUS_52_EOP) {
       CobolRuntimeException.setException(status_exception[status / 10]);
     }
-    this.file_status[0] = (byte) (status / 10 + '0');
-    this.file_status[1] = (byte) (status % 10 + '0');
+    CobolFile.file_status[0] = (byte) (status / 10 + '0');
+    CobolFile.file_status[1] = (byte) (status % 10 + '0');
     if (fnstatus != null) {
       fnstatus.getDataStorage().setByte(0, this.file_status[0]);
       fnstatus.getDataStorage().setByte(1, this.file_status[1]);
@@ -1521,10 +1521,10 @@ public class CobolFile {
   }
 
   public String getSelectName() {
-    return this.select_name;
+    return select_name;
   }
 
   public byte[] getFileStatus() {
-    return this.file_status;
+    return file_status;
   }
 }
