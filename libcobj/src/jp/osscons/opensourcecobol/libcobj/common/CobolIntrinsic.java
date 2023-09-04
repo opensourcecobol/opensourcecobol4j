@@ -32,6 +32,7 @@ import jp.osscons.opensourcecobol.libcobj.data.CobolNationalField;
 import jp.osscons.opensourcecobol.libcobj.exceptions.CobolExceptionId;
 import jp.osscons.opensourcecobol.libcobj.exceptions.CobolRuntimeException;
 import jp.osscons.opensourcecobol.libcobj.exceptions.CobolStopRunException;
+import jp.osscons.opensourcecobol.libcobj.file.CobolFile;
 
 public class CobolIntrinsic {
 
@@ -45,6 +46,7 @@ public class CobolIntrinsic {
   private static AbstractCobolField currField = null;
   private static AbstractCobolField[] calcField = new AbstractCobolField[DEPTH_LEVEL];
   private static Random random = new Random();
+  private static byte[] localeBuff;
 
   /** libcob/intrinsicのmake_double_entryの実装 */
   private static void makeDoubleEntry() {
@@ -1890,6 +1892,90 @@ public class CobolIntrinsic {
     year *= 1000;
     year += days;
     currField.setInt(year);
+    return currField;
+  }
+
+  /**
+   * cob_intr_exception_fileの実装
+   *
+   * @return
+   */
+  public static AbstractCobolField funcExceptionFile() {
+    int flen;
+    byte[] data;
+
+    CobolFieldAttribute attr =
+        new CobolFieldAttribute(CobolFieldAttribute.COB_TYPE_ALPHANUMERIC, 0, 0, 0, null);
+    AbstractCobolField field = CobolFieldFactory.makeCobolField(0, (CobolDataStorage) null, attr);
+    if (CobolRuntimeException.getExceptionCode() == 0
+        || (CobolRuntimeException.getExceptionCode() & 0x0500) != 0x0500) {
+      field.setSize(2);
+      makeFieldEntry(field);
+      currField.memcpy("00", 2);
+    } else {
+      flen = CobolFile.getSelectName().length();
+      field.setSize(flen + 2);
+      makeFieldEntry(field);
+      data = new byte[2 + flen];
+      System.arraycopy(CobolFile.getFileStatus(), 0, data, 0, 2);
+      System.arraycopy(CobolFile.getSelectName().getBytes(), 0, data, 2, flen);
+      currField.setDataStorage(new CobolDataStorage(data));
+    }
+    return currField;
+  }
+
+  /**
+   * cob_intr_exception_locationの実装
+   *
+   * @return
+   */
+  public static AbstractCobolField funcExceptionLocation() {
+    String data;
+    String buff;
+    CobolFieldAttribute attr =
+        new CobolFieldAttribute(CobolFieldAttribute.COB_TYPE_ALPHANUMERIC, 0, 0, 0, null);
+    AbstractCobolField field = CobolFieldFactory.makeCobolField(0, (CobolDataStorage) null, attr);
+    currField = field;
+    if (CobolRuntimeException.getException() != 1
+        || CobolRuntimeException.getOrigProgramId() == null) {
+      field.setSize(1);
+      makeFieldEntry(field);
+      data = String.valueOf(' ');
+      currField.memcpy(data.getBytes(), 1);
+      return currField;
+    }
+    if (CobolRuntimeException.getOrigSection() != null
+        && CobolRuntimeException.getOrigParagragh() != null) {
+      buff =
+          String.format(
+              "%s; %s OF %s; %d",
+              CobolRuntimeException.getOrigProgramId(),
+              CobolRuntimeException.getOrigParagragh(),
+              CobolRuntimeException.getOrigSection(),
+              CobolRuntimeException.getOrigLine());
+    } else if (CobolRuntimeException.getOrigSection() != null) {
+      buff =
+          String.format(
+              "%s; %s; %d",
+              CobolRuntimeException.getOrigProgramId(),
+              CobolRuntimeException.getOrigSection(),
+              CobolRuntimeException.getOrigLine());
+    } else if (CobolRuntimeException.getOrigParagragh() != null) {
+      buff =
+          String.format(
+              "%s; %s; %d",
+              CobolRuntimeException.getOrigProgramId(),
+              CobolRuntimeException.getOrigParagragh(),
+              CobolRuntimeException.getOrigLine());
+    } else {
+      buff =
+          String.format(
+              "%s; ; %d",
+              CobolRuntimeException.getOrigProgramId(), CobolRuntimeException.getOrigLine());
+    }
+    localeBuff = buff.getBytes();
+    field.setSize(localeBuff.length);
+    currField.setDataStorage(new CobolDataStorage(localeBuff));
     return currField;
   }
 }

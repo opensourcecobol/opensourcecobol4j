@@ -184,8 +184,8 @@ public class CobolFile {
     CobolExceptionId.COB_EC_I_O,
     CobolExceptionId.COB_EC_I_O_IMP
   };
-  protected String select_name;
-  public byte[] file_status;
+  protected static String select_name;
+  public static byte[] file_status;
   protected AbstractCobolField assign;
   protected AbstractCobolField record;
   protected AbstractCobolField record_size;
@@ -1518,5 +1518,13 @@ public class CobolFile {
         return;
       }
     }
+  }
+
+  public static String getSelectName() {
+    return select_name;
+  }
+
+  public static byte[] getFileStatus() {
+    return file_status;
   }
 }
