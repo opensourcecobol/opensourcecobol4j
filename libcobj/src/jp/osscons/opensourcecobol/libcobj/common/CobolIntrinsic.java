@@ -1903,6 +1903,7 @@ public class CobolIntrinsic {
   public static AbstractCobolField funcExceptionFile() {
     int flen;
     byte[] data;
+    CobolFile cobolFile = new CobolFile();
 
     CobolFieldAttribute attr =
         new CobolFieldAttribute(CobolFieldAttribute.COB_TYPE_ALPHANUMERIC, 0, 0, 0, null);
@@ -1913,12 +1914,12 @@ public class CobolIntrinsic {
       makeFieldEntry(field);
       currField.memcpy("00", 2);
     } else {
-      flen = CobolFile.getSelectName().length();
+      flen = cobolFile.getSelectName().length();
       field.setSize(flen + 2);
       makeFieldEntry(field);
       data = new byte[2 + flen];
-      System.arraycopy(CobolFile.getFileStatus(), 0, data, 0, 2);
-      System.arraycopy(CobolFile.getSelectName().getBytes(), 0, data, 2, flen);
+      System.arraycopy(cobolFile.getFileStatus(), 0, data, 0, 2);
+      System.arraycopy(cobolFile.getSelectName().getBytes(), 0, data, 2, flen);
       currField.setDataStorage(new CobolDataStorage(data));
     }
     return currField;
