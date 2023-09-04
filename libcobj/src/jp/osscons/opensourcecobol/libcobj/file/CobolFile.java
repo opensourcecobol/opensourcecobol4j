@@ -747,6 +747,7 @@ public class CobolFile {
       return;
     }
   }
+
   // protected long start;
   // protected long end;
 

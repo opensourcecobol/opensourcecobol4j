@@ -36,6 +36,7 @@ public class CobolRuntimeException extends RuntimeException {
 
   /** エラー番号 */
   private int errorCode;
+
   /** エラーメッセージ */
   private String message;
 

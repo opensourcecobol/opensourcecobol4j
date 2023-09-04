@@ -41,13 +41,17 @@ public class CobolResolve {
 
   /** プログラム名とCobolRunnableインスタンスの対応表 */
   private static Map<String, CobolRunnable> callTable;
+
   /** ポインタ(UUID)のCobolRunnableインスタンスの対応表 */
   private static Map<UUID, String> pointerTable;
+
   /** 名前の変換方法(小文字か大文字)を示す変数 */
   private static int name_convert;
+
   // TODO resolve_pathsの利用方法
   /** システムで設定された区切り文字で区切られた0個以上のパス 動的に読み込むクラスファイルを検索する場所を示す. */
   private static List<String> resolve_paths;
+
   /** システムで設定された区切り文字で区切られた0個以上のパス 動的に読み込むクラスファイルを検索するパッケージ名を示す. */
   private static List<String> package_paths;
 

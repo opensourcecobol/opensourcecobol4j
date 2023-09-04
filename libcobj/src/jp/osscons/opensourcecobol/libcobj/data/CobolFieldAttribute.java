@@ -56,12 +56,16 @@ public class CobolFieldAttribute {
 
   /** 変数の種類 */
   private int type;
+
   /** 数値の時,桁数を示す */
   private int digits;
+
   /** 数値の時,スケールを示す */
   private int scale;
+
   /** 様々なフラグ */
   private int flags;
+
   /** PICTURE句の文字列 */
   private String pic;
 

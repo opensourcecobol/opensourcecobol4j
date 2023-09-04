@@ -28,6 +28,7 @@ public class CobolDataStorage {
 
   /** データを保存するバイト配列 */
   private byte[] data;
+
   /** このクラスの扱うデータが保存する領域のバイト配列中での相対位置 */
   private int index;
 
