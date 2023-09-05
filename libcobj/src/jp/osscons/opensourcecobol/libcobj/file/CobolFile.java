@@ -184,8 +184,8 @@ public class CobolFile {
     CobolExceptionId.COB_EC_I_O,
     CobolExceptionId.COB_EC_I_O_IMP
   };
-  protected static String select_name;
-  protected static byte[] file_status;
+  public String select_name;
+  public byte[] file_status;
   protected AbstractCobolField assign;
   protected AbstractCobolField record;
   protected AbstractCobolField record_size;
@@ -219,6 +219,8 @@ public class CobolFile {
   protected char file_version;
 
   protected static String runtime_buffer;
+  protected static String name;
+  protected static byte[] status;
 
   public Linage getLinorkeyptr() {
     return this.linorkeyptr;
@@ -1521,13 +1523,13 @@ public class CobolFile {
     }
   }
 
-  public static String getSelectName() {
+  public String getSelectName() {
     // CobolFile cobolFile = new CobolFile();
-    return select_name;
+    return this.select_name;
   }
 
-  public static byte[] getFileStatus() {
+  public byte[] getFileStatus() {
     // CobolFile cobolFile = new CobolFile();
-    return file_status;
+    return this.file_status;
   }
 }
