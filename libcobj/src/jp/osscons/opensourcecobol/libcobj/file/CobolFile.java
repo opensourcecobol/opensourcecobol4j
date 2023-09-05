@@ -219,8 +219,6 @@ public class CobolFile {
   protected char file_version;
 
   protected static String runtime_buffer;
-  protected static String name;
-  protected static byte[] status;
 
   public Linage getLinorkeyptr() {
     return this.linorkeyptr;
@@ -1524,12 +1522,10 @@ public class CobolFile {
   }
 
   public String getSelectName() {
-    // CobolFile cobolFile = new CobolFile();
     return this.select_name;
   }
 
   public byte[] getFileStatus() {
-    // CobolFile cobolFile = new CobolFile();
     return this.file_status;
   }
 }
