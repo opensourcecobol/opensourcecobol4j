@@ -1913,12 +1913,12 @@ public class CobolIntrinsic {
       makeFieldEntry(field);
       currField.memcpy("00", 2);
     } else {
-      flen = CobolFile.select_name.length();
+      flen = CobolFile.getSelectName().length();
       field.setSize(flen + 2);
       makeFieldEntry(field);
       data = new byte[2 + flen];
-      System.arraycopy(CobolFile.file_status, 0, data, 0, 2);
-      System.arraycopy(CobolFile.select_name.getBytes(), 0, data, 2, flen);
+      System.arraycopy(CobolFile.getFileStatus(), 0, data, 0, 2);
+      System.arraycopy(CobolFile.getSelectName().getBytes(), 0, data, 2, flen);
       currField.setDataStorage(new CobolDataStorage(data));
     }
     return currField;
