@@ -1936,7 +1936,7 @@ public class CobolIntrinsic {
         new CobolFieldAttribute(CobolFieldAttribute.COB_TYPE_ALPHANUMERIC, 0, 0, 0, null);
     AbstractCobolField field = CobolFieldFactory.makeCobolField(0, (CobolDataStorage) null, attr);
     currField = field;
-    if (CobolRuntimeException.getException() != 1
+    if (CobolRuntimeException.getExceptionCode() != 1
         || CobolRuntimeException.getOrigProgramId() == null) {
       field.setSize(1);
       makeFieldEntry(field);

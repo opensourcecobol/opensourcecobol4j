@@ -294,8 +294,8 @@ public class CobolFile {
   protected void saveStatus(int status, AbstractCobolField fnstatus) {
     CobolFile.errorFile = this;
     if (status == 0) {
-      file_status[0] = '0';
-      file_status[1] = '0';
+      this.file_status[0] = '0';
+      this.file_status[1] = '0';
       if (fnstatus != null) {
         fnstatus.getDataStorage().setByte(0, (byte) '0');
         fnstatus.getDataStorage().setByte(1, (byte) '0');
@@ -307,11 +307,11 @@ public class CobolFile {
     if (status != COB_STATUS_52_EOP) {
       CobolRuntimeException.setException(status_exception[status / 10]);
     }
-    file_status[0] = (byte) (status / 10 + '0');
-    file_status[1] = (byte) (status % 10 + '0');
+    this.file_status[0] = (byte) (status / 10 + '0');
+    this.file_status[1] = (byte) (status % 10 + '0');
     if (fnstatus != null) {
-      fnstatus.getDataStorage().setByte(0, file_status[0]);
-      fnstatus.getDataStorage().setByte(1, file_status[1]);
+      fnstatus.getDataStorage().setByte(0, this.file_status[0]);
+      fnstatus.getDataStorage().setByte(1, this.file_status[1]);
     }
   }
 
