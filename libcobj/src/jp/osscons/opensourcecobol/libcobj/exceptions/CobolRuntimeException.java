@@ -78,10 +78,10 @@ public class CobolRuntimeException extends RuntimeException {
   public static void setException(int id) {
     code = CobolExceptionTabCode.code[id];
     cob_got_exception = 1;
+    cob_orig_line = CobolUtil.getSourceLine();
     cob_orig_program_id = CobolUtil.getCurrProgramId();
     cob_orig_section = CobolUtil.getCurrSection();
     cob_orig_paragraph = CobolUtil.getCurrParagraph();
-    cob_orig_line = CobolUtil.getSourceLine();
     // TODO common.c実装に残りをやる
   }
 
