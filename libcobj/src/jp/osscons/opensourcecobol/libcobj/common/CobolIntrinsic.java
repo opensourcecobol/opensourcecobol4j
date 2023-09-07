@@ -47,6 +47,7 @@ public class CobolIntrinsic {
   private static AbstractCobolField[] calcField = new AbstractCobolField[DEPTH_LEVEL];
   private static Random random = new Random();
   private static byte[] localeBuff;
+  private static final byte[] byteArray00 = "00".getBytes();
 
   /** libcob/intrinsicのmake_double_entryの実装 */
   private static void makeDoubleEntry() {
@@ -1911,7 +1912,7 @@ public class CobolIntrinsic {
         || (CobolRuntimeException.getExceptionCode() & 0x0500) != 0x0500) {
       field.setSize(2);
       makeFieldEntry(field);
-      currField.memcpy("00", 2);
+      currField.memcpy(byteArray00, 2);
     } else {
       flen = CobolFile.errorFile.getSelectName().length();
       field.setSize(flen + 2);
@@ -1930,8 +1931,8 @@ public class CobolIntrinsic {
    * @return
    */
   public static AbstractCobolField funcExceptionLocation() {
-    String data;
     String buff;
+
     CobolFieldAttribute attr =
         new CobolFieldAttribute(CobolFieldAttribute.COB_TYPE_ALPHANUMERIC, 0, 0, 0, null);
     AbstractCobolField field = CobolFieldFactory.makeCobolField(0, (CobolDataStorage) null, attr);
@@ -1940,8 +1941,7 @@ public class CobolIntrinsic {
         || CobolRuntimeException.getOrigProgramId() == null) {
       field.setSize(1);
       makeFieldEntry(field);
-      data = String.valueOf(' ');
-      currField.memcpy(data.getBytes(), 1);
+      currField.getDataStorage().setByte(0, ' ');
       return currField;
     }
     if (CobolRuntimeException.getOrigSection() != null
