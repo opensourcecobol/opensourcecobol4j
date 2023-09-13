@@ -123,28 +123,4 @@ public class CobolRuntimeException extends RuntimeException {
   public static String getOrigStatement() {
     return cob_orig_statement;
   }
-
-  public static int getExceptionCode() {
-    return code;
-  }
-
-  public static int getException() {
-    return cob_got_exception;
-  }
-
-  public static String getOrigProgramId() {
-    return cob_orig_program_id;
-  }
-
-  public static String getOrigSection() {
-    return cob_orig_section;
-  }
-
-  public static String getOrigParagragh() {
-    return cob_orig_paragraph;
-  }
-
-  public static int getOrigLine() {
-    return cob_orig_line;
-  }
 }
