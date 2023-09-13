@@ -43,7 +43,7 @@ public class CobolResolve {
   private static Map<String, CobolRunnable> callTable;
 
   /** ポインタ(UUID)のCobolRunnableインスタンスの対応表 */
-  public static Map<UUID, String> pointerTable;
+  private static Map<UUID, String> pointerTable;
 
   public static Map<String, String> cob_exception;
 
