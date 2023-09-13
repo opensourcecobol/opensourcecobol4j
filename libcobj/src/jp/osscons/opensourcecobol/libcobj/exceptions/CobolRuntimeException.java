@@ -19,6 +19,7 @@
 package jp.osscons.opensourcecobol.libcobj.exceptions;
 
 import java.util.List;
+import jp.osscons.opensourcecobol.libcobj.call.CobolResolve;
 import jp.osscons.opensourcecobol.libcobj.common.CobolUtil;
 
 /** 実行時エラーを示す例外 */
@@ -29,6 +30,7 @@ public class CobolRuntimeException extends RuntimeException {
   public static String cob_orig_section;
   public static String cob_orig_paragraph;
   public static int cob_orig_line = 0;
+  public static String cob_orig_statement;
 
   public static final int COBOL_FITAL_ERROR = 9000;
 
@@ -82,7 +84,16 @@ public class CobolRuntimeException extends RuntimeException {
     cob_orig_program_id = CobolUtil.getCurrProgramId();
     cob_orig_section = CobolUtil.getCurrSection();
     cob_orig_paragraph = CobolUtil.getCurrParagraph();
-    // TODO common.c実装に残りをやる
+    cob_orig_statement = CobolUtil.getSourceStatement();
+  }
+
+  public static String getExceptionName(int exceptionCode) {
+    for (String key : CobolResolve.cob_exception.keySet()) {
+      if (exceptionCode == Integer.parseInt(key, 16)) {
+        return CobolResolve.cob_exception.get(key);
+      }
+    }
+    return null;
   }
 
   public static int getExceptionCode() {
@@ -107,5 +118,9 @@ public class CobolRuntimeException extends RuntimeException {
 
   public static int getOrigLine() {
     return cob_orig_line;
+  }
+
+  public static String getOrigStatement() {
+    return cob_orig_statement;
   }
 }

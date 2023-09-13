@@ -1978,4 +1978,58 @@ public class CobolIntrinsic {
     currField.setDataStorage(new CobolDataStorage(localeBuff));
     return currField;
   }
+
+  /**
+   * cob_intr_exception_statementの実装
+   *
+   * @return
+   */
+  public static AbstractCobolField funcExceptionStatement() {
+    byte[] data = new byte[31];
+    String fm;
+
+    CobolFieldAttribute attr =
+        new CobolFieldAttribute(CobolFieldAttribute.COB_TYPE_ALPHANUMERIC, 0, 0, 0, null);
+    AbstractCobolField field = CobolFieldFactory.makeCobolField(31, (CobolDataStorage) null, attr);
+    makeFieldEntry(field);
+    if (CobolRuntimeException.getExceptionCode() != 0
+        && CobolRuntimeException.getOrigStatement() != null) {
+      fm = "%" + String.valueOf(-31) + "s";
+      data = String.format(fm, CobolRuntimeException.getOrigStatement()).getBytes();
+    } else {
+      fm = "%" + String.valueOf(-31) + "s";
+      data = String.format(fm, "").getBytes();
+    }
+    currField.setDataStorage(new CobolDataStorage(data));
+    return currField;
+  }
+
+  /**
+   * cob_intr_exception_statusの実装
+   *
+   * @return
+   */
+  public static AbstractCobolField funcExceptionStatus() {
+    byte[] data = new byte[31];
+    byte[] exceptName;
+    String fm;
+
+    CobolFieldAttribute attr =
+        new CobolFieldAttribute(CobolFieldAttribute.COB_TYPE_ALPHANUMERIC, 0, 0, 0, null);
+    AbstractCobolField field = CobolFieldFactory.makeCobolField(31, (CobolDataStorage) null, attr);
+    makeFieldEntry(field);
+    fm = "%" + String.valueOf(-31) + "s";
+    data = String.format(fm, "").getBytes();
+    currField.setDataStorage(new CobolDataStorage(data));
+    if (CobolRuntimeException.getExceptionCode() != 0) {
+      exceptName =
+          CobolRuntimeException.getExceptionName(CobolRuntimeException.getExceptionCode())
+              .getBytes();
+      if (exceptName == null) {
+        exceptName = "EXCEPTION-OBJECT".getBytes();
+      }
+      currField.memcpy(exceptName, exceptName.length);
+    }
+    return currField;
+  }
 }

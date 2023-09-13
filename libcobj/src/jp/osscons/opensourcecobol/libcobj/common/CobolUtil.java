@@ -64,6 +64,7 @@ public class CobolUtil {
   public static String currProgramId;
   public static String currSection;
   public static String currParagraph;
+  public static String sourceStatement;
 
   abstract class HandlerList {
     public HandlerList next = null;
@@ -698,6 +699,9 @@ public class CobolUtil {
     currSection = csect;
     currParagraph = cpara;
     sourceLine = sline;
+    if (cstatement != null) {
+      sourceStatement = cstatement;
+    }
     if (CobolUtil.lineTrace) {
       System.err.println(
           String.format(
@@ -763,5 +767,9 @@ public class CobolUtil {
 
   public static int getSourceLine() {
     return sourceLine;
+  }
+
+  public static String getSourceStatement() {
+    return sourceStatement;
   }
 }
