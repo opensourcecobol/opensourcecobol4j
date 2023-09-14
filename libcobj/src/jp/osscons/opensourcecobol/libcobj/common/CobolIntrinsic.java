@@ -2022,10 +2022,11 @@ public class CobolIntrinsic {
     data = String.format(fm, "").getBytes();
     currField.setDataStorage(new CobolDataStorage(data));
     if (CobolRuntimeException.getExceptionCode() != 0) {
-      exceptName =
-          CobolRuntimeException.getExceptionName(CobolRuntimeException.getExceptionCode())
-              .getBytes();
-      if (exceptName == null) {
+      try {
+        exceptName =
+            CobolRuntimeException.getExceptionName(CobolRuntimeException.getExceptionCode())
+                .getBytes();
+      } catch (NullPointerException e) {
         exceptName = "EXCEPTION-OBJECT".getBytes();
       }
       currField.memcpy(exceptName, exceptName.length);

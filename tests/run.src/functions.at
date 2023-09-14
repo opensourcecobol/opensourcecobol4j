@@ -403,7 +403,7 @@ AT_CHECK([java prog], [0],
 
 AT_CLEANUP
 
-AT_SETUP([FUNCTION EXCEPTION-FILE (existing text)])
+AT_SETUP([FUNCTION EXCEPTION-FILE (If text file exists)])
 
 AT_DATA([prog.cob], [
        IDENTIFICATION   DIVISION.
@@ -468,7 +468,7 @@ AT_CHECK([java prog], [0],
 
 AT_CLEANUP
 
-AT_SETUP([FUNCTION EXCEPTION-LOCATION (existing text)])
+AT_SETUP([FUNCTION EXCEPTION-LOCATION (If text file exists)])
 
 AT_DATA([prog.cob], [
        IDENTIFICATION   DIVISION.
@@ -533,7 +533,7 @@ AT_CHECK([java prog], [0],
 
 AT_CLEANUP
 
-AT_SETUP([FUNCTION EXCEPTION-STATEMENT (existing text)])
+AT_SETUP([FUNCTION EXCEPTION-STATEMENT (If text file exists)])
 
 AT_DATA([prog.cob], [
        IDENTIFICATION   DIVISION.
@@ -594,7 +594,7 @@ AT_CHECK([java prog], [0],
 
 AT_CLEANUP
 
-AT_SETUP([FUNCTION EXCEPTION-STATUS (existing text)])
+AT_SETUP([FUNCTION EXCEPTION-STATUS (If text file exists)])
 
 AT_DATA([prog.cob], [
        IDENTIFICATION   DIVISION.

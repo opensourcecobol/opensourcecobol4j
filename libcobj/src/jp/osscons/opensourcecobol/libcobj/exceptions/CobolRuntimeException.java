@@ -25,12 +25,12 @@ import jp.osscons.opensourcecobol.libcobj.common.CobolUtil;
 /** 実行時エラーを示す例外 */
 public class CobolRuntimeException extends RuntimeException {
   public static int code;
-  public static int cob_got_exception = 0;
-  public static String cob_orig_program_id;
-  public static String cob_orig_section;
-  public static String cob_orig_paragraph;
-  public static int cob_orig_line = 0;
-  public static String cob_orig_statement;
+  public static int cobException = 0;
+  public static String origProgramId;
+  public static String origSection;
+  public static String origParagraph;
+  public static int origLine = 0;
+  public static String origStatement;
 
   public static final int COBOL_FITAL_ERROR = 9000;
 
@@ -79,21 +79,16 @@ public class CobolRuntimeException extends RuntimeException {
 
   public static void setException(int id) {
     code = CobolExceptionTabCode.code[id];
-    cob_got_exception = 1;
-    cob_orig_line = CobolUtil.getSourceLine();
-    cob_orig_program_id = CobolUtil.getCurrProgramId();
-    cob_orig_section = CobolUtil.getCurrSection();
-    cob_orig_paragraph = CobolUtil.getCurrParagraph();
-    cob_orig_statement = CobolUtil.getSourceStatement();
+    cobException = 1;
+    origLine = CobolUtil.getSourceLine();
+    origProgramId = CobolUtil.getCurrProgramId();
+    origSection = CobolUtil.getCurrSection();
+    origParagraph = CobolUtil.getCurrParagraph();
+    origStatement = CobolUtil.getSourceStatement();
   }
 
   public static String getExceptionName(int exceptionCode) {
-    for (String key : CobolResolve.cob_exception.keySet()) {
-      if (exceptionCode == Integer.parseInt(key, 16)) {
-        return CobolResolve.cob_exception.get(key);
-      }
-    }
-    return null;
+    return CobolResolve.cobException.get(exceptionCode);
   }
 
   public static int getExceptionCode() {
@@ -101,26 +96,26 @@ public class CobolRuntimeException extends RuntimeException {
   }
 
   public static int getException() {
-    return cob_got_exception;
+    return cobException;
   }
 
   public static String getOrigProgramId() {
-    return cob_orig_program_id;
+    return origProgramId;
   }
 
   public static String getOrigSection() {
-    return cob_orig_section;
+    return origSection;
   }
 
   public static String getOrigParagragh() {
-    return cob_orig_paragraph;
+    return origParagraph;
   }
 
   public static int getOrigLine() {
-    return cob_orig_line;
+    return origLine;
   }
 
   public static String getOrigStatement() {
-    return cob_orig_statement;
+    return origStatement;
   }
 }
