@@ -61,6 +61,10 @@ public class CobolUtil {
 
   public static String sourceFile;
   public static int sourceLine;
+  public static String currProgramId;
+  public static String currSection;
+  public static String currParagraph;
+  public static String sourceStatement;
 
   abstract class HandlerList {
     public HandlerList next = null;
@@ -691,6 +695,13 @@ public class CobolUtil {
       String progId, String sfile, int sline, String csect, String cpara, String cstatement) {
     CobolUtil.sourceFile = sfile;
     CobolUtil.sourceLine = sline;
+    currProgramId = progId;
+    currSection = csect;
+    currParagraph = cpara;
+    sourceLine = sline;
+    if (cstatement != null) {
+      sourceStatement = cstatement;
+    }
     if (CobolUtil.lineTrace) {
       System.err.println(
           String.format(
@@ -740,5 +751,25 @@ public class CobolUtil {
 
   public static byte[] toBytes(byte... bytes) {
     return bytes;
+  }
+
+  public static String getCurrProgramId() {
+    return currProgramId;
+  }
+
+  public static String getCurrSection() {
+    return currSection;
+  }
+
+  public static String getCurrParagraph() {
+    return currParagraph;
+  }
+
+  public static int getSourceLine() {
+    return sourceLine;
+  }
+
+  public static String getSourceStatement() {
+    return sourceStatement;
   }
 }

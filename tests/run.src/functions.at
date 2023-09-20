@@ -373,8 +373,7 @@ AT_CHECK([java prog], [0],
 
 AT_CLEANUP
 
-AT_SETUP([FUNCTION EXCEPTION-FILE])
-AT_CHECK([${SKIP_TEST}])
+AT_SETUP([FUNCTION EXCEPTION-FILE (no text)])
 
 AT_DATA([prog.cob], [
        IDENTIFICATION   DIVISION.
@@ -404,8 +403,38 @@ AT_CHECK([java prog], [0],
 
 AT_CLEANUP
 
-AT_SETUP([FUNCTION EXCEPTION-LOCATION])
-AT_CHECK([${SKIP_TEST}])
+AT_SETUP([FUNCTION EXCEPTION-FILE (If text file exists)])
+
+AT_DATA([prog.cob], [
+       IDENTIFICATION   DIVISION.
+       PROGRAM-ID.      prog.
+       ENVIRONMENT      DIVISION.
+       INPUT-OUTPUT     SECTION.
+       FILE-CONTROL.
+           SELECT TEST-FILE ASSIGN "TEXIST"
+           FILE STATUS IS TEST-STATUS.
+       DATA             DIVISION.
+       FILE             SECTION.
+       FD  TEST-FILE.
+       01  TEST-REC      PIC X(4).
+       WORKING-STORAGE SECTION.
+       01  TEST-STATUS  PIC XX.
+       PROCEDURE        DIVISION.
+           OPEN OUTPUT TEST-FILE.
+           DISPLAY FUNCTION EXCEPTION-FILE
+           END-DISPLAY.
+           CLOSE TEST-FILE.
+           STOP RUN.
+])
+
+AT_CHECK([${COMPILE} prog.cob])
+AT_CHECK([java prog], [0],
+[00
+])
+
+AT_CLEANUP
+
+AT_SETUP([FUNCTION EXCEPTION-LOCATION (no text)])
 
 AT_DATA([prog.cob], [
        IDENTIFICATION   DIVISION.
@@ -439,8 +468,42 @@ AT_CHECK([java prog], [0],
 
 AT_CLEANUP
 
-AT_SETUP([FUNCTION EXCEPTION-STATEMENT])
-AT_CHECK([${SKIP_TEST}])
+AT_SETUP([FUNCTION EXCEPTION-LOCATION (If text file exists)])
+
+AT_DATA([prog.cob], [
+       IDENTIFICATION   DIVISION.
+       PROGRAM-ID.      prog.
+       ENVIRONMENT      DIVISION.
+       INPUT-OUTPUT     SECTION.
+       FILE-CONTROL.
+           SELECT TEST-FILE ASSIGN "TEXIST"
+           FILE STATUS IS TEST-STATUS.
+       DATA             DIVISION.
+       FILE             SECTION.
+       FD  TEST-FILE.
+       01  TEST-REC      PIC X(4).
+       WORKING-STORAGE SECTION.
+       01  TEST-STATUS  PIC XX.
+       PROCEDURE        DIVISION.
+       A00-MAIN SECTION.
+       A00.
+           OPEN OUTPUT TEST-FILE.
+       B00-MAIN SECTION.
+       B00.
+           DISPLAY FUNCTION EXCEPTION-LOCATION
+                   NO ADVANCING
+           END-DISPLAY.
+           CLOSE TEST-FILE.
+           STOP RUN.
+])
+
+AT_CHECK([${COMPILE} -debug prog.cob])
+AT_CHECK([java prog], [0],
+[ ])
+
+AT_CLEANUP
+
+AT_SETUP([FUNCTION EXCEPTION-STATEMENT (no text)])
 
 AT_DATA([prog.cob], [
        IDENTIFICATION   DIVISION.
@@ -470,8 +533,38 @@ AT_CHECK([java prog], [0],
 
 AT_CLEANUP
 
-AT_SETUP([FUNCTION EXCEPTION-STATUS])
-AT_CHECK([${SKIP_TEST}])
+AT_SETUP([FUNCTION EXCEPTION-STATEMENT (If text file exists)])
+
+AT_DATA([prog.cob], [
+       IDENTIFICATION   DIVISION.
+       PROGRAM-ID.      prog.
+       ENVIRONMENT      DIVISION.
+       INPUT-OUTPUT     SECTION.
+       FILE-CONTROL.
+           SELECT TEST-FILE ASSIGN "TEXIST"
+           FILE STATUS IS TEST-STATUS.
+       DATA             DIVISION.
+       FILE             SECTION.
+       FD  TEST-FILE.
+       01  TEST-REC      PIC X(4).
+       WORKING-STORAGE SECTION.
+       01  TEST-STATUS  PIC XX.
+       PROCEDURE        DIVISION.
+           OPEN OUTPUT TEST-FILE.
+           DISPLAY FUNCTION EXCEPTION-STATEMENT
+                   NO ADVANCING
+           END-DISPLAY.
+           CLOSE TEST-FILE.
+           STOP RUN.
+])
+
+AT_CHECK([${COMPILE} -debug prog.cob])
+AT_CHECK([java prog], [0],
+[                               ])
+
+AT_CLEANUP
+
+AT_SETUP([FUNCTION EXCEPTION-STATUS (no text)])
 
 AT_DATA([prog.cob], [
        IDENTIFICATION   DIVISION.
@@ -498,6 +591,37 @@ AT_DATA([prog.cob], [
 AT_CHECK([${COMPILE} prog.cob])
 AT_CHECK([java prog], [0],
 [EC-I-O-PERMANENT-ERROR         ])
+
+AT_CLEANUP
+
+AT_SETUP([FUNCTION EXCEPTION-STATUS (If text file exists)])
+
+AT_DATA([prog.cob], [
+       IDENTIFICATION   DIVISION.
+       PROGRAM-ID.      prog.
+       ENVIRONMENT      DIVISION.
+       INPUT-OUTPUT     SECTION.
+       FILE-CONTROL.
+           SELECT TEST-FILE ASSIGN "TEXIST"
+           FILE STATUS IS TEST-STATUS.
+       DATA             DIVISION.
+       FILE             SECTION.
+       FD  TEST-FILE.
+       01  TEST-REC      PIC X(4).
+       WORKING-STORAGE SECTION.
+       01  TEST-STATUS  PIC XX.
+       PROCEDURE        DIVISION.
+           OPEN OUTPUT TEST-FILE.
+           DISPLAY FUNCTION EXCEPTION-STATUS
+                   NO ADVANCING
+           END-DISPLAY.
+           CLOSE TEST-FILE.
+           STOP RUN.
+])
+
+AT_CHECK([${COMPILE} prog.cob])
+AT_CHECK([java prog], [0],
+[                               ])
 
 AT_CLEANUP
 
