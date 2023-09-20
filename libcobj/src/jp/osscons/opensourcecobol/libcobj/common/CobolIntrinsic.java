@@ -1985,24 +1985,22 @@ public class CobolIntrinsic {
    * @return
    */
   public static AbstractCobolField funcExceptionStatement() {
-    byte[] data = new byte[31];
-    String fm;
-
     CobolFieldAttribute attr =
         new CobolFieldAttribute(CobolFieldAttribute.COB_TYPE_ALPHANUMERIC, 0, 0, 0, null);
     AbstractCobolField field = CobolFieldFactory.makeCobolField(31, (CobolDataStorage) null, attr);
     makeFieldEntry(field);
+    byte[] data;
     if (CobolRuntimeException.getExceptionCode() != 0
         && CobolRuntimeException.getOrigStatement() != null) {
-      fm = "%" + String.valueOf(-31) + "s";
-      data = String.format(fm, CobolRuntimeException.getOrigStatement()).getBytes();
+      data = String.format("%-31s", CobolRuntimeException.getOrigStatement()).getBytes();
     } else {
-      fm = "%" + String.valueOf(-31) + "s";
-      data = String.format(fm, "").getBytes();
+      data = String.format("%-31s", "").getBytes();
     }
     currField.setDataStorage(new CobolDataStorage(data));
     return currField;
   }
+
+  private static final byte[] CONST_STRING_EXCEPTION_OBJECT = "EXCEPTION-OBJECT".getBytes();
 
   /**
    * cob_intr_exception_statusの実装
@@ -2010,16 +2008,13 @@ public class CobolIntrinsic {
    * @return
    */
   public static AbstractCobolField funcExceptionStatus() {
-    byte[] data = new byte[31];
     byte[] exceptName;
-    String fm;
 
     CobolFieldAttribute attr =
         new CobolFieldAttribute(CobolFieldAttribute.COB_TYPE_ALPHANUMERIC, 0, 0, 0, null);
     AbstractCobolField field = CobolFieldFactory.makeCobolField(31, (CobolDataStorage) null, attr);
     makeFieldEntry(field);
-    fm = "%" + String.valueOf(-31) + "s";
-    data = String.format(fm, "").getBytes();
+    byte[] data = String.format("%-31s", "").getBytes();
     currField.setDataStorage(new CobolDataStorage(data));
     if (CobolRuntimeException.getExceptionCode() != 0) {
       try {
@@ -2027,7 +2022,7 @@ public class CobolIntrinsic {
             CobolRuntimeException.getExceptionName(CobolRuntimeException.getExceptionCode())
                 .getBytes();
       } catch (NullPointerException e) {
-        exceptName = "EXCEPTION-OBJECT".getBytes();
+        exceptName = CONST_STRING_EXCEPTION_OBJECT;
       }
       currField.memcpy(exceptName, exceptName.length);
     }
