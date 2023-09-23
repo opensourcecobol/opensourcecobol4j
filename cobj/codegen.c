@@ -4087,6 +4087,7 @@ static void joutput_file_initialization(struct cb_file *f) {
   }
 
   if (f->linage) {
+    joutput_line("%s%s.setLinorkeyptr(new Linage());", CB_PREFIX_FILE, f->cname);
     joutput_line("lingptr = (Linage)(%s%s.getLinorkeyptr());", CB_PREFIX_FILE,
                  f->cname);
     joutput_prefix();
