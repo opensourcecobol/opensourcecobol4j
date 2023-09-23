@@ -4012,8 +4012,9 @@ static void joutput_file_initialization(struct cb_file *f) {
           joutput_line ("  byte_%s%s[i] = '0;'");
           joutput_line ("}");
   }*/
-  if(f->external) {
-    joutput_line("%s%s = CobolFile.getExternalFile(\"%s\");", CB_PREFIX_FILE, f->cname, f->cname);
+  if (f->external) {
+    joutput_line("%s%s = CobolFile.getExternalFile(\"%s\");", CB_PREFIX_FILE,
+                 f->cname, f->cname);
     joutput_line("if(%s%s == null) {", CB_PREFIX_FILE, f->cname);
     joutput_indent_level += 2;
   }
@@ -4022,7 +4023,8 @@ static void joutput_file_initialization(struct cb_file *f) {
                f->cname);
   joutput_line("/* select_name = */ \"%s\",", f->name);
   if (f->external && !f->file_status) {
-    joutput_line("/* file_status = */ CobolFile.getExternalFileStatus (\"%s%s_status\"),",
+    joutput_line("/* file_status = */ CobolFile.getExternalFileStatus "
+                 "(\"%s%s_status\"),",
                  CB_PREFIX_FILE, f->cname);
   } else {
     joutput_line("/* file_status = */ %s%s_status,", CB_PREFIX_FILE, f->cname);
@@ -4081,13 +4083,15 @@ static void joutput_file_initialization(struct cb_file *f) {
   joutput_line(");");
 
   if (f->external) {
-    joutput_line("CobolFile.putExternalFile(\"%s\", %s%s);", f->cname, CB_PREFIX_FILE, f->cname);
+    joutput_line("CobolFile.putExternalFile(\"%s\", %s%s);", f->cname,
+                 CB_PREFIX_FILE, f->cname);
     joutput_indent_level -= 2;
     joutput_line("}");
   }
 
   if (f->linage) {
-    joutput_line("%s%s.setLinorkeyptr(new Linage());", CB_PREFIX_FILE, f->cname);
+    joutput_line("%s%s.setLinorkeyptr(new Linage());", CB_PREFIX_FILE,
+                 f->cname);
     joutput_line("lingptr = (Linage)(%s%s.getLinorkeyptr());", CB_PREFIX_FILE,
                  f->cname);
     joutput_prefix();
