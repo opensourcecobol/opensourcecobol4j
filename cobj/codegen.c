@@ -4012,12 +4012,17 @@ static void joutput_file_initialization(struct cb_file *f) {
           joutput_line ("  byte_%s%s[i] = '0;'");
           joutput_line ("}");
   }*/
+  if(f->external) {
+    joutput_line("%s%s = CobolFile.getExternalFile(\"%s\");", CB_PREFIX_FILE, f->cname, f->cname);
+    joutput_line("if(%s%s == null) {", CB_PREFIX_FILE, f->cname);
+    joutput_indent_level += 2;
+  }
 
   joutput_line("%s%s = CobolFileFactory.makeCobolFileInstance(", CB_PREFIX_FILE,
                f->cname);
   joutput_line("/* select_name = */ \"%s\",", f->name);
   if (f->external && !f->file_status) {
-    joutput_line("/* file_status = */ cob_external_addr (\"%s%s_status\", 4),",
+    joutput_line("/* file_status = */ CobolFile.getExternalFileStatus (\"%s%s_status\"),",
                  CB_PREFIX_FILE, f->cname);
   } else {
     joutput_line("/* file_status = */ %s%s_status,", CB_PREFIX_FILE, f->cname);
@@ -4076,23 +4081,9 @@ static void joutput_file_initialization(struct cb_file *f) {
   joutput_line(");");
 
   if (f->external) {
-    // joutput_line ("%s%s = CobolExternal.getFileAddress (\"%s\");",
-    // CB_PREFIX_FILE, f->cname, f->cname);
-    joutput_line("if (CobolExternal.initialExternal)");
-    joutput_indent("{");
-    if (f->linage) {
-      joutput_line("%s%s.setLinorkeyptr(new Linage());", CB_PREFIX_FILE,
-                   f->cname);
-    }
-  } else {
-    // joutput_line ("if (%s%s == null)", CB_PREFIX_FILE, f->cname);
-    // joutput_indent ("{");
-    // joutput_line ("%s%s = new CobolFile();", CB_PREFIX_FILE, f->cname);
-    if (f->linage) {
-      joutput_line("%s%s.setLinorkeyptr(new Linage());", CB_PREFIX_FILE,
-                   f->cname);
-    }
-    // joutput_indent ("}");
+    joutput_line("CobolFile.putExternalFile(\"%s\", %s%s);", f->cname, CB_PREFIX_FILE, f->cname);
+    joutput_indent_level -= 2;
+    joutput_line("}");
   }
 
   if (f->linage) {
@@ -4134,9 +4125,6 @@ static void joutput_file_initialization(struct cb_file *f) {
     joutput_line("lingptr.setLinFoot(0);");
     joutput_line("lingptr.setLinTop(0);");
     joutput_line("lingptr.setLinBot(0);");
-  }
-  if (f->external) {
-    joutput_indent("}");
   }
 }
 
