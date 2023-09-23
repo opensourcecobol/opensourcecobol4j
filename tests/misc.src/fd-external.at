@@ -1,0 +1,68 @@
+AT_SETUP([FD EXTERNAL])
+
+AT_DATA([prog.cbl], [
+       identification              division.	
+       program-id.                 prog.	
+       environment division.
+       input-output section.
+       file-control.
+         select sequential-file assign to "sequential.txt"
+                organization is sequential
+                file status is sequential-file-status.
+       data division.
+       file section.
+       fd sequential-file is external.
+       01 sequential-file-rec pic x(20).
+       working-storage             section.	
+       01 sequential-file-status pic 99.
+       01 command pic x(20).
+       procedure                   division.	
+       main-rtn.
+           open output sequential-file.
+           move "seq-data" to sequential-file-rec.
+           move "write-sequential" to command.
+           call "sub" using command.
+           close sequential-file.
+
+           open input sequential-file.
+           move space to sequential-file-rec.
+           move "read-sequential" to command.
+           call "sub" using command.
+           display "sequential-file-rec:" sequential-file-rec.
+           close sequential-file.
+
+])
+
+AT_DATA([sub.cbl], [
+       identification              division.	
+       program-id.                 sub.	
+       environment division.
+       input-output section.
+       file-control.
+         select sequential-file assign to "sequential.txt"
+                organization is sequential
+                file status is sequential-file-status.
+       data division.
+       file section.
+       fd sequential-file is external.
+       01 sequential-file-rec pic x(20).
+       working-storage             section.	
+       01 sequential-file-status pic 99.
+       linkage section.
+       01 command pic x(20).
+       procedure division using command.
+       main-rtn.
+           evaluate command
+           when "read-sequential"
+                  read sequential-file
+           when "write-sequential"
+                  write sequential-file-rec
+           end-evaluate.
+])
+
+AT_CHECK([${COBJ} prog.cbl sub.cbl])
+AT_CHECK([java prog], [0],
+[sequential-file-rec:seq-data            @&t@
+])
+
+AT_CLEANUP

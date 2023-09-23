@@ -29,7 +29,9 @@ import java.nio.file.Paths;
 import java.nio.file.StandardOpenOption;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import jp.osscons.opensourcecobol.libcobj.common.CobolModule;
 import jp.osscons.opensourcecobol.libcobj.common.CobolUtil;
 import jp.osscons.opensourcecobol.libcobj.data.AbstractCobolField;
@@ -164,7 +166,7 @@ public class CobolFile {
   protected static String file_open_name;
   protected static byte[] file_open_buff = new byte[1024];
 
-  protected static final String[] prefix = {"DD_", "dd_", ""};
+  protected static final String[] prefix = { "DD_", "dd_", "" };
   protected static final int NUM_PREFIX = prefix.length;
 
   protected static int eop_status = 0;
@@ -173,16 +175,16 @@ public class CobolFile {
   private static List<CobolFile> file_cache = new ArrayList<CobolFile>();
 
   protected static int[] status_exception = {
-    0,
-    CobolExceptionId.COB_EC_I_O_AT_END,
-    CobolExceptionId.COB_EC_I_O_INVALID_KEY,
-    CobolExceptionId.COB_EC_I_O_PERMANENT_ERROR,
-    CobolExceptionId.COB_EC_I_O_LOGIC_ERROR,
-    CobolExceptionId.COB_EC_I_O_RECORD_OPERATION,
-    CobolExceptionId.COB_EC_I_O_FILE_SHARING,
-    CobolExceptionId.COB_EC_I_O,
-    CobolExceptionId.COB_EC_I_O,
-    CobolExceptionId.COB_EC_I_O_IMP
+      0,
+      CobolExceptionId.COB_EC_I_O_AT_END,
+      CobolExceptionId.COB_EC_I_O_INVALID_KEY,
+      CobolExceptionId.COB_EC_I_O_PERMANENT_ERROR,
+      CobolExceptionId.COB_EC_I_O_LOGIC_ERROR,
+      CobolExceptionId.COB_EC_I_O_RECORD_OPERATION,
+      CobolExceptionId.COB_EC_I_O_FILE_SHARING,
+      CobolExceptionId.COB_EC_I_O,
+      CobolExceptionId.COB_EC_I_O,
+      CobolExceptionId.COB_EC_I_O_IMP
   };
   public String select_name;
   public byte[] file_status;
@@ -230,7 +232,8 @@ public class CobolFile {
     this.linorkeyptr = ptr;
   }
 
-  public CobolFile() {}
+  public CobolFile() {
+  }
 
   public CobolFile(
       String selectName,
@@ -287,7 +290,8 @@ public class CobolFile {
   }
 
   /**
-   * libcob/fileio.cのsave_statusの実装 RETURN_STATUSマクロは実装できないため,本メソッドの呼び出し後の次の文はreturn;を書くこと.
+   * libcob/fileio.cのsave_statusの実装
+   * RETURN_STATUSマクロは実装できないため,本メソッドの呼び出し後の次の文はreturn;を書くこと.
    *
    * @param status
    * @param fnstatus
@@ -351,8 +355,7 @@ public class CobolFile {
     Linage lingptr = getLinorkeyptr();
     lingptr.setLinLines(lingptr.getLinage().getInt());
 
-    outer:
-    {
+    outer: {
       if (lingptr.getLinLines() < 1) {
         break outer;
       }
@@ -765,25 +768,22 @@ public class CobolFile {
           fp = FileChannel.open(Paths.get(filename), StandardOpenOption.READ);
           break;
         case COB_OPEN_OUTPUT:
-          fp =
-              FileChannel.open(
-                  Paths.get(filename),
-                  StandardOpenOption.WRITE,
-                  StandardOpenOption.CREATE,
-                  StandardOpenOption.TRUNCATE_EXISTING);
+          fp = FileChannel.open(
+              Paths.get(filename),
+              StandardOpenOption.WRITE,
+              StandardOpenOption.CREATE,
+              StandardOpenOption.TRUNCATE_EXISTING);
           break;
         case COB_OPEN_I_O:
-          fp =
-              FileChannel.open(
-                  Paths.get(filename),
-                  StandardOpenOption.READ,
-                  StandardOpenOption.WRITE,
-                  StandardOpenOption.CREATE);
+          fp = FileChannel.open(
+              Paths.get(filename),
+              StandardOpenOption.READ,
+              StandardOpenOption.WRITE,
+              StandardOpenOption.CREATE);
           break;
         case COB_OPEN_EXTEND:
-          fp =
-              FileChannel.open(
-                  Paths.get(filename), StandardOpenOption.APPEND, StandardOpenOption.CREATE);
+          fp = FileChannel.open(
+              Paths.get(filename), StandardOpenOption.APPEND, StandardOpenOption.CREATE);
           break;
         default:
           break;
@@ -1073,8 +1073,7 @@ public class CobolFile {
     }
 
     String openMode = openModeToString(this.last_open_mode);
-    if (invokeFun(COB_IO_WRITE, this, null, rec.getDataStorage(), fnstatus, openMode, null, null)
-        != 0) {
+    if (invokeFun(COB_IO_WRITE, this, null, rec.getDataStorage(), fnstatus, openMode, null, null) != 0) {
       return;
     }
 
@@ -1531,5 +1530,28 @@ public class CobolFile {
   public byte[] getFileStatus() {
     // CobolFile cobolFile = new CobolFile();
     return this.file_status;
+  }
+
+  private static Map<String, byte[]> externalFileStatusTable = new HashMap<String, byte[]>();
+
+  public static byte[] getExternalFileStatus(String key) {
+    byte[] bytes = externalFileStatusTable.get(key);
+    if (bytes == null) {
+      bytes = new byte[2];
+      bytes[0] = 0;
+      bytes[1] = 0;
+      externalFileStatusTable.put(key, bytes);
+    }
+    return bytes;
+  }
+
+  private static Map<String, CobolFile> externalFileTable = new HashMap<String, CobolFile>();
+
+  public static CobolFile getExternalFile(String key) {
+    return externalFileTable.get(key);
+  }
+
+  public static CobolFile putExternalFile(String key, CobolFile value) {
+    return externalFileTable.put(key, value);
   }
 }

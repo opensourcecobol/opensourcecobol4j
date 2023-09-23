@@ -186,7 +186,8 @@ misc_DEPENDENCIES = \
 	misc.src/version-string-in-java.at \
 	misc.src/comp3-compute.at \
 	misc.src/index-file-status.at \
-	misc.src/comp-n.at
+	misc.src/comp-n.at \
+	misc.src/fd-external.at
 	
 
 EXTRA_DIST = $(srcdir)/package.m4 \
