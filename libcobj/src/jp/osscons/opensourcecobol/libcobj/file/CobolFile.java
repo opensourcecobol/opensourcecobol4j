@@ -1538,8 +1538,14 @@ public class CobolFile {
   private static Map<String, byte[]> externalFileStatusTable = new HashMap<String, byte[]>();
 
   public static byte[] getExternalFileStatus(String key) {
-    byte[] ret = externalFileStatusTable.get(key);
-    return ret == null ? new byte[2] : ret;
+    byte[] bytes = externalFileStatusTable.get(key);
+    if (bytes == null) {
+      bytes = new byte[2];
+      bytes[0] = 0;
+      bytes[1] = 1;
+      externalFileStatusTable.put(key, bytes);
+    }
+    return bytes;
   }
 
   private static Map<String, CobolFile> externalFileTable = new HashMap<String, CobolFile>();

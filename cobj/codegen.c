@@ -4024,8 +4024,8 @@ static void joutput_file_initialization(struct cb_file *f) {
   joutput_line("/* select_name = */ \"%s\",", f->name);
   if (f->external && !f->file_status) {
     joutput_line("/* file_status = */ CobolFile.getExternalFileStatus "
-                 "(\"%s%s_status\"),",
-                 CB_PREFIX_FILE, f->cname);
+                 "(\"%s\"),",
+                 f->cname);
   } else {
     joutput_line("/* file_status = */ %s%s_status,", CB_PREFIX_FILE, f->cname);
   }
