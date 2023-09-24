@@ -1,0 +1,24 @@
+AT_SETUP([-Wredefinition])
+
+AT_DATA([prog.cbl], [
+       IDENTIFICATION              DIVISION.	
+       PROGRAM-ID.                 prog.	
+       DATA DIVISION.
+       WORKING-STORAGE             SECTION.	
+       01 GRP.
+         03 A PIC X(5).
+       01 B redefines GRP.
+         05 C PIC X(5).
+       01 C  PIC X(5).
+       PROCEDURE                   DIVISION.	
+       MAIN-RTN.
+           STOP RUN.	
+])
+
+AT_CHECK([${COBJ} -Wredefinition prog.cbl], [0], [],
+[prog.cbl:10: Warning: Redefinition of 'C'
+prog.cbl:9: Warning: 'C' previously defined here
+])
+
+AT_CHECK([${COBJ} --help | grep '\-Wredefinition' > /dev/null], [0])
+AT_CLEANUP
