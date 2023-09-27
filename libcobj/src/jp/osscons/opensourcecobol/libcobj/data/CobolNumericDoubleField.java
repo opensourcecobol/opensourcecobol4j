@@ -40,8 +40,7 @@ public class CobolNumericDoubleField extends AbstractCobolField {
 
   @Override
   public String getString() {
-    String str = String.format("%.18f", this.getDouble());
-    return str;
+    return String.format("%.18f", this.getDouble());
   }
 
   @Override
