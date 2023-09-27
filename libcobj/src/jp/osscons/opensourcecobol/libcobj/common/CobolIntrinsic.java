@@ -2031,12 +2031,18 @@ public class CobolIntrinsic {
 
   /**
    * cob_intr_fraction_partの実装
+   *
    * @param srcfield
    * @return
    */
-  public static AbstractCobolField funcFractionPart(AbstractCobolField srcfield){
+  public static AbstractCobolField funcFractionPart(AbstractCobolField srcfield) {
     CobolFieldAttribute attr =
-        new CobolFieldAttribute(CobolFieldAttribute.COB_TYPE_NUMERIC_BINARY, 18, 18, CobolFieldAttribute.COB_FLAG_HAVE_SIGN, null);
+        new CobolFieldAttribute(
+            CobolFieldAttribute.COB_TYPE_NUMERIC_BINARY,
+            18,
+            18,
+            CobolFieldAttribute.COB_FLAG_HAVE_SIGN,
+            null);
     AbstractCobolField field = CobolFieldFactory.makeCobolField(8, (CobolDataStorage) null, attr);
     makeFieldEntry(field);
 
