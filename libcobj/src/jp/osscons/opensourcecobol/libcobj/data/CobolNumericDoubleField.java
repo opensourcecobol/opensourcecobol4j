@@ -40,19 +40,8 @@ public class CobolNumericDoubleField extends AbstractCobolField {
 
   @Override
   public String getString() {
-    CobolFieldAttribute thisAttr = this.getAttribute();
-    int flag = thisAttr.isFlagHaveSign() ? CobolFieldAttribute.COB_FLAG_HAVE_SIGN : 0;
-    CobolFieldAttribute attr =
-        new CobolFieldAttribute(
-            CobolFieldAttribute.COB_TYPE_NUMERIC,
-            thisAttr.getDigits(),
-            thisAttr.getScale(),
-            flag,
-            thisAttr.getPic());
-    CobolDataStorage storage = new CobolDataStorage(thisAttr.getDigits());
-    CobolNumericField numericField = new CobolNumericField(thisAttr.getDigits(), storage, attr);
-    numericField.moveFrom(this);
-    return numericField.getString();
+    String str = String.format("%.18f", this.getDouble());
+    return str;
   }
 
   @Override

@@ -382,9 +382,7 @@ public class CobolNumericField extends AbstractCobolField {
 
   private void moveDoubleToDisplay(AbstractCobolField field) {
     CobolFieldAttribute thisAttr = this.getAttribute();
-    double val = Math.abs(field.getDouble() * thisAttr.getScale());
-    String formatter = "%0" + thisAttr.getDigits() + "." + thisAttr.getScale() + "f";
-    String valString = String.format(formatter, val).replace(".", "");
+    double val = Math.abs(field.getDouble());
     int startIndex = 0;
     if (thisAttr.isFlagHaveSign()
         && thisAttr.isFlagSignLeading()
@@ -392,7 +390,7 @@ public class CobolNumericField extends AbstractCobolField {
       startIndex = 1;
     }
     CobolDataStorage dstStorage = this.getDataStorage().getSubDataStorage(startIndex);
-    dstStorage.memcpy(valString, thisAttr.getDigits());
+    dstStorage.memcpy(String.valueOf(val), thisAttr.getDigits());
     this.putSign(field.getSign() >= 0 ? 1 : -1);
   }
 
