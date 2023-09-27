@@ -2049,38 +2049,4 @@ public class CobolIntrinsic {
     currField.moveFrom(srcfield);
     return currField;
   }
-
-  // /**
-  //  * cob_intr_midrangeの実装
-  //  * @param params
-  //  * @param fields
-  //  * @return
-  //  */
-  // public static AbstractCobolField funcMidrange(int params, AbstractCobolField... fields){
-  //   AbstractCobolField f, basemin, basemax;
-  //   int i;
-
-  //   makeDoubleEntry();
-
-  //   basemin = fields[0];
-  //   basemax = basemin;
-  //   for(i = 1; i < params; i++){
-  //     f = fields[i];
-  //     if((f.getBigDecimal().compareTo(basemin.getBigDecimal())) == -1){
-  //       basemin = f;
-  //     }
-  //     if((f.getBigDecimal().compareTo(basemax.getBigDecimal())) == 1){
-  //       basemax = f;
-  //     }
-  //   }
-
-  //   CobolDecimal.cobD1.setField(basemin);
-  //   CobolDecimal.cobD2.setField(basemax);
-  //   CobolDecimal.cobD1.add(CobolDecimal.cobD2);
-  //   CobolDecimal.cobD2.setScale(0);
-  //   CobolDecimal.cobD1.div(CobolDecimal.cobD2);
-  //   CobolDecimal.cobD1.getField(currField, 0);
-
-  //   return currField;
-  // }
 }

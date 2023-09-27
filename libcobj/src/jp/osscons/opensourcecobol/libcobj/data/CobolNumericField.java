@@ -109,7 +109,7 @@ public class CobolNumericField extends AbstractCobolField {
       }
       sb.append(c);
     }
-
+    System.out.println("dbg: getString");
     for (; i < digits; ++i) {
       if (scale > 0 && i - 1 == pointIndex) {
         sb.append('.');
