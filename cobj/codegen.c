@@ -1408,6 +1408,7 @@ static void joutput_param(cb_tree x, int id) {
   struct cb_alphabet_name *abp;
   struct cb_alphabet_name *rbp;
   cb_tree l;
+  struct literal_list *ll;
   int n;
   int extrefs;
   int sav_stack_id;
@@ -1490,8 +1491,8 @@ static void joutput_param(cb_tree x, int id) {
     joutput("%s%s", CB_PREFIX_FILE, CB_FILE(x)->cname);
     break;
   case CB_TAG_LITERAL:
-    struct literal_list *l = lookup_literal(x);
-    joutput_const_identifier(l);
+    ll = lookup_literal(x);
+    joutput_const_identifier(ll);
     break;
   case CB_TAG_FIELD:
     /* TODO: remove me */
