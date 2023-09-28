@@ -6,12 +6,6 @@ opensource COBOL 4Jへのコントリビュートを検討頂きありがとう�
 opensource COBOL 4Jに関するトピックを投稿してください。ただし、英語か日本語での記載をお願いします。
 
 # Pull Requests
-
-We will check pull requests which pass all CI checks which run tests and static code analysis.
-The static analysis checks whether C and Java source files are respectively formated with [clang-format](https://clang.llvm.org/docs/ClangFormat.html) and [google-java-format](https://github.com/google/google-java-format) and [PMD](https://pmd.github.io/) finds no error and warning in Java source files.
-
-The below sections describe how to setup and run static code analysis.
-
 CIはテストとコードの静的解析を実行します。
 CIの静的解析はCとJavaのソースコードがそれぞれ[clang-format](https://clang.llvm.org/docs/ClangFormat.html) and [google-java-format](https://github.com/google/google-java-format)で整形されているか、
 [PMD](https://pmd.github.io/)によるJavaソースコードの静的解析でエラーや警告が表示されないかをチェックします。

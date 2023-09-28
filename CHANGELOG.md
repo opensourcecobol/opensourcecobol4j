@@ -3,7 +3,7 @@
 All notable changes to this project will be documented in this file.
 
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
-## [1.0.15] - 2023-08-31
+## [1.0.15] - 2023-09-29
 ### Added
 - Add new intrinsic functions
   - EXCEPTION-FILE (#218)
@@ -12,7 +12,7 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
   - EXCEPTION-STATUS (#221)
   - FRACTION-PART (#224)
 - Add `-Wredefinition` option (#223)
-- Implement `FD` clause with `EXTERNAL` specified (#222)
+- Implement `FD` with `EXTERNAL` clause (#222)
 - Add a guideline for contributing (#226)
 ### Fixed
 - Fix a build error on some platforms (#225)

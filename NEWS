@@ -12,7 +12,7 @@ NEWS - user visible changes				-*- outline -*-
      (d) EXCEPTION-STATUS
      (e) FRACTION-PART
   (2) Add -Wredefinition option
-  (3) Implement FD clause with EXTERNAL specified
+  (3) Implement FD with EXTERNAL clause
 
 ** Bug fixes
   (1) Fix a build error on some platforms
