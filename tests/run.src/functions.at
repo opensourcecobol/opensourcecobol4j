@@ -674,7 +674,6 @@ AT_CHECK([java prog], [0],
 AT_CLEANUP
 
 AT_SETUP([FUNCTION FRACTION-PART])
-AT_CHECK([${SKIP_TEST}])
 
 AT_DATA([prog.cob], [
        IDENTIFICATION   DIVISION.
@@ -1035,8 +1034,7 @@ AT_CHECK([java prog], [0],
 
 AT_CLEANUP
 
-AT_SETUP([FUNCTION MIDRANGE])
-AT_CHECK([${SKIP_TEST}])
+AT_SETUP([FUNCTION MIDRANGE(calculation result is negative)])
 
 AT_DATA([prog.cob], [
        IDENTIFICATION   DIVISION.
@@ -1052,6 +1050,46 @@ AT_DATA([prog.cob], [
 AT_CHECK([${COMPILE} prog.cob])
 AT_CHECK([java prog], [0],
 [-3.000000000000000000
+])
+
+AT_CLEANUP
+
+AT_SETUP([FUNCTION MIDRANGE(calculation result is positive)])
+
+AT_DATA([prog.cob], [
+       IDENTIFICATION   DIVISION.
+       PROGRAM-ID.      prog.
+       DATA             DIVISION.
+       WORKING-STORAGE  SECTION.
+       PROCEDURE        DIVISION.
+           DISPLAY FUNCTION MIDRANGE ( 3 14 0 8 3 )
+           END-DISPLAY.
+           STOP RUN.
+])
+
+AT_CHECK([${COMPILE} prog.cob])
+AT_CHECK([java prog], [0],
+[7.000000000000000000
+])
+
+AT_CLEANUP
+
+AT_SETUP([FUNCTION MIDRANGE(calculation result is decimal)])
+
+AT_DATA([prog.cob], [
+       IDENTIFICATION   DIVISION.
+       PROGRAM-ID.      prog.
+       DATA             DIVISION.
+       WORKING-STORAGE  SECTION.
+       PROCEDURE        DIVISION.
+           DISPLAY FUNCTION MIDRANGE ( 2 2 3 9 )
+           END-DISPLAY.
+           STOP RUN.
+])
+
+AT_CHECK([${COMPILE} prog.cob])
+AT_CHECK([java prog], [0],
+[5.500000000000000000
 ])
 
 AT_CLEANUP
