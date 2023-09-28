@@ -1,4 +1,4 @@
-Thank you for considering to contribute to opensource COBOL 4J.
+Thank you for your interest in contributing to opensource COBOL 4J.
 A summary of how to contribute is below.
 
 # Issues
