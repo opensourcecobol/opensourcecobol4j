@@ -17,6 +17,9 @@ NEWS - user visible changes				-*- outline -*-
 ** Bug fixes
   (1) Fix a build error on some platforms
 
+** Miscellaneous
+  (1) Add a guidelines for contributing 
+
 -----------------------------------------------------------------------
 
 * opensource COBOL 4J 1.0.14

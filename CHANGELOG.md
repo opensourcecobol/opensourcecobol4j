@@ -13,6 +13,7 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
   - FRACTION-PART (#224)
 - Add `-Wredefinition` option (#223)
 - Implement `FD` clause with `EXTERNAL` specified (#222)
+- Add a guideline for contributing (#226)
 ### Fixed
 - Fix a build error on some platforms (#225)
 ### Changed
