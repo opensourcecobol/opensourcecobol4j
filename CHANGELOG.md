@@ -16,8 +16,6 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 - Add a guideline for contributing (#226)
 ### Fixed
 - Fix a build error on some platforms (#225)
-### Changed
-- Improve the readability of CALL statements (#202)
 
 ## [1.0.14] - 2023-08-31
 ### Added
