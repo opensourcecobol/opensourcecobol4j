@@ -1013,6 +1013,20 @@ public abstract class AbstractCobolField {
     this.setInt((int) data.intValue());
   }
 
+  public void setLong(Long n) {
+    CobolFieldAttribute attr =
+        new CobolFieldAttribute(
+            CobolFieldAttribute.COB_TYPE_NUMERIC_BINARY,
+            9,
+            0,
+            CobolFieldAttribute.COB_FLAG_HAVE_SIGN,
+            null);
+    CobolDataStorage data = new CobolDataStorage(ByteBuffer.allocate(8).putLong(n).array());
+    AbstractCobolField temp = CobolFieldFactory.makeCobolField(8, data, attr);
+    this.moveFrom(temp);
+  }
+
+
   /**
    * libcob/common.cのcob_memcpyの実装
    *
