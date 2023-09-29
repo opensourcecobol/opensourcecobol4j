@@ -1026,7 +1026,6 @@ public abstract class AbstractCobolField {
     this.moveFrom(temp);
   }
 
-
   /**
    * libcob/common.cのcob_memcpyの実装
    *

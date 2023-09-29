@@ -1126,7 +1126,7 @@ public class CobolIntrinsic {
       }
     }
 
-    currField.setLong((long)ordmin + 1);
+    currField.setLong((long) ordmin + 1);
     return currField;
   }
 
@@ -1158,7 +1158,7 @@ public class CobolIntrinsic {
       }
     }
 
-    currField.setLong((long)ordmax + 1);
+    currField.setLong((long) ordmax + 1);
     return currField;
   }
 
