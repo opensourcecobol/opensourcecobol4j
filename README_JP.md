@@ -81,6 +81,7 @@ rw            4        0     4     0      0    0       0       0     0   REPORT 
 total        21        0    21     0      0    0       0       0     0
 ```
 
-# コントリビュータ
+# コントリビューㇳ
 
-https://github.com/opensourcecobol/opensourcecobol4j/graphs/contributors を参照してください.
+コントリビュータの一覧は https://github.com/opensourcecobol/opensourcecobol4j/graphs/contributors に掲載されています。
+コントリビュータ向けのガイドラインは[CONTRIBUTING_JP.md](./CONTRIBUTING_JP.md)を参照してください。
