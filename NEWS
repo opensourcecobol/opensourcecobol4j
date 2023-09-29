@@ -2,6 +2,26 @@ NEWS - user visible changes				-*- outline -*-
 
 -----------------------------------------------------------------------
 
+* opensource COBOL 4J 1.0.15
+
+** New Features
+  (1) Add new intrinsic functions
+     (a) EXCEPTION-FILE
+     (b) EXCEPTION-LOCATION
+     (c) EXCEPTION-STATEMENT
+     (d) EXCEPTION-STATUS
+     (e) FRACTION-PART
+  (2) Add -Wredefinition option
+  (3) Implement FD with EXTERNAL clause
+
+** Bug fixes
+  (1) Fix a build error on some platforms
+
+** Miscellaneous
+  (1) Add a guidelines for contributing 
+
+-----------------------------------------------------------------------
+
 * opensource COBOL 4J 1.0.14
 
 ** New Features

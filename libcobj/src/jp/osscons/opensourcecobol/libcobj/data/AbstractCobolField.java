@@ -31,8 +31,10 @@ import jp.osscons.opensourcecobol.libcobj.exceptions.CobolStopRunException;
 public abstract class AbstractCobolField {
   /** データを格納に使用するバイト配列の長さ */
   protected int size;
+
   /** データを格納するバイト配列を扱うオブジェクト */
   protected CobolDataStorage dataStorage;
+
   /** 変数に関する様々な情報を保持するオブジェクト(符号付か,COMP-3指定かなど) */
   protected CobolFieldAttribute attribute;
 

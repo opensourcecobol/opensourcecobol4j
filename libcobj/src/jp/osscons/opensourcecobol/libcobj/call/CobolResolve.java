@@ -41,13 +41,19 @@ public class CobolResolve {
 
   /** プログラム名とCobolRunnableインスタンスの対応表 */
   private static Map<String, CobolRunnable> callTable;
+
   /** ポインタ(UUID)のCobolRunnableインスタンスの対応表 */
   private static Map<UUID, String> pointerTable;
+
+  public static Map<Integer, String> cobException;
+
   /** 名前の変換方法(小文字か大文字)を示す変数 */
   private static int name_convert;
+
   // TODO resolve_pathsの利用方法
   /** システムで設定された区切り文字で区切られた0個以上のパス 動的に読み込むクラスファイルを検索する場所を示す. */
   private static List<String> resolve_paths;
+
   /** システムで設定された区切り文字で区切られた0個以上のパス 動的に読み込むクラスファイルを検索するパッケージ名を示す. */
   private static List<String> package_paths;
 
@@ -57,6 +63,154 @@ public class CobolResolve {
     name_convert = 0;
     resolve_paths = new ArrayList<String>();
     package_paths = new ArrayList<String>();
+    cobException = new HashMap<>();
+
+    cobException.put(0xFFFF, "EC-ALL");
+    cobException.put(0x0100, "EC-ARGUMENT");
+    cobException.put(0x0101, "EC-ARGUMENT-FUNCTION");
+    cobException.put(0x0102, "EC-ARGUMENT-IMP");
+    cobException.put(0x0200, "EC-BOUND");
+    cobException.put(0x0201, "EC-BOUND-IMP");
+    cobException.put(0x0202, "EC-BOUND-ODO");
+    cobException.put(0x0203, "EC-BOUND-OVERFLOW");
+    cobException.put(0x0204, "EC-BOUND-PTR");
+    cobException.put(0x0205, "EC-BOUND-REF-MOD");
+    cobException.put(0x0206, "EC-BOUND-SET");
+    cobException.put(0x0207, "EC-BOUND-SUBSCRIPT");
+    cobException.put(0x0208, "EC-BOUND-TABLE-LIMIT");
+    cobException.put(0x0300, "EC-DATA");
+    cobException.put(0x0301, "EC-DATA-CONVERSION");
+    cobException.put(0x0302, "EC-DATA-IMP");
+    cobException.put(0x0303, "EC-DATA-INCOMPATIBLE");
+    cobException.put(0x0304, "EC-DATA-INTEGRITY");
+    cobException.put(0x0305, "EC-DATA-PTR-NULL");
+    cobException.put(0x0306, "EC-DATA-INFINITY");
+    cobException.put(0x0307, "EC-DATA-NEGATIVE-INFINITY");
+    cobException.put(0x0308, "EC-DATA-NOT_A_NUMBER");
+    cobException.put(0x0400, "EC-FLOW");
+    cobException.put(0x0401, "EC-FLOW-GLOBAL-EXIT");
+    cobException.put(0x0402, "EC-FLOW-GLOBAL-GOBACK");
+    cobException.put(0x0403, "EC-FLOW-IMP");
+    cobException.put(0x0404, "EC-FLOW-RELEASE");
+    cobException.put(0x0405, "EC-FLOW-REPORT");
+    cobException.put(0x0406, "EC-FLOW-RETURN");
+    cobException.put(0x0407, "EC-FLOW-SEARCH");
+    cobException.put(0x0408, "EC-FLOW-USE");
+    cobException.put(0x0500, "EC-I-O");
+    cobException.put(0x0501, "EC-I-O-AT-END");
+    cobException.put(0x0502, "EC-I-O-EOP");
+    cobException.put(0x0503, "EC-I-O-EOP-OVERFLOW");
+    cobException.put(0x0504, "EC-I-O-FILE-SHARING");
+    cobException.put(0x0505, "EC-I-O-IMP");
+    cobException.put(0x0506, "EC-I-O-INVALID-KEY");
+    cobException.put(0x0507, "EC-I-O-LINAGE");
+    cobException.put(0x0508, "EC-I-O-LOGIC-ERROR");
+    cobException.put(0x0509, "EC-I-O-PERMANENT-ERROR");
+    cobException.put(0x050A, "EC-I-O-RECORD-OPERATION");
+    cobException.put(0x0600, "EC-IMP");
+    cobException.put(0x0601, "EC-IMP-ACCEPT");
+    cobException.put(0x0602, "EC-IMP-DISPLAY");
+    cobException.put(0x0700, "EC-LOCALE");
+    cobException.put(0x0701, "EC-LOCALE-IMP");
+    cobException.put(0x0702, "EC-LOCALE-INCOMPATIBLE");
+    cobException.put(0x0703, "EC-LOCALE-INVALID");
+    cobException.put(0x0704, "EC-LOCALE-INVALID-PTR");
+    cobException.put(0x0705, "EC-LOCALE-MISSING");
+    cobException.put(0x0706, "EC-LOCALE-SIZE");
+    cobException.put(0x0800, "EC-OO");
+    cobException.put(0x0801, "EC-OO-CONFORMANCE");
+    cobException.put(0x0802, "EC-OO-EXCEPTION");
+    cobException.put(0x0803, "EC-OO-IMP");
+    cobException.put(0x0804, "EC-OO-METHOD");
+    cobException.put(0x0805, "EC-OO-NULL");
+    cobException.put(0x0806, "EC-OO-RESOURCE");
+    cobException.put(0x0807, "EC-OO-UNIVERSAL");
+    cobException.put(0x0900, "EC-ORDER");
+    cobException.put(0x0901, "EC-ORDER-IMP");
+    cobException.put(0x0902, "EC-ORDER-NOT-SUPPORTED");
+    cobException.put(0x0A00, "EC-OVERFLOW");
+    cobException.put(0x0A01, "EC-OVERFLOW-IMP");
+    cobException.put(0x0A02, "EC-OVERFLOW-STRING");
+    cobException.put(0x0A03, "EC-OVERFLOW-UNSTRING");
+    cobException.put(0x0B00, "EC-PROGRAM");
+    cobException.put(0x0B01, "EC-PROGRAM-ARG-MISMATCH");
+    cobException.put(0x0B02, "EC-PROGRAM-ARG-OMITTED");
+    cobException.put(0x0B03, "EC-PROGRAM-CANCEL-ACTIVE");
+    cobException.put(0x0B04, "EC-PROGRAM-IMP");
+    cobException.put(0x0B05, "EC-PROGRAM-NOT-FOUND");
+    cobException.put(0x0B06, "EC-PROGRAM-PTR-NULL");
+    cobException.put(0x0B07, "EC-PROGRAM-RECURSIVE-CALL");
+    cobException.put(0x0B08, "EC-PROGRAM-RESOURCES");
+    cobException.put(0x0C00, "EC-RAISING");
+    cobException.put(0x0C01, "EC-RAISING-IMP");
+    cobException.put(0x0C02, "EC-RAISING-NOT-SPECIFIED");
+    cobException.put(0x0D00, "EC-RANGE");
+    cobException.put(0x0D01, "EC-RANGE-IMP");
+    cobException.put(0x0D02, "EC-RANGE-INDEX");
+    cobException.put(0x0D03, "EC-RANGE-INSPECT-SIZE");
+    cobException.put(0x0D04, "EC-RANGE-INVALID");
+    cobException.put(0x0D05, "EC-RANGE-PERFORM-VARYING");
+    cobException.put(0x0D06, "EC-RANGE-PTR");
+    cobException.put(0x0D07, "EC-RANGE-SEARCH-INDEX");
+    cobException.put(0x0D08, "EC-RANGE-SEARCH-NO-MATCH");
+    cobException.put(0x0E00, "EC-REPORT");
+    cobException.put(0x0E01, "EC-REPORT-ACTIVE");
+    cobException.put(0x0E02, "EC-REPORT-COLUMN-OVERLAP");
+    cobException.put(0x0E03, "EC-REPORT-FILE-MODE");
+    cobException.put(0x0E04, "EC-REPORT-IMP");
+    cobException.put(0x0E05, "EC-REPORT-INACTIVE");
+    cobException.put(0x0E06, "EC-REPORT-LINE-OVERLAP");
+    cobException.put(0x0E08, "EC-REPORT-NOT-TERMINATED");
+    cobException.put(0x0E09, "EC-REPORT-PAGE-LIMIT");
+    cobException.put(0x0E0A, "EC-REPORT-PAGE-WIDTH");
+    cobException.put(0x0E0B, "EC-REPORT-SUM-SIZE");
+    cobException.put(0x0E0C, "EC-REPORT-VARYING");
+    cobException.put(0x0F00, "EC-SCREEN");
+    cobException.put(0x0F01, "EC-SCREEN-FIELD-OVERLAP");
+    cobException.put(0x0F02, "EC-SCREEN-IMP");
+    cobException.put(0x0F03, "EC-SCREEN-ITEM-TRUNCATED");
+    cobException.put(0x0F04, "EC-SCREEN-LINE-NUMBER");
+    cobException.put(0x0F05, "EC-SCREEN-STARTING-COLUMN");
+    cobException.put(0x1000, "EC-SIZE");
+    cobException.put(0x1001, "EC-SIZE-ADDRESS");
+    cobException.put(0x1002, "EC-SIZE-EXPONENTIATION");
+    cobException.put(0x1003, "EC-SIZE-IMP");
+    cobException.put(0x1004, "EC-SIZE-OVERFLOW");
+    cobException.put(0x1005, "EC-SIZE-TRUNCATION");
+    cobException.put(0x1006, "EC-SIZE-UNDERFLOW");
+    cobException.put(0x1007, "EC-SIZE-ZERO-DIVIDE");
+    cobException.put(0x1100, "EC-SORT-MERGE");
+    cobException.put(0x1101, "EC-SORT-MERGE-ACTIVE");
+    cobException.put(0x1102, "EC-SORT-MERGE-FILE-OPEN");
+    cobException.put(0x1103, "EC-SORT-MERGE-IMP");
+    cobException.put(0x1104, "EC-SORT-MERGE-RELEASE");
+    cobException.put(0x1105, "EC-SORT-MERGE-RETURN");
+    cobException.put(0x1106, "EC-SORT-MERGE-SEQUENCE");
+    cobException.put(0x1200, "EC-STORAGE");
+    cobException.put(0x1201, "EC-STORAGE-IMP");
+    cobException.put(0x1202, "EC-STORAGE-NOT-ALLOC");
+    cobException.put(0x1203, "EC-STORAGE-NOT-AVAIL");
+    cobException.put(0x1300, "EC-USER");
+    cobException.put(0x1400, "EC-VALIDATE");
+    cobException.put(0x1401, "EC-VALIDATE-CONTENT");
+    cobException.put(0x1402, "EC-VALIDATE-FORMAT");
+    cobException.put(0x1403, "EC-VALIDATE-IMP");
+    cobException.put(0x1404, "EC-VALIDATE-RELATION");
+    cobException.put(0x1405, "EC-VALIDATE-VARYING");
+    cobException.put(0x1500, "EC-FUNCTION");
+    cobException.put(0x1501, "EC-FUNCTION-NOT-FOUND");
+    cobException.put(0x1502, "EC-FUNCTION-PTR-INVALID");
+    cobException.put(0x1503, "EC-FUNCTION-PTR-NULL");
+    cobException.put(0x1600, "EC-XML");
+    cobException.put(0x1601, "EC-XML-CODESET");
+    cobException.put(0x1602, "EC-XML-CODESET-CONVERSION");
+    cobException.put(0x1603, "EC-XML-COUNT");
+    cobException.put(0x1604, "EC-XML-DOCUMENT-TYPE");
+    cobException.put(0x1605, "EC-XML-IMPLICIT-CLOSE");
+    cobException.put(0x1606, "EC-XML-INVALID");
+    cobException.put(0x1607, "EC-XML-NAMESPACE");
+    cobException.put(0x1608, "EC-XML-STACKED-OPEN");
+    cobException.put(0x1609, "EC-XML-RANGE");
   }
 
   /** 初期化を行う */

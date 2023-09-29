@@ -19,10 +19,18 @@
 package jp.osscons.opensourcecobol.libcobj.exceptions;
 
 import java.util.List;
+import jp.osscons.opensourcecobol.libcobj.call.CobolResolve;
+import jp.osscons.opensourcecobol.libcobj.common.CobolUtil;
 
 /** 実行時エラーを示す例外 */
 public class CobolRuntimeException extends RuntimeException {
   public static int code;
+  public static int cobException = 0;
+  public static String origProgramId;
+  public static String origSection;
+  public static String origParagraph;
+  public static int origLine = 0;
+  public static String origStatement;
 
   public static final int COBOL_FITAL_ERROR = 9000;
 
@@ -30,6 +38,7 @@ public class CobolRuntimeException extends RuntimeException {
 
   /** エラー番号 */
   private int errorCode;
+
   /** エラーメッセージ */
   private String message;
 
@@ -70,6 +79,43 @@ public class CobolRuntimeException extends RuntimeException {
 
   public static void setException(int id) {
     code = CobolExceptionTabCode.code[id];
-    // TODO common.c実装に残りをやる
+    cobException = 1;
+    origLine = CobolUtil.getSourceLine();
+    origProgramId = CobolUtil.getCurrProgramId();
+    origSection = CobolUtil.getCurrSection();
+    origParagraph = CobolUtil.getCurrParagraph();
+    origStatement = CobolUtil.getSourceStatement();
+  }
+
+  public static String getExceptionName(int exceptionCode) {
+    return CobolResolve.cobException.get(exceptionCode);
+  }
+
+  public static int getExceptionCode() {
+    return code;
+  }
+
+  public static int getException() {
+    return cobException;
+  }
+
+  public static String getOrigProgramId() {
+    return origProgramId;
+  }
+
+  public static String getOrigSection() {
+    return origSection;
+  }
+
+  public static String getOrigParagragh() {
+    return origParagraph;
+  }
+
+  public static int getOrigLine() {
+    return origLine;
+  }
+
+  public static String getOrigStatement() {
+    return origStatement;
   }
 }

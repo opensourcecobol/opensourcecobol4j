@@ -57,24 +57,34 @@ enum CursorReadOption {
 public final class IndexedCursor {
   /** a cursor to the top direction */
   private Optional<ResultSet> backwardCursor;
+
   /** a cursor to the bottom direction */
   private Optional<ResultSet> forwardCursor;
+
   /** a connection to the SQLite database */
   private Connection conn;
+
   /** firstFetch is true if and only if the cursor has not read any data yet */
   private boolean firstFetch;
+
   /** a position in buffers that stores the read data */
   private int cursorIndex;
+
   /** one of COB_EQ, COB_LT, COB_LE, COB_GT, COB_GE in CobolIndexedFile.java */
   private int comparator;
+
   /** isDuplicate is true if and only if the table key allows duplicates */
   private boolean isDuplicate;
+
   /** a key */
   private byte[] key;
+
   /** forwardBuffer stores data located to the bottom direction from the first read position */
   List<FetchResult> forwardBuffer;
+
   /** bakckwardBuffer stores data located to the first direction from the first read position */
   List<FetchResult> backwardBuffer;
+
   /** the index of the table */
   private int tableIndex;
 

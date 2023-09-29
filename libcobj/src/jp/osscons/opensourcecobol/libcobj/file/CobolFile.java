@@ -29,7 +29,9 @@ import java.nio.file.Paths;
 import java.nio.file.StandardOpenOption;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import jp.osscons.opensourcecobol.libcobj.common.CobolModule;
 import jp.osscons.opensourcecobol.libcobj.common.CobolUtil;
 import jp.osscons.opensourcecobol.libcobj.data.AbstractCobolField;
@@ -184,7 +186,7 @@ public class CobolFile {
     CobolExceptionId.COB_EC_I_O,
     CobolExceptionId.COB_EC_I_O_IMP
   };
-  protected String select_name;
+  public String select_name;
   public byte[] file_status;
   protected AbstractCobolField assign;
   protected AbstractCobolField record;
@@ -219,6 +221,8 @@ public class CobolFile {
   protected char file_version;
 
   protected static String runtime_buffer;
+  protected static String name;
+  protected static byte[] status;
 
   public Linage getLinorkeyptr() {
     return this.linorkeyptr;
@@ -747,6 +751,7 @@ public class CobolFile {
       return;
     }
   }
+
   // protected long start;
   // protected long end;
 
@@ -1518,5 +1523,38 @@ public class CobolFile {
         return;
       }
     }
+  }
+
+  public String getSelectName() {
+    // CobolFile cobolFile = new CobolFile();
+    return this.select_name;
+  }
+
+  public byte[] getFileStatus() {
+    // CobolFile cobolFile = new CobolFile();
+    return this.file_status;
+  }
+
+  private static Map<String, byte[]> externalFileStatusTable = new HashMap<String, byte[]>();
+
+  public static byte[] getExternalFileStatus(String key) {
+    byte[] bytes = externalFileStatusTable.get(key);
+    if (bytes == null) {
+      bytes = new byte[2];
+      bytes[0] = 0;
+      bytes[1] = 0;
+      externalFileStatusTable.put(key, bytes);
+    }
+    return bytes;
+  }
+
+  private static Map<String, CobolFile> externalFileTable = new HashMap<String, CobolFile>();
+
+  public static CobolFile getExternalFile(String key) {
+    return externalFileTable.get(key);
+  }
+
+  public static CobolFile putExternalFile(String key, CobolFile value) {
+    return externalFileTable.put(key, value);
   }
 }

@@ -82,6 +82,7 @@ rw            4        0     4     0      0    0       0       0     0   REPORT 
 total        21        0    21     0      0    0       0       0     0
 ```
 
-# Contributors
+# Contributing
 
-See https://github.com/opensourcecobol/opensourcecobol4j/graphs/contributors
+Guidelines for contributing to opensource COBOL 4J can be found in [CONTRIBUTING.md](./CONTRIBUTING.md).
+Contributors are listed in https://github.com/opensourcecobol/opensourcecobol4j/graphs/contributors

@@ -147,6 +147,7 @@ command_line_options_DEPENDENCIES = \
 	command-line-options.src/B.at \
 	command-line-options.src/list-reserved.at \
 	command-line-options.src/assign_external.at \
+	command-line-options.src/Wredefinition.at \
 	command-line-options.src/Wparentheses.at \
 	command-line-options.src/Wcolumn-overflow.at \
 	command-line-options.src/Wterminator.at \
@@ -186,8 +187,8 @@ misc_DEPENDENCIES = \
 	misc.src/version-string-in-java.at \
 	misc.src/comp3-compute.at \
 	misc.src/index-file-status.at \
-	misc.src/comp-n.at
-	
+	misc.src/comp-n.at \
+	misc.src/fd-external.at
 
 EXTRA_DIST = $(srcdir)/package.m4 \
 	$(TESTS) \
@@ -198,7 +199,6 @@ EXTRA_DIST = $(srcdir)/package.m4 \
 	$(jp_compat_DEPENDENCIES) \
 	$(command_line_options_DEPENDENCIES) \
 	$(misc_DEPENDENCIES)
-
 
 DISTCLEANFILES = atconfig
 

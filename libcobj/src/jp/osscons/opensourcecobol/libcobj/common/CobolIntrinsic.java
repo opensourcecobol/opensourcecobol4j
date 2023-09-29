@@ -19,6 +19,7 @@
 package jp.osscons.opensourcecobol.libcobj.common;
 
 import java.math.BigDecimal;
+import java.time.LocalDateTime;
 import java.util.Arrays;
 import java.util.Calendar;
 import java.util.Random;
@@ -31,6 +32,7 @@ import jp.osscons.opensourcecobol.libcobj.data.CobolNationalField;
 import jp.osscons.opensourcecobol.libcobj.exceptions.CobolExceptionId;
 import jp.osscons.opensourcecobol.libcobj.exceptions.CobolRuntimeException;
 import jp.osscons.opensourcecobol.libcobj.exceptions.CobolStopRunException;
+import jp.osscons.opensourcecobol.libcobj.file.CobolFile;
 
 public class CobolIntrinsic {
 
@@ -44,6 +46,8 @@ public class CobolIntrinsic {
   private static AbstractCobolField currField = null;
   private static AbstractCobolField[] calcField = new AbstractCobolField[DEPTH_LEVEL];
   private static Random random = new Random();
+  private static byte[] localeBuff;
+  private static final byte[] byteArray00 = "00".getBytes();
 
   /** libcob/intrinsicのmake_double_entryの実装 */
   private static void makeDoubleEntry() {
@@ -1768,6 +1772,281 @@ public class CobolIntrinsic {
     if (offset > 0) {
       calcRefMod(currField, offset, length);
     }
+    return currField;
+  }
+
+  /**
+   * cob_intr_date_to_yyyymmddの実装
+   *
+   * @param params
+   * @param fields
+   * @return
+   */
+  public static AbstractCobolField funcDateToYyyymmdd(int params, AbstractCobolField... fields) {
+    int year;
+    int mmdd;
+    int interval;
+    int xqtyear;
+    int maxyear;
+    LocalDateTime timeptr;
+
+    CobolFieldAttribute attr =
+        new CobolFieldAttribute(CobolFieldAttribute.COB_TYPE_NUMERIC_BINARY, 8, 0, 0, null);
+    AbstractCobolField field = CobolFieldFactory.makeCobolField(4, (CobolDataStorage) null, attr);
+    makeFieldEntry(field);
+    year = fields[0].getInt();
+    mmdd = year % 10000;
+    year /= 10000;
+    if (params > 1) {
+      interval = fields[1].getInt();
+    } else {
+      interval = 50;
+    }
+    if (params > 2) {
+      xqtyear = fields[2].getInt();
+    } else {
+      timeptr = CobolUtil.localtime();
+      xqtyear = 1900 + timeptr.getDayOfYear();
+    }
+    if (year < 0 || year > 999999) {
+      CobolRuntimeException.setException(CobolExceptionId.COB_EC_ARGUMENT_FUNCTION);
+      currField.setInt(0);
+      return currField;
+    }
+    if (xqtyear < 1601 || xqtyear > 9999) {
+      CobolRuntimeException.setException(CobolExceptionId.COB_EC_ARGUMENT_FUNCTION);
+      currField.setInt(0);
+      return currField;
+    }
+    maxyear = xqtyear + interval;
+    if (maxyear < 1700 || maxyear > 9999) {
+      CobolRuntimeException.setException(CobolExceptionId.COB_EC_ARGUMENT_FUNCTION);
+      currField.setInt(0);
+      return currField;
+    }
+    if (maxyear % 100 >= year) {
+      year += 100 * (maxyear / 100);
+    } else {
+      year += 100 * ((maxyear / 100) - 1);
+    }
+    year *= 10000;
+    year += mmdd;
+    currField.setInt(year);
+    return currField;
+  }
+
+  /**
+   * cob_intr_day_to_yyyydddの実装
+   *
+   * @param params
+   * @param fields
+   * @return
+   */
+  public static AbstractCobolField funcDayToYyyyddd(int params, AbstractCobolField... fields) {
+    int year;
+    int days;
+    int interval;
+    int xqtyear;
+    int maxyear;
+    LocalDateTime timeptr;
+
+    CobolFieldAttribute attr =
+        new CobolFieldAttribute(CobolFieldAttribute.COB_TYPE_NUMERIC_BINARY, 8, 0, 0, null);
+    AbstractCobolField field = CobolFieldFactory.makeCobolField(4, (CobolDataStorage) null, attr);
+    makeFieldEntry(field);
+    year = fields[0].getInt();
+    days = year % 1000;
+    year /= 1000;
+    if (params > 1) {
+      interval = fields[1].getInt();
+    } else {
+      interval = 50;
+    }
+    if (params > 2) {
+      xqtyear = fields[2].getInt();
+    } else {
+      timeptr = CobolUtil.localtime();
+      xqtyear = 1900 + timeptr.getDayOfYear();
+    }
+
+    if (year < 0 || year > 999999) {
+      CobolRuntimeException.setException(CobolExceptionId.COB_EC_ARGUMENT_FUNCTION);
+      currField.setInt(0);
+      return currField;
+    }
+    if (xqtyear < 1601 || xqtyear > 9999) {
+      CobolRuntimeException.setException(CobolExceptionId.COB_EC_ARGUMENT_FUNCTION);
+      currField.setInt(0);
+      return currField;
+    }
+    maxyear = xqtyear + interval;
+    if (maxyear < 1700 || maxyear > 9999) {
+      CobolRuntimeException.setException(CobolExceptionId.COB_EC_ARGUMENT_FUNCTION);
+      currField.setInt(0);
+      return currField;
+    }
+    if (maxyear % 100 >= year) {
+      year += 100 * (maxyear / 100);
+    } else {
+      year += 100 * ((maxyear / 100) - 1);
+    }
+    year *= 1000;
+    year += days;
+    currField.setInt(year);
+    return currField;
+  }
+
+  /**
+   * cob_intr_exception_fileの実装
+   *
+   * @return
+   */
+  public static AbstractCobolField funcExceptionFile() {
+    int flen;
+    byte[] data;
+
+    CobolFieldAttribute attr =
+        new CobolFieldAttribute(CobolFieldAttribute.COB_TYPE_ALPHANUMERIC, 0, 0, 0, null);
+    AbstractCobolField field = CobolFieldFactory.makeCobolField(0, (CobolDataStorage) null, attr);
+    if (CobolRuntimeException.getException() == 0
+        || (CobolRuntimeException.getExceptionCode() & 0x0500) != 0x0500) {
+      field.setSize(2);
+      makeFieldEntry(field);
+      currField.memcpy(byteArray00, 2);
+    } else {
+      flen = CobolFile.errorFile.getSelectName().length();
+      field.setSize(flen + 2);
+      makeFieldEntry(field);
+      data = new byte[2 + flen];
+      System.arraycopy(CobolFile.errorFile.getFileStatus(), 0, data, 0, 2);
+      System.arraycopy(CobolFile.errorFile.getSelectName().getBytes(), 0, data, 2, flen);
+      currField.setDataStorage(new CobolDataStorage(data));
+    }
+    return currField;
+  }
+
+  /**
+   * cob_intr_exception_locationの実装
+   *
+   * @return
+   */
+  public static AbstractCobolField funcExceptionLocation() {
+    String buff;
+
+    CobolFieldAttribute attr =
+        new CobolFieldAttribute(CobolFieldAttribute.COB_TYPE_ALPHANUMERIC, 0, 0, 0, null);
+    AbstractCobolField field = CobolFieldFactory.makeCobolField(0, (CobolDataStorage) null, attr);
+    currField = field;
+    if (CobolRuntimeException.getException() != 1
+        || CobolRuntimeException.getOrigProgramId() == null) {
+      field.setSize(1);
+      makeFieldEntry(field);
+      currField.getDataStorage().setByte(0, ' ');
+      return currField;
+    }
+    if (CobolRuntimeException.getOrigSection() != null
+        && CobolRuntimeException.getOrigParagragh() != null) {
+      buff =
+          String.format(
+              "%s; %s OF %s; %d",
+              CobolRuntimeException.getOrigProgramId(),
+              CobolRuntimeException.getOrigParagragh(),
+              CobolRuntimeException.getOrigSection(),
+              CobolRuntimeException.getOrigLine());
+    } else if (CobolRuntimeException.getOrigSection() != null) {
+      buff =
+          String.format(
+              "%s; %s; %d",
+              CobolRuntimeException.getOrigProgramId(),
+              CobolRuntimeException.getOrigSection(),
+              CobolRuntimeException.getOrigLine());
+    } else if (CobolRuntimeException.getOrigParagragh() != null) {
+      buff =
+          String.format(
+              "%s; %s; %d",
+              CobolRuntimeException.getOrigProgramId(),
+              CobolRuntimeException.getOrigParagragh(),
+              CobolRuntimeException.getOrigLine());
+    } else {
+      buff =
+          String.format(
+              "%s; ; %d",
+              CobolRuntimeException.getOrigProgramId(), CobolRuntimeException.getOrigLine());
+    }
+    localeBuff = buff.getBytes();
+    field.setSize(localeBuff.length);
+    currField.setDataStorage(new CobolDataStorage(localeBuff));
+    return currField;
+  }
+
+  /**
+   * cob_intr_exception_statementの実装
+   *
+   * @return
+   */
+  public static AbstractCobolField funcExceptionStatement() {
+    CobolFieldAttribute attr =
+        new CobolFieldAttribute(CobolFieldAttribute.COB_TYPE_ALPHANUMERIC, 0, 0, 0, null);
+    AbstractCobolField field = CobolFieldFactory.makeCobolField(31, (CobolDataStorage) null, attr);
+    makeFieldEntry(field);
+    byte[] data;
+    if (CobolRuntimeException.getExceptionCode() != 0
+        && CobolRuntimeException.getOrigStatement() != null) {
+      data = String.format("%-31s", CobolRuntimeException.getOrigStatement()).getBytes();
+    } else {
+      data = String.format("%-31s", "").getBytes();
+    }
+    currField.setDataStorage(new CobolDataStorage(data));
+    return currField;
+  }
+
+  private static final byte[] CONST_STRING_EXCEPTION_OBJECT = "EXCEPTION-OBJECT".getBytes();
+
+  /**
+   * cob_intr_exception_statusの実装
+   *
+   * @return
+   */
+  public static AbstractCobolField funcExceptionStatus() {
+    byte[] exceptName;
+
+    CobolFieldAttribute attr =
+        new CobolFieldAttribute(CobolFieldAttribute.COB_TYPE_ALPHANUMERIC, 0, 0, 0, null);
+    AbstractCobolField field = CobolFieldFactory.makeCobolField(31, (CobolDataStorage) null, attr);
+    makeFieldEntry(field);
+    byte[] data = String.format("%-31s", "").getBytes();
+    currField.setDataStorage(new CobolDataStorage(data));
+    if (CobolRuntimeException.getExceptionCode() != 0) {
+      try {
+        exceptName =
+            CobolRuntimeException.getExceptionName(CobolRuntimeException.getExceptionCode())
+                .getBytes();
+      } catch (NullPointerException e) {
+        exceptName = CONST_STRING_EXCEPTION_OBJECT;
+      }
+      currField.memcpy(exceptName, exceptName.length);
+    }
+    return currField;
+  }
+
+  /**
+   * cob_intr_fraction_partの実装
+   *
+   * @param srcfield
+   * @return
+   */
+  public static AbstractCobolField funcFractionPart(AbstractCobolField srcfield) {
+    CobolFieldAttribute attr =
+        new CobolFieldAttribute(
+            CobolFieldAttribute.COB_TYPE_NUMERIC_BINARY,
+            18,
+            18,
+            CobolFieldAttribute.COB_FLAG_HAVE_SIGN,
+            null);
+    AbstractCobolField field = CobolFieldFactory.makeCobolField(8, (CobolDataStorage) null, attr);
+    makeFieldEntry(field);
+
+    currField.moveFrom(srcfield);
     return currField;
   }
 }
