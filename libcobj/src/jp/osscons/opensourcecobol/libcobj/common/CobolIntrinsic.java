@@ -19,6 +19,7 @@
 package jp.osscons.opensourcecobol.libcobj.common;
 
 import java.math.BigDecimal;
+import java.sql.Date;
 import java.time.LocalDateTime;
 import java.util.Arrays;
 import java.util.Calendar;
@@ -2113,5 +2114,13 @@ public class CobolIntrinsic {
     }
     currField.setInt(seconds);
     return currField;
+  }
+
+  public static AbstractCobolField funcSecondsPastMidnight(){
+    CobolFieldAttribute attr =
+        new CobolFieldAttribute(CobolFieldAttribute.COB_TYPE_NUMERIC_BINARY, 8, 0, 0, null);
+    AbstractCobolField field = CobolFieldFactory.makeCobolField(4, (CobolDataStorage) null, attr);
+    makeFieldEntry(field);
+    Date currDate = new Date();
   }
 }
