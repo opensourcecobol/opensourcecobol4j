@@ -1108,7 +1108,7 @@ public class CobolIntrinsic {
   public static AbstractCobolField funcOrdMin(int params, AbstractCobolField... fields) {
     CobolFieldAttribute attr =
         new CobolFieldAttribute(CobolFieldAttribute.COB_TYPE_NUMERIC_DISPLAY, 8, 0, 0, null);
-    AbstractCobolField field = CobolFieldFactory.makeCobolField(4, (CobolDataStorage) null, attr);
+    AbstractCobolField field = CobolFieldFactory.makeCobolField(8, (CobolDataStorage) null, attr);
     makeFieldEntry(field);
 
     if (fields.length <= 1) {
@@ -1126,7 +1126,7 @@ public class CobolIntrinsic {
       }
     }
 
-    currField.setInt(ordmin + 1);
+    currField.setLong((long) ordmin + 1);
     return currField;
   }
 
@@ -1140,7 +1140,7 @@ public class CobolIntrinsic {
   public static AbstractCobolField funcOrdMax(int params, AbstractCobolField... fields) {
     CobolFieldAttribute attr =
         new CobolFieldAttribute(CobolFieldAttribute.COB_TYPE_NUMERIC_DISPLAY, 8, 0, 0, null);
-    AbstractCobolField field = CobolFieldFactory.makeCobolField(4, (CobolDataStorage) null, attr);
+    AbstractCobolField field = CobolFieldFactory.makeCobolField(8, (CobolDataStorage) null, attr);
     makeFieldEntry(field);
 
     if (fields.length <= 1) {
@@ -1158,7 +1158,7 @@ public class CobolIntrinsic {
       }
     }
 
-    currField.setInt(ordmax + 1);
+    currField.setLong((long) ordmax + 1);
     return currField;
   }
 

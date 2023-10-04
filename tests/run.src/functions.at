@@ -1196,8 +1196,7 @@ AT_CHECK([java prog], [0],
 
 AT_CLEANUP
 
-AT_SETUP([FUNCTION ORD-MAX])
-AT_CHECK([${SKIP_TEST}])
+AT_SETUP([FUNCTION ORD-MAX(only one maximum)])
 
 AT_DATA([prog.cob], [
        IDENTIFICATION   DIVISION.
@@ -1217,8 +1216,47 @@ AT_CHECK([java prog], [0],
 
 AT_CLEANUP
 
-AT_SETUP([FUNCTION ORD-MIN])
-AT_CHECK([${SKIP_TEST}])
+AT_SETUP([FUNCTION ORD-MAX(multiple maximums)])
+
+AT_DATA([prog.cob], [
+       IDENTIFICATION   DIVISION.
+       PROGRAM-ID.      prog.
+       DATA             DIVISION.
+       WORKING-STORAGE  SECTION.
+       PROCEDURE        DIVISION.
+           DISPLAY FUNCTION ORD-MAX ( 3 8 0 8 -3 )
+           END-DISPLAY.
+           STOP RUN.
+])
+
+AT_CHECK([${COMPILE} prog.cob])
+AT_CHECK([java prog], [0],
+[00000002
+])
+
+AT_CLEANUP
+
+AT_SETUP([FUNCTION ORD-MIN(only one minimum)])
+
+AT_DATA([prog.cob], [
+       IDENTIFICATION   DIVISION.
+       PROGRAM-ID.      prog.
+       DATA             DIVISION.
+       WORKING-STORAGE  SECTION.
+       PROCEDURE        DIVISION.
+           DISPLAY FUNCTION ORD-MIN ( -14 -14 0 8 -3 )
+           END-DISPLAY.
+           STOP RUN.
+])
+
+AT_CHECK([${COMPILE} prog.cob])
+AT_CHECK([java prog], [0],
+[00000001
+])
+
+AT_CLEANUP
+
+AT_SETUP([FUNCTION ORD-MIN(multiple minimums)])
 
 AT_DATA([prog.cob], [
        IDENTIFICATION   DIVISION.
