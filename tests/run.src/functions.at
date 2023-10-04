@@ -1297,7 +1297,6 @@ AT_CHECK([java prog], [0],
 AT_CLEANUP
 
 AT_SETUP([FUNCTION PRESENT-VALUE])
-AT_CHECK([${SKIP_TEST}])
 
 AT_DATA([prog.cob], [
        IDENTIFICATION   DIVISION.
@@ -1400,31 +1399,70 @@ AT_CHECK([java prog], [0],
 AT_CLEANUP
 
 AT_SETUP([FUNCTION SECONDS-FROM-FORMATTED-TIME])
-AT_CHECK([${SKIP_TEST}])
 
 AT_DATA([prog.cob], [
        IDENTIFICATION   DIVISION.
        PROGRAM-ID.      prog.
        DATA             DIVISION.
        WORKING-STORAGE  SECTION.
-       01  X   PIC      X(6)   VALUE "hhmmss".
+       01  X   PIC      X(6).
        01  Y   PIC      9(8)   COMP-5.
        01  Z   PIC      X(6)   VALUE "010203".
        PROCEDURE        DIVISION.
+           MOVE "hhmmss" TO X.
            MOVE FUNCTION SECONDS-FROM-FORMATTED-TIME (X, Z) TO Y.
            IF Y = 3723
                    DISPLAY "OK"
-                   END-DISPLAY
-           ELSE
-                   DISPLAY Y
-                   END-DISPLAY
            END-IF.
+
+           MOVE "mmhhss" TO X.
+           MOVE FUNCTION SECONDS-FROM-FORMATTED-TIME (X, Z) TO Y.
+           IF Y = 7263
+                   DISPLAY "OK"
+           END-IF.
+
+           MOVE "mmsshh" TO X.
+           MOVE FUNCTION SECONDS-FROM-FORMATTED-TIME (X, Z) TO Y.
+           IF Y = 10862
+                   DISPLAY "OK"
+           END-IF.
+
+           MOVE "hhssmm" TO X.
+           MOVE FUNCTION SECONDS-FROM-FORMATTED-TIME (X, Z) TO Y.
+           IF Y = 3782
+                   DISPLAY "OK"
+           END-IF.
+
+           MOVE "sshhmm" TO X.
+           MOVE FUNCTION SECONDS-FROM-FORMATTED-TIME (X, Z) TO Y.
+           IF Y = 7381
+                   DISPLAY "OK"
+           END-IF.
+
+           MOVE "ssmmhh" TO X.
+           MOVE FUNCTION SECONDS-FROM-FORMATTED-TIME (X, Z) TO Y.
+           IF Y = 10921
+                   DISPLAY "OK"
+           END-IF.
+
+           MOVE "sshh" TO X.
+           MOVE FUNCTION SECONDS-FROM-FORMATTED-TIME (X, Z) TO Y.
+           IF Y = 0
+                   DISPLAY "OK"
+           END-IF.
+
            STOP RUN.
 ])
 
 AT_CHECK([${COMPILE} prog.cob])
 AT_CHECK([java prog], [0],
 [OK
+OK
+OK
+OK
+OK
+OK
+OK
 ])
 
 AT_CLEANUP
