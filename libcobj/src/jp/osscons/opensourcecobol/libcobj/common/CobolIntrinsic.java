@@ -1673,7 +1673,7 @@ public class CobolIntrinsic {
   }
 
   /**
-   * libcob/intrinsicのcob_int_nationalの実装
+   * libcob/intrinsicのcob_intr_nationalの実装
    *
    * @param prams
    * @param fields
@@ -2088,17 +2088,17 @@ public class CobolIntrinsic {
         p1 = new String(formatData.getByteArray(n * 2, 2));
         p2 = Integer.valueOf(new String(valueData.getByteArray(n * 2, 2)));
 
-        if (p1.equals("hh") && !hoursSeen) {
+        if ("hh".equals(p1) && !hoursSeen) {
           hours = p2;
           hoursSeen = true;
           continue;
         }
-        if (p1.equals("mm") && !minutesSeen) {
+        if ("mm".equals(p1) && !minutesSeen) {
           minutes = p2;
           minutesSeen = true;
           continue;
         }
-        if (p1.equals("ss") && !secondsSeen) {
+        if ("ss".equals(p1) && !secondsSeen) {
           seconds = p2;
           secondsSeen = true;
           continue;
