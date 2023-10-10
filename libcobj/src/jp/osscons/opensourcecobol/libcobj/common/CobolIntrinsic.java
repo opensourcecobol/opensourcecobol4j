@@ -2083,28 +2083,29 @@ public class CobolIntrinsic {
     CobolDataStorage formatData = format.getDataStorage();
     CobolDataStorage valueData = value.getDataStorage();
 
-    if (format.getSize() == 6) {
-      for (n = 0; n < 3; n++) {
-        p1 = new String(formatData.getByteArray(n * 2, 2));
-        p2 = Integer.valueOf(new String(valueData.getByteArray(n * 2, 2)));
-
+      for (n = 0; n < format.getSize() - 1; n++) {
+        p1 = new String(formatData.getByteArray(n, 2));
+        
         if ("hh".equals(p1) && !hoursSeen) {
+          p2 = Integer.valueOf(new String(valueData.getByteArray(n, 2)));
           hours = p2;
           hoursSeen = true;
           continue;
         }
         if ("mm".equals(p1) && !minutesSeen) {
+          p2 = Integer.valueOf(new String(valueData.getByteArray(n, 2)));
           minutes = p2;
           minutesSeen = true;
           continue;
         }
         if ("ss".equals(p1) && !secondsSeen) {
+          p2 = Integer.valueOf(new String(valueData.getByteArray(n, 2)));
           seconds = p2;
           secondsSeen = true;
           continue;
         }
       }
-    }
+      
     if (hoursSeen && minutesSeen && secondsSeen) {
       seconds += hours * 3600 + minutes * 60;
     } else {

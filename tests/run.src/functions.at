@@ -1405,64 +1405,48 @@ AT_DATA([prog.cob], [
        PROGRAM-ID.      prog.
        DATA             DIVISION.
        WORKING-STORAGE  SECTION.
-       01  X   PIC      X(6).
-       01  Y   PIC      9(8)   COMP-5.
-       01  Z   PIC      X(6)   VALUE "010203".
+       01  X1   PIC      X(6).
+       01  Y1   PIC      X(6)   VALUE "010203".
+       01  X2   PIC      X(35)
+           VALUE  "Hours(hh), Minutes(mm), Seconds(ss)".
+       01  Y2   PIC      X(35) 
+           VALUE  "HHHHH(01), MMMMMMM<02>, SSSSSSS{03}".      
        PROCEDURE        DIVISION.
-           MOVE "hhmmss" TO X.
-           MOVE FUNCTION SECONDS-FROM-FORMATTED-TIME (X, Z) TO Y.
-           IF Y = 3723
-                   DISPLAY "OK"
-           END-IF.
+           MOVE "hhmmss" TO X1.
+           DISPLAY FUNCTION SECONDS-FROM-FORMATTED-TIME (X1, Y1).
 
-           MOVE "mmhhss" TO X.
-           MOVE FUNCTION SECONDS-FROM-FORMATTED-TIME (X, Z) TO Y.
-           IF Y = 7263
-                   DISPLAY "OK"
-           END-IF.
+           MOVE "mmhhss" TO X1.
+           DISPLAY FUNCTION SECONDS-FROM-FORMATTED-TIME (X1, Y1).
 
-           MOVE "mmsshh" TO X.
-           MOVE FUNCTION SECONDS-FROM-FORMATTED-TIME (X, Z) TO Y.
-           IF Y = 10862
-                   DISPLAY "OK"
-           END-IF.
+           MOVE "mmsshh" TO X1.
+           DISPLAY FUNCTION SECONDS-FROM-FORMATTED-TIME (X1, Y1).
 
-           MOVE "hhssmm" TO X.
-           MOVE FUNCTION SECONDS-FROM-FORMATTED-TIME (X, Z) TO Y.
-           IF Y = 3782
-                   DISPLAY "OK"
-           END-IF.
+           MOVE "hhssmm" TO X1.
+           DISPLAY FUNCTION SECONDS-FROM-FORMATTED-TIME (X1, Y1).
 
-           MOVE "sshhmm" TO X.
-           MOVE FUNCTION SECONDS-FROM-FORMATTED-TIME (X, Z) TO Y.
-           IF Y = 7381
-                   DISPLAY "OK"
-           END-IF.
+           MOVE "sshhmm" TO X1.
+           DISPLAY FUNCTION SECONDS-FROM-FORMATTED-TIME (X1, Y1).
 
-           MOVE "ssmmhh" TO X.
-           MOVE FUNCTION SECONDS-FROM-FORMATTED-TIME (X, Z) TO Y.
-           IF Y = 10921
-                   DISPLAY "OK"
-           END-IF.
+           MOVE "ssmmhh" TO X1.
+           DISPLAY FUNCTION SECONDS-FROM-FORMATTED-TIME (X1, Y1).
 
-           MOVE "sshh" TO X.
-           MOVE FUNCTION SECONDS-FROM-FORMATTED-TIME (X, Z) TO Y.
-           IF Y = 0
-                   DISPLAY "OK"
-           END-IF.
+           MOVE "sshhhm" TO X1.
+           DISPLAY FUNCTION SECONDS-FROM-FORMATTED-TIME (X1, Y1).
 
+           DISPLAY FUNCTION SECONDS-FROM-FORMATTED-TIME (X2, Y2).
            STOP RUN.
 ])
 
 AT_CHECK([${COMPILE} prog.cob])
 AT_CHECK([java prog], [0],
-[OK
-OK
-OK
-OK
-OK
-OK
-OK
+[00003723
+00007263
+00010862
+00003782
+00007381
+00010921
+00000000
+00003723
 ])
 
 AT_CLEANUP
