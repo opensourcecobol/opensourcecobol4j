@@ -19,7 +19,8 @@
 package jp.osscons.opensourcecobol.libcobj.common;
 
 import java.math.BigDecimal;
-import java.sql.Date;
+import java.math.RoundingMode;
+import java.nio.ByteBuffer;
 import java.time.LocalDateTime;
 import java.util.Arrays;
 import java.util.Calendar;
@@ -796,8 +797,37 @@ public class CobolIntrinsic {
   /** libcob/intrinsicのcob_intr_sqrtの実装 */
   public static AbstractCobolField funcSqrt(AbstractCobolField srcfield) {
     CobolDecimal d1 = mathFunctionBefore2(srcfield);
-    double mathd2 = Math.sqrt(intrGetDouble(d1));
-    return mathFunctionAfter2(mathd2);
+
+    BigDecimal TWO = new BigDecimal(2).setScale(20);
+    BigDecimal num = new BigDecimal(intrGetDouble(d1)).setScale(20);
+    BigDecimal mathd2 = num.divide(TWO,40,RoundingMode.CEILING);
+    BigDecimal g1;
+    do{
+      g1 = mathd2;
+      mathd2 = num.divide(g1,40,RoundingMode.CEILING);
+      mathd2 = mathd2.add(g1); 
+      mathd2 = mathd2.divide(TWO,40,RoundingMode.CEILING);
+    }while(g1.add(mathd2.negate()).setScale(40, RoundingMode.CEILING).compareTo(BigDecimal.ZERO) != 0);
+    System.out.println("dbg: result="+mathd2.toString());
+
+    BigDecimal x = new BigDecimal(1.5);
+    BigDecimal num1 = BigDecimal.ZERO;
+    BigDecimal num2 = x;
+    BigDecimal mid;
+
+    for (int i = 0; i < 100; i++) {
+      mid =  num2.add(num1).divide(TWO);//    (num2 + num1) / 2;
+      if (mid.pow(2).add(x.negate()).abs().setScale(20, RoundingMode.CEILING).compareTo(BigDecimal.ZERO) == 0) {
+        System.out.println(x + "の平方根:"+ mid.toString());
+        break;
+      } else if (mid.pow(2).compareTo(x) == -1) {
+        num1 = mid;
+      } else if (mid.pow(2).compareTo(x) == 1) {
+        num2 = mid;
+      }
+    }
+
+    return mathFunctionAfter2(mathd2.doubleValue());
   }
 
   /** libcob/intrinsicのcob_intr_tanの実装 */
@@ -2117,10 +2147,30 @@ public class CobolIntrinsic {
   }
 
   public static AbstractCobolField funcSecondsPastMidnight(){
+    int seconds;
     CobolFieldAttribute attr =
         new CobolFieldAttribute(CobolFieldAttribute.COB_TYPE_NUMERIC_BINARY, 8, 0, 0, null);
     AbstractCobolField field = CobolFieldFactory.makeCobolField(4, (CobolDataStorage) null, attr);
     makeFieldEntry(field);
-    Date currDate = new Date();
+    LocalDateTime currDate = LocalDateTime.now();
+    seconds = currDate.getHour() * 3600 + currDate.getMinute() * 60 + currDate.getSecond();
+    currField.setInt(seconds);
+    return currField;
+  }
+
+  public static AbstractCobolField funcSign(AbstractCobolField srcfield){
+    CobolFieldAttribute attr =
+        new CobolFieldAttribute(CobolFieldAttribute.COB_TYPE_NUMERIC_BINARY, 8, 0, CobolFieldAttribute.COB_FLAG_HAVE_SIGN, null);
+    AbstractCobolField field = CobolFieldFactory.makeCobolField(4, (CobolDataStorage) null, attr);
+    makeFieldEntry(field);
+
+    currField.setInt(0);
+    int n = srcfield.compareTo(currField);
+    if(n < 0){
+      currField.setInt(-1);
+    }else if(n > 0){
+      currField.setInt(1);
+    }
+    return currField;
   }
 }
