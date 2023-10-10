@@ -57,8 +57,7 @@ AT_CHECK([java prog], [0],
 AT_CLEANUP
 
 
-AT_SETUP([DISPLAY literals, DECIMAL-POINT is COMMA])
-AT_CHECK([${SKIP_TEST}])
+AT_SETUP([DISPLAY literals, DECIMAL-POINT is COMMA(successful termination)])
 
 AT_DATA([prog.cob], [
        IDENTIFICATION   DIVISION.
@@ -82,6 +81,27 @@ AT_CHECK([java prog], [0],
 [12,3
 +12,3
 -12,3
+])
+
+AT_CLEANUP
+
+AT_SETUP([DISPLAY literals, DECIMAL-POINT is COMMA(If a period is used)])
+
+AT_DATA([prog.cob], [
+       IDENTIFICATION   DIVISION.
+       PROGRAM-ID.      prog.
+       ENVIRONMENT      DIVISION.
+       CONFIGURATION    SECTION.
+       SPECIAL-NAMES.
+           DECIMAL-POINT    IS COMMA.
+       PROCEDURE        DIVISION.
+           DISPLAY  12.3
+           END-DISPLAY.
+           STOP RUN.
+])
+
+AT_CHECK([${COMPILE} prog.cob], [1], [],
+[prog.cob:9: Error: Unknown statement '3'
 ])
 
 AT_CLEANUP

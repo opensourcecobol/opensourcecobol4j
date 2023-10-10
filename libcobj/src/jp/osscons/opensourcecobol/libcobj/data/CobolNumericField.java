@@ -61,6 +61,7 @@ public class CobolNumericField extends AbstractCobolField {
     CobolDataStorage data = this.getDataStorage();
     CobolFieldAttribute attr = this.getAttribute();
     int digits = attr.getDigits();
+    char decimalPoint = (char) CobolModule.getDecimalPoint();
 
     StringBuilder sb = new StringBuilder();
     if (attr.isFlagHaveSign()) {
@@ -74,7 +75,7 @@ public class CobolNumericField extends AbstractCobolField {
     int scale = attr.getScale();
     int fieldSize = this.getFieldSize();
     if (scale >= fieldSize) {
-      sb.append(".");
+      sb.append(decimalPoint);
       for (int i = 0; i < scale - fieldSize; ++i) {
         sb.append('0');
       }
@@ -100,7 +101,7 @@ public class CobolNumericField extends AbstractCobolField {
             : this.getSize() - 1;
     for (; i + getFirstDataIndex() <= dataLastIndex; ++i) {
       if (scale > 0 && i - 1 == pointIndex) {
-        sb.append('.');
+        sb.append(decimalPoint);
       }
       char c = (char) data.getByte(this.getFirstDataIndex() + i);
       if (attr.isFlagHaveSign() && !attr.isFlagSignSeparate() && i == signIndex && c >= 0x70) {
@@ -110,7 +111,7 @@ public class CobolNumericField extends AbstractCobolField {
     }
     for (; i < digits; ++i) {
       if (scale > 0 && i - 1 == pointIndex) {
-        sb.append('.');
+        sb.append(decimalPoint);
       }
       sb.append('0');
     }
