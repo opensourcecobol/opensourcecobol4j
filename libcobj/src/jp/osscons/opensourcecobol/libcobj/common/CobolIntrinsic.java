@@ -1673,7 +1673,7 @@ public class CobolIntrinsic {
   }
 
   /**
-   * libcob/intrinsicのcob_intr_present_valueの実装
+   * libcob/intrinsicのcob_intr_nationalの実装
    *
    * @param prams
    * @param fields
@@ -2047,6 +2047,72 @@ public class CobolIntrinsic {
     makeFieldEntry(field);
 
     currField.moveFrom(srcfield);
+    return currField;
+  }
+
+  /**
+   * cob_intr_seconds_from_formatted_timeの実装
+   *
+   * @param format
+   * @param value
+   * @return
+   */
+  public static AbstractCobolField funcSecondsFromFormattedTime(
+      AbstractCobolField format, AbstractCobolField value) {
+    int n;
+    int seconds = 0;
+    int minutes = 0;
+    int hours = 0;
+    boolean secondsSeen = false;
+    boolean minutesSeen = false;
+    boolean hoursSeen = false;
+    String p1;
+    int p2;
+
+    CobolFieldAttribute attr =
+        new CobolFieldAttribute(CobolFieldAttribute.COB_TYPE_NUMERIC_BINARY, 8, 0, 0, null);
+    AbstractCobolField field = CobolFieldFactory.makeCobolField(4, (CobolDataStorage) null, attr);
+    makeFieldEntry(field);
+
+    if (value.getSize() < format.getSize()) {
+      CobolRuntimeException.setException(CobolExceptionId.COB_EC_ARGUMENT_FUNCTION);
+      currField.setInt(0);
+      return currField;
+    }
+
+    CobolDataStorage formatData = format.getDataStorage();
+    CobolDataStorage valueData = value.getDataStorage();
+
+    for (n = 0; n < format.getSize() - 1; n++) {
+      p1 = new String(formatData.getByteArray(n, 2));
+
+      if ("hh".equals(p1) && !hoursSeen) {
+        p2 = Integer.valueOf(new String(valueData.getByteArray(n, 2)));
+        hours = p2;
+        hoursSeen = true;
+        continue;
+      }
+      if ("mm".equals(p1) && !minutesSeen) {
+        p2 = Integer.valueOf(new String(valueData.getByteArray(n, 2)));
+        minutes = p2;
+        minutesSeen = true;
+        continue;
+      }
+      if ("ss".equals(p1) && !secondsSeen) {
+        p2 = Integer.valueOf(new String(valueData.getByteArray(n, 2)));
+        seconds = p2;
+        secondsSeen = true;
+        continue;
+      }
+    }
+
+    if (hoursSeen && minutesSeen && secondsSeen) {
+      seconds += hours * 3600 + minutes * 60;
+    } else {
+      CobolRuntimeException.setException(CobolExceptionId.COB_EC_ARGUMENT_FUNCTION);
+      seconds = 0;
+    }
+    currField.setInt(seconds);
     return currField;
   }
 }
