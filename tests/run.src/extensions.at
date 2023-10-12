@@ -450,69 +450,70 @@ AT_CHECK([test -e TESTFILE], [0])
 
 AT_CLEANUP
 
-AT_SETUP([CALL unusual PROGRAM-ID.])
-AT_CHECK([${SKIP_TEST}])
-
-AT_DATA([A@B.cob], [
-       IDENTIFICATION   DIVISION.
-       PROGRAM-ID.      "A@B".
-       PROCEDURE        DIVISION.
-           DISPLAY "P1" NO ADVANCING
-           END-DISPLAY.
-           EXIT PROGRAM.
-])
-
-AT_DATA([[A#B.cob]], [[
-       IDENTIFICATION   DIVISION.
-       PROGRAM-ID.      "A#B".
-       PROCEDURE        DIVISION.
-           DISPLAY "P2" NO ADVANCING
-           END-DISPLAY.
-           EXIT PROGRAM.
-]])
-
-AT_DATA([A-B.cob], [
-       IDENTIFICATION   DIVISION.
-       PROGRAM-ID.      "A-B".
-       PROCEDURE        DIVISION.
-           DISPLAY "P3" NO ADVANCING
-           END-DISPLAY.
-           EXIT PROGRAM.
-])
-
-AT_DATA([A_B.cob], [
-       IDENTIFICATION   DIVISION.
-       PROGRAM-ID.      "A_B".
-       PROCEDURE        DIVISION.
-           DISPLAY "P4" NO ADVANCING
-           END-DISPLAY.
-           EXIT PROGRAM.
-])
-
-AT_DATA([caller.cob], [
-       IDENTIFICATION   DIVISION.
-       PROGRAM-ID.      caller.
-       PROCEDURE        DIVISION.
-           CALL "A@B"
-           END-CALL.
-           CALL "A#B"
-           END-CALL.
-           CALL "A-B"
-           END-CALL.
-           CALL "A_B"
-           END-CALL.
-           STOP RUN.
-])
-
-AT_CHECK([${COMPILE_MODULE} A@B.cob])
-AT_CHECK([[${COMPILE_MODULE} A#B.cob]])
-AT_CHECK([${COMPILE_MODULE} A-B.cob])
-AT_CHECK([${COMPILE_MODULE} A_B.cob])
-AT_CHECK([${COMPILE} -o caller caller.cob])
-
-AT_CHECK([./caller], [0], [P1P2P3P4])
-
-AT_CLEANUP
+# opensource COBOL 4J does not support PROGRAM-ID containing special characters
+#AT_SETUP([CALL unusual PROGRAM-ID.])
+#AT_CHECK([${SKIP_TEST}])
+#
+#AT_DATA([A@B.cob], [
+#       IDENTIFICATION   DIVISION.
+#       PROGRAM-ID.      "A@B".
+#       PROCEDURE        DIVISION.
+#           DISPLAY "P1" NO ADVANCING
+#           END-DISPLAY.
+#           EXIT PROGRAM.
+#])
+#
+#AT_DATA([[A#B.cob]], [[
+#       IDENTIFICATION   DIVISION.
+#       PROGRAM-ID.      "A#B".
+#       PROCEDURE        DIVISION.
+#           DISPLAY "P2" NO ADVANCING
+#           END-DISPLAY.
+#           EXIT PROGRAM.
+#]])
+#
+#AT_DATA([A-B.cob], [
+#       IDENTIFICATION   DIVISION.
+#       PROGRAM-ID.      "A-B".
+#       PROCEDURE        DIVISION.
+#           DISPLAY "P3" NO ADVANCING
+#           END-DISPLAY.
+#           EXIT PROGRAM.
+#])
+#
+#AT_DATA([A_B.cob], [
+#       IDENTIFICATION   DIVISION.
+#       PROGRAM-ID.      "A_B".
+#       PROCEDURE        DIVISION.
+#           DISPLAY "P4" NO ADVANCING
+#           END-DISPLAY.
+#           EXIT PROGRAM.
+#])
+#
+#AT_DATA([caller.cob], [
+#       IDENTIFICATION   DIVISION.
+#       PROGRAM-ID.      caller.
+#       PROCEDURE        DIVISION.
+#           CALL "A@B"
+#           END-CALL.
+#           CALL "A#B"
+#           END-CALL.
+#           CALL "A-B"
+#           END-CALL.
+#           CALL "A_B"
+#           END-CALL.
+#           STOP RUN.
+#])
+#
+#AT_CHECK([${COMPILE_MODULE} A@B.cob])
+#AT_CHECK([[${COMPILE_MODULE} A#B.cob]])
+#AT_CHECK([${COMPILE_MODULE} A-B.cob])
+#AT_CHECK([${COMPILE_MODULE} A_B.cob])
+#AT_CHECK([${COMPILE} -o caller caller.cob])
+#
+#AT_CHECK([./caller], [0], [P1P2P3P4])
+#
+#AT_CLEANUP
 
 AT_SETUP([Case independent PROGRAM-ID])
 
@@ -561,26 +562,25 @@ AT_CHECK([java prog], [0], [OK])
 AT_CLEANUP
 
 AT_SETUP([Quoted PROGRAM-ID])
-AT_CHECK([${SKIP_TEST}])
 
-AT_DATA([prog.cob], [
+AT_DATA([caller.cob], [
        IDENTIFICATION   DIVISION.
        PROGRAM-ID.      "caller".
        PROCEDURE        DIVISION.
            CALL "callee"
            END-CALL.
            STOP RUN.
+])
+AT_DATA([callee.cob], [
+       IDENTIFICATION   DIVISION.
        PROGRAM-ID.      "callee".
        PROCEDURE        DIVISION.
            DISPLAY "OK" NO ADVANCING
            END-DISPLAY.
-           EXIT PROGRAM.
-       END PROGRAM callee.
-       END PROGRAM caller.
 ])
 
-AT_CHECK([${COMPILE} prog.cob])
-AT_CHECK([java prog], [0], [OK])
+AT_CHECK([${COMPILE} caller.cob callee.cob])
+AT_CHECK([java caller], [0], [OK])
 
 AT_CLEANUP
 
@@ -791,7 +791,7 @@ AT_DATA([caller.cob], [
 
 AT_CHECK([${COMPILE} caller.cob])
 AT_CHECK([${COMPILE_MODULE} callee.cob])
-AT_CHECK([./caller], [0],
+AT_CHECK([java caller], [0],
 [+000000000
 +000000001
 +000000002
@@ -805,7 +805,6 @@ AT_CLEANUP
 # Program parameters
 
 AT_SETUP([PROCEDURE DIVISION USING BY ...])
-AT_CHECK([${SKIP_TEST}])
 
 AT_DATA([callee.cob], [
        IDENTIFICATION   DIVISION.
@@ -847,7 +846,7 @@ AT_DATA([caller.cob], [
 
 AT_CHECK([${COMPILE} caller.cob])
 AT_CHECK([${COMPILE_MODULE} callee.cob])
-AT_CHECK([./caller], [0],
+AT_CHECK([java caller], [0],
 [X = X Y = 12 Z = 34
 X = X Y = 56 Z = 34
 ])
@@ -937,7 +936,7 @@ AT_DATA([hello.cob], [
 
 AT_CHECK([${COMPILE} -std=mvs caller.cob])
 AT_CHECK([${COMPILE_MODULE} -std=mvs hello.cob])
-AT_CHECK([./caller], [0],
+AT_CHECK([java caller], [0],
 [Hello, COBOL!
 Bye, COBOL!
 ])
