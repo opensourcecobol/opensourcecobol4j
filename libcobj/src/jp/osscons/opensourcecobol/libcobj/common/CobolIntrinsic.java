@@ -817,16 +817,21 @@ public class CobolIntrinsic {
       mathd2 = num.divide(g1,30,RoundingMode.FLOOR);
       mathd2 = mathd2.add(g1);
       mathd2 = mathd2.divide(TWO,30,RoundingMode.FLOOR);
-      System.out.println("dbg: mathd2="+mathd2);
-      System.out.println("dbg: mathd2^2="+mathd2.pow(2));
     }while(g1.add(mathd2.negate()).setScale(30, RoundingMode.FLOOR).compareTo(BigDecimal.ZERO) != 0);
     
     if(mathd2.pow(2).compareTo(num.pow(2)) != 0){
       mathd2 = mathd2.subtract(comp);
     }
-
     System.out.println("dbg: result="+mathd2.toString());
     
+    double num1;
+    double num2 = 1.5 / 2;
+    do{
+      num1 = num2;
+      num2 = (1.5/ num1 + num1) / 2;
+    }while((num1 - num2) != 0);
+    System.out.printf("dbg: %.18f\n", num2 * num2);
+
     currField.memcpy(mathd2.toString());
     return currField;
   }
@@ -2172,6 +2177,31 @@ public class CobolIntrinsic {
     }else if(n > 0){
       currField.setInt(1);
     }
+    return currField;
+  }
+
+  /**
+   * cob_intr_stored_char_lengthの実装
+   * @param srcfield
+   * @return
+   */
+  public static AbstractCobolField funcStoredCharLength(AbstractCobolField srcfield){
+    int count;
+    byte[] p;
+    
+    CobolFieldAttribute attr =
+        new CobolFieldAttribute(CobolFieldAttribute.COB_TYPE_NUMERIC_BINARY, 8, 0, 0, null);
+    AbstractCobolField field = CobolFieldFactory.makeCobolField(4, (CobolDataStorage) null, attr);
+    makeFieldEntry(field);
+
+    p = srcfield.getDataStorage().getByteArray();
+    for(count = p.length; count > 0; count--){
+      if(p[count - 1] != ' '){
+        break;
+      }
+    }
+
+    currField.setInt(count);
     return currField;
   }
 }
