@@ -19,11 +19,6 @@
 package jp.osscons.opensourcecobol.libcobj.common;
 
 import java.math.BigDecimal;
-<<<<<<< HEAD
-import java.math.RoundingMode;
-import java.nio.ByteBuffer;
-=======
->>>>>>> function10
 import java.time.LocalDateTime;
 import java.util.Arrays;
 import java.util.Calendar;
@@ -801,7 +796,8 @@ public class CobolIntrinsic {
   public static AbstractCobolField funcSqrt(AbstractCobolField srcfield) {
     CobolDecimal d1 = mathFunctionBefore2(srcfield);
     double mathd2 = Math.sqrt(intrGetDouble(d1));
-    return mathFunctionAfter2(mathd2);}
+    return mathFunctionAfter2(mathd2);
+  }
 
   /** libcob/intrinsicのcob_intr_tanの実装 */
   public static AbstractCobolField funcTan(AbstractCobolField srcfield) {
@@ -2122,9 +2118,10 @@ public class CobolIntrinsic {
 
   /**
    * cob_intr_seconds_past_midnightの実装
+   *
    * @return
    */
-  public static AbstractCobolField funcSecondsPastMidnight(){
+  public static AbstractCobolField funcSecondsPastMidnight() {
     int seconds;
     CobolFieldAttribute attr =
         new CobolFieldAttribute(CobolFieldAttribute.COB_TYPE_NUMERIC_BINARY, 8, 0, 0, null);
@@ -2138,20 +2135,26 @@ public class CobolIntrinsic {
 
   /**
    * cob_intr_signの実装
+   *
    * @param srcfield
    * @return
    */
-  public static AbstractCobolField funcSign(AbstractCobolField srcfield){
+  public static AbstractCobolField funcSign(AbstractCobolField srcfield) {
     CobolFieldAttribute attr =
-        new CobolFieldAttribute(CobolFieldAttribute.COB_TYPE_NUMERIC_BINARY, 8, 0, CobolFieldAttribute.COB_FLAG_HAVE_SIGN, null);
+        new CobolFieldAttribute(
+            CobolFieldAttribute.COB_TYPE_NUMERIC_BINARY,
+            8,
+            0,
+            CobolFieldAttribute.COB_FLAG_HAVE_SIGN,
+            null);
     AbstractCobolField field = CobolFieldFactory.makeCobolField(4, (CobolDataStorage) null, attr);
     makeFieldEntry(field);
 
     currField.setInt(0);
     int n = srcfield.compareTo(currField);
-    if(n < 0){
+    if (n < 0) {
       currField.setInt(-1);
-    }else if(n > 0){
+    } else if (n > 0) {
       currField.setInt(1);
     }
     return currField;
@@ -2159,21 +2162,22 @@ public class CobolIntrinsic {
 
   /**
    * cob_intr_stored_char_lengthの実装
+   *
    * @param srcfield
    * @return
    */
-  public static AbstractCobolField funcStoredCharLength(AbstractCobolField srcfield){
+  public static AbstractCobolField funcStoredCharLength(AbstractCobolField srcfield) {
     int count;
     byte[] p;
-    
+
     CobolFieldAttribute attr =
         new CobolFieldAttribute(CobolFieldAttribute.COB_TYPE_NUMERIC_BINARY, 8, 0, 0, null);
     AbstractCobolField field = CobolFieldFactory.makeCobolField(4, (CobolDataStorage) null, attr);
     makeFieldEntry(field);
 
     p = srcfield.getDataStorage().getByteArray();
-    for(count = p.length; count > 0; count--){
-      if(p[count - 1] != ' '){
+    for (count = p.length; count > 0; count--) {
+      if (p[count - 1] != ' ') {
         break;
       }
     }
