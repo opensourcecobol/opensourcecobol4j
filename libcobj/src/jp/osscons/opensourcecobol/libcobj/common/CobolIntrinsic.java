@@ -796,45 +796,9 @@ public class CobolIntrinsic {
 
   /** libcob/intrinsicのcob_intr_sqrtの実装 */
   public static AbstractCobolField funcSqrt(AbstractCobolField srcfield) {
-     CobolFieldAttribute attr =
-        new CobolFieldAttribute(
-            CobolFieldAttribute.COB_TYPE_NUMERIC_DOUBLE,
-            18,
-            0,
-            CobolFieldAttribute.COB_FLAG_HAVE_SIGN,
-            null);
-    AbstractCobolField field = CobolFieldFactory.makeCobolField(8, (CobolDataStorage) null, attr);
-    makeFieldEntry(field);
-
-    BigDecimal TWO = new BigDecimal(2).setScale(18);
-    BigDecimal num = new BigDecimal(srcfield.getDouble()).setScale(18, RoundingMode.UP);
-    BigDecimal mathd2 = num.divide(TWO,18,RoundingMode.UNNECESSARY);
-    BigDecimal comp = new BigDecimal(1).movePointLeft(18);
-    BigDecimal g1;
-    
-    do{
-      g1 = mathd2;
-      mathd2 = num.divide(g1,30,RoundingMode.FLOOR);
-      mathd2 = mathd2.add(g1);
-      mathd2 = mathd2.divide(TWO,30,RoundingMode.FLOOR);
-    }while(g1.add(mathd2.negate()).setScale(30, RoundingMode.FLOOR).compareTo(BigDecimal.ZERO) != 0);
-    
-    if(mathd2.pow(2).compareTo(num.pow(2)) != 0){
-      mathd2 = mathd2.subtract(comp);
-    }
-    System.out.println("dbg: result="+mathd2.toString());
-    
-    double num1;
-    double num2 = 1.5 / 2;
-    do{
-      num1 = num2;
-      num2 = (1.5/ num1 + num1) / 2;
-    }while((num1 - num2) != 0);
-    System.out.printf("dbg: %.18f\n", num2 * num2);
-
-    currField.memcpy(mathd2.toString());
-    return currField;
-  }
+    CobolDecimal d1 = mathFunctionBefore2(srcfield);
+    double mathd2 = Math.sqrt(intrGetDouble(d1));
+    return mathFunctionAfter2(mathd2);}
 
   /** libcob/intrinsicのcob_intr_tanの実装 */
   public static AbstractCobolField funcTan(AbstractCobolField srcfield) {
