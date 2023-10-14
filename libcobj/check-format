@@ -7,7 +7,7 @@ if [ "${PATH_GOOGLE_JAVA_FORMAT}" = "" ]; then
 	exit 1
 fi
 
-SRC_FILES=src/jp/osscons/opensourcecobol/libcobj/*/*.java
+SRC_FILES=app/src/main/java/jp/osscons/opensourcecobol/libcobj/*/*.java
 FILES=$(java -jar ${PATH_GOOGLE_JAVA_FORMAT} --dry-run ${SRC_FILES})
 
 if [ "$FILES" != "" ]; then
