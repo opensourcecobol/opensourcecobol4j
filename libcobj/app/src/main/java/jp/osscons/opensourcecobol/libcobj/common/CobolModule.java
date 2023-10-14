@@ -160,7 +160,12 @@ public class CobolModule {
    *
    * @param programId
    */
-  public void setProgramId(String programId) {}
+  public void setProgramId(String programName) {
+    if (this.program_id != null) {
+      this.program_id = null;
+    }
+    this.program_id = programName;
+  }
 
   /** パラメータリストのすべての要素を削除する */
   public void clearParameter() {
@@ -208,5 +213,9 @@ public class CobolModule {
    */
   public AbstractCobolField getParameter(int index) {
     return cob_procedure_parameters.get(index);
+  }
+
+  public static int getDecimalPoint() {
+    return currentModule.decimal_point;
   }
 }
