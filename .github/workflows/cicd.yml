@@ -128,7 +128,7 @@ jobs:
 
       - name: Run SpotBugs
         run: |
-          java -jar spotbugs-4.7.3/lib/spotbugs.jar -textui libcobj/output
+          java -jar spotbugs-4.7.3/lib/spotbugs.jar -textui libcobj/app/build/classes
 
       - name: Run PMD
         run: |
