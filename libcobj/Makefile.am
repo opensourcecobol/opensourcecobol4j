@@ -1,6 +1,7 @@
 TARGET_JAR = app/build/libs/libcobj.jar
 
 SRC_FILES = \	
+	./app/src/main/java/jp/osscons/opensourcecobol/libcobj/MetaData.java \
 	./app/src/main/java/jp/osscons/opensourcecobol/libcobj/Const.java \
 	./app/src/main/java/jp/osscons/opensourcecobol/libcobj/call/CobolCallDataContent.java \
 	./app/src/main/java/jp/osscons/opensourcecobol/libcobj/call/CobolResolve.java \
@@ -73,7 +74,7 @@ SRC_FILES = \
 all: $(TARGET_JAR)
 
 $(TARGET_JAR): $(SRC_FILES)
-	./gradlew jar
+	./gradlew shadowJar
 
 clean:
 	rm -rf $(TARGET_JAR)
