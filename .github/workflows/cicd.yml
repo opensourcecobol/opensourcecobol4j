@@ -37,6 +37,7 @@ jobs:
         run: |
           ./configure --prefix=/usr/
           make
+          echo ARTIFACT_NAME=${{ matrix.os }} | sed 's/:/-/g' >> $GITHUB_ENV
 
       - name: Create an artifact file
         run: |
@@ -47,7 +48,7 @@ jobs:
       - name: Upload an artifact
         uses: actions/upload-artifact@v2
         with:
-          name: opensourcecobol4j-${{ matrix.os }}
+          name: opensourcecobol4j-${{ env.ARTIFACT_NAME }}
           path: opensourcecobol4j.tar.gz
 
       #- name: Run tests "command-line-options"
