@@ -56,7 +56,7 @@ jobs:
           test "$(cat report.txt | tail -n 3 | head -n 1 | awk '{print $4}')" = '(100.00%)'
 
       - name: Run tests ${{ inputs.test-name }}
-        if: not ${{ inputs.check-result  != 'true' }}
+        if: ${{ inputs.check-result  != 'true' }}
         run: |
           cd tests/cobol85/${{ inputs.test-name }}
           make test
