@@ -17,6 +17,8 @@ COBOL = cobj -std=cobol85
 
 COB85DIR = "`cd $(srcdir) && pwd`"
 
+all: $(MODULES_MAKEFILES) $(EXTRA_MODULES_MAKEFILES)
+
 test: $(MODULES_MAKEFILES)
 	@for m in $(MODULES); do \
 	  (cd $$m && make test) \

@@ -46,5 +46,6 @@ jobs:
       
       - name: Run tests ${{ inputs.test-name }}
         run: |
-          cd tests/
-          ./${{ inputs.test-name }}
+          cd tests/cobol85/${{ inputs.test-name }}
+          make test
+          test "$(cat report.txt | tail -n 3 | head -n 1 | awk '{print $4}')" = '(100.00%)'
