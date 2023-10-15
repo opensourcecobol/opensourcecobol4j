@@ -82,12 +82,12 @@ jobs:
       - name: Install opensource COBOL 4J
         run: |
           tar zxf opensourcecobol4j.tar.gz
-          cd opensourcecobol4j
+          mv opensourcecobol4j/* .
           make install
       
       - name: Run tests "misc"
         run: |
-          cd opensourcecobol4j/tests/
+          cd tests/
           ./misc || cat misc.dir/01/*.log
 
       #- name: Run tests "command-line-options"
