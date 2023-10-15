@@ -37,52 +37,62 @@ jobs:
         run: |
           ./configure --prefix=/usr/
           make
-          make install
 
-      - name: Run tests "command-line-options"
+      - name: Create an artifact file
         run: |
-          cd tests/
-          ./command-line-options
+         cd ../
+         tar zcf opensourcecobol4j.tar.gz opensourcecobol4j
+      
+      - name: Upload an artifact
+        uses: actions/upload-artifact@v2
+        with:
+          name: opensourcecobol4j-${{ matrix.os }}
+          path: ../opensourcecobol4j.tar.gz
 
-      - name: Run tests "misc"
-        run: |
-          cd tests/
-          ./misc
+      #- name: Run tests "command-line-options"
+      #  run: |
+      #    cd tests/
+      #    ./command-line-options
 
-      - name: Run tests "data-rep"
-        run: |
-          cd tests/
-          ./data-rep
+      #- name: Run tests "misc"
+      #  run: |
+      #    cd tests/
+      #    ./misc
 
-      - name: Run tests "i18n_sjis"
-        run: |
-          cd tests/
-          ./i18n_sjis
+      #- name: Run tests "data-rep"
+      #  run: |
+      #    cd tests/
+      #    ./data-rep
 
-      - name: Run tests "jp-compat"
-        run: |
-          cd tests/
-          ./jp-compat
+      #- name: Run tests "i18n_sjis"
+      #  run: |
+      #    cd tests/
+      #    ./i18n_sjis
 
-      - name: Run tests "run"
-        run: |
-          cd tests/
-          ./run
+      #- name: Run tests "jp-compat"
+      #  run: |
+      #    cd tests/
+      #    ./jp-compat
 
-      - name: Run tests "syntax"
-        run: |
-          cd tests/
-          ./syntax
+      #- name: Run tests "run"
+      #  run: |
+      #    cd tests/
+      #    ./run
 
-      - name: Run NIST test
-        run: |
-          cd tests/cobol85
-          make test
+      #- name: Run tests "syntax"
+      #  run: |
+      #    cd tests/
+      #    ./syntax
 
-      - name: Run Extra NIST test
-        run: |
-          cd tests/cobol85
-          make test-extra
+      #- name: Run NIST test
+      #  run: |
+      #    cd tests/cobol85
+      #    make test
+
+      #- name: Run Extra NIST test
+      #  run: |
+      #    cd tests/cobol85
+      #    make test-extra
 
           #- name: Run tests "i18n_utf8"
           #  run: |
