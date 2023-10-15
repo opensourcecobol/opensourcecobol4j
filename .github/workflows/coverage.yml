@@ -1,9 +1,6 @@
 name: Make a coverate report
 
 on:
-  push:
-  pull_request:
-    types: [opened, reopened, review_requested, synchronize]
   workflow_dispatch:
 
 env:
