@@ -6,6 +6,10 @@ on:
       test-name:
         required: true
         type: string
+      check-result:
+        required: false
+        default: true
+        type: boolean
 
 env:
   CLASSPATH: ":/usr/lib/opensourcecobol4j/libcobj.jar"
@@ -45,7 +49,14 @@ jobs:
           make install
       
       - name: Run tests ${{ inputs.test-name }}
+        if: ${{ inputs.check-result }}
         run: |
           cd tests/cobol85/${{ inputs.test-name }}
           make test
           test "$(cat report.txt | tail -n 3 | head -n 1 | awk '{print $4}')" = '(100.00%)'
+
+      - name: Run tests ${{ inputs.test-name }}
+        if: not ${{ inputs.check-result  != 'true' }}
+        run: |
+          cd tests/cobol85/${{ inputs.test-name }}
+          make test

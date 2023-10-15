@@ -69,6 +69,16 @@ jobs:
     with:
       test-name: ${{ matrix.test_name }}
 
+  run-test-nist-extra:
+    needs: build
+    strategy:
+      matrix:
+        test_name: ["CM", "DB", "RW"]
+    uses: ./.github/workflows/test-nist.yml
+    with:
+      test-name: ${{ matrix.test_name }}
+      check-result: false
+
   static_analysis:
     runs-on: ubuntu-latest
     steps:
