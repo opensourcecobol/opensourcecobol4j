@@ -46,7 +46,7 @@ jobs:
          mv opensourcecobol4j.tar.gz opensourcecobol4j
       
       - name: Upload an artifact
-        uses: actions/upload-artifact@v2
+        uses: actions/upload-artifact@v3
         with:
           name: opensourcecobol4j-${{ env.ARTIFACT_NAME }}
           path: opensourcecobol4j.tar.gz
