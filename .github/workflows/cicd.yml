@@ -51,11 +51,14 @@ jobs:
           name: opensourcecobol4j-${{ env.ARTIFACT_NAME }}
           path: opensourcecobol4j.tar.gz
 
-  run-test-misc:
+  run-test-other:
     needs: build
+    strategy:
+      matrix:
+        test_name: ["command-line-options", "data-rep", "i18n_sjis", "jp-compat", "run", "syntax"]
     uses: ./.github/workflows/test-other.yml
     with:
-      test-name: misc
+      test-name: ${{ matrix.test_name }}
 
       #- name: Run tests "command-line-options"
       #  run: |
