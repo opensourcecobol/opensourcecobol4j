@@ -42,12 +42,13 @@ jobs:
         run: |
          cd ../
          tar zcf opensourcecobol4j.tar.gz opensourcecobol4j
+         mv opensourcecobol4j.tar.gz opensourcecobol4j
       
       - name: Upload an artifact
         uses: actions/upload-artifact@v2
         with:
           name: opensourcecobol4j-${{ matrix.os }}
-          path: ../opensourcecobol4j.tar.gz
+          path: opensourcecobol4j.tar.gz
 
       #- name: Run tests "command-line-options"
       #  run: |
