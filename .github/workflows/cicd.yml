@@ -71,13 +71,13 @@ jobs:
         if: matrix.os == 'ubuntu:22.04'
         run: |
           apt update -y
-          apt install -y default-jdk build-essential automake autoconf
+          apt install -y default-jdk build-essential
 
       - name: Install dependencies on AlmaLinux 9
         if: matrix.os == 'almalinux:9'
         run: |
           dnf -y update
-          dnf install -y java-17-openjdk-devel gcc gcc-c++ make bison flex automake autoconf diffutils gettext
+          dnf install -y java-17-openjdk-devel gcc gcc-c++ make 
 
       - name: Install opensource COBOL 4J
         run: |
