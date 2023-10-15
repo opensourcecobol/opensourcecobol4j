@@ -7,6 +7,9 @@ on:
         required: true
         type: string
 
+env:
+  CLASSPATH: ":/usr/lib/opensourcecobol4j/libcobj.jar"
+
 jobs:
   test-other:
     strategy:
@@ -41,7 +44,7 @@ jobs:
           mv opensourcecobol4j/* .
           make install
       
-      - name: Run tests ${{ inputs.test-name }}}
+      - name: Run tests ${{ inputs.test-name }}
         run: |
           cd tests/
-          ./${{ inputs.test-name }} || cat ${{ inputs.test-name }}.dir/01/*.log
+          ./${{ inputs.test-name }}
