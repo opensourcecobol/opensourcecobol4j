@@ -68,6 +68,7 @@ jobs:
     uses: ./.github/workflows/test-nist.yml
     with:
       test-name: ${{ matrix.test_name }}
+      check-result: true
 
   run-test-nist-extra:
     needs: build

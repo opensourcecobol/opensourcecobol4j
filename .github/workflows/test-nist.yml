@@ -7,8 +7,7 @@ on:
         required: true
         type: string
       check-result:
-        required: false
-        default: true
+        required: true
         type: boolean
 
 env:
@@ -55,8 +54,8 @@ jobs:
           make test
           test "$(cat report.txt | tail -n 3 | head -n 1 | awk '{print $4}')" = '(100.00%)'
 
-      - name: Run tests ${{ inputs.test-name }}
-        if: ${{ inputs.check-result  != 'true' }}
+      - name: Run tests ${{ inputs.test-name }} (No check result)
+        if: ${{ inputs.check-result  == 'false' }}
         run: |
           cd tests/cobol85/${{ inputs.test-name }}
           make test
