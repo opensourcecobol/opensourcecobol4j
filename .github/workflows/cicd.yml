@@ -77,7 +77,7 @@ jobs:
         if: matrix.os == 'almalinux:9'
         run: |
           dnf -y update
-          dnf install -y java-17-openjdk-devel gcc gcc-c++ make 
+          dnf install -y java-17-openjdk-devel gcc gcc-c++ make diffutils
 
       - name: Install opensource COBOL 4J
         run: |
