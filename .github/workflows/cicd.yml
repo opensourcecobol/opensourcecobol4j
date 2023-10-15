@@ -9,7 +9,7 @@ env:
   CLASSPATH: ":/usr/lib/opensourcecobol4j/libcobj.jar"
 
 jobs:
-  run-tests:
+  build:
     strategy:
       matrix:
         os: ["ubuntu:22.04", "almalinux:9"]
@@ -50,6 +50,33 @@ jobs:
         with:
           name: opensourcecobol4j-${{ env.ARTIFACT_NAME }}
           path: opensourcecobol4j.tar.gz
+
+  run-test-misc:
+    needs: build
+    strategy:
+      matrix:
+        os: ["ubuntu:22.04", "almalinux:9"]
+    runs-on: ubuntu-latest
+    container:
+      image: ${{ matrix.os }}
+    steps:
+      - name: Get the artifact name
+        run: echo ARTIFACT_NAME=${{ matrix.os }} | sed 's/:/-/g' >> $GITHUB_ENV
+
+      - uses: actions/download-artifact@v3
+        with:
+          name: opensourcecobol4j-${{ env.ARTIFACT_NAME }}
+
+      - name: Install opensource COBOL 4J
+        run: |
+          tar zxf opensourcecobol4j.tar.gz
+          cd opensourcecobol4j
+          make install
+      
+      - name: Run tests "misc"
+        run: |
+          cd opensourcecobol4j/tests/
+          ./misc
 
       #- name: Run tests "command-line-options"
       #  run: |
