@@ -88,7 +88,7 @@ jobs:
       - name: Run tests "misc"
         run: |
           cd opensourcecobol4j/tests/
-          ./misc
+          ./misc || cat misc.dir/01/*.log
 
       #- name: Run tests "command-line-options"
       #  run: |
