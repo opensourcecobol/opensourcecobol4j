@@ -44,4 +44,4 @@ jobs:
       - name: Run tests ${{ inputs.test-name }}}
         run: |
           cd tests/
-          ./${{ inputs.test-name }}
+          ./${{ inputs.test-name }} || cat ${{ inputs.test-name }}.dir/01/*.log
