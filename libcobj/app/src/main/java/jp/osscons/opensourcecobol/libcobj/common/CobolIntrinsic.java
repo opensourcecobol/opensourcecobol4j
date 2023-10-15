@@ -2115,4 +2115,74 @@ public class CobolIntrinsic {
     currField.setInt(seconds);
     return currField;
   }
+
+  /**
+   * cob_intr_seconds_past_midnightの実装
+   *
+   * @return
+   */
+  public static AbstractCobolField funcSecondsPastMidnight() {
+    int seconds;
+    CobolFieldAttribute attr =
+        new CobolFieldAttribute(CobolFieldAttribute.COB_TYPE_NUMERIC_BINARY, 8, 0, 0, null);
+    AbstractCobolField field = CobolFieldFactory.makeCobolField(4, (CobolDataStorage) null, attr);
+    makeFieldEntry(field);
+    LocalDateTime currDate = LocalDateTime.now();
+    seconds = currDate.getHour() * 3600 + currDate.getMinute() * 60 + currDate.getSecond();
+    currField.setInt(seconds);
+    return currField;
+  }
+
+  /**
+   * cob_intr_signの実装
+   *
+   * @param srcfield
+   * @return
+   */
+  public static AbstractCobolField funcSign(AbstractCobolField srcfield) {
+    CobolFieldAttribute attr =
+        new CobolFieldAttribute(
+            CobolFieldAttribute.COB_TYPE_NUMERIC_BINARY,
+            8,
+            0,
+            CobolFieldAttribute.COB_FLAG_HAVE_SIGN,
+            null);
+    AbstractCobolField field = CobolFieldFactory.makeCobolField(4, (CobolDataStorage) null, attr);
+    makeFieldEntry(field);
+
+    currField.setInt(0);
+    int n = srcfield.compareTo(currField);
+    if (n < 0) {
+      currField.setInt(-1);
+    } else if (n > 0) {
+      currField.setInt(1);
+    }
+    return currField;
+  }
+
+  /**
+   * cob_intr_stored_char_lengthの実装
+   *
+   * @param srcfield
+   * @return
+   */
+  public static AbstractCobolField funcStoredCharLength(AbstractCobolField srcfield) {
+    int count;
+    byte[] p;
+
+    CobolFieldAttribute attr =
+        new CobolFieldAttribute(CobolFieldAttribute.COB_TYPE_NUMERIC_BINARY, 8, 0, 0, null);
+    AbstractCobolField field = CobolFieldFactory.makeCobolField(4, (CobolDataStorage) null, attr);
+    makeFieldEntry(field);
+
+    p = srcfield.getDataStorage().getByteArray();
+    for (count = p.length; count > 0; count--) {
+      if (p[count - 1] != ' ') {
+        break;
+      }
+    }
+
+    currField.setInt(count);
+    return currField;
+  }
 }
