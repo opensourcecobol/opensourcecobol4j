@@ -18,14 +18,6 @@ CIの静的解析はCとJavaのソースコードがそれぞれ[clang-format](h
 
 Ubuntuでは`sudo apt install clang-format`コマンドを実行すれば`clang-format`をインストールできます。
 
-### google-java-format
-
-下記のコマンドを実行して`google-java-format`をダウンロードしてください。
-```sh
-curl -L -o google-java-format.jar https://github.com/google/google-java-format/releases/download/v1.15.0/google-java-format-1.15.0-all-deps.jar
-```
-さらに環境変数`PATH_GOOGLE_JAVA_FORMAT`に上記のjarファイルのファイルパスを設定してください。
-
 ### PMD
 
 下記のコマンドを実行して`PMD`をインストールしてください。

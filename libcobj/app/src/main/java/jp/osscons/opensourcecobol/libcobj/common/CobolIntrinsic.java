@@ -36,10 +36,10 @@ import jp.osscons.opensourcecobol.libcobj.file.CobolFile;
 
 public class CobolIntrinsic {
 
-  private static int[] normalDays = { 0, 31, 59, 90, 120, 151, 181, 212, 243, 273, 304, 334, 365 };
-  private static int[] leapDays = { 0, 31, 60, 91, 121, 152, 182, 213, 244, 274, 305, 335, 366 };
-  private static int[] normalMonthDays = { 0, 31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31 };
-  private static int[] leapMonthDays = { 0, 31, 29, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31 };
+  private static int[] normalDays = {0, 31, 59, 90, 120, 151, 181, 212, 243, 273, 304, 334, 365};
+  private static int[] leapDays = {0, 31, 60, 91, 121, 152, 182, 213, 244, 274, 305, 335, 366};
+  private static int[] normalMonthDays = {0, 31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31};
+  private static int[] leapMonthDays = {0, 31, 29, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31};
   private static final int DEPTH_LEVEL = 8;
   private static final int sizeOfDouble = 8;
   private static int currEntry = 0;
@@ -53,12 +53,13 @@ public class CobolIntrinsic {
   private static void makeDoubleEntry() {
     CobolDataStorage s = new CobolDataStorage(sizeOfDouble + 1);
 
-    CobolFieldAttribute newAttr = new CobolFieldAttribute(
-        CobolFieldAttribute.COB_TYPE_NUMERIC_DOUBLE,
-        18,
-        9,
-        CobolFieldAttribute.COB_FLAG_HAVE_SIGN,
-        null);
+    CobolFieldAttribute newAttr =
+        new CobolFieldAttribute(
+            CobolFieldAttribute.COB_TYPE_NUMERIC_DOUBLE,
+            18,
+            9,
+            CobolFieldAttribute.COB_FLAG_HAVE_SIGN,
+            null);
     AbstractCobolField newField = CobolFieldFactory.makeCobolField(sizeOfDouble, s, newAttr);
 
     calcField[currEntry] = newField;
@@ -71,8 +72,9 @@ public class CobolIntrinsic {
 
   /** libcob/intrinsicのmake_field_entryの実装 */
   private static void makeFieldEntry(AbstractCobolField f) {
-    AbstractCobolField newField = CobolFieldFactory.makeCobolField(
-        f.getSize(), new CobolDataStorage(f.getSize() + 1), f.getAttribute());
+    AbstractCobolField newField =
+        CobolFieldFactory.makeCobolField(
+            f.getSize(), new CobolDataStorage(f.getSize() + 1), f.getAttribute());
     calcField[currEntry] = newField;
     currField = calcField[currEntry];
 
@@ -94,7 +96,8 @@ public class CobolIntrinsic {
 
   /** libcob/intrinsicのcob_init_intrinsicの実装 */
   public static void init() {
-    CobolFieldAttribute attr = new CobolFieldAttribute(CobolFieldAttribute.COB_TYPE_ALPHANUMERIC, 0, 0, 0, null);
+    CobolFieldAttribute attr =
+        new CobolFieldAttribute(CobolFieldAttribute.COB_TYPE_ALPHANUMERIC, 0, 0, 0, null);
     for (int i = 0; i < DEPTH_LEVEL; ++i) {
       calcField[i] = CobolFieldFactory.makeCobolField(256, new CobolDataStorage(256), attr);
     }
@@ -184,9 +187,11 @@ public class CobolIntrinsic {
     if (d1.getScale() > size) {
       size = d1.getScale();
     }
-    CobolFieldAttribute attr = new CobolFieldAttribute(
-        CobolFieldAttribute.COB_TYPE_NUMERIC_DISPLAY, size, d1.getScale(), attrsign, null);
-    AbstractCobolField field = CobolFieldFactory.makeCobolField(size, (CobolDataStorage) null, attr);
+    CobolFieldAttribute attr =
+        new CobolFieldAttribute(
+            CobolFieldAttribute.COB_TYPE_NUMERIC_DISPLAY, size, d1.getScale(), attrsign, null);
+    AbstractCobolField field =
+        CobolFieldFactory.makeCobolField(size, (CobolDataStorage) null, attr);
     makeFieldEntry(field);
     d1.getDisplayField(currField, 0);
     return currField;
@@ -199,7 +204,8 @@ public class CobolIntrinsic {
    * @return
    */
   public static AbstractCobolField funcLength(AbstractCobolField srcfield) {
-    CobolFieldAttribute attr = new CobolFieldAttribute(CobolFieldAttribute.COB_TYPE_NUMERIC_BINARY, 8, 0, 0, null);
+    CobolFieldAttribute attr =
+        new CobolFieldAttribute(CobolFieldAttribute.COB_TYPE_NUMERIC_BINARY, 8, 0, 0, null);
     AbstractCobolField field = CobolFieldFactory.makeCobolField(4, (CobolDataStorage) null, attr);
     makeFieldEntry(field);
     currField.setInt(srcfield.getSize());
@@ -213,12 +219,13 @@ public class CobolIntrinsic {
    * @return
    */
   public static AbstractCobolField funcInteger(AbstractCobolField srcfield) {
-    CobolFieldAttribute attr = new CobolFieldAttribute(
-        CobolFieldAttribute.COB_TYPE_NUMERIC_BINARY,
-        18,
-        0,
-        CobolFieldAttribute.COB_FLAG_HAVE_SIGN,
-        null);
+    CobolFieldAttribute attr =
+        new CobolFieldAttribute(
+            CobolFieldAttribute.COB_TYPE_NUMERIC_BINARY,
+            18,
+            0,
+            CobolFieldAttribute.COB_FLAG_HAVE_SIGN,
+            null);
     AbstractCobolField field = CobolFieldFactory.makeCobolField(8, (CobolDataStorage) null, attr);
     makeFieldEntry(field);
 
@@ -264,12 +271,13 @@ public class CobolIntrinsic {
    * @return
    */
   public static AbstractCobolField funcIntegerPart(AbstractCobolField srcfield) {
-    CobolFieldAttribute attr = new CobolFieldAttribute(
-        CobolFieldAttribute.COB_TYPE_NUMERIC_BINARY,
-        18,
-        0,
-        CobolFieldAttribute.COB_FLAG_HAVE_SIGN,
-        null);
+    CobolFieldAttribute attr =
+        new CobolFieldAttribute(
+            CobolFieldAttribute.COB_TYPE_NUMERIC_BINARY,
+            18,
+            0,
+            CobolFieldAttribute.COB_FLAG_HAVE_SIGN,
+            null);
     AbstractCobolField field = CobolFieldFactory.makeCobolField(8, (CobolDataStorage) null, attr);
 
     makeFieldEntry(field);
@@ -365,20 +373,22 @@ public class CobolIntrinsic {
    * @return
    */
   public static AbstractCobolField funcCurrentDate(int offset, int length) {
-    CobolFieldAttribute attr = new CobolFieldAttribute(CobolFieldAttribute.COB_TYPE_ALPHANUMERIC, 0, 0, 0, null);
+    CobolFieldAttribute attr =
+        new CobolFieldAttribute(CobolFieldAttribute.COB_TYPE_ALPHANUMERIC, 0, 0, 0, null);
     AbstractCobolField field = CobolFieldFactory.makeCobolField(21, (CobolDataStorage) null, attr);
     makeFieldEntry(field);
     // TODO Time Zoneを表示する機能を取り入れる
 
-    String dateString = String.format(
-        "%4d%02d%02d%02d%02d%02d%02d00000",
-        CobolUtil.cal.get(Calendar.YEAR),
-        CobolUtil.cal.get(Calendar.MONTH) + 1,
-        CobolUtil.cal.get(Calendar.DAY_OF_MONTH),
-        CobolUtil.cal.get(Calendar.HOUR_OF_DAY),
-        CobolUtil.cal.get(Calendar.MINUTE),
-        CobolUtil.cal.get(Calendar.SECOND),
-        CobolUtil.cal.get(Calendar.MILLISECOND) / 10);
+    String dateString =
+        String.format(
+            "%4d%02d%02d%02d%02d%02d%02d00000",
+            CobolUtil.cal.get(Calendar.YEAR),
+            CobolUtil.cal.get(Calendar.MONTH) + 1,
+            CobolUtil.cal.get(Calendar.DAY_OF_MONTH),
+            CobolUtil.cal.get(Calendar.HOUR_OF_DAY),
+            CobolUtil.cal.get(Calendar.MINUTE),
+            CobolUtil.cal.get(Calendar.SECOND),
+            CobolUtil.cal.get(Calendar.MILLISECOND) / 10);
     currField.getDataStorage().memcpy(dateString.getBytes());
 
     if (offset > 0) {
@@ -394,7 +404,8 @@ public class CobolIntrinsic {
    * @return
    */
   public static AbstractCobolField funcChar(AbstractCobolField srcfield) {
-    CobolFieldAttribute attr = new CobolFieldAttribute(CobolFieldAttribute.COB_TYPE_ALPHANUMERIC, 0, 0, 0, null);
+    CobolFieldAttribute attr =
+        new CobolFieldAttribute(CobolFieldAttribute.COB_TYPE_ALPHANUMERIC, 0, 0, 0, null);
     AbstractCobolField field = CobolFieldFactory.makeCobolField(1, (CobolDataStorage) null, attr);
     makeFieldEntry(field);
 
@@ -414,7 +425,8 @@ public class CobolIntrinsic {
    * @return
    */
   public static AbstractCobolField funcOrd(AbstractCobolField srcfield) {
-    CobolFieldAttribute attr = new CobolFieldAttribute(CobolFieldAttribute.COB_TYPE_NUMERIC_BINARY, 8, 0, 0, null);
+    CobolFieldAttribute attr =
+        new CobolFieldAttribute(CobolFieldAttribute.COB_TYPE_NUMERIC_BINARY, 8, 0, 0, null);
     AbstractCobolField field = CobolFieldFactory.makeCobolField(4, (CobolDataStorage) null, attr);
     makeFieldEntry(field);
 
@@ -429,7 +441,8 @@ public class CobolIntrinsic {
    * @return
    */
   public static AbstractCobolField funcDateOfInteger(AbstractCobolField srcdays) {
-    CobolFieldAttribute attr = new CobolFieldAttribute(CobolFieldAttribute.COB_TYPE_NUMERIC_DISPLAY, 8, 0, 0, null);
+    CobolFieldAttribute attr =
+        new CobolFieldAttribute(CobolFieldAttribute.COB_TYPE_NUMERIC_DISPLAY, 8, 0, 0, null);
     AbstractCobolField field = CobolFieldFactory.makeCobolField(8, (CobolDataStorage) null, attr);
     makeFieldEntry(field);
 
@@ -479,7 +492,8 @@ public class CobolIntrinsic {
    * @return
    */
   public static AbstractCobolField funcDayOfInteger(AbstractCobolField srcdays) {
-    CobolFieldAttribute attr = new CobolFieldAttribute(CobolFieldAttribute.COB_TYPE_NUMERIC_DISPLAY, 7, 0, 0, null);
+    CobolFieldAttribute attr =
+        new CobolFieldAttribute(CobolFieldAttribute.COB_TYPE_NUMERIC_DISPLAY, 7, 0, 0, null);
     AbstractCobolField field = CobolFieldFactory.makeCobolField(7, (CobolDataStorage) null, attr);
     makeFieldEntry(field);
 
@@ -515,7 +529,8 @@ public class CobolIntrinsic {
    * @return
    */
   public static AbstractCobolField funcIntegerOfDate(AbstractCobolField srcfield) {
-    CobolFieldAttribute attr = new CobolFieldAttribute(CobolFieldAttribute.COB_TYPE_NUMERIC_BINARY, 8, 0, 0, null);
+    CobolFieldAttribute attr =
+        new CobolFieldAttribute(CobolFieldAttribute.COB_TYPE_NUMERIC_BINARY, 8, 0, 0, null);
     AbstractCobolField field = CobolFieldFactory.makeCobolField(4, (CobolDataStorage) null, attr);
     makeFieldEntry(field);
 
@@ -583,7 +598,8 @@ public class CobolIntrinsic {
    * @return
    */
   public static AbstractCobolField funcIntegerOfDay(AbstractCobolField srcfield) {
-    CobolFieldAttribute attr = new CobolFieldAttribute(CobolFieldAttribute.COB_TYPE_NUMERIC_BINARY, 8, 0, 0, null);
+    CobolFieldAttribute attr =
+        new CobolFieldAttribute(CobolFieldAttribute.COB_TYPE_NUMERIC_BINARY, 8, 0, 0, null);
     AbstractCobolField field = CobolFieldFactory.makeCobolField(4, (CobolDataStorage) null, attr);
     makeFieldEntry(field);
 
@@ -623,7 +639,8 @@ public class CobolIntrinsic {
    * @return
    */
   public static AbstractCobolField funcFactorial(AbstractCobolField srcfield) {
-    CobolFieldAttribute attr = new CobolFieldAttribute(CobolFieldAttribute.COB_TYPE_NUMERIC_BINARY, 18, 0, 0, null);
+    CobolFieldAttribute attr =
+        new CobolFieldAttribute(CobolFieldAttribute.COB_TYPE_NUMERIC_BINARY, 18, 0, 0, null);
     AbstractCobolField field = CobolFieldFactory.makeCobolField(8, (CobolDataStorage) null, attr);
     makeFieldEntry(field);
 
@@ -648,12 +665,13 @@ public class CobolIntrinsic {
 
   private static CobolDecimal mathFunctionBefore1(AbstractCobolField srcfield) {
     CobolDecimal d1 = new CobolDecimal();
-    CobolFieldAttribute attr = new CobolFieldAttribute(
-        CobolFieldAttribute.COB_TYPE_NUMERIC_BINARY,
-        18,
-        17,
-        CobolFieldAttribute.COB_FLAG_HAVE_SIGN,
-        null);
+    CobolFieldAttribute attr =
+        new CobolFieldAttribute(
+            CobolFieldAttribute.COB_TYPE_NUMERIC_BINARY,
+            18,
+            17,
+            CobolFieldAttribute.COB_FLAG_HAVE_SIGN,
+            null);
     AbstractCobolField field = CobolFieldFactory.makeCobolField(8, (CobolDataStorage) null, attr);
     d1.setField(srcfield);
     makeFieldEntry(field);
@@ -795,12 +813,13 @@ public class CobolIntrinsic {
    * @return
    */
   public static AbstractCobolField funcNumval(AbstractCobolField srcfield) {
-    CobolFieldAttribute attr = new CobolFieldAttribute(
-        CobolFieldAttribute.COB_TYPE_NUMERIC_BINARY,
-        18,
-        0,
-        CobolFieldAttribute.COB_FLAG_HAVE_SIGN,
-        null);
+    CobolFieldAttribute attr =
+        new CobolFieldAttribute(
+            CobolFieldAttribute.COB_TYPE_NUMERIC_BINARY,
+            18,
+            0,
+            CobolFieldAttribute.COB_FLAG_HAVE_SIGN,
+            null);
     AbstractCobolField field = CobolFieldFactory.makeCobolField(8, (CobolDataStorage) null, attr);
 
     CobolDataStorage s = srcfield.getDataStorage();
@@ -814,7 +833,7 @@ public class CobolIntrinsic {
     for (int i = 0; i < srcfield.getSize(); ++i) {
       if (i < srcfield.getSize() - 1) {
         if ((Character.toUpperCase(s.getByte(i)) == 'C'
-            && Character.toUpperCase(s.getByte(i + 1)) == 'R')
+                && Character.toUpperCase(s.getByte(i + 1)) == 'R')
             || (Character.toUpperCase(s.getByte(i)) == 'D'
                 && Character.toUpperCase(s.getByte(i + 1)) == 'B')) {
           sign = true;
@@ -862,7 +881,8 @@ public class CobolIntrinsic {
       makeFieldEntry(field);
       currField.getDataStorage().set(llval);
     } else {
-      String dataString = String.format("%s%s.%s", sign ? "-" : "", integerBuff.toString(), decimalBuff.toString());
+      String dataString =
+          String.format("%s%s.%s", sign ? "-" : "", integerBuff.toString(), decimalBuff.toString());
       double val = Double.parseDouble(dataString);
       makeDoubleEntry();
       currField.getDataStorage().set(val);
@@ -878,12 +898,13 @@ public class CobolIntrinsic {
    */
   public static AbstractCobolField funcNumvalC(
       AbstractCobolField srcfield, AbstractCobolField currency) {
-    CobolFieldAttribute attr = new CobolFieldAttribute(
-        CobolFieldAttribute.COB_TYPE_NUMERIC_BINARY,
-        18,
-        0,
-        CobolFieldAttribute.COB_FLAG_HAVE_SIGN,
-        null);
+    CobolFieldAttribute attr =
+        new CobolFieldAttribute(
+            CobolFieldAttribute.COB_TYPE_NUMERIC_BINARY,
+            18,
+            0,
+            CobolFieldAttribute.COB_FLAG_HAVE_SIGN,
+            null);
     AbstractCobolField field = CobolFieldFactory.makeCobolField(8, (CobolDataStorage) null, attr);
 
     boolean sign = false;
@@ -913,7 +934,8 @@ public class CobolIntrinsic {
       if (currencyData != null) {
         if (i < srcfield.getSize() - currency.getSize()) {
           if (currencyData.memcmp(
-              srcfield.getDataStorage().getSubDataStorage(i), currency.getSize()) == 0) {
+                  srcfield.getDataStorage().getSubDataStorage(i), currency.getSize())
+              == 0) {
             i += (currency.getSize() - 1);
             continue;
           }
@@ -962,7 +984,8 @@ public class CobolIntrinsic {
       makeFieldEntry(field);
       currField.getDataStorage().set(llval);
     } else {
-      String dataString = String.format("%s%s.%s", sign ? "-" : "", integerBuff.toString(), decimalBuff.toString());
+      String dataString =
+          String.format("%s%s.%s", sign ? "-" : "", integerBuff.toString(), decimalBuff.toString());
       double val = Double.parseDouble(dataString);
       makeDoubleEntry();
       currField.getDataStorage().set(val);
@@ -1042,12 +1065,13 @@ public class CobolIntrinsic {
     int size = sizeInBase10(d1.getValue());
     AbstractCobolField field;
     if (size < 19) {
-      CobolFieldAttribute attr = new CobolFieldAttribute(
-          CobolFieldAttribute.COB_TYPE_NUMERIC_BINARY,
-          18,
-          scale,
-          CobolFieldAttribute.COB_FLAG_HAVE_SIGN,
-          null);
+      CobolFieldAttribute attr =
+          new CobolFieldAttribute(
+              CobolFieldAttribute.COB_TYPE_NUMERIC_BINARY,
+              18,
+              scale,
+              CobolFieldAttribute.COB_FLAG_HAVE_SIGN,
+              null);
       field = CobolFieldFactory.makeCobolField(8, (CobolDataStorage) null, attr);
     } else {
       if (d1.getScale() > size) {
@@ -1056,12 +1080,13 @@ public class CobolIntrinsic {
       if (scale > size) {
         size = scale;
       }
-      CobolFieldAttribute attr = new CobolFieldAttribute(
-          CobolFieldAttribute.COB_TYPE_NUMERIC_DISPLAY,
-          size,
-          scale,
-          CobolFieldAttribute.COB_FLAG_HAVE_SIGN,
-          null);
+      CobolFieldAttribute attr =
+          new CobolFieldAttribute(
+              CobolFieldAttribute.COB_TYPE_NUMERIC_DISPLAY,
+              size,
+              scale,
+              CobolFieldAttribute.COB_FLAG_HAVE_SIGN,
+              null);
       field = CobolFieldFactory.makeCobolField(size, (CobolDataStorage) null, attr);
     }
     makeFieldEntry(field);
@@ -1081,7 +1106,8 @@ public class CobolIntrinsic {
    * @return
    */
   public static AbstractCobolField funcOrdMin(int params, AbstractCobolField... fields) {
-    CobolFieldAttribute attr = new CobolFieldAttribute(CobolFieldAttribute.COB_TYPE_NUMERIC_DISPLAY, 8, 0, 0, null);
+    CobolFieldAttribute attr =
+        new CobolFieldAttribute(CobolFieldAttribute.COB_TYPE_NUMERIC_DISPLAY, 8, 0, 0, null);
     AbstractCobolField field = CobolFieldFactory.makeCobolField(8, (CobolDataStorage) null, attr);
     makeFieldEntry(field);
 
@@ -1112,7 +1138,8 @@ public class CobolIntrinsic {
    * @return
    */
   public static AbstractCobolField funcOrdMax(int params, AbstractCobolField... fields) {
-    CobolFieldAttribute attr = new CobolFieldAttribute(CobolFieldAttribute.COB_TYPE_NUMERIC_DISPLAY, 8, 0, 0, null);
+    CobolFieldAttribute attr =
+        new CobolFieldAttribute(CobolFieldAttribute.COB_TYPE_NUMERIC_DISPLAY, 8, 0, 0, null);
     AbstractCobolField field = CobolFieldFactory.makeCobolField(8, (CobolDataStorage) null, attr);
     makeFieldEntry(field);
 
@@ -1257,12 +1284,13 @@ public class CobolIntrinsic {
    * @return
    */
   public static AbstractCobolField funcMean(int pramas, AbstractCobolField... fields) {
-    CobolFieldAttribute attr = new CobolFieldAttribute(
-        CobolFieldAttribute.COB_TYPE_NUMERIC_BINARY,
-        18,
-        0,
-        CobolFieldAttribute.COB_FLAG_HAVE_SIGN,
-        null);
+    CobolFieldAttribute attr =
+        new CobolFieldAttribute(
+            CobolFieldAttribute.COB_TYPE_NUMERIC_BINARY,
+            18,
+            0,
+            CobolFieldAttribute.COB_FLAG_HAVE_SIGN,
+            null);
     AbstractCobolField field = CobolFieldFactory.makeCobolField(8, (CobolDataStorage) null, attr);
     CobolDecimal d1 = new CobolDecimal(BigDecimal.ZERO);
     CobolDecimal d2 = new CobolDecimal();
@@ -1315,12 +1343,13 @@ public class CobolIntrinsic {
    */
   public static AbstractCobolField funcMod(
       AbstractCobolField srcfield1, AbstractCobolField srcfield2) throws CobolStopRunException {
-    CobolFieldAttribute attr = new CobolFieldAttribute(
-        CobolFieldAttribute.COB_TYPE_NUMERIC_BINARY,
-        18,
-        0,
-        CobolFieldAttribute.COB_FLAG_HAVE_SIGN,
-        null);
+    CobolFieldAttribute attr =
+        new CobolFieldAttribute(
+            CobolFieldAttribute.COB_TYPE_NUMERIC_BINARY,
+            18,
+            0,
+            CobolFieldAttribute.COB_FLAG_HAVE_SIGN,
+            null);
     AbstractCobolField field = CobolFieldFactory.makeCobolField(8, (CobolDataStorage) null, attr);
     CobolDecimal d1 = new CobolDecimal();
     CobolDecimal d2 = new CobolDecimal();
@@ -1350,12 +1379,13 @@ public class CobolIntrinsic {
    */
   public static AbstractCobolField funcRange(int params, AbstractCobolField... fields)
       throws CobolStopRunException {
-    CobolFieldAttribute attr = new CobolFieldAttribute(
-        CobolFieldAttribute.COB_TYPE_NUMERIC_BINARY,
-        18,
-        0,
-        CobolFieldAttribute.COB_FLAG_HAVE_SIGN,
-        null);
+    CobolFieldAttribute attr =
+        new CobolFieldAttribute(
+            CobolFieldAttribute.COB_TYPE_NUMERIC_BINARY,
+            18,
+            0,
+            CobolFieldAttribute.COB_FLAG_HAVE_SIGN,
+            null);
     AbstractCobolField field = CobolFieldFactory.makeCobolField(8, (CobolDataStorage) null, attr);
     CobolDecimal d1 = new CobolDecimal();
     CobolDecimal d2 = new CobolDecimal();
@@ -1394,12 +1424,13 @@ public class CobolIntrinsic {
    */
   public static AbstractCobolField funcRem(
       AbstractCobolField srcfield1, AbstractCobolField srcfield2) throws CobolStopRunException {
-    CobolFieldAttribute attr = new CobolFieldAttribute(
-        CobolFieldAttribute.COB_TYPE_NUMERIC_BINARY,
-        18,
-        0,
-        CobolFieldAttribute.COB_FLAG_HAVE_SIGN,
-        null);
+    CobolFieldAttribute attr =
+        new CobolFieldAttribute(
+            CobolFieldAttribute.COB_TYPE_NUMERIC_BINARY,
+            18,
+            0,
+            CobolFieldAttribute.COB_FLAG_HAVE_SIGN,
+            null);
     AbstractCobolField field = CobolFieldFactory.makeCobolField(8, (CobolDataStorage) null, attr);
     AbstractCobolField f1 = funcIntegerPart(intrBinop(srcfield1, '/', srcfield2));
     CobolDecimal d1 = new CobolDecimal();
@@ -1428,12 +1459,13 @@ public class CobolIntrinsic {
    * @return
    */
   public static AbstractCobolField funcRandom(int prams, AbstractCobolField... fields) {
-    CobolFieldAttribute attr = new CobolFieldAttribute(
-        CobolFieldAttribute.COB_TYPE_NUMERIC_BINARY,
-        18,
-        0,
-        CobolFieldAttribute.COB_FLAG_HAVE_SIGN,
-        null);
+    CobolFieldAttribute attr =
+        new CobolFieldAttribute(
+            CobolFieldAttribute.COB_TYPE_NUMERIC_BINARY,
+            18,
+            0,
+            CobolFieldAttribute.COB_FLAG_HAVE_SIGN,
+            null);
     AbstractCobolField field = CobolFieldFactory.makeCobolField(8, (CobolDataStorage) null, attr);
 
     if (fields.length > 0) {
@@ -1474,12 +1506,13 @@ public class CobolIntrinsic {
    */
   public static AbstractCobolField funcVariance(int prams, AbstractCobolField... fields)
       throws CobolStopRunException {
-    CobolFieldAttribute attr = new CobolFieldAttribute(
-        CobolFieldAttribute.COB_TYPE_NUMERIC_BINARY,
-        18,
-        0,
-        CobolFieldAttribute.COB_FLAG_HAVE_SIGN,
-        null);
+    CobolFieldAttribute attr =
+        new CobolFieldAttribute(
+            CobolFieldAttribute.COB_TYPE_NUMERIC_BINARY,
+            18,
+            0,
+            CobolFieldAttribute.COB_FLAG_HAVE_SIGN,
+            null);
     AbstractCobolField field = CobolFieldFactory.makeCobolField(8, (CobolDataStorage) null, attr);
 
     if (fields.length == 1) {
@@ -1547,12 +1580,13 @@ public class CobolIntrinsic {
    */
   public static AbstractCobolField funcStandardDeviation(int prams, AbstractCobolField... fields)
       throws CobolStopRunException {
-    CobolFieldAttribute attr = new CobolFieldAttribute(
-        CobolFieldAttribute.COB_TYPE_NUMERIC_BINARY,
-        18,
-        0,
-        CobolFieldAttribute.COB_FLAG_HAVE_SIGN,
-        null);
+    CobolFieldAttribute attr =
+        new CobolFieldAttribute(
+            CobolFieldAttribute.COB_TYPE_NUMERIC_BINARY,
+            18,
+            0,
+            CobolFieldAttribute.COB_FLAG_HAVE_SIGN,
+            null);
     AbstractCobolField field = CobolFieldFactory.makeCobolField(8, (CobolDataStorage) null, attr);
 
     makeDoubleEntry();
@@ -1648,10 +1682,13 @@ public class CobolIntrinsic {
    */
   public static AbstractCobolField funcNational(AbstractCobolField srcfield) {
     int size = srcfield.getSize();
-    byte[] pdata = CobolNationalField.han2zen(srcfield.getDataStorage().getByteBuffer(size).array(), size);
+    byte[] pdata =
+        CobolNationalField.han2zen(srcfield.getDataStorage().getByteBuffer(size).array(), size);
     int ndata = CobolNationalField.workReturnSize;
-    CobolFieldAttribute attr = new CobolFieldAttribute(CobolFieldAttribute.COB_TYPE_NATIONAL, 0, 0, 0, null);
-    AbstractCobolField field = CobolFieldFactory.makeCobolField(ndata, (CobolDataStorage) null, attr);
+    CobolFieldAttribute attr =
+        new CobolFieldAttribute(CobolFieldAttribute.COB_TYPE_NATIONAL, 0, 0, 0, null);
+    AbstractCobolField field =
+        CobolFieldFactory.makeCobolField(ndata, (CobolDataStorage) null, attr);
     makeFieldEntry(field);
     currField.getDataStorage().memcpy(pdata, ndata);
     return currField;
@@ -1671,7 +1708,8 @@ public class CobolIntrinsic {
     String str;
     byte[] buff = new byte[12];
 
-    CobolFieldAttribute attr = new CobolFieldAttribute(CobolFieldAttribute.COB_TYPE_NUMERIC_DISPLAY, 12, 5, 0, null);
+    CobolFieldAttribute attr =
+        new CobolFieldAttribute(CobolFieldAttribute.COB_TYPE_NUMERIC_DISPLAY, 12, 5, 0, null);
     AbstractCobolField field = CobolFieldFactory.makeCobolField(12, (CobolDataStorage) null, attr);
     makeFieldEntry(field);
     CobolRuntimeException.setException(0);
@@ -1718,8 +1756,10 @@ public class CobolIntrinsic {
     for (i = 0; i < params; i++) {
       calcsize += fields[i].getSize();
     }
-    CobolFieldAttribute attr = new CobolFieldAttribute(CobolFieldAttribute.COB_TYPE_ALPHANUMERIC, 0, 0, 0, null);
-    AbstractCobolField field = CobolFieldFactory.makeCobolField(calcsize, (CobolDataStorage) null, attr);
+    CobolFieldAttribute attr =
+        new CobolFieldAttribute(CobolFieldAttribute.COB_TYPE_ALPHANUMERIC, 0, 0, 0, null);
+    AbstractCobolField field =
+        CobolFieldFactory.makeCobolField(calcsize, (CobolDataStorage) null, attr);
     makeFieldEntry(field);
     data = new byte[calcsize];
     for (i = 0; i < params; i++) {
@@ -1750,7 +1790,8 @@ public class CobolIntrinsic {
     int maxyear;
     LocalDateTime timeptr;
 
-    CobolFieldAttribute attr = new CobolFieldAttribute(CobolFieldAttribute.COB_TYPE_NUMERIC_BINARY, 8, 0, 0, null);
+    CobolFieldAttribute attr =
+        new CobolFieldAttribute(CobolFieldAttribute.COB_TYPE_NUMERIC_BINARY, 8, 0, 0, null);
     AbstractCobolField field = CobolFieldFactory.makeCobolField(4, (CobolDataStorage) null, attr);
     makeFieldEntry(field);
     year = fields[0].getInt();
@@ -1809,7 +1850,8 @@ public class CobolIntrinsic {
     int maxyear;
     LocalDateTime timeptr;
 
-    CobolFieldAttribute attr = new CobolFieldAttribute(CobolFieldAttribute.COB_TYPE_NUMERIC_BINARY, 8, 0, 0, null);
+    CobolFieldAttribute attr =
+        new CobolFieldAttribute(CobolFieldAttribute.COB_TYPE_NUMERIC_BINARY, 8, 0, 0, null);
     AbstractCobolField field = CobolFieldFactory.makeCobolField(4, (CobolDataStorage) null, attr);
     makeFieldEntry(field);
     year = fields[0].getInt();
@@ -1863,7 +1905,8 @@ public class CobolIntrinsic {
     int flen;
     byte[] data;
 
-    CobolFieldAttribute attr = new CobolFieldAttribute(CobolFieldAttribute.COB_TYPE_ALPHANUMERIC, 0, 0, 0, null);
+    CobolFieldAttribute attr =
+        new CobolFieldAttribute(CobolFieldAttribute.COB_TYPE_ALPHANUMERIC, 0, 0, 0, null);
     AbstractCobolField field = CobolFieldFactory.makeCobolField(0, (CobolDataStorage) null, attr);
     if (CobolRuntimeException.getException() == 0
         || (CobolRuntimeException.getExceptionCode() & 0x0500) != 0x0500) {
@@ -1890,7 +1933,8 @@ public class CobolIntrinsic {
   public static AbstractCobolField funcExceptionLocation() {
     String buff;
 
-    CobolFieldAttribute attr = new CobolFieldAttribute(CobolFieldAttribute.COB_TYPE_ALPHANUMERIC, 0, 0, 0, null);
+    CobolFieldAttribute attr =
+        new CobolFieldAttribute(CobolFieldAttribute.COB_TYPE_ALPHANUMERIC, 0, 0, 0, null);
     AbstractCobolField field = CobolFieldFactory.makeCobolField(0, (CobolDataStorage) null, attr);
     currField = field;
     if (CobolRuntimeException.getException() != 1
@@ -1902,28 +1946,32 @@ public class CobolIntrinsic {
     }
     if (CobolRuntimeException.getOrigSection() != null
         && CobolRuntimeException.getOrigParagragh() != null) {
-      buff = String.format(
-          "%s; %s OF %s; %d",
-          CobolRuntimeException.getOrigProgramId(),
-          CobolRuntimeException.getOrigParagragh(),
-          CobolRuntimeException.getOrigSection(),
-          CobolRuntimeException.getOrigLine());
+      buff =
+          String.format(
+              "%s; %s OF %s; %d",
+              CobolRuntimeException.getOrigProgramId(),
+              CobolRuntimeException.getOrigParagragh(),
+              CobolRuntimeException.getOrigSection(),
+              CobolRuntimeException.getOrigLine());
     } else if (CobolRuntimeException.getOrigSection() != null) {
-      buff = String.format(
-          "%s; %s; %d",
-          CobolRuntimeException.getOrigProgramId(),
-          CobolRuntimeException.getOrigSection(),
-          CobolRuntimeException.getOrigLine());
+      buff =
+          String.format(
+              "%s; %s; %d",
+              CobolRuntimeException.getOrigProgramId(),
+              CobolRuntimeException.getOrigSection(),
+              CobolRuntimeException.getOrigLine());
     } else if (CobolRuntimeException.getOrigParagragh() != null) {
-      buff = String.format(
-          "%s; %s; %d",
-          CobolRuntimeException.getOrigProgramId(),
-          CobolRuntimeException.getOrigParagragh(),
-          CobolRuntimeException.getOrigLine());
+      buff =
+          String.format(
+              "%s; %s; %d",
+              CobolRuntimeException.getOrigProgramId(),
+              CobolRuntimeException.getOrigParagragh(),
+              CobolRuntimeException.getOrigLine());
     } else {
-      buff = String.format(
-          "%s; ; %d",
-          CobolRuntimeException.getOrigProgramId(), CobolRuntimeException.getOrigLine());
+      buff =
+          String.format(
+              "%s; ; %d",
+              CobolRuntimeException.getOrigProgramId(), CobolRuntimeException.getOrigLine());
     }
     localeBuff = buff.getBytes();
     field.setSize(localeBuff.length);
@@ -1937,7 +1985,8 @@ public class CobolIntrinsic {
    * @return
    */
   public static AbstractCobolField funcExceptionStatement() {
-    CobolFieldAttribute attr = new CobolFieldAttribute(CobolFieldAttribute.COB_TYPE_ALPHANUMERIC, 0, 0, 0, null);
+    CobolFieldAttribute attr =
+        new CobolFieldAttribute(CobolFieldAttribute.COB_TYPE_ALPHANUMERIC, 0, 0, 0, null);
     AbstractCobolField field = CobolFieldFactory.makeCobolField(31, (CobolDataStorage) null, attr);
     makeFieldEntry(field);
     byte[] data;
@@ -1961,15 +2010,17 @@ public class CobolIntrinsic {
   public static AbstractCobolField funcExceptionStatus() {
     byte[] exceptName;
 
-    CobolFieldAttribute attr = new CobolFieldAttribute(CobolFieldAttribute.COB_TYPE_ALPHANUMERIC, 0, 0, 0, null);
+    CobolFieldAttribute attr =
+        new CobolFieldAttribute(CobolFieldAttribute.COB_TYPE_ALPHANUMERIC, 0, 0, 0, null);
     AbstractCobolField field = CobolFieldFactory.makeCobolField(31, (CobolDataStorage) null, attr);
     makeFieldEntry(field);
     byte[] data = String.format("%-31s", "").getBytes();
     currField.setDataStorage(new CobolDataStorage(data));
     if (CobolRuntimeException.getExceptionCode() != 0) {
       try {
-        exceptName = CobolRuntimeException.getExceptionName(CobolRuntimeException.getExceptionCode())
-            .getBytes();
+        exceptName =
+            CobolRuntimeException.getExceptionName(CobolRuntimeException.getExceptionCode())
+                .getBytes();
       } catch (NullPointerException e) {
         exceptName = CONST_STRING_EXCEPTION_OBJECT;
       }
@@ -1985,12 +2036,13 @@ public class CobolIntrinsic {
    * @return
    */
   public static AbstractCobolField funcFractionPart(AbstractCobolField srcfield) {
-    CobolFieldAttribute attr = new CobolFieldAttribute(
-        CobolFieldAttribute.COB_TYPE_NUMERIC_BINARY,
-        18,
-        18,
-        CobolFieldAttribute.COB_FLAG_HAVE_SIGN,
-        null);
+    CobolFieldAttribute attr =
+        new CobolFieldAttribute(
+            CobolFieldAttribute.COB_TYPE_NUMERIC_BINARY,
+            18,
+            18,
+            CobolFieldAttribute.COB_FLAG_HAVE_SIGN,
+            null);
     AbstractCobolField field = CobolFieldFactory.makeCobolField(8, (CobolDataStorage) null, attr);
     makeFieldEntry(field);
 
@@ -2017,7 +2069,8 @@ public class CobolIntrinsic {
     String p1;
     int p2;
 
-    CobolFieldAttribute attr = new CobolFieldAttribute(CobolFieldAttribute.COB_TYPE_NUMERIC_BINARY, 8, 0, 0, null);
+    CobolFieldAttribute attr =
+        new CobolFieldAttribute(CobolFieldAttribute.COB_TYPE_NUMERIC_BINARY, 8, 0, 0, null);
     AbstractCobolField field = CobolFieldFactory.makeCobolField(4, (CobolDataStorage) null, attr);
     makeFieldEntry(field);
 
@@ -2070,7 +2123,8 @@ public class CobolIntrinsic {
    */
   public static AbstractCobolField funcSecondsPastMidnight() {
     int seconds;
-    CobolFieldAttribute attr = new CobolFieldAttribute(CobolFieldAttribute.COB_TYPE_NUMERIC_BINARY, 8, 0, 0, null);
+    CobolFieldAttribute attr =
+        new CobolFieldAttribute(CobolFieldAttribute.COB_TYPE_NUMERIC_BINARY, 8, 0, 0, null);
     AbstractCobolField field = CobolFieldFactory.makeCobolField(4, (CobolDataStorage) null, attr);
     makeFieldEntry(field);
     LocalDateTime currDate = LocalDateTime.now();
@@ -2086,12 +2140,13 @@ public class CobolIntrinsic {
    * @return
    */
   public static AbstractCobolField funcSign(AbstractCobolField srcfield) {
-    CobolFieldAttribute attr = new CobolFieldAttribute(
-        CobolFieldAttribute.COB_TYPE_NUMERIC_BINARY,
-        8,
-        0,
-        CobolFieldAttribute.COB_FLAG_HAVE_SIGN,
-        null);
+    CobolFieldAttribute attr =
+        new CobolFieldAttribute(
+            CobolFieldAttribute.COB_TYPE_NUMERIC_BINARY,
+            8,
+            0,
+            CobolFieldAttribute.COB_FLAG_HAVE_SIGN,
+            null);
     AbstractCobolField field = CobolFieldFactory.makeCobolField(4, (CobolDataStorage) null, attr);
     makeFieldEntry(field);
 
@@ -2114,7 +2169,8 @@ public class CobolIntrinsic {
   public static AbstractCobolField funcStoredCharLength(AbstractCobolField srcfield) {
     int count;
 
-    CobolFieldAttribute attr = new CobolFieldAttribute(CobolFieldAttribute.COB_TYPE_NUMERIC_BINARY, 8, 0, 0, null);
+    CobolFieldAttribute attr =
+        new CobolFieldAttribute(CobolFieldAttribute.COB_TYPE_NUMERIC_BINARY, 8, 0, 0, null);
     AbstractCobolField field = CobolFieldFactory.makeCobolField(4, (CobolDataStorage) null, attr);
     makeFieldEntry(field);
 

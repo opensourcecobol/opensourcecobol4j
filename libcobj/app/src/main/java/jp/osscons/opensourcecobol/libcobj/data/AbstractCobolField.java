@@ -152,9 +152,7 @@ public abstract class AbstractCobolField {
    */
   public abstract String getString();
 
-  /**
-   * @return
-   */
+  /** @return */
   public int getInt() {
     CobolFieldAttribute attr =
         new CobolFieldAttribute(
@@ -169,9 +167,7 @@ public abstract class AbstractCobolField {
     return ByteBuffer.wrap(n.getByteArray(0, 4)).getInt();
   }
 
-  /**
-   * @return
-   */
+  /** @return */
   public double getDouble() {
     try {
       return Double.parseDouble(this.getString());
