@@ -4,6 +4,7 @@ plugins {
     application
     id("com.github.johnrengelman.shadow") version "8.1.1"
     id("java")
+    id("com.github.sherter.google-java-format") version "0.9"
 }
 
 repositories {
