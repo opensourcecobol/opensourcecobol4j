@@ -5,6 +5,8 @@ plugins {
     id("com.github.johnrengelman.shadow") version "8.1.1"
     id("java")
     id("com.github.sherter.google-java-format") version "0.9"
+    id("maven-publish")
+    kotlin("multiplatform") version "1.8.10"
 }
 
 repositories {
@@ -23,6 +25,18 @@ java {
     }
 }
 
+publishing {
+  repositories {
+    maven {
+      name = "GitHubPackages"
+      url = uri("https://maven.pkg.github.com/opensourcecobol/opensourcecobol4j")
+      credentials {
+        username = project.findProperty("gpr.user") as String? ?: System.getenv("GITHUB_ACTOR")
+        password = project.findProperty("gpr.key") as String? ?: System.getenv("GITHUB_TOKEN")
+      }
+    }
+  }
+}
 
 application {
     mainClass.set("")
