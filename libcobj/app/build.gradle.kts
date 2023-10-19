@@ -25,7 +25,7 @@ java {
 }
 
 publishing {
-    publications {
+    /*publications {
         create<MavenPublication>("mavenJava") {
             artifactId = "my-library"
             from(components["java"])
@@ -47,7 +47,7 @@ publishing {
             //    )
             //}
         }
-    }
+    }*/
     repositories {
       maven {
         url = uri("https://maven.pkg.github.com/yutaro-sakamoto/opensourcecobol4j")
