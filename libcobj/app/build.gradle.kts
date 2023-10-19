@@ -25,37 +25,20 @@ java {
 }
 
 publishing {
-    /*publications {
-        create<MavenPublication>("mavenJava") {
-            artifactId = "my-library"
-            from(components["java"])
-            //versionMapping {
-            //    usage("java-api") {
-            //        fromResolutionOf("runtimeClasspath")
-            //    }
-            //    usage("java-runtime") {
-            //        fromResolutionResult()
-            //    }
-            //}
-            //pom {
-            //    name = "My Library"
-            //    description = "A concise description of my library"
-            //    url = "http://www.example.com/library"
-            //    properties = mapOf(
-            //        "myProp" to "value",
-            //        "prop.with.dots" to "anotherValue"
-            //    )
-            //}
-        }
-    }*/
     repositories {
-      maven {
-        url = uri("https://maven.pkg.github.com/yutaro-sakamoto/opensourcecobol4j")
-        credentials {
-          username = System.getenv("GITHUB_ACTOR")
-          password = System.getenv("GITHUB_TOKEN")
+        maven {
+            name = "GitHubPackages"
+            url = uri("https://maven.pkg.github.com/yutaro-sakamoto/opensourcecobol4j")
+            credentials {
+                username = project.findProperty("gpr.user") as String? ?: System.getenv("GITHUB_ACTOR")
+                password = project.findProperty("gpr.key") as String? ?: System.getenv("GITHUB_TOKEN")
+            }
         }
-      }
+    }
+    publications {
+        register<MavenPublication>("gpr") {
+            from(components["java"])
+        }
     }
 }
 
