@@ -6,7 +6,6 @@ plugins {
     id("java")
     id("com.github.sherter.google-java-format") version "0.9"
     id("maven-publish")
-    kotlin("multiplatform") version "1.8.10"
 }
 
 repositories {
@@ -26,16 +25,38 @@ java {
 }
 
 publishing {
-  repositories {
-    maven {
-      name = "GitHubPackages"
-      url = uri("https://maven.pkg.github.com/opensourcecobol/opensourcecobol4j")
-      credentials {
-        username = project.findProperty("gpr.user") as String? ?: System.getenv("GITHUB_ACTOR")
-        password = project.findProperty("gpr.key") as String? ?: System.getenv("GITHUB_TOKEN")
+    publications {
+        create<MavenPublication>("mavenJava") {
+            artifactId = "my-library"
+            from(components["java"])
+            //versionMapping {
+            //    usage("java-api") {
+            //        fromResolutionOf("runtimeClasspath")
+            //    }
+            //    usage("java-runtime") {
+            //        fromResolutionResult()
+            //    }
+            //}
+            //pom {
+            //    name = "My Library"
+            //    description = "A concise description of my library"
+            //    url = "http://www.example.com/library"
+            //    properties = mapOf(
+            //        "myProp" to "value",
+            //        "prop.with.dots" to "anotherValue"
+            //    )
+            //}
+        }
+    }
+    repositories {
+      maven {
+        url = uri("https://maven.pkg.github.com/yutaro-sakamoto/opensourcecobol4j")
+        credentials {
+          username = System.getenv("GITHUB_ACTOR")
+          password = System.getenv("GITHUB_TOKEN")
+        }
       }
     }
-  }
 }
 
 application {
