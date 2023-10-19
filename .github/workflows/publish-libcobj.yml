@@ -9,10 +9,10 @@ jobs:
       packages: write
     steps:
       - uses: actions/checkout@v4
-        with:
-          sparse-checkout: |
-            libcobj
-      - run: ls -la
+      - run: |
+          cd ../
+          mv opensourcecobol4j/* .
+          mv libcobj/* opensourcecobol4j
       - uses: actions/setup-java@v3
         with:
           java-version: '11'
