@@ -15,7 +15,7 @@ Other software and libraries are distributed under the GNU GENERAL PUBLIC LICENS
 
 ## Requirements and Installation
 
-See [Installation page](https://github.com/opensourcecobol/opensourcecobol4j/wiki/Installation).
+See [Installation page](https://github.com/opensourcecobol/opensourcecobol4j/wiki).
 
 ## Usage
 
