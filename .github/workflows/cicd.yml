@@ -96,9 +96,7 @@ jobs:
         run: |
           sudo apt-get update -y
           sudo apt-get install -y clang-format cppcheck
-          curl -L -o pmd-bin-6.52.0.zip https://github.com/pmd/pmd/releases/download/pmd_releases%2F6.52.0/pmd-bin-6.52.0.zip
           curl -L -o spotbugs-4.7.3.zip https://github.com/spotbugs/spotbugs/releases/download/4.7.3/spotbugs-4.7.3.zip
-          unzip pmd-bin-6.52.0.zip
           unzip spotbugs-4.7.3.zip
 
       - name: Install opensource COBOL 4J
@@ -118,7 +116,8 @@ jobs:
 
       - name: Run PMD
         run: |
-          pmd-bin-6.52.0/bin/run.sh pmd -d ${PWD}/libcobj/src -R ${PWD}/.github/ruleset.xml -f text
+          cd libcobj
+          ./gradlew pmdMain
 
       - name: Run cppcheck
         run: |
