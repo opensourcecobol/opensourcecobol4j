@@ -28,7 +28,7 @@ java {
 pmd {
     isConsoleOutput = true
     ruleSets = listOf()
-    ruleSetFiles = files("${rootDir}/config/ruleset.xml")
+    ruleSetFiles = files("${rootDir}/config/pmdRuleSet.xml")
 }
 
 publishing {

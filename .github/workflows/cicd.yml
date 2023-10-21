@@ -116,11 +116,8 @@ jobs:
 
       - name: Run PMD
         run: |
-          cd libcobj/
-          if ! ./gradlew pmdMain; then
-            cat app/build/reports/pmd/main.xml
-            exit 1
-          fi
+          cd libcobj
+          ./gradlew pmdMain
 
       - name: Run cppcheck
         run: |
