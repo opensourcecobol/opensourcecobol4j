@@ -28,7 +28,7 @@ publishing {
     repositories {
         maven {
             name = "GitHubPackages"
-            url = uri("https://maven.pkg.github.com/yutaro-sakamoto/opensourcecobol4j")
+            url = uri("https://maven.pkg.github.com/opensourcecobol/opensourcecobol4j")
             credentials {
                 username = project.findProperty("gpr.user") as String? ?: System.getenv("GITHUB_ACTOR")
                 password = project.findProperty("gpr.key") as String? ?: System.getenv("GITHUB_TOKEN")
@@ -37,6 +37,9 @@ publishing {
     }
     publications {
         register<MavenPublication>("gpr") {
+            groupId = "jp.osscons.opensourcecobol"
+            artifactId = "libcobj"
+            version = "1.0.15b"
             from(components["java"])
         }
     }
