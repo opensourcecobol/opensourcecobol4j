@@ -96,8 +96,6 @@ jobs:
         run: |
           sudo apt-get update -y
           sudo apt-get install -y clang-format cppcheck
-          curl -L -o spotbugs-4.7.3.zip https://github.com/spotbugs/spotbugs/releases/download/4.7.3/spotbugs-4.7.3.zip
-          unzip spotbugs-4.7.3.zip
 
       - name: Install opensource COBOL 4J
         run: |
@@ -110,15 +108,16 @@ jobs:
         run: |
           ./check-format
 
-      - name: Run SpotBugs
+      - name: Run SpotBugs (ignore results)
         run: |
-          java -jar spotbugs-4.7.3/lib/spotbugs.jar -textui libcobj/app/build/classes
+          cd libcobj
+          ./gradlew spotbugsMain || true
 
       - name: Run PMD
         run: |
           cd libcobj
           ./gradlew pmdMain
 
-      - name: Run cppcheck
+      - name: Run cppcheck (ignore results)
         run: |
           cd cobj && cppcheck cobj.c cobj.h codegen.c config.c error.c field.c pplex.c ppparse.c ppparse.h reserved.c tree.c tree.h typeck.c
