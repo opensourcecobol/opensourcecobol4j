@@ -14,19 +14,7 @@ CIの静的解析はCとJavaのソースコードがそれぞれ[clang-format](h
 
 ## セットアップ
 
-### clang-format
-
 Ubuntuでは`sudo apt install clang-format`コマンドを実行すれば`clang-format`をインストールできます。
-
-### PMD
-
-下記のコマンドを実行して`PMD`をインストールしてください。
-```sh
-curl -L -o pmd-bin-6.52.0.zip https://github.com/pmd/pmd/releases/download/pmd_releases%2F6.52.0/pmd-bin-6.52.0.zip
-unzip pmd-bin-6.52.0.zip
-mv pmd-bin-6.52 /usr/local/bin/
-rm pmd-bin-6.52.0.zip
-```
 
 ## 静的解析の実行
 
@@ -37,7 +25,7 @@ opensource COBOL 4Jのトップディレクトリで`./format`を実行してく
 
 ### PMD
 
-opensource COBOL 4Jのトップディレクトリで下記のコマンドを実行してください。
+opensource COBOL 4Jのlibcobj/ディレクトリで下記のコマンドを実行してください。
 ```
-/usr/local/bin/pmd-bin-6.52.0/bin/run.sh -d libcobj/src -R .github/ruleset.xml -f text
+./gradlew pmdMain
 ```

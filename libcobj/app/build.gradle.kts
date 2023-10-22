@@ -6,6 +6,7 @@ plugins {
     id("java")
     id("com.github.sherter.google-java-format") version "0.9"
     id("maven-publish")
+    pmd
 }
 
 repositories {
@@ -22,6 +23,12 @@ java {
     toolchain {
         languageVersion.set(JavaLanguageVersion.of(11))
     }
+}
+
+pmd {
+    isConsoleOutput = true
+    ruleSets = listOf()
+    ruleSetFiles = files("${rootDir}/config/pmdRuleSet.xml")
 }
 
 publishing {
