@@ -7,6 +7,7 @@ plugins {
     id("com.github.sherter.google-java-format") version "0.9"
     id("maven-publish")
     pmd
+    id("com.github.spotbugs") version "6.0.0-rc.2"
 }
 
 repositories {
@@ -15,8 +16,8 @@ repositories {
 
 dependencies {
     implementation("com.google.guava:guava:31.1-jre")
-
     implementation("org.xerial:sqlite-jdbc:3.30.1")
+    spotbugs("com.github.spotbugs:spotbugs:4.8.0")
 }
 
 java {
