@@ -2265,10 +2265,12 @@ public class CobolIntrinsic {
       n++;
       p2[pi2++] = p1[pi1++]; 
     }
+    currField.setDataStorage(new CobolDataStorage(p2));
+    
     if(offset > 0){
       calcRefMod(currField, offset, length);
     }
-    currField.setDataStorage(new CobolDataStorage(p2));
+
     return currField;
   }
 }
