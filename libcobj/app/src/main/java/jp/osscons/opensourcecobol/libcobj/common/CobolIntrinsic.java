@@ -2204,13 +2204,15 @@ public class CobolIntrinsic {
     }
     int beginIndex = 0;
     if (direction != 2) {
-      for (; srcStorage.getByte(beginIndex) == ' '; ++beginIndex)
-        ;
+      while (srcStorage.getByte(beginIndex) == ' ') {
+        ++beginIndex;
+      }
     }
     int endIndex = srcFieldSize - 1;
     if (direction != 1) {
-      for (; srcStorage.getByte(endIndex) == ' '; --endIndex)
-        ;
+      while (srcStorage.getByte(endIndex) == ' ') {
+        --endIndex;
+      }
     }
     CobolDataStorage currStorage = currField.getDataStorage();
     currField.setSize(endIndex - beginIndex + 1);
