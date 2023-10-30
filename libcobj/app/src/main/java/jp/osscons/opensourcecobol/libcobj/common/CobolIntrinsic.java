@@ -2184,4 +2184,44 @@ public class CobolIntrinsic {
     currField.setInt(count);
     return currField;
   }
+
+  /** Equivalent to cob_intr_trim */
+  public static AbstractCobolField funcTrim(
+      int offset, int length, AbstractCobolField srcField, int direction) {
+    makeFieldEntry(srcField);
+    int i;
+    int srcFieldSize = srcField.getSize();
+    CobolDataStorage srcStorage = srcField.getDataStorage();
+    for (i = 0; i < srcFieldSize; ++i) {
+      if (srcStorage.getByte(i) != ' ') {
+        break;
+      }
+    }
+    if (i == srcFieldSize) {
+      currField.setSize(1);
+      currField.getDataStorage().setByte(0, (byte) ' ');
+      return currField;
+    }
+    int beginIndex = 0;
+    if (direction != 2) {
+      while (srcStorage.getByte(beginIndex) == ' ') {
+        ++beginIndex;
+      }
+    }
+    int endIndex = srcFieldSize - 1;
+    if (direction != 1) {
+      while (srcStorage.getByte(endIndex) == ' ') {
+        --endIndex;
+      }
+    }
+    CobolDataStorage currStorage = currField.getDataStorage();
+    currField.setSize(endIndex - beginIndex + 1);
+    for (i = 0; i <= endIndex - beginIndex; ++i) {
+      currStorage.setByte(i, srcStorage.getByte(beginIndex + i));
+    }
+    if (offset > 0) {
+      calcRefMod(currField, offset, length);
+    }
+    return currField;
+  }
 }
