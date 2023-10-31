@@ -1,0 +1,50 @@
+name: Other tests
+
+on:
+  workflow_call:
+    inputs:
+      test-name:
+        required: true
+        type: string
+
+env:
+  CLASSPATH: ":/usr/lib/opensourcecobol4j/libcobj.jar"
+
+jobs:
+  test-other:
+    strategy:
+      matrix:
+        os: ["ubuntu:22.04", "almalinux:9"]
+    runs-on: ubuntu-latest
+    container:
+      image: ${{ matrix.os }}
+    steps:
+      - name: Get the artifact name
+        run: echo ARTIFACT_NAME=${{ matrix.os }} | sed 's/:/-/g' >> $GITHUB_ENV
+
+      - uses: actions/download-artifact@v3
+        with:
+          name: opensourcecobol4j-${{ env.ARTIFACT_NAME }}
+
+      - name: Install dependencies on Ubuntu 22.04
+        if: matrix.os == 'ubuntu:22.04'
+        run: |
+          apt update -y
+          apt install -y default-jdk build-essential
+
+      - name: Install dependencies on AlmaLinux 9
+        if: matrix.os == 'almalinux:9'
+        run: |
+          dnf -y update
+          dnf install -y java-17-openjdk-devel gcc make diffutils
+
+      - name: Install opensource COBOL 4J
+        run: |
+          tar zxf opensourcecobol4j.tar.gz
+          mv opensourcecobol4j/* .
+          make install
+      
+      - name: Run tests ${{ inputs.test-name }}
+        run: |
+          cd tests/
+          ./${{ inputs.test-name }}

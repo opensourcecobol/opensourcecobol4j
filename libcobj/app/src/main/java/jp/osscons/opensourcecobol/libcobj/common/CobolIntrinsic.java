@@ -1108,7 +1108,7 @@ public class CobolIntrinsic {
   public static AbstractCobolField funcOrdMin(int params, AbstractCobolField... fields) {
     CobolFieldAttribute attr =
         new CobolFieldAttribute(CobolFieldAttribute.COB_TYPE_NUMERIC_DISPLAY, 8, 0, 0, null);
-    AbstractCobolField field = CobolFieldFactory.makeCobolField(4, (CobolDataStorage) null, attr);
+    AbstractCobolField field = CobolFieldFactory.makeCobolField(8, (CobolDataStorage) null, attr);
     makeFieldEntry(field);
 
     if (fields.length <= 1) {
@@ -1126,7 +1126,7 @@ public class CobolIntrinsic {
       }
     }
 
-    currField.setInt(ordmin + 1);
+    currField.setLong((long) ordmin + 1);
     return currField;
   }
 
@@ -1140,7 +1140,7 @@ public class CobolIntrinsic {
   public static AbstractCobolField funcOrdMax(int params, AbstractCobolField... fields) {
     CobolFieldAttribute attr =
         new CobolFieldAttribute(CobolFieldAttribute.COB_TYPE_NUMERIC_DISPLAY, 8, 0, 0, null);
-    AbstractCobolField field = CobolFieldFactory.makeCobolField(4, (CobolDataStorage) null, attr);
+    AbstractCobolField field = CobolFieldFactory.makeCobolField(8, (CobolDataStorage) null, attr);
     makeFieldEntry(field);
 
     if (fields.length <= 1) {
@@ -1158,7 +1158,7 @@ public class CobolIntrinsic {
       }
     }
 
-    currField.setInt(ordmax + 1);
+    currField.setLong((long) ordmax + 1);
     return currField;
   }
 
@@ -1673,7 +1673,7 @@ public class CobolIntrinsic {
   }
 
   /**
-   * libcob/intrinsicのcob_intr_present_valueの実装
+   * libcob/intrinsicのcob_intr_nationalの実装
    *
    * @param prams
    * @param fields
@@ -2047,6 +2047,181 @@ public class CobolIntrinsic {
     makeFieldEntry(field);
 
     currField.moveFrom(srcfield);
+    return currField;
+  }
+
+  /**
+   * cob_intr_seconds_from_formatted_timeの実装
+   *
+   * @param format
+   * @param value
+   * @return
+   */
+  public static AbstractCobolField funcSecondsFromFormattedTime(
+      AbstractCobolField format, AbstractCobolField value) {
+    int n;
+    int seconds = 0;
+    int minutes = 0;
+    int hours = 0;
+    boolean secondsSeen = false;
+    boolean minutesSeen = false;
+    boolean hoursSeen = false;
+    String p1;
+    int p2;
+
+    CobolFieldAttribute attr =
+        new CobolFieldAttribute(CobolFieldAttribute.COB_TYPE_NUMERIC_BINARY, 8, 0, 0, null);
+    AbstractCobolField field = CobolFieldFactory.makeCobolField(4, (CobolDataStorage) null, attr);
+    makeFieldEntry(field);
+
+    if (value.getSize() < format.getSize()) {
+      CobolRuntimeException.setException(CobolExceptionId.COB_EC_ARGUMENT_FUNCTION);
+      currField.setInt(0);
+      return currField;
+    }
+
+    CobolDataStorage formatData = format.getDataStorage();
+    CobolDataStorage valueData = value.getDataStorage();
+
+    for (n = 0; n < format.getSize() - 1; n++) {
+      p1 = new String(formatData.getByteArray(n, 2));
+
+      if ("hh".equals(p1) && !hoursSeen) {
+        p2 = Integer.valueOf(new String(valueData.getByteArray(n, 2)));
+        hours = p2;
+        hoursSeen = true;
+        continue;
+      }
+      if ("mm".equals(p1) && !minutesSeen) {
+        p2 = Integer.valueOf(new String(valueData.getByteArray(n, 2)));
+        minutes = p2;
+        minutesSeen = true;
+        continue;
+      }
+      if ("ss".equals(p1) && !secondsSeen) {
+        p2 = Integer.valueOf(new String(valueData.getByteArray(n, 2)));
+        seconds = p2;
+        secondsSeen = true;
+        continue;
+      }
+    }
+
+    if (hoursSeen && minutesSeen && secondsSeen) {
+      seconds += hours * 3600 + minutes * 60;
+    } else {
+      CobolRuntimeException.setException(CobolExceptionId.COB_EC_ARGUMENT_FUNCTION);
+      seconds = 0;
+    }
+    currField.setInt(seconds);
+    return currField;
+  }
+
+  /**
+   * cob_intr_seconds_past_midnightの実装
+   *
+   * @return
+   */
+  public static AbstractCobolField funcSecondsPastMidnight() {
+    int seconds;
+    CobolFieldAttribute attr =
+        new CobolFieldAttribute(CobolFieldAttribute.COB_TYPE_NUMERIC_BINARY, 8, 0, 0, null);
+    AbstractCobolField field = CobolFieldFactory.makeCobolField(4, (CobolDataStorage) null, attr);
+    makeFieldEntry(field);
+    LocalDateTime currDate = LocalDateTime.now();
+    seconds = currDate.getHour() * 3600 + currDate.getMinute() * 60 + currDate.getSecond();
+    currField.setInt(seconds);
+    return currField;
+  }
+
+  /**
+   * cob_intr_signの実装
+   *
+   * @param srcfield
+   * @return
+   */
+  public static AbstractCobolField funcSign(AbstractCobolField srcfield) {
+    CobolFieldAttribute attr =
+        new CobolFieldAttribute(
+            CobolFieldAttribute.COB_TYPE_NUMERIC_BINARY,
+            8,
+            0,
+            CobolFieldAttribute.COB_FLAG_HAVE_SIGN,
+            null);
+    AbstractCobolField field = CobolFieldFactory.makeCobolField(4, (CobolDataStorage) null, attr);
+    makeFieldEntry(field);
+
+    currField.setInt(0);
+    int n = srcfield.compareTo(currField);
+    if (n < 0) {
+      currField.setInt(-1);
+    } else if (n > 0) {
+      currField.setInt(1);
+    }
+    return currField;
+  }
+
+  /**
+   * cob_intr_stored_char_lengthの実装
+   *
+   * @param srcfield
+   * @return
+   */
+  public static AbstractCobolField funcStoredCharLength(AbstractCobolField srcfield) {
+    int count;
+
+    CobolFieldAttribute attr =
+        new CobolFieldAttribute(CobolFieldAttribute.COB_TYPE_NUMERIC_BINARY, 8, 0, 0, null);
+    AbstractCobolField field = CobolFieldFactory.makeCobolField(4, (CobolDataStorage) null, attr);
+    makeFieldEntry(field);
+
+    CobolDataStorage storage = srcfield.getDataStorage();
+    for (count = srcfield.getSize(); count > 0; count--) {
+      if (storage.getByte(count - 1) != ' ') {
+        break;
+      }
+    }
+
+    currField.setInt(count);
+    return currField;
+  }
+
+  /** Equivalent to cob_intr_trim */
+  public static AbstractCobolField funcTrim(
+      int offset, int length, AbstractCobolField srcField, int direction) {
+    makeFieldEntry(srcField);
+    int i;
+    int srcFieldSize = srcField.getSize();
+    CobolDataStorage srcStorage = srcField.getDataStorage();
+    for (i = 0; i < srcFieldSize; ++i) {
+      if (srcStorage.getByte(i) != ' ') {
+        break;
+      }
+    }
+    if (i == srcFieldSize) {
+      currField.setSize(1);
+      currField.getDataStorage().setByte(0, (byte) ' ');
+      return currField;
+    }
+    int beginIndex = 0;
+    if (direction != 2) {
+      while (srcStorage.getByte(beginIndex) == ' ') {
+        ++beginIndex;
+      }
+    }
+    int endIndex = srcFieldSize - 1;
+    if (direction != 1) {
+      while (srcStorage.getByte(endIndex) == ' ') {
+        --endIndex;
+      }
+    }
+    CobolDataStorage currStorage = currField.getDataStorage();
+    currField.setSize(endIndex - beginIndex + 1);
+    for (i = 0; i <= endIndex - beginIndex; ++i) {
+      currStorage.setByte(i, srcStorage.getByte(beginIndex + i));
+    }
+    if (offset > 0) {
+      calcRefMod(currField, offset, length);
+    }
     return currField;
   }
 }

@@ -1,13 +1,10 @@
 name: Make a coverate report
 
 on:
-  push:
-  pull_request:
-    types: [opened, reopened, review_requested, synchronize]
   workflow_dispatch:
 
 env:
-  CLASSPATH: ":/usr/lib/opensourcecobol4j/libcobj.jar:/usr/lib/opensourcecobol4j/sqlite.jar"
+  CLASSPATH: ":/usr/lib/opensourcecobol4j/libcobj.jar"
 
 jobs:
   run-tests:
@@ -24,7 +21,6 @@ jobs:
       
       - name: Install opensource COBOL 4J
         run: |
-          curl -L -k -o libcobj/sqlite-jdbc/sqlite.jar https://github.com/xerial/sqlite-jdbc/releases/download/3.36.0.3/sqlite-jdbc-3.36.0.3.jar
           ./configure CFLAGS='-fprofile-arcs -ftest-coverage' --prefix=/usr/
           make
           sudo make install

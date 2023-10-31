@@ -143,7 +143,6 @@ prog.cob:9: Error: User defined name must be less than 32 characters
 AT_CLEANUP
 
 AT_SETUP([Nihongo Filename])
-AT_CHECK([${SKIP_TEST}])
 
 AT_DATA([prog.cob], [
        IDENTIFICATION   DIVISION.

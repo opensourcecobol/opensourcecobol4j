@@ -3,6 +3,18 @@
 All notable changes to this project will be documented in this file.
 
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
+## [1.0.16] - 2023-10-31
+## Added
+* Publish libcobj.jar in GitHub Packages
+* Implement intrinsic functions
+  * ORD-MAX (#228)
+  * ORD-MIN (#228)
+  * SECONDS-FROM-FORMATTED-TIME (#231)
+  * SIGN (#231)
+  * STORED-CHAR-LENGTH (#231)
+  * TRIM (#244)
+## Fixed
+* Fix `DECIMAL POINT IS COMMA` in `SPECIAL NAMES` clause. (#233)
 ## [1.0.15] - 2023-09-29
 ### Added
 - Add new intrinsic functions

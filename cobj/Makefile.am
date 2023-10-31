@@ -41,4 +41,3 @@ CLEANFILES = parser.output
 
 pplex.l: pplex.l.m4
 scanner.l: scanner.l.m4
-

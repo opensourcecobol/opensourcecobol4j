@@ -152,9 +152,7 @@ public abstract class AbstractCobolField {
    */
   public abstract String getString();
 
-  /**
-   * @return
-   */
+  /** @return */
   public int getInt() {
     CobolFieldAttribute attr =
         new CobolFieldAttribute(
@@ -169,9 +167,7 @@ public abstract class AbstractCobolField {
     return ByteBuffer.wrap(n.getByteArray(0, 4)).getInt();
   }
 
-  /**
-   * @return
-   */
+  /** @return */
   public double getDouble() {
     try {
       return Double.parseDouble(this.getString());
@@ -1011,6 +1007,19 @@ public abstract class AbstractCobolField {
   /** libcob/move.cのcob_set_intの実装 */
   public void setInt(CobolDataStorage data) {
     this.setInt((int) data.intValue());
+  }
+
+  public void setLong(Long n) {
+    CobolFieldAttribute attr =
+        new CobolFieldAttribute(
+            CobolFieldAttribute.COB_TYPE_NUMERIC_BINARY,
+            9,
+            0,
+            CobolFieldAttribute.COB_FLAG_HAVE_SIGN,
+            null);
+    CobolDataStorage data = new CobolDataStorage(ByteBuffer.allocate(8).putLong(n).array());
+    AbstractCobolField temp = CobolFieldFactory.makeCobolField(8, data, attr);
+    this.moveFrom(temp);
   }
 
   /**

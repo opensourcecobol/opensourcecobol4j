@@ -1,5 +1,4 @@
 AT_SETUP([PROGRAM-ID NATIONAL C89 no warning])
-AT_CHECK([${SKIP_TEST}])
 
 AT_DATA([test.conf], [
 include "default.conf"
@@ -14,12 +13,12 @@ AT_DATA([prog.cob], [
            END PROGRAM ìåãûìs.
 ])
 
-AT_CHECK([${COMPILE} -conf=test.conf -x prog.cob], [0])
+AT_CHECK([${COMPILE} -conf=test.conf prog.cob], [0])
 
 AT_CLEANUP
 
+
 AT_SETUP([PROGRAM-ID NATIONAL C89 warning])
-AT_CHECK([${SKIP_TEST}])
 
 AT_DATA([test.conf], [
 include "default.conf"
@@ -34,7 +33,7 @@ AT_DATA([prog.cob], [
            END PROGRAM ìåãûòpä›ç`òpã«.
 ])
 
-AT_CHECK([${COMPILE} -conf=test.conf -x prog.cob], [0], [],
+AT_CHECK([${COMPILE} -conf=test.conf prog.cob], [0], [],
 [prog.cob:3: Warning: PROGRAM-ID length exceeds C89 function name limit
 prog.cob:6: Warning: PROGRAM-ID length exceeds C89 function name limit
 ])
@@ -42,7 +41,6 @@ prog.cob:6: Warning: PROGRAM-ID length exceeds C89 function name limit
 AT_CLEANUP
 
 AT_SETUP([PROGRAM-ID NATIONAL C89 ignore])
-AT_CHECK([${SKIP_TEST}])
 
 AT_DATA([prog.cob], [
        IDENTIFICATION   DIVISION.
@@ -52,12 +50,12 @@ AT_DATA([prog.cob], [
            END PROGRAM ìåãûòpä›ç`òpã«.
 ])
 
-AT_CHECK([${COMPILE} -x prog.cob], [0])
+AT_CHECK([${COMPILE} prog.cob], [0])
+
 
 AT_CLEANUP
 
 AT_SETUP([PROGRAM-ID NATIONAL 32 character no over])
-AT_CHECK([${SKIP_TEST}])
 
 AT_DATA([prog.cob], [
        IDENTIFICATION   DIVISION.
@@ -68,7 +66,7 @@ AT_DATA([prog.cob], [
            STOP RUN.
 ])
 
-AT_CHECK([${COMPILE} -x prog.cob], [0])
+AT_CHECK([${COMPILE} prog.cob], [0])
 
 AT_CLEANUP
 
@@ -83,7 +81,7 @@ AT_DATA([prog.cob], [
            STOP RUN.
 ])
 
-AT_CHECK([${COMPILE} -x prog.cob], [1], [],
+AT_CHECK([${COMPILE} prog.cob], [1], [],
 [prog.cob:3: Error: User defined name must be less than 32 characters
 ])
 
