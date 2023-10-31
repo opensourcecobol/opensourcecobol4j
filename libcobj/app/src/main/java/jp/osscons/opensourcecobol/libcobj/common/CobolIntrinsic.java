@@ -2187,16 +2187,10 @@ public class CobolIntrinsic {
 
   public static AbstractCobolField funcSubstitute(
       int offset, int length, int params, AbstractCobolField... fields) {
+    int i, j, n;
     int numreps = params / 2;
     AbstractCobolField[] f1 = new AbstractCobolField[numreps];
     AbstractCobolField[] f2 = new AbstractCobolField[numreps];
-    byte[] f1Data;
-    byte[] f2Data;
-    int i, j, n;
-    int pi1 = 0;
-    int pi2 = 0;
-    int calcsize = 0;
-    int found = 0;
 
     for (i = 0; i < params - 1; i++) {
       if ((i % 2) == 0) {
@@ -2207,13 +2201,17 @@ public class CobolIntrinsic {
     }
 
     byte[] p1 = fields[0].getDataStorage().getByteArray();
+    byte[] fData1;
     int varsize = p1.length;
+    int pi1 = 0;
+    int calcsize = 0;
+    int found = 0;
 
     for (n = 0; n < varsize; ) {
       for (i = 0; i < numreps; i++) {
         if (n + f1[i].getSize() <= varsize) {
-          f1Data = f1[i].getDataStorage().getByteArray();
-          if (Arrays.compare(p1, pi1, pi1 + f1[i].getSize(), f1Data, 0, f1[i].getSize()) == 0) {
+          fData1 = f1[i].getDataStorage().getByteArray();
+          if (Arrays.compare(p1, pi1, pi1 + f1[i].getSize(), fData1, 0, f1[i].getSize()) == 0) {
             pi1 += f1[i].getSize();
             n += f1[i].getSize();
             calcsize += f2[i].getSize();
@@ -2238,17 +2236,19 @@ public class CobolIntrinsic {
     makeFieldEntry(field);
 
     byte[] p2 = currField.getDataStorage().getByteArray();
-    found = 0;
-    pi1 = 0;
+    byte[] fData2;
+    int pi2 = 0;
 
+    pi1 = 0;
+    found = 0;
     for (n = 0; n < varsize; ) {
       for (i = 0; i < numreps; ++i) {
         if (n + f1[i].getSize() <= varsize) {
-          f1Data = f1[i].getDataStorage().getByteArray();
-          if (Arrays.compare(p1, pi1, pi1 + f1[i].getSize(), f1Data, 0, f1[i].getSize()) == 0) {
-            f2Data = f2[i].getDataStorage().getByteArray();
+          fData1 = f1[i].getDataStorage().getByteArray();
+          if (Arrays.compare(p1, pi1, pi1 + f1[i].getSize(), fData1, 0, f1[i].getSize()) == 0) {
+            fData2 = f2[i].getDataStorage().getByteArray();
             for (j = 0; j < f2[i].getSize(); j++) {
-              p2[j + pi2] = f2Data[j];
+              p2[j + pi2] = fData2[j];
             }
             pi1 += f1[i].getSize();
             pi2 += f2[i].getSize();
@@ -2276,14 +2276,10 @@ public class CobolIntrinsic {
 
   public static AbstractCobolField funcSubstituteCase(
       int offset, int length, int params, AbstractCobolField... fields) {
+    int i, j, n;
     int numreps = params / 2;
     AbstractCobolField[] f1 = new AbstractCobolField[numreps];
     AbstractCobolField[] f2 = new AbstractCobolField[numreps];
-    int varsize = fields[0].getSize();
-    int i, j, n;
-    int calcsize = 0;
-    int found = 0;
-    int size1, size2;
 
     for (i = 0; i < params - 1; i++) {
       if (i % 2 == 0) {
@@ -2294,16 +2290,20 @@ public class CobolIntrinsic {
     }
 
     byte[] p1 = fields[0].getDataStorage().getByteArray();
+    String pStr1, fStr1;
+    int size1, size2;
+    int varsize = p1.length;
     int pi1 = 0;
-    String ps1, fs1;
+    int calcsize = 0;
+    int found = 0;
 
     for (n = 0; n < varsize; ) {
       for (i = 0; i < numreps; i++) {
         if (n + f1[i].getSize() <= varsize) {
           size1 = f1[i].getSize();
-          ps1 = new String(Arrays.copyOfRange(p1, pi1, pi1 + size1));
-          fs1 = new String(f1[i].getDataStorage().getByteArray());
-          if (ps1.equalsIgnoreCase(fs1)) {
+          pStr1 = new String(Arrays.copyOfRange(p1, pi1, pi1 + size1));
+          fStr1 = new String(f1[i].getDataStorage().getByteArray());
+          if (pStr1.equalsIgnoreCase(fStr1)) {
             size2 = f2[i].getSize();
             pi1 += size1;
             n += size1;
@@ -2338,10 +2338,10 @@ public class CobolIntrinsic {
       for (i = 0; i < numreps; i++) {
         if (n + f1[i].getSize() <= varsize) {
           size1 = f1[i].getSize();
-          ps1 = new String(Arrays.copyOfRange(p1, pi1, pi1 + size1));
-          fs1 = new String(f1[i].getDataStorage().getByteArray());
+          pStr1 = new String(Arrays.copyOfRange(p1, pi1, pi1 + size1));
+          fStr1 = new String(f1[i].getDataStorage().getByteArray());
           fd2 = f2[i].getDataStorage().getByteArray();
-          if (ps1.equalsIgnoreCase(fs1)) {
+          if (pStr1.equalsIgnoreCase(fStr1)) {
             for (j = 0; j < f2[i].getSize(); j++) {
               p2[j + pi2] = fd2[j];
             }
