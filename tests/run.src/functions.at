@@ -1744,7 +1744,6 @@ AT_CHECK([java prog], [0],
 AT_CLEANUP
 
 AT_SETUP([FUNCTION TRIM])
-AT_CHECK([${SKIP_TEST}])
 
 AT_DATA([prog.cob], [
        IDENTIFICATION   DIVISION.
@@ -1769,7 +1768,6 @@ AT_CHECK([java prog], [0],
 AT_CLEANUP
 
 AT_SETUP([FUNCTION TRIM with reference modding])
-AT_CHECK([${SKIP_TEST}])
 
 AT_DATA([prog.cob], [
        IDENTIFICATION   DIVISION.

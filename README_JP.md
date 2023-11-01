@@ -12,7 +12,7 @@ opensource COBOL 4JはCOBOLからCに変換するCOBOLコンパイラ["opensourc
 
 ## インストール
 
-[インストールページ](https://github.com/opensourcecobol/opensourcecobol4j/wiki/Installation_JP)をご覧ください.
+[インストールページ](https://github.com/opensourcecobol/opensourcecobol4j/wiki)をご覧ください.
 
 ## 使い方
 

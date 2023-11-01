@@ -2,6 +2,23 @@ NEWS - user visible changes				-*- outline -*-
 
 -----------------------------------------------------------------------
 
+* opensource COBOL 4J 1.0.16
+
+** New Features
+  (1) Publish libcobj.jar in GitHub Packages
+  (2) Implement intrinsic functions
+    (a) ORD-MAX
+    (b) ORD-MIN
+    (c) SECONDS-FROM-FORMATTED-TIME
+    (d) SIGN
+    (e) STORED-CHAR-LENGTH
+    (f) TRIM
+
+** Bug fixes Fixed
+  (1) Fix `DECIMAL POINT IS COMMA` in `SPECIAL NAMES` clause.
+
+-----------------------------------------------------------------------
+
 * opensource COBOL 4J 1.0.15
 
 ** New Features
