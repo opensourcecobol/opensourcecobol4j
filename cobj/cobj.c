@@ -1732,7 +1732,7 @@ static int process_compile(struct filename *fn) {
         }
         sprintf(
             buff,
-            "cd %s && jar --create --main-class=%s --file=%s.jar %s/*.class",
+            "cd %s && jar -c -e %s -f %s.jar %s/*.class",
             output_name_a, *program_id, *program_id, package_dir);
         ret = process(buff);
         if (ret) {
@@ -1992,7 +1992,7 @@ int process_build_single_jar() {
     package_dir = ".";
   }
 
-  sprintf(buff, "cd %s && jar --create --file=%s %s/*.class", output_name_a,
+  sprintf(buff, "cd %s && jar -c -f %s %s/*.class", output_name_a,
           cb_single_jar_name, package_dir);
   ret = process(buff);
   sprintf(buff, "rm -f %s/%s/*.class #aaa", output_name_a, package_dir);
