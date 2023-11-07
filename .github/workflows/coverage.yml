@@ -10,7 +10,12 @@ jobs:
   run-tests:
     runs-on: ubuntu-latest
     steps:
-        
+
+      - uses: actions/setup-java@v3
+        with:
+          distribution: 'temurin'
+          java-version: '8'
+
       - name: Install dependencies on Ubuntu 22.04
         run: |
           sudo apt update -y

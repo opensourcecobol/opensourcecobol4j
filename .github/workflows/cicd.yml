@@ -17,18 +17,23 @@ jobs:
     container:
       image: ${{ matrix.os }}
     steps:
-        
+ 
+      - uses: actions/setup-java@v3
+        with:
+          distribution: 'temurin'
+          java-version: '8'
+
       - name: Install dependencies on Ubuntu 22.04
         if: matrix.os == 'ubuntu:22.04'
         run: |
           apt update -y
-          apt install -y default-jdk build-essential bison flex gettext texinfo automake autoconf
+          apt install -y build-essential bison flex gettext texinfo automake autoconf
 
       - name: Install dependencies on AlmaLinux 9
         if: matrix.os == 'almalinux:9'
         run: |
           dnf -y update
-          dnf install -y java-17-openjdk-devel gcc make bison flex automake autoconf diffutils gettext
+          dnf install -y gcc make bison flex automake autoconf diffutils gettext
 
       - name: Checkout opensource COBOL 4J
         uses: actions/checkout@v3
@@ -90,7 +95,7 @@ jobs:
       - uses: actions/setup-java@v3
         with:
           distribution: 'temurin'
-          java-version: '17'
+          java-version: '8'
 
       - name: Install static analysis tools
         run: |
