@@ -158,13 +158,6 @@ public class CobolDataStorage {
     return result;
   }
 
-  public byte[] getByteArray() {
-    int length = this.data.length;
-    byte[] result = new byte[length];
-    System.arraycopy(this.data, this.index, result, 0, length);
-    return result;
-  }
-
   /**
    * C言語のmemcpy
    *

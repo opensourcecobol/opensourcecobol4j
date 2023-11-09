@@ -2187,10 +2187,14 @@ public class CobolIntrinsic {
 
   public static AbstractCobolField funcSubstitute(
       int offset, int length, int params, AbstractCobolField... fields) {
-    int i, j, n;
+    int i, j, k;
     int numreps = params / 2;
     AbstractCobolField[] f1 = new AbstractCobolField[numreps];
     AbstractCobolField[] f2 = new AbstractCobolField[numreps];
+    byte[] src = fields[0].getDataStorage().getByteArray(0, fields[0].getSize());
+    byte[] fData1;
+    String rtn = new String();
+    int fSize1;
 
     for (i = 0; i < params - 1; i++) {
       if ((i % 2) == 0) {
@@ -2200,72 +2204,33 @@ public class CobolIntrinsic {
       }
     }
 
-    byte[] p1 = fields[0].getDataStorage().getByteArray();
-    byte[] fData1;
-    int varsize = p1.length;
-    int pi1 = 0;
-    int calcsize = 0;
-    int found = 0;
-
-    for (n = 0; n < varsize; ) {
-      for (i = 0; i < numreps; i++) {
-        if (n + f1[i].getSize() <= varsize) {
-          fData1 = f1[i].getDataStorage().getByteArray();
-          if (Arrays.compare(p1, pi1, pi1 + f1[i].getSize(), fData1, 0, f1[i].getSize()) == 0) {
-            pi1 += f1[i].getSize();
-            n += f1[i].getSize();
-            calcsize += f2[i].getSize();
-            found = 1;
+    for (i = 0; i < src.length; ) {
+      for (j = 0; j < numreps; j++) {
+        fData1 = f1[j].getBytes();
+        fSize1 = fData1.length;
+        for (k = fSize1 - 1; k >= 0; k--) {
+          if (i + k >= src.length || src[i + k] != fData1[k]) {
             break;
           }
         }
+        if (k < 0) {
+          rtn += f2[j].getString();
+          i += fSize1;
+          break;
+        }
       }
-      if (found == 1) {
-        found = 0;
-        continue;
+      if (j == numreps) {
+        rtn += String.valueOf((char) src[i]);
+        i++;
       }
-      n++;
-      pi1++;
-      calcsize++;
     }
 
     CobolFieldAttribute attr =
         new CobolFieldAttribute(CobolFieldAttribute.COB_TYPE_ALPHANUMERIC, 0, 0, 0, null);
     AbstractCobolField field = CobolFieldFactory.makeCobolField(0, (CobolDataStorage) null, attr);
-    field.setSize(calcsize);
+    field.setSize(rtn.getBytes().length);
     makeFieldEntry(field);
-
-    byte[] p2 = currField.getDataStorage().getByteArray();
-    byte[] fData2;
-    int pi2 = 0;
-
-    pi1 = 0;
-    found = 0;
-    for (n = 0; n < varsize; ) {
-      for (i = 0; i < numreps; ++i) {
-        if (n + f1[i].getSize() <= varsize) {
-          fData1 = f1[i].getDataStorage().getByteArray();
-          if (Arrays.compare(p1, pi1, pi1 + f1[i].getSize(), fData1, 0, f1[i].getSize()) == 0) {
-            fData2 = f2[i].getDataStorage().getByteArray();
-            for (j = 0; j < f2[i].getSize(); j++) {
-              p2[j + pi2] = fData2[j];
-            }
-            pi1 += f1[i].getSize();
-            pi2 += f2[i].getSize();
-            n += f1[i].getSize();
-            found = 1;
-            break;
-          }
-        }
-      }
-      if (found == 1) {
-        found = 0;
-        continue;
-      }
-      n++;
-      p2[pi2++] = p1[pi1++];
-    }
-    currField.setDataStorage(new CobolDataStorage(p2));
+    currField.setDataStorage(new CobolDataStorage(rtn.getBytes()));
 
     if (offset > 0) {
       calcRefMod(currField, offset, length);
@@ -2275,10 +2240,14 @@ public class CobolIntrinsic {
 
   public static AbstractCobolField funcSubstituteCase(
       int offset, int length, int params, AbstractCobolField... fields) {
-    int i, j, n;
+    int i, j, k;
     int numreps = params / 2;
     AbstractCobolField[] f1 = new AbstractCobolField[numreps];
     AbstractCobolField[] f2 = new AbstractCobolField[numreps];
+    byte[] src = fields[0].getDataStorage().getByteArray(0, fields[0].getSize());
+    byte[] fData1;
+    String rtn = new String();
+    int fSize1;
 
     for (i = 0; i < params - 1; i++) {
       if (i % 2 == 0) {
@@ -2288,78 +2257,36 @@ public class CobolIntrinsic {
       }
     }
 
-    byte[] p1 = fields[0].getDataStorage().getByteArray();
-    String pStr1, fStr1;
-    int size1, size2;
-    int varsize = p1.length;
-    int pi1 = 0;
-    int calcsize = 0;
-    int found = 0;
-
-    for (n = 0; n < varsize; ) {
-      for (i = 0; i < numreps; i++) {
-        if (n + f1[i].getSize() <= varsize) {
-          size1 = f1[i].getSize();
-          pStr1 = new String(Arrays.copyOfRange(p1, pi1, pi1 + size1));
-          fStr1 = new String(f1[i].getDataStorage().getByteArray());
-          if (pStr1.equalsIgnoreCase(fStr1)) {
-            size2 = f2[i].getSize();
-            pi1 += size1;
-            n += size1;
-            calcsize += size2;
-            found = 1;
+    for (i = 0; i < src.length; ) {
+      for (j = 0; j < numreps; j++) {
+        fData1 = f1[j].getBytes();
+        fSize1 = fData1.length;
+        for (k = fSize1 - 1; k >= 0; k--) {
+          if (i + k >= src.length
+              || Character.toLowerCase((char) fData1[k])
+                  != Character.toLowerCase((char) src[i + k])) {
             break;
           }
         }
+        if (k < 0) {
+          rtn += f2[j].getString();
+          i += fSize1;
+          break;
+        }
       }
-      if (found == 1) {
-        found = 0;
-        continue;
+      if (j == numreps) {
+        rtn += String.valueOf((char) src[i]);
+        i++;
       }
-      n++;
-      pi1++;
-      calcsize++;
     }
 
     CobolFieldAttribute attr =
         new CobolFieldAttribute(CobolFieldAttribute.COB_TYPE_ALPHANUMERIC, 0, 0, 0, null);
     AbstractCobolField field = CobolFieldFactory.makeCobolField(0, (CobolDataStorage) null, attr);
-    field.setSize(calcsize);
+    field.setSize(rtn.getBytes().length);
     makeFieldEntry(field);
 
-    byte[] p2 = currField.getDataStorage().getByteArray();
-    int pi2 = 0;
-    byte[] fd2;
-
-    pi1 = 0;
-    found = 0;
-    for (n = 0; n < varsize; ) {
-      for (i = 0; i < numreps; i++) {
-        if (n + f1[i].getSize() <= varsize) {
-          size1 = f1[i].getSize();
-          pStr1 = new String(Arrays.copyOfRange(p1, pi1, pi1 + size1));
-          fStr1 = new String(f1[i].getDataStorage().getByteArray());
-          fd2 = f2[i].getDataStorage().getByteArray();
-          if (pStr1.equalsIgnoreCase(fStr1)) {
-            for (j = 0; j < f2[i].getSize(); j++) {
-              p2[j + pi2] = fd2[j];
-            }
-            pi1 += f1[i].getSize();
-            pi2 += f2[i].getSize();
-            n += f1[i].getSize();
-            found = 1;
-            break;
-          }
-        }
-      }
-      if (found == 1) {
-        found = 0;
-        continue;
-      }
-      n++;
-      p2[pi2++] = p1[pi1++];
-    }
-    currField.setDataStorage(new CobolDataStorage(p2));
+    currField.setDataStorage(new CobolDataStorage(rtn.getBytes()));
     if (offset > 0) {
       calcRefMod(currField, offset, length);
     }
