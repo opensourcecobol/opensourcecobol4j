@@ -2191,10 +2191,11 @@ public class CobolIntrinsic {
     int numreps = params / 2;
     AbstractCobolField[] f1 = new AbstractCobolField[numreps];
     AbstractCobolField[] f2 = new AbstractCobolField[numreps];
-    byte[] src = fields[0].getDataStorage().getByteArray(0, fields[0].getSize());
-    byte[] fData1;
-    String rtn = new String();
+    CobolDataStorage src = fields[0].getDataStorage();
+    CobolDataStorage fData1;
+    int srcSize = fields[0].getSize();
     int fSize1;
+    StringBuilder rtn = new StringBuilder();
 
     for (i = 0; i < params - 1; i++) {
       if ((i % 2) == 0) {
@@ -2204,23 +2205,23 @@ public class CobolIntrinsic {
       }
     }
 
-    for (i = 0; i < src.length; ) {
+    for (i = 0; i < srcSize; ) {
       for (j = 0; j < numreps; j++) {
-        fData1 = f1[j].getBytes();
-        fSize1 = fData1.length;
+        fData1 = f1[j].getDataStorage();
+        fSize1 = f1[j].getSize();
         for (k = fSize1 - 1; k >= 0; k--) {
-          if (i + k >= src.length || src[i + k] != fData1[k]) {
+          if (i + k >= srcSize || src.getByte(i + k) != fData1.getByte(k)) {
             break;
           }
         }
         if (k < 0) {
-          rtn += f2[j].getString();
+          rtn.append(f2[j].getString());
           i += fSize1;
           break;
         }
       }
       if (j == numreps) {
-        rtn += String.valueOf((char) src[i]);
+        rtn.append((char) src.getByte(i));
         i++;
       }
     }
@@ -2228,9 +2229,9 @@ public class CobolIntrinsic {
     CobolFieldAttribute attr =
         new CobolFieldAttribute(CobolFieldAttribute.COB_TYPE_ALPHANUMERIC, 0, 0, 0, null);
     AbstractCobolField field = CobolFieldFactory.makeCobolField(0, (CobolDataStorage) null, attr);
-    field.setSize(rtn.getBytes().length);
+    field.setSize(rtn.length());
     makeFieldEntry(field);
-    currField.setDataStorage(new CobolDataStorage(rtn.getBytes()));
+    currField.setDataStorage(new CobolDataStorage(rtn.toString()));
 
     if (offset > 0) {
       calcRefMod(currField, offset, length);
@@ -2244,10 +2245,11 @@ public class CobolIntrinsic {
     int numreps = params / 2;
     AbstractCobolField[] f1 = new AbstractCobolField[numreps];
     AbstractCobolField[] f2 = new AbstractCobolField[numreps];
-    byte[] src = fields[0].getDataStorage().getByteArray(0, fields[0].getSize());
-    byte[] fData1;
-    String rtn = new String();
+    CobolDataStorage src = fields[0].getDataStorage();
+    CobolDataStorage fData1;
+    int srcSize = fields[0].getSize();
     int fSize1;
+    StringBuilder rtn = new StringBuilder();
 
     for (i = 0; i < params - 1; i++) {
       if (i % 2 == 0) {
@@ -2257,25 +2259,25 @@ public class CobolIntrinsic {
       }
     }
 
-    for (i = 0; i < src.length; ) {
+    for (i = 0; i < srcSize; ) {
       for (j = 0; j < numreps; j++) {
-        fData1 = f1[j].getBytes();
-        fSize1 = fData1.length;
+        fData1 = f1[j].getDataStorage();
+        fSize1 = f1[j].getSize();
         for (k = fSize1 - 1; k >= 0; k--) {
-          if (i + k >= src.length
-              || Character.toLowerCase((char) fData1[k])
-                  != Character.toLowerCase((char) src[i + k])) {
+          if (i + k >= srcSize
+              || Character.toLowerCase((char) fData1.getByte(k))
+                  != Character.toLowerCase((char) src.getByte(i + k))) {
             break;
           }
         }
         if (k < 0) {
-          rtn += f2[j].getString();
+          rtn.append(f2[j].getString());
           i += fSize1;
           break;
         }
       }
       if (j == numreps) {
-        rtn += String.valueOf((char) src[i]);
+        rtn.append((char) src.getByte(i));
         i++;
       }
     }
@@ -2283,10 +2285,10 @@ public class CobolIntrinsic {
     CobolFieldAttribute attr =
         new CobolFieldAttribute(CobolFieldAttribute.COB_TYPE_ALPHANUMERIC, 0, 0, 0, null);
     AbstractCobolField field = CobolFieldFactory.makeCobolField(0, (CobolDataStorage) null, attr);
-    field.setSize(rtn.getBytes().length);
+    field.setSize(rtn.length());
     makeFieldEntry(field);
 
-    currField.setDataStorage(new CobolDataStorage(rtn.getBytes()));
+    currField.setDataStorage(new CobolDataStorage(rtn.toString()));
     if (offset > 0) {
       calcRefMod(currField, offset, length);
     }
