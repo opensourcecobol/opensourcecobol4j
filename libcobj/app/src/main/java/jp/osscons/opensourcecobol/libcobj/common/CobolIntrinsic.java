@@ -2228,8 +2228,8 @@ public class CobolIntrinsic {
 
     CobolFieldAttribute attr =
         new CobolFieldAttribute(CobolFieldAttribute.COB_TYPE_ALPHANUMERIC, 0, 0, 0, null);
-    AbstractCobolField field = CobolFieldFactory.makeCobolField(0, (CobolDataStorage) null, attr);
-    field.setSize(rtn.length());
+    AbstractCobolField field =
+        CobolFieldFactory.makeCobolField(rtn.length(), (CobolDataStorage) null, attr);
     makeFieldEntry(field);
     currField.setDataStorage(new CobolDataStorage(rtn.toString()));
 
@@ -2284,8 +2284,8 @@ public class CobolIntrinsic {
 
     CobolFieldAttribute attr =
         new CobolFieldAttribute(CobolFieldAttribute.COB_TYPE_ALPHANUMERIC, 0, 0, 0, null);
-    AbstractCobolField field = CobolFieldFactory.makeCobolField(0, (CobolDataStorage) null, attr);
-    field.setSize(rtn.length());
+    AbstractCobolField field =
+        CobolFieldFactory.makeCobolField(rtn.length(), (CobolDataStorage) null, attr);
     makeFieldEntry(field);
 
     currField.setDataStorage(new CobolDataStorage(rtn.toString()));
