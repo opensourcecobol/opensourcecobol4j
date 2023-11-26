@@ -42,10 +42,19 @@ public class CobolDataStorage {
     this.index = 0;
   }
 
+  public void setDataRefAndIndex(CobolDataStorage data, int index) {
+    this.data = data.data;
+    this.index = index;
+  }
+
+  public void setIndex(int index) {
+    this.index = index;
+  }
+
   /**
    * コンストラクタ.データを保存するバイト配列と保存する領域の相対位置を引数で指定する.
    *
-   * @param data データを保存するバイト配列
+   * @param data  データを保存するバイト配列
    * @param index このクラスの扱うデータが保存する領域のバイト配列中での相対位置
    */
   public CobolDataStorage(byte[] data, int index) {
@@ -148,7 +157,7 @@ public class CobolDataStorage {
   /**
    * バイト配列の引数で指定した相対位置から指定した長さをコピーした配列を返す。
    *
-   * @param index コピーの開始位置(this.indexバイト目を基準とする)
+   * @param index  コピーの開始位置(this.indexバイト目を基準とする)
    * @param length コピーする長さ(バイト数)
    * @return 開始位置からlengthバイト分の配列
    */
@@ -322,14 +331,13 @@ public class CobolDataStorage {
   /**
    * 引数で指定されたバイト配列をthis.dataの引数で指定された位置からコピーする
    *
-   * @param data コピー元のバイト配列
+   * @param data  コピー元のバイト配列
    * @param index this.byteのコピー開始位置(this.indexバイト目を基準とする)
    */
   public void setData(byte[] data, int index) {
-    int length =
-        (data.length <= this.data.length - this.index - index)
-            ? data.length
-            : this.data.length - this.index - index;
+    int length = (data.length <= this.data.length - this.index - index)
+        ? data.length
+        : this.data.length - this.index - index;
 
     System.arraycopy(data, 0, this.data, this.index + index, length);
   }
@@ -400,7 +408,7 @@ public class CobolDataStorage {
    * バイト配列のthis.indexバイト目からsizeバイトの範囲にvalueを代入する
    *
    * @param value 代入する値
-   * @param size 代入先のバイト数
+   * @param size  代入先のバイト数
    */
   public void fillBytes(byte value, int size) {
     fillBytes(0, value, size);
@@ -410,7 +418,7 @@ public class CobolDataStorage {
    * バイト配列のthis.indexバイト目からsizeバイトの範囲にvalueを代入する
    *
    * @param value 代入する値
-   * @param size 代入先のバイト数
+   * @param size  代入先のバイト数
    */
   public void fillBytes(int value, int size) {
     fillBytes(0, value, size);
@@ -420,7 +428,7 @@ public class CobolDataStorage {
    * バイト配列のthis.indexバイト目からsizeバイトの範囲にvalueを代入する
    *
    * @param value 代入する値
-   * @param size 代入先のバイト数
+   * @param size  代入先のバイト数
    */
   public void fillBytes(char value, int size) {
     fillBytes(0, value, size);
@@ -431,7 +439,7 @@ public class CobolDataStorage {
    *
    * @param index コピーの開始位置(this.indexが基準)
    * @param value 代入する値
-   * @param size 代入先のバイト数
+   * @param size  代入先のバイト数
    */
   public void fillBytes(int index, byte value, int size) {
     for (int i = 0; i < size; ++i) {
@@ -444,7 +452,7 @@ public class CobolDataStorage {
    *
    * @param index コピーの開始位置(this.indexが基準)
    * @param value 代入する値
-   * @param size 代入先のバイト数
+   * @param size  代入先のバイト数
    */
   public void fillBytes(int index, int value, int size) {
     this.fillBytes(index, (byte) value, size);
@@ -455,7 +463,7 @@ public class CobolDataStorage {
    *
    * @param index コピーの開始位置(this.indexが基準)
    * @param value 代入する値
-   * @param size 代入先のバイト数
+   * @param size  代入先のバイト数
    */
   public void fillBytes(int index, char value, int size) {
     this.fillBytes(index, (byte) value, size);
@@ -475,7 +483,7 @@ public class CobolDataStorage {
   /**
    * 指定のバイト配列に格納された値を this.dataのthis.indexバイト目以降へlengthバイトだけコピーする.
    *
-   * @param bytes コピー元の配列
+   * @param bytes  コピー元の配列
    * @param length コピーするバイト数
    */
   public void setBytes(byte[] bytes, int length) {
@@ -487,8 +495,8 @@ public class CobolDataStorage {
   /**
    * 指定のバイト配列に格納された値を this.dataのthis.index+indexバイト目以降へlengthバイトだけコピーする.
    *
-   * @param index コピー先のthis.indexからの相対位置
-   * @param bytes コピー元の配列
+   * @param index  コピー先のthis.indexからの相対位置
+   * @param bytes  コピー元の配列
    * @param length コピーするバイト数
    */
   public void setBytes(int index, byte[] bytes, int length) {
@@ -500,7 +508,7 @@ public class CobolDataStorage {
   /**
    * 指定した文字列をバイト配列にコピーする
    *
-   * @param str コピー元の文字列
+   * @param str    コピー元の文字列
    * @param length コピーするバイト数
    */
   public void setBytes(String str, int length) {
@@ -514,7 +522,7 @@ public class CobolDataStorage {
   /**
    * 指定されたCobolDataStorageのインスタンスから,lengthバイトだけデータをコピーする
    *
-   * @param data コピー元のCobolDataStorage
+   * @param data   コピー元のCobolDataStorage
    * @param length コピーするバイト数
    */
   public void setBytes(CobolDataStorage data, int length) {
@@ -524,8 +532,8 @@ public class CobolDataStorage {
   /**
    * 指定されたCobolDataStorageのインスタンスから,lengthバイトだけデータをコピーする
    *
-   * @param data コピー元のCobolDataStorage
-   * @param length コピーするバイト数
+   * @param data     コピー元のCobolDataStorage
+   * @param length   コピーするバイト数
    * @param dstIndex コピー先(this.data)のthis.indexからの相対位置
    */
   public void setBytes(CobolDataStorage data, int length, int dstIndex) {
@@ -535,8 +543,8 @@ public class CobolDataStorage {
   /**
    * 指定されたCobolDataStorageのインスタンスから,lengthバイトだけデータをコピーする
    *
-   * @param data コピー元のCobolDataStorage
-   * @param length コピーするバイト数
+   * @param data     コピー元のCobolDataStorage
+   * @param length   コピーするバイト数
    * @param dstIndex コピー先(this.data)のthis.indexからの相対位置
    * @param srcIndex コピー元バイト配列中の相対位置
    */
@@ -703,25 +711,23 @@ public class CobolDataStorage {
     int run(long a, long b);
   }
 
-  private static final Cmpr compareS =
-      new Cmpr() {
-        public int run(long a, long b) {
-          if (a < b) {
-            return -1;
-          } else if (a > b) {
-            return 1;
-          } else {
-            return 0;
-          }
-        }
-      };
+  private static final Cmpr compareS = new Cmpr() {
+    public int run(long a, long b) {
+      if (a < b) {
+        return -1;
+      } else if (a > b) {
+        return 1;
+      } else {
+        return 0;
+      }
+    }
+  };
 
-  private static final Cmpr compareU =
-      new Cmpr() {
-        public int run(long a, long b) {
-          return Long.compareUnsigned(a, b);
-        }
-      };
+  private static final Cmpr compareU = new Cmpr() {
+    public int run(long a, long b) {
+      return Long.compareUnsigned(a, b);
+    }
+  };
 
   public int compareToBinary(long n, int numOfBytes, boolean signed, boolean isBigEndian) {
     long val = this.toLong(numOfBytes, signed, isBigEndian);

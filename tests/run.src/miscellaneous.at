@@ -1404,7 +1404,6 @@ e1d4c5b2a3
 AT_CLEANUP
 
 AT_SETUP([SORT: EBCDIC table sort])
-AT_CHECK([${SKIP_TEST}])
 
 AT_DATA([prog.cob], [
        IDENTIFICATION   DIVISION.
