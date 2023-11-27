@@ -1373,28 +1373,58 @@ AT_DATA([prog.cob], [
        DATA             DIVISION.
        WORKING-STORAGE  SECTION.
        01 G             VALUE "d4b2e1a3c5".
-         02 TBL         OCCURS 5.
+         02 TBL-G         OCCURS 5.
            03 X         PIC X.
            03 Y         PIC 9.
+       01 H             VALUE "d4Db2Be3Ea5Ac6Cf1F".
+         02 TBL-H         OCCURS 6.
+           03 A         PIC X.
+           03 B         PIC 9.
+           03 C         PIC X.
        PROCEDURE        DIVISION.
-           SORT TBL ASCENDING KEY X.
-           DISPLAY G
-           END-DISPLAY.
-           SORT TBL DESCENDING KEY Y.
-           DISPLAY G
-           END-DISPLAY.
-           SORT TBL ASCENDING KEY TBL.
-           DISPLAY G
-           END-DISPLAY.
-           SORT TBL DESCENDING KEY.
-           DISPLAY G
-           END-DISPLAY.
+           SORT TBL-G ASCENDING KEY X.
+           DISPLAY G.
+           SORT TBL-G DESCENDING KEY Y.
+           DISPLAY G.
+           SORT TBL-G ASCENDING KEY TBL-G.
+           DISPLAY G.
+           SORT TBL-G DESCENDING KEY.
+           DISPLAY G.
+
+           SORT TBL-H ASCENDING KEY A.
+           DISPLAY H.
+           SORT TBL-H DESCENDING KEY B.
+           DISPLAY H.
+           SORT TBL-H DESCENDING KEY C.
+           DISPLAY H.
+           SORT TBL-H ASCENDING KEY TBL-H.
+           DISPLAY H.
+           SORT TBL-H DESCENDING KEY.
+           DISPLAY H.
+
+           SORT TBL-G ASCENDING KEY X.
+           DISPLAY G.
+           SORT TBL-G DESCENDING KEY Y.
+           DISPLAY G.
+           SORT TBL-G ASCENDING KEY TBL-G.
+           DISPLAY G.
+           SORT TBL-G DESCENDING KEY.
+           DISPLAY G.
            STOP RUN.
 ])
 
 AT_CHECK([${COMPILE} prog.cob])
 AT_CHECK([java prog], [0],
 [a3b2c5d4e1
+c5d4a3b2e1
+a3b2c5d4e1
+e1d4c5b2a3
+a5Ab2Bc6Cd4De3Ef1F
+c6Ca5Ad4De3Eb2Bf1F
+f1Fe3Ed4Dc6Cb2Ba5A
+a5Ab2Bc6Cd4De3Ef1F
+f1Fe3Ed4Dc6Cb2Ba5A
+a3b2c5d4e1
 c5d4a3b2e1
 a3b2c5d4e1
 e1d4c5b2a3
