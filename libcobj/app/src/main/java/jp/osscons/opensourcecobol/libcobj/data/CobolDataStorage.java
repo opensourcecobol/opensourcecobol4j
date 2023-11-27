@@ -80,6 +80,10 @@ public class CobolDataStorage {
     return this.index;
   }
 
+  public void setIndex(int index) {
+    this.index = index;
+  }
+
   public byte[] getRefOfData() {
     return this.data;
   }
