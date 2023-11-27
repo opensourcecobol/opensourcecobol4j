@@ -71,8 +71,17 @@ public class CobolDataStorage {
     this.data = null;
   }
 
+  public void setDataRefAndIndex(CobolDataStorage data, int index) {
+    this.data = data.data;
+    this.index = index;
+  }
+
   public int getIndex() {
     return this.index;
+  }
+
+  public void setIndex(int index) {
+    this.index = index;
   }
 
   public byte[] getRefOfData() {
