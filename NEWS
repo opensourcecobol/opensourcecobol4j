@@ -2,6 +2,17 @@ NEWS - user visible changes				-*- outline -*-
 
 -----------------------------------------------------------------------
 
+* opensource COBOL 4J 1.0.17
+
+** New Features
+  (1) Implement sorting a table
+  (2) Implement functions SUBSTITUTE and SUBSATITUTE-CASE
+
+** Miscellaneous
+  (1) Support JDK 11
+
+-----------------------------------------------------------------------
+
 * opensource COBOL 4J 1.0.16
 
 ** New Features
