@@ -1366,7 +1366,6 @@ AT_CLEANUP
 
 
 AT_SETUP([SORT: table sort])
-AT_CHECK([${SKIP_TEST}])
 
 AT_DATA([prog.cob], [
        IDENTIFICATION   DIVISION.

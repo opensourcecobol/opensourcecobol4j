@@ -31,6 +31,7 @@ import jp.osscons.opensourcecobol.libcobj.common.CobolModule;
 import jp.osscons.opensourcecobol.libcobj.common.CobolUtil;
 import jp.osscons.opensourcecobol.libcobj.data.AbstractCobolField;
 import jp.osscons.opensourcecobol.libcobj.data.CobolDataStorage;
+import jp.osscons.opensourcecobol.libcobj.data.CobolFieldAttribute;
 import jp.osscons.opensourcecobol.libcobj.data.CobolFieldFactory;
 import jp.osscons.opensourcecobol.libcobj.exceptions.CobolStopRunException;
 
@@ -902,5 +903,163 @@ public class CobolFileSort {
         f.saveStatus(CobolFile.COB_STATUS_30_PERMANENT_ERROR, fnstatus);
         return;
     }
+  }
+
+  /* Table sort */
+  private static int sortNKeys;
+  private static CobolFileKey[] sortKeys;
+  private static CobolDataStorage sortCollate;
+  private static CobolDataStorage pivotStorage = new CobolDataStorage();
+  private static CobolDataStorage pivotLeftStorage = new CobolDataStorage();
+  private static CobolDataStorage pivotRightStorage = new CobolDataStorage();
+  private static CobolDataStorage leftStorage = new CobolDataStorage();
+  private static CobolDataStorage rightStorage = new CobolDataStorage();
+  private static CobolDataStorage cmpStorage1 = new CobolDataStorage();
+  private static CobolDataStorage cmpStorage2 = new CobolDataStorage();
+  private static CobolDataStorage copyBuffer = null;
+  private static int copyBufferSize = 0;
+  private static AbstractCobolField cmpField1 =
+      CobolFieldFactory.makeCobolField(
+          0,
+          cmpStorage1,
+          new CobolFieldAttribute(CobolFieldAttribute.COB_TYPE_ALPHANUMERIC, 0, 0, 0, null));
+  private static AbstractCobolField cmpField2 =
+      CobolFieldFactory.makeCobolField(
+          0,
+          cmpStorage2,
+          new CobolFieldAttribute(CobolFieldAttribute.COB_TYPE_ALPHANUMERIC, 0, 0, 0, null));
+
+  public static void sortTableInit(int nkeys, int collatingSequence) {
+    sortTableInit(nkeys, null);
+  }
+
+  public static void sortTableInit(int nkeys, CobolDataStorage collatingSequence) {
+    sortNKeys = 0;
+    if (sortKeys == null || sortKeys.length < nkeys) {
+      sortKeys = new CobolFileKey[nkeys];
+    }
+    if (collatingSequence != null) {
+      sortCollate = collatingSequence;
+    } else {
+      sortCollate = CobolModule.getCurrentModule().collating_sequence;
+    }
+  }
+
+  public static void sortTableInitKey(int flag, AbstractCobolField field, int offset) {
+    if (sortKeys[sortNKeys] == null) {
+      sortKeys[sortNKeys] = new CobolFileKey();
+    }
+    sortKeys[sortNKeys].setFlag(flag);
+    sortKeys[sortNKeys].setField(
+        CobolFieldFactory.makeCobolField(
+            field.getSize(), (CobolDataStorage) null, field.getAttribute()));
+    sortKeys[sortNKeys].setOffset(offset);
+    sortNKeys++;
+  }
+
+  public static void sortTable(AbstractCobolField f, int n) {
+    int size = f.getSize();
+    if (copyBuffer == null || copyBufferSize < size) {
+      copyBuffer = new CobolDataStorage(size);
+    }
+    fieldQuickSort(f.getDataStorage(), 0, n, f.getSize());
+  }
+
+  private static void fieldQuickSort(
+      CobolDataStorage base, int mostLeft, int mostRight, int recordSize) {
+
+    if (mostRight - mostLeft <= 1) {
+      return;
+    }
+
+    int pivot = (mostRight + mostLeft) / 2;
+    int left = mostLeft, right = mostRight - 1;
+
+    while (true) {
+      pivotStorage.setDataRefAndIndex(base, base.getIndex() + pivot * recordSize);
+      boolean elementBiggerThanPivot = false;
+      for (; left < pivot; ++left) {
+        leftStorage.setDataRefAndIndex(base, base.getIndex() + left * recordSize);
+        if (compareStorageForSort(leftStorage, pivotStorage) > 0) {
+          elementBiggerThanPivot = true;
+          break;
+        }
+      }
+      boolean elementSmallerThanPivot = false;
+      for (; right > pivot; --right) {
+        rightStorage.setDataRefAndIndex(base, base.getIndex() + right * recordSize);
+        if (compareStorageForSort(pivotStorage, rightStorage) > 0) {
+          elementSmallerThanPivot = true;
+          break;
+        }
+      }
+      if (elementBiggerThanPivot && elementSmallerThanPivot) {
+        swap2Storages(leftStorage, rightStorage, recordSize);
+        ++left;
+        --right;
+      } else if (elementBiggerThanPivot && !elementSmallerThanPivot) {
+        if (left + 1 == pivot) {
+          swap2Storages(leftStorage, pivotStorage, recordSize);
+        } else {
+          pivotLeftStorage.setDataRefAndIndex(base, base.getIndex() + (pivot - 1) * recordSize);
+          rotate3Storages(pivotStorage, pivotLeftStorage, leftStorage, recordSize);
+        }
+        --pivot;
+      } else if (!elementBiggerThanPivot && elementSmallerThanPivot) {
+        if (right - 1 == pivot) {
+          swap2Storages(pivotStorage, rightStorage, recordSize);
+        } else {
+          pivotRightStorage.setDataRefAndIndex(base, base.getIndex() + (pivot + 1) * recordSize);
+          rotate3Storages(pivotStorage, pivotRightStorage, rightStorage, recordSize);
+        }
+        ++pivot;
+      } else {
+        break;
+      }
+    }
+    fieldQuickSort(base, mostLeft, pivot, recordSize);
+    fieldQuickSort(base, pivot + 1, mostRight, recordSize);
+  }
+
+  private static int compareStorageForSort(CobolDataStorage s1, CobolDataStorage s2) {
+    for (int i = 0; i < sortNKeys; ++i) {
+      int keySize = sortKeys[i].getField().getSize();
+      cmpField1.setSize(keySize);
+      cmpField2.setSize(keySize);
+
+      CobolFieldAttribute attr = sortKeys[i].getField().getAttribute();
+      cmpField1.setAttribute(attr);
+      cmpField2.setAttribute(attr);
+
+      cmpStorage1.setDataRefAndIndex(s1, s1.getIndex() + sortKeys[i].getOffset());
+      cmpStorage2.setDataRefAndIndex(s2, s2.getIndex() + sortKeys[i].getOffset());
+
+      int cmp;
+      if (attr.isTypeNumeric()) {
+        cmp = cmpField1.numericCompareTo(cmpField2);
+      } else if (attr.isTypeNational()) {
+        cmp = CobolUtil.nationalCmps(s1, s2, keySize, sortCollate);
+      } else {
+        cmp = cmpField1.cmpAlnum(cmpField2);
+      }
+      if (cmp != 0) {
+        return (sortKeys[i].getFlag() == COB_ASCENDING) ? cmp : -cmp;
+      }
+    }
+    return 0;
+  }
+
+  private static void swap2Storages(CobolDataStorage s1, CobolDataStorage s2, int size) {
+    copyBuffer.memcpy(s1, size);
+    s1.memcpy(s2, size);
+    s2.memcpy(copyBuffer, size);
+  }
+
+  private static void rotate3Storages(
+      CobolDataStorage s1, CobolDataStorage s2, CobolDataStorage s3, int size) {
+    copyBuffer.memcpy(s3, size);
+    s3.memcpy(s2, size);
+    s2.memcpy(s1, size);
+    s1.memcpy(copyBuffer, size);
   }
 }
