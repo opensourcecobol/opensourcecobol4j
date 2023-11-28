@@ -4,12 +4,14 @@ All notable changes to this project will be documented in this file.
 
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 
-## [1.0.17] - 2023-11-29
+## [1.0.17] - 2023-11-28
 ### Added
 * Implement sorting a table (#251)
-* Implement functions SUBSTITUTE and SUBSATITUTE-CASE (#246)
+* Implement functions SUBSTITUTE and SUBSTITUTE-CASE (#246)
 ### Changed
 * Support JDK 11 (#249)
+  * Older versions are tested with JDK 17 and 1.0.17 is tested with JDK 11.
+  * Plan to support JDK 8 in the future.
 ## [1.0.16] - 2023-10-31
 ### Added
 * Publish libcobj.jar in GitHub Packages

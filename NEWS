@@ -6,10 +6,11 @@ NEWS - user visible changes				-*- outline -*-
 
 ** New Features
   (1) Implement sorting a table
-  (2) Implement functions SUBSTITUTE and SUBSATITUTE-CASE
-
+  (2) Implement functions SUBSTITUTE and SUBSTITUTE-CASE
 ** Miscellaneous
   (1) Support JDK 11
+    (a) Older versions are tested with JDK 17 and 1.0.17 is tested with JDK 11.
+    (b) Plan to support JDK 8 in the future.
 
 -----------------------------------------------------------------------
 
