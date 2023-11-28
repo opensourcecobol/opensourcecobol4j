@@ -2185,6 +2185,116 @@ public class CobolIntrinsic {
     return currField;
   }
 
+  public static AbstractCobolField funcSubstitute(
+      int offset, int length, int params, AbstractCobolField... fields) {
+    int i, j, k;
+    int numreps = params / 2;
+    AbstractCobolField[] f1 = new AbstractCobolField[numreps];
+    AbstractCobolField[] f2 = new AbstractCobolField[numreps];
+    CobolDataStorage src = fields[0].getDataStorage();
+    CobolDataStorage fData1;
+    int srcSize = fields[0].getSize();
+    int fSize1;
+    StringBuilder rtn = new StringBuilder();
+
+    for (i = 0; i < params - 1; i++) {
+      if ((i % 2) == 0) {
+        f1[i / 2] = fields[i + 1];
+      } else {
+        f2[i / 2] = fields[i + 1];
+      }
+    }
+
+    for (i = 0; i < srcSize; ) {
+      for (j = 0; j < numreps; j++) {
+        fData1 = f1[j].getDataStorage();
+        fSize1 = f1[j].getSize();
+        for (k = fSize1 - 1; k >= 0; k--) {
+          if (i + k >= srcSize || src.getByte(i + k) != fData1.getByte(k)) {
+            break;
+          }
+        }
+        if (k < 0) {
+          rtn.append(f2[j].getString());
+          i += fSize1;
+          break;
+        }
+      }
+      if (j == numreps) {
+        rtn.append((char) src.getByte(i));
+        i++;
+      }
+    }
+
+    CobolFieldAttribute attr =
+        new CobolFieldAttribute(CobolFieldAttribute.COB_TYPE_ALPHANUMERIC, 0, 0, 0, null);
+    AbstractCobolField field =
+        CobolFieldFactory.makeCobolField(rtn.length(), (CobolDataStorage) null, attr);
+    makeFieldEntry(field);
+    currField.setDataStorage(new CobolDataStorage(rtn.toString()));
+
+    if (offset > 0) {
+      calcRefMod(currField, offset, length);
+    }
+    return currField;
+  }
+
+  public static AbstractCobolField funcSubstituteCase(
+      int offset, int length, int params, AbstractCobolField... fields) {
+    int i, j, k;
+    int numreps = params / 2;
+    AbstractCobolField[] f1 = new AbstractCobolField[numreps];
+    AbstractCobolField[] f2 = new AbstractCobolField[numreps];
+    CobolDataStorage src = fields[0].getDataStorage();
+    CobolDataStorage fData1;
+    int srcSize = fields[0].getSize();
+    int fSize1;
+    StringBuilder rtn = new StringBuilder();
+
+    for (i = 0; i < params - 1; i++) {
+      if (i % 2 == 0) {
+        f1[i / 2] = fields[i + 1];
+      } else {
+        f2[i / 2] = fields[i + 1];
+      }
+    }
+
+    for (i = 0; i < srcSize; ) {
+      for (j = 0; j < numreps; j++) {
+        fData1 = f1[j].getDataStorage();
+        fSize1 = f1[j].getSize();
+        for (k = fSize1 - 1; k >= 0; k--) {
+          if (i + k >= srcSize
+              || Character.toLowerCase((char) fData1.getByte(k))
+                  != Character.toLowerCase((char) src.getByte(i + k))) {
+            break;
+          }
+        }
+        if (k < 0) {
+          rtn.append(f2[j].getString());
+          i += fSize1;
+          break;
+        }
+      }
+      if (j == numreps) {
+        rtn.append((char) src.getByte(i));
+        i++;
+      }
+    }
+
+    CobolFieldAttribute attr =
+        new CobolFieldAttribute(CobolFieldAttribute.COB_TYPE_ALPHANUMERIC, 0, 0, 0, null);
+    AbstractCobolField field =
+        CobolFieldFactory.makeCobolField(rtn.length(), (CobolDataStorage) null, attr);
+    makeFieldEntry(field);
+
+    currField.setDataStorage(new CobolDataStorage(rtn.toString()));
+    if (offset > 0) {
+      calcRefMod(currField, offset, length);
+    }
+    return currField;
+  }
+
   /** Equivalent to cob_intr_trim */
   public static AbstractCobolField funcTrim(
       int offset, int length, AbstractCobolField srcField, int direction) {

@@ -1625,7 +1625,6 @@ AT_CHECK([java prog], [0],
 AT_CLEANUP
 
 AT_SETUP([FUNCTION SUBSTITUTE])
-AT_CHECK([${SKIP_TEST}])
 
 AT_DATA([prog.cob], [
        IDENTIFICATION   DIVISION.
@@ -1637,18 +1636,27 @@ AT_DATA([prog.cob], [
            MOVE "abc111444555defxxabc" TO Y.
            DISPLAY FUNCTION SUBSTITUTE ( Y "abc" "zz" "55" "666" )
            END-DISPLAY.
+           MOVE "abc111444555defxxabc" TO Y.
+           DISPLAY FUNCTION SUBSTITUTE
+                   ( Y "abc" "55" "55" "666" )
+           END-DISPLAY.
+           MOVE "abc111444555defxxabc" TO Y.
+           DISPLAY FUNCTION SUBSTITUTE
+                   ( Y "abc1" "666" "abc" "zz" )
+           END-DISPLAY.
            STOP RUN.
 ])
 
 AT_CHECK([${COMPILE} prog.cob])
 AT_CHECK([java prog], [0],
 [zz1114446665defxxzz
+551114446665defxx55
+66611444555defxxzz
 ])
 
 AT_CLEANUP
 
 AT_SETUP([FUNCTION SUBSTITUTE with reference modding])
-AT_CHECK([${SKIP_TEST}])
 
 AT_DATA([prog.cob], [
        IDENTIFICATION   DIVISION.
@@ -1672,7 +1680,6 @@ AT_CHECK([java prog], [0],
 AT_CLEANUP
 
 AT_SETUP([FUNCTION SUBSTITUTE-CASE])
-AT_CHECK([${SKIP_TEST}])
 
 AT_DATA([prog.cob], [
        IDENTIFICATION   DIVISION.
@@ -1684,18 +1691,28 @@ AT_DATA([prog.cob], [
            MOVE "ABC111444555defxxabc" TO Y.
            DISPLAY FUNCTION SUBSTITUTE-CASE (Y "abc" "zz" "55" "666")
            END-DISPLAY.
+           MOVE "abc111444555defxxABC" TO Y.
+           DISPLAY FUNCTION SUBSTITUTE-CASE
+                   ( Y "abc" "55" "55" "666" )
+           END-DISPLAY.
+
+           MOVE "abc111444555defxxABC" TO Y.
+           DISPLAY FUNCTION SUBSTITUTE-CASE
+                   ( Y "abc1" "666" "abc" "zz" )
+           END-DISPLAY.
            STOP RUN.
 ])
 
 AT_CHECK([${COMPILE} prog.cob])
 AT_CHECK([java prog], [0],
 [zz1114446665defxxzz
+551114446665defxx55
+66611444555defxxzz
 ])
 
 AT_CLEANUP
 
 AT_SETUP([FUNCTION SUBSTITUTE-CASE with reference mod])
-AT_CHECK([${SKIP_TEST}])
 
 AT_DATA([prog.cob], [
        IDENTIFICATION   DIVISION.
@@ -1704,7 +1721,7 @@ AT_DATA([prog.cob], [
        WORKING-STORAGE  SECTION.
        01  Y   PIC   X(20).
        PROCEDURE        DIVISION.
-           MOVE "abc111444555defxxabc" TO Y.
+           MOVE "abc111444555defxxABC" TO Y.
            DISPLAY FUNCTION SUBSTITUTE-CASE
                    ( Y "ABC" "zz" "55" "666" ) (2 : 9)
            END-DISPLAY.

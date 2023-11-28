@@ -71,8 +71,17 @@ public class CobolDataStorage {
     this.data = null;
   }
 
+  public void setDataRefAndIndex(CobolDataStorage data, int index) {
+    this.data = data.data;
+    this.index = index;
+  }
+
   public int getIndex() {
     return this.index;
+  }
+
+  public void setIndex(int index) {
+    this.index = index;
   }
 
   public byte[] getRefOfData() {
@@ -155,13 +164,6 @@ public class CobolDataStorage {
   public byte[] getByteArray(int index, int length) {
     byte[] result = new byte[length];
     System.arraycopy(this.data, this.index + index, result, 0, length);
-    return result;
-  }
-
-  public byte[] getByteArray() {
-    int length = this.data.length;
-    byte[] result = new byte[length];
-    System.arraycopy(this.data, this.index, result, 0, length);
     return result;
   }
 

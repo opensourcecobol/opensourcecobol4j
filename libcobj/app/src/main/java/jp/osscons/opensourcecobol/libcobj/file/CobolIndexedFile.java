@@ -256,7 +256,7 @@ public class CobolIndexedFile extends CobolFile {
     boolean isDuplicate = this.keys[p.key_index].getFlag() != 0;
 
     this.cursor = IndexedCursor.createCursor(p.connection, p.key, p.key_index, isDuplicate, cond);
-    if (this.cursor.isEmpty()) {
+    if (!this.cursor.isPresent()) {
       return COB_STATUS_30_PERMANENT_ERROR;
     }
 
@@ -316,25 +316,25 @@ public class CobolIndexedFile extends CobolFile {
     if (this.indexedFirstRead || this.flag_begin_of_file) {
       this.cursor =
           IndexedCursor.createCursor(p.connection, p.key, p.key_index, isDuplicate, COB_GE);
-      if (this.cursor.isEmpty()) {
+      if (!this.cursor.isPresent()) {
         return COB_STATUS_10_END_OF_FILE;
       }
       this.cursor.get().moveToFirst();
     } else if (this.flag_end_of_file) {
       this.cursor =
           IndexedCursor.createCursor(p.connection, p.key, p.key_index, isDuplicate, COB_LE);
-      if (this.cursor.isEmpty()) {
+      if (!this.cursor.isPresent()) {
         return COB_STATUS_30_PERMANENT_ERROR;
       }
       this.cursor.get().moveToLast();
     } else if (this.updateWhileReading) {
       this.updateWhileReading = false;
-      if (this.cursor.isEmpty()) {
+      if (!this.cursor.isPresent()) {
         return COB_STATUS_30_PERMANENT_ERROR;
       }
       IndexedCursor oldCursor = this.cursor.get();
       Optional<IndexedCursor> newCursor = oldCursor.reloadCursor();
-      if (newCursor.isEmpty()) {
+      if (!newCursor.isPresent()) {
         this.cursor = Optional.of(oldCursor);
       } else {
         oldCursor.close();
@@ -342,7 +342,7 @@ public class CobolIndexedFile extends CobolFile {
       }
     }
 
-    if (this.cursor.isEmpty()) {
+    if (!this.cursor.isPresent()) {
       return COB_STATUS_30_PERMANENT_ERROR;
     }
 
@@ -361,7 +361,7 @@ public class CobolIndexedFile extends CobolFile {
 
     this.indexedFirstRead = false;
 
-    if (optionalResult.isEmpty()) {
+    if (!optionalResult.isPresent()) {
       return COB_STATUS_10_END_OF_FILE;
     } else {
       FetchResult result = optionalResult.get();

@@ -26,17 +26,22 @@ jobs:
         with:
           name: opensourcecobol4j-${{ env.ARTIFACT_NAME }}
 
+      - uses: actions/setup-java@v3
+        with:
+          distribution: 'temurin'
+          java-version: '11'
+
       - name: Install dependencies on Ubuntu 22.04
         if: matrix.os == 'ubuntu:22.04'
         run: |
           apt update -y
-          apt install -y default-jdk build-essential
+          apt install -y build-essential
 
       - name: Install dependencies on AlmaLinux 9
         if: matrix.os == 'almalinux:9'
         run: |
           dnf -y update
-          dnf install -y java-17-openjdk-devel gcc make diffutils
+          dnf install -y gcc make diffutils
 
       - name: Install opensource COBOL 4J
         run: |
