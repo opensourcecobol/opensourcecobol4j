@@ -182,7 +182,7 @@ AT_CHECK([${SKIP_TEST}])
 
 AT_DATA([prog.cob], [
        IDENTIFICATION    DIVISION.
-       PROGRAM-ID.       numcheck.
+       PROGRAM-ID.       prog.
        DATA              DIVISION.
        WORKING-STORAGE   SECTION.
        01  TEST-REC.
@@ -206,7 +206,7 @@ AT_CHECK([${SKIP_TEST}])
 
 AT_DATA([prog.cob], [
        IDENTIFICATION    DIVISION.
-       PROGRAM-ID.       basedcheck.
+       PROGRAM-ID.       prog.
        DATA              DIVISION.
        WORKING-STORAGE   SECTION.
        01  XçÄñ⁄    PIC  X(4) VALUE 'ABCD'.
@@ -228,7 +228,7 @@ AT_CHECK([${SKIP_TEST}])
 
 AT_DATA([prog.cob], [
        IDENTIFICATION    DIVISION.
-       PROGRAM-ID.       odocheck.
+       PROGRAM-ID.       prog.
        DATA              DIVISION.
        WORKING-STORAGE   SECTION.
        01  IçÄñ⁄         PIC 9 VALUE 4.
@@ -251,7 +251,7 @@ AT_CHECK([${SKIP_TEST}])
 
 AT_DATA([prog.cob], [
        IDENTIFICATION    DIVISION.
-       PROGRAM-ID.       odocheck.
+       PROGRAM-ID.       prog.
        DATA              DIVISION.
        WORKING-STORAGE   SECTION.
        01  IçÄñ⁄         PIC 9 VALUE 2.
@@ -274,7 +274,7 @@ AT_CHECK([${SKIP_TEST}])
 
 AT_DATA([prog.cob], [
        IDENTIFICATION    DIVISION.
-       PROGRAM-ID.       refcheck.
+       PROGRAM-ID.       prog.
        DATA              DIVISION.
        WORKING-STORAGE   SECTION.
        01  I             PIC 9    VALUE 2.
@@ -297,7 +297,7 @@ AT_CHECK([${SKIP_TEST}])
 
 AT_DATA([prog.cob], [
        IDENTIFICATION    DIVISION.
-       PROGRAM-ID.       refcheck.
+       PROGRAM-ID.       prog.
        DATA              DIVISION.
        WORKING-STORAGE   SECTION.
        01  I             PIC 9    VALUE 6.
@@ -320,7 +320,7 @@ AT_CHECK([${SKIP_TEST}])
 
 AT_DATA([prog.cob], [
        IDENTIFICATION    DIVISION.
-       PROGRAM-ID.       refcheck.
+       PROGRAM-ID.       prog.
        DATA              DIVISION.
        WORKING-STORAGE   SECTION.
        01  I             PIC 9    VALUE 2.
@@ -343,7 +343,7 @@ AT_CHECK([${SKIP_TEST}])
 
 AT_DATA([prog.cob], [
        IDENTIFICATION    DIVISION.
-       PROGRAM-ID.       refcheck.
+       PROGRAM-ID.       prog.
        DATA              DIVISION.
        WORKING-STORAGE   SECTION.
        01  I             PIC 99   VALUE 18.
