@@ -1,30 +1,18 @@
-name: Other tests
+name: build opensource COBOL 4J
 
 on:
   workflow_call:
     inputs:
-      test-name:
-        required: true
-        type: string
       os:
         required: true
         type: string
-env:
-  CLASSPATH: ":/usr/lib/opensourcecobol4j/libcobj.jar"
 
 jobs:
-  test-other:
+  build:
     runs-on: ubuntu-latest
     container:
       image: ${{ inputs.os }}
-    steps:
-      - name: Get the artifact name
-        run: echo ARTIFACT_NAME=${{ inputs.os }} | sed 's/:/-/g' >> $GITHUB_ENV
-
-      - uses: actions/download-artifact@v3
-        with:
-          name: opensourcecobol4j-${{ env.ARTIFACT_NAME }}
-
+    steps: 
       - uses: actions/setup-java@v3
         if: inputs.os != 'amazonlinux:2023'
         with:
@@ -35,32 +23,42 @@ jobs:
         if: inputs.os == 'ubuntu:22.04'
         run: |
           apt update -y
-          apt install -y build-essential
+          apt install -y build-essential bison flex gettext texinfo automake autoconf
 
       - name: Install dependencies on AlmaLinux 9
         if: inputs.os == 'almalinux:9'
         run: |
           dnf -y update
-          dnf install -y gcc make diffutils
+          dnf install -y gcc make bison flex automake autoconf diffutils gettext
 
       - name: Install dependencies on Amazon Linux 2023
         if: inputs.os == 'amazonlinux:2023'
         run: |
           dnf -y update
-          dnf install -y gcc make diffutils tar gzip
+          dnf install -y gcc make bison flex automake autoconf diffutils gettext tar gzip
 
       - name: Install Java
         if: inputs.os == 'amazonlinux:2023'
         run: |
           dnf install -y java-11-amazon-corretto-devel
 
+      - name: Checkout opensource COBOL 4J
+        uses: actions/checkout@v3
+      
       - name: Install opensource COBOL 4J
         run: |
-          tar zxf opensourcecobol4j.tar.gz
-          mv opensourcecobol4j/* .
-          make install
-      
-      - name: Run tests ${{ inputs.test-name }}
+          ./configure --prefix=/usr/
+          make
+          echo ARTIFACT_NAME=${{ inputs.os }} | sed 's/:/-/g' >> $GITHUB_ENV
+
+      - name: Create an artifact file
         run: |
-          cd tests/
-          ./${{ inputs.test-name }}
+         cd ../
+         tar zcf opensourcecobol4j.tar.gz opensourcecobol4j
+         mv opensourcecobol4j.tar.gz opensourcecobol4j
+      
+      - name: Upload an artifact
+        uses: actions/upload-artifact@v3
+        with:
+          name: opensourcecobol4j-${{ env.ARTIFACT_NAME }}
+          path: opensourcecobol4j.tar.gz
