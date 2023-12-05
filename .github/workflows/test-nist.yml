@@ -32,7 +32,9 @@ jobs:
         with:
           name: opensourcecobol4j-${{ env.ARTIFACT_NAME }}
 
-      - uses: actions/setup-java@v3
+      - name: Install Java
+        uses: actions/setup-java@v3
+        if: inputs.os != 'amazonlinux:2023'
         with:
           distribution: 'temurin'
           java-version: '11'
@@ -48,6 +50,17 @@ jobs:
         run: |
           dnf -y update
           dnf install -y gcc make perl
+
+      - name: Install dependencies on Amazon Linux 2023
+        if: inputs.os == 'amazonlinux:2023'
+        run: |
+          dnf -y update
+          dnf install -y gcc make perl tar gzip
+      
+      - name: Install Java
+        if: inputs.os == 'amazonlinux:2023'
+        run: |
+          dnf install -y java-11-amazon-corretto-devel
 
       - name: Install opensource COBOL 4J
         run: |
