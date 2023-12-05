@@ -21,9 +21,11 @@ jobs:
     strategy:
       matrix:
         test_name: ["command-line-options", "data-rep", "i18n_sjis", "jp-compat", "run", "syntax"]
+        os: ["ubuntu:22.04", "almalinux:9"]
     uses: ./.github/workflows/test-other.yml
     with:
       test-name: ${{ matrix.test_name }}
+      os: ${{ matrix.os }}
 
   run-test-nist:
     needs: build
