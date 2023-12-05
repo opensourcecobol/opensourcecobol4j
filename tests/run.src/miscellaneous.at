@@ -1276,8 +1276,6 @@ AT_CLEANUP
 
 AT_SETUP([First READ on empty SEQUENTIAL INDEXED file])
 
-AT_CHECK([test "$COB_HAS_ISAM" = "yes" || exit 77])
-
 AT_DATA([prog.cob], [
        IDENTIFICATION   DIVISION.
        PROGRAM-ID.      prog.
@@ -1433,7 +1431,6 @@ e1d4c5b2a3
 AT_CLEANUP
 
 AT_SETUP([SORT: EBCDIC table sort])
-AT_CHECK([${SKIP_TEST}])
 
 AT_DATA([prog.cob], [
        IDENTIFICATION   DIVISION.
