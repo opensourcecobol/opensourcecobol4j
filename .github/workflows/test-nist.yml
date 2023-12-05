@@ -9,6 +9,9 @@ on:
       check-result:
         required: true
         type: boolean
+      os:
+        required: true
+        type: string
 
 env:
   CLASSPATH: ":/usr/lib/opensourcecobol4j/libcobj.jar"
@@ -20,10 +23,10 @@ jobs:
         os: ["ubuntu:22.04", "almalinux:9"]
     runs-on: ubuntu-latest
     container:
-      image: ${{ matrix.os }}
+      image: ${{ inputs.os }}
     steps:
       - name: Get the artifact name
-        run: echo ARTIFACT_NAME=${{ matrix.os }} | sed 's/:/-/g' >> $GITHUB_ENV
+        run: echo ARTIFACT_NAME=${{ inputs.os }} | sed 's/:/-/g' >> $GITHUB_ENV
 
       - uses: actions/download-artifact@v3
         with:
@@ -35,13 +38,13 @@ jobs:
           java-version: '11'
 
       - name: Install dependencies on Ubuntu 22.04
-        if: matrix.os == 'ubuntu:22.04'
+        if: inputs.os == 'ubuntu:22.04'
         run: |
           apt update -y
           apt install -y build-essential
 
       - name: Install dependencies on AlmaLinux 9
-        if: matrix.os == 'almalinux:9'
+        if: inputs.os == 'almalinux:9'
         run: |
           dnf -y update
           dnf install -y gcc make perl
