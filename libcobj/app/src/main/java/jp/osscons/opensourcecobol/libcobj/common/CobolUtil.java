@@ -198,6 +198,11 @@ public class CobolUtil {
     if (s != null && s.length() > 0 && (s.charAt(0) == 'y' || s.charAt(0) == 'Y')) {
       CobolUtil.cob_io_assume_rewrite = true;
     }
+
+    s = CobolUtil.getEnv("COB_NIBBLE_C_UNSIGNED");
+    if (s != null && s.length() > 0 && (s.charAt(0) == 'y' || s.charAt(0) == 'Y')) {
+      CobolUtil.nibbleCForUnsigned = true;
+    }
   }
 
   /**
