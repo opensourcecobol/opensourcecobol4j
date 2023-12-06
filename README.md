@@ -21,7 +21,7 @@ opensource COBOL 4J is tested with the following platforms and dependencies
 * OpenJDK 11
 
 In order to check requirements of older versions,
-see [doc/requirements-all.md](./requirements-all.md).
+see [doc/requirements-all.md](./doc/requirements-all.md).
 
 ## Installation
 
