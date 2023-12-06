@@ -145,14 +145,12 @@ public class FileIO {
         }
         int i = 0;
         try {
-          for (i = 0; i < size; ++i) {
-            byte[] b = new byte[1];
-            ByteBuffer bb = ByteBuffer.wrap(b);
-            if (this.fc.read(bb) != 1) {
-              return i;
-            }
-            storage.setByte(i, b[0]);
+          byte[] b = new byte[size];
+          ByteBuffer bb = ByteBuffer.wrap(b);
+          if (this.fc.read(bb) == -1) {
+            return i;
           }
+          storage.setBytes(b);
         } catch (IOException e) {
           throw e;
         }
