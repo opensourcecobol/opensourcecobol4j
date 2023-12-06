@@ -354,8 +354,6 @@ AT_CLEANUP
 
 AT_SETUP([Allow file delete (INDEXED)])
 
-AT_CHECK([test $COB_SPLITKEY_FLAGS = "yes" || exit 77])
-
 AT_DATA([prog.cob], [
        IDENTIFICATION   DIVISION.
        PROGRAM-ID.      prog.
