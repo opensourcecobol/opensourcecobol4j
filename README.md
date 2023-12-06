@@ -46,7 +46,7 @@ sudo make install
 Add /usr/lib/opensourcecobol4j/libcobj.jar to the environment variable $CLASSPATH.
 
 In order to check installations of older versions,
-[doc/installation/](./installation) directory respectively
+[doc/installation/](./doc/installation) directory respectively
 
 ## Usage
 
