@@ -1113,12 +1113,16 @@ public abstract class AbstractCobolField {
         if (sign == 0x0f) {
           return true;
         }
-        if (CobolUtil.nibbleCForUnsigned) {
+        if (this.getAttribute().isFlagHaveSign()) {
+          if (sign == 0x0c || sign == 0x0d) {
+            return true;
+          }
+        } else if (CobolUtil.nibbleCForUnsigned) {
           if (sign == 0x0c) {
             return true;
           }
         }
-        return sign == 0x0c || sign == 0x0d;
+        return false;
       case CobolFieldAttribute.COB_TYPE_NUMERIC_DISPLAY:
         int size = this.getFieldSize();
         int firstIndex = this.getFirstDataIndex();
