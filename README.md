@@ -48,6 +48,27 @@ Add /usr/lib/opensourcecobol4j/libcobj.jar to the environment variable $CLASSPAT
 In order to check installations of older versions,
 [doc/installation/](./doc/installation) directory respectively
 
+### Install with Docker
+
+The docker container for opensource COBOL 4J is available.
+
+```bash
+docker pull opensourcecobol/opensourcecobol4j:1.0.17
+```
+
+Execute the following commands in order to run the "Hello World" COBOL program.
+
+``` bash
+# Move to the sample directory
+$ cd /root/cobol_sample
+
+# Translate COBOL to Java and compile the Java source file.
+$ cobj HELLO.cbl
+
+# Run "Hello World"
+$ java HELLO
+HELLO WORLD!
+```
 ## Usage
 
 Compile.
