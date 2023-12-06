@@ -13,9 +13,40 @@ This compiler is deeply inspired by ["opensource COBOL"](https://github.com/open
 libcobj, the runtime libraries, are distributed under the the GNU Lesser General Public License Version 3.
 Other software and libraries are distributed under the GNU GENERAL PUBLIC LICENSE Version 3.
 
-## Requirements and Installation
+## Requirements
 
-See [Installation page](https://github.com/opensourcecobol/opensourcecobol4j/wiki).
+opensource COBOL 4J is tested with the following platforms and dependencies
+
+* Ubuntu 22.04 and AlmaLinux 9
+* OpenJDK 11
+
+In order to check requirements of older versions,
+see [doc/requirements-all.md](./requirements-all.md).
+
+## Installation
+
+### Install dependencies
+
+```
+sudo apt-get update
+sudo apt-get install -y default-jdk build-essential bison flex gettext texinfo libgmp-dev autoconf
+```
+
+### Install opensource COBOL 4J
+```
+curl -L -o opensourcecobol4j-v1.0.17.tar.gz https://github.com/opensourcecobol/opensourcecobol4j/archive/refs/tags/v1.0.17.tar.gz
+tar zxvf opensourcecobol4j-v1.0.17.tar.gz
+cd opensourcecobol4j-1.0.17
+./configure --prefix=/usr/
+make
+sudo make install
+```
+
+### Set $CLASSPATH
+Add /usr/lib/opensourcecobol4j/libcobj.jar to the environment variable $CLASSPATH.
+
+In order to check installations of older versions,
+[doc/installation/](./installation) directory respectively
 
 ## Usage
 
