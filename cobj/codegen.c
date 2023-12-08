@@ -3410,15 +3410,15 @@ static void joutput_sort_finish(struct cb_sort_finish *p) {
   }
   if (cb_enable_sort_status_register &&
       !current_program->flag_sort_status_used) {
-    joutput("    if (*(int*)(");
+    joutput("    if (");
     joutput_param(p->sort_return, 0);
-    joutput(") != 0)\n");
+    joutput(".intValue() != 0)\n");
     joutput("      {\n");
-    joutput("        cob_runtime_error (");
-    joutput("\"SORT-STATUS is set to %%d.\", (*(int*)");
+    joutput("        CobolUtil.runtimeError (");
+    joutput("\"SORT-STATUS is set to \" + ");
     joutput_param(p->sort_return, 0);
-    joutput("));\n");
-    joutput("        cob_stop_run (1);\n");
+    joutput(".intValue() + \".\");\n");
+    joutput("        CobolStopRunException.stopRunAndThrow (1);\n");
     joutput("      }\n");
   }
 }
