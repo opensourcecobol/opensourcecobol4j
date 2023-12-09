@@ -798,7 +798,7 @@ public class CobolFileSort {
       for (int i = 0; i < varcnt; i++) {
         fbase[i].close(CobolFile.COB_CLOSE_NORMAL, null);
       }
-      CobolUtil.verboseOutput(String.format("END OF SORT/MERGE, RECORD %d.", cntRec));
+      CobolUtil.verboseOutput(String.format("END OF SORT/MERGE, RECORD=%d.", cntRec));
 
     } else {
 
@@ -835,7 +835,7 @@ public class CobolFileSort {
       for (int i = 0; i < varcnt; i++) {
         fbase[i].close(CobolFile.COB_CLOSE_NORMAL, null);
       }
-      CobolUtil.verboseOutput(String.format("END OF SORT/MERGE, RECORD %d.", cntRec));
+      CobolUtil.verboseOutput(String.format("END OF SORT/MERGE, RECORD=%d.", cntRec));
     }
   }
 
