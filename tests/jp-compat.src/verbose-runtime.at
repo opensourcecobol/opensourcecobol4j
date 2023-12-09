@@ -1,5 +1,4 @@
 AT_SETUP([COB_VERBOSE file sort])
-AT_CHECK([${SKIP_TEST}])
 
 AT_DATA([prog.cob], [
        IDENTIFICATION       DIVISION.
@@ -35,7 +34,7 @@ AT_DATA([prog.cob], [
 AT_CHECK([echo -n 11CC33AA22BB >input.txt])
 AT_CHECK([${COMPILE} prog.cob])
 AT_CHECK([COB_VERBOSE=Y java prog], [0],
-[libcobj: END OF SORT/MERGE, RECORD= 3.
+[libcobj: END OF SORT/MERGE, RECORD=3.
 ])
 
 AT_CLEANUP
