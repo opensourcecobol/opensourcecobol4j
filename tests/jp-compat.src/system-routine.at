@@ -1,5 +1,4 @@
 AT_SETUP([CALL C$CALLEDBY])
-AT_CHECK([${SKIP_TEST}])
 
 AT_DATA([callee.cob], [
        IDENTIFICATION   DIVISION.
@@ -37,7 +36,7 @@ AT_DATA([caller.cob], [
 
 AT_CHECK([${COMPILE} caller.cob])
 AT_CHECK([${COMPILE_MODULE} callee.cob])
-AT_CHECK([./caller], [0],
+AT_CHECK([java caller], [0],
 [caller                        1
                               0
 ])
