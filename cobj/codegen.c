@@ -4524,6 +4524,7 @@ static void joutput_internal_function(struct cb_program *prog,
   joutput_line("/* Initialize program */");
   joutput_line("if (!this.initialized) {");
   joutput_indent_level += 2;
+  joutput("module.setProgramId(\"%s\");\n", prog->program_id);
 
   if (prog->decimal_index_max) {
     joutput_line("/* Initialize decimal numbers */");

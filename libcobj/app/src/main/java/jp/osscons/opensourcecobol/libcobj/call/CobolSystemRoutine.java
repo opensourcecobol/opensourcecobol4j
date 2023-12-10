@@ -565,4 +565,9 @@ public class CobolSystemRoutine {
     CobolSystemRoutine.CBL_OC_NANOSLEEP(field.getDataStorage());
     return 0;
   }
+
+  public static int calledBy(CobolDataStorage data) throws CobolStopRunException {
+    CobolUtil.COB_CHK_PARMS("calledby", 1);
+    return CobolModule.calledBy(data);
+  }
 }

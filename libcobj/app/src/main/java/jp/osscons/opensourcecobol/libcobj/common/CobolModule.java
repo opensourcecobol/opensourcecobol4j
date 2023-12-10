@@ -20,14 +20,14 @@ package jp.osscons.opensourcecobol.libcobj.common;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Stack;
 import jp.osscons.opensourcecobol.libcobj.data.AbstractCobolField;
 import jp.osscons.opensourcecobol.libcobj.data.CobolDataStorage;
+import jp.osscons.opensourcecobol.libcobj.exceptions.CobolStopRunException;
 
 /** libcob/common.hのcob_moduleに対応するクラス */
 public class CobolModule {
 
-  private static Stack<CobolModule> moduleStack = new Stack<CobolModule>();
+  private static List<CobolModule> moduleStack = new ArrayList<CobolModule>();
   private static CobolModule currentModule;
 
   public static CobolModule getCurrentModule() {
@@ -41,12 +41,30 @@ public class CobolModule {
    */
   public static void push(CobolModule module) {
     currentModule = module;
-    moduleStack.push(module);
+    moduleStack.add(module);
   }
 
   /** モジュールスタックからモジュールを取り除く */
   public static void pop() {
-    currentModule = moduleStack.pop();
+    currentModule = moduleStack.remove(moduleStack.size() - 1);
+  }
+
+  public static int calledBy(CobolDataStorage data) throws CobolStopRunException {
+    AbstractCobolField param = CobolModule.getCurrentModule().cob_procedure_parameters.get(0);
+    if (param != null) {
+      if (moduleStack.size() >= 2) {
+        String calledProgramName = moduleStack.get(moduleStack.size() - 2).program_id;
+        if (calledProgramName == null) {
+          return -1;
+        }
+        int length = Math.min(param.getSize(), calledProgramName.length());
+        param.getDataStorage().memcpy(calledProgramName, length);
+      } else {
+        param.getDataStorage().memset(' ', param.getSize());
+        return 0;
+      }
+    }
+    return 1;
   }
 
   /**
