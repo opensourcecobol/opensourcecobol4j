@@ -177,8 +177,7 @@ World
 AT_CLEANUP
 
 
-AT_SETUP([cobcrun validation])
-AT_CHECK([${SKIP_TEST}])
+AT_SETUP([java command validation])
 
 AT_DATA([callee.cob], [
        IDENTIFICATION   DIVISION.
@@ -212,7 +211,7 @@ AT_DATA([caller.cob], [
 
 AT_CHECK([${COMPILE_MODULE} callee.cob])
 AT_CHECK([${COMPILE_MODULE} caller.cob])
-AT_CHECK([${COBCRUN} caller], [0],
+AT_CHECK([java caller], [0],
 [Hello
 World
 ])
