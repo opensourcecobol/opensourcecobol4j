@@ -543,14 +543,12 @@ public class CobolDecimal {
 
   public int getDoubleField(AbstractCobolField f, int opt) {
     BigDecimal d1 = this.value;
-    BigDecimal TEN = new BigDecimal(10);
-    CobolDataStorage storage = new CobolDataStorage(20);
     int scale = this.scale;
     for (int i = 0; i < Math.abs(scale); ++i) {
       if (scale > 0) {
-        d1 = d1.divide(TEN);
+        d1 = d1.divide(BigDecimal.TEN);
       } else {
-        d1 = d1.multiply(TEN);
+        d1 = d1.multiply(BigDecimal.TEN);
       }
     }
     f.memcpy(d1.toString());

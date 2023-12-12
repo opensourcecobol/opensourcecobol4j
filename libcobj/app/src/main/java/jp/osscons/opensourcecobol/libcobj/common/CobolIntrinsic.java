@@ -808,9 +808,8 @@ public class CobolIntrinsic {
     CobolDecimal d1 = new CobolDecimal();
     d1.setField(srcfield);
     // CobolDecimal d1 = mathFunctionBefore2(srcfield);
-    BigDecimal d2 =
-        new BigDecimal(Math.sqrt(d1.decimalGetDouble()), MathContext.DECIMAL128)
-            .setScale(17, RoundingMode.HALF_UP);
+    Double sq = Math.sqrt(d1.decimalGetDouble());
+    BigDecimal d2 = new BigDecimal(sq, MathContext.DECIMAL128).setScale(17, RoundingMode.HALF_UP);
     CobolDecimal d3 = new CobolDecimal(d2);
     try {
       d3.getField(currField, 0);
