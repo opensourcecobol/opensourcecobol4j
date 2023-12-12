@@ -4487,7 +4487,6 @@ yysyntax_error (YYPTRDIFF_T *yymsg_alloc, char **yymsg,
               }
         }
     }
-
   switch (yycount)
     {
 # define YYCASE_(N, S)                      \

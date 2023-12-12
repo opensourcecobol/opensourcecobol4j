@@ -64,6 +64,36 @@ public class CobolTerminal {
     stream.write(storage.getRefOfData(), storage.getIndex(), f.getSize());
   }
 
+  private static void prettyDisplayNumeric(AbstractCobolField f, PrintStream stream) {
+    int i = 0;
+    int i0;
+    int digits;
+    int size;
+    int scale;
+    CobolFieldAttribute attr = f.getAttribute();
+
+    if (f.getSize() == 0) {
+      return;
+    }
+
+    digits = attr.getDigits();
+    scale = attr.getScale();
+    size = (digits + (attr.isFlagHaveSign() ? 1 : 0) + (scale > 0 ? 1 : 0));
+    i0 = size - scale + (attr.isFlagHaveSign() ? 1 : 0) + (scale > 0 ? 1 : 0);
+
+    CobolDataStorage temp = new CobolDataStorage(size);
+    char firstIndex = (char) f.getString().getBytes()[0];
+    if (f.getAttribute().isFlagHaveSign() && firstIndex != '+' && firstIndex != '-') {
+      temp.setByte(0, '+');
+      i = 1;
+    }
+    temp.setData(f.getString().getBytes(), i);
+    // for(i = i0; i < size; i++){
+    //   temp.setByte(i, '0');
+    // }
+    stream.write(temp.getByteArray(0, size), 0, size);
+  }
+
   /**
    * cob_displayの実装 TODO 暫定実装
    *
@@ -76,10 +106,20 @@ public class CobolTerminal {
     PrintStream stream = outorerr == 0 ? System.out : System.err;
     for (AbstractCobolField field : fields) {
       CobolFieldAttribute attr = field.getAttribute();
-      if (attr.isTypeNumericBinary() && CobolModule.getCurrentModule().flag_pretty_display == 0) {
+      if (attr.isTypeNumericDouble()) {
         stream.print(field);
+      } else if (attr.isTypeNumericBinary()
+          && CobolModule.getCurrentModule().flag_pretty_display == 0) {
+        stream.print(field);
+        // } else if(attr.isTypeNumericDouble()){
+        //   System.out.println("display2");
+        //   stream.print(field);
       } else if (attr.isTypeNumeric()) {
-        stream.print(field);
+        if (CobolModule.getCurrentModule().flag_pretty_display == 1) {
+          prettyDisplayNumeric(field, stream);
+        } else {
+          stream.print(field);
+        }
       } else {
         displayAlnum(field, stream);
       }

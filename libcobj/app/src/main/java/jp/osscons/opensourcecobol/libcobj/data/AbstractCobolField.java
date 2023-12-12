@@ -64,7 +64,7 @@ public abstract class AbstractCobolField {
    * @return this.dataStorage
    */
   public CobolDataStorage getDataStorage() {
-    return dataStorage;
+    return this.dataStorage;
   }
 
   /** メンバ変数dataStorageのsetter */

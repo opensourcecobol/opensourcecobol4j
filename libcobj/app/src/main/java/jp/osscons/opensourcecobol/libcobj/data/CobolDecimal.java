@@ -19,6 +19,7 @@
 package jp.osscons.opensourcecobol.libcobj.data;
 
 import java.math.BigDecimal;
+import java.math.MathContext;
 import java.math.RoundingMode;
 import jp.osscons.opensourcecobol.libcobj.common.CobolModule;
 import jp.osscons.opensourcecobol.libcobj.common.CobolUtil;
@@ -154,7 +155,7 @@ public class CobolDecimal {
    * @return this.value
    */
   public BigDecimal getValue() {
-    return value;
+    return this.value;
   }
 
   /** libcob/numeric.cのcob_decimal_initの実装 */
@@ -393,6 +394,29 @@ public class CobolDecimal {
     this.setValue(this.getValue().divide(decimal.getValue(), RoundingMode.DOWN));
   }
 
+  public void div(CobolDecimal decimal, RoundingMode r) throws CobolStopRunException {
+    if (DECIMAL_CHECK(this, decimal)) {
+      return;
+    }
+    if (decimal.getValue().signum() == 0) {
+      this.setScale(DECIMAL_NAN);
+      if (CobolUtil.cobErrorOnExitFlag) {
+        // TODO より正確な実装に変更
+        System.err.println("Detected division by zero");
+        CobolStopRunException.throwException(1);
+      }
+      return;
+    }
+    if (this.getValue().signum() == 0) {
+      this.setScale(0);
+      return;
+    }
+    this.setScale(this.getScale() - decimal.getScale());
+    int shift = 37 + ((this.getScale() < 0) ? -this.getScale() : 0);
+    this.shiftDecimal(shift);
+    this.setValue(this.getValue().divide(decimal.getValue(), r));
+  }
+
   /**
    * this.valueの値をthis.valueでnを割った値にする
    *
@@ -422,6 +446,10 @@ public class CobolDecimal {
     }
   }
 
+  public void sqrt(MathContext mc) {
+    this.decimalSetDouble(this.value.sqrt(mc).doubleValue());
+  }
+
   /**
    * libcob/numeric.cのcob_decimal_set_doubleの実装
    *
@@ -432,7 +460,7 @@ public class CobolDecimal {
     this.setScale(9);
   }
 
-  private double decimalGetDouble() {
+  public double decimalGetDouble() {
     double v = this.getValue().doubleValue();
     int n = this.getScale();
     for (; n > 0; n--) {
@@ -481,7 +509,6 @@ public class CobolDecimal {
     }
 
     d.shiftDecimal(f.getAttribute().getScale() - d.getScale());
-
     // TODO 残りのパターンも実装
     switch (f.getAttribute().getType()) {
       case CobolFieldAttribute.COB_TYPE_NUMERIC_DISPLAY:
@@ -515,18 +542,18 @@ public class CobolDecimal {
   }
 
   public int getDoubleField(AbstractCobolField f, int opt) {
-    CobolDataStorage storage = new CobolDataStorage(8);
-    double val = this.value.doubleValue();
+    BigDecimal d1 = this.value;
+    BigDecimal TEN = new BigDecimal(10);
+    CobolDataStorage storage = new CobolDataStorage(20);
     int scale = this.scale;
     for (int i = 0; i < Math.abs(scale); ++i) {
       if (scale > 0) {
-        val /= 10;
+        d1 = d1.divide(TEN);
       } else {
-        val *= 10;
+        d1 = d1.multiply(TEN);
       }
     }
-    storage.set(val);
-    f.setDataStorage(storage);
+    f.memcpy(d1.toString());
     return 0;
   }
 

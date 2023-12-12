@@ -19,6 +19,8 @@
 package jp.osscons.opensourcecobol.libcobj.common;
 
 import java.math.BigDecimal;
+import java.math.MathContext;
+import java.math.RoundingMode;
 import java.time.LocalDateTime;
 import java.util.Arrays;
 import java.util.Calendar;
@@ -794,9 +796,35 @@ public class CobolIntrinsic {
 
   /** libcob/intrinsicのcob_intr_sqrtの実装 */
   public static AbstractCobolField funcSqrt(AbstractCobolField srcfield) {
-    CobolDecimal d1 = mathFunctionBefore2(srcfield);
-    double mathd2 = Math.sqrt(intrGetDouble(d1));
-    return mathFunctionAfter2(mathd2);
+    CobolFieldAttribute attr =
+        new CobolFieldAttribute(
+            CobolFieldAttribute.COB_TYPE_NUMERIC_BINARY,
+            18,
+            17,
+            CobolFieldAttribute.COB_FLAG_HAVE_SIGN,
+            null);
+    AbstractCobolField field = CobolFieldFactory.makeCobolField(8, (CobolDataStorage) null, attr);
+    makeFieldEntry(field);
+    CobolDecimal d1 = new CobolDecimal();
+    d1.setField(srcfield);
+    // CobolDecimal d1 = mathFunctionBefore2(srcfield);
+    BigDecimal d2 =
+        new BigDecimal(Math.sqrt(d1.decimalGetDouble()), MathContext.DECIMAL128)
+            .setScale(17, RoundingMode.HALF_UP);
+    CobolDecimal d3 = new CobolDecimal(d2);
+    try {
+      d3.getField(currField, 0);
+    } catch (CobolStopRunException e) {
+      return null;
+    }
+    // currField.setDataStorage(new CobolDataStorage(d2.toString().getBytes()));
+    // currField.getAttribute().setScale(17);
+
+    // for(byte b: currField.getDataStorage().getByteArray(0, 19)){
+    //   System.out.printf("%c",(char) b);
+    // }
+    // currField.getDataStorage().set(d2.toString());
+    return currField;
   }
 
   /** libcob/intrinsicのcob_intr_tanの実装 */
@@ -1504,7 +1532,7 @@ public class CobolIntrinsic {
    * @return
    * @throws CobolStopRunException
    */
-  public static AbstractCobolField funcVariance(int prams, AbstractCobolField... fields)
+  public static AbstractCobolField funcVariance(int params, AbstractCobolField... fields)
       throws CobolStopRunException {
     CobolFieldAttribute attr =
         new CobolFieldAttribute(
@@ -1514,8 +1542,7 @@ public class CobolIntrinsic {
             CobolFieldAttribute.COB_FLAG_HAVE_SIGN,
             null);
     AbstractCobolField field = CobolFieldFactory.makeCobolField(8, (CobolDataStorage) null, attr);
-
-    if (fields.length == 1) {
+    if (params == 1) {
       makeFieldEntry(field);
       currField.setInt(0);
       return currField;
@@ -1548,28 +1575,28 @@ public class CobolIntrinsic {
 
     CobolDecimal d3 = new CobolDecimal(new BigDecimal(fields.length), 0);
     try {
-      d4.div(d3);
+      d4.div(d3); // , RoundingMode.HALF_DOWN);
     } catch (CobolStopRunException e) {
       return null;
     }
     CobolDataStorage data = new CobolDataStorage(8);
     field.setDataStorage(data);
-    d4.getDisplayField(field, 0);
-    long n = data.longValue();
+    // d4.getDisplayField(field, 0);
+    d4.getField(field, 0);
+    CobolDecimal d5 = new CobolDecimal(new BigDecimal(field.getString()));
     int i = 0;
-    while (n != 0) {
-      n /= 10;
+    while (d5.compareTo(new CobolDecimal(0)) != 0) {
+      d5.div(10);
       ++i;
     }
     field.setDataStorage(null);
+    makeFieldEntry(field);
     if (i <= 18) {
-      attr.setScale(18 - i);
+      currField.getAttribute().setScale(18 - i);
     }
-    makeDoubleEntry();
     d4.getField(currField, 0);
     return currField;
   }
-
   /**
    * libcob/intrinsicのcob_intr_standard_deviationの実装
    *

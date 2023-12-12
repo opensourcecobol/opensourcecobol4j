@@ -82,6 +82,7 @@ public class CobolNumericField extends AbstractCobolField {
       int firstIndex = this.getFirstDataIndex();
       int signIndex = attr.isFlagSignLeading() ? 0 : this.getSize() - 1;
       for (int i = 0; i < fieldSize; ++i) {
+
         char c = (char) data.getByte(firstIndex + i);
         if (firstIndex + i == signIndex && c >= 0x70) {
           c -= 0x40;
@@ -115,7 +116,6 @@ public class CobolNumericField extends AbstractCobolField {
       }
       sb.append('0');
     }
-
     return sb.toString();
   }
 
@@ -185,7 +185,6 @@ public class CobolNumericField extends AbstractCobolField {
     if (src1 == null) {
       return;
     }
-
     switch (src1.getAttribute().getType()) {
       case CobolFieldAttribute.COB_TYPE_NUMERIC_DISPLAY:
         this.moveDisplayToDisplay(src1);
@@ -334,8 +333,7 @@ public class CobolNumericField extends AbstractCobolField {
           this.getDataStorage().setByte(s2++, c);
           // TODO Moduleの情報を参照するコードに編集する
         } else if (c == (byte) '.') {
-          ++count;
-          if (count > 0) {
+          if (count++ > 0) {
             break outer;
           }
 
