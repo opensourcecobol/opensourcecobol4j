@@ -4,6 +4,22 @@ All notable changes to this project will be documented in this file.
 
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 
+## [Unreleased]
+### Added
+* Implement runtime numeric checkings (#253)
+* Implement sorting a table based on ebcdic (#254)
+* Implement KEY IS option of SORT statements (#259)
+* Add documents that describes installations and requirements (#256)
+* Implement the environemt variable COB_NIBBLE_C_UNSIGNED (#258)
+* Add intrinsic functions
+  * `C$CALLEDBY` (#262)
+  * `C$LIST-DIRECTORY` (#264)
+### Fixed
+* Fix the message of COB_VERBOSE file sort (#260)
+* Fix the process that checks moving x to numeric (#266)
+### Optimized
+* Optimize the file reading process (#257)
+
 ## [1.0.17] - 2023-11-28
 ### Added
 * Implement sorting a table (#251)
