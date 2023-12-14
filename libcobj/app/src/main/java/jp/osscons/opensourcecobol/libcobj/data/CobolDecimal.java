@@ -785,4 +785,17 @@ public class CobolDecimal {
       s1.setByte(i1++, s2.getByte(i2++));
     } while (--size != 0);
   }
+
+  public static CobolDecimal sqrt(CobolDecimal decimal, int scale) {
+    BigDecimal d1 = decimal.getValue();
+    System.out.println("dbg: d1=" + d1.doubleValue());
+    BigDecimal b2 = new BigDecimal(2);
+    for (int tempScale = 16; tempScale < scale; tempScale *= 2) {
+      // x = x - (x * x - a) / (2 * x);
+      d1 =
+          d1.subtract(
+              d1.multiply(d1).subtract(d1).divide(d1.multiply(b2), scale, RoundingMode.HALF_EVEN));
+    }
+    return new CobolDecimal(d1);
+  }
 }

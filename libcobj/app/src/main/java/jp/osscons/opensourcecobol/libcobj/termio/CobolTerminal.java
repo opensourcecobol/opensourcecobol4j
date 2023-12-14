@@ -66,7 +66,6 @@ public class CobolTerminal {
 
   private static void prettyDisplayNumeric(AbstractCobolField f, PrintStream stream) {
     int i = 0;
-    int i0;
     int digits;
     int size;
     int scale;
@@ -79,7 +78,6 @@ public class CobolTerminal {
     digits = attr.getDigits();
     scale = attr.getScale();
     size = (digits + (attr.isFlagHaveSign() ? 1 : 0) + (scale > 0 ? 1 : 0));
-    i0 = size - scale + (attr.isFlagHaveSign() ? 1 : 0) + (scale > 0 ? 1 : 0);
 
     CobolDataStorage temp = new CobolDataStorage(size);
     char firstIndex = (char) f.getString().getBytes()[0];
@@ -88,9 +86,6 @@ public class CobolTerminal {
       i = 1;
     }
     temp.setData(f.getString().getBytes(), i);
-    // for(i = i0; i < size; i++){
-    //   temp.setByte(i, '0');
-    // }
     stream.write(temp.getByteArray(0, size), 0, size);
   }
 
@@ -111,9 +106,6 @@ public class CobolTerminal {
       } else if (attr.isTypeNumericBinary()
           && CobolModule.getCurrentModule().flag_pretty_display == 0) {
         stream.print(field);
-        // } else if(attr.isTypeNumericDouble()){
-        //   System.out.println("display2");
-        //   stream.print(field);
       } else if (attr.isTypeNumeric()) {
         if (CobolModule.getCurrentModule().flag_pretty_display == 1) {
           prettyDisplayNumeric(field, stream);

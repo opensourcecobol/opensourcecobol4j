@@ -807,8 +807,7 @@ public class CobolIntrinsic {
     makeFieldEntry(field);
     CobolDecimal d1 = new CobolDecimal();
     d1.setField(srcfield);
-    // CobolDecimal d1 = mathFunctionBefore2(srcfield);
-    Double sq = Math.sqrt(d1.decimalGetDouble());
+    double sq = Math.sqrt(d1.decimalGetDouble());
     BigDecimal d2 = new BigDecimal(sq, MathContext.DECIMAL128).setScale(17, RoundingMode.HALF_UP);
     CobolDecimal d3 = new CobolDecimal(d2);
     try {
@@ -816,13 +815,6 @@ public class CobolIntrinsic {
     } catch (CobolStopRunException e) {
       return null;
     }
-    // currField.setDataStorage(new CobolDataStorage(d2.toString().getBytes()));
-    // currField.getAttribute().setScale(17);
-
-    // for(byte b: currField.getDataStorage().getByteArray(0, 19)){
-    //   System.out.printf("%c",(char) b);
-    // }
-    // currField.getDataStorage().set(d2.toString());
     return currField;
   }
 
