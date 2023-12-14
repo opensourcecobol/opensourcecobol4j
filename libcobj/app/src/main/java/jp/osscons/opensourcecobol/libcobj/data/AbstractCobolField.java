@@ -928,7 +928,7 @@ public abstract class AbstractCobolField {
    *
    * @param field
    */
-  public void checkMoveStrNum(AbstractCobolField field) {
+  public void checkMoveStrNum(AbstractCobolField field) throws CobolStopRunException {
     switch (this.getAttribute().getType()) {
       case CobolFieldAttribute.COB_TYPE_ALPHANUMERIC:
       case CobolFieldAttribute.COB_TYPE_ALPHANUMERIC_ALL:
@@ -946,8 +946,8 @@ public abstract class AbstractCobolField {
             for (int i = 0; i < this.getSize(); i++) {
               byte val = data.getByte(firstIndex + i);
               if (val < 0x30 || 0x39 < val) {
-                System.out.println("Numeric value is expected");
-                // TODO STOP RUNを呼ぶ
+                CobolUtil.runtimeError("Numeric value is expected");
+                CobolStopRunException.stopRunAndThrow(1);
               }
             }
             break;
