@@ -262,7 +262,6 @@ AT_CLEANUP
 
 
 AT_SETUP([Offset out of bounds in MOVE (2)])
-AT_CHECK([${SKIP_TEST}])
 
 AT_DATA([prog.cob], [
        IDENTIFICATION   DIVISION.

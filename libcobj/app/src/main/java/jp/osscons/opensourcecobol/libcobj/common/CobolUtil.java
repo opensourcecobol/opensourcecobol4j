@@ -114,6 +114,17 @@ public class CobolUtil {
     CobolUtil.cobCheckRefMod(offset, length, size, name);
   }
 
+  public static void cobCheckRefMod(
+      int offset, long length, int size, CobolDataStorage name, int nameLen)
+      throws CobolStopRunException {
+    cobCheckRefMod(offset, length, size, name.getByteArrayRef(0, nameLen));
+  }
+
+  public static void cobCheckRefMod(int offset, long length, int size, byte[] name, int nameLen)
+      throws CobolStopRunException {
+    cobCheckRefMod(offset, length, size, name);
+  }
+
   public static void cobCheckRefMod(int offset, long length, int size, byte[] name)
       throws CobolStopRunException {
     try {
@@ -121,6 +132,11 @@ public class CobolUtil {
     } catch (UnsupportedEncodingException e) {
       CobolUtil.cobCheckRefMod(offset, length, size, "");
     }
+  }
+
+  public static void cobCheckRefMod(int offset, long length, int size, String name, int nameLen)
+      throws CobolStopRunException {
+    cobCheckRefMod(offset, length, size, name);
   }
 
   public static void cobCheckRefMod(int offset, long length, int size, String name)
