@@ -861,7 +861,8 @@ cb_tree cb_build_identifier(cb_tree x) {
           e1 = cb_build_funcall_5(
               "CobolUtil.cobCheckRefMod", cb_build_cast_integer(r->offset),
               r->length ? cb_build_cast_integer(r->length) : cb_int1,
-              cb_int(f->size), cb_build_string0((ucharptr)f->name), cb_int(strlen((ucharptr)f->name)));
+              cb_int(f->size), cb_build_string0((ucharptr)f->name),
+              cb_int(strlen((ucharptr)f->name)));
         }
         r->check = cb_list_add(r->check, e1);
       }
