@@ -16,7 +16,7 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
   * `C$LIST-DIRECTORY` (#264)
 ### Fixed
 * Fix the message of COB_VERBOSE file sort (#260)
-* Fix the process that checks moving x to numeric (#266)
+* Fix the process that checks MOVE statements (#266, #267)
 ### Optimized
 * Optimize the file reading process (#257)
 
