@@ -329,6 +329,17 @@ public class CobolDataStorage {
     return 0;
   }
 
+  public int memcmp(int offset, CobolDataStorage buf, int size) {
+    for (int i = 0; i < size; ++i) {
+      byte x = this.getByte(offset + i);
+      byte y = buf.getByte(i);
+      if (x != y) {
+        return Byte.toUnsignedInt(x) - Byte.toUnsignedInt(y);
+      }
+    }
+    return 0;
+  }
+
   /**
    * 引数で与えられたバイト配列をthis.dataの先頭からコピーする
    *
