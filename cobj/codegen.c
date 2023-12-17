@@ -3150,9 +3150,7 @@ static void joutput_call(struct cb_call *p) {
   if (!system_call) {
     if (cb_sticky_linkage || cb_flag_null_param) {
       for (n = 0; n < 4; n++) {
-        if (n != 0 || parmnum != 0) {
-          joutput(", ");
-        }
+        joutput(", ");
         joutput("null");
       }
     }
@@ -4741,7 +4739,7 @@ static void joutput_internal_function(struct cb_program *prog,
   /* Entry dispatch */
   joutput_line("/* Entry dispatch */");
   if (cb_list_length(prog->entry_list) > 1) {
-    joutput_line("multiple entry dispatch is not implemented");
+    joutput_line("//multiple entry dispatch is not implemented");
     joutput_newline();
     joutput_line("switch (entry)");
     joutput_line("  {");
