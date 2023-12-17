@@ -14,6 +14,7 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 * Add intrinsic functions
   * `C$CALLEDBY` (#262)
   * `C$LIST-DIRECTORY` (#264)
+* Implement `NUMBER-OF-PARAMETERS` (#270)
 ### Fixed
 * Fix the message of COB_VERBOSE file sort (#260)
 * Fix the process that checks MOVE statements (#266, #267)

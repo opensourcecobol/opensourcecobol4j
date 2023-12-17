@@ -748,7 +748,6 @@ AT_CLEANUP
 # Number of call parameters
 
 AT_SETUP([NUMBER-OF-CALL-PARAMETERS])
-AT_CHECK([${SKIP_TEST}])
 
 AT_DATA([callee.cob], [
        IDENTIFICATION   DIVISION.
