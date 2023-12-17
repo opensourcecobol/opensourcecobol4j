@@ -19,5 +19,5 @@
 package jp.osscons.opensourcecobol.libcobj.common;
 
 public class CobolCallParams {
-    public static int callParams = 0;
+  public static int callParams = 0;
 }

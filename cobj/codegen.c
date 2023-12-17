@@ -4678,13 +4678,13 @@ static void joutput_internal_function(struct cb_program *prog,
   //	output_newline ();
   // }
 
-   if (cb_field (current_prog->cb_call_params)->count) {
-  	joutput_line ("/* Initialize number of call params */");
-  	joutput_prefix ();
-  	joutput_param(current_prog->cb_call_params, -1);
-  	joutput (".setInt(CobolCallParams.callParams);");
-    joutput_newline ();
-   }
+  if (cb_field(current_prog->cb_call_params)->count) {
+    joutput_line("/* Initialize number of call params */");
+    joutput_prefix();
+    joutput_param(current_prog->cb_call_params, -1);
+    joutput(".setInt(CobolCallParams.callParams);");
+    joutput_newline();
+  }
   // output_line ("cob_save_call_params = cob_call_params;");
   // output_newline ();
   if (cb_flag_traceall) {
