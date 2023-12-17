@@ -2946,6 +2946,8 @@ static void joutput_call(struct cb_call *p) {
     if (CB_LITERAL_P(p->name)) {
       callp = cb_encode_program_id((char *)(CB_LITERAL(p->name)->data));
       lookup_call(callp);
+      joutput_line("if (call_%s == null) {", callp);
+      joutput_indent_level += 2;
       if (cb_java_package_name) {
         joutput_line("call_%s = CobolResolve.resolve(\"%s\", \"%s\", call_%s);",
                      callp, cb_java_package_name,
@@ -2954,6 +2956,8 @@ static void joutput_call(struct cb_call *p) {
         joutput_line("call_%s = CobolResolve.resolve(null, \"%s\", call_%s);",
                      callp, (char *)(CB_LITERAL(p->name)->data), callp);
       }
+      joutput_indent_level -= 2;
+      joutput_line("}");
     } else {
       callp = NULL;
       joutput_prefix();
