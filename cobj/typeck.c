@@ -714,7 +714,7 @@ cb_tree cb_build_identifier(cb_tree x) {
       if (p->flag_item_based ||
           (f->storage == CB_STORAGE_LINKAGE && !p->flag_is_pdiv_parm)) {
         current_statement->null_check = cb_build_funcall_2(
-            "cob_check_based",
+            "CobolUtil.cobCheckBased",
             cb_build_address(cb_build_field_reference(p, NULL)),
             cb_build_string0((ucharptr)name));
       }

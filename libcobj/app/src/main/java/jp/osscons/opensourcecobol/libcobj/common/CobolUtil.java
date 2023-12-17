@@ -156,6 +156,13 @@ public class CobolUtil {
     }
   }
 
+  public static void cobCheckBased(CobolDataStorage x, byte[] name) throws CobolStopRunException {
+    if (x == null) {
+      CobolUtil.runtimeError(String.format("BASED/LINKAGE item '%s' has NULL address", name));
+      CobolStopRunException.stopRunAndThrow(1);
+    }
+  }
+
   /** libcob/common.cのcob_initの実装 TODO 未完成 */
   public static void cob_init(String[] argv, boolean cobInitialized) {
     if (!cobInitialized) {
