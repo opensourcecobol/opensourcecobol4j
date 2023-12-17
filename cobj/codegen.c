@@ -2902,6 +2902,7 @@ static void joutput_call(struct cb_call *p) {
     }
   }
   joutput(");\n");
+  joutput_line("CobolCallParams.callParams = %d;", (int)n);
 
   if (!dynamic_link) {
     if (CB_REFERENCE_P(p->name) && CB_FIELD_P(CB_REFERENCE(p->name)->value) &&
@@ -4677,12 +4678,13 @@ static void joutput_internal_function(struct cb_program *prog,
   //	output_newline ();
   // }
 
-  // if (cb_field (current_prog->cb_call_params)->count) {
-  //	output_line ("/* Initialize number of call params */");
-  //	output ("  ");
-  //	output_integer (current_prog->cb_call_params);
-  //	output_line (" = cob_call_params;");
-  // }
+  if (cb_field(current_prog->cb_call_params)->count) {
+    joutput_line("/* Initialize number of call params */");
+    joutput_prefix();
+    joutput_param(current_prog->cb_call_params, -1);
+    joutput(".setInt(CobolCallParams.callParams);");
+    joutput_newline();
+  }
   // output_line ("cob_save_call_params = cob_call_params;");
   // output_newline ();
   if (cb_flag_traceall) {
