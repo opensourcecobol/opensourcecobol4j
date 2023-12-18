@@ -5821,6 +5821,12 @@ void codegen(struct cb_program *prog, const int nested, char **program_id_list,
   needs_exit_prog = 0;
   gen_custom = 0;
   call_cache = NULL;
+  while (call_parameter_cache) {
+    struct call_parameter_list *next = call_parameter_cache->next;
+    free(call_parameter_cache);
+    call_parameter_cache = next;
+  }
+  call_parameter_cache = NULL;
   label_cache = NULL;
   local_cache = NULL;
   excp_current_program_id = prog->orig_source_name;
