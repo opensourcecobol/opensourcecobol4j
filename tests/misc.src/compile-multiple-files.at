@@ -1,0 +1,55 @@
+# With the previous version, compiling the following programs fails because the compiler write
+# the declarations of call parameters in multiple times.
+# This test checks whether this problem is resolved.
+# See Issue #271 (https://github.com/opensourcecobol/opensourcecobol4j/issues/271) for detail.
+AT_SETUP([Compile multiple files])
+
+AT_DATA([caller.cbl], [
+       IDENTIFICATION   DIVISION.
+       PROGRAM-ID.      caller.
+       DATA             DIVISION.
+       WORKING-STORAGE  SECTION.
+       01 W             PIC X.
+       01 X             PIC X.
+       01 Y             PIC X.
+       01 Z             PIC X.
+       PROCEDURE        DIVISION.
+           CALL "callee"
+           END-CALL.
+           CALL "callee" USING W
+           END-CALL.
+           CALL "callee" USING W X
+           END-CALL.
+           CALL "callee" USING W X Y
+           END-CALL.
+           CALL "callee" USING W X Y Z
+           END-CALL.
+           STOP RUN.
+])
+
+AT_DATA([callee.cbl], [
+       IDENTIFICATION   DIVISION.
+       PROGRAM-ID.      callee.
+       DATA             DIVISION.
+       LINKAGE          SECTION.
+       01 W             PIC X.
+       01 X             PIC X.
+       01 Y             PIC X.
+       01 Z             PIC X.
+       PROCEDURE        DIVISION
+           USING W X Y Z.
+           DISPLAY NUMBER-OF-CALL-PARAMETERS
+           END-DISPLAY.
+           EXIT PROGRAM.
+])
+
+AT_CHECK([${COBJ} callee.cbl caller.cbl])
+AT_CHECK([java caller], [0],
+[+000000000
++000000001
++000000002
++000000003
++000000004
+])
+
+AT_CLEANUP
