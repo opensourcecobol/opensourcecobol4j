@@ -19,6 +19,7 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 * Fix the message of COB_VERBOSE file sort (#260)
 * Fix the process that checks MOVE statements (#266, #267)
 * Fix `INSPECT` statement (#268)
+* Fix error handlings of 0 divisions (#273)
 ### Optimized
 * Optimize the file reading process (#257)
 
