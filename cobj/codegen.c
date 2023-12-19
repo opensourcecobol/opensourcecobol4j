@@ -3563,7 +3563,7 @@ static void joutput_stmt(cb_tree x, enum joutput_stmt_type output_type) {
         ((strcmp(p->name, "DIVIDE") == 0) ||
          (strcmp(p->name, "COMPUTE") == 0)) &&
         (!p->handler1 && !p->handler2)) {
-      joutput_line("cobolErrorOnExitFlag = true;");
+      joutput_line("CobolUtil.cobErrorOnExitFlag = true;");
     }
 
     if (p->null_check) {

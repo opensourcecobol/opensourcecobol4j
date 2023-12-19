@@ -677,7 +677,8 @@ jp_compat_DEPENDENCIES = \
 	jp-compat.src/greater-less-than-equal.at \
 	jp-compat.src/file-desc.at \
 	jp-compat.src/abort-on-file-error.at \
-	jp-compat.src/system-routine.at
+	jp-compat.src/system-routine.at \
+	jp-compat.src/catch-exception.at
 
 command_line_options_DEPENDENCIES = \
 	command-line-options.src/free.at \
