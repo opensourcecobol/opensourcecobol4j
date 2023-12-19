@@ -377,9 +377,9 @@ public class CobolDecimal {
     if (decimal.getValue().signum() == 0) {
       this.setScale(DECIMAL_NAN);
       if (CobolUtil.cobErrorOnExitFlag) {
-        // TODO より正確な実装に変更
-        System.err.println("Detected division by zero");
-        CobolStopRunException.throwException(1);
+        CobolUtil.runtimeError("Detected division by zero.");
+        CobolStopRunException.stopRunAndThrow(1);
+        ;
       }
       return;
     }
