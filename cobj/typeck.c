@@ -2531,7 +2531,6 @@ cb_tree cb_build_cond(cb_tree x) {
         if (size1 == 1 && size2 == 1) {
           x = cb_build_funcall_2("$G", p->x, p->y);
         } else if (size1 != 0 && size1 == size2) {
-          /* dbg 1*/
           cb_tree xx;
           if (CB_LITERAL_P(p->x)) {
             xx = cb_build_string0(CB_LITERAL(p->x)->data);
