@@ -2501,9 +2501,19 @@ cb_tree cb_build_cond(cb_tree x) {
 
         if (cb_chk_num_cond(p->x, p->y)) {
           size1 = cb_field_size(p->x);
-          x = cb_build_method_call_3("memcmp", cb_build_cast_address(p->x),
-                                     cb_build_cast_address(p->y),
-                                     cb_int(size1));
+          cb_tree xx;
+          if (CB_LITERAL_P(p->x)) {
+            xx = cb_build_string0(CB_LITERAL(p->x)->data);
+          } else {
+            xx = cb_build_cast_address(p->x);
+          }
+          cb_tree yy;
+          if (CB_LITERAL_P(p->y)) {
+            yy = cb_build_string0(CB_LITERAL(p->y)->data);
+          } else {
+            yy = cb_build_cast_address(p->y);
+          }
+          x = cb_build_method_call_3("memcmp", xx, yy, cb_int(size1));
           break;
         }
         if (CB_TREE_CLASS(p->x) == CB_CLASS_NUMERIC &&
