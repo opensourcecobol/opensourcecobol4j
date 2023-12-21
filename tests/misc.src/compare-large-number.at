@@ -1,0 +1,42 @@
+AT_SETUP([Compare large])
+
+AT_DATA([prog.cbl], [
+       IDENTIFICATION   DIVISION.
+       PROGRAM-ID.      prog.
+       DATA             DIVISION.
+       WORKING-STORAGE  SECTION.
+       PROCEDURE        DIVISION.
+           IF 2147483647 = 2147483647 THEN
+              DISPLAY "OK"
+           END-IF.
+
+           IF -2147483648 = 2147483648 THEN
+              DISPLAY "OK"
+           END-IF.
+
+           EVALUATE 2147483647
+             WHEN 2147483647
+               DISPLAY "OK"
+             WHEN 1
+               DISPLAY "NG"
+             WHEN OTHER
+               DISPLAY "NG".
+
+           EVALUATE -2147483648
+             WHEN -2147483648
+               DISPLAY "OK"
+             WHEN 1
+               DISPLAY "NG"
+             WHEN OTHER
+               DISPLAY "NG".
+])
+
+AT_CHECK([cobj prog.cbl])
+AT_CHECK([java prog], [0],
+[OK
+OK
+OK
+OK
+])
+
+AT_CLEANUP
