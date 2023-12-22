@@ -19,7 +19,6 @@
 package jp.osscons.opensourcecobol.libcobj.data;
 
 import java.math.BigDecimal;
-import java.math.BigInteger;
 import java.nio.ByteBuffer;
 import java.nio.charset.Charset;
 import jp.osscons.opensourcecobol.libcobj.common.CobolConstant;
@@ -903,10 +902,7 @@ public abstract class AbstractCobolField {
 
   // TODO abstract指定
   public BigDecimal getBigDecimal() {
-    byte[] arr = this.getDataStorage().getByteArray(0, this.getFieldSize());
-    BigInteger bigInt = new BigInteger(arr);
-    // return BigDecimal.ZERO;
-    return new BigDecimal(bigInt);
+    return BigDecimal.ZERO;
   }
 
   /**

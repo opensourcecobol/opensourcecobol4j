@@ -1547,13 +1547,12 @@ public class CobolIntrinsic {
 
     CobolDecimal d3 = new CobolDecimal(new BigDecimal(fields.length), 0);
     try {
-      d4.div(d3); // , RoundingMode.HALF_DOWN);
+      d4.div(d3);
     } catch (CobolStopRunException e) {
       return null;
     }
     CobolDataStorage data = new CobolDataStorage(8);
     field.setDataStorage(data);
-    // d4.getDisplayField(field, 0);
     d4.getField(field, 0);
     CobolDecimal d5 = new CobolDecimal(new BigDecimal(field.getString()));
     int i = 0;

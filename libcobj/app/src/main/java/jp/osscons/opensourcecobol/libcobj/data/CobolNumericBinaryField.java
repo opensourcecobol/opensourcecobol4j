@@ -294,8 +294,7 @@ public class CobolNumericBinaryField extends AbstractCobolField {
   @Override
   public CobolDecimal getDecimal() {
     CobolDecimal decimal = new CobolDecimal();
-    // decimal.setValue(new BigDecimal(this.getBinaryValue()));
-    decimal.setValue(this.getBigDecimal());
+    decimal.setValue(new BigDecimal(this.getBinaryValue()));
     decimal.setScale(this.getAttribute().getScale());
     return decimal;
   }

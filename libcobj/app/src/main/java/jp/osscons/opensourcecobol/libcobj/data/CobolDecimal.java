@@ -19,7 +19,6 @@
 package jp.osscons.opensourcecobol.libcobj.data;
 
 import java.math.BigDecimal;
-import java.math.MathContext;
 import java.math.RoundingMode;
 import jp.osscons.opensourcecobol.libcobj.common.CobolModule;
 import jp.osscons.opensourcecobol.libcobj.common.CobolUtil;
@@ -447,10 +446,6 @@ public class CobolDecimal {
     }
   }
 
-  public void sqrt(MathContext mc) {
-    this.decimalSetDouble(this.value.sqrt(mc).doubleValue());
-  }
-
   /**
    * libcob/numeric.cのcob_decimal_set_doubleの実装
    *
@@ -523,7 +518,6 @@ public class CobolDecimal {
       case CobolFieldAttribute.COB_TYPE_NUMERIC_DOUBLE:
         return d.getDoubleField(f, opt);
       default:
-        System.out.println("default");
         int digits = f.getAttribute().getDigits();
         CobolFieldAttribute attr = f.getAttribute();
         CobolFieldAttribute newAttr =
