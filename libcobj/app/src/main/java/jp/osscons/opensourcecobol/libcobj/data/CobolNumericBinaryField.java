@@ -172,22 +172,15 @@ public class CobolNumericBinaryField extends AbstractCobolField {
     int data1Index = field.getFirstDataIndex();
     int sign = field.getSign();
     CobolDataStorage data1 = field.getDataStorage();
-    CobolDataStorage data2;
 
-    boolean flagNull = true;
     int numIndex = 0;
     for (int i = 0; i < size1; ++i) {
       if (data1.getByte(data1Index + i) != 0x30) {
         numIndex = data1Index + i;
-        flagNull = false;
         break;
       }
     }
-    // if (flagNull) {
-    //   for (int i = 0; i < this.getSize(); ++i) {
-    //     data2.setByte(i, (byte) 0);
-    //   }
-    // }
+
     int size = size1 - field.getAttribute().getScale() + this.getAttribute().getScale();
     long val = 0;
     for (int i = 0; i < size; ++i) {

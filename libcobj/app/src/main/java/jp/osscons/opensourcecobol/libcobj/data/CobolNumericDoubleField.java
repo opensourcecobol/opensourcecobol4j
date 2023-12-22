@@ -102,38 +102,27 @@ public class CobolNumericDoubleField extends AbstractCobolField {
 
   public void moveDisplayToDouble(AbstractCobolField src) {
     double dval = 0;
-    BigDecimal d1 = BigDecimal.ZERO;
-    BigDecimal d2;
     CobolDataStorage storage = src.getDataStorage();
     for (int i = 0; i < src.getSize(); ++i) {
       byte c = storage.getByte(i);
       if (c == (byte) '-' || c == (byte) '+') {
         continue;
       }
-      // dval *= 10;
-      // dval += c >= 0x70 ? c - 0x70 : c - 0x30;
-      d1 = d1.multiply(BigDecimal.TEN);
-      d1 = d1.add(new BigDecimal(c >= 0x70 ? c - 0x70 : c - 0x30));
+      dval *= 10;
+      dval += c >= 0x70 ? c - 0x70 : c - 0x30;
     }
     int scale = src.getAttribute().getScale();
     for (int i = 0; i < Math.abs(scale); ++i) {
       if (scale < 0) {
-        // dval *= 10;
-        d1 = d1.multiply(BigDecimal.TEN);
+        dval *= 10;
       } else {
-        // dval /= 10;
-        d1 = d1.divide(BigDecimal.TEN);
+        dval /= 10;
       }
     }
-    BigDecimal mONE = new BigDecimal(-1);
     if (src.getSign() < 0) {
-      // dval *= -1;
-      d1 = d1.multiply(mONE);
+      dval *= -1;
     }
-    // this.getDataStorage().set(dval);
-    CobolDecimal d3 = new CobolDecimal(d1);
-    // this.setDataStorage(new CobolDataStorage(d1.toPlainString().getBytes()));
-    this.getDataStorage().set(d3.decimalGetDouble());
+    this.getDataStorage().set(dval);
   }
 
   @Override
