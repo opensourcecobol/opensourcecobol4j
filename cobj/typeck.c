@@ -767,29 +767,32 @@ cb_tree cb_build_identifier(cb_tree x) {
                   cb_int(p->occurs_min), cb_int(p->occurs_max),
                   cb_build_string0(
                       (ucharptr)(cb_field(p->occurs_depending)->name)));
-              e2 = cb_build_funcall_4(
+              e2 = cb_build_funcall_5(
                   "CobolCheck.checkSubscript", cb_build_cast_integer(sub),
                   cb_int1, cb_build_cast_integer(p->occurs_depending),
-                  cb_build_string0((ucharptr)name));
+                  cb_build_string0((ucharptr)name),
+                  cb_int(strlen((ucharptr)name)));
             } else {
               e1 = cb_build_funcall_4(
                   "CobolCheck.checkOdo", cb_int(p->occurs_max),
                   cb_int(p->occurs_min), cb_int(p->occurs_max),
                   cb_build_string0(
                       (ucharptr)(cb_field(p->occurs_depending)->name)));
-              e2 = cb_build_funcall_4("CobolCheck.checkSubscript",
+              e2 = cb_build_funcall_5("CobolCheck.checkSubscript",
                                       cb_build_cast_integer(sub), cb_int1,
                                       cb_int(p->occurs_max),
-                                      cb_build_string0((ucharptr)name));
+                                      cb_build_string0((ucharptr)name),
+                                      cb_int(strlen((ucharptr)name)));
             }
             r->check = cb_list_add(r->check, e1);
             r->check = cb_list_add(r->check, e2);
           } else {
             if (!CB_LITERAL_P(sub)) {
-              e1 = cb_build_funcall_4("CobolCheck.checkSubscript",
+              e1 = cb_build_funcall_5("CobolCheck.checkSubscript",
                                       cb_build_cast_integer(sub), cb_int1,
                                       cb_int(p->occurs_max),
-                                      cb_build_string0((ucharptr)name));
+                                      cb_build_string0((ucharptr)name),
+                                      cb_int(strlen((ucharptr)name)));
               r->check = cb_list_add(r->check, e1);
             }
           }

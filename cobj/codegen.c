@@ -1210,7 +1210,7 @@ static void joutput_integer(cb_tree x) {
   case CB_TAG_BINARY_OP:
     p = CB_BINARY_OP(x);
     if (p->op == '^') {
-      joutput("(int) pow (");
+      joutput("(int) Math.pow (");
       joutput_integer(p->x);
       joutput(", ");
       joutput_integer(p->y);
