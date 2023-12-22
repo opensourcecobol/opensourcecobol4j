@@ -118,24 +118,24 @@ public class CobolNumericDoubleField extends AbstractCobolField {
     int scale = src.getAttribute().getScale();
     for (int i = 0; i < Math.abs(scale); ++i) {
       if (scale < 0) {
-        //dval *= 10;
+        // dval *= 10;
         d1 = d1.multiply(BigDecimal.TEN);
       } else {
-        //dval /= 10;
+        // dval /= 10;
         d1 = d1.divide(BigDecimal.TEN);
       }
     }
     BigDecimal mONE = new BigDecimal(-1);
     if (src.getSign() < 0) {
-      //dval *= -1;
+      // dval *= -1;
       d1 = d1.multiply(mONE);
     }
-    //this.getDataStorage().set(dval);
+    // this.getDataStorage().set(dval);
     CobolDecimal d3 = new CobolDecimal(d1);
-    //this.setDataStorage(new CobolDataStorage(d1.toPlainString().getBytes()));
+    // this.setDataStorage(new CobolDataStorage(d1.toPlainString().getBytes()));
     this.getDataStorage().set(d3.decimalGetDouble());
   }
-  
+
   @Override
   public CobolNumericField getNumericField() {
     CobolFieldAttribute attr =

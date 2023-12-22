@@ -19,7 +19,6 @@
 package jp.osscons.opensourcecobol.libcobj.data;
 
 import java.math.BigDecimal;
-import java.math.BigInteger;
 import java.math.MathContext;
 import java.math.RoundingMode;
 import jp.osscons.opensourcecobol.libcobj.common.CobolModule;
@@ -494,7 +493,7 @@ public class CobolDecimal {
     }
 
     CobolDecimal d = new CobolDecimal(this);
-    
+
     /* rounding */
     if ((opt & CobolDecimal.COB_STORE_ROUND) != 0) {
       if (f.getAttribute().getScale() < d.getScale()) {
@@ -524,7 +523,7 @@ public class CobolDecimal {
       case CobolFieldAttribute.COB_TYPE_NUMERIC_DOUBLE:
         return d.getDoubleField(f, opt);
       default:
-      System.out.println("default");
+        System.out.println("default");
         int digits = f.getAttribute().getDigits();
         CobolFieldAttribute attr = f.getAttribute();
         CobolFieldAttribute newAttr =

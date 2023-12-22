@@ -905,7 +905,7 @@ public abstract class AbstractCobolField {
   public BigDecimal getBigDecimal() {
     byte[] arr = this.getDataStorage().getByteArray(0, this.getFieldSize());
     BigInteger bigInt = new BigInteger(arr);
-    //return BigDecimal.ZERO;
+    // return BigDecimal.ZERO;
     return new BigDecimal(bigInt);
   }
 

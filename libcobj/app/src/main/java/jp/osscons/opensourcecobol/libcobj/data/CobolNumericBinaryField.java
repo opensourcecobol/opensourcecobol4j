@@ -175,7 +175,7 @@ public class CobolNumericBinaryField extends AbstractCobolField {
     CobolDataStorage data2;
 
     boolean flagNull = true;
-    int numIndex=0;
+    int numIndex = 0;
     for (int i = 0; i < size1; ++i) {
       if (data1.getByte(data1Index + i) != 0x30) {
         numIndex = data1Index + i;
@@ -209,7 +209,7 @@ public class CobolNumericBinaryField extends AbstractCobolField {
     this.setLongValue(val);
     field.putSign(sign);
   }
-  
+
   /**
    * libcob/move.cのcob_binary_mset_int64の実装
    *
@@ -303,7 +303,7 @@ public class CobolNumericBinaryField extends AbstractCobolField {
   @Override
   public CobolDecimal getDecimal() {
     CobolDecimal decimal = new CobolDecimal();
-    //decimal.setValue(new BigDecimal(this.getBinaryValue()));
+    // decimal.setValue(new BigDecimal(this.getBinaryValue()));
     decimal.setValue(this.getBigDecimal());
     decimal.setScale(this.getAttribute().getScale());
     return decimal;
