@@ -26,7 +26,6 @@
 # 1) TODO
 
 AT_SETUP([non-numeric subscript])
-AT_CHECK([${SKIP_TEST}])
 
 AT_DATA([prog.cob], [
        IDENTIFICATION   DIVISION.
@@ -55,7 +54,6 @@ AT_CLEANUP
 # 2) DONE
 
 AT_SETUP([The range of subscripts])
-AT_CHECK([${SKIP_TEST}])
 
 AT_DATA([prog.cob], [
        IDENTIFICATION   DIVISION.
