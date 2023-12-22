@@ -1547,8 +1547,8 @@ AT_DATA([prog.cob], [
        01  Y   PIC   S9V9(17)   COMP.
        PROCEDURE        DIVISION.
            MOVE FUNCTION SQRT ( X ) TO Y.
-           IF Y >= 1.22474487139158890 AND
-              Y <= 1.22474487139158899
+           IF Y >= 1.2247448713915890 AND
+              Y <= 1.2247448713915900
                    DISPLAY "OK"
                    END-DISPLAY
            ELSE
@@ -1575,8 +1575,8 @@ AT_DATA([prog.cob], [
        01  Y   PIC   S9V9(17)   COMP.
        PROCEDURE        DIVISION.
            MOVE FUNCTION STANDARD-DEVIATION ( 3 -14 0 8 -3 ) TO Y.
-           IF Y >= 7.35934779718963925 AND
-              Y <= 7.35934779718964025
+           IF Y >= 7.35934779718963900 AND
+              Y <= 7.35934779718964000
                    DISPLAY "OK"
                    END-DISPLAY
            ELSE

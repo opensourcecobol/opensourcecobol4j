@@ -126,22 +126,7 @@ public class CobolNumericBinaryField extends AbstractCobolField {
 
   /** TODO */
   @Override
-  public void setDecimal(BigDecimal decimal) {
-    byte[] arr = new byte[9];
-     int i;
-    //CobolDataStorage storage = new CobolDataStorage(arr);
-    //this.getDataStorage().set(decimal.toBigInteger().toByteArray());
-    //this.setDataStorage(storage);
-    //this.setLongValue(decimal.longValue());
-    byte[] arr2 = decimal.toBigInteger().toByteArray();
-    for(i = 0; i < arr2.length; i++){
-      if(arr2[i] != 0){
-        System.arraycopy(arr2, i, arr, 0, 8); 
-        break;
-      }
-    }
-    this.getDataStorage().set(arr);
-  }
+  public void setDecimal(BigDecimal decimal) {}
 
   /**
    * 引数で与えらえられたデータからthisへの代入を行う
@@ -198,7 +183,6 @@ public class CobolNumericBinaryField extends AbstractCobolField {
         break;
       }
     }
-    
     // if (flagNull) {
     //   for (int i = 0; i < this.getSize(); ++i) {
     //     data2.setByte(i, (byte) 0);
@@ -218,16 +202,10 @@ public class CobolNumericBinaryField extends AbstractCobolField {
     if (sign < 0 && this.getAttribute().isFlagHaveSign()) {
       val = -val;
     }
-    // if (CobolModule.getCurrentModule().flag_binary_truncate != 0
-    //     && !this.getAttribute().isFlagRealBinary()) {
-    //   val %= CobolConstant.exp10LL[this.getAttribute().getDigits()];
-    // }
-
-    data2 = new CobolDataStorage(size - numIndex);
-    //this.setBinaryValue(val);
-    
-    data2.setBytes(data1.getByteArray(numIndex, size - numIndex));
-    //this.setDataStorage(data2);
+    if (CobolModule.getCurrentModule().flag_binary_truncate != 0
+        && !this.getAttribute().isFlagRealBinary()) {
+      val %= CobolConstant.exp10LL[this.getAttribute().getDigits()];
+    }
     this.setLongValue(val);
     field.putSign(sign);
   }

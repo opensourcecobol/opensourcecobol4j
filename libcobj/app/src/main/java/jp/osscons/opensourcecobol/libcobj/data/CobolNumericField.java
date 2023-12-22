@@ -378,7 +378,6 @@ public class CobolNumericField extends AbstractCobolField {
   }
 
   private void moveDoubleToDisplay(AbstractCobolField field) {
-    System.out.println("dbg; field="+field.getString());
     CobolFieldAttribute thisAttr = this.getAttribute();
     double val = Math.abs(field.getDouble());
     int startIndex = 0;

@@ -797,24 +797,9 @@ public class CobolIntrinsic {
 
   /** libcob/intrinsicのcob_intr_sqrtの実装 */
   public static AbstractCobolField funcSqrt(AbstractCobolField srcfield) {
-    CobolFieldAttribute attr =
-        new CobolFieldAttribute(
-            CobolFieldAttribute.COB_TYPE_NUMERIC_BINARY,
-            18,
-            9,
-            CobolFieldAttribute.COB_FLAG_HAVE_SIGN,
-            null);
-    AbstractCobolField field = CobolFieldFactory.makeCobolField(8, (CobolDataStorage) null, attr);
-    makeFieldEntry(field);
-    System.out.println("[dbg] double sqrt=" + Math.sqrt(srcfield.getDouble()));
-    BigDecimal decimal = new BigDecimal(Math.sqrt(srcfield.getDouble()))/*.setScale(17, RoundingMode.HALF_UP)*/;
-    CobolDecimal d1 = new CobolDecimal(decimal);
-    try {
-      d1.getField(currField, 0);
-    } catch (CobolStopRunException e) {
-      return null;
-    }
-    return currField;
+    CobolDecimal d1 = mathFunctionBefore2(srcfield);
+    double mathd2 = Math.sqrt(intrGetDouble(d1));
+    return mathFunctionAfter2(mathd2);
   }
 
   /** libcob/intrinsicのcob_intr_tanの実装 */

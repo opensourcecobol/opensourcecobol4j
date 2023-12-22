@@ -488,10 +488,6 @@ public class CobolDecimal {
    * @return
    */
   public int getField(AbstractCobolField f, int opt) throws CobolStopRunException {
-    System.out.println("[dbg] getyField");
-    System.out.println("[dbg] this.value="+this.value);
-    System.out.println("[dbg] this.scale="+this.scale);
-    System.out.println("[dbg] opt="+opt);
     if (this.getScale() == CobolDecimal.DECIMAL_NAN) {
       CobolRuntimeException.setException(CobolExceptionId.COB_EC_SIZE_OVERFLOW);
       return CobolRuntimeException.code;
@@ -610,10 +606,6 @@ public class CobolDecimal {
    * @return
    */
   public int getDisplayField(AbstractCobolField f, int opt) throws CobolStopRunException {
-    System.out.println("[dbg] getDisplayField");
-    System.out.println("[dbg] this.value="+this.value);
-    System.out.println("[dbg] this.scale="+this.scale);
-    System.out.println("[dbg] opt="+opt);
     int sign = this.value.signum();
     this.value = this.value.abs();
     String numString = this.value.toPlainString();
@@ -726,10 +718,6 @@ public class CobolDecimal {
    * @return
    */
   private int getBinaryField(AbstractCobolField f, int opt) {
-    System.out.println("[dbg] getyBinaryField");
-    System.out.println("[dbg] this.value="+this.value);
-    System.out.println("[dbg] this.scale="+this.scale);
-    System.out.println("[dbg] opt="+opt);
     CobolDataStorage data = f.getDataStorage();
     CobolFieldAttribute attr = f.getAttribute();
     if (this.getValue().signum() == 0) {
@@ -773,15 +761,7 @@ public class CobolDecimal {
           }
         }
       }
-      //f.setDataStorage(new CobolDataStorage(this.getValue().toBigInteger().toString()));
-      // System.out.print("---------dbg: this=");
-      // for(byte b: this.getValue().toBigInteger().toByteArray()){
-      //   System.out.printf("%c ", b);
-      // }
-      // System.out.println();
-      //f.getDataStorage().set(this.getValue().toBigInteger().toByteArray());
       ((CobolNumericBinaryField) f).setLongValue(this.getValue().longValue());
-      //f.setDecimal(this.getValue());
       if (overflow == 0) {
         return 0;
       }
