@@ -333,7 +333,8 @@ public class CobolNumericField extends AbstractCobolField {
           this.getDataStorage().setByte(s2++, c);
           // TODO Moduleの情報を参照するコードに編集する
         } else if (c == (byte) '.') {
-          if (count++ > 0) {
+          if (count > 0) {
+            count++;
             break outer;
           }
 
@@ -359,7 +360,6 @@ public class CobolNumericField extends AbstractCobolField {
   private void moveBinaryToDisplay(AbstractCobolField field) {
     int sign = 1;
     long val = field.getLongValue();
-
     if (this.getAttribute().isFlagHaveSign() && val < 0) {
       sign = -1;
       val = -val;
@@ -378,6 +378,7 @@ public class CobolNumericField extends AbstractCobolField {
   }
 
   private void moveDoubleToDisplay(AbstractCobolField field) {
+    System.out.println("dbg; field="+field.getString());
     CobolFieldAttribute thisAttr = this.getAttribute();
     double val = Math.abs(field.getDouble());
     int startIndex = 0;

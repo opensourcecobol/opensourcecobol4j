@@ -80,7 +80,6 @@ public class CobolAlphanumericField extends AbstractCobolField {
     if (src1 == null) {
       return;
     }
-
     switch (src1.getAttribute().getType()) {
       case CobolFieldAttribute.COB_TYPE_NUMERIC_DISPLAY:
         this.moveDisplayToAlnum(src1);

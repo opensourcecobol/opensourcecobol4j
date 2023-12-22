@@ -19,6 +19,7 @@
 package jp.osscons.opensourcecobol.libcobj.data;
 
 import java.math.BigDecimal;
+import java.math.BigInteger;
 import java.math.MathContext;
 import java.math.RoundingMode;
 import jp.osscons.opensourcecobol.libcobj.common.CobolModule;
@@ -230,6 +231,7 @@ public class CobolDecimal {
    */
   public void setField(AbstractCobolField f) {
     CobolDecimal decimal = f.getDecimal();
+
     this.setValue(decimal.getValue());
     this.setScale(decimal.getScale());
   }
@@ -486,13 +488,17 @@ public class CobolDecimal {
    * @return
    */
   public int getField(AbstractCobolField f, int opt) throws CobolStopRunException {
+    System.out.println("[dbg] getyField");
+    System.out.println("[dbg] this.value="+this.value);
+    System.out.println("[dbg] this.scale="+this.scale);
+    System.out.println("[dbg] opt="+opt);
     if (this.getScale() == CobolDecimal.DECIMAL_NAN) {
       CobolRuntimeException.setException(CobolExceptionId.COB_EC_SIZE_OVERFLOW);
       return CobolRuntimeException.code;
     }
 
     CobolDecimal d = new CobolDecimal(this);
-
+    
     /* rounding */
     if ((opt & CobolDecimal.COB_STORE_ROUND) != 0) {
       if (f.getAttribute().getScale() < d.getScale()) {
@@ -507,7 +513,6 @@ public class CobolDecimal {
         }
       }
     }
-
     d.shiftDecimal(f.getAttribute().getScale() - d.getScale());
     // TODO 残りのパターンも実装
     switch (f.getAttribute().getType()) {
@@ -523,6 +528,7 @@ public class CobolDecimal {
       case CobolFieldAttribute.COB_TYPE_NUMERIC_DOUBLE:
         return d.getDoubleField(f, opt);
       default:
+      System.out.println("default");
         int digits = f.getAttribute().getDigits();
         CobolFieldAttribute attr = f.getAttribute();
         CobolFieldAttribute newAttr =
@@ -604,6 +610,10 @@ public class CobolDecimal {
    * @return
    */
   public int getDisplayField(AbstractCobolField f, int opt) throws CobolStopRunException {
+    System.out.println("[dbg] getDisplayField");
+    System.out.println("[dbg] this.value="+this.value);
+    System.out.println("[dbg] this.scale="+this.scale);
+    System.out.println("[dbg] opt="+opt);
     int sign = this.value.signum();
     this.value = this.value.abs();
     String numString = this.value.toPlainString();
@@ -716,6 +726,10 @@ public class CobolDecimal {
    * @return
    */
   private int getBinaryField(AbstractCobolField f, int opt) {
+    System.out.println("[dbg] getyBinaryField");
+    System.out.println("[dbg] this.value="+this.value);
+    System.out.println("[dbg] this.scale="+this.scale);
+    System.out.println("[dbg] opt="+opt);
     CobolDataStorage data = f.getDataStorage();
     CobolFieldAttribute attr = f.getAttribute();
     if (this.getValue().signum() == 0) {
@@ -759,7 +773,15 @@ public class CobolDecimal {
           }
         }
       }
+      //f.setDataStorage(new CobolDataStorage(this.getValue().toBigInteger().toString()));
+      // System.out.print("---------dbg: this=");
+      // for(byte b: this.getValue().toBigInteger().toByteArray()){
+      //   System.out.printf("%c ", b);
+      // }
+      // System.out.println();
+      //f.getDataStorage().set(this.getValue().toBigInteger().toByteArray());
       ((CobolNumericBinaryField) f).setLongValue(this.getValue().longValue());
+      //f.setDecimal(this.getValue());
       if (overflow == 0) {
         return 0;
       }
@@ -784,18 +806,5 @@ public class CobolDecimal {
     do {
       s1.setByte(i1++, s2.getByte(i2++));
     } while (--size != 0);
-  }
-
-  public static CobolDecimal sqrt(CobolDecimal decimal, int scale) {
-    BigDecimal d1 = decimal.getValue();
-    System.out.println("dbg: d1=" + d1.doubleValue());
-    BigDecimal b2 = new BigDecimal(2);
-    for (int tempScale = 16; tempScale < scale; tempScale *= 2) {
-      // x = x - (x * x - a) / (2 * x);
-      d1 =
-          d1.subtract(
-              d1.multiply(d1).subtract(d1).divide(d1.multiply(b2), scale, RoundingMode.HALF_EVEN));
-    }
-    return new CobolDecimal(d1);
   }
 }

@@ -21,6 +21,7 @@ package jp.osscons.opensourcecobol.libcobj.common;
 import java.math.BigDecimal;
 import java.math.MathContext;
 import java.math.RoundingMode;
+import java.nio.ByteBuffer;
 import java.time.LocalDateTime;
 import java.util.Arrays;
 import java.util.Calendar;
@@ -800,18 +801,16 @@ public class CobolIntrinsic {
         new CobolFieldAttribute(
             CobolFieldAttribute.COB_TYPE_NUMERIC_BINARY,
             18,
-            17,
+            9,
             CobolFieldAttribute.COB_FLAG_HAVE_SIGN,
             null);
     AbstractCobolField field = CobolFieldFactory.makeCobolField(8, (CobolDataStorage) null, attr);
     makeFieldEntry(field);
-    CobolDecimal d1 = new CobolDecimal();
-    d1.setField(srcfield);
-    double sq = Math.sqrt(d1.decimalGetDouble());
-    BigDecimal d2 = new BigDecimal(sq, MathContext.DECIMAL128).setScale(17, RoundingMode.HALF_UP);
-    CobolDecimal d3 = new CobolDecimal(d2);
+    System.out.println("[dbg] double sqrt=" + Math.sqrt(srcfield.getDouble()));
+    BigDecimal decimal = new BigDecimal(Math.sqrt(srcfield.getDouble()))/*.setScale(17, RoundingMode.HALF_UP)*/;
+    CobolDecimal d1 = new CobolDecimal(decimal);
     try {
-      d3.getField(currField, 0);
+      d1.getField(currField, 0);
     } catch (CobolStopRunException e) {
       return null;
     }

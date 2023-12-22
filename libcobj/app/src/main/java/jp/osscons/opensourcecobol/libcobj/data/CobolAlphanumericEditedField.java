@@ -71,7 +71,6 @@ public class CobolAlphanumericEditedField extends AbstractCobolField {
     if (src1 == null) {
       return;
     }
-
     switch (src1.getAttribute().getType()) {
       case CobolFieldAttribute.COB_TYPE_NUMERIC_DISPLAY:
         CobolFieldAttribute attr = src1.getAttribute();

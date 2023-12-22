@@ -65,7 +65,6 @@ public class CobolNumericEditedField extends AbstractCobolField {
     if (src1 == null) {
       return;
     }
-
     switch (src1.getAttribute().getType()) {
       case CobolFieldAttribute.COB_TYPE_NUMERIC_DISPLAY:
         CobolNumericEditedField.moveDisplayToEdited(this, src1);
