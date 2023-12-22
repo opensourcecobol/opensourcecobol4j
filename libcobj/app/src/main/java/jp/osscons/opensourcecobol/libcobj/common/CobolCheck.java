@@ -56,8 +56,7 @@ public class CobolCheck {
   public static void checkOdo(int i, int min, int max, String name) throws CobolStopRunException {
     if (i < min || max < i) {
       CobolRuntimeException.setException(CobolExceptionId.COB_EC_BOUND_SUBSCRIPT);
-      // TODO ここを正しく実装する
-      System.err.println("check odo error");
+      CobolUtil.runtimeError(String.format("OCCURS DEPENDING ON '%s' out of bounds: %d", name, i));
       CobolStopRunException.stopRunAndThrow(1);
     }
   }

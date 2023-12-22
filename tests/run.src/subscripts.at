@@ -233,7 +233,6 @@ AT_CHECK([java prog], [1], ,
 AT_CLEANUP
 
 AT_SETUP([Value of DEPENDING ON N out of bounds (lower)])
-AT_CHECK([${SKIP_TEST}])
 
 AT_DATA([prog.cob], [
        IDENTIFICATION   DIVISION.
@@ -258,7 +257,6 @@ AT_CLEANUP
 
 
 AT_SETUP([Value of DEPENDING ON N out of bounds (upper)])
-AT_CHECK([${SKIP_TEST}])
 
 AT_DATA([prog.cob], [
        IDENTIFICATION   DIVISION.
