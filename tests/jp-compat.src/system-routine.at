@@ -1,5 +1,4 @@
 AT_SETUP([CALL C$CALLEDBY])
-AT_CHECK([${SKIP_TEST}])
 
 AT_DATA([callee.cob], [
        IDENTIFICATION   DIVISION.
@@ -37,14 +36,13 @@ AT_DATA([caller.cob], [
 
 AT_CHECK([${COMPILE} caller.cob])
 AT_CHECK([${COMPILE_MODULE} callee.cob])
-AT_CHECK([./caller], [0],
+AT_CHECK([java caller], [0],
 [caller                        1
                               0
 ])
 
 AT_CLEANUP
 AT_SETUP([CALL C$LIST-DIRECTORY])
-AT_CHECK([${SKIP_TEST}])
 
 AT_DATA([prog.cob], [
        IDENTIFICATION   DIVISION.
@@ -82,7 +80,7 @@ AT_DATA([prog.cob], [
 AT_CHECK([mkdir list])
 AT_CHECK([echo -n 1 >list/input1.txt])
 AT_CHECK([echo -n 1 >list/input2.txt])
-AT_CHECK([ls -1f list > list1])
+AT_CHECK([ls -1f list | sort > list1])
 AT_CHECK([${COMPILE} prog.cob])
 AT_CHECK([java prog > list2])
 AT_CHECK([diff list1 list2], [0],[])

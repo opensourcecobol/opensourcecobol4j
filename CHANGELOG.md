@@ -3,8 +3,37 @@
 All notable changes to this project will be documented in this file.
 
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
+
+## [Unreleased]
+### Added
+* Implement runtime numeric checkings (#253)
+* Implement sorting a table based on ebcdic (#254)
+* Implement KEY IS option of SORT statements (#259)
+* Add documents that describes installations and requirements (#256)
+* Implement the environemt variable COB_NIBBLE_C_UNSIGNED (#258)
+* Add intrinsic functions
+  * `C$CALLEDBY` (#262)
+  * `C$LIST-DIRECTORY` (#264)
+* Implement `NUMBER-OF-PARAMETERS` (#270)
+### Fixed
+* Fix the message of COB_VERBOSE file sort (#260)
+* Fix the process that checks MOVE statements (#266, #267)
+* Fix `INSPECT` statement (#268)
+* Fix error handlings of 0 divisions (#273)
+* Fix an error of comparing large numbers (#275)
+### Optimized
+* Optimize the file reading process (#257)
+
+## [1.0.17] - 2023-11-28
+### Added
+* Implement sorting a table (#251)
+* Implement functions SUBSTITUTE and SUBSTITUTE-CASE (#246)
+### Changed
+* Support JDK 11 (#249)
+  * Older versions are tested with JDK 17 and 1.0.17 is tested with JDK 11.
+  * Plan to support JDK 8 in the future.
 ## [1.0.16] - 2023-10-31
-## Added
+### Added
 * Publish libcobj.jar in GitHub Packages
 * Implement intrinsic functions
   * ORD-MAX (#228)
@@ -13,7 +42,17 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
   * SIGN (#231)
   * STORED-CHAR-LENGTH (#231)
   * TRIM (#244)
-## Fixed
+## [1.0.16] - 2023-10-31
+### Added
+* Publish libcobj.jar in GitHub Packages
+* Implement intrinsic functions
+  * ORD-MAX (#228)
+  * ORD-MIN (#228)
+  * SECONDS-FROM-FORMATTED-TIME (#231)
+  * SIGN (#231)
+  * STORED-CHAR-LENGTH (#231)
+  * TRIM (#244)
+### Fixed
 * Fix `DECIMAL POINT IS COMMA` in `SPECIAL NAMES` clause. (#233)
 ## [1.0.15] - 2023-09-29
 ### Added

@@ -136,7 +136,8 @@ jp_compat_DEPENDENCIES = \
 	jp-compat.src/greater-less-than-equal.at \
 	jp-compat.src/file-desc.at \
 	jp-compat.src/abort-on-file-error.at \
-	jp-compat.src/system-routine.at
+	jp-compat.src/system-routine.at \
+	jp-compat.src/catch-exception.at
 
 command_line_options_DEPENDENCIES = \
 	command-line-options.src/free.at \
@@ -188,7 +189,9 @@ misc_DEPENDENCIES = \
 	misc.src/comp3-compute.at \
 	misc.src/index-file-status.at \
 	misc.src/comp-n.at \
-	misc.src/fd-external.at
+	misc.src/fd-external.at \
+	misc.src/compile-multiple-files.at \
+	misc.src/compare-large-number.at
 
 EXTRA_DIST = $(srcdir)/package.m4 \
 	$(TESTS) \

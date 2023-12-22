@@ -71,8 +71,17 @@ public class CobolDataStorage {
     this.data = null;
   }
 
+  public void setDataRefAndIndex(CobolDataStorage data, int index) {
+    this.data = data.data;
+    this.index = index;
+  }
+
   public int getIndex() {
     return this.index;
+  }
+
+  public void setIndex(int index) {
+    this.index = index;
   }
 
   public byte[] getRefOfData() {
@@ -156,6 +165,17 @@ public class CobolDataStorage {
     byte[] result = new byte[length];
     System.arraycopy(this.data, this.index + index, result, 0, length);
     return result;
+  }
+
+
+  /*
+   * Returns a reference to the byte array holded by this object.
+   * Modification of the returned array will affect the data holded by this
+   * object.
+   */
+  public byte[] getByteArrayRef(int index, int length) {
+    ByteBuffer buffer = ByteBuffer.wrap(this.data, this.index + index, length);
+    return buffer.array();
   }
 
   /**
@@ -305,6 +325,17 @@ public class CobolDataStorage {
         int x = Byte.toUnsignedInt(this.getByte(i));
         int y = Byte.toUnsignedInt(buf.getByte(i));
         return x - y;
+      }
+    }
+    return 0;
+  }
+
+  public int memcmp(int offset, CobolDataStorage buf, int size) {
+    for (int i = 0; i < size; ++i) {
+      byte x = this.getByte(offset + i);
+      byte y = buf.getByte(i);
+      if (x != y) {
+        return Byte.toUnsignedInt(x) - Byte.toUnsignedInt(y);
       }
     }
     return 0;

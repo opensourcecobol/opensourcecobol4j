@@ -40,6 +40,7 @@ public abstract class AbstractCobolField {
 
   static int lastsize = 0;
   static CobolDataStorage lastdata = null;
+  static Charset CharSetSJIS = Charset.forName("SHIFT-JIS");
 
   static final int[] cobExp10 = {
     1, 10, 100, 1000, 10000, 100000, 1000000, 10000000, 100000000, 1000000000
@@ -599,7 +600,7 @@ public abstract class AbstractCobolField {
   public void moveFrom(String s) {
     // The maximum number of digits of int type in decimal is 10
 
-    byte[] bytes = s.getBytes(Charset.forName("SJIS"));
+    byte[] bytes = s.getBytes(CharSetSJIS);
 
     CobolDataStorage storage = new CobolDataStorage(bytes.length);
     storage.memcpy(bytes);
@@ -692,7 +693,15 @@ public abstract class AbstractCobolField {
    *
    * @param s
    */
-  public void checkNumeric(byte[] s) {}
+  public void checkNumeric(byte[] s) throws CobolStopRunException {
+    if (!this.isNumeric()) {
+      byte[] buff = this.getDataStorage().getByteArrayRef(0, this.getSize());
+      String name = new String(s, CharSetSJIS);
+      String content = new String(buff, CharSetSJIS);
+      CobolUtil.runtimeError("'" + name + "' not numeric: '" + content + "'");
+      CobolStopRunException.stopRunAndThrow(1);
+    }
+  }
 
   // TODO abstract指定
   /**
@@ -919,7 +928,7 @@ public abstract class AbstractCobolField {
    *
    * @param field
    */
-  public void checkMoveStrNum(AbstractCobolField field) {
+  public void checkMoveStrNum(AbstractCobolField field) throws CobolStopRunException {
     switch (this.getAttribute().getType()) {
       case CobolFieldAttribute.COB_TYPE_ALPHANUMERIC:
       case CobolFieldAttribute.COB_TYPE_ALPHANUMERIC_ALL:
@@ -937,8 +946,8 @@ public abstract class AbstractCobolField {
             for (int i = 0; i < this.getSize(); i++) {
               byte val = data.getByte(firstIndex + i);
               if (val < 0x30 || 0x39 < val) {
-                System.out.println("Numeric value is expected");
-                // TODO STOP RUNを呼ぶ
+                CobolUtil.runtimeError("Numeric value is expected");
+                CobolStopRunException.stopRunAndThrow(1);
               }
             }
             break;
@@ -1104,12 +1113,16 @@ public abstract class AbstractCobolField {
         if (sign == 0x0f) {
           return true;
         }
-        if (CobolUtil.nibbleCForUnsigned) {
+        if (this.getAttribute().isFlagHaveSign()) {
+          if (sign == 0x0c || sign == 0x0d) {
+            return true;
+          }
+        } else if (CobolUtil.nibbleCForUnsigned) {
           if (sign == 0x0c) {
             return true;
           }
         }
-        return sign == 0x0c || sign == 0x0d;
+        return false;
       case CobolFieldAttribute.COB_TYPE_NUMERIC_DISPLAY:
         int size = this.getFieldSize();
         int firstIndex = this.getFirstDataIndex();

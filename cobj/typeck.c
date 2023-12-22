@@ -714,7 +714,7 @@ cb_tree cb_build_identifier(cb_tree x) {
       if (p->flag_item_based ||
           (f->storage == CB_STORAGE_LINKAGE && !p->flag_is_pdiv_parm)) {
         current_statement->null_check = cb_build_funcall_2(
-            "cob_check_based",
+            "CobolUtil.cobCheckBased",
             cb_build_address(cb_build_field_reference(p, NULL)),
             cb_build_string0((ucharptr)name));
       }
@@ -858,10 +858,11 @@ cb_tree cb_build_identifier(cb_tree x) {
               r->length ? cb_build_cast_integer(r->length) : cb_int2,
               cb_int(f->size), cb_build_string0((ucharptr)f->name));
         } else {
-          e1 = cb_build_funcall_4(
+          e1 = cb_build_funcall_5(
               "CobolUtil.cobCheckRefMod", cb_build_cast_integer(r->offset),
               r->length ? cb_build_cast_integer(r->length) : cb_int1,
-              cb_int(f->size), cb_build_string0((ucharptr)f->name));
+              cb_int(f->size), cb_build_string0((ucharptr)f->name),
+              cb_int(strlen((ucharptr)f->name)));
         }
         r->check = cb_list_add(r->check, e1);
       }
@@ -2500,9 +2501,19 @@ cb_tree cb_build_cond(cb_tree x) {
 
         if (cb_chk_num_cond(p->x, p->y)) {
           size1 = cb_field_size(p->x);
-          x = cb_build_method_call_3("memcmp", cb_build_cast_address(p->x),
-                                     cb_build_cast_address(p->y),
-                                     cb_int(size1));
+          cb_tree xx;
+          if (CB_LITERAL_P(p->x)) {
+            xx = cb_build_string0(CB_LITERAL(p->x)->data);
+          } else {
+            xx = cb_build_cast_address(p->x);
+          }
+          cb_tree yy;
+          if (CB_LITERAL_P(p->y)) {
+            yy = cb_build_string0(CB_LITERAL(p->y)->data);
+          } else {
+            yy = cb_build_cast_address(p->y);
+          }
+          x = cb_build_method_call_3("memcmp", xx, yy, cb_int(size1));
           break;
         }
         if (CB_TREE_CLASS(p->x) == CB_CLASS_NUMERIC &&
@@ -2530,9 +2541,19 @@ cb_tree cb_build_cond(cb_tree x) {
         if (size1 == 1 && size2 == 1) {
           x = cb_build_funcall_2("$G", p->x, p->y);
         } else if (size1 != 0 && size1 == size2) {
-          x = cb_build_method_call_3("memcmp", cb_build_cast_address(p->x),
-                                     cb_build_cast_address(p->y),
-                                     cb_int(size1));
+          cb_tree xx;
+          if (CB_LITERAL_P(p->x)) {
+            xx = cb_build_string0(CB_LITERAL(p->x)->data);
+          } else {
+            xx = cb_build_cast_address(p->x);
+          }
+          cb_tree yy;
+          if (CB_LITERAL_P(p->y)) {
+            yy = cb_build_string0(CB_LITERAL(p->y)->data);
+          } else {
+            yy = cb_build_cast_address(p->y);
+          }
+          x = cb_build_method_call_3("memcmp", xx, yy, cb_int(size1));
         } else {
           if (CB_TREE_CLASS(p->x) == CB_CLASS_NUMERIC && p->y == cb_zero) {
             x = cb_build_optim_cond(p);

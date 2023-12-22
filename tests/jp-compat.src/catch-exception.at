@@ -49,7 +49,6 @@ AT_CLEANUP
 # 3) DONE
 
 AT_SETUP([Divide by zero: by variable - option yes])
-AT_CHECK([${SKIP_TEST}])
 
 AT_DATA([prog.cob], [
        IDENTIFICATION   DIVISION.
@@ -150,7 +149,6 @@ AT_CLEANUP
 # 7) DONE
 
 AT_SETUP([Divide by zero: by variable compute - option yes])
-AT_CHECK([${SKIP_TEST}])
 
 AT_DATA([prog.cob], [
        IDENTIFICATION   DIVISION.
@@ -204,7 +202,6 @@ AT_CLEANUP
 # 9) DONE
 
 AT_SETUP([Divide by zero: by variable with on size error])
-AT_CHECK([${SKIP_TEST}])
 
 AT_DATA([prog.cob], [
        IDENTIFICATION   DIVISION.

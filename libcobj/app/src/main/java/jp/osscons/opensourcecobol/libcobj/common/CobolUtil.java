@@ -114,6 +114,17 @@ public class CobolUtil {
     CobolUtil.cobCheckRefMod(offset, length, size, name);
   }
 
+  public static void cobCheckRefMod(
+      int offset, long length, int size, CobolDataStorage name, int nameLen)
+      throws CobolStopRunException {
+    cobCheckRefMod(offset, length, size, name.getByteArrayRef(0, nameLen));
+  }
+
+  public static void cobCheckRefMod(int offset, long length, int size, byte[] name, int nameLen)
+      throws CobolStopRunException {
+    cobCheckRefMod(offset, length, size, name);
+  }
+
   public static void cobCheckRefMod(int offset, long length, int size, byte[] name)
       throws CobolStopRunException {
     try {
@@ -121,6 +132,11 @@ public class CobolUtil {
     } catch (UnsupportedEncodingException e) {
       CobolUtil.cobCheckRefMod(offset, length, size, "");
     }
+  }
+
+  public static void cobCheckRefMod(int offset, long length, int size, String name, int nameLen)
+      throws CobolStopRunException {
+    cobCheckRefMod(offset, length, size, name);
   }
 
   public static void cobCheckRefMod(int offset, long length, int size, String name)
@@ -136,6 +152,13 @@ public class CobolUtil {
     if (length < 1 || offset + length - 1 > size) {
       CobolRuntimeException.setException(CobolExceptionId.COB_EC_BOUND_REF_MOD);
       CobolUtil.runtimeError(String.format("Length of '%s' out of bounds: %d", name, length));
+      CobolStopRunException.stopRunAndThrow(1);
+    }
+  }
+
+  public static void cobCheckBased(CobolDataStorage x, byte[] name) throws CobolStopRunException {
+    if (x == null) {
+      CobolUtil.runtimeError(String.format("BASED/LINKAGE item '%s' has NULL address", name));
       CobolStopRunException.stopRunAndThrow(1);
     }
   }
@@ -197,6 +220,11 @@ public class CobolUtil {
     s = CobolUtil.getEnv("COB_IO_ASSUME_REWRITE");
     if (s != null && s.length() > 0 && (s.charAt(0) == 'y' || s.charAt(0) == 'Y')) {
       CobolUtil.cob_io_assume_rewrite = true;
+    }
+
+    s = CobolUtil.getEnv("COB_NIBBLE_C_UNSIGNED");
+    if (s != null && s.length() > 0 && (s.charAt(0) == 'y' || s.charAt(0) == 'Y')) {
+      CobolUtil.nibbleCForUnsigned = true;
     }
   }
 
@@ -624,14 +652,16 @@ public class CobolUtil {
       CobolDataStorage s1, CobolDataStorage s2, int size, CobolDataStorage col) {
     if (col != null) {
       for (int i = 0; i < size; ++i) {
-        int ret = col.getByte(s1.getByte(i) & 0xFF) - col.getByte(s2.getByte(i) & 0xFF);
+        int ret =
+            col.getByte(Byte.toUnsignedInt(s1.getByte(i)))
+                - col.getByte(Byte.toUnsignedInt(s2.getByte(i)));
         if (ret != 0) {
           return ret;
         }
       }
     } else {
       for (int i = 0; i < size; ++i) {
-        int ret = (s1.getByte(i) & 0xFF) - (s2.getByte(i) & 0xFF);
+        int ret = Byte.toUnsignedInt(s1.getByte(i)) - Byte.toUnsignedInt(s2.getByte(i));
         if (ret != 0) {
           return ret;
         }

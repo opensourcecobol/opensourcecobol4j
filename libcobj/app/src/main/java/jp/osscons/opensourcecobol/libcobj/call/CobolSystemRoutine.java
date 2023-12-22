@@ -20,8 +20,13 @@ package jp.osscons.opensourcecobol.libcobj.call;
 
 import java.io.IOException;
 import java.lang.ProcessBuilder.Redirect;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+import java.util.Collections;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
+import java.util.stream.Collectors;
 import jp.osscons.opensourcecobol.libcobj.common.CobolModule;
 import jp.osscons.opensourcecobol.libcobj.common.CobolUtil;
 import jp.osscons.opensourcecobol.libcobj.data.AbstractCobolField;
@@ -564,5 +569,127 @@ public class CobolSystemRoutine {
   public static int CBL_OC_NANOSLEEP(AbstractCobolField field) throws CobolStopRunException {
     CobolSystemRoutine.CBL_OC_NANOSLEEP(field.getDataStorage());
     return 0;
+  }
+
+  public static int calledBy(CobolDataStorage data) throws CobolStopRunException {
+    CobolUtil.COB_CHK_PARMS("calledby", 1);
+    return CobolModule.calledBy(data);
+  }
+
+  public static int listDir(CobolDataStorage... data) throws CobolStopRunException {
+    CobolUtil.COB_CHK_PARMS("listDirectory", 1);
+    List<AbstractCobolField> params = CobolModule.getCurrentModule().cob_procedure_parameters;
+    if (params == null) {
+      return -1;
+    }
+    int paramsSize = params.size();
+    if (paramsSize < 1) {
+      return -1;
+    }
+    AbstractCobolField operationCodeFiled = params.get(0);
+    if (operationCodeFiled == null) {
+      return -1;
+    }
+
+    int operationCode = params.get(0).getInt();
+    switch (operationCode) {
+      case 1: // LISTDIR-OPEN(value:1)
+        if (paramsSize < 3) {
+          return -1;
+        }
+        return listDirOpen(params.get(1), params.get(2));
+      case 2: // LISTDIR-OPEN(value:2)
+        if (paramsSize < 3) {
+          return -1;
+        }
+        return listDirNext(params.get(1), params.get(2));
+      case 3: // LISTDIR-OPEN(value:3)
+        if (paramsSize < 2) {
+          return -1;
+        }
+        return lsitDirClose(params.get(1));
+      default:
+        return -1;
+    }
+  }
+
+  private static List<Path> dirList = null;
+
+  private static int listDirOpen(AbstractCobolField dirPathField, AbstractCobolField patternField) {
+    // FIXME: now not use patternField.
+    String dirPath = strFromField(dirPathField);
+    try {
+      dirList =
+          Files.list(Paths.get(dirPath)).map(p -> p.getFileName()).collect(Collectors.toList());
+    } catch (IOException e) {
+      return -1;
+    }
+    dirList.add(Paths.get("."));
+    dirList.add(Paths.get(".."));
+    Collections.sort(dirList);
+    return 0;
+  }
+
+  private static int listDirNext(AbstractCobolField handleField, AbstractCobolField fileNameField) {
+    // FIXME: now not use handleField.
+    if (dirList == null) {
+      return -1;
+    }
+
+    CobolDataStorage storage = fileNameField.getDataStorage();
+    int fieldSize = fileNameField.getSize();
+    storage.memset(' ', fieldSize);
+
+    if (dirList.isEmpty()) {
+      return -1;
+    }
+
+    Path filePath = dirList.get(0);
+    dirList.remove(0);
+    byte[] filePathBytes = filePath.toString().getBytes();
+    int filePathStringLength = filePathBytes.length;
+    int copySize = Math.min(fieldSize, filePathStringLength);
+    storage.memcpy(filePathBytes, copySize);
+    return 0;
+  }
+
+  private static int lsitDirClose(AbstractCobolField handleField) {
+    // FIXME: now not use handleField
+    dirList = null;
+    return 0;
+  }
+
+  private static String strFromField(AbstractCobolField field) {
+    if (field == null) {
+      return null;
+    }
+
+    int i;
+    CobolDataStorage storage = field.getDataStorage();
+    for (i = field.getSize() - 1; i >= 0; --i) {
+      byte b = storage.getByte(i);
+      if (b != ' ' && b != 0) {
+        break;
+      }
+    }
+
+    StringBuilder sb = new StringBuilder();
+    boolean quoteSwitch = false;
+    for (int n = 0; n <= i; ++n) {
+      byte b = storage.getByte(n);
+      if (b == '\'') {
+        quoteSwitch = !quoteSwitch;
+        continue;
+      }
+      if (quoteSwitch) {
+        sb.append((char) b);
+        continue;
+      } else if (b == ' ' || b == 0) {
+        break;
+      } else {
+        sb.append((char) b);
+      }
+    }
+    return sb.toString();
   }
 }

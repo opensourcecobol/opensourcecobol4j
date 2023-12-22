@@ -2902,6 +2902,7 @@ static void joutput_call(struct cb_call *p) {
     }
   }
   joutput(");\n");
+  joutput_line("CobolCallParams.callParams = %d;", (int)n);
 
   if (!dynamic_link) {
     if (CB_REFERENCE_P(p->name) && CB_FIELD_P(CB_REFERENCE(p->name)->value) &&
@@ -2946,6 +2947,8 @@ static void joutput_call(struct cb_call *p) {
     if (CB_LITERAL_P(p->name)) {
       callp = cb_encode_program_id((char *)(CB_LITERAL(p->name)->data));
       lookup_call(callp);
+      joutput_line("if (call_%s == null) {", callp);
+      joutput_indent_level += 2;
       if (cb_java_package_name) {
         joutput_line("call_%s = CobolResolve.resolve(\"%s\", \"%s\", call_%s);",
                      callp, cb_java_package_name,
@@ -2954,6 +2957,8 @@ static void joutput_call(struct cb_call *p) {
         joutput_line("call_%s = CobolResolve.resolve(null, \"%s\", call_%s);",
                      callp, (char *)(CB_LITERAL(p->name)->data), callp);
       }
+      joutput_indent_level -= 2;
+      joutput_line("}");
     } else {
       callp = NULL;
       joutput_prefix();
@@ -3150,9 +3155,7 @@ static void joutput_call(struct cb_call *p) {
   if (!system_call) {
     if (cb_sticky_linkage || cb_flag_null_param) {
       for (n = 0; n < 4; n++) {
-        if (n != 0 || parmnum != 0) {
-          joutput(", ");
-        }
+        joutput(", ");
         joutput("null");
       }
     }
@@ -3410,15 +3413,15 @@ static void joutput_sort_finish(struct cb_sort_finish *p) {
   }
   if (cb_enable_sort_status_register &&
       !current_program->flag_sort_status_used) {
-    joutput("    if (*(int*)(");
+    joutput("    if (");
     joutput_param(p->sort_return, 0);
-    joutput(") != 0)\n");
+    joutput(".intValue() != 0)\n");
     joutput("      {\n");
-    joutput("        cob_runtime_error (");
-    joutput("\"SORT-STATUS is set to %%d.\", (*(int*)");
+    joutput("        CobolUtil.runtimeError (");
+    joutput("\"SORT-STATUS is set to \" + ");
     joutput_param(p->sort_return, 0);
-    joutput("));\n");
-    joutput("        cob_stop_run (1);\n");
+    joutput(".intValue() + \".\");\n");
+    joutput("        CobolStopRunException.stopRunAndThrow (1);\n");
     joutput("      }\n");
   }
 }
@@ -3560,7 +3563,7 @@ static void joutput_stmt(cb_tree x, enum joutput_stmt_type output_type) {
         ((strcmp(p->name, "DIVIDE") == 0) ||
          (strcmp(p->name, "COMPUTE") == 0)) &&
         (!p->handler1 && !p->handler2)) {
-      joutput_line("cobolErrorOnExitFlag = true;");
+      joutput_line("CobolUtil.cobErrorOnExitFlag = true;");
     }
 
     if (p->null_check) {
@@ -4524,6 +4527,7 @@ static void joutput_internal_function(struct cb_program *prog,
   joutput_line("/* Initialize program */");
   joutput_line("if (!this.initialized) {");
   joutput_indent_level += 2;
+  joutput("module.setProgramId(\"%s\");\n", prog->program_id);
 
   if (prog->decimal_index_max) {
     joutput_line("/* Initialize decimal numbers */");
@@ -4674,12 +4678,13 @@ static void joutput_internal_function(struct cb_program *prog,
   //	output_newline ();
   // }
 
-  // if (cb_field (current_prog->cb_call_params)->count) {
-  //	output_line ("/* Initialize number of call params */");
-  //	output ("  ");
-  //	output_integer (current_prog->cb_call_params);
-  //	output_line (" = cob_call_params;");
-  // }
+  if (cb_field(current_prog->cb_call_params)->count) {
+    joutput_line("/* Initialize number of call params */");
+    joutput_prefix();
+    joutput_param(current_prog->cb_call_params, -1);
+    joutput(".setInt(CobolCallParams.callParams);");
+    joutput_newline();
+  }
   // output_line ("cob_save_call_params = cob_call_params;");
   // output_newline ();
   if (cb_flag_traceall) {
@@ -4740,7 +4745,7 @@ static void joutput_internal_function(struct cb_program *prog,
   /* Entry dispatch */
   joutput_line("/* Entry dispatch */");
   if (cb_list_length(prog->entry_list) > 1) {
-    joutput_line("multiple entry dispatch is not implemented");
+    joutput_line("//multiple entry dispatch is not implemented");
     joutput_newline();
     joutput_line("switch (entry)");
     joutput_line("  {");
@@ -5816,6 +5821,12 @@ void codegen(struct cb_program *prog, const int nested, char **program_id_list,
   needs_exit_prog = 0;
   gen_custom = 0;
   call_cache = NULL;
+  while (call_parameter_cache) {
+    struct call_parameter_list *next = call_parameter_cache->next;
+    free(call_parameter_cache);
+    call_parameter_cache = next;
+  }
+  call_parameter_cache = NULL;
   label_cache = NULL;
   local_cache = NULL;
   excp_current_program_id = prog->orig_source_name;

@@ -10,9 +10,71 @@ opensource COBOL 4JはCOBOLからCに変換するCOBOLコンパイラ["opensourc
 ## ライセンス
 ランタイムライブラリであるlibcobjはLGPL 3,それ以外のソフトウェアやライブラリはGPL 3の下で配布されています.
 
+## 動作環境
+
+opensource COBOL 4J は下記の環境でテストされています.
+
+* Ubuntu 22.04 および AlmaLinux 9
+* OpenJDK 11
+
+古いバージョンの動作環境については、[doc/requirements-all.md](./doc/requirements-all.md)をご覧ください.
+
+
 ## インストール
 
-[インストールページ](https://github.com/opensourcecobol/opensourcecobol4j/wiki)をご覧ください.
+opensource COBOL 4J v1.0.17はUbuntuとAlmaLinuxで動作を確認しています.  
+
+# 手動インストール
+
+## 依存ライブラリのインストール
+
+下記のコマンドを実行する
+
+```
+sudo apt-get update
+sudo apt-get install -y default-jdk build-essential bison flex gettext texinfo libgmp-dev autoconf
+```
+
+## opensource COBOL 4Jのインストール
+
+下記のコマンドを実行する
+
+```
+curl -L -o opensourcecobol4j-v1.0.17.tar.gz https://github.com/opensourcecobol/opensourcecobol4j/archive/refs/tags/v1.0.17.tar.gz
+tar zxvf opensourcecobol4j-v1.0.17.tar.gz
+cd opensourcecobol4j-1.0.17
+./configure --prefix=/usr/
+make
+sudo make install
+```
+
+## $CLASSPATHの設定
+
+/usr/lib/opensourcecobol4j/libcobj.jar を 環境変数$CLASSPATH に追加する.
+
+古いバージョンのインストール方法は、[doc/installation_jp](./doc/installation_jp)をご覧ください.
+
+# Dockerによるインストール
+
+opensource COBOL 4J v1.0.17をインストールしたDockerイメージを利用できます.
+
+```bash
+docker pull opensourcecobol/opensourcecobol4j:1.0.17
+```
+
+コンテナ内で下記のコマンドを実行すると、Hello Worldプログラムをコンパイル&実行できる。
+
+``` bash
+# Move to the sample directory
+$ cd /root/cobol_sample
+
+# Translate COBOL to Java and compile the Java source file.
+$ cobj HELLO.cbl
+
+# Run "Hello World"
+$ java HELLO
+HELLO WORLD!
+```
 
 ## 使い方
 
