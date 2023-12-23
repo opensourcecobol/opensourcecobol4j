@@ -1799,7 +1799,6 @@ AT_CHECK([java prog], [0],
 AT_CLEANUP
 
 AT_SETUP([CALL with OMITTED parameter])
-AT_CHECK([${SKIP_TEST}])
 
 AT_DATA([callee.cob], [
        IDENTIFICATION   DIVISION.
@@ -1829,9 +1828,8 @@ AT_DATA([caller.cob], [
            STOP RUN.
 ])
 
-AT_CHECK([${COMPILE_MODULE} callee.cob])
-AT_CHECK([${COMPILE} -o caller caller.cob])
-AT_CHECK([./caller], [0],
+AT_CHECK([${COMPILE} callee.cob caller.cob])
+AT_CHECK([java caller], [0],
 [OKOKOK
 ])
 
