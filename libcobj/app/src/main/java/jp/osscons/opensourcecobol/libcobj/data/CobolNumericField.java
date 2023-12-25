@@ -335,7 +335,7 @@ public class CobolNumericField extends AbstractCobolField {
           // TODO Moduleの情報を参照するコードに編集する
         } else if (c == (byte) '.') {
           ++count;
-          if (count > 0) {
+          if (count > 1) {
             break outer;
           }
 

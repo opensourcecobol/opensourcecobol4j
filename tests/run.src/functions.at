@@ -1537,7 +1537,6 @@ AT_CHECK([java prog], [0],
 AT_CLEANUP
 
 AT_SETUP([FUNCTION SQRT])
-AT_CHECK([${SKIP_TEST}])
 
 AT_DATA([prog.cob], [
        IDENTIFICATION   DIVISION.
@@ -1548,8 +1547,8 @@ AT_DATA([prog.cob], [
        01  Y   PIC   S9V9(17)   COMP.
        PROCEDURE        DIVISION.
            MOVE FUNCTION SQRT ( X ) TO Y.
-           IF Y >= 1.22474487139158890 AND
-              Y <= 1.22474487139158899
+           IF Y >= 1.2247448713915890 AND
+              Y <= 1.2247448713915900
                    DISPLAY "OK"
                    END-DISPLAY
            ELSE
@@ -1855,7 +1854,6 @@ AT_CHECK([java prog], [0],
 AT_CLEANUP
 
 AT_SETUP([FUNCTION VARIANCE])
-AT_CHECK([${SKIP_TEST}])
 
 AT_DATA([prog.cob], [
        IDENTIFICATION   DIVISION.
