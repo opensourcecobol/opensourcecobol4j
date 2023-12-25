@@ -1554,18 +1554,17 @@ public class CobolIntrinsic {
     }
     CobolDataStorage data = new CobolDataStorage(8);
     field.setDataStorage(data);
-    d4.getDisplayField(field, 0);
-    long n = data.longValue();
+    d4.getField(field, 0);
+    long n = field.getLong();
     int i = 0;
     while (n != 0) {
       n /= 10;
       ++i;
     }
-    field.setDataStorage(null);
+    makeFieldEntry(field);
     if (i <= 18) {
       attr.setScale(18 - i);
     }
-    makeDoubleEntry();
     d4.getField(currField, 0);
     return currField;
   }
