@@ -27,9 +27,27 @@ see [doc/requirements-all.md](./doc/requirements-all.md).
 
 ### Install dependencies
 
+Run the following commands.
+
+#### Ubuntu 22.04
+
 ```
 sudo apt-get update
 sudo apt-get install -y default-jdk build-essential bison flex gettext texinfo libgmp-dev autoconf
+```
+
+#### AlmaLinux 9
+
+```
+dnf -y update
+dnf install -y java-11-openjdk-devel gcc make bison flex automake autoconf diffutils gettext
+```
+
+#### Amazon Linux 2023
+
+```
+dnf -y update
+dnf install -y java-11-amazon-corretto-devel gcc make bison flex automake autoconf diffutils gettext tar gzip
 ```
 
 ### Install opensource COBOL 4J
@@ -134,7 +152,7 @@ rw            4        0     4     0      0    0       0       0     0   REPORT 
 total        21        0    21     0      0    0       0       0     0
 ```
 
-# Contributing
+## Contributing
 
 Guidelines for contributing to opensource COBOL 4J can be found in [CONTRIBUTING.md](./CONTRIBUTING.md).
 Contributors are listed in https://github.com/opensourcecobol/opensourcecobol4j/graphs/contributors

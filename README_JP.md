@@ -24,18 +24,34 @@ opensource COBOL 4J は下記の環境でテストされています.
 
 opensource COBOL 4J v1.0.18はUbuntuとAlmaLinuxで動作を確認しています.  
 
-# 手動インストール
+## 手動インストール
 
-## 依存ライブラリのインストール
+### 依存ライブラリのインストール
 
-下記のコマンドを実行する
+下記のコマンドを実行する.
+
+#### Ubuntu 22.04
 
 ```
 sudo apt-get update
 sudo apt-get install -y default-jdk build-essential bison flex gettext texinfo libgmp-dev autoconf
 ```
 
-## opensource COBOL 4Jのインストール
+#### AlmaLinux 9
+
+```
+dnf -y update
+dnf install -y java-11-openjdk-devel gcc make bison flex automake autoconf diffutils gettext
+```
+
+#### Amazon Linux 2023
+
+```
+dnf -y update
+dnf install -y java-11-amazon-corretto-devel gcc make bison flex automake autoconf diffutils gettext tar gzip
+```
+
+### opensource COBOL 4Jのインストール
 
 下記のコマンドを実行する
 
@@ -48,13 +64,13 @@ make
 sudo make install
 ```
 
-## $CLASSPATHの設定
+### $CLASSPATHの設定
 
 /usr/lib/opensourcecobol4j/libcobj.jar を 環境変数$CLASSPATH に追加する.
 
 古いバージョンのインストール方法は、[doc/installation_jp](./doc/installation_jp)をご覧ください.
 
-# Dockerによるインストール
+## Dockerによるインストール
 
 opensource COBOL 4J v1.0.18をインストールしたDockerイメージを利用できます.
 
@@ -103,9 +119,9 @@ java [PROGRAM-ID]
 * SORT文
 * 組み込み関数 (ACOS, LENGTH, MAX, ...)
 
-# テストのステータス
+## テストのステータス
 
-## NIST COBOL85 test suite
+### NIST COBOL85 test suite
 
 opensource COBOL 4Jは[NIST COBOL85 test suite](https://www.itl.nist.gov/div897/ctg/cobol_fo
 rm.htm)によりテストされています。
@@ -143,7 +159,7 @@ rw            4        0     4     0      0    0       0       0     0   REPORT 
 total        21        0    21     0      0    0       0       0     0
 ```
 
-# コントリビューㇳ
+## コントリビューㇳ
 
 コントリビュータの一覧は https://github.com/opensourcecobol/opensourcecobol4j/graphs/contributors に掲載されています。
 コントリビュータ向けのガイドラインは[CONTRIBUTING_JP.md](./CONTRIBUTING_JP.md)を参照してください。
