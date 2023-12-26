@@ -17,8 +17,9 @@ Other software and libraries are distributed under the GNU GENERAL PUBLIC LICENS
 
 opensource COBOL 4J is tested with the following platforms and dependencies
 
-* Ubuntu 22.04, AlmaLinux 9 and Amazon Linux 2023
-* OpenJDK 11
+* Ubuntu 22.04 and OpenJDK 21
+* AlmaLinux 9 and OpenJDK 11
+* Amazon Linux 2023 and OpenJDK 21
 
 In order to check requirements of older versions,
 see [doc/requirements-all.md](./doc/requirements-all.md).
@@ -47,7 +48,7 @@ dnf install -y java-11-openjdk-devel gcc make bison flex automake autoconf diffu
 
 ```
 dnf -y update
-dnf install -y java-11-amazon-corretto-devel gcc make bison flex automake autoconf diffutils gettext tar gzip
+dnf install -y java-21-amazon-corretto-devel gcc make bison flex automake autoconf diffutils gettext tar gzip
 ```
 
 ### Install opensource COBOL 4J

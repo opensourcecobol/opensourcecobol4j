@@ -14,7 +14,13 @@ jobs:
       image: ${{ inputs.os }}
     steps: 
       - uses: actions/setup-java@v3
-        if: inputs.os != 'amazonlinux:2023'
+        if: inputs.os == 'ubuntu:22.04'
+        with:
+          distribution: 'temurin'
+          java-version: '21'
+
+      - uses: actions/setup-java@v3
+        if: inputs.os == 'almalinux:9'
         with:
           distribution: 'temurin'
           java-version: '11'
@@ -35,7 +41,7 @@ jobs:
         if: inputs.os == 'amazonlinux:2023'
         run: |
           dnf -y update
-          dnf install -y java-11-amazon-corretto-devel gcc make bison flex automake autoconf diffutils gettext tar gzip
+          dnf install -y java-21-amazon-corretto-devel gcc make bison flex automake autoconf diffutils gettext tar gzip
 
       - name: Checkout opensource COBOL 4J
         uses: actions/checkout@v3

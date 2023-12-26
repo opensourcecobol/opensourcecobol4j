@@ -14,8 +14,9 @@ opensource COBOL 4JはCOBOLからCに変換するCOBOLコンパイラ["opensourc
 
 opensource COBOL 4J は下記の環境でテストされています.
 
-* Ubuntu 22.04, AlmaLinux 9 および Amazon Linux 2023
-* OpenJDK 11
+* Ubuntu 22.04 と OpenJDK 21
+* AlmaLinux 9 と OpenJDK 11
+* Amazon Linux 2023 と OpenJDK 21
 
 古いバージョンの動作環境については、[doc/requirements-all.md](./doc/requirements-all.md)をご覧ください.
 
@@ -48,7 +49,7 @@ dnf install -y java-11-openjdk-devel gcc make bison flex automake autoconf diffu
 
 ```
 dnf -y update
-dnf install -y java-11-amazon-corretto-devel gcc make bison flex automake autoconf diffutils gettext tar gzip
+dnf install -y java-21-amazon-corretto-devel gcc make bison flex automake autoconf diffutils gettext tar gzip
 ```
 
 ### opensource COBOL 4Jのインストール
