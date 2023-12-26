@@ -10,7 +10,7 @@ jobs:
   build:
     strategy:
       matrix:
-        os: ["ubuntu:22.04", "amazonlinux:2023"]
+        os: ["ubuntu:22.04"]
     uses: ./.github/workflows/build.yml
     with:
       os: ${{ matrix.os }}
@@ -20,7 +20,7 @@ jobs:
     strategy:
       matrix:
         test_name: ["command-line-options", "data-rep", "i18n_sjis", "jp-compat", "run", "syntax"]
-        os: ["ubuntu:22.04", "amazonlinux:2023"]
+        os: ["ubuntu:22.04"]
     uses: ./.github/workflows/test-other.yml
     with:
       test-name: ${{ matrix.test_name }}
@@ -31,7 +31,7 @@ jobs:
     strategy:
       matrix:
         test_name: ["IC", "IF", "IX", "NC", "OB", "RL", "SG", "SM", "SQ", "ST"]
-        os: ["ubuntu:22.04", "amazonlinux:2023"]
+        os: ["ubuntu:22.04"]
     uses: ./.github/workflows/test-nist.yml
     with:
       test-name: ${{ matrix.test_name }}
@@ -43,7 +43,7 @@ jobs:
     strategy:
       matrix:
         test_name: ["CM", "DB", "RW"]
-        os: ["ubuntu:22.04", "amazonlinux:2023"]
+        os: ["ubuntu:22.04"]
     uses: ./.github/workflows/test-nist.yml
     with:
       test-name: ${{ matrix.test_name }}
