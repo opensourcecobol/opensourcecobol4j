@@ -39,7 +39,7 @@ AT_CHECK([for f in ./*; do echo $f; done | sort], [0],
 ./prog2.cbl
 ./prog3.cbl
 ])
-AT_CHECK([cobj --help | grep '\-fsyntax\-only' > /dev/null], [0])
+AT_CHECK([cobj --help | grep '@<:@-@:>@fsyntax@<:@-@:>@only' > /dev/null], [0])
 
 
 AT_CLEANUP
