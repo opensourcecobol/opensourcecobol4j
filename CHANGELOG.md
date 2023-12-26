@@ -12,7 +12,7 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 * Implement KEY IS option of SORT statements (#259)
 * Add documents that describes installations and requirements (#256)
 * Implement the environemt variable COB_NIBBLE_C_UNSIGNED (#258)
-* Add intrinsic functions
+* Add built-in subroutines 
   * `C$CALLEDBY` (#262)
   * `C$LIST-DIRECTORY` (#264)
 * Implement `NUMBER-OF-PARAMETERS` (#270)

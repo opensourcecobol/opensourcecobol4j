@@ -11,7 +11,7 @@ NEWS - user visible changes				-*- outline -*-
   (4) Implement KEY IS option of SORT statements
   (5) Add documents that describes installations and requirements
   (6) Implement the environemt variable COB_NIBBLE_C_UNSIGNED
-  (7) Add intrinsic functions
+  (7) Add built-in subroutines
     (a) `C$CALLEDBY`
     (b) `C$LIST-DIRECTORY`
   (8) Implement `NUMBER-OF-PARAMETERS`
