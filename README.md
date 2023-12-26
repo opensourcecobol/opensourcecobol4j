@@ -34,9 +34,9 @@ sudo apt-get install -y default-jdk build-essential bison flex gettext texinfo l
 
 ### Install opensource COBOL 4J
 ```
-curl -L -o opensourcecobol4j-v1.0.17.tar.gz https://github.com/opensourcecobol/opensourcecobol4j/archive/refs/tags/v1.0.17.tar.gz
-tar zxvf opensourcecobol4j-v1.0.17.tar.gz
-cd opensourcecobol4j-1.0.17
+curl -L -o opensourcecobol4j-v1.0.18.tar.gz https://github.com/opensourcecobol/opensourcecobol4j/archive/refs/tags/v1.0.18.tar.gz
+tar zxvf opensourcecobol4j-v1.0.18.tar.gz
+cd opensourcecobol4j-1.0.18
 ./configure --prefix=/usr/
 make
 sudo make install
@@ -53,7 +53,7 @@ In order to check installations of older versions,
 The docker container for opensource COBOL 4J is available.
 
 ```bash
-docker pull opensourcecobol/opensourcecobol4j:1.0.17
+docker pull opensourcecobol/opensourcecobol4j:1.0.18
 ```
 
 Execute the following commands in order to run the "Hello World" COBOL program.

@@ -22,7 +22,7 @@ opensource COBOL 4J は下記の環境でテストされています.
 
 ## インストール
 
-opensource COBOL 4J v1.0.17はUbuntuとAlmaLinuxで動作を確認しています.  
+opensource COBOL 4J v1.0.18はUbuntuとAlmaLinuxで動作を確認しています.  
 
 # 手動インストール
 
@@ -40,9 +40,9 @@ sudo apt-get install -y default-jdk build-essential bison flex gettext texinfo l
 下記のコマンドを実行する
 
 ```
-curl -L -o opensourcecobol4j-v1.0.17.tar.gz https://github.com/opensourcecobol/opensourcecobol4j/archive/refs/tags/v1.0.17.tar.gz
-tar zxvf opensourcecobol4j-v1.0.17.tar.gz
-cd opensourcecobol4j-1.0.17
+curl -L -o opensourcecobol4j-v1.0.18.tar.gz https://github.com/opensourcecobol/opensourcecobol4j/archive/refs/tags/v1.0.18.tar.gz
+tar zxvf opensourcecobol4j-v1.0.18.tar.gz
+cd opensourcecobol4j-1.0.18
 ./configure --prefix=/usr/
 make
 sudo make install
@@ -56,10 +56,10 @@ sudo make install
 
 # Dockerによるインストール
 
-opensource COBOL 4J v1.0.17をインストールしたDockerイメージを利用できます.
+opensource COBOL 4J v1.0.18をインストールしたDockerイメージを利用できます.
 
 ```bash
-docker pull opensourcecobol/opensourcecobol4j:1.0.17
+docker pull opensourcecobol/opensourcecobol4j:1.0.18
 ```
 
 コンテナ内で下記のコマンドを実行すると、Hello Worldプログラムをコンパイル&実行できる。

@@ -1,5 +1,7 @@
 | version (opensource COBOL 4J) | OS | version (JDK) | 
 | -- | -- | -- |
+| 1.0.18 | Ubuntu 22.04 | 11 |
+| 1.0.18 | AlmaLinux 9 | 11 |
 | 1.0.17 | Ubuntu 22.04 | 11 |
 | 1.0.17 | AlmaLinux 9 | 11 |
 | 1.0.16 | Ubuntu 22.04 | 11 |
