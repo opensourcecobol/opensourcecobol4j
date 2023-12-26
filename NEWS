@@ -5,15 +5,16 @@ NEWS - user visible changes				-*- outline -*-
 * opensource COBOL 4J 1.0.18
 
 ** New Features
-  (1) Implement runtime numeric checkings
-  (2) Implement sorting a table based on ebcdic
-  (3) Implement KEY IS option of SORT statements
-  (4) Add documents that describes installations and requirements
-  (5) Implement the environemt variable COB_NIBBLE_C_UNSIGNED
-  (6) Add intrinsic functions
+  (1) Support Amazon Linux 2023
+  (2) Implement runtime numeric checkings
+  (3) Implement sorting a table based on ebcdic
+  (4) Implement KEY IS option of SORT statements
+  (5) Add documents that describes installations and requirements
+  (6) Implement the environemt variable COB_NIBBLE_C_UNSIGNED
+  (7) Add intrinsic functions
     (a) `C$CALLEDBY`
     (b) `C$LIST-DIRECTORY`
-  (7) Implement `NUMBER-OF-PARAMETERS`
+  (8) Implement `NUMBER-OF-PARAMETERS`
 ** Bug fixes
   (1) Fix the message of COB_VERBOSE file sort
   (2) Fix the process that checks MOVE statements

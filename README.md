@@ -17,7 +17,7 @@ Other software and libraries are distributed under the GNU GENERAL PUBLIC LICENS
 
 opensource COBOL 4J is tested with the following platforms and dependencies
 
-* Ubuntu 22.04 and AlmaLinux 9
+* Ubuntu 22.04, AlmaLinux 9 and Amazon Linux 2023
 * OpenJDK 11
 
 In order to check requirements of older versions,
