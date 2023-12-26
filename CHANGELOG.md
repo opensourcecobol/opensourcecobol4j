@@ -6,6 +6,7 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 
 ## [1.0.18] - 2023-12-26
 ### Added
+* Support Amazon Linux 2023 (#282)
 * Implement runtime numeric checkings (#253)
 * Implement sorting a table based on ebcdic (#254)
 * Implement KEY IS option of SORT statements (#259)
