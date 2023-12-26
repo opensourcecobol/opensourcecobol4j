@@ -2,6 +2,32 @@ NEWS - user visible changes				-*- outline -*-
 
 -----------------------------------------------------------------------
 
+* opensource COBOL 4J 1.0.18
+
+** New Features
+  (1) Support Amazon Linux 2023
+  (2) Implement runtime numeric checkings
+  (3) Implement sorting a table based on ebcdic
+  (4) Implement KEY IS option of SORT statements
+  (5) Add documents that describes installations and requirements
+  (6) Implement the environemt variable COB_NIBBLE_C_UNSIGNED
+  (7) Add built-in subroutines
+    (a) `C$CALLEDBY`
+    (b) `C$LIST-DIRECTORY`
+  (8) Implement `NUMBER-OF-PARAMETERS`
+** Bug fixes
+  (1) Fix the message of COB_VERBOSE file sort
+  (2) Fix the process that checks MOVE statements
+  (3) Fix `INSPECT` statement
+  (4) Fix error handlings of 0 divisions
+  (5) Fix an error of comparing large numbers
+  (6) Fix checkings for subscripts
+  (7) Fix FUNCTION VARIANCE
+** Miscellaneous
+  (1) Optimize the file reading process
+
+-----------------------------------------------------------------------
+
 * opensource COBOL 4J 1.0.17
 
 ** New Features
@@ -26,7 +52,7 @@ NEWS - user visible changes				-*- outline -*-
     (e) STORED-CHAR-LENGTH
     (f) TRIM
 
-** Bug fixes Fixed
+** Bug fixes
   (1) Fix `DECIMAL POINT IS COMMA` in `SPECIAL NAMES` clause.
 
 -----------------------------------------------------------------------

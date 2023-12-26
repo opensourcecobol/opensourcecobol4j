@@ -4,7 +4,7 @@ All notable changes to this project will be documented in this file.
 
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 
-## [Unreleased]
+## [1.0.18] - 2023-12-26
 ### Added
 * Support Amazon Linux 2023 (#282)
 * Implement runtime numeric checkings (#253)
@@ -12,7 +12,7 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 * Implement KEY IS option of SORT statements (#259)
 * Add documents that describes installations and requirements (#256)
 * Implement the environemt variable COB_NIBBLE_C_UNSIGNED (#258)
-* Add intrinsic functions
+* Add built-in subroutines 
   * `C$CALLEDBY` (#262)
   * `C$LIST-DIRECTORY` (#264)
 * Implement `NUMBER-OF-PARAMETERS` (#270)
@@ -23,7 +23,7 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 * Fix error handlings of 0 divisions (#273)
 * Fix an error of comparing large numbers (#275)
 * Fix checkings for subscripts (#277)
-* Fix FUNCTION VARIANCE and a test case of FUNCTION SQRT (#280)
+* Fix FUNCTION VARIANCE (#280)
 ### Optimized
 * Optimize the file reading process (#257)
 
