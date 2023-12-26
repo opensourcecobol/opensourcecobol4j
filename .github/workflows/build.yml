@@ -35,12 +35,7 @@ jobs:
         if: inputs.os == 'amazonlinux:2023'
         run: |
           dnf -y update
-          dnf install -y gcc make bison flex automake autoconf diffutils gettext tar gzip
-
-      - name: Install Java
-        if: inputs.os == 'amazonlinux:2023'
-        run: |
-          dnf install -y java-11-amazon-corretto-devel
+          dnf install -y java-11-amazon-corretto-devel gcc make bison flex automake autoconf diffutils gettext tar gzip
 
       - name: Checkout opensource COBOL 4J
         uses: actions/checkout@v3
