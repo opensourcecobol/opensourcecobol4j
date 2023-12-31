@@ -59,7 +59,7 @@ jobs:
       
       - name: Install Java
         if: inputs.os == 'amazonlinux:2023'
-        run: |
+        run:
           dnf install -y java-11-amazon-corretto-devel
 
       - name: Install opensource COBOL 4J
@@ -70,13 +70,13 @@ jobs:
       
       - name: Run tests ${{ inputs.test-name }}
         if: ${{ inputs.check-result }}
+        working-directory: tests/cobol85/${{ inputs.test-name }}
         run: |
-          cd tests/cobol85/${{ inputs.test-name }}
           make test
           test "$(cat report.txt | tail -n 3 | head -n 1 | awk '{print $4}')" = '(100.00%)'
 
       - name: Run tests ${{ inputs.test-name }} (No check result)
         if: ${{ inputs.check-result  == 'false' }}
-        run: |
-          cd tests/cobol85/${{ inputs.test-name }}
+        working-directory: tests/cobol85/${{ inputs.test-name }}
+        run:
           make test

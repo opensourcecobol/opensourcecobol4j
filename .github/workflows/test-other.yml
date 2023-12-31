@@ -61,6 +61,6 @@ jobs:
           make install
       
       - name: Run tests ${{ inputs.test-name }}
-        run: |
-          cd tests/
+        working-directory: tests/
+        run:
           ./${{ inputs.test-name }}
