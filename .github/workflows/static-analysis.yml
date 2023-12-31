@@ -44,4 +44,4 @@ jobs:
 
       - name: Run cppcheck (ignore results)
         run: |
-          cd cobj && cppcheck cobj.c cobj.h codegen.c config.c error.c field.c pplex.c ppparse.c ppparse.h reserved.c tree.c tree.h typeck.c
+          cd cobj && cppcheck cobj.c cobj.h codegen.c config.c error.c field.c ppparse.c ppparse.h reserved.c tree.c tree.h typeck.c
