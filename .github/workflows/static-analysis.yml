@@ -33,15 +33,16 @@ jobs:
           ./check-format
 
       - name: Run SpotBugs (ignore results)
+        working-directory: libcobj
         run: |
-          cd libcobj
           ./gradlew spotbugsMain || true
 
       - name: Run PMD
+        working-directory: libcobj
         run: |
-          cd libcobj
           ./gradlew pmdMain
 
       - name: Run cppcheck
+        working-directory: cobj
         run: |
-          cd cobj && cppcheck --error-exitcode=1 cobj.c cobj.h codegen.c config.c error.c field.c ppparse.c ppparse.h reserved.c tree.c tree.h typeck.c
+          cppcheck --error-exitcode=1 cobj.c cobj.h codegen.c config.c error.c field.c ppparse.c ppparse.h reserved.c tree.c tree.h typeck.c
