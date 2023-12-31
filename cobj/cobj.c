@@ -1745,7 +1745,7 @@ static int process_compile(struct filename *fn) {
 }
 
 static int process_build_module(struct filename *fn) {
-  int ret;
+  int ret = 0;
   char buff[COB_MEDIUM_BUFF];
   char name[COB_MEDIUM_BUFF];
 
