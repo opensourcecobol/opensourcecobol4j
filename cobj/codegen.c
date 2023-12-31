@@ -4917,7 +4917,9 @@ static void *list_cache_sort(void *inlist,
       }
       p = q;
     }
-    tail->next = NULL;
+    if (tail) {
+      tail->next = NULL;
+    }
     if (nmerges <= 1) {
       return (void *)list;
     }

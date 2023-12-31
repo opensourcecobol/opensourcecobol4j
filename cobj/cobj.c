@@ -1712,43 +1712,40 @@ static int process_compile(struct filename *fn) {
   char *output_name_a = output_name == NULL ? "./" : output_name;
   char *java_source_dir_a = java_source_dir == NULL ? "./" : java_source_dir;
 
-  if (!cb_single_jar_name) {
-    char **program_id;
-    for (program_id = program_id_list; *program_id; ++program_id) {
-      sprintf(buff, "javac %s -encoding SJIS -d %s %s/%s.java", cob_java_flags,
-              output_name_a, java_source_dir_a, *program_id);
-      ret = process(buff);
+  char **program_id;
+  for (program_id = program_id_list; *program_id; ++program_id) {
+    sprintf(buff, "javac %s -encoding SJIS -d %s %s/%s.java", cob_java_flags,
+            output_name_a, java_source_dir_a, *program_id);
+    ret = process(buff);
 
+    if (ret) {
+      return ret;
+    }
+    if (cb_flag_jar) {
+      char *package_dir;
+      if (cb_java_package_name) {
+        package_name_to_path(buff2, cb_java_package_name);
+        package_dir = buff2;
+      } else {
+        package_dir = ".";
+      }
+      sprintf(buff,
+              "cd %s && jar --create --main-class=%s --file=%s.jar %s/*.class",
+              output_name_a, *program_id, *program_id, package_dir);
+      ret = process(buff);
       if (ret) {
         return ret;
       }
-      if (cb_flag_jar) {
-        char *package_dir;
-        if (cb_java_package_name) {
-          package_name_to_path(buff2, cb_java_package_name);
-          package_dir = buff2;
-        } else {
-          package_dir = ".";
-        }
-        sprintf(
-            buff,
-            "cd %s && jar --create --main-class=%s --file=%s.jar %s/*.class",
-            output_name_a, *program_id, *program_id, package_dir);
-        ret = process(buff);
-        if (ret) {
-          return ret;
-        }
-        sprintf(buff, "rm -rf %s/%s.class %s/%s$*.class", output_name_a,
-                *program_id, output_name_a, *program_id);
-        process(buff);
-      }
+      sprintf(buff, "rm -rf %s/%s.class %s/%s$*.class", output_name_a,
+              *program_id, output_name_a, *program_id);
+      process(buff);
     }
-    return ret;
   }
+  return ret;
 }
 
 static int process_build_module(struct filename *fn) {
-  int ret;
+  int ret = 0;
   char buff[COB_MEDIUM_BUFF];
   char name[COB_MEDIUM_BUFF];
 

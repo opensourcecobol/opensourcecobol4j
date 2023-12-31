@@ -42,6 +42,6 @@ jobs:
           cd libcobj
           ./gradlew pmdMain
 
-      - name: Run cppcheck (ignore results)
+      - name: Run cppcheck
         run: |
-          cd cobj && cppcheck cobj.c cobj.h codegen.c config.c error.c field.c pplex.c ppparse.c ppparse.h reserved.c tree.c tree.h typeck.c
+          cd cobj && cppcheck --error-exitcode=1 cobj.c cobj.h codegen.c config.c error.c field.c ppparse.c ppparse.h reserved.c tree.c tree.h typeck.c

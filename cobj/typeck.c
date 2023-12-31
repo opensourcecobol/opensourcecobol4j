@@ -2432,6 +2432,11 @@ cb_tree cb_build_cond(cb_tree x) {
   cb_tree d2;
   cb_tree err = NULL;
 
+  if (!x) {
+    cb_error_x(x, _("Invalid expression"));
+    return cb_error_node;
+  }
+
   switch (CB_TREE_TAG(x)) {
   case CB_TAG_CONST:
   case CB_TAG_FUNCALL:
