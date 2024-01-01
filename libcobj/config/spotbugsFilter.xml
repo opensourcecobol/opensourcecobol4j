@@ -6,4 +6,8 @@
   <Match>
     <Bug code="MS,EI,EI2,UrF,UuF,Dm,OBL,PA" />
   </Match>
+  <Match>
+    <Class name="jp.osscons.opensourcecobol.libcobj.common.CobolInspect" />
+    <Bug code="DLS" />
+  </Match>
 </FindBugsFilter>
