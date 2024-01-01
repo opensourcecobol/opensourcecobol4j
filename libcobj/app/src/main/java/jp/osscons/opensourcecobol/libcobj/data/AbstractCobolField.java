@@ -1244,7 +1244,7 @@ public abstract class AbstractCobolField {
           data = data.getSubDataStorage(this.getSize());
         }
         if (size > 0) {
-          comparator.compare(this.getDataStorage(), data, size, s);
+          ret = comparator.compare(this.getDataStorage(), data, size, s);
         }
       } while (false);
     } else {
@@ -1263,7 +1263,7 @@ public abstract class AbstractCobolField {
           data = data.getSubDataStorage(other.getSize());
         }
         if (size > 0) {
-          comparator.compare(data, other.getDataStorage(), size, s);
+          ret = comparator.compare(data, other.getDataStorage(), size, s);
         }
       } while (false);
     }
