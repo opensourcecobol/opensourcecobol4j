@@ -22,8 +22,8 @@ import jp.osscons.opensourcecobol.libcobj.data.AbstractCobolField;
 import jp.osscons.opensourcecobol.libcobj.data.CobolDataStorage;
 import jp.osscons.opensourcecobol.libcobj.data.CobolFieldAttribute;
 import jp.osscons.opensourcecobol.libcobj.data.CobolFieldFactory;
-import jp.osscons.opensourcecobol.libcobj.exceptions.CobolExceptionInfo;
 import jp.osscons.opensourcecobol.libcobj.exceptions.CobolExceptionId;
+import jp.osscons.opensourcecobol.libcobj.exceptions.CobolExceptionInfo;
 import jp.osscons.opensourcecobol.libcobj.exceptions.CobolRuntimeException;
 import jp.osscons.opensourcecobol.libcobj.exceptions.CobolStopRunException;
 
