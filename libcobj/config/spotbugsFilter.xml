@@ -15,4 +15,9 @@
     <Method name="cobCancel" />
     <Bug code="NP" />
   </Match>
+  <Match>
+    <Class name="jp.osscons.opensourcecobol.libcobj.data.CobolDecimal" />
+    <Method name="compareTo" />
+    <Bug code="Eq" />
+  </Match>
 </FindBugsFilter>
