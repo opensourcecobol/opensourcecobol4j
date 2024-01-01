@@ -497,7 +497,8 @@ public class CobolFile {
          * jbuf[i] = 0;
          * }
          */
-        rt = jbuf;
+        // TODO
+        rt = null;
       }
       if (flagQuoted && siz > 2) {
         rt[0] = rt[siz - 2] = (byte) '\'';
@@ -529,7 +530,8 @@ public class CobolFile {
          * jbuf[i] = name[i];
          * }
          */
-        rt = jbuf;
+        // TODO fix
+        rt = null;
       }
     }
     return rt;
