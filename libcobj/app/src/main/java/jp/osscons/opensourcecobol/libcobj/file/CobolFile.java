@@ -1490,7 +1490,12 @@ public class CobolFile {
       file_open_name = new String(fileOpenNameBytes);
     }
 
-    Path filePath = Paths.get(this.assign.fieldToString());
+    Path filePath;
+    if (this.assign == null) {
+      filePath = Paths.get(this.select_name);
+    } else {
+      filePath = Paths.get(this.assign.fieldToString());
+    }
     try {
       saveStatus(COB_STATUS_00_SUCCESS, fnstatus);
       Files.delete(filePath);
