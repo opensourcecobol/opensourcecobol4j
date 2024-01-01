@@ -43,6 +43,7 @@ public class CobolDecimal {
   public static CobolDecimal cobD4 = new CobolDecimal();
   public static BigDecimal[] cobMpze10 = new BigDecimal[COB_MAX_BINARY];
   public static byte[] packedValue = new byte[20];
+  public static int packedValueInt = 0;
 
   public static void cobInitNumeric() {
     cobD1 = new CobolDecimal();
@@ -57,6 +58,7 @@ public class CobolDecimal {
     for (int i = 0; i < packedValue.length; ++i) {
       packedValue[i] = 0;
     }
+    packedValueInt = 0;
   }
 
   // TODO cob_init_numeric周辺の初期化処理を正しく実装出来たら消す。
@@ -68,6 +70,7 @@ public class CobolDecimal {
     for (int i = 0; i < packedValue.length; ++i) {
       packedValue[i] = 0;
     }
+    packedValueInt = 0;
   }
 
   /** 保持する数値データ */
