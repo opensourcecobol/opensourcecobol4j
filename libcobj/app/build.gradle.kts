@@ -44,6 +44,10 @@ pmd {
     ruleSetFiles = files("${rootDir}/config/pmdRuleSet.xml")
 }
 
+spotbugs {
+    excludeFilter.set(project.file("${rootDir}/config/spotbugsFilter.xml"))
+}
+
 publishing {
     repositories {
         maven {
