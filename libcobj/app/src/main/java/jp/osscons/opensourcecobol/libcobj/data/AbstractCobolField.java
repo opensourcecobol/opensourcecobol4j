@@ -187,7 +187,7 @@ public abstract class AbstractCobolField {
     int firstDataIndex = this.getFirstDataIndex();
     int size = this.getFieldSize();
 
-    if (data.getByte(firstDataIndex) == 255) {
+    if (Byte.toUnsignedInt(data.getByte(firstDataIndex)) == 0xFF) {
       CobolDecimal decimal = new CobolDecimal(BigDecimal.TEN.pow(size));
       decimal.setScale(this.getAttribute().getScale());
       return decimal;
