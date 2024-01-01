@@ -658,16 +658,16 @@ public class CobolDecimal {
       }
       byte val = (byte) ((int) numBuffPtr[j] - '0');
       int index;
-      if (digits % 2 == 1) {
-        index = i / 2;
-      } else {
+      if (digits % 2 == 0) {
         index = (i + 1) / 2;
+      } else {
+        index = i / 2;
       }
       byte b = data.getByte(index);
-      if ((digits + i) % 2 == 1) {
-        data.setByte(index, (val << 4) | (b & 0x0F));
-      } else {
+      if ((digits + i) % 2 == 0) {
         data.setByte(index, (b & 0xF0) | val);
+      } else {
+        data.setByte(index, (val << 4) | (b & 0x0F));
       }
     }
 
