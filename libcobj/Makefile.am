@@ -40,7 +40,7 @@ SRC_FILES = \
 	./app/src/main/java/jp/osscons/opensourcecobol/libcobj/exceptions/CobolGoBackException.java \
 	./app/src/main/java/jp/osscons/opensourcecobol/libcobj/exceptions/CobolStopRunException.java \
 	./app/src/main/java/jp/osscons/opensourcecobol/libcobj/exceptions/RuntimeErrorHandler.java \
-	./app/src/main/java/jp/osscons/opensourcecobol/libcobj/exceptions/CobolException.java \
+	./app/src/main/java/jp/osscons/opensourcecobol/libcobj/exceptions/CobolExceptionInfo.java \
 	./app/src/main/java/jp/osscons/opensourcecobol/libcobj/exceptions/CobolExceptionTabCode.java \
 	./app/src/main/java/jp/osscons/opensourcecobol/libcobj/exceptions/CobolRuntimeException.java \
 	./app/src/main/java/jp/osscons/opensourcecobol/libcobj/exceptions/CobolUndefinedException.java \
