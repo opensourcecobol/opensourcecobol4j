@@ -163,7 +163,6 @@ public class CobolDecimal {
   /** libcob/numeric.cのcob_decimal_initの実装 */
   public void decimalInit() {
     this.value = BigDecimal.ZERO;
-    this.value.setScale(0);
   }
 
   /**
