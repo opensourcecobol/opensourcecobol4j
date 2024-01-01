@@ -994,7 +994,8 @@ public class CobolIntrinsic {
   }
 
   public static AbstractCobolField funcNumvalC(int n, AbstractCobolField currency) {
-    return funcNumvalC(null, currency);
+    // TODO
+    return null;
   }
 
   public static AbstractCobolField funcNumvalC(AbstractCobolField srcfield, int n) {
@@ -1002,7 +1003,8 @@ public class CobolIntrinsic {
   }
 
   public static AbstractCobolField funcNumvalC(int n, int m) {
-    return funcNumvalC(null, null);
+    // TODO
+    return null;
   }
 
   /**
