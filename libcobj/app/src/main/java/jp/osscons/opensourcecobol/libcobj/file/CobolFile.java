@@ -1274,7 +1274,8 @@ public class CobolFile {
       if (f.open_mode != COB_OPEN_CLOSED && f.open_mode != COB_OPEN_LOCKED) {
         String filename = f.assign.fieldToString();
         System.err.print(
-            String.format("WARNING - Implicit CLOSE of %s (\"%s\") \n", f.select_name, filename));
+            String.format(
+                "WARNING - Implicit CLOSE of %s (\"%s\") %c", f.select_name, filename, '\n'));
       }
     }
   }
