@@ -446,23 +446,8 @@ public abstract class AbstractCobolField {
   }
 
   protected AbstractCobolField preprocessOfMoving(AbstractCobolField src) {
-    AbstractCobolField src1;
 
-    // TODO 以下の分岐は不要?
-    if (src == CobolConstant.quote
-        || src == CobolConstant.zenQuote
-        || src == CobolConstant.space
-        || src == CobolConstant.zenSpace
-        || src == CobolConstant.blank
-        || src == CobolConstant.zenBlank
-        || src == CobolConstant.zero
-        || src == CobolConstant.zenZero) {
-      src1 = src;
-    } else {
-      src1 = src;
-    }
-
-    if (src1.getAttribute().isTypeAlphanumAll() || src1.getAttribute().isTypeNationalAll()) {
+    if (src.getAttribute().isTypeAlphanumAll() || src.getAttribute().isTypeNationalAll()) {
       this.moveFromAll(src);
       return null;
     }
@@ -471,7 +456,7 @@ public abstract class AbstractCobolField {
       return null;
     }
 
-    CobolFieldAttribute srcAttr = src1.getAttribute();
+    CobolFieldAttribute srcAttr = src.getAttribute();
     CobolFieldAttribute dstAttr = this.getAttribute();
     if (!srcAttr.isTypeGroup()) {
       if ((srcAttr.isTypeNumeric() || srcAttr.isTypeAlphanum() || srcAttr.isTypeAlphanumEdited())
@@ -481,21 +466,21 @@ public abstract class AbstractCobolField {
         if (srcAttr.isTypeNumericDisplay()
             || srcAttr.isTypeAlphanum()
             || srcAttr.isTypeAlphanumEdited()) {
-          pTmp = CobolNationalField.judge_hankakujpn_exist(src1);
+          pTmp = CobolNationalField.judge_hankakujpn_exist(src);
           size = CobolNationalField.workReturnSize;
         }
         if (pTmp != null) {
-          src1.setDataStorage(new CobolDataStorage(pTmp));
-          src1.setSize(size);
+          src.setDataStorage(new CobolDataStorage(pTmp));
+          src.setSize(size);
         }
-        if (src1.size == 0) {
-          src1 = CobolConstant.zenSpace;
+        if (src.size == 0) {
+          src = CobolConstant.zenSpace;
         }
       }
     }
 
-    if (src1.getSize() == 0) {
-      src1 = CobolConstant.space;
+    if (src.getSize() == 0) {
+      src = CobolConstant.space;
     }
 
     return src;
