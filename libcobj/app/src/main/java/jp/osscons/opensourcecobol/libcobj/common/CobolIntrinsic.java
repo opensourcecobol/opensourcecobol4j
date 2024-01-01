@@ -2020,7 +2020,7 @@ public class CobolIntrinsic {
         exceptName =
             CobolRuntimeException.getExceptionName(CobolRuntimeException.getExceptionCode())
                 .getBytes();
-      } catch (NullPointerException e) {
+      } catch (Exception e) {
         exceptName = CONST_STRING_EXCEPTION_OBJECT;
       }
       currField.memcpy(exceptName, exceptName.length);
