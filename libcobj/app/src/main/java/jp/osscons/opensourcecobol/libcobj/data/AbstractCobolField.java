@@ -446,8 +446,9 @@ public abstract class AbstractCobolField {
   }
 
   protected AbstractCobolField preprocessOfMoving(AbstractCobolField src) {
+    AbstractCobolField src1 = src;
 
-    if (src.getAttribute().isTypeAlphanumAll() || src.getAttribute().isTypeNationalAll()) {
+    if (src1.getAttribute().isTypeAlphanumAll() || src1.getAttribute().isTypeNationalAll()) {
       this.moveFromAll(src);
       return null;
     }
@@ -456,7 +457,7 @@ public abstract class AbstractCobolField {
       return null;
     }
 
-    CobolFieldAttribute srcAttr = src.getAttribute();
+    CobolFieldAttribute srcAttr = src1.getAttribute();
     CobolFieldAttribute dstAttr = this.getAttribute();
     if (!srcAttr.isTypeGroup()) {
       if ((srcAttr.isTypeNumeric() || srcAttr.isTypeAlphanum() || srcAttr.isTypeAlphanumEdited())
@@ -466,21 +467,21 @@ public abstract class AbstractCobolField {
         if (srcAttr.isTypeNumericDisplay()
             || srcAttr.isTypeAlphanum()
             || srcAttr.isTypeAlphanumEdited()) {
-          pTmp = CobolNationalField.judge_hankakujpn_exist(src);
+          pTmp = CobolNationalField.judge_hankakujpn_exist(src1);
           size = CobolNationalField.workReturnSize;
         }
         if (pTmp != null) {
-          src.setDataStorage(new CobolDataStorage(pTmp));
-          src.setSize(size);
+          src1.setDataStorage(new CobolDataStorage(pTmp));
+          src1.setSize(size);
         }
-        if (src.size == 0) {
-          src = CobolConstant.zenSpace;
+        if (src1.size == 0) {
+          return src1;
         }
       }
     }
 
-    if (src.getSize() == 0) {
-      src = CobolConstant.space;
+    if (src1.getSize() == 0) {
+      return src1;
     }
 
     return src;
