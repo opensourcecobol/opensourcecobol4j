@@ -235,7 +235,7 @@ public class FileIO {
       return 0;
     }
     if (USE_STD_BUFFER) {
-      byte[] arr = { val };
+      byte[] arr = {val};
       try {
         this.bos.write(arr);
       } catch (IOException e) {
@@ -244,7 +244,7 @@ public class FileIO {
       return val;
     } else {
       try {
-        byte[] arr = { val };
+        byte[] arr = {val};
         this.fc.write(ByteBuffer.wrap(arr));
       } catch (IOException e) {
         return -1;
@@ -303,7 +303,8 @@ public class FileIO {
 
   public void close() {
     if (!useStdOut && !useStdIn && this.fc != null) {
-      outer: if (USE_STD_BUFFER) {
+      outer:
+      if (USE_STD_BUFFER) {
         try {
           this.bos.flush();
           this.bis.close();
@@ -356,8 +357,7 @@ public class FileIO {
     return true;
   }
 
-  public void seekInit() {
-  }
+  public void seekInit() {}
 
   public void rewind() {
     if (!useStdOut && !useStdIn) {

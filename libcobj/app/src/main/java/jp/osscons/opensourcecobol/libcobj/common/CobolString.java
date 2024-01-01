@@ -406,9 +406,7 @@ public class CobolString {
     }
   }
 
-  public static void unstringTallying(int f) throws CobolStopRunException {
-    unstringTallying(null);
-  }
+  public static void unstringTallying(int f) throws CobolStopRunException {}
 
   public static void unstringTallying(AbstractCobolField f) throws CobolStopRunException {
     f.addInt(unstringCount);
