@@ -1705,7 +1705,6 @@ public class CobolIntrinsic {
     int srdays;
     int srtime;
     String str;
-    byte[] buff = new byte[12];
 
     CobolFieldAttribute attr =
         new CobolFieldAttribute(CobolFieldAttribute.COB_TYPE_NUMERIC_DISPLAY, 12, 5, 0, null);
@@ -1725,10 +1724,10 @@ public class CobolIntrinsic {
       return currField;
     }
     str = String.format("%7d%5d", srdays, srtime);
-    buff = str.getBytes();
-    for (int i = 0; i < 12; i++) {
-      if (buff[i] == 32) {
-        buff[i] = 48;
+    byte[] buff = str.getBytes();
+    for (int i = 0; i < buff.length; i++) {
+      if (buff[i] == ' ') {
+        buff[i] = '0';
       }
     }
     currField.getDataStorage().memcpy(buff);
