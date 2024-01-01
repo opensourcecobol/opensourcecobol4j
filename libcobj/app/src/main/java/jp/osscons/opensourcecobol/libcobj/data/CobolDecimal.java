@@ -22,7 +22,7 @@ import java.math.BigDecimal;
 import java.math.RoundingMode;
 import jp.osscons.opensourcecobol.libcobj.common.CobolModule;
 import jp.osscons.opensourcecobol.libcobj.common.CobolUtil;
-import jp.osscons.opensourcecobol.libcobj.exceptions.CobolException;
+import jp.osscons.opensourcecobol.libcobj.exceptions.CobolExceptionInfo;
 import jp.osscons.opensourcecobol.libcobj.exceptions.CobolExceptionId;
 import jp.osscons.opensourcecobol.libcobj.exceptions.CobolRuntimeException;
 import jp.osscons.opensourcecobol.libcobj.exceptions.CobolStopRunException;
@@ -498,19 +498,18 @@ public class CobolDecimal {
       default:
         int digits = f.getAttribute().getDigits();
         CobolFieldAttribute attr = f.getAttribute();
-        CobolFieldAttribute newAttr =
-            new CobolFieldAttribute(
-                CobolFieldAttribute.COB_TYPE_NUMERIC_DISPLAY,
-                digits,
-                attr.getScale(),
-                CobolFieldAttribute.COB_FLAG_HAVE_SIGN,
-                null);
-        AbstractCobolField displayField =
-            CobolFieldFactory.makeCobolField(digits, new CobolDataStorage(digits), newAttr);
+        CobolFieldAttribute newAttr = new CobolFieldAttribute(
+            CobolFieldAttribute.COB_TYPE_NUMERIC_DISPLAY,
+            digits,
+            attr.getScale(),
+            CobolFieldAttribute.COB_FLAG_HAVE_SIGN,
+            null);
+        AbstractCobolField displayField = CobolFieldFactory.makeCobolField(digits, new CobolDataStorage(digits),
+            newAttr);
         if (d.getField(displayField, opt) == 0) {
           f.moveFrom(displayField);
         }
-        return CobolException.code;
+        return CobolExceptionInfo.code;
     }
   }
 
@@ -681,7 +680,8 @@ public class CobolDecimal {
     return 0;
   }
 
-  class OverflowException extends Exception {}
+  class OverflowException extends Exception {
+  }
 
   /**
    * libcob/numeric.cのcob_decimal_get_binaryの実装
@@ -709,8 +709,7 @@ public class CobolDecimal {
       }
     }
     int bitnum = f.getSize() * 8 - sign;
-    outer:
-    {
+    outer: {
       if (this.getValue().compareTo(new BigDecimal(2).pow(bitnum).subtract(BigDecimal.ONE)) > 0) {
         if ((opt & COB_STORE_KEEP_ON_OVERFLOW) != 0) {
           break outer;
@@ -740,7 +739,7 @@ public class CobolDecimal {
       }
     }
     CobolRuntimeException.setException(CobolExceptionId.COB_EC_SIZE_OVERFLOW);
-    return CobolException.code;
+    return CobolExceptionInfo.code;
   }
 
   /**
