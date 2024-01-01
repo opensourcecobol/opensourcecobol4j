@@ -2085,19 +2085,19 @@ public class CobolIntrinsic {
       p1 = new String(formatData.getByteArray(n, 2));
 
       if ("hh".equals(p1) && !hoursSeen) {
-        p2 = Integer.valueOf(new String(valueData.getByteArray(n, 2)));
+        p2 = Integer.parseInt(new String(valueData.getByteArray(n, 2)));
         hours = p2;
         hoursSeen = true;
         continue;
       }
       if ("mm".equals(p1) && !minutesSeen) {
-        p2 = Integer.valueOf(new String(valueData.getByteArray(n, 2)));
+        p2 = Integer.parseInt(new String(valueData.getByteArray(n, 2)));
         minutes = p2;
         minutesSeen = true;
         continue;
       }
       if ("ss".equals(p1) && !secondsSeen) {
-        p2 = Integer.valueOf(new String(valueData.getByteArray(n, 2)));
+        p2 = Integer.parseInt(new String(valueData.getByteArray(n, 2)));
         seconds = p2;
         secondsSeen = true;
         continue;
