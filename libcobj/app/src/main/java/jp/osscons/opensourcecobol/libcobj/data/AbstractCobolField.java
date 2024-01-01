@@ -187,7 +187,7 @@ public abstract class AbstractCobolField {
     int firstDataIndex = this.getFirstDataIndex();
     int size = this.getFieldSize();
 
-    if (data.getByte(firstDataIndex) == 255) {
+    if (Byte.toUnsignedInt(data.getByte(firstDataIndex)) == 0xFF) {
       CobolDecimal decimal = new CobolDecimal(BigDecimal.TEN.pow(size));
       decimal.setScale(this.getAttribute().getScale());
       return decimal;
@@ -446,21 +446,7 @@ public abstract class AbstractCobolField {
   }
 
   protected AbstractCobolField preprocessOfMoving(AbstractCobolField src) {
-    AbstractCobolField src1;
-
-    // TODO 以下の分岐は不要?
-    if (src == CobolConstant.quote
-        || src == CobolConstant.zenQuote
-        || src == CobolConstant.space
-        || src == CobolConstant.zenSpace
-        || src == CobolConstant.blank
-        || src == CobolConstant.zenBlank
-        || src == CobolConstant.zero
-        || src == CobolConstant.zenZero) {
-      src1 = src;
-    } else {
-      src1 = src;
-    }
+    AbstractCobolField src1 = src;
 
     if (src1.getAttribute().isTypeAlphanumAll() || src1.getAttribute().isTypeNationalAll()) {
       this.moveFromAll(src);
@@ -489,13 +475,13 @@ public abstract class AbstractCobolField {
           src1.setSize(size);
         }
         if (src1.size == 0) {
-          src1 = CobolConstant.zenSpace;
+          return src1;
         }
       }
     }
 
     if (src1.getSize() == 0) {
-      src1 = CobolConstant.space;
+      return src1;
     }
 
     return src;
@@ -1259,7 +1245,7 @@ public abstract class AbstractCobolField {
           data = data.getSubDataStorage(this.getSize());
         }
         if (size > 0) {
-          comparator.compare(this.getDataStorage(), data, size, s);
+          ret = comparator.compare(this.getDataStorage(), data, size, s);
         }
       } while (false);
     } else {
@@ -1278,7 +1264,7 @@ public abstract class AbstractCobolField {
           data = data.getSubDataStorage(other.getSize());
         }
         if (size > 0) {
-          comparator.compare(data, other.getDataStorage(), size, s);
+          ret = comparator.compare(data, other.getDataStorage(), size, s);
         }
       } while (false);
     }

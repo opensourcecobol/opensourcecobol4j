@@ -22,8 +22,8 @@ import jp.osscons.opensourcecobol.libcobj.data.AbstractCobolField;
 import jp.osscons.opensourcecobol.libcobj.data.CobolDataStorage;
 import jp.osscons.opensourcecobol.libcobj.data.CobolFieldAttribute;
 import jp.osscons.opensourcecobol.libcobj.data.CobolFieldFactory;
-import jp.osscons.opensourcecobol.libcobj.exceptions.CobolException;
 import jp.osscons.opensourcecobol.libcobj.exceptions.CobolExceptionId;
+import jp.osscons.opensourcecobol.libcobj.exceptions.CobolExceptionInfo;
 import jp.osscons.opensourcecobol.libcobj.exceptions.CobolRuntimeException;
 import jp.osscons.opensourcecobol.libcobj.exceptions.CobolStopRunException;
 
@@ -295,7 +295,7 @@ public class CobolString {
 
   public static void unstringInto(
       AbstractCobolField dst, AbstractCobolField dlm, AbstractCobolField cnt) {
-    if (CobolException.code != 0) {
+    if (CobolExceptionInfo.code != 0) {
       return;
     }
     if (unstringOffset >= unstringSrc.getSize()) {
@@ -406,9 +406,7 @@ public class CobolString {
     }
   }
 
-  public static void unstringTallying(int f) throws CobolStopRunException {
-    unstringTallying(null);
-  }
+  public static void unstringTallying(int f) throws CobolStopRunException {}
 
   public static void unstringTallying(AbstractCobolField f) throws CobolStopRunException {
     f.addInt(unstringCount);

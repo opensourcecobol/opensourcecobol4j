@@ -214,7 +214,7 @@ public class CobolResolve {
   }
 
   /** 初期化を行う */
-  public static void CobolInitCall() {
+  public static void cobolInitCall() {
 
     String s;
     String buf;

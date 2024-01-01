@@ -22,8 +22,8 @@ import java.math.BigDecimal;
 import java.math.RoundingMode;
 import jp.osscons.opensourcecobol.libcobj.common.CobolModule;
 import jp.osscons.opensourcecobol.libcobj.common.CobolUtil;
-import jp.osscons.opensourcecobol.libcobj.exceptions.CobolException;
 import jp.osscons.opensourcecobol.libcobj.exceptions.CobolExceptionId;
+import jp.osscons.opensourcecobol.libcobj.exceptions.CobolExceptionInfo;
 import jp.osscons.opensourcecobol.libcobj.exceptions.CobolRuntimeException;
 import jp.osscons.opensourcecobol.libcobj.exceptions.CobolStopRunException;
 
@@ -43,6 +43,7 @@ public class CobolDecimal {
   public static CobolDecimal cobD4 = new CobolDecimal();
   public static BigDecimal[] cobMpze10 = new BigDecimal[COB_MAX_BINARY];
   public static byte[] packedValue = new byte[20];
+  public static int packedValueInt = 0;
 
   public static void cobInitNumeric() {
     cobD1 = new CobolDecimal();
@@ -57,6 +58,7 @@ public class CobolDecimal {
     for (int i = 0; i < packedValue.length; ++i) {
       packedValue[i] = 0;
     }
+    packedValueInt = 0;
   }
 
   // TODO cob_init_numeric周辺の初期化処理を正しく実装出来たら消す。
@@ -68,6 +70,7 @@ public class CobolDecimal {
     for (int i = 0; i < packedValue.length; ++i) {
       packedValue[i] = 0;
     }
+    packedValueInt = 0;
   }
 
   /** 保持する数値データ */
@@ -160,7 +163,6 @@ public class CobolDecimal {
   /** libcob/numeric.cのcob_decimal_initの実装 */
   public void decimalInit() {
     this.value = BigDecimal.ZERO;
-    this.value.setScale(0);
   }
 
   /**
@@ -510,7 +512,7 @@ public class CobolDecimal {
         if (d.getField(displayField, opt) == 0) {
           f.moveFrom(displayField);
         }
-        return CobolException.code;
+        return CobolExceptionInfo.code;
     }
   }
 
@@ -655,16 +657,16 @@ public class CobolDecimal {
       }
       byte val = (byte) ((int) numBuffPtr[j] - '0');
       int index;
-      if (digits % 2 == 1) {
-        index = i / 2;
-      } else {
+      if (digits % 2 == 0) {
         index = (i + 1) / 2;
+      } else {
+        index = i / 2;
       }
       byte b = data.getByte(index);
-      if ((digits + i) % 2 == 1) {
-        data.setByte(index, (val << 4) | (b & 0x0F));
-      } else {
+      if ((digits + i) % 2 == 0) {
         data.setByte(index, (b & 0xF0) | val);
+      } else {
+        data.setByte(index, (val << 4) | (b & 0x0F));
       }
     }
 
@@ -680,8 +682,6 @@ public class CobolDecimal {
 
     return 0;
   }
-
-  class OverflowException extends Exception {}
 
   /**
    * libcob/numeric.cのcob_decimal_get_binaryの実装
@@ -740,7 +740,7 @@ public class CobolDecimal {
       }
     }
     CobolRuntimeException.setException(CobolExceptionId.COB_EC_SIZE_OVERFLOW);
-    return CobolException.code;
+    return CobolExceptionInfo.code;
   }
 
   /**

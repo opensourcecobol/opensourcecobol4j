@@ -497,7 +497,8 @@ public class CobolFile {
          * jbuf[i] = 0;
          * }
          */
-        rt = jbuf;
+        // TODO
+        rt = null;
       }
       if (flagQuoted && siz > 2) {
         rt[0] = rt[siz - 2] = (byte) '\'';
@@ -529,7 +530,8 @@ public class CobolFile {
          * jbuf[i] = name[i];
          * }
          */
-        rt = jbuf;
+        // TODO fix
+        rt = null;
       }
     }
     return rt;
@@ -1272,7 +1274,8 @@ public class CobolFile {
       if (f.open_mode != COB_OPEN_CLOSED && f.open_mode != COB_OPEN_LOCKED) {
         String filename = f.assign.fieldToString();
         System.err.print(
-            String.format("WARNING - Implicit CLOSE of %s (\"%s\") \n", f.select_name, filename));
+            String.format(
+                "WARNING - Implicit CLOSE of %s (\"%s\") %c", f.select_name, filename, '\n'));
       }
     }
   }
@@ -1487,7 +1490,12 @@ public class CobolFile {
       file_open_name = new String(fileOpenNameBytes);
     }
 
-    Path filePath = Paths.get(this.assign.fieldToString());
+    Path filePath;
+    if (this.assign == null) {
+      filePath = Paths.get(this.select_name);
+    } else {
+      filePath = Paths.get(this.assign.fieldToString());
+    }
     try {
       saveStatus(COB_STATUS_00_SUCCESS, fnstatus);
       Files.delete(filePath);

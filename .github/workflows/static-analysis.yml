@@ -32,10 +32,10 @@ jobs:
         run: |
           ./check-format
 
-      - name: Run SpotBugs (ignore results)
+      - name: Run SpotBugs
         working-directory: libcobj
         run: |
-          ./gradlew spotbugsMain || true
+          ./gradlew spotbugsMain
 
       - name: Run PMD
         working-directory: libcobj

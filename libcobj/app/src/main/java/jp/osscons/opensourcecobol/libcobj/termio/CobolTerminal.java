@@ -29,8 +29,8 @@ import jp.osscons.opensourcecobol.libcobj.data.AbstractCobolField;
 import jp.osscons.opensourcecobol.libcobj.data.CobolDataStorage;
 import jp.osscons.opensourcecobol.libcobj.data.CobolFieldAttribute;
 import jp.osscons.opensourcecobol.libcobj.data.CobolFieldFactory;
-import jp.osscons.opensourcecobol.libcobj.exceptions.CobolException;
 import jp.osscons.opensourcecobol.libcobj.exceptions.CobolExceptionId;
+import jp.osscons.opensourcecobol.libcobj.exceptions.CobolExceptionInfo;
 
 /** 標準出力,標準エラー出力に関するメソッドを実装するクラス */
 public class CobolTerminal {
@@ -215,7 +215,7 @@ public class CobolTerminal {
    */
   public static void displayEnvValue(AbstractCobolField f) {
     if (CobolUtil.cobLocalEnv == null || CobolUtil.cobLocalEnv.equals("")) {
-      CobolException.setException(CobolExceptionId.COB_EC_IMP_DISPLAY);
+      CobolExceptionInfo.setException(CobolExceptionId.COB_EC_IMP_DISPLAY);
       return;
     }
   }
@@ -233,7 +233,7 @@ public class CobolTerminal {
 
     if (p == null) {
       // TODO setExceptionは暫定実装
-      CobolException.setException(CobolExceptionId.COB_EC_IMP_ACCEPT);
+      CobolExceptionInfo.setException(CobolExceptionId.COB_EC_IMP_ACCEPT);
       p = " ";
     }
 
@@ -283,7 +283,7 @@ public class CobolTerminal {
     temp.moveFrom(f);
     int n = ByteBuffer.wrap(data).getInt();
     if (n < 0 || n > CobolUtil.commandLineArgs.length) {
-      CobolException.setException(CobolExceptionId.COB_EC_IMP_DISPLAY);
+      CobolExceptionInfo.setException(CobolExceptionId.COB_EC_IMP_DISPLAY);
       return;
     }
     CobolUtil.currentArgIndex = n;
@@ -311,7 +311,7 @@ public class CobolTerminal {
    */
   public static void acceptArgValue(AbstractCobolField f) {
     if (CobolUtil.currentArgIndex > CobolUtil.commandLineArgs.length) {
-      CobolException.setException(CobolExceptionId.COB_EC_IMP_ACCEPT);
+      CobolExceptionInfo.setException(CobolExceptionId.COB_EC_IMP_ACCEPT);
       return;
     }
     f.memcpy(CobolUtil.commandLineArgs[CobolUtil.currentArgIndex - 1]);

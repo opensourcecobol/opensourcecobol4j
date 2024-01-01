@@ -887,9 +887,8 @@ public class CobolNumericPackedField extends AbstractCobolField {
     if (this.getAttribute().getDigits() % 2 == 0) {
       val1[20 - this.getSize()] &= 0x0F;
     }
-    int lastval = 0;
-    if (n != lastval) {
-      lastval = n;
+    if (n != CobolDecimal.packedValueInt) {
+      CobolDecimal.packedValueInt = n;
       if (n < 0) {
         n = -n;
       }

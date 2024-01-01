@@ -994,7 +994,8 @@ public class CobolIntrinsic {
   }
 
   public static AbstractCobolField funcNumvalC(int n, AbstractCobolField currency) {
-    return funcNumvalC(null, currency);
+    // TODO
+    return null;
   }
 
   public static AbstractCobolField funcNumvalC(AbstractCobolField srcfield, int n) {
@@ -1002,7 +1003,8 @@ public class CobolIntrinsic {
   }
 
   public static AbstractCobolField funcNumvalC(int n, int m) {
-    return funcNumvalC(null, null);
+    // TODO
+    return null;
   }
 
   /**
@@ -1705,7 +1707,6 @@ public class CobolIntrinsic {
     int srdays;
     int srtime;
     String str;
-    byte[] buff = new byte[12];
 
     CobolFieldAttribute attr =
         new CobolFieldAttribute(CobolFieldAttribute.COB_TYPE_NUMERIC_DISPLAY, 12, 5, 0, null);
@@ -1725,10 +1726,10 @@ public class CobolIntrinsic {
       return currField;
     }
     str = String.format("%7d%5d", srdays, srtime);
-    buff = str.getBytes();
-    for (int i = 0; i < 12; i++) {
-      if (buff[i] == 32) {
-        buff[i] = 48;
+    byte[] buff = str.getBytes();
+    for (int i = 0; i < buff.length; i++) {
+      if (buff[i] == ' ') {
+        buff[i] = '0';
       }
     }
     currField.getDataStorage().memcpy(buff);
@@ -2020,7 +2021,7 @@ public class CobolIntrinsic {
         exceptName =
             CobolRuntimeException.getExceptionName(CobolRuntimeException.getExceptionCode())
                 .getBytes();
-      } catch (NullPointerException e) {
+      } catch (Exception e) {
         exceptName = CONST_STRING_EXCEPTION_OBJECT;
       }
       currField.memcpy(exceptName, exceptName.length);
@@ -2086,19 +2087,19 @@ public class CobolIntrinsic {
       p1 = new String(formatData.getByteArray(n, 2));
 
       if ("hh".equals(p1) && !hoursSeen) {
-        p2 = Integer.valueOf(new String(valueData.getByteArray(n, 2)));
+        p2 = Integer.parseInt(new String(valueData.getByteArray(n, 2)));
         hours = p2;
         hoursSeen = true;
         continue;
       }
       if ("mm".equals(p1) && !minutesSeen) {
-        p2 = Integer.valueOf(new String(valueData.getByteArray(n, 2)));
+        p2 = Integer.parseInt(new String(valueData.getByteArray(n, 2)));
         minutes = p2;
         minutesSeen = true;
         continue;
       }
       if ("ss".equals(p1) && !secondsSeen) {
-        p2 = Integer.valueOf(new String(valueData.getByteArray(n, 2)));
+        p2 = Integer.parseInt(new String(valueData.getByteArray(n, 2)));
         seconds = p2;
         secondsSeen = true;
         continue;

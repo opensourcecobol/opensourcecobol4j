@@ -27,8 +27,8 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import jp.osscons.opensourcecobol.libcobj.data.AbstractCobolField;
 import jp.osscons.opensourcecobol.libcobj.data.CobolDataStorage;
-import jp.osscons.opensourcecobol.libcobj.exceptions.CobolException;
 import jp.osscons.opensourcecobol.libcobj.exceptions.CobolExceptionId;
+import jp.osscons.opensourcecobol.libcobj.exceptions.CobolExceptionInfo;
 import jp.osscons.opensourcecobol.libcobj.exceptions.CobolRuntimeException;
 import jp.osscons.opensourcecobol.libcobj.exceptions.CobolStopRunException;
 import jp.osscons.opensourcecobol.libcobj.file.CobolFile;
@@ -66,7 +66,7 @@ public class CobolUtil {
   public static String currParagraph;
   public static String sourceStatement;
 
-  abstract class HandlerList {
+  abstract static class HandlerList {
     public HandlerList next = null;
 
     public abstract int proc(String s);
@@ -299,7 +299,7 @@ public class CobolUtil {
   public static void getEnvironment(AbstractCobolField envname, AbstractCobolField envval) {
     String p = CobolUtil.getEnv(envname.fieldToString());
     if (p == null) {
-      CobolException.setException(CobolExceptionId.COB_EC_IMP_ACCEPT);
+      CobolExceptionInfo.setException(CobolExceptionId.COB_EC_IMP_ACCEPT);
       p = " ";
     }
     envval.memcpy(p);

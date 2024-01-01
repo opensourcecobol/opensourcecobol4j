@@ -118,8 +118,7 @@ public class CobolRelativeFile extends CobolFile {
           this.fp.seek(this.fp.length());
           break;
         default:
-          this.fp = null;
-          break;
+          return EACCESS;
       }
     } catch (IOException e) {
       if (this.fp != null) {

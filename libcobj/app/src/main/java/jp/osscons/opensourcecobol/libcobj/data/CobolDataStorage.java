@@ -1517,8 +1517,7 @@ public class CobolDataStorage {
     return retval;
   }
 
-  /** */
-  private class PairInt {
+  private static class PairInt {
     public int first;
     public int last;
 

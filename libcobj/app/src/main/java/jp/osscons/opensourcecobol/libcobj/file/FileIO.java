@@ -63,6 +63,7 @@ public class FileIO {
 
   public void setChannel(FileChannel fc, FileLock fl) {
     this.fc = fc;
+    this.fl = fl;
     this.useStdOut = false;
     this.useStdIn = false;
 
