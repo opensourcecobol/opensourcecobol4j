@@ -1669,23 +1669,12 @@ static int process_translate(struct filename *fn) {
     program_id_list[i] = NULL;
   }
   codegen(p, 0, program_id_list,
-          java_source_dir == NULL ? "./" : java_source_dir);
+          java_source_dir == NULL ? (char *)"./" : java_source_dir);
 
   return 0;
 }
 
-static void create_module_info_java(char *source_dir, char *package_name) {
-  char path[COB_MEDIUM_BUFF];
-  sprintf(path, "%s/module-info.java", source_dir);
-  FILE *f = fopen(path, "w");
-  fprintf(f, "module %s {\n", package_name);
-  fprintf(f, "  requires transitive jp.osscons.opensourcecobol.libcobj;\n");
-  fprintf(f, "  exports %s;\n", package_name);
-  fprintf(f, "}\n");
-  fclose(f);
-}
-
-static package_name_to_path(char *buff, char *package_name) {
+static void package_name_to_path(char *buff, char *package_name) {
   char *b_p = buff;
   char *p_p = package_name;
   for (; *p_p; ++p_p, ++b_p) {
@@ -1709,13 +1698,14 @@ static int process_compile(struct filename *fn) {
     file_basename(fn->source, name);
   }
 
-  char *output_name_a = output_name == NULL ? "./" : output_name;
-  char *java_source_dir_a = java_source_dir == NULL ? "./" : java_source_dir;
+  char *output_name_a = output_name == NULL ? (char *)"./" : output_name;
+  char *java_source_dir_a =
+      java_source_dir == NULL ? (char *)"./" : java_source_dir;
 
   char **program_id;
   for (program_id = program_id_list; *program_id; ++program_id) {
-    sprintf(buff, "javac %s -encoding SJIS -d %s %s/%s.java", cob_java_flags,
-            output_name_a, java_source_dir_a, *program_id);
+    snprintf(buff, COB_MEDIUM_BUFF, "javac %s -encoding SJIS -d %s %s/%s.java",
+             cob_java_flags, output_name_a, java_source_dir_a, *program_id);
     ret = process(buff);
 
     if (ret) {
@@ -1727,17 +1717,17 @@ static int process_compile(struct filename *fn) {
         package_name_to_path(buff2, cb_java_package_name);
         package_dir = buff2;
       } else {
-        package_dir = ".";
+        package_dir = (char *)".";
       }
-      sprintf(buff,
-              "cd %s && jar --create --main-class=%s --file=%s.jar %s/*.class",
-              output_name_a, *program_id, *program_id, package_dir);
+      snprintf(buff, COB_MEDIUM_BUFF,
+               "cd %s && jar --create --main-class=%s --file=%s.jar %s/*.class",
+               output_name_a, *program_id, *program_id, package_dir);
       ret = process(buff);
       if (ret) {
         return ret;
       }
-      sprintf(buff, "rm -rf %s/%s.class %s/%s$*.class", output_name_a,
-              *program_id, output_name_a, *program_id);
+      snprintf(buff, COB_MEDIUM_BUFF, "rm -rf %s/%s.class %s/%s$*.class",
+               output_name_a, *program_id, output_name_a, *program_id);
       process(buff);
     }
   }
@@ -1965,13 +1955,14 @@ static int process_link(struct filename *l) {
   return ret;
 }
 
-int process_build_single_jar() {
+static int process_build_single_jar() {
   char buff[COB_MEDIUM_BUFF];
   char buff2[COB_MEDIUM_BUFF];
   int ret;
 
-  char *output_name_a = output_name == NULL ? "./" : output_name;
-  char *java_source_dir_a = java_source_dir == NULL ? "./" : java_source_dir;
+  char *output_name_a = output_name == NULL ? (char *)"./" : output_name;
+  char *java_source_dir_a =
+      java_source_dir == NULL ? (char *)"./" : java_source_dir;
 
   sprintf(buff, "javac %s -encoding SJIS -d %s %s/*.java", cob_java_flags,
           output_name_a, java_source_dir_a);
@@ -1986,13 +1977,14 @@ int process_build_single_jar() {
     package_name_to_path(buff2, cb_java_package_name);
     package_dir = buff2;
   } else {
-    package_dir = ".";
+    package_dir = (char *)".";
   }
 
-  sprintf(buff, "cd %s && jar --create --file=%s %s/*.class", output_name_a,
-          cb_single_jar_name, package_dir);
+  snprintf(buff, COB_MEDIUM_BUFF, "cd %s && jar --create --file=%s %s/*.class",
+           output_name_a, cb_single_jar_name, package_dir);
   ret = process(buff);
-  sprintf(buff, "rm -f %s/%s/*.class #aaa", output_name_a, package_dir);
+  snprintf(buff, COB_MEDIUM_BUFF, "rm -f %s/%s/*.class #aaa", output_name_a,
+           package_dir);
   process(buff);
   return ret;
 }
