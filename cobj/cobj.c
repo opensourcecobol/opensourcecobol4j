@@ -1704,8 +1704,8 @@ static int process_compile(struct filename *fn) {
 
   char **program_id;
   for (program_id = program_id_list; *program_id; ++program_id) {
-    snprintf(buff, COB_MEDIUM_BUFF, "javac %s -encoding SJIS -d %s %s/%s.java", cob_java_flags,
-            output_name_a, java_source_dir_a, *program_id);
+    snprintf(buff, COB_MEDIUM_BUFF, "javac %s -encoding SJIS -d %s %s/%s.java",
+             cob_java_flags, output_name_a, java_source_dir_a, *program_id);
     ret = process(buff);
 
     if (ret) {
@@ -1720,14 +1720,14 @@ static int process_compile(struct filename *fn) {
         package_dir = (char *)".";
       }
       snprintf(buff, COB_MEDIUM_BUFF,
-              "cd %s && jar --create --main-class=%s --file=%s.jar %s/*.class",
-              output_name_a, *program_id, *program_id, package_dir);
+               "cd %s && jar --create --main-class=%s --file=%s.jar %s/*.class",
+               output_name_a, *program_id, *program_id, package_dir);
       ret = process(buff);
       if (ret) {
         return ret;
       }
-      snprintf(buff, COB_MEDIUM_BUFF, "rm -rf %s/%s.class %s/%s$*.class", output_name_a,
-              *program_id, output_name_a, *program_id);
+      snprintf(buff, COB_MEDIUM_BUFF, "rm -rf %s/%s.class %s/%s$*.class",
+               output_name_a, *program_id, output_name_a, *program_id);
       process(buff);
     }
   }
@@ -1980,10 +1980,11 @@ static int process_build_single_jar() {
     package_dir = (char *)".";
   }
 
-  snprintf(buff, COB_MEDIUM_BUFF, "cd %s && jar --create --file=%s %s/*.class", output_name_a,
-          cb_single_jar_name, package_dir);
+  snprintf(buff, COB_MEDIUM_BUFF, "cd %s && jar --create --file=%s %s/*.class",
+           output_name_a, cb_single_jar_name, package_dir);
   ret = process(buff);
-  snprintf(buff, COB_MEDIUM_BUFF, "rm -f %s/%s/*.class #aaa", output_name_a, package_dir);
+  snprintf(buff, COB_MEDIUM_BUFF, "rm -f %s/%s/*.class #aaa", output_name_a,
+           package_dir);
   process(buff);
   return ret;
 }
