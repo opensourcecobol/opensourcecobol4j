@@ -4965,9 +4965,6 @@ exit_body:
   }
 | PERFORM
   {
-	struct cb_perform	*p;
-	char			name[64];
-
 	if (!perform_stack) {
 		cb_error (_("EXIT PERFORM is only valid with inline PERFORM"));
 	} else {
@@ -4976,9 +4973,6 @@ exit_body:
   }
 | PERFORM CYCLE
   {
-	struct cb_perform	*p;
-	char			name[64];
-
 	if (!perform_stack) {
 		cb_error (_("EXIT PERFORM is only valid with inline PERFORM"));
 	} else {
