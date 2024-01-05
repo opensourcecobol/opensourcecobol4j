@@ -1674,7 +1674,7 @@ static int process_translate(struct filename *fn) {
   return 0;
 }
 
-static package_name_to_path(char *buff, char *package_name) {
+static void package_name_to_path(char *buff, char *package_name) {
   char *b_p = buff;
   char *p_p = package_name;
   for (; *p_p; ++p_p, ++b_p) {
