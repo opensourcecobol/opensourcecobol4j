@@ -708,7 +708,7 @@ static void destroy_sorted_data_storage_cache() {
   free(sorted_data_storage_cache);
 }
 
-int is_call_parameter(struct cb_field *f) {
+static int is_call_parameter(struct cb_field *f) {
   cb_tree l;
   for (l = call_parameters; l; l = CB_CHAIN(l)) {
     if (f == cb_field(CB_VALUE(l))) {
@@ -766,7 +766,6 @@ static void joutput_base(struct cb_field *f) {
   struct base_list *bl;
   char *nmp;
   char name[COB_SMALL_BUFF];
-  char *base_name = NULL;
   top = cb_field_founder(f);
 
   if (f->flag_item_78) {
@@ -1160,7 +1159,7 @@ static struct literal_list *lookup_literal(cb_tree x) {
   return l;
 }
 
-void joutput_const_identifier(struct literal_list *l) {
+static void joutput_const_identifier(struct literal_list *l) {
   const int MAX_LITERAL_SIZE = 64;
   char s[MAX_LITERAL_SIZE + 1];
   memset(s, 0, MAX_LITERAL_SIZE + 1);
@@ -2730,7 +2729,6 @@ static void joutput_call(struct cb_call *p) {
   char *system_call = NULL;
   struct system_table *psyst;
   size_t n;
-  size_t parmnum = 0;
   size_t retptr;
   int dynamic_link = 1;
   int sizes;
