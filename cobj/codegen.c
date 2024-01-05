@@ -719,7 +719,7 @@ static int is_call_parameter(struct cb_field *f) {
 }
 
 static int joutput_field_storage(struct cb_field *f, struct cb_field *top) {
-  char *p;
+  const char *p;
   int flag_call_parameter = is_call_parameter(top);
   if (flag_call_parameter ||
       (f->offset == 0 && strcmp(f->name, top->name) == 0)) {
