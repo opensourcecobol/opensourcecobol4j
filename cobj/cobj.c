@@ -1669,7 +1669,7 @@ static int process_translate(struct filename *fn) {
     program_id_list[i] = NULL;
   }
   codegen(p, 0, program_id_list,
-          java_source_dir == NULL ? "./" : java_source_dir);
+          java_source_dir == NULL ? (char *)"./" : java_source_dir);
 
   return 0;
 }
@@ -1698,8 +1698,9 @@ static int process_compile(struct filename *fn) {
     file_basename(fn->source, name);
   }
 
-  char *output_name_a = output_name == NULL ? "./" : output_name;
-  char *java_source_dir_a = java_source_dir == NULL ? "./" : java_source_dir;
+  char *output_name_a = output_name == NULL ? (char *)"./" : output_name;
+  char *java_source_dir_a =
+      java_source_dir == NULL ? (char *)"./" : java_source_dir;
 
   char **program_id;
   for (program_id = program_id_list; *program_id; ++program_id) {
@@ -1716,7 +1717,7 @@ static int process_compile(struct filename *fn) {
         package_name_to_path(buff2, cb_java_package_name);
         package_dir = buff2;
       } else {
-        package_dir = ".";
+        package_dir = (char *)".";
       }
       sprintf(buff,
               "cd %s && jar --create --main-class=%s --file=%s.jar %s/*.class",
@@ -1959,8 +1960,9 @@ static int process_build_single_jar() {
   char buff2[COB_MEDIUM_BUFF];
   int ret;
 
-  char *output_name_a = output_name == NULL ? "./" : output_name;
-  char *java_source_dir_a = java_source_dir == NULL ? "./" : java_source_dir;
+  char *output_name_a = output_name == NULL ? (char *)"./" : output_name;
+  char *java_source_dir_a =
+      java_source_dir == NULL ? (char *)"./" : java_source_dir;
 
   sprintf(buff, "javac %s -encoding SJIS -d %s %s/*.java", cob_java_flags,
           output_name_a, java_source_dir_a);
@@ -1975,7 +1977,7 @@ static int process_build_single_jar() {
     package_name_to_path(buff2, cb_java_package_name);
     package_dir = buff2;
   } else {
-    package_dir = ".";
+    package_dir = (char *)".";
   }
 
   sprintf(buff, "cd %s && jar --create --file=%s %s/*.class", output_name_a,
