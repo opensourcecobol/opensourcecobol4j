@@ -26,8 +26,6 @@
 #include	<string.h>
 #include	<stdlib.h>
 
-#include	"tarstamp.h"
-
 #ifdef	HAVE_KPATHSEA_GETOPT_H
 #include <kpathsea/getopt.h>
 #else

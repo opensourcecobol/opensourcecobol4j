@@ -28,8 +28,6 @@
 #include <string.h>
 #include <time.h>
 
-#include "tarstamp.h"
-
 #include "cobj.h"
 #include "tree.h"
 
