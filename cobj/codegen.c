@@ -645,8 +645,8 @@ static void register_data_storage_list(struct cb_field *f,
   if (f->offset == 0 && strcmp(f->name, top->name) == 0) {
     return;
   }
-  unsigned int index =
-      (((unsigned int)f) + ((unsigned int)top)) % DATA_STORAGE_CACHE_BUFF_SIZE;
+  unsigned long index = (((unsigned long)f) + ((unsigned long)top)) %
+                        DATA_STORAGE_CACHE_BUFF_SIZE;
   struct data_storage_list *entry = data_storage_cache[index];
   while (entry != NULL) {
     if (entry->f == f && entry->top == top) {
