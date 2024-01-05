@@ -1674,17 +1674,6 @@ static int process_translate(struct filename *fn) {
   return 0;
 }
 
-static void create_module_info_java(char *source_dir, char *package_name) {
-  char path[COB_MEDIUM_BUFF];
-  sprintf(path, "%s/module-info.java", source_dir);
-  FILE *f = fopen(path, "w");
-  fprintf(f, "module %s {\n", package_name);
-  fprintf(f, "  requires transitive jp.osscons.opensourcecobol.libcobj;\n");
-  fprintf(f, "  exports %s;\n", package_name);
-  fprintf(f, "}\n");
-  fclose(f);
-}
-
 static package_name_to_path(char *buff, char *package_name) {
   char *b_p = buff;
   char *p_p = package_name;
@@ -1965,7 +1954,7 @@ static int process_link(struct filename *l) {
   return ret;
 }
 
-int process_build_single_jar() {
+static int process_build_single_jar() {
   char buff[COB_MEDIUM_BUFF];
   char buff2[COB_MEDIUM_BUFF];
   int ret;
