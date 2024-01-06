@@ -29,6 +29,7 @@ TESTS = syntax \
 	i18n_utf8 \
 	jp-compat \
 	command-line-options \
+	cobj-idx \
 	misc
 else
 TESTS = syntax \
@@ -39,6 +40,7 @@ TESTS = syntax \
 	i18n_sjis \
 	jp-compat \
 	command-line-options \
+	cobj-idx \
 	misc
 endif
 
@@ -166,6 +168,12 @@ command_line_options_DEPENDENCIES = \
 	command-line-options.src/debug.at \
 	command-line-options.src/jar.at
 
+cobj_idx_DEPENDENCIES = \
+	cobj-idx.src/info.at \
+	cobj-idx.src/load.at \
+	cobj-idx.src/unload.at \
+	cobj-idx.src/help.at
+
 misc_DEPENDENCIES = \
 	misc.src/signed-comp3.at \
 	misc.src/index-comp.at \
@@ -201,6 +209,7 @@ EXTRA_DIST = $(srcdir)/package.m4 \
 	$(i18n_sjis_DEPENDENCIES) \
 	$(jp_compat_DEPENDENCIES) \
 	$(command_line_options_DEPENDENCIES) \
+	$(cobj_idx_DEPENDENCIES) \
 	$(misc_DEPENDENCIES)
 
 DISTCLEANFILES = atconfig
@@ -232,4 +241,5 @@ $(srcdir)/i18n_utf8: $(i18n_utf8_DEPENDENCIES)
 $(srcdir)/i18n_sjis: $(i18n_sjis_DEPENDENCIES)
 $(srcdir)/jp-compat: $(jp_compat_DEPENDENCIES)
 $(srcdir)/command-line-options: $(command_line_options_DEPENDENCIES)
+$(srcdir)/cobj-idx: $(cobj_idx_DEPENDENCIES)
 $(srcdir)/misc: $(misc_DEPENDENCIES)

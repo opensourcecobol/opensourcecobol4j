@@ -20,7 +20,7 @@ jobs:
     needs: build
     strategy:
       matrix:
-        test_name: ["command-line-options", "data-rep", "i18n_sjis", "jp-compat", "run", "syntax"]
+        test_name: ["command-line-options", "data-rep", "i18n_sjis", "jp-compat", "run", "syntax", "cobj-idx"]
         os: ["ubuntu:22.04", "almalinux:9", "amazonlinux:2023"]
     uses: ./.github/workflows/test-other.yml
     with:
