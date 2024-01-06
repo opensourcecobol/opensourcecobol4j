@@ -1,0 +1,3 @@
+#!/bin/bash
+
+java jp.osscons.opensourcecobol.libcobj.user_util.indexed_file.IndexedFileUtilMain $@
