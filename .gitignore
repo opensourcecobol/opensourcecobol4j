@@ -50,6 +50,7 @@ tests/data-rep
 tests/i18n_sjis
 tests/i18n_utf8
 tests/jp-compat
+tests/cobj-idx
 tests/misc
 tests/run
 tests/*.log
