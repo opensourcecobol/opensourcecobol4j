@@ -124,19 +124,19 @@ AT_CHECK([java empty])
 #
 ## a test for an not-existing file
 #AT_CHECK([cobj-idx info not-existing-file], [1], [],
-#[error: 'not-existing-file' does not exist
+#[error: 'not-existing-file' does not exist.
 #])
 #
 ## a test for a directory
 #AT_CHECK([mkdir indexed-file-dir])
 #AT_CHECK([cobj-idx info indexed-file-dir], [1], [],
-#[error: 'indexed-file-dir' is a directory
+#[error: 'indexed-file-dir' is not a valid indexed file.
 #])
 #
 ## a test for an invalid format file
 #AT_CHECK([echo "info" > invalid-format-indexed-file])
 #AT_CHECK([cobj-idx info invalid-format-indexed-file], [1], [],
-#[error: The format of 'invalid-format-indexed-file' is invalid.
+#[error: 'invalid-format-indexed-file' is not a valid indexed file.
 #])
 
 # Shuffle the order of key definitions of an indexed file
