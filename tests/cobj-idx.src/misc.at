@@ -1,4 +1,4 @@
-AT_SETUP([help])
+AT_SETUP([misc])
 
 AT_CHECK([echo -n hello], [0], [hello])
 

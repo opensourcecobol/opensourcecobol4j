@@ -710,10 +710,11 @@ command_line_options_DEPENDENCIES = \
 	command-line-options.src/jar.at
 
 cobj_idx_DEPENDENCIES = \
+	cobj-idx.at \
 	cobj-idx.src/info.at \
 	cobj-idx.src/load.at \
 	cobj-idx.src/unload.at \
-	cobj-idx.src/help.at
+	cobj-idx.src/misc.at
 
 misc_DEPENDENCIES = \
 	misc.src/signed-comp3.at \
