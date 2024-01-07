@@ -1,5 +1,532 @@
 AT_SETUP([load])
 
-AT_CHECK([echo -n hello], [0], [hello])
+AT_DATA([load.cbl],
+[       identification division.
+       program-id. load.
+       environment division.
+       input-output section.
+       file-control.
+       select f assign to external IDX_FILE_PATH
+           organization is indexed
+           access mode is sequential
+           record key is rec-key
+           alternate record key is alt-key-1
+           alternate record key is alt-key-2
+           alternate record key is alt-key-dup-1 with duplicates
+           alternate record key is alt-key-dup-2 with duplicates.
+       data division.
+       file section.
+       fd f.
+       01 rec.
+         03 rec-key pic x(5).
+         03 alt-key-1 pic x(5).
+         03 alt-key-2 pic x(5).
+         03 alt-key-dup-1 pic x(5).
+         03 alt-key-dup-2 pic x(5).
+         03 rec-value pic x(5).
+       working-storage section.
+       procedure division.
+       main-proc.
+           open input f.
+           perform forever
+             read f next
+               at end
+                 exit perform
+             end-read
+             display rec
+           end-perform
+           close f.
+])
+AT_CHECK([${COMPILE} load.cbl])
 
+# COBOL program to create a sample indexed file
+AT_DATA([sample.cbl],
+[       identification division.
+       program-id. sample.
+       environment division.
+       input-output section.
+       file-control.
+       select f assign to 'idx-file'
+           organization is indexed
+           access mode is random
+           record key is rec-key
+           alternate record key is alt-key-1
+           alternate record key is alt-key-2
+           alternate record key is alt-key-dup-1 with duplicates
+           alternate record key is alt-key-dup-2 with duplicates.
+       data division.
+       file section.
+       fd f.
+       01 rec.
+         03 rec-key pic x(5).
+         03 alt-key-1 pic x(5).
+         03 alt-key-2 pic x(5).
+         03 alt-key-dup-1 pic x(5).
+         03 alt-key-dup-2 pic x(5).
+         03 rec-value pic x(5).
+       working-storage section.
+       procedure division.
+       main-proc.
+           open output f.
+
+           move 'a0000' to rec-key.
+           move 'b0000' to alt-key-1.
+           move 'c0000' to alt-key-2.
+           move 'd0000' to alt-key-dup-1.
+           move 'e0000' to alt-key-dup-2.
+           move '00000' to rec-value.
+           write rec.
+
+           move 'a0001' to rec-key.
+           move 'b0001' to alt-key-1.
+           move 'c0001' to alt-key-2.
+           move 'd0001' to alt-key-dup-1.
+           move 'e0001' to alt-key-dup-2.
+           move '00001' to rec-value.
+           write rec.
+
+           move 'a0010' to rec-key.
+           move 'b0010' to alt-key-1.
+           move 'c0010' to alt-key-2.
+           move 'd0010' to alt-key-dup-1.
+           move 'e0010' to alt-key-dup-2.
+           move '00010' to rec-value.
+           write rec.
+
+           move 'a0011' to rec-key.
+           move 'b0011' to alt-key-1.
+           move 'c0011' to alt-key-2.
+           move 'd0010' to alt-key-dup-1.
+           move 'e0010' to alt-key-dup-2.
+           move '00011' to rec-value.
+           write rec.
+
+           close f.
+])
+
+# COBOL program to create an empty indexed file
+AT_DATA([empty.cbl],
+[       identification division.
+       program-id. empty.
+       environment division.
+       input-output section.
+       file-control.
+       select f assign to 'idx-empty-file'
+           organization is indexed
+           access mode is random
+           record key is rec-key
+           alternate record key is alt-key-1
+           alternate record key is alt-key-2
+           alternate record key is alt-key-dup-1 with duplicates
+           alternate record key is alt-key-dup-2 with duplicates.
+       data division.
+       file section.
+       fd f.
+       01 rec.
+         03 rec-key pic x(5).
+         03 alt-key-1 pic x(5).
+         03 alt-key-2 pic x(5).
+         03 alt-key-dup-1 pic x(5).
+         03 alt-key-dup-2 pic x(5).
+         03 rec-value pic x(5).
+       working-storage section.
+       procedure division.
+       main-proc.
+           open output f.
+           close f.
+])
+
+AT_CHECK([${COMPILE} sample.cbl empty.cbl])
+
+# Create a sample indexed file
+AT_CHECK([java sample])
+# Create an empty indexed file (This is a valid indexed file)
+AT_CHECK([java empty])
+# Create an invalid indexed file
+AT_CHECK([echo "invalid data" > idx-invalid-file])
+# Create a directory (This is not a valid indexed file)
+AT_CHECK([mkdir dir-idx-file])
+
+######## test for the file 'sample' with valid input #######
+## basic test
+#AT_CHECK([cp sample work-sample])
+#AT_DATA([input.txt],
+#[a0002b0002c0002d0002e000200002
+#a0012b0012c0012d0012e001200012
+#])
+#AT_CHECK([cobj-idx load work-sample < input.txt])
+#AT_CHECK([IDX_FILE_PATH=work-sample java load], [0],
+#[a0000b0000c0000d0000e000000000
+#a0001b0001c0001d0001e000100001
+#a0002b0002c0002d0002e000200002
+#a0010b0010c0010d0010e001000010
+#a0011b0011c0011d0010e001000011
+#a0012b0012c0012d0012e001200012
+#])
+#
+## test for duplicate keys
+#AT_CHECK([cp sample work-sample])
+#AT_DATA([input.txt],
+#[a0002b0002c0002d0000e000000002
+#a0012b0012c0012d0010e001000012
+#])
+#AT_CHECK([cobj-idx load work-sample < input.txt])
+#AT_CHECK([IDX_FILE_PATH=work-sample java load], [0],
+#[a0000b0000c0000d0000e000000000
+#a0001b0001c0001d0001e000100001
+#a0002b0002c0002d0000e000000002
+#a0010b0010c0010d0010e001000010
+#a0011b0011c0011d0010e001000011
+#a0012b0012c0012d0010e001000012
+#])
+#
+## test with empty input
+#AT_CHECK([cp sample work-sample])
+#AT_DATA([input.txt],
+#[])
+#AT_CHECK([cobj-idx load work-sample < input.txt])
+#AT_CHECK([IDX_FILE_PATH=work-sample java load], [0],
+#[a0000b0000c0000d0000e000000000
+#a0001b0001c0001d0001e000100001
+#a0010b0010c0010d0010e001000010
+#a0011b0011c0011d0010e001000011
+#])
+#
+######## test for the file 'sample' with invalid input #######
+#
+## test for input containing short records
+#AT_CHECK([cp sample work-sample])
+#AT_DATA([input.txt],
+#[a0002b0002c0002d0002e000200002
+#a0012b0012c0012d0012e001200
+#])
+#AT_CHECK([cobj-idx load work-sample < input.txt], [1], [],
+#[error: all record must have the length of 30 bytes
+#])
+#AT_CHECK([IDX_FILE_PATH=work-sample java load], [0],
+#[a0000b0000c0000d0000e000000000
+#a0001b0001c0001d0001e000100001
+#a0010b0010c0010d0010e001000010
+#a0011b0011c0011d0010e001000011
+#])
+#
+## test for input containing long records
+#AT_CHECK([cp sample work-sample])
+#AT_DATA([input.txt],
+#[a0002b0002c0002d0002e000200002
+#a0012b0012c0012d0012e001200012aaa
+#])
+#AT_CHECK([cobj-idx load work-sample < input.txt], [1], [],
+#[error: all record must have the length of 30 bytes
+#])
+#AT_CHECK([IDX_FILE_PATH=work-sample java load], [0],
+#[a0000b0000c0000d0000e000000000
+#a0001b0001c0001d0001e000100001
+#a0010b0010c0010d0010e001000010
+#a0011b0011c0011d0010e001000011
+#])
+#
+## test for input violating the key duplication rule (primary key, #1)
+#AT_CHECK([cp sample work-sample])
+#AT_DATA([input.txt],
+#[a0000b0002c0002d0002e000200002
+#])
+#AT_CHECK([cobj-idx load work-sample < input.txt], [1], [],
+#[error: loading fails because of duplicate keys
+#])
+#AT_CHECK([IDX_FILE_PATH=work-sample java load], [0],
+#[a0000b0000c0000d0000e000000000
+#a0001b0001c0001d0001e000100001
+#a0010b0010c0010d0010e001000010
+#a0011b0011c0011d0010e001000011
+#])
+#
+## test for input violating the key duplication rule (primary key, #2)
+#AT_CHECK([cp sample work-sample])
+#AT_DATA([input.txt],
+#[a0002b0003c0003d0003e000300003
+#a0002b0003c0003d0003e000300003
+#])
+#AT_CHECK([cobj-idx load work-sample < input.txt], [1], [],
+#[error: loading fails because of duplicate keys
+#])
+#AT_CHECK([IDX_FILE_PATH=work-sample java load], [0],
+#[a0000b0000c0000d0000e000000000
+#a0001b0001c0001d0001e000100001
+#a0010b0010c0010d0010e001000010
+#a0011b0011c0011d0010e001000011
+#])
+#
+## test for input violating the key duplication rule (alternate key, #1)
+#AT_CHECK([cp sample work-sample])
+#AT_DATA([input.txt],
+#[a0002b0001c0002d0002e000200002
+#])
+#AT_CHECK([cobj-idx load work-sample < input.txt], [1], [],
+#[error: loading fails because of duplicate keys
+#])
+#AT_CHECK([IDX_FILE_PATH=work-sample java load], [0],
+#[a0000b0000c0000d0000e000000000
+#a0001b0001c0001d0001e000100001
+#a0010b0010c0010d0010e001000010
+#a0011b0011c0011d0010e001000011
+#])
+#
+## test for input violating the key duplication rule (alternate key, #2)
+#AT_CHECK([cp sample work-sample])
+#AT_DATA([input.txt],
+#[a0002b0002c0002d0002e000200002
+#a0003b0002c0003d0003e000300003
+#])
+#AT_CHECK([cobj-idx load work-sample < input.txt], [1], [],
+#[error: loading fails because of duplicate keys
+#])
+#AT_CHECK([IDX_FILE_PATH=work-sample java load], [0],
+#[a0000b0000c0000d0000e000000000
+#a0001b0001c0001d0001e000100001
+#a0010b0010c0010d0010e001000010
+#a0011b0011c0011d0010e001000011
+#])
+#
+######## test for the file 'empty' with valid input #######
+## basic test
+#AT_CHECK([cp empty work-empty])
+#AT_DATA([input.txt],
+#[a0002b0002c0002d0002e000200002
+#a0012b0012c0012d0012e001200012
+#])
+#AT_CHECK([cobj-idx load work-empty < input.txt])
+#AT_CHECK([IDX_FILE_PATH=work-empty java load], [0],
+#[a0002b0002c0002d0002e000200002
+#a0012b0012c0012d0012e001200012
+#])
+#
+## test for duplicate keys
+#AT_CHECK([cp empty work-empty])
+#AT_DATA([input.txt],
+#[a0002b0002c0002d0000e000000002
+#a0012b0012c0012d0010e001000012
+#])
+#AT_CHECK([cobj-idx load work-empty < input.txt])
+#AT_CHECK([IDX_FILE_PATH=work-empty java load], [0],
+#[a0002b0002c0002d0000e000000002
+#a0012b0012c0012d0010e001000012
+#])
+#
+## test with empty input
+#AT_CHECK([cp empty work-empty])
+#AT_DATA([input.txt],
+#[])
+#AT_CHECK([cobj-idx load work-empty < input.txt])
+#AT_CHECK([IDX_FILE_PATH=work-empty java load], [0],
+#[])
+#
+######## test for the file 'empty' with invalid input #######
+#
+## test for input containing short records
+#AT_CHECK([cp empty work-empty])
+#AT_DATA([input.txt],
+#[a0002b0002c0002d0002e000200002
+#a0012b0012c0012d0012e001200
+#])
+#AT_CHECK([cobj-idx load work-empty < input.txt], [1], [],
+#[error: all record must have the length of 30 bytes
+#])
+#AT_CHECK([IDX_FILE_PATH=work-empty java load], [0],
+#[])
+#
+## test for input containing long records
+#AT_CHECK([cp empty work-empty])
+#AT_DATA([input.txt],
+#[a0002b0002c0002d0002e000200002
+#a0012b0012c0012d0012e001200012aaa
+#])
+#AT_CHECK([cobj-idx load work-empty < input.txt], [1], [],
+#[error: all record must have the length of 30 bytes
+#])
+#AT_CHECK([IDX_FILE_PATH=work-empty java load], [0],
+#[])
+#
+## test for input violating the key duplication rule (primary key)
+#AT_CHECK([cp empty work-empty])
+#AT_DATA([input.txt],
+#[a0002b0003c0003d0003e000300003
+#a0002b0003c0003d0003e000300003
+#])
+#AT_CHECK([cobj-idx load work-empty < input.txt], [1], [],
+#[error: loading fails because of duplicate keys
+#])
+#AT_CHECK([IDX_FILE_PATH=work-empty java load], [0],
+#[])
+#
+## test for input violating the key duplication rule (alternate key)
+#AT_CHECK([cp empty work-empty])
+#AT_DATA([input.txt],
+#[a0002b0002c0002d0002e000200002
+#a0003b0002c0003d0003e000300003
+#])
+#AT_CHECK([cobj-idx load work-empty < input.txt], [1], [],
+#[error: loading fails because of duplicate keys
+#])
+#AT_CHECK([IDX_FILE_PATH=work-empty java load], [0],
+#[])
+#
+######## test for the file 'idx-invalid-file' with valid input #######
+## basic test
+#AT_CHECK([cp idx-invalid-file work-idx-invalid-file])
+#AT_DATA([input.txt],
+#[a0002b0002c0002d0002e000200002
+#a0012b0012c0012d0012e001200012
+#])
+#AT_CHECK([cobj-idx load work-idx-invalid-file < input.txt], [1], [],
+#[error: 'work-idx-invalid-file' is not a valid indexed file.
+#])
+#
+## test for duplicate keys
+#AT_CHECK([cp idx-invalid-file work-idx-invalid-file])
+#AT_DATA([input.txt],
+#[a0002b0002c0002d0000e000000002
+#a0012b0012c0012d0010e001000012
+#])
+#AT_CHECK([cobj-idx load work-idx-invalid-file < input.txt], [1], [],
+#[error: 'work-idx-invalid-file' is not a valid indexed file.
+#])
+#
+## test with idx-invalid-file input
+#AT_CHECK([cp idx-invalid-file work-idx-invalid-file])
+#AT_DATA([input.txt],
+#[])
+#AT_CHECK([cobj-idx load work-idx-invalid-file < input.txt], [1], [],
+#[error: 'work-idx-invalid-file' is not a valid indexed file.
+#])
+#
+######## test for the file 'idx-invalid-file' with invalid input #######
+#
+## test for input containing short records
+#AT_CHECK([cp idx-invalid-file work-idx-invalid-file])
+#AT_DATA([input.txt],
+#[a0002b0002c0002d0002e000200002
+#a0012b0012c0012d0012e001200
+#])
+#AT_CHECK([cobj-idx load work-idx-invalid-file < input.txt], [1], [],
+#[error: 'work-idx-invalid-file' is not a valid indexed file.
+#])
+#AT_CHECK([IDX_FILE_PATH=work-idx-invalid-file java load], [0],
+#[])
+#
+## test for input containing long records
+#AT_CHECK([cp idx-invalid-file work-idx-invalid-file])
+#AT_DATA([input.txt],
+#[a0002b0002c0002d0002e000200002
+#a0012b0012c0012d0012e001200012aaa
+#])
+#AT_CHECK([cobj-idx load work-idx-invalid-file < input.txt], [1], [],
+#[error: 'work-idx-invalid-file' is not a valid indexed file.
+#])
+#AT_CHECK([IDX_FILE_PATH=work-idx-invalid-file java load], [0],
+#[])
+#
+## test for input violating the key duplication rule (primary key)
+#AT_CHECK([cp idx-invalid-file work-idx-invalid-file])
+#AT_DATA([input.txt],
+#[a0002b0003c0003d0003e000300003
+#a0002b0003c0003d0003e000300003
+#])
+#AT_CHECK([cobj-idx load work-idx-invalid-file < input.txt], [1], [],
+#[error: 'work-idx-invalid-file' is not a valid indexed file.
+#])
+#AT_CHECK([IDX_FILE_PATH=work-idx-invalid-file java load], [0],
+#[])
+#
+## test for input violating the key duplication rule (alternate key)
+#AT_CHECK([cp idx-invalid-file work-idx-invalid-file])
+#AT_DATA([input.txt],
+#[a0002b0002c0002d0002e000200002
+#a0003b0002c0003d0003e000300003
+#])
+#AT_CHECK([cobj-idx load work-idx-invalid-file < input.txt], [1], [],
+#[error: 'work-idx-invalid-file' is not a valid indexed file.
+#])
+#AT_CHECK([IDX_FILE_PATH=work-idx-invalid-file java load], [0],
+#[])
+#
+######## test for the file 'dir-idx-file' with valid input #######
+## basic test
+#AT_CHECK([cp -r dir-idx-file work-dir-idx-file])
+#AT_DATA([input.txt],
+#[a0002b0002c0002d0002e000200002
+#a0012b0012c0012d0012e001200012
+#])
+#AT_CHECK([cobj-idx load work-dir-idx-file < input.txt], [1], [],
+#[error: 'work-dir-idx-file' is not a valid indexed file.
+#])
+#
+## test for duplicate keys
+#AT_CHECK([cp -r dir-idx-file work-dir-idx-file])
+#AT_DATA([input.txt],
+#[a0002b0002c0002d0000e000000002
+#a0012b0012c0012d0010e001000012
+#])
+#AT_CHECK([cobj-idx load work-dir-idx-file < input.txt], [1], [],
+#[error: 'work-dir-idx-file' is not a valid indexed file.
+#])
+#
+## test with dir-idx-file input
+#AT_CHECK([cp -r dir-idx-file work-dir-idx-file])
+#AT_DATA([input.txt],
+#[])
+#AT_CHECK([cobj-idx load work-dir-idx-file < input.txt], [1], [],
+#[error: 'work-dir-idx-file' is not a valid indexed file.
+#])
+#
+######## test for the file 'dir-idx-file' with invalid input #######
+#
+## test for input containing short records
+#AT_CHECK([cp -r dir-idx-file work-dir-idx-file])
+#AT_DATA([input.txt],
+#[a0002b0002c0002d0002e000200002
+#a0012b0012c0012d0012e001200
+#])
+#AT_CHECK([cobj-idx load work-dir-idx-file < input.txt], [1], [],
+#[error: 'work-dir-idx-file' is not a valid indexed file.
+#])
+#AT_CHECK([IDX_FILE_PATH=work-dir-idx-file java load], [0],
+#[])
+#
+## test for input containing long records
+#AT_CHECK([cp -r dir-idx-file work-dir-idx-file])
+#AT_DATA([input.txt],
+#[a0002b0002c0002d0002e000200002
+#a0012b0012c0012d0012e001200012aaa
+#])
+#AT_CHECK([cobj-idx load work-dir-idx-file < input.txt], [1], [],
+#[error: 'work-dir-idx-file' is not a valid indexed file.
+#])
+#AT_CHECK([IDX_FILE_PATH=work-dir-idx-file java load], [0],
+#[])
+#
+## test for input violating the key duplication rule (primary key)
+#AT_CHECK([cp -r dir-idx-file work-dir-idx-file])
+#AT_DATA([input.txt],
+#[a0002b0003c0003d0003e000300003
+#a0002b0003c0003d0003e000300003
+#])
+#AT_CHECK([cobj-idx load work-dir-idx-file < input.txt], [1], [],
+#[error: 'work-dir-idx-file' is not a valid indexed file.
+#])
+#AT_CHECK([IDX_FILE_PATH=work-dir-idx-file java load], [0],
+#[])
+#
+## test for input violating the key duplication rule (alternate key)
+#AT_CHECK([cp -r dir-idx-file work-dir-idx-file])
+#AT_DATA([input.txt],
+#[a0002b0002c0002d0002e000200002
+#a0003b0002c0003d0003e000300003
+#])
+#AT_CHECK([cobj-idx load work-dir-idx-file < input.txt], [1], [],
+#[error: 'work-dir-idx-file' is not a valid indexed file.
+#])
+#AT_CHECK([IDX_FILE_PATH=work-dir-idx-file java load], [0],
+#[])
+#
 AT_CLEANUP

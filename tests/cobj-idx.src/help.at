@@ -1,5 +1,0 @@
-AT_SETUP([help])
-
-AT_CHECK([echo -n hello], [0], [hello])
-
-AT_CLEANUP
