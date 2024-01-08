@@ -101,7 +101,7 @@ AT_CHECK([${COMPILE} empty.cbl])
 AT_CHECK([java empty])
 
 ## a test for an indexed file
-#AT_CHECK([cobj-idx info idx-file], [0],
+#AT_CHECK([${COBJ_IDX} info idx-file], [0],
 #[Size of a record: 30
 #Number of records: 4
 #Primary key position: 1-5
@@ -112,7 +112,7 @@ AT_CHECK([java empty])
 #])
 #
 ## a test for an empty indexed file
-#AT_CHECK([cobj-idx info idx-empty-file], [0],
+#AT_CHECK([${COBJ_IDX} info idx-empty-file], [0],
 #[Size of a record: 30
 #Number of records: 0
 #Primary key position: 1-5
@@ -123,19 +123,19 @@ AT_CHECK([java empty])
 #])
 #
 ## a test for an not-existing file
-#AT_CHECK([cobj-idx info not-existing-file], [1], [],
+#AT_CHECK([${COBJ_IDX} info not-existing-file], [1], [],
 #[error: 'not-existing-file' does not exist.
 #])
 #
 ## a test for a directory
 #AT_CHECK([mkdir indexed-file-dir])
-#AT_CHECK([cobj-idx info indexed-file-dir], [1], [],
+#AT_CHECK([${COBJ_IDX} info indexed-file-dir], [1], [],
 #[error: 'indexed-file-dir' is not a valid indexed file.
 #])
 #
 ## a test for an invalid format file
 #AT_CHECK([echo "info" > invalid-format-indexed-file])
-#AT_CHECK([cobj-idx info invalid-format-indexed-file], [1], [],
+#AT_CHECK([${COBJ_IDX} info invalid-format-indexed-file], [1], [],
 #[error: 'invalid-format-indexed-file' is not a valid indexed file.
 #])
 
@@ -240,7 +240,7 @@ AT_CHECK([${COMPILE} empty.cbl])
 AT_CHECK([java empty])
 
 ## a test for an indexed file
-#AT_CHECK([cobj-idx info idx-file], [0],
+#AT_CHECK([${COBJ_IDX} info idx-file], [0],
 #[Size of a record: 30
 #Number of records: 4
 #Primary key position: 1-5
@@ -251,7 +251,7 @@ AT_CHECK([java empty])
 #])
 #
 ## a test for an empty indexed file
-#AT_CHECK([cobj-idx info idx-empty-file], [0],
+#AT_CHECK([${COBJ_IDX} info idx-empty-file], [0],
 #[Size of a record: 30
 #Number of records: 0
 #Primary key position: 1-5
