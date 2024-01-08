@@ -171,12 +171,11 @@ public class CobolIndexedFile extends CobolFile {
       }
     }
 
-    for (int i = 0; i < this.nkeys; ++i) {
-      String tableName = getTableName(i);
-
-      if (mode == COB_OPEN_OUTPUT
-          || (!fileExists && (mode == COB_OPEN_EXTEND || mode == COB_OPEN_I_O))) {
-        try {
+    if (mode == COB_OPEN_OUTPUT
+        || (!fileExists && (mode == COB_OPEN_EXTEND || mode == COB_OPEN_I_O))) {
+      try {
+        for (int i = 0; i < this.nkeys; ++i) {
+          String tableName = getTableName(i);
           Statement statement = p.connection.createStatement();
           if (i == 0) {
             statement.execute(
@@ -203,9 +202,11 @@ public class CobolIndexedFile extends CobolFile {
           statement.execute(
               String.format("create index %s on %s(key)", getIndexName(i), tableName));
           statement.close();
-        } catch (SQLException e) {
-          return COB_STATUS_30_PERMANENT_ERROR;
         }
+        this.writeMetaData(p);
+        p.connection.commit();
+      } catch (SQLException e) {
+        return COB_STATUS_30_PERMANENT_ERROR;
       }
     }
 
@@ -224,6 +225,38 @@ public class CobolIndexedFile extends CobolFile {
     this.callStart = false;
 
     return 0;
+  }
+
+  // Write a metadata to the database
+  private void writeMetaData(IndexedFile p) throws SQLException {
+    Statement statement = p.connection.createStatement();
+    // Create a table to store metadata
+    statement.execute(
+        "create table metadata_string_int (key text not null primary key, value integer not null)");
+    statement.execute(
+        "create table metadata_key (idx integer not null primary key, offset integer not null, size integer not null, duplicate boolean)");
+
+    // Store the size of a record
+    PreparedStatement recordSizePreparedStmt =
+        p.connection.prepareStatement("insert into metadata_string_int values ('record_size', ?)");
+    recordSizePreparedStmt.setInt(1, this.record_max);
+    recordSizePreparedStmt.execute();
+    recordSizePreparedStmt.close();
+
+    // Store information of all keys
+    PreparedStatement keyPreparedStmt =
+        p.connection.prepareStatement("insert into metadata_key values (?, ?, ?, ?)");
+    for (int i = 0; i < this.nkeys; i++) {
+      keyPreparedStmt.setInt(1, i);
+      keyPreparedStmt.setInt(
+          2,
+          this.keys[i].getField().getDataStorage().getIndex()
+              - this.record.getDataStorage().getIndex());
+      keyPreparedStmt.setInt(3, this.keys[i].getField().getSize());
+      keyPreparedStmt.setBoolean(4, this.keys[i].getFlag() != 0);
+      keyPreparedStmt.execute();
+    }
+    keyPreparedStmt.close();
   }
 
   /** Equivalent to indexed_close in libcob/fileio.c */

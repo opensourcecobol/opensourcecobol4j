@@ -1,36 +1,37 @@
 AT_SETUP([misc])
 
-#AT_CHECK([cobj-idx], [0],
-#[cobj-idx is a utility tool to handle a indexed file of opensource COBOL 4J.
-#
-#Usage:
-#
-#cobj-idx info <indexed-file>   - Show information of the indexed file
-#cobj-idx load <indexed-file>   - Load data inputted from stdin to the indexed file.
-#                                 The format of the input data is line-sequential of COBOL.
-#cobj-idx unload <indexed-file> - Write recods stored in the indexed file to stdout.
-#                                 The format of the output data is line-sequential of COBOL.
-#])
-#
-#AT_CHECK([cobj-idx --version | grep -v '@<:@0-9@:>@\+\.@<:@0-9@:>@\+\.@<:@0-9@:>@\+'])
-#
-#AT_CHECK([cobj-idx info], [1],
+AT_CHECK([${COBJ_IDX}], [0],
+[cobj-idx - Utility tool to handle a indexed file of opensource COBOL 4J
+
+Usage:
+
+cobj-idx info <indexed-file>   - Show information of the indexed file.
+cobj-idx load <indexed-file>   - Load data inputted from stdin to the indexed file.
+                                 The format of the input data is line-sequential of COBOL.
+cobj-idx unload <indexed-file> - Write records stored in the indexed file to stdout.
+                                 The format of the output data is line-sequential of COBOL.
+])
+
+#AT_CHECK([${COBJ_IDX} --version | grep -v '@<:@0-9@:>@\+\.@<:@0-9@:>@\+\.@<:@0-9@:>@\+'])
+
+AT_CHECK([${COBJ_IDX} info], [1], [],
+[error: no indexed file is specified.
+])
+
+#AT_CHECK([${COBJ_IDX} load], [1], [],
 #[error: no indexed file is specified.
 #])
-#AT_CHECK([cobj-idx load], [1],
+#AT_CHECK([${COBJ_IDX} unload], [1], [],
 #[error: no indexed file is specified.
 #])
-#AT_CHECK([cobj-idx unload], [1],
-#[error: no indexed file is specified.
-#])
-#
-#AT_CHECK([cobj-idx info file1 file2], [1],
+
+AT_CHECK([${COBJ_IDX} info file1 file2], [1], [],
+[error: too many indexed files are specified.
+])
+#AT_CHECK([${COBJ_IDX} load file1 file2], [1], [],
 #[error: too many indexed files are specified.
 #])
-#AT_CHECK([cobj-idx load file1 file2], [1],
-#[error: too many indexed files are specified.
-#])
-#AT_CHECK([cobj-idx unload], [1],
+#AT_CHECK([${COBJ_IDX} unload], [1], [],
 #[error: too many indexed files are specified.
 #])
 
