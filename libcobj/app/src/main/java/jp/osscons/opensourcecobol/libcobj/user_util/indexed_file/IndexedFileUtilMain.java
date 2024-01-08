@@ -1,5 +1,13 @@
 package jp.osscons.opensourcecobol.libcobj.user_util.indexed_file;
 
+import java.io.File;
+import java.sql.Connection;
+import java.sql.DriverManager;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.sql.Statement;
+import org.sqlite.SQLiteConfig;
+
 public class IndexedFileUtilMain {
   public static void main(String[] args) {
     if (args.length == 0) {
@@ -47,6 +55,74 @@ public class IndexedFileUtilMain {
   }
 
   private static void processInfoCommand(String indexedFilePath) {
+    File indexedFile = new File(indexedFilePath);
+    if (!indexedFile.exists()) {
+      System.err.println("error: '" + indexedFilePath + "' does not exist.");
+      System.exit(1);
+    }
+    if (!indexedFile.isFile()) {
+      System.err.println("error: '" + indexedFilePath + "' is not a valid indexed file.");
+      System.exit(1);
+    }
 
+    SQLiteConfig config = new SQLiteConfig();
+    config.setReadOnly(true);
+    Connection conn = null;
+    StringBuilder sb = new StringBuilder();
+
+    try {
+      conn = DriverManager.getConnection("jdbc:sqlite:" + indexedFilePath, config.toProperties());
+      Statement stmt = conn.createStatement();
+
+      ResultSet rs =
+          stmt.executeQuery("select value from metadata_string_int where key = 'record_size'");
+      if (!rs.next()) {
+        System.err.println("error: '" + indexedFilePath + "' is not a valid indexed file.");
+        System.exit(1);
+      }
+      int recordSize = rs.getInt("value");
+      sb.append("Size of a record: " + recordSize + "\n");
+
+      rs = stmt.executeQuery("select count(*) from table0");
+      if (!rs.next()) {
+        System.err.println("error: '" + indexedFilePath + "' is not a valid indexed file.");
+        System.exit(1);
+      }
+      sb.append("Number of records: " + rs.getInt(1) + "\n");
+
+      rs = stmt.executeQuery("select idx, offset, size, duplicate from metadata_key order by idx");
+      while (rs.next()) {
+        int idx = rs.getInt("idx");
+        int offset = rs.getInt("offset") + 1;
+        int size = rs.getInt("size");
+        boolean duplicate = rs.getBoolean("duplicate");
+        if (idx == 0) {
+          sb.append("Primary key position: ");
+        } else {
+          sb.append("Alternate key position ");
+          if (duplicate) {
+            sb.append("(Duplicates): ");
+          } else {
+            sb.append("(No duplicate): ");
+          }
+        }
+        sb.append(offset + "-" + (offset + size - 1) + "\n");
+      }
+
+      System.out.print(sb.toString());
+      System.exit(0);
+    } catch (SQLException e) {
+      System.err.println("error: '" + indexedFilePath + "' is not a valid indexed file.");
+      System.exit(1);
+    } finally {
+      if (conn != null) {
+        try {
+          conn.close();
+        } catch (SQLException e) {
+          System.err.println("error: '" + indexedFilePath + "' is not a valid indexed file.");
+          System.exit(1);
+        }
+      }
+    }
   }
 }

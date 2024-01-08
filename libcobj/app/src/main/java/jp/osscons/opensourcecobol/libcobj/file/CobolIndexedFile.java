@@ -204,6 +204,7 @@ public class CobolIndexedFile extends CobolFile {
           statement.close();
         }
         this.writeMetaData(p);
+        p.connection.commit();
       } catch (SQLException e) {
         return COB_STATUS_30_PERMANENT_ERROR;
       }
