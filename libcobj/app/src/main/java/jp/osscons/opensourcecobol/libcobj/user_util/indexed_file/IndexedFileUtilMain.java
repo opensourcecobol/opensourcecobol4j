@@ -149,17 +149,17 @@ public class IndexedFileUtilMain {
       }
 
       System.out.print(sb.toString());
+      conn.close();
       return 0;
     } catch (SQLException e) {
-      return ErrorLib.errorInvalidIndexedFile(indexedFilePath);
-    } finally {
       if (conn != null) {
         try {
           conn.close();
-        } catch (SQLException e) {
-          return ErrorLib.errorInvalidIndexedFile(indexedFilePath);
+        } catch (SQLException ee) {
+          return ErrorLib.errorIO();
         }
       }
+      return ErrorLib.errorInvalidIndexedFile(indexedFilePath);
     }
   }
 
@@ -302,17 +302,17 @@ public class IndexedFileUtilMain {
               false,
               false,
               (char) 0);
+      conn.close();
       return Optional.of(cobolFile);
     } catch (SQLException e) {
-      return Optional.empty();
-    } finally {
       if (conn != null) {
         try {
           conn.close();
-        } catch (SQLException e) {
+        } catch (SQLException ee) {
           return Optional.empty();
         }
       }
+      return Optional.empty();
     }
   }
 }
