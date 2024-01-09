@@ -25,7 +25,8 @@ public class IndexedFileUtilMain {
         System.exit(1);
       }
       String indexedFilePath = args[1];
-      processInfoCommand(indexedFilePath);
+      int exitCode = processInfoCommand(indexedFilePath);
+      System.exit(exitCode);
     } else if ("load".equals(subCommand)) {
       System.err.println("error: load command is not implemented yet.");
       System.exit(1);
@@ -54,15 +55,13 @@ public class IndexedFileUtilMain {
         "                                 The format of the output data is line-sequential of COBOL.");
   }
 
-  private static void processInfoCommand(String indexedFilePath) {
+  private static int processInfoCommand(String indexedFilePath) {
     File indexedFile = new File(indexedFilePath);
     if (!indexedFile.exists()) {
-      System.err.println("error: '" + indexedFilePath + "' does not exist.");
-      System.exit(1);
+      return ErrorLib.errorFileDoesNotExist(indexedFilePath);
     }
     if (!indexedFile.isFile()) {
-      System.err.println("error: '" + indexedFilePath + "' is not a valid indexed file.");
-      System.exit(1);
+      return ErrorLib.errorInvalidIndexedFile(indexedFilePath);
     }
 
     SQLiteConfig config = new SQLiteConfig();
@@ -77,16 +76,14 @@ public class IndexedFileUtilMain {
       ResultSet rs =
           stmt.executeQuery("select value from metadata_string_int where key = 'record_size'");
       if (!rs.next()) {
-        System.err.println("error: '" + indexedFilePath + "' is not a valid indexed file.");
-        System.exit(1);
+        return ErrorLib.errorInvalidIndexedFile(indexedFilePath);
       }
       int recordSize = rs.getInt("value");
       sb.append("Size of a record: " + recordSize + "\n");
 
       rs = stmt.executeQuery("select count(*) from table0");
       if (!rs.next()) {
-        System.err.println("error: '" + indexedFilePath + "' is not a valid indexed file.");
-        System.exit(1);
+        return ErrorLib.errorInvalidIndexedFile(indexedFilePath);
       }
       sb.append("Number of records: " + rs.getInt(1) + "\n");
 
@@ -110,17 +107,15 @@ public class IndexedFileUtilMain {
       }
 
       System.out.print(sb.toString());
-      System.exit(0);
+      return 0;
     } catch (SQLException e) {
-      System.err.println("error: '" + indexedFilePath + "' is not a valid indexed file.");
-      System.exit(1);
+      return ErrorLib.errorInvalidIndexedFile(indexedFilePath);
     } finally {
       if (conn != null) {
         try {
           conn.close();
         } catch (SQLException e) {
-          System.err.println("error: '" + indexedFilePath + "' is not a valid indexed file.");
-          System.exit(1);
+          return ErrorLib.errorInvalidIndexedFile(indexedFilePath);
         }
       }
     }
