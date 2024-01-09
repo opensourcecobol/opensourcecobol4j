@@ -64,37 +64,37 @@ public class CobolFile {
   protected static final int COB_IO_UNLOCK = 9;
   protected static final int COB_IO_DELETE_FILE = 10;
 
-  protected static final int COB_OPEN_CLOSED = 0;
-  protected static final int COB_OPEN_INPUT = 1;
-  protected static final int COB_OPEN_OUTPUT = 2;
-  protected static final int COB_OPEN_I_O = 3;
-  protected static final int COB_OPEN_EXTEND = 4;
-  protected static final int COB_OPEN_LOCKED = 5;
+  public static final int COB_OPEN_CLOSED = 0;
+  public static final int COB_OPEN_INPUT = 1;
+  public static final int COB_OPEN_OUTPUT = 2;
+  public static final int COB_OPEN_I_O = 3;
+  public static final int COB_OPEN_EXTEND = 4;
+  public static final int COB_OPEN_LOCKED = 5;
 
-  protected static final int COB_CLOSE_NORMAL = 0;
-  protected static final int COB_CLOSE_LOCK = 1;
-  protected static final int COB_CLOSE_NO_REWIND = 2;
-  protected static final int COB_CLOSE_UNIT = 3;
-  protected static final int COB_CLOSE_UNIT_REMOVAL = 4;
+  public static final int COB_CLOSE_NORMAL = 0;
+  public static final int COB_CLOSE_LOCK = 1;
+  public static final int COB_CLOSE_NO_REWIND = 2;
+  public static final int COB_CLOSE_UNIT = 3;
+  public static final int COB_CLOSE_UNIT_REMOVAL = 4;
 
-  protected static final int COB_WRITE_MASK = 0x0000ffff;
-  protected static final int COB_WRITE_LINES = 0x00010000;
-  protected static final int COB_WRITE_PAGE = 0x00020000;
-  protected static final int COB_WRITE_CHANNEL = 0x00040000;
-  protected static final int COB_WRITE_AFTER = 0x00100000;
-  protected static final int COB_WRITE_BEFORE = 0x00200000;
-  protected static final int COB_WRITE_EOP = 0x00400000;
-  protected static final int COB_WRITE_LOCK = 0x00800000;
+  public static final int COB_WRITE_MASK = 0x0000ffff;
+  public static final int COB_WRITE_LINES = 0x00010000;
+  public static final int COB_WRITE_PAGE = 0x00020000;
+  public static final int COB_WRITE_CHANNEL = 0x00040000;
+  public static final int COB_WRITE_AFTER = 0x00100000;
+  public static final int COB_WRITE_BEFORE = 0x00200000;
+  public static final int COB_WRITE_EOP = 0x00400000;
+  public static final int COB_WRITE_LOCK = 0x00800000;
 
-  protected static final int COB_READ_NEXT = 0x01;
-  protected static final int COB_READ_PREVIOUS = 0x2;
-  protected static final int COB_READ_FIRST = 0x04;
-  protected static final int COB_READ_LAST = 0x08;
-  protected static final int COB_READ_LOCK = 0x10;
-  protected static final int COB_READ_NO_LOCK = 0x20;
-  protected static final int COB_READ_KEPT_LOCK = 0x40;
-  protected static final int COB_READ_WAIT_LOCK = 0x80;
-  protected static final int COB_READ_IGNORE_LOCK = 0x100;
+  public static final int COB_READ_NEXT = 0x01;
+  public static final int COB_READ_PREVIOUS = 0x2;
+  public static final int COB_READ_FIRST = 0x04;
+  public static final int COB_READ_LAST = 0x08;
+  public static final int COB_READ_LOCK = 0x10;
+  public static final int COB_READ_NO_LOCK = 0x20;
+  public static final int COB_READ_KEPT_LOCK = 0x40;
+  public static final int COB_READ_WAIT_LOCK = 0x80;
+  public static final int COB_READ_IGNORE_LOCK = 0x100;
 
   protected static final String TIS_DEFINE_USERFH = "OC_USERFH";
   protected static final String COB_IO_CREATES = "OC_IO_CREATES";
@@ -189,7 +189,7 @@ public class CobolFile {
   public String select_name;
   public byte[] file_status;
   protected AbstractCobolField assign;
-  protected AbstractCobolField record;
+  public AbstractCobolField record;
   protected AbstractCobolField record_size;
   protected CobolFileKey[] keys;
   public FileIO file;

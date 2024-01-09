@@ -22,4 +22,15 @@ public class ErrorLib {
     System.err.println("error: '" + indexedFilePath + "' is not a valid indexed file.");
     return 1;
   }
+
+  /**
+   * Error when IO operations of indexed files
+   *
+   * @param indexedFilePath
+   * @return 1
+   */
+  public static int errorIO() {
+    System.err.println("error: IO error.");
+    return 1;
+  }
 }

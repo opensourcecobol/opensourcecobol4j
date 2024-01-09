@@ -107,27 +107,25 @@ AT_CHECK([echo "invalid data" > idx-invalid-file])
 # Create a directory (This is not a valid indexed file)
 AT_CHECK([mkdir dir-idx-file])
 
-#AT_CHECK([${COBJ_IDX} unload idx-file], [0],
-#[a0000b0000c0000d0000e000000000
-#a0001b0001c0001d0001e000100001
-#a0010b0010c0010d0010e001000010
-#a0011b0011c0011d0010e001000011
-#])
-#
-#AT_CHECK([${COBJ_IDX} unload idx-empty-file], [0],
-#[
-#])
-#
-#AT_CHECK([${COBJ_IDX} unload idx-invalid-file], [1], [],
-#[error: 'idx-invalid-file' is not a valid indexed file.
-#])
-#
-#AT_CHECK([${COBJ_IDX} unload not-existing-file], [1], [],,
-#[error: 'not-existing-file' does not exist.
-#])
-#
-#AT_CHECK([${COBJ_IDX} unload dir-idx-file], [1], [],
-#[error: 'dir-idx-file' is not a valid indexed file.
-#])
+AT_CHECK([${COBJ_IDX} unload idx-file], [0],
+[a0000b0000c0000d0000e000000000
+a0001b0001c0001d0001e000100001
+a0010b0010c0010d0010e001000010
+a0011b0011c0011d0010e001000011
+])
+
+AT_CHECK([${COBJ_IDX} unload idx-empty-file])
+
+AT_CHECK([${COBJ_IDX} unload idx-invalid-file], [1], [],
+[error: 'idx-invalid-file' is not a valid indexed file.
+])
+
+AT_CHECK([${COBJ_IDX} unload not-existing-file], [1], [],
+[error: 'not-existing-file' does not exist.
+])
+
+AT_CHECK([${COBJ_IDX} unload dir-idx-file], [1], [],
+[error: 'dir-idx-file' is not a valid indexed file.
+])
 
 AT_CLEANUP
