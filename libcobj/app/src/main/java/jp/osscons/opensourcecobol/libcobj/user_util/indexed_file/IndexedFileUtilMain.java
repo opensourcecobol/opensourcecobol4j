@@ -8,7 +8,17 @@ import java.sql.SQLException;
 import java.sql.Statement;
 import org.sqlite.SQLiteConfig;
 
+/**
+ * Main class of the utility tool `cobj-idx` to handle a indexed file of opensource COBOL 4J. This
+ * tool is used to show information of the indexed file, load data to the indexed file, and unload
+ * data from the indexed file.
+ */
 public class IndexedFileUtilMain {
+  /**
+   * Main method
+   *
+   * @param args
+   */
   public static void main(String[] args) {
     if (args.length == 0) {
       printHelpMessage();
@@ -39,6 +49,7 @@ public class IndexedFileUtilMain {
     }
   }
 
+  /** Print help message. */
   private static void printHelpMessage() {
     System.out.println("cobj-idx - Utility tool to handle a indexed file of opensource COBOL 4J");
     System.out.println();
@@ -55,6 +66,12 @@ public class IndexedFileUtilMain {
         "                                 The format of the output data is line-sequential of COBOL.");
   }
 
+  /**
+   * Process info sub command, which shows information of the indexed file.
+   *
+   * @param indexedFilePath
+   * @return 0 if success, otherwise non-zero. The return value is error code.
+   */
   private static int processInfoCommand(String indexedFilePath) {
     File indexedFile = new File(indexedFilePath);
     if (!indexedFile.exists()) {
@@ -70,9 +87,11 @@ public class IndexedFileUtilMain {
     StringBuilder sb = new StringBuilder();
 
     try {
+      // Open the database file.
       conn = DriverManager.getConnection("jdbc:sqlite:" + indexedFilePath, config.toProperties());
       Statement stmt = conn.createStatement();
 
+      // Retrieve the record size
       ResultSet rs =
           stmt.executeQuery("select value from metadata_string_int where key = 'record_size'");
       if (!rs.next()) {
@@ -81,12 +100,14 @@ public class IndexedFileUtilMain {
       int recordSize = rs.getInt("value");
       sb.append("Size of a record: " + recordSize + "\n");
 
+      // Retrieve the number of records
       rs = stmt.executeQuery("select count(*) from table0");
       if (!rs.next()) {
         return ErrorLib.errorInvalidIndexedFile(indexedFilePath);
       }
       sb.append("Number of records: " + rs.getInt(1) + "\n");
 
+      // Retrieve the number of keys
       rs = stmt.executeQuery("select idx, offset, size, duplicate from metadata_key order by idx");
       while (rs.next()) {
         int idx = rs.getInt("idx");
