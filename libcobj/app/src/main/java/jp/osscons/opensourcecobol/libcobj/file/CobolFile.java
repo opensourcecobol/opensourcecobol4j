@@ -834,6 +834,11 @@ public class CobolFile {
       Linage lingptr = this.getLinorkeyptr();
       lingptr.getLinageCtr().setInt(1);
     }
+    if ((this.organization == COB_ORG_SEQUENTIAL || this.organization == COB_ORG_LINE_SEQUENTIAL)
+        && (mode == COB_OPEN_OUTPUT || mode == COB_OPEN_EXTEND)
+        && CobolUtil.fileSeqWriteBufferSize > 0) {
+      this.file.prepareWriteBuffer(CobolUtil.fileSeqWriteBufferSize * this.record_max);
+    }
     return 0;
   }
 
