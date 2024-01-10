@@ -617,18 +617,16 @@ public class CobolUtil {
    * @param size
    * @return
    */
-  public static int isNationalPadding(CobolDataStorage s, int size) {
+  public static int isNationalPadding(int offset, CobolDataStorage s, int size) {
     int ret = 1;
     int i = 0;
-    OUTER_LOOP:
     while (i < size && ret != 0) {
-      if (s.getByte(i) == ' ') {
+      if (s.getByte(offset + i) == ' ') {
         i++;
-      } else if (size - i > CobolConstant.ZENCSIZ) {
+      } else if (size - i >= CobolConstant.ZENCSIZ) {
         for (int j = 0; j < CobolConstant.ZENCSIZ; ++j) {
-          if (s.getByte(i + j) != CobolConstant.ZENSPC[j]) {
-            i += CobolConstant.ZENCSIZ;
-            continue OUTER_LOOP;
+          if (s.getByte(offset + i + j) != CobolConstant.ZENSPC[j]) {
+            return 0;
           }
         }
         i += CobolConstant.ZENCSIZ;

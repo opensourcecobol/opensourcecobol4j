@@ -1298,7 +1298,7 @@ public abstract class AbstractCobolField {
         if ((lf.getAttribute().getType() & CobolFieldAttribute.COB_TYPE_NATIONAL) != 0) {
           ret =
               CobolUtil.isNationalPadding(
-                  lf.getDataStorage().getSubDataStorage(sf.getSize()), lf.getSize() - sf.getSize());
+                  sf.getSize(), lf.getDataStorage(), lf.getSize() - sf.getSize());
         } else {
           ret =
               CobolUtil.commonCmpc(
