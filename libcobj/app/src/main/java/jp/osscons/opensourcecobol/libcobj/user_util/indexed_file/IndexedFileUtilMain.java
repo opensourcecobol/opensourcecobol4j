@@ -9,15 +9,18 @@ import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
+import java.util.Scanner;
 import jp.osscons.opensourcecobol.libcobj.common.CobolModule;
 import jp.osscons.opensourcecobol.libcobj.data.AbstractCobolField;
 import jp.osscons.opensourcecobol.libcobj.data.CobolDataStorage;
 import jp.osscons.opensourcecobol.libcobj.data.CobolFieldAttribute;
 import jp.osscons.opensourcecobol.libcobj.data.CobolFieldFactory;
 import jp.osscons.opensourcecobol.libcobj.exceptions.CobolRuntimeException;
+import jp.osscons.opensourcecobol.libcobj.exceptions.CobolStopRunException;
 import jp.osscons.opensourcecobol.libcobj.file.CobolFile;
 import jp.osscons.opensourcecobol.libcobj.file.CobolFileFactory;
 import jp.osscons.opensourcecobol.libcobj.file.CobolFileKey;
+import jp.osscons.opensourcecobol.libcobj.file.CobolIndexedFile;
 import org.sqlite.SQLiteConfig;
 
 /**
@@ -50,8 +53,17 @@ public class IndexedFileUtilMain {
       int exitCode = processInfoCommand(indexedFilePath);
       System.exit(exitCode);
     } else if ("load".equals(subCommand)) {
-      System.err.println("error: load command is not implemented yet.");
-      System.exit(1);
+      if (args.length != 2) {
+        if (args.length < 2) {
+          System.err.println("error: no indexed file is specified.");
+        } else {
+          System.err.println("error: too many indexed files are specified.");
+        }
+        System.exit(1);
+      }
+      String indexedFilePath = args[1];
+      int exitCode = processLoadCommand(indexedFilePath);
+      System.exit(exitCode);
     } else if ("unload".equals(subCommand)) {
       if (args.length != 2) {
         if (args.length < 2) {
@@ -160,6 +172,82 @@ public class IndexedFileUtilMain {
         }
       }
       return ErrorLib.errorInvalidIndexedFile(indexedFilePath);
+    }
+  }
+
+  enum LoadResult {
+    Success,
+    DataSizeMismatch,
+    Other,
+  };
+  /**
+   * Process load sub command, which loads data inputted from stdin to the indexed file.
+   *
+   * @param indexedFilePath
+   * @return
+   */
+  private static int processLoadCommand(String indexedFilePath) {
+    File indexedFile = new File(indexedFilePath);
+    if (!indexedFile.exists()) {
+      return ErrorLib.errorFileDoesNotExist(indexedFilePath);
+    }
+    if (!indexedFile.isFile()) {
+      return ErrorLib.errorInvalidIndexedFile(indexedFilePath);
+    }
+    Optional<CobolFile> cobolFileRet = createCobolFileFromIndexedFilePath(indexedFilePath);
+    if (!cobolFileRet.isPresent()) {
+      return ErrorLib.errorInvalidIndexedFile(indexedFilePath);
+    }
+    CobolIndexedFile cobolIndexedFile = (CobolIndexedFile) cobolFileRet.get();
+
+    // Set the module
+    CobolModule module =
+        new CobolModule(null, null, null, null, 0, '.', '$', ',', 1, 1, 1, 0, null);
+    CobolModule.push(module);
+
+    // Open the indexed file
+    CobolRuntimeException.code = 0;
+    cobolIndexedFile.setCommitOnModification(false);
+    cobolIndexedFile.open(CobolFile.COB_OPEN_EXTEND, 0, null);
+    if (CobolRuntimeException.code != 0) {
+      return ErrorLib.errorIO();
+    }
+
+    // Read records from stdin and write them to the indexed file
+    String line = null;
+    Scanner scan = new Scanner(System.in);
+    LoadResult loadResult = LoadResult.Success;
+    while (scan.hasNextLine()) {
+      line = scan.nextLine();
+      CobolRuntimeException.code = 0;
+      byte[] readData = line.getBytes();
+      if (readData.length != cobolIndexedFile.record.getSize()) {
+        loadResult = LoadResult.DataSizeMismatch;
+        break;
+      }
+      cobolIndexedFile.record.getDataStorage().memcpy(readData);
+      try {
+        cobolIndexedFile.write(cobolIndexedFile.record, 0, null);
+      } catch (CobolStopRunException e) {
+        loadResult = LoadResult.Other;
+        break;
+      }
+      if (CobolRuntimeException.code != 0) {
+        loadResult = LoadResult.Other;
+        break;
+      }
+    }
+
+    scan.close();
+
+    if (loadResult == LoadResult.DataSizeMismatch) {
+      return ErrorLib.errorDataSizeMismatch(cobolIndexedFile.record.getSize());
+    } else if (loadResult == LoadResult.Other) {
+      return ErrorLib.errorDuplicateKeys();
+    } else {
+      cobolIndexedFile.commitJdbcTransaction();
+      cobolIndexedFile.close(0, null);
+      return 0;
     }
   }
 
