@@ -176,9 +176,9 @@ public class IndexedFileUtilMain {
   }
 
   enum LoadResult {
-    Success,
-    DataSizeMismatch,
-    Other,
+    LoadResultSuccess,
+    LoadResultDataSizeMismatch,
+    LoadResultOther,
   };
   /**
    * Process load sub command, which loads data inputted from stdin to the indexed file.
@@ -216,33 +216,33 @@ public class IndexedFileUtilMain {
     // Read records from stdin and write them to the indexed file
     String line = null;
     Scanner scan = new Scanner(System.in);
-    LoadResult loadResult = LoadResult.Success;
+    LoadResult loadResult = LoadResult.LoadResultSuccess;
     while (scan.hasNextLine()) {
       line = scan.nextLine();
       CobolRuntimeException.code = 0;
       byte[] readData = line.getBytes();
       if (readData.length != cobolIndexedFile.record.getSize()) {
-        loadResult = LoadResult.DataSizeMismatch;
+        loadResult = LoadResult.LoadResultDataSizeMismatch;
         break;
       }
       cobolIndexedFile.record.getDataStorage().memcpy(readData);
       try {
         cobolIndexedFile.write(cobolIndexedFile.record, 0, null);
       } catch (CobolStopRunException e) {
-        loadResult = LoadResult.Other;
+        loadResult = LoadResult.LoadResultOther;
         break;
       }
       if (CobolRuntimeException.code != 0) {
-        loadResult = LoadResult.Other;
+        loadResult = LoadResult.LoadResultOther;
         break;
       }
     }
 
     scan.close();
 
-    if (loadResult == LoadResult.DataSizeMismatch) {
+    if (loadResult == LoadResult.LoadResultDataSizeMismatch) {
       return ErrorLib.errorDataSizeMismatch(cobolIndexedFile.record.getSize());
-    } else if (loadResult == LoadResult.Other) {
+    } else if (loadResult == LoadResult.LoadResultOther) {
       return ErrorLib.errorDuplicateKeys();
     } else {
       cobolIndexedFile.commitJdbcTransaction();
