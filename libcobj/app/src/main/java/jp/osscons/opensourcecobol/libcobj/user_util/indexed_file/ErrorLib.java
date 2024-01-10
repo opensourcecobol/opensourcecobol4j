@@ -33,4 +33,25 @@ public class ErrorLib {
     System.err.println("error: IO error.");
     return 1;
   }
+
+  /**
+   * Error when some keys in input data have conflicts
+   *
+   * @return
+   */
+  public static int errorDuplicateKeys() {
+    System.err.println("error: loading fails because of duplicate keys.");
+    return 1;
+  }
+
+  /**
+   * Error when some records in input data have invalid size
+   *
+   * @param correctSize
+   * @return
+   */
+  public static int errorDataSizeMismatch(int correctSize) {
+    System.err.println("error: all record must have the length of " + correctSize + " bytes.");
+    return 1;
+  }
 }

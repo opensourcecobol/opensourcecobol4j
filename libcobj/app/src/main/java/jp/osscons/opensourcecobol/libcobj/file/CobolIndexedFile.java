@@ -39,6 +39,7 @@ public class CobolIndexedFile extends CobolFile {
   private boolean updateWhileReading = false;
   private boolean indexedFirstRead = true;
   private boolean callStart = false;
+  private boolean commitOnModification = true;
 
   public static final int COB_EQ = 1;
   public static final int COB_LT = 2;
@@ -119,6 +120,10 @@ public class CobolIndexedFile extends CobolFile {
 
   private static String getConstraintName(int index) {
     return String.format("constraint%d", index);
+  }
+
+  public void setCommitOnModification(boolean commitOnModification) {
+    this.commitOnModification = commitOnModification;
   }
 
   /** Equivalent to DBT_SET in libcob/fileio.c */
@@ -204,7 +209,9 @@ public class CobolIndexedFile extends CobolFile {
           statement.close();
         }
         this.writeMetaData(p);
-        p.connection.commit();
+        if (this.commitOnModification) {
+          p.connection.commit();
+        }
       } catch (SQLException e) {
         return COB_STATUS_30_PERMANENT_ERROR;
       }
@@ -482,7 +489,9 @@ public class CobolIndexedFile extends CobolFile {
       insertStatement.setBytes(1, p.key);
       insertStatement.setBytes(2, p.data);
       insertStatement.execute();
-      p.connection.commit();
+      if (this.commitOnModification) {
+        p.connection.commit();
+      }
     } catch (SQLException e) {
       return returnWith(p, closeCursor, 0, COB_STATUS_51_RECORD_LOCKED);
     }
@@ -515,7 +524,9 @@ public class CobolIndexedFile extends CobolFile {
           insertStatement.setBytes(2, p.data);
         }
         insertStatement.execute();
-        p.connection.commit();
+        if (this.commitOnModification) {
+          p.connection.commit();
+        }
       } catch (SQLException e) {
         return returnWith(p, closeCursor, 0, COB_STATUS_51_RECORD_LOCKED);
       }
@@ -649,10 +660,12 @@ public class CobolIndexedFile extends CobolFile {
       }
     }
 
-    try {
-      p.connection.commit();
-    } catch (SQLException e) {
-      return returnWith(p, closeCursor, 0, COB_STATUS_30_PERMANENT_ERROR);
+    if (this.commitOnModification) {
+      try {
+        p.connection.commit();
+      } catch (SQLException e) {
+        return returnWith(p, closeCursor, 0, COB_STATUS_30_PERMANENT_ERROR);
+      }
     }
 
     this.updateWhileReading = true;
@@ -669,5 +682,14 @@ public class CobolIndexedFile extends CobolFile {
   @Override
   public void unlock_() {
     System.err.println("Unlocking INDEXED file is not implemented");
+  }
+
+  public void commitJdbcTransaction() {
+    IndexedFile p = this.filei;
+    try {
+      p.connection.commit();
+    } catch (SQLException e) {
+      System.err.println("Failed to commit a transaction");
+    }
   }
 }

@@ -70,7 +70,8 @@ SRC_FILES = \
 	./app/src/main/java/jp/osscons/opensourcecobol/libcobj/ui/CobolResultInt.java \
 	./app/src/main/java/jp/osscons/opensourcecobol/libcobj/ui/CobolResultString.java \
 	./app/src/main/java/jp/osscons/opensourcecobol/libcobj/ui/CobolResultDouble.java \
-	./app/src/main/java/jp/osscons/opensourcecobol/libcobj/user_util/indexed_file/IndexedFileUtilMain.java
+	./app/src/main/java/jp/osscons/opensourcecobol/libcobj/user_util/indexed_file/IndexedFileUtilMain.java \
+	./app/src/main/java/jp/osscons/opensourcecobol/libcobj/user_util/indexed_file/ErrorLib.java
 
 all: $(TARGET_JAR)
 
