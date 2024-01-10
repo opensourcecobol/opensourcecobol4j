@@ -141,13 +141,13 @@ public class CobolSequentialFile extends CobolFile {
 
     if (this.record_min != this.record_max) {
       ByteBuffer.wrap(sbuff).putInt(this.record.getSize());
-      if (this.file.write(sbuff, 4, 1) != 1) {
+      if (!this.file.write(sbuff, 4)) {
         return COB_STATUS_30_PERMANENT_ERROR;
       }
     }
 
     /* write the record */
-    if (this.file.write(this.record.getDataStorage(), this.record.getSize(), 1) != 1) {
+    if (!this.file.write(this.record.getDataStorage(), this.record.getSize())) {
       return COB_STATUS_30_PERMANENT_ERROR;
     }
 
@@ -167,7 +167,7 @@ public class CobolSequentialFile extends CobolFile {
     if (!this.file.seek(-this.record.getSize(), FileIO.SEEK_CUR)) {
       return COB_STATUS_30_PERMANENT_ERROR;
     }
-    if (this.file.write(this.record.getDataStorage(), this.record.getSize(), 1) != 1) {
+    if (!this.file.write(this.record.getDataStorage(), this.record.getSize())) {
       return COB_STATUS_30_PERMANENT_ERROR;
     }
     return COB_STATUS_00_SUCCESS;

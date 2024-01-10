@@ -183,7 +183,7 @@ public class CobolLineSequentialFile extends CobolFile {
           this.file.putc(data.getByte(p));
         }
       } else {
-        if (this.file.write(this.record.getDataStorage(), size, 1) != 1) {
+        if (!this.file.write(this.record.getDataStorage(), size)) {
           return COB_STATUS_30_PERMANENT_ERROR;
         }
       }

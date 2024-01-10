@@ -332,13 +332,13 @@ public class CobolFileSort {
   private static boolean writeItem(FileIO fp, CobolItem q, CobolSort hp) {
     byte[] blockByteData = new byte[1];
     blockByteData[0] = q.getBlockByte();
-    if (fp.write(blockByteData, 1, 1) != 1) {
+    if (!fp.write(blockByteData, 1)) {
       return true;
     }
-    if (fp.write(q.getUnique(), 8, 1) != 1) {
+    if (!fp.write(q.getUnique(), 8)) {
       return true;
     }
-    return fp.write(q.getItem(), hp.getSize(), 1) != 1;
+    return fp.write(q.getItem(), hp.getSize());
   }
 
   /**

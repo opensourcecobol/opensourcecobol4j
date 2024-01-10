@@ -57,6 +57,8 @@ public class CobolUtil {
   public static boolean cobErrorOnExitFlag = false;
   public static Calendar cal;
 
+  public static int fileSeqWriteBufferSize = 10;
+
   private static boolean lineTrace = false;
 
   public static String sourceFile;
@@ -225,6 +227,14 @@ public class CobolUtil {
     s = CobolUtil.getEnv("COB_NIBBLE_C_UNSIGNED");
     if (s != null && s.length() > 0 && (s.charAt(0) == 'y' || s.charAt(0) == 'Y')) {
       CobolUtil.nibbleCForUnsigned = true;
+    }
+
+    s = System.getenv("COB_FILE_SEQ_WRITE_BUFFER_SIZE");
+    if (s != null) {
+      int size = Integer.parseInt(s);
+      if (size >= 0) {
+        CobolUtil.fileSeqWriteBufferSize = size;
+      }
     }
   }
 
