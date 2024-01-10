@@ -23,7 +23,6 @@ import java.io.InputStream;
 import java.io.PrintStream;
 import java.io.RandomAccessFile;
 import java.nio.ByteBuffer;
-import java.nio.channels.ClosedChannelException;
 import java.nio.channels.FileChannel;
 import java.nio.channels.FileLock;
 import java.nio.channels.NonReadableChannelException;
@@ -107,11 +106,7 @@ public class FileIO {
       ByteBuffer data = ByteBuffer.wrap(bytes);
       try {
         readSize = this.fc.read(data);
-      } catch (ClosedChannelException e) {
-        return 0;
-      } catch (IOException e) {
-        return 0;
-      } catch (NonReadableChannelException e) {
+      } catch (IOException | NonReadableChannelException e) {
         return 0;
       }
 
@@ -140,12 +135,8 @@ public class FileIO {
           }
           storage.setByte(i, b[0]);
         }
-      } catch (ClosedChannelException e) {
-        throw new IOException();
-      } catch (IOException e) {
-        throw new IOException();
-      } catch (NonReadableChannelException e) {
-        throw new IOException();
+      } catch (IOException | NonReadableChannelException e) {
+        throw e;
       }
       return size;
     }
@@ -162,11 +153,7 @@ public class FileIO {
   private boolean writeByteBuffer(ByteBuffer bb) {
     try {
       this.fc.write(bb);
-    } catch (ClosedChannelException e) {
-      return false;
-    } catch (IOException e) {
-      return false;
-    } catch (NonWritableChannelException e) {
+    } catch (IOException | NonWritableChannelException e) {
       return false;
     }
     return true;
@@ -267,11 +254,7 @@ public class FileIO {
           } else {
             this.readBufferEndIndex = readBytes;
           }
-        } catch (ClosedChannelException e) {
-          return -1;
-        } catch (IOException e) {
-          return -1;
-        } catch (NonReadableChannelException e) {
+        } catch (IOException | NonReadableChannelException e) {
           return -1;
         }
       }
@@ -291,11 +274,7 @@ public class FileIO {
         } else {
           return -1;
         }
-      } catch (ClosedChannelException e) {
-        return -1;
-      } catch (IOException e) {
-        return -1;
-      } catch (NonReadableChannelException e) {
+      } catch (IOException | NonReadableChannelException e) {
         return -1;
       }
     }
@@ -308,17 +287,18 @@ public class FileIO {
         destroyWriteBuffer();
         this.fc.close();
       } catch (IOException e) {
+        return;
       }
     }
   }
 
   public void flush() {
-    if (useStdOut) {
-    } else {
+    if (!useStdOut) {
       try {
         outputWriteBuffer();
         this.fc.force(false);
       } catch (IOException e) {
+        return;
       }
     }
   }
