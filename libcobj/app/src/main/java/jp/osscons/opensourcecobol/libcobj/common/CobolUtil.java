@@ -231,7 +231,7 @@ public class CobolUtil {
 
     s = System.getenv("COB_FILE_SEQ_WRITE_BUFFER_SIZE");
     if (s != null) {
-      int size = Integer.valueOf(s);
+      int size = Integer.parseInt(s);
       if (size >= 0) {
         CobolUtil.fileSeqWriteBufferSize = size;
       }
