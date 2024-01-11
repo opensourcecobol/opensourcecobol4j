@@ -282,6 +282,8 @@ top_srcdir = @top_srcdir@
 TARGET_JAR = app/build/libs/libcobj.jar
 COBJ_IDX = bin/cobj-idx
 SRC_FILES = \
+	settings.gradle.kts \
+	./app/build.gradle.kts \
 	./app/src/main/java/jp/osscons/opensourcecobol/libcobj/Const.java \
 	./app/src/main/java/jp/osscons/opensourcecobol/libcobj/call/CobolCallDataContent.java \
 	./app/src/main/java/jp/osscons/opensourcecobol/libcobj/call/CobolResolve.java \

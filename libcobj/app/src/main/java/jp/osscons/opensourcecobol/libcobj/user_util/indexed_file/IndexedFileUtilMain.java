@@ -29,6 +29,7 @@ import org.sqlite.SQLiteConfig;
  * data from the indexed file.
  */
 public class IndexedFileUtilMain {
+  private static final String version = jp.osscons.opensourcecobol.libcobj.Const.version;
   /**
    * Main method
    *
@@ -84,7 +85,8 @@ public class IndexedFileUtilMain {
 
   /** Print help message. */
   private static void printHelpMessage() {
-    System.out.println("cobj-idx - Utility tool to handle a indexed file of opensource COBOL 4J");
+    System.out.println(
+        "cobj-idx - Utility tool to handle a indexed file of opensource COBOL 4J " + version);
     System.out.println();
     System.out.println("Usage:");
     System.out.println();
