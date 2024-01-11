@@ -21,6 +21,11 @@ import jp.osscons.opensourcecobol.libcobj.file.CobolFile;
 import jp.osscons.opensourcecobol.libcobj.file.CobolFileFactory;
 import jp.osscons.opensourcecobol.libcobj.file.CobolFileKey;
 import jp.osscons.opensourcecobol.libcobj.file.CobolIndexedFile;
+import org.apache.commons.cli.CommandLine;
+import org.apache.commons.cli.CommandLineParser;
+import org.apache.commons.cli.DefaultParser;
+import org.apache.commons.cli.Options;
+import org.apache.commons.cli.ParseException;
 import org.sqlite.SQLiteConfig;
 
 /**
@@ -29,20 +34,52 @@ import org.sqlite.SQLiteConfig;
  * data from the indexed file.
  */
 public class IndexedFileUtilMain {
+  private static final String version = jp.osscons.opensourcecobol.libcobj.Const.version;
   /**
    * Main method
    *
    * @param args
    */
   public static void main(String[] args) {
-    if (args.length == 0) {
+
+    // Build a command line parser
+    Options options = new Options();
+    options.addOption("h", "help", false, "Print this message.");
+    options.addOption("v", "version", false, "Print the version");
+    CommandLineParser parser = new DefaultParser();
+    CommandLine cmd;
+
+    // Parse command line arguments
+    try {
+      cmd = parser.parse(options, args);
+    } catch (ParseException e) {
+      printHelpMessage();
+      System.exit(1);
+      return;
+    }
+
+    if (cmd.hasOption("h")) {
       printHelpMessage();
       System.exit(0);
+      return;
     }
-    String subCommand = args[0];
+    if (cmd.hasOption("v")) {
+      System.out.println(version);
+      System.exit(0);
+      return;
+    }
+
+    String[] unrecognizedArgs = cmd.getArgs();
+    if (unrecognizedArgs.length == 0) {
+      printHelpMessage();
+      System.exit(0);
+      return;
+    }
+
+    String subCommand = unrecognizedArgs[0];
     if ("info".equals(subCommand)) {
-      if (args.length != 2) {
-        if (args.length < 2) {
+      if (unrecognizedArgs.length != 2) {
+        if (unrecognizedArgs.length < 2) {
           System.err.println("error: no indexed file is specified.");
         } else {
           System.err.println("error: too many indexed files are specified.");
@@ -53,8 +90,8 @@ public class IndexedFileUtilMain {
       int exitCode = processInfoCommand(indexedFilePath);
       System.exit(exitCode);
     } else if ("load".equals(subCommand)) {
-      if (args.length != 2) {
-        if (args.length < 2) {
+      if (unrecognizedArgs.length != 2) {
+        if (unrecognizedArgs.length < 2) {
           System.err.println("error: no indexed file is specified.");
         } else {
           System.err.println("error: too many indexed files are specified.");
@@ -65,8 +102,8 @@ public class IndexedFileUtilMain {
       int exitCode = processLoadCommand(indexedFilePath);
       System.exit(exitCode);
     } else if ("unload".equals(subCommand)) {
-      if (args.length != 2) {
-        if (args.length < 2) {
+      if (unrecognizedArgs.length != 2) {
+        if (unrecognizedArgs.length < 2) {
           System.err.println("error: no indexed file is specified.");
         } else {
           System.err.println("error: too many indexed files are specified.");
@@ -88,6 +125,8 @@ public class IndexedFileUtilMain {
     System.out.println();
     System.out.println("Usage:");
     System.out.println();
+    System.out.println("cobj-idx --help                - Print this message");
+    System.out.println("cobj-idx --version             - Print the version of cobj-idx");
     System.out.println("cobj-idx info <indexed-file>   - Show information of the indexed file.");
     System.out.println(
         "cobj-idx load <indexed-file>   - Load data inputted from stdin to the indexed file.");
