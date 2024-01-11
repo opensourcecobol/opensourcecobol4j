@@ -5,6 +5,8 @@ AT_CHECK([${COBJ_IDX}], [0],
 
 Usage:
 
+cobj-idx --help                - Print this message
+cobj-idx --version             - Print the version of cobj-idx
 cobj-idx info <indexed-file>   - Show information of the indexed file.
 cobj-idx load <indexed-file>   - Load data inputted from stdin to the indexed file.
                                  The format of the input data is line-sequential of COBOL.
@@ -12,27 +14,27 @@ cobj-idx unload <indexed-file> - Write records stored in the indexed file to std
                                  The format of the output data is line-sequential of COBOL.
 ])
 
-#AT_CHECK([${COBJ_IDX} --version | grep -v '@<:@0-9@:>@\+\.@<:@0-9@:>@\+\.@<:@0-9@:>@\+'])
+AT_CHECK([${COBJ_IDX} --version | grep -vE '@<:@0-9@:>@+\.@<:@0-9@:>@+\.@<:@0-9@:>@+'], [1])
 
 AT_CHECK([${COBJ_IDX} info], [1], [],
 [error: no indexed file is specified.
 ])
 
-#AT_CHECK([${COBJ_IDX} load], [1], [],
-#[error: no indexed file is specified.
-#])
-#AT_CHECK([${COBJ_IDX} unload], [1], [],
-#[error: no indexed file is specified.
-#])
+AT_CHECK([${COBJ_IDX} load], [1], [],
+[error: no indexed file is specified.
+])
+AT_CHECK([${COBJ_IDX} unload], [1], [],
+[error: no indexed file is specified.
+])
 
 AT_CHECK([${COBJ_IDX} info file1 file2], [1], [],
 [error: too many indexed files are specified.
 ])
-#AT_CHECK([${COBJ_IDX} load file1 file2], [1], [],
-#[error: too many indexed files are specified.
-#])
-#AT_CHECK([${COBJ_IDX} unload], [1], [],
-#[error: too many indexed files are specified.
-#])
+AT_CHECK([${COBJ_IDX} load file1 file2], [1], [],
+[error: too many indexed files are specified.
+])
+AT_CHECK([${COBJ_IDX} unload], [1], [],
+[error: no indexed file is specified.
+])
 
 AT_CLEANUP

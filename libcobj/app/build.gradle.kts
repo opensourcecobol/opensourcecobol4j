@@ -29,6 +29,7 @@ tasks {
 dependencies {
     implementation("com.google.guava:guava:31.1-jre")
     implementation("org.xerial:sqlite-jdbc:3.30.1")
+    implementation("commons-cli:commons-cli:1.6.0")
     spotbugs("com.github.spotbugs:spotbugs:4.8.0")
 }
 
