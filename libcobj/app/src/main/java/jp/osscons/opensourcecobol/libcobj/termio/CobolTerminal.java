@@ -59,7 +59,7 @@ public class CobolTerminal {
     }
   }
 
-  private static void displayAlnum(AbstractCobolField f, PrintStream stream) {
+  public static void displayAlnum(AbstractCobolField f, PrintStream stream) {
     CobolDataStorage storage = f.getDataStorage();
     stream.write(storage.getRefOfData(), storage.getIndex(), f.getSize());
   }

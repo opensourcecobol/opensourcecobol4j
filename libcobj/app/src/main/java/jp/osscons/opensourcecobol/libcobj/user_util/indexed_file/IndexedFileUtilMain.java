@@ -21,6 +21,8 @@ import jp.osscons.opensourcecobol.libcobj.file.CobolFile;
 import jp.osscons.opensourcecobol.libcobj.file.CobolFileFactory;
 import jp.osscons.opensourcecobol.libcobj.file.CobolFileKey;
 import jp.osscons.opensourcecobol.libcobj.file.CobolIndexedFile;
+import jp.osscons.opensourcecobol.libcobj.termio.CobolTerminal;
+
 import org.apache.commons.cli.CommandLine;
 import org.apache.commons.cli.CommandLineParser;
 import org.apache.commons.cli.DefaultParser;
@@ -35,6 +37,7 @@ import org.sqlite.SQLiteConfig;
  */
 public class IndexedFileUtilMain {
   private static final String version = jp.osscons.opensourcecobol.libcobj.Const.version;
+
   /**
    * Main method
    *
@@ -47,6 +50,7 @@ public class IndexedFileUtilMain {
     options.addOption("h", "help", false, "Print this message.");
     options.addOption("v", "version", false, "Print the version");
     options.addOption("n", "new", false, "Delete all data before loading");
+    options.addOption("f", "format", true, "Specify the format of the input and output data");
     CommandLineParser parser = new DefaultParser();
     CommandLine cmd;
 
@@ -59,17 +63,39 @@ public class IndexedFileUtilMain {
       return;
     }
 
+    // Process -h, --help option
     if (cmd.hasOption("h")) {
       printHelpMessage();
       System.exit(0);
       return;
     }
+
+    // Process -v, --version option
     if (cmd.hasOption("v")) {
       System.out.println(version);
       System.exit(0);
       return;
     }
 
+    // Process -f, --format option
+    UserDataFormat userDataFormat = UserDataFormat.LINE_SEQUENTIAL;
+    String userDataFormatString = cmd.getOptionValue("f");
+    if (userDataFormatString != null) {
+      userDataFormatString = userDataFormatString.toLowerCase();
+      if ("txt".equals(userDataFormatString)) {
+        userDataFormat = UserDataFormat.LINE_SEQUENTIAL;
+      } else if ("bin".equals(userDataFormatString)) {
+        userDataFormat = UserDataFormat.SEQUENTIAL;
+      } else {
+        System.err.println(
+            String.format(
+                "error: '%s' is invalid value of -f and --format option.", userDataFormatString));
+        System.err.println("       possible values of -f and --format option is 'txt' and 'bin'.");
+        System.exit(1);
+      }
+    }
+
+    // If no sub command is specified, print help message and exit.
     String[] unrecognizedArgs = cmd.getArgs();
     if (unrecognizedArgs.length == 0) {
       printHelpMessage();
@@ -77,6 +103,7 @@ public class IndexedFileUtilMain {
       return;
     }
 
+    // Dispatch sub commands
     String subCommand = unrecognizedArgs[0];
     if ("info".equals(subCommand)) {
       if (unrecognizedArgs.length != 2) {
@@ -90,6 +117,7 @@ public class IndexedFileUtilMain {
       String indexedFilePath = args[1];
       int exitCode = processInfoCommand(indexedFilePath);
       System.exit(exitCode);
+
     } else if ("load".equals(subCommand)) {
       if (unrecognizedArgs.length != 2) {
         if (unrecognizedArgs.length < 2) {
@@ -100,8 +128,10 @@ public class IndexedFileUtilMain {
         System.exit(1);
       }
       String indexedFilePath = unrecognizedArgs[1];
-      int exitCode = processLoadCommand(indexedFilePath, cmd.hasOption("n"));
+      boolean deleteBeforeLoading = cmd.hasOption("n");
+      int exitCode = processLoadCommand(indexedFilePath, deleteBeforeLoading);
       System.exit(exitCode);
+
     } else if ("unload".equals(subCommand)) {
       if (unrecognizedArgs.length != 2) {
         if (unrecognizedArgs.length < 2) {
@@ -112,7 +142,7 @@ public class IndexedFileUtilMain {
         System.exit(1);
       }
       String indexedFilePath = unrecognizedArgs[1];
-      int exitCode = processUnloadCommand(indexedFilePath);
+      int exitCode = processUnloadCommand(indexedFilePath, userDataFormat);
       System.exit(exitCode);
     } else {
       printHelpMessage();
@@ -125,6 +155,9 @@ public class IndexedFileUtilMain {
     System.out.println("cobj-idx - Utility tool to handle a indexed file of opensource COBOL 4J");
     System.out.println();
     System.out.println("Usage:");
+    System.out.println("cobj-idx <a sub command> [options] <an indexed file>");
+    System.out.println();
+    System.err.println("Sub commands:");
     System.out.println();
     System.out.println("cobj-idx info <indexed-file>   - Show information of the indexed file.");
     System.out.println(
@@ -138,9 +171,19 @@ public class IndexedFileUtilMain {
     System.out.println();
     System.out.println("Options:");
     System.out.println();
+    System.out.println(
+        "-f <format>, --format=<format> - Specify the format of the input and output data.");
+    System.out.println(
+        "                                 Possible values are 'bin' and 'txt' and the default value is 'txt'.");
+    System.out.println(
+        "                                 'bin' means the line-sequential format and 'txt' means the sequeential format.");
+    System.out.println(
+        "                                 When the sub command is 'load', this option specifies the format of input data which will be inserted to an indexed file.");
+    System.out.println(
+        "                                 When the sub command is 'unload', this option specifies the format of output data which will be read from an indexed file.");
     System.out.println("-h --help                      - Print this message.");
     System.out.println(
-        "-n, --new                      - Delete all data before inserting new data.");
+        "-n, --new                      - Delete all data before inserting new data. This option is only valid when the sub command is 'load'.");
     System.out.println("-v, --version                  - Print the version of cobj-idx.");
   }
 
@@ -220,11 +263,6 @@ public class IndexedFileUtilMain {
     }
   }
 
-  enum LoadResult {
-    LoadResultSuccess,
-    LoadResultDataSizeMismatch,
-    LoadResultOther,
-  };
   /**
    * Process load sub command, which loads data inputted from stdin to the indexed file.
    *
@@ -303,10 +341,14 @@ public class IndexedFileUtilMain {
   /**
    * Process unload sub command, which writes records stored in the indexed file to stdout.
    *
-   * @param indexedFilePath
+   * @param indexedFilePath The path of the indexed file.
+   * @param userDataFormat The format of the output data. If this value is
+   *     UserDataFormat.LINE_SEQUENTIAL, each records are separated by a newline character (0x20).
+   *     If this value is UserDataFormat.SEQUENTIAL, each records are concatenated without any
+   *     separator.
    * @return 0 if success, otherwise non-zero. The return value is error code.
    */
-  private static int processUnloadCommand(String indexedFilePath) {
+  private static int processUnloadCommand(String indexedFilePath, UserDataFormat userDataFormat) {
     File indexedFile = new File(indexedFilePath);
     if (!indexedFile.exists()) {
       return ErrorLib.errorFileDoesNotExist(indexedFilePath);
@@ -337,13 +379,21 @@ public class IndexedFileUtilMain {
       CobolRuntimeException.code = 0;
       cobolFile.read(0, null, 1);
       if (CobolRuntimeException.code == 0) {
-        System.out.println(cobolFile.record.getString());
+        CobolTerminal.displayAlnum(cobolFile.record, System.out);
+        if (userDataFormat == UserDataFormat.LINE_SEQUENTIAL) {
+          System.out.print('\n');
+        }
       } else if (CobolRuntimeException.code == 0x0501) {
         break;
       } else {
         return ErrorLib.errorIO();
       }
     }
+
+    if (userDataFormat == UserDataFormat.SEQUENTIAL) {
+      System.out.print('\n');
+    }
+
     cobolFile.close(CobolFile.COB_CLOSE_NORMAL, null);
 
     CobolModule.pop();
