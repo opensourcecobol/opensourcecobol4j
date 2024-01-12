@@ -5,13 +5,17 @@ AT_CHECK([${COBJ_IDX}], [0],
 
 Usage:
 
-cobj-idx --help                - Print this message
-cobj-idx --version             - Print the version of cobj-idx
 cobj-idx info <indexed-file>   - Show information of the indexed file.
 cobj-idx load <indexed-file>   - Load data inputted from stdin to the indexed file.
                                  The format of the input data is line-sequential of COBOL.
 cobj-idx unload <indexed-file> - Write records stored in the indexed file to stdout.
                                  The format of the output data is line-sequential of COBOL.
+
+Options:
+
+-h --help                      - Print this message.
+-n, --new                      - Delete all data before inserting new data.
+-v, --version                  - Print the version of cobj-idx. 
 ])
 
 AT_CHECK([${COBJ_IDX} --version | grep -vE '@<:@0-9@:>@+\.@<:@0-9@:>@+\.@<:@0-9@:>@+'], [1])

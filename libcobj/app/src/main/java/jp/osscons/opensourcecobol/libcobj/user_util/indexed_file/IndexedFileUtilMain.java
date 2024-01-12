@@ -46,6 +46,7 @@ public class IndexedFileUtilMain {
     Options options = new Options();
     options.addOption("h", "help", false, "Print this message.");
     options.addOption("v", "version", false, "Print the version");
+    options.addOption("n", "new", false, "Delete all data before loading");
     CommandLineParser parser = new DefaultParser();
     CommandLine cmd;
 
@@ -98,8 +99,8 @@ public class IndexedFileUtilMain {
         }
         System.exit(1);
       }
-      String indexedFilePath = args[1];
-      int exitCode = processLoadCommand(indexedFilePath);
+      String indexedFilePath = unrecognizedArgs[1];
+      int exitCode = processLoadCommand(indexedFilePath, cmd.hasOption("n"));
       System.exit(exitCode);
     } else if ("unload".equals(subCommand)) {
       if (unrecognizedArgs.length != 2) {
@@ -110,7 +111,7 @@ public class IndexedFileUtilMain {
         }
         System.exit(1);
       }
-      String indexedFilePath = args[1];
+      String indexedFilePath = unrecognizedArgs[1];
       int exitCode = processUnloadCommand(indexedFilePath);
       System.exit(exitCode);
     } else {
@@ -125,8 +126,6 @@ public class IndexedFileUtilMain {
     System.out.println();
     System.out.println("Usage:");
     System.out.println();
-    System.out.println("cobj-idx --help                - Print this message");
-    System.out.println("cobj-idx --version             - Print the version of cobj-idx");
     System.out.println("cobj-idx info <indexed-file>   - Show information of the indexed file.");
     System.out.println(
         "cobj-idx load <indexed-file>   - Load data inputted from stdin to the indexed file.");
@@ -136,6 +135,13 @@ public class IndexedFileUtilMain {
         "cobj-idx unload <indexed-file> - Write records stored in the indexed file to stdout.");
     System.out.println(
         "                                 The format of the output data is line-sequential of COBOL.");
+    System.out.println();
+    System.out.println("Options:");
+    System.out.println();
+    System.out.println("-h --help                      - Print this message.");
+    System.out.println(
+        "-n, --new                      - Delete all data before inserting new data.");
+    System.out.println("-v, --version                  - Print the version of cobj-idx.");
   }
 
   /**
@@ -225,7 +231,7 @@ public class IndexedFileUtilMain {
    * @param indexedFilePath
    * @return
    */
-  private static int processLoadCommand(String indexedFilePath) {
+  private static int processLoadCommand(String indexedFilePath, boolean deleteBeforeLoading) {
     File indexedFile = new File(indexedFilePath);
     if (!indexedFile.exists()) {
       return ErrorLib.errorFileDoesNotExist(indexedFilePath);
@@ -250,6 +256,10 @@ public class IndexedFileUtilMain {
     cobolIndexedFile.open(CobolFile.COB_OPEN_EXTEND, 0, null);
     if (CobolRuntimeException.code != 0) {
       return ErrorLib.errorIO();
+    }
+
+    if (deleteBeforeLoading) {
+      cobolIndexedFile.deleteAllRecords();
     }
 
     // Read records from stdin and write them to the indexed file

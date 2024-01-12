@@ -692,4 +692,26 @@ public class CobolIndexedFile extends CobolFile {
       System.err.println("Failed to commit a transaction");
     }
   }
+
+  /**
+   * Delete all records in the file
+   *
+   * @return true if all records are deleted successfully, otherwise false
+   */
+  public boolean deleteAllRecords() {
+    IndexedFile p = this.filei;
+    try {
+      for (int i = this.nkeys - 1; i >= 0; --i) {
+        Statement statement = p.connection.createStatement();
+        statement.execute("delete from " + getTableName(i));
+        statement.close();
+      }
+      if (this.commitOnModification) {
+        p.connection.commit();
+      }
+      return true;
+    } catch (SQLException e) {
+      return false;
+    }
+  }
 }
