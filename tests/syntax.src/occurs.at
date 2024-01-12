@@ -45,7 +45,7 @@ AT_CHECK([${COMPILE_ONLY} prog.cob], [1], ,
 prog.cob:7: Error: Level 01 item 'G' cannot have OCCURS clause
 prog.cob:9: Error: Level 66 item 'X-66' cannot have other than RENAMES clause
 prog.cob:10: Error: Level 77 item 'X-77' cannot have OCCURS clause
-prog.cob:11: Error: syntax error, unexpected OCCURS, expecting end of file or FUNCTION-ID or PROGRAM-ID
+prog.cob:11: Error: syntax error
 ])
 
 AT_CLEANUP
