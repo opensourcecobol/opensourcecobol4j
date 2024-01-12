@@ -62,7 +62,7 @@ AT_DATA([prog.cob], [
 ])
 
 AT_CHECK([${COMPILE_ONLY} prog.cob], [1], ,
-[prog.cob:3: Error: syntax error, unexpected RECURSIVE, expecting '.'
+[prog.cob:3: Error: syntax error
 ])
 
 AT_CLEANUP

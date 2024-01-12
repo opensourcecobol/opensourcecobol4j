@@ -52,13 +52,13 @@ static void print_error(char *file, int line, const char *prefix,
 
   /* print the paragraph or section name */
   if (current_section != last_section || current_paragraph != last_paragraph) {
-    if (current_paragraph &&
-        strcmp((const char *)(current_paragraph->name), "MAIN PARAGRAPH")) {
+    if (current_paragraph && strstr((const char *)(current_paragraph->name),
+                                    "_SECTION__DEFAULT_PARAGRAPH") == NULL) {
       cb_get_jisword_buff((const char *)current_paragraph->name, msgword,
                           sizeof(msgword));
       fprintf(stderr, _("%s: In paragraph '%s':\n"), file, msgword);
     } else if (current_section &&
-               strcmp((const char *)(current_section->name), "MAIN SECTION")) {
+               strcmp((const char *)(current_section->name), "MAIN")) {
       cb_get_jisword_buff((const char *)current_section->name, msgword,
                           sizeof(msgword));
       fprintf(stderr, _("%s: In section '%s':\n"), file, msgword);
