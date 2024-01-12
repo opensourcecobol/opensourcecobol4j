@@ -337,6 +337,10 @@ public class IndexedFileUtilMain {
             break;
           }
         }
+        if (indexInLineDataBytes >= lineDataBytes.length) {
+          loadResult = LoadResult.LoadResultSuccess;
+          break;
+        }
         recordDataStorage.memcpy(lineDataBytes, indexInLineDataBytes, recordSize);
         indexInLineDataBytes += recordSize;
       }
