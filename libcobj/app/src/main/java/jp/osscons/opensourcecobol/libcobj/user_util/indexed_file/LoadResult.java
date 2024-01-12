@@ -1,8 +1,6 @@
 package jp.osscons.opensourcecobol.libcobj.user_util.indexed_file;
 
-/**
- * Enum to specify the result of the load operation.
- */
+/** Enum to specify the result of the load operation. */
 public enum LoadResult {
   /** The load operation succeeded. */
   LoadResultSuccess,

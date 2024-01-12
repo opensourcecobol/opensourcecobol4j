@@ -22,7 +22,6 @@ import jp.osscons.opensourcecobol.libcobj.file.CobolFileFactory;
 import jp.osscons.opensourcecobol.libcobj.file.CobolFileKey;
 import jp.osscons.opensourcecobol.libcobj.file.CobolIndexedFile;
 import jp.osscons.opensourcecobol.libcobj.termio.CobolTerminal;
-
 import org.apache.commons.cli.CommandLine;
 import org.apache.commons.cli.CommandLineParser;
 import org.apache.commons.cli.DefaultParser;
@@ -375,10 +374,12 @@ public class IndexedFileUtilMain {
     }
 
     // Read records from the indexed file and write them to stdout
+    boolean isIndexedFileEmpty = true;
     while (true) {
       CobolRuntimeException.code = 0;
       cobolFile.read(0, null, 1);
       if (CobolRuntimeException.code == 0) {
+        isIndexedFileEmpty = false;
         CobolTerminal.displayAlnum(cobolFile.record, System.out);
         if (userDataFormat == UserDataFormat.LINE_SEQUENTIAL) {
           System.out.print('\n');
@@ -390,7 +391,7 @@ public class IndexedFileUtilMain {
       }
     }
 
-    if (userDataFormat == UserDataFormat.SEQUENTIAL) {
+    if (userDataFormat == UserDataFormat.SEQUENTIAL && !isIndexedFileEmpty) {
       System.out.print('\n');
     }
 
