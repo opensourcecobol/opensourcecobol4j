@@ -242,6 +242,8 @@ static void strcpy_identifier_cobol_to_java(char *buf, const char *identifier) {
 struct cb_label_id_map {
   int key;
   int val;
+  char* label_name;
+  struct cb_label* section;
   struct cb_label_id_map *next;
 };
 struct cb_label_id_map *label_id_map_head = NULL;
@@ -3179,8 +3181,10 @@ static void joutput_call(struct cb_call *p) {
  */
 
 static void joutput_goto_1(cb_tree x) {
-  joutput_line("if(true) return Optional.of(contList[%d]);",
-               find_label_id(CB_LABEL(cb_ref(x))));
+  joutput_prefix();
+	joutput ("if(true) return Optional.of(contList[");
+	joutput_label_variable(CB_LABEL (cb_ref (x)));
+	joutput_line ("]);\n");
 }
 
 static void joutput_goto(struct cb_goto *p) {
@@ -3229,12 +3233,17 @@ static void joutput_perform_call(struct cb_label *lb, struct cb_label *le) {
 
   if (lb == le) {
     joutput_line("/* PERFORM %s */", lb->name);
-    joutput_line("CobolControl.perform(contList, %d).run();",
-                 find_label_id(lb));
+    joutput_prefix();
+	  joutput("CobolControl.perform(contList, ");
+		joutput_label_variable(lb);
+		joutput(").run();\n");
   } else {
     joutput_line("/* PERFORM %s THRU %s */", lb->name, le->name);
-    joutput_line("CobolControl.performThrough(contList, %d, %d).run();",
-                 find_label_id(lb), find_label_id(le));
+    joutput_line("CobolControl.performThrough(contList, ");
+		joutput_label_variable(lb);
+		joutput(", ");
+		joutput_label_variable(le);
+		joutput(").run();\n");
   }
 
   cb_id++;
@@ -3371,12 +3380,18 @@ static void joutput_sort_proc(struct cb_sort_proc *p) {
 
   if (lb == le) {
     joutput_line("/* PERFORM %s */", lb->name);
-    joutput_line("CobolControl.perform(contList, %d).run();",
-                 find_label_id(lb));
+    joutput_prefix();
+	  joutput("CobolControl.perform(contList, ");
+		joutput_label_variable(lb);
+		joutput(").run();\n");
   } else {
     joutput_line("/* PERFORM %s THRU %s */", lb->name, le->name);
-    joutput_line("CobolControl.performThrough(contList, %d, %d).run();",
-                 find_label_id(lb), find_label_id(le));
+    joutput_prefix();
+	  joutput("CobolControl.performThrough(contList, ");
+		joutput_label_variable(lb);
+		joutput(", ");
+		joutput_label_variable(le);
+		joutput(").run();\n");
   }
 
   cb_id++;
@@ -3603,7 +3618,10 @@ static void joutput_stmt(cb_tree x, enum joutput_stmt_type output_type) {
 
     // the end of the previous label.
     if (flag_execution_end == EXECUTION_NORMAL) {
-      joutput_line("return Optional.of(contList[%d]);", ++control_counter);
+      joutput_prefix();
+			joutput("return Optional.of(contList[");
+			joutput_label_variable_by_value(++control_counter);
+			joutput("]);\n");
     } else {
       joutput_line("return Optional.of(CobolControl.pure());");
     }
@@ -3635,10 +3653,11 @@ static void joutput_stmt(cb_tree x, enum joutput_stmt_type output_type) {
 
     // the start of the label
     joutput_prefix();
+    joutput("new CobolControl(");
     if (flag_execution_begin == EXECUTION_ERROR_HANDLER) {
-      joutput("new CobolControl(%d", control_counter + 1);
+      joutput_label_variable_by_value(control_counter + 1);
     } else {
-      joutput("new CobolControl(%d", control_counter);
+      joutput_label_variable_by_value(control_counter);
     }
 
     if (lp->is_section) {
@@ -4743,8 +4762,10 @@ static void joutput_internal_function(struct cb_program *prog,
     joutput_line("  {");
     for (i = 0, l = prog->entry_list; l; l = CB_CHAIN(l)) {
       joutput_line("  case %d:", i++);
-      joutput_line("    execEntry(%d);",
-                   find_label_id(CB_LABEL(CB_PURPOSE(l))));
+      joutput_prefix();
+			joutput ("    execEntry(");
+			joutput_label_variable(CB_LABEL (CB_PURPOSE (l)));
+			joutput(");\n");
     }
     joutput_line("  }");
     joutput_line("/* This should never be reached */");
@@ -4752,7 +4773,10 @@ static void joutput_internal_function(struct cb_program *prog,
     joutput_newline();
   } else {
     l = prog->entry_list;
-    joutput_line("execEntry(%d);", find_label_id(CB_LABEL(CB_PURPOSE(l))));
+    joutput_prefix();
+		joutput ("execEntry(");
+		joutput_label_variable(CB_LABEL (CB_PURPOSE (l)));
+		joutput(");\n");
     joutput_newline();
   }
 
@@ -5615,6 +5639,14 @@ void append_label_id_map(struct cb_label *label) {
   struct cb_label_id_map *new_entry = malloc(sizeof(struct cb_label_id_map));
   new_entry->key = label->id;
   new_entry->val = ++label_id_counter;
+  new_entry->section = label->section;
+	// clone label name
+	if(label->name) {
+		new_entry->label_name = malloc(strlen(label->name) + 1);
+		strcpy(new_entry->label_name, label->name);
+	} else {
+		new_entry->label_name = NULL;
+	}
   new_entry->next = NULL;
   if (label_id_map_last) {
     label_id_map_last->next = new_entry;
@@ -5639,7 +5671,38 @@ void create_label_id_map(struct cb_program *prog) {
   append_label_id_map(CB_LABEL(cb_standard_error_handler));
 }
 
-int find_label_id(struct cb_label *label) {
+void joutput_label_variable_name(char* s, int key, struct cb_label* section)
+{
+	joutput(CB_PREFIX_LABEL);
+	char* c;
+	if (s) {
+		if(section && section->name) {
+			for(c=section->name; *c; ++c) {
+				if(*c == ' ') {
+					joutput("_");
+				} else if(*c == '-') {
+					joutput("_");
+				} else {
+					joutput("%c", *c);
+				}
+			}
+			joutput("__");
+		}
+		for(c=s; *c; ++c) {
+			if(*c == ' ') {
+				joutput("_");
+			} else if(*c == '-') {
+				joutput("_");
+			} else {
+				joutput("%c", *c);
+			}
+		}
+	} else {
+		joutput("anonymous__%d", key);
+	}
+}
+
+void joutput_label_variable(struct cb_label* label) {
   if (!label) {
     fprintf(stderr, "[internal error] label is null\n");
     return -1;
@@ -5648,17 +5711,31 @@ int find_label_id(struct cb_label *label) {
   struct cb_label_id_map *l;
   for (l = label_id_map_head; l; l = l->next) {
     if (l->key == id) {
-      return l->val;
+      joutput_label_variable_name(l->label_name, l->key, l->section);
+			return;
     }
   }
   fprintf(stderr, "[internal error] cannot find label_id: %d %s\n",
           CB_LABEL(label)->id, CB_LABEL(label)->name);
-  return -1;
+}
+
+void joutput_label_variable_by_value(int value) {
+	struct cb_label_id_map* l;
+	for(l = label_id_map_head; l; l = l->next) {
+		if(l->val == value) {
+			joutput_label_variable_name(l->label_name, l->key, l->section);
+			return;
+		}
+	}
+	fprintf(stderr, "[internal error] cannot find label_value: %d\n", value);
 }
 
 void destroy_label_id_map() {
   while (label_id_map_head) {
     struct cb_label_id_map *next = label_id_map_head->next;
+    if(label_id_map_head->label_name) {
+			free(label_id_map_head->label_name);
+		}
     free(label_id_map_head);
     label_id_map_head = next;
   }
@@ -5763,7 +5840,7 @@ void joutput_execution_list(struct cb_program *prog) {
     joutput_newline();
   }
 
-  joutput_line("return Optional.of(CobolControl.pure());", control_counter + 1);
+  joutput_line("return Optional.of(CobolControl.pure());");
   joutput_indent_level -= 2;
   joutput_line("}");
   joutput_indent_level -= 2;
@@ -5772,7 +5849,6 @@ void joutput_execution_list(struct cb_program *prog) {
   joutput_line("CobolControl.pure()");
   joutput_indent_level -= 2;
   joutput_line("};");
-  destroy_label_id_map();
 }
 
 void joutput_execution_entry_func() {
@@ -6064,6 +6140,17 @@ void codegen(struct cb_program *prog, const int nested, char **program_id_list,
     }
   }
   joutput("\n");
+
+  joutput_line("/* Sections and Labels */");
+	struct cb_label_id_map* label;
+	for(label=label_id_map_head; label; label=label->next) {
+		joutput_prefix();
+		joutput("private final static int ");
+		joutput_label_variable_name(label->label_name, label->key, label->section);
+		joutput(" = %d;\n", label->val);
+	}
+	destroy_label_id_map();
+	joutput("\n");
 
   /* CALL cache */
   if (call_cache) {

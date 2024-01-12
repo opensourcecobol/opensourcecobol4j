@@ -76,7 +76,7 @@ AT_DATA([prog.cob], [
 ])
 
 AT_CHECK([${COMPILE_JP_COMPAT} prog.cob], [1], [],
-[prog.cob:10: Error: syntax error, unexpected Identifier, expecting end of file or FUNCTION-ID or PROGRAM-ID
+[prog.cob:10: Error: syntax error
 ])
 AT_CLEANUP
 

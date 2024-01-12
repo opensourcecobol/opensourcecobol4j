@@ -4018,13 +4018,16 @@ statements:
 	cb_tree label;
 
 	if (!current_section) {
-		label = cb_build_reference ("MAIN SECTION");
+		label = cb_build_reference ("MAIN");
 		current_section = CB_LABEL (cb_build_label (label, NULL));
 		current_section->is_section = 1;
 		emit_statement (CB_TREE (current_section));
 	}
 	if (!current_paragraph) {
-		label = cb_build_reference ("MAIN PARAGRAPH");
+		char* suffix = "_SECTION__DEFAULT_PARAGRAPH";
+		char *label_name = malloc(strlen(current_section->name) + strlen(suffix) + 1);
+		sprintf(label_name, "%s%s", current_section->name, suffix);
+		label = cb_build_reference (label_name);
 		current_paragraph = CB_LABEL (cb_build_label (label, NULL));
 		emit_statement (CB_TREE (current_paragraph));
 		current_section->children =
