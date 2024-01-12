@@ -162,11 +162,11 @@ public class IndexedFileUtilMain {
     System.out.println(
         "cobj-idx load <indexed-file>   - Load data inputted from stdin to the indexed file.");
     System.out.println(
-        "                                 The format of the input data is line-sequential of COBOL.");
+        "                                 The default format of the input data is line-sequential of COBOL.");
     System.out.println(
         "cobj-idx unload <indexed-file> - Write records stored in the indexed file to stdout.");
     System.out.println(
-        "                                 The format of the output data is line-sequential of COBOL.");
+        "                                 The default format of the output data is line-sequential of COBOL.");
     System.out.println();
     System.out.println("Options:");
     System.out.println();
