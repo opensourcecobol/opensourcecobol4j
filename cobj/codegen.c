@@ -185,6 +185,10 @@ int find_label_id(struct cb_label *label);
 void destroy_label_id_map(void);
 void joutput_edit_code_command(const char *target);
 
+void joutput_label_variable(struct cb_label *label);
+void joutput_label_variable_name(char *s, int key, struct cb_label *section);
+void joutput_label_variable_by_value(int value);
+
 const int EXECUTION_NORMAL = 0;
 const int EXECUTION_LAST = 1;
 const int EXECUTION_ERROR_HANDLER = 2;
@@ -5642,8 +5646,8 @@ void append_label_id_map(struct cb_label *label) {
   new_entry->section = label->section;
   // clone label name
   if (label->name) {
-    new_entry->label_name = malloc(strlen(label->name) + 1);
-    strcpy(new_entry->label_name, label->name);
+    new_entry->label_name = malloc(strlen((char *)label->name) + 1);
+    strcpy(new_entry->label_name, (char *)label->name);
   } else {
     new_entry->label_name = NULL;
   }
@@ -5673,10 +5677,10 @@ void create_label_id_map(struct cb_program *prog) {
 
 void joutput_label_variable_name(char *s, int key, struct cb_label *section) {
   joutput(CB_PREFIX_LABEL);
-  char *c;
+  const char *c;
   if (s) {
     if (section && section->name) {
-      for (c = section->name; *c; ++c) {
+      for (c = (const char *)section->name; *c; ++c) {
         if (*c == ' ') {
           joutput("_");
         } else if (*c == '-') {
@@ -5704,7 +5708,7 @@ void joutput_label_variable_name(char *s, int key, struct cb_label *section) {
 void joutput_label_variable(struct cb_label *label) {
   if (!label) {
     fprintf(stderr, "[internal error] label is null\n");
-    return -1;
+    return;
   }
   int id = CB_LABEL(label)->id;
   struct cb_label_id_map *l;

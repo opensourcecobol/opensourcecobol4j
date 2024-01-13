@@ -4024,8 +4024,8 @@ statements:
 		emit_statement (CB_TREE (current_section));
 	}
 	if (!current_paragraph) {
-		char* suffix = "_SECTION__DEFAULT_PARAGRAPH";
-		char *label_name = malloc(strlen(current_section->name) + strlen(suffix) + 1);
+		const char* suffix = "_SECTION__DEFAULT_PARAGRAPH";
+		char *label_name = malloc(strlen((char*)current_section->name) + strlen(suffix) + 1);
 		sprintf(label_name, "%s%s", current_section->name, suffix);
 		label = cb_build_reference (label_name);
 		current_paragraph = CB_LABEL (cb_build_label (label, NULL));
@@ -4968,9 +4968,6 @@ exit_body:
   }
 | PERFORM
   {
-	struct cb_perform	*p;
-	char			name[64];
-
 	if (!perform_stack) {
 		cb_error (_("EXIT PERFORM is only valid with inline PERFORM"));
 	} else {
@@ -4979,9 +4976,6 @@ exit_body:
   }
 | PERFORM CYCLE
   {
-	struct cb_perform	*p;
-	char			name[64];
-
 	if (!perform_stack) {
 		cb_error (_("EXIT PERFORM is only valid with inline PERFORM"));
 	} else {
