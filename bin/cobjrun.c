@@ -62,13 +62,17 @@ static const struct option long_options[] = {
 	{NULL, 0, NULL, 0}
 };
 
+
+static int cobjrun_run_module();
+
 static void
 cobjrun_print_version (void)
 {
 	int	year;
 	int	day;
-	char	buff[64];
-	char	month[64];
+	const size_t buff_size = 64;
+	char	buff[buff_size];
+	char	month[buff_size];
 
 	memset (buff, 0, sizeof(buff));
 	memset (month, 0, sizeof(month));
@@ -76,9 +80,9 @@ cobjrun_print_version (void)
 	year = 0;
 	sscanf (__DATE__, "%s %d %d", month, &day, &year);
 	if (day && year) {
-		sprintf (buff, "%s %2.2d %4.4d %s", month, day, year, __TIME__);
+		snprintf (buff, buff_size, "%s %2.2d %4.4d %s", month, day, year, __TIME__);
 	} else {
-		sprintf (buff, "%s %s", __DATE__, __TIME__);
+		snprintf (buff, buff_size, "%s %s", __DATE__, __TIME__);
 	}
 	printf ("cobjrun (%s) %s.%d\n",
 		PACKAGE_NAME, PACKAGE_VERSION, PATCH_LEVEL);
@@ -106,7 +110,7 @@ add_include_path(char* path)
 static void
 init_include_paths()
 {
-	add_include_path(default_include_path);
+	add_include_path((char*)default_include_path);
 }
 
 static void
@@ -155,7 +159,7 @@ process_command_line (int argc, char *argv[])
 	return 1;
 }
 
-int cobjrun_run_module() {
+static int cobjrun_run_module() {
 	char buff[8192];
 	char* buff_ptr = buff;
 	struct path_list* list;
