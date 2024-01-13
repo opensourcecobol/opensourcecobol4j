@@ -29,26 +29,26 @@ jobs:
         if: inputs.os == 'ubuntu:22.04'
         run: |
           apt update -y
-          apt install -y build-essential bison flex gettext texinfo automake autoconf
+          apt install -y build-essential gettext texinfo autoconf
 
       - name: Install dependencies on AlmaLinux 9
         if: inputs.os == 'almalinux:9'
         run: |
           dnf -y update
-          dnf install -y gcc make bison flex automake autoconf diffutils gettext
+          dnf install -y gcc make autoconf diffutils gettext
 
       - name: Install dependencies on Amazon Linux 2023
         if: inputs.os == 'amazonlinux:2023'
         run: |
           dnf -y update
-          dnf install -y java-21-amazon-corretto-devel gcc make bison flex automake autoconf diffutils gettext tar gzip
+          dnf install -y java-21-amazon-corretto-devel gcc make autoconf diffutils gettext tar gzip
 
       - name: Checkout opensource COBOL 4J
         uses: actions/checkout@v3
       
       - name: Install opensource COBOL 4J
         run: |
-          ./configure --prefix=/usr/
+          ./configure --prefix=/usr/ CFLAGS=-Werror
           make
           echo ARTIFACT_NAME=${{ inputs.os }} | sed 's/:/-/g' >> $GITHUB_ENV
 

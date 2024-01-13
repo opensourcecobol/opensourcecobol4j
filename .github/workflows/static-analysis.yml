@@ -23,7 +23,7 @@ jobs:
 
       - name: Install opensource COBOL 4J
         run: |
-          sudo apt install -y build-essential bison flex gettext texinfo automake autoconf
+          sudo apt install -y build-essential bison flex gettext texinfo autoconf
           ./configure --prefix=/usr/
           make
           sudo make install

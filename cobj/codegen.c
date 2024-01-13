@@ -172,18 +172,22 @@ static char *get_java_identifier_field(struct cb_field *f);
 static char *get_java_identifier_base(struct cb_field *f);
 static void get_java_identifier_helper(struct cb_field *f, char *buf);
 static void strcpy_identifier_cobol_to_java(char *buf, const char *identifier);
-void joutput_execution_list(struct cb_program *prog);
-void joutput_execution_entry_func(void);
-void joutput_init_method(struct cb_program *prog);
-void joutput_declare_member_variables(struct cb_program *prog,
-                                      cb_tree parameter_list);
+static void joutput_execution_list(struct cb_program *prog);
+static void joutput_execution_entry_func(void);
+static void joutput_init_method(struct cb_program *prog);
+static void joutput_declare_member_variables(struct cb_program *prog,
+                                             cb_tree parameter_list);
 
-char *convert_byte_value_format(char value);
-void append_label_id_map(struct cb_label *label);
-void create_label_id_map(struct cb_program *prog);
-int find_label_id(struct cb_label *label);
-void destroy_label_id_map(void);
-void joutput_edit_code_command(const char *target);
+static char *convert_byte_value_format(char value);
+static void append_label_id_map(struct cb_label *label);
+static void create_label_id_map(struct cb_program *prog);
+static void destroy_label_id_map(void);
+static void joutput_edit_code_command(const char *target);
+
+static void joutput_label_variable(struct cb_label *label);
+static void joutput_label_variable_name(char *s, int key,
+                                        struct cb_label *section);
+static void joutput_label_variable_by_value(int value);
 
 const int EXECUTION_NORMAL = 0;
 const int EXECUTION_LAST = 1;
@@ -253,7 +257,7 @@ int control_counter = 0;
 int flag_execution_begin = EXECUTION_NORMAL;
 int flag_execution_end = EXECUTION_NORMAL;
 
-char *convert_byte_value_format(char value) {
+static char *convert_byte_value_format(char value) {
   char *s;
   if (value == '\'') {
     s = malloc(5);
@@ -593,7 +597,7 @@ static void joutput_local(const char *fmt, ...) {
   }
 }
 
-void joutput_edit_code_command(const char *target) {
+static void joutput_edit_code_command(const char *target) {
   if (!edit_code_command_is_set) {
     return;
   }
@@ -4950,7 +4954,7 @@ static void *list_cache_sort(void *inlist,
 /**
  * メンバ変数の初期化を行うメソッドinitを出力する
  */
-void joutput_init_method(struct cb_program *prog) {
+static void joutput_init_method(struct cb_program *prog) {
   int i;
   struct literal_list *m;
   struct field_list *k;
@@ -5339,8 +5343,8 @@ static void joutput_alphabet_name_definition(struct cb_alphabet_name *p) {
 /**
  * メンバ変数の宣言部分を出力
  */
-void joutput_declare_member_variables(struct cb_program *prog,
-                                      cb_tree parameter_list) {
+static void joutput_declare_member_variables(struct cb_program *prog,
+                                             cb_tree parameter_list) {
   int i;
   cb_tree l;
   struct literal_list *m;
@@ -5635,15 +5639,15 @@ static void joutput_class_name_definition(struct cb_class_name *p) {
   joutput_newline();
 }
 
-void append_label_id_map(struct cb_label *label) {
+static void append_label_id_map(struct cb_label *label) {
   struct cb_label_id_map *new_entry = malloc(sizeof(struct cb_label_id_map));
   new_entry->key = label->id;
   new_entry->val = ++label_id_counter;
   new_entry->section = label->section;
   // clone label name
   if (label->name) {
-    new_entry->label_name = malloc(strlen(label->name) + 1);
-    strcpy(new_entry->label_name, label->name);
+    new_entry->label_name = malloc(strlen((char *)label->name) + 1);
+    strcpy(new_entry->label_name, (char *)label->name);
   } else {
     new_entry->label_name = NULL;
   }
@@ -5656,7 +5660,7 @@ void append_label_id_map(struct cb_label *label) {
   label_id_map_last = new_entry;
 }
 
-void create_label_id_map(struct cb_program *prog) {
+static void create_label_id_map(struct cb_program *prog) {
   label_id_counter = 0;
   label_id_map_head = NULL;
   label_id_map_last = NULL;
@@ -5671,12 +5675,13 @@ void create_label_id_map(struct cb_program *prog) {
   append_label_id_map(CB_LABEL(cb_standard_error_handler));
 }
 
-void joutput_label_variable_name(char *s, int key, struct cb_label *section) {
+static void joutput_label_variable_name(char *s, int key,
+                                        struct cb_label *section) {
   joutput(CB_PREFIX_LABEL);
-  char *c;
+  const char *c;
   if (s) {
     if (section && section->name) {
-      for (c = section->name; *c; ++c) {
+      for (c = (const char *)section->name; *c; ++c) {
         if (*c == ' ') {
           joutput("_");
         } else if (*c == '-') {
@@ -5701,10 +5706,10 @@ void joutput_label_variable_name(char *s, int key, struct cb_label *section) {
   }
 }
 
-void joutput_label_variable(struct cb_label *label) {
+static void joutput_label_variable(struct cb_label *label) {
   if (!label) {
     fprintf(stderr, "[internal error] label is null\n");
-    return -1;
+    return;
   }
   int id = CB_LABEL(label)->id;
   struct cb_label_id_map *l;
@@ -5718,7 +5723,7 @@ void joutput_label_variable(struct cb_label *label) {
           CB_LABEL(label)->id, CB_LABEL(label)->name);
 }
 
-void joutput_label_variable_by_value(int value) {
+static void joutput_label_variable_by_value(int value) {
   struct cb_label_id_map *l;
   for (l = label_id_map_head; l; l = l->next) {
     if (l->val == value) {
@@ -5729,7 +5734,7 @@ void joutput_label_variable_by_value(int value) {
   fprintf(stderr, "[internal error] cannot find label_value: %d\n", value);
 }
 
-void destroy_label_id_map() {
+static void destroy_label_id_map() {
   while (label_id_map_head) {
     struct cb_label_id_map *next = label_id_map_head->next;
     if (label_id_map_head->label_name) {
@@ -5741,7 +5746,7 @@ void destroy_label_id_map() {
   label_id_map_head = NULL;
 }
 
-void joutput_execution_list(struct cb_program *prog) {
+static void joutput_execution_list(struct cb_program *prog) {
   control_counter = 0;
   int seen, i, n;
   struct handler_struct *hstr;
@@ -5850,7 +5855,7 @@ void joutput_execution_list(struct cb_program *prog) {
   joutput_line("};");
 }
 
-void joutput_execution_entry_func() {
+static void joutput_execution_entry_func() {
   joutput_line("public void execEntry(int start) throws CobolRuntimeException, "
                "CobolGoBackException, CobolStopRunException {");
   joutput_indent_level += 2;
