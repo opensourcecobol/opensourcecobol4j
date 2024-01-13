@@ -1,6 +1,9 @@
 TARGET_JAR = app/build/libs/libcobj.jar
+COBJ_IDX = bin/cobj-idx
 
-SRC_FILES = \	
+SRC_FILES = \
+	settings.gradle.kts \
+	./app/build.gradle.kts \
 	./app/src/main/java/jp/osscons/opensourcecobol/libcobj/Const.java \
 	./app/src/main/java/jp/osscons/opensourcecobol/libcobj/call/CobolCallDataContent.java \
 	./app/src/main/java/jp/osscons/opensourcecobol/libcobj/call/CobolResolve.java \
@@ -68,7 +71,11 @@ SRC_FILES = \
 	./app/src/main/java/jp/osscons/opensourcecobol/libcobj/ui/CobolCallResult.java \
 	./app/src/main/java/jp/osscons/opensourcecobol/libcobj/ui/CobolResultInt.java \
 	./app/src/main/java/jp/osscons/opensourcecobol/libcobj/ui/CobolResultString.java \
-	./app/src/main/java/jp/osscons/opensourcecobol/libcobj/ui/CobolResultDouble.java
+	./app/src/main/java/jp/osscons/opensourcecobol/libcobj/ui/CobolResultDouble.java \
+	./app/src/main/java/jp/osscons/opensourcecobol/libcobj/user_util/indexed_file/IndexedFileUtilMain.java \
+	./app/src/main/java/jp/osscons/opensourcecobol/libcobj/user_util/indexed_file/ErrorLib.java \
+	./app/src/main/java/jp/osscons/opensourcecobol/libcobj/user_util/indexed_file/LoadResult.java \
+	./app/src/main/java/jp/osscons/opensourcecobol/libcobj/user_util/indexed_file/UserDataFormat.java
 
 all: $(TARGET_JAR)
 
@@ -78,6 +85,7 @@ $(TARGET_JAR): $(SRC_FILES)
 clean:
 	rm -rf $(TARGET_JAR)
 
-install: $(TARGET_JAR)
+install: $(TARGET_JAR) $(COBJ_IDX)
 	mkdir -p $(DESTDIR)$(prefix)/lib/opensourcecobol4j/
 	install $(TARGET_JAR) $(DESTDIR)$(prefix)/lib/opensourcecobol4j/
+	install $(COBJ_IDX) $(DESTDIR)$(prefix)/bin/

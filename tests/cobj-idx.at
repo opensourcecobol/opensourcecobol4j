@@ -1,0 +1,7 @@
+AT_INIT([cobj-idx])
+
+m4_include([info.at])
+m4_include([load.at])
+m4_include([unload.at])
+m4_include([cobj-idx.src/misc.at])
+

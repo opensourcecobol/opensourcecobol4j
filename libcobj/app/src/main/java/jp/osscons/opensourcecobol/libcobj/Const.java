@@ -40,4 +40,6 @@ public class Const {
   public static final int COB_PATCH_LEVEL = 0;
   // TODO 標準パスの設定
   public static final String COB_LIBRARY_PATH = "";
+
+  public static final String version = "1.0.18";
 }

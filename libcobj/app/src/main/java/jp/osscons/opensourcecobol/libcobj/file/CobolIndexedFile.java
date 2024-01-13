@@ -39,6 +39,7 @@ public class CobolIndexedFile extends CobolFile {
   private boolean updateWhileReading = false;
   private boolean indexedFirstRead = true;
   private boolean callStart = false;
+  private boolean commitOnModification = true;
 
   public static final int COB_EQ = 1;
   public static final int COB_LT = 2;
@@ -121,6 +122,10 @@ public class CobolIndexedFile extends CobolFile {
     return String.format("constraint%d", index);
   }
 
+  public void setCommitOnModification(boolean commitOnModification) {
+    this.commitOnModification = commitOnModification;
+  }
+
   /** Equivalent to DBT_SET in libcob/fileio.c */
   private byte[] DBT_SET(AbstractCobolField field) {
     return field.getDataStorage().getByteArray(0, field.getSize());
@@ -171,12 +176,11 @@ public class CobolIndexedFile extends CobolFile {
       }
     }
 
-    for (int i = 0; i < this.nkeys; ++i) {
-      String tableName = getTableName(i);
-
-      if (mode == COB_OPEN_OUTPUT
-          || (!fileExists && (mode == COB_OPEN_EXTEND || mode == COB_OPEN_I_O))) {
-        try {
+    if (mode == COB_OPEN_OUTPUT
+        || (!fileExists && (mode == COB_OPEN_EXTEND || mode == COB_OPEN_I_O))) {
+      try {
+        for (int i = 0; i < this.nkeys; ++i) {
+          String tableName = getTableName(i);
           Statement statement = p.connection.createStatement();
           if (i == 0) {
             statement.execute(
@@ -203,9 +207,13 @@ public class CobolIndexedFile extends CobolFile {
           statement.execute(
               String.format("create index %s on %s(key)", getIndexName(i), tableName));
           statement.close();
-        } catch (SQLException e) {
-          return COB_STATUS_30_PERMANENT_ERROR;
         }
+        this.writeMetaData(p);
+        if (this.commitOnModification) {
+          p.connection.commit();
+        }
+      } catch (SQLException e) {
+        return COB_STATUS_30_PERMANENT_ERROR;
       }
     }
 
@@ -224,6 +232,38 @@ public class CobolIndexedFile extends CobolFile {
     this.callStart = false;
 
     return 0;
+  }
+
+  // Write a metadata to the database
+  private void writeMetaData(IndexedFile p) throws SQLException {
+    Statement statement = p.connection.createStatement();
+    // Create a table to store metadata
+    statement.execute(
+        "create table metadata_string_int (key text not null primary key, value integer not null)");
+    statement.execute(
+        "create table metadata_key (idx integer not null primary key, offset integer not null, size integer not null, duplicate boolean)");
+
+    // Store the size of a record
+    PreparedStatement recordSizePreparedStmt =
+        p.connection.prepareStatement("insert into metadata_string_int values ('record_size', ?)");
+    recordSizePreparedStmt.setInt(1, this.record_max);
+    recordSizePreparedStmt.execute();
+    recordSizePreparedStmt.close();
+
+    // Store information of all keys
+    PreparedStatement keyPreparedStmt =
+        p.connection.prepareStatement("insert into metadata_key values (?, ?, ?, ?)");
+    for (int i = 0; i < this.nkeys; i++) {
+      keyPreparedStmt.setInt(1, i);
+      keyPreparedStmt.setInt(
+          2,
+          this.keys[i].getField().getDataStorage().getIndex()
+              - this.record.getDataStorage().getIndex());
+      keyPreparedStmt.setInt(3, this.keys[i].getField().getSize());
+      keyPreparedStmt.setBoolean(4, this.keys[i].getFlag() != 0);
+      keyPreparedStmt.execute();
+    }
+    keyPreparedStmt.close();
   }
 
   /** Equivalent to indexed_close in libcob/fileio.c */
@@ -449,7 +489,9 @@ public class CobolIndexedFile extends CobolFile {
       insertStatement.setBytes(1, p.key);
       insertStatement.setBytes(2, p.data);
       insertStatement.execute();
-      p.connection.commit();
+      if (this.commitOnModification) {
+        p.connection.commit();
+      }
     } catch (SQLException e) {
       return returnWith(p, closeCursor, 0, COB_STATUS_51_RECORD_LOCKED);
     }
@@ -482,7 +524,9 @@ public class CobolIndexedFile extends CobolFile {
           insertStatement.setBytes(2, p.data);
         }
         insertStatement.execute();
-        p.connection.commit();
+        if (this.commitOnModification) {
+          p.connection.commit();
+        }
       } catch (SQLException e) {
         return returnWith(p, closeCursor, 0, COB_STATUS_51_RECORD_LOCKED);
       }
@@ -616,10 +660,12 @@ public class CobolIndexedFile extends CobolFile {
       }
     }
 
-    try {
-      p.connection.commit();
-    } catch (SQLException e) {
-      return returnWith(p, closeCursor, 0, COB_STATUS_30_PERMANENT_ERROR);
+    if (this.commitOnModification) {
+      try {
+        p.connection.commit();
+      } catch (SQLException e) {
+        return returnWith(p, closeCursor, 0, COB_STATUS_30_PERMANENT_ERROR);
+      }
     }
 
     this.updateWhileReading = true;
@@ -636,5 +682,36 @@ public class CobolIndexedFile extends CobolFile {
   @Override
   public void unlock_() {
     System.err.println("Unlocking INDEXED file is not implemented");
+  }
+
+  public void commitJdbcTransaction() {
+    IndexedFile p = this.filei;
+    try {
+      p.connection.commit();
+    } catch (SQLException e) {
+      System.err.println("Failed to commit a transaction");
+    }
+  }
+
+  /**
+   * Delete all records in the file
+   *
+   * @return true if all records are deleted successfully, otherwise false
+   */
+  public boolean deleteAllRecords() {
+    IndexedFile p = this.filei;
+    try {
+      for (int i = this.nkeys - 1; i >= 0; --i) {
+        Statement statement = p.connection.createStatement();
+        statement.execute("delete from " + getTableName(i));
+        statement.close();
+      }
+      if (this.commitOnModification) {
+        p.connection.commit();
+      }
+      return true;
+    } catch (SQLException e) {
+      return false;
+    }
   }
 }

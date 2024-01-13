@@ -1,0 +1,167 @@
+AT_SETUP([unload])
+
+# COBOL program to create a sample indexed file
+AT_DATA([sample.cbl],
+[       identification division.
+       program-id. sample.
+       environment division.
+       input-output section.
+       file-control.
+       select f assign to 'idx-file'
+           organization is indexed
+           access mode is random
+           record key is rec-key
+           alternate record key is alt-key-1
+           alternate record key is alt-key-2
+           alternate record key is alt-key-dup-1 with duplicates
+           alternate record key is alt-key-dup-2 with duplicates.
+       data division.
+       file section.
+       fd f.
+       01 rec.
+         03 rec-key pic x(5).
+         03 alt-key-1 pic x(5).
+         03 alt-key-2 pic x(5).
+         03 alt-key-dup-1 pic x(5).
+         03 alt-key-dup-2 pic x(5).
+         03 rec-value pic x(5).
+       working-storage section.
+       procedure division.
+       main-proc.
+           open output f.
+
+           move 'a0010' to rec-key.
+           move 'b0010' to alt-key-1.
+           move 'c0010' to alt-key-2.
+           move 'd0010' to alt-key-dup-1.
+           move 'e0010' to alt-key-dup-2.
+           move '00010' to rec-value.
+           write rec.
+
+           move 'a0011' to rec-key.
+           move 'b0011' to alt-key-1.
+           move 'c0011' to alt-key-2.
+           move 'd0010' to alt-key-dup-1.
+           move 'e0010' to alt-key-dup-2.
+           move '00011' to rec-value.
+           write rec.
+
+           move 'a0000' to rec-key.
+           move 'b0000' to alt-key-1.
+           move 'c0000' to alt-key-2.
+           move 'd0000' to alt-key-dup-1.
+           move 'e0000' to alt-key-dup-2.
+           move '00000' to rec-value.
+           write rec.
+
+           move 'a0001' to rec-key.
+           move 'b0001' to alt-key-1.
+           move 'c0001' to alt-key-2.
+           move 'd0001' to alt-key-dup-1.
+           move 'e0001' to alt-key-dup-2.
+           move '00001' to rec-value.
+           write rec.
+           close f.
+])
+
+# COBOL program to create an empty indexed file
+AT_DATA([empty.cbl],
+[       identification division.
+       program-id. empty.
+       environment division.
+       input-output section.
+       file-control.
+       select f assign to 'idx-empty-file'
+           organization is indexed
+           access mode is random
+           record key is rec-key
+           alternate record key is alt-key-1
+           alternate record key is alt-key-2
+           alternate record key is alt-key-dup-1 with duplicates
+           alternate record key is alt-key-dup-2 with duplicates.
+       data division.
+       file section.
+       fd f.
+       01 rec.
+         03 rec-key pic x(5).
+         03 alt-key-1 pic x(5).
+         03 alt-key-2 pic x(5).
+         03 alt-key-dup-1 pic x(5).
+         03 alt-key-dup-2 pic x(5).
+         03 rec-value pic x(5).
+       working-storage section.
+       procedure division.
+       main-proc.
+           open output f.
+           close f.
+])
+
+AT_CHECK([${COMPILE} sample.cbl empty.cbl])
+
+# Create a sample indexed file
+AT_CHECK([java sample])
+# Create an empty indexed file (This is a valid indexed file)
+AT_CHECK([java empty])
+# Create an invalid indexed file
+AT_CHECK([echo "invalid data" > idx-invalid-file])
+# Create a directory (This is not a valid indexed file)
+AT_CHECK([mkdir dir-idx-file])
+
+# basic tests
+AT_CHECK([${COBJ_IDX} unload idx-file], [0],
+[a0000b0000c0000d0000e000000000
+a0001b0001c0001d0001e000100001
+a0010b0010c0010d0010e001000010
+a0011b0011c0011d0010e001000011
+])
+
+AT_CHECK([${COBJ_IDX} unload idx-empty-file])
+
+AT_CHECK([${COBJ_IDX} unload idx-invalid-file], [1], [],
+[error: 'idx-invalid-file' is not a valid indexed file.
+])
+
+AT_CHECK([${COBJ_IDX} unload not-existing-file], [1], [],
+[error: 'not-existing-file' does not exist.
+])
+
+AT_CHECK([${COBJ_IDX} unload dir-idx-file], [1], [],
+[error: 'dir-idx-file' is not a valid indexed file.
+])
+
+# Tests for -f, --format option
+AT_CHECK([${COBJ_IDX} unload -f txt idx-file], [0],
+[a0000b0000c0000d0000e000000000
+a0001b0001c0001d0001e000100001
+a0010b0010c0010d0010e001000010
+a0011b0011c0011d0010e001000011
+])
+
+AT_CHECK([${COBJ_IDX} unload --format=txt idx-file], [0],
+[a0000b0000c0000d0000e000000000
+a0001b0001c0001d0001e000100001
+a0010b0010c0010d0010e001000010
+a0011b0011c0011d0010e001000011
+])
+
+AT_CHECK([${COBJ_IDX} unload -f bin idx-file], [0],
+[a0000b0000c0000d0000e000000000a0001b0001c0001d0001e000100001a0010b0010c0010d0010e001000010a0011b0011c0011d0010e001000011
+])
+
+AT_CHECK([${COBJ_IDX} unload --format=bin idx-file], [0],
+[a0000b0000c0000d0000e000000000a0001b0001c0001d0001e000100001a0010b0010c0010d0010e001000010a0011b0011c0011d0010e001000011
+])
+
+AT_CHECK([${COBJ_IDX} unload -f txt idx-empty-file], [0],
+[])
+
+AT_CHECK([${COBJ_IDX} unload --format=txt idx-empty-file], [0],
+[])
+
+AT_CHECK([${COBJ_IDX} unload -f bin idx-empty-file], [0],
+[])
+
+AT_CHECK([${COBJ_IDX} unload --format=bin idx-empty-file], [0],
+[])
+
+AT_CLEANUP

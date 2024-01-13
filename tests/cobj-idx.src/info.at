@@ -1,0 +1,264 @@
+AT_SETUP([info])
+
+# Create a sample indexed file named 'idx-file'
+
+AT_DATA([sample.cbl],[
+       identification division.
+       program-id. sample.
+       environment division.
+       input-output section.
+       file-control.
+       select f assign to 'idx-file'
+           organization is indexed
+           access mode is random
+           record key is rec-key
+           alternate record key is alt-key-1
+           alternate record key is alt-key-2
+           alternate record key is alt-key-dup-1 with duplicates
+           alternate record key is alt-key-dup-2 with duplicates.
+       data division.
+       file section.
+       fd f.
+       01 rec.
+         03 rec-key pic x(5).
+         03 alt-key-1 pic x(5).
+         03 alt-key-2 pic x(5).
+         03 alt-key-dup-1 pic x(5).
+         03 alt-key-dup-2 pic x(5).
+         03 rec-value pic x(5).
+       working-storage section.
+       procedure division.
+       main-proc.
+           open output f.
+           move 'a0000' to rec-key.
+           move 'b0000' to alt-key-1.
+           move 'c0000' to alt-key-2.
+           move 'd0000' to alt-key-dup-1.
+           move 'e0000' to alt-key-dup-2.
+           move '00000' to rec-value.
+           write rec.
+           move 'a0001' to rec-key.
+           move 'b0001' to alt-key-1.
+           move 'c0001' to alt-key-2.
+           move 'd0001' to alt-key-dup-1.
+           move 'e0001' to alt-key-dup-2.
+           move '00001' to rec-value.
+           write rec.
+           move 'a0010' to rec-key.
+           move 'b0010' to alt-key-1.
+           move 'c0010' to alt-key-2.
+           move 'd0010' to alt-key-dup-1.
+           move 'e0010' to alt-key-dup-2.
+           move '00010' to rec-value.
+           write rec.
+           move 'a0011' to rec-key.
+           move 'b0011' to alt-key-1.
+           move 'c0011' to alt-key-2.
+           move 'd0010' to alt-key-dup-1.
+           move 'e0010' to alt-key-dup-2.
+           move '00011' to rec-value.
+           write rec.
+           close f.
+])
+
+AT_CHECK([${COMPILE} sample.cbl])
+AT_CHECK([java sample])
+
+# Create an empty indexed file named 'idx-empty-file'
+
+AT_DATA([empty.cbl],[
+       identification division.
+       program-id. empty.
+       environment division.
+       input-output section.
+       file-control.
+       select f assign to 'idx-empty-file'
+           organization is indexed
+           access mode is random
+           record key is rec-key
+           alternate record key is alt-key-1
+           alternate record key is alt-key-2
+           alternate record key is alt-key-dup-1 with duplicates
+           alternate record key is alt-key-dup-2 with duplicates.
+       data division.
+       file section.
+       fd f.
+       01 rec.
+         03 rec-key pic x(5).
+         03 alt-key-1 pic x(5).
+         03 alt-key-2 pic x(5).
+         03 alt-key-dup-1 pic x(5).
+         03 alt-key-dup-2 pic x(5).
+         03 rec-value pic x(5).
+       working-storage section.
+       procedure division.
+       main-proc.
+           open output f.
+           close f.
+])
+
+AT_CHECK([${COMPILE} empty.cbl])
+AT_CHECK([java empty])
+
+# a test for an indexed file
+AT_CHECK([${COBJ_IDX} info idx-file], [0],
+[Size of a record: 30
+Number of records: 4
+Primary key position: 1-5
+Alternate key position (No duplicate): 6-10
+Alternate key position (No duplicate): 11-15
+Alternate key position (Duplicates): 16-20
+Alternate key position (Duplicates): 21-25
+])
+
+# a test for an empty indexed file
+AT_CHECK([${COBJ_IDX} info idx-empty-file], [0],
+[Size of a record: 30
+Number of records: 0
+Primary key position: 1-5
+Alternate key position (No duplicate): 6-10
+Alternate key position (No duplicate): 11-15
+Alternate key position (Duplicates): 16-20
+Alternate key position (Duplicates): 21-25
+])
+
+# a test for an not-existing file
+AT_CHECK([${COBJ_IDX} info not-existing-file], [1], [],
+[error: 'not-existing-file' does not exist.
+])
+
+# a test for a directory
+AT_CHECK([mkdir indexed-file-dir])
+AT_CHECK([${COBJ_IDX} info indexed-file-dir], [1], [],
+[error: 'indexed-file-dir' is not a valid indexed file.
+])
+
+# a test for an invalid format file
+AT_CHECK([echo "info" > invalid-format-indexed-file])
+AT_CHECK([${COBJ_IDX} info invalid-format-indexed-file], [1], [],
+[error: 'invalid-format-indexed-file' is not a valid indexed file.
+])
+
+# Shuffle the order of key definitions of an indexed file
+
+AT_DATA([sample.cbl],[
+       identification division.
+       program-id. sample.
+       environment division.
+       input-output section.
+       file-control.
+       select f assign to 'idx-file'
+           organization is indexed
+           access mode is random
+           alternate record key is alt-key-dup-1 with duplicates
+           alternate record key is alt-key-1
+           alternate record key is alt-key-dup-2 with duplicates
+           alternate record key is alt-key-2
+           record key is rec-key.
+       data division.
+       file section.
+       fd f.
+       01 rec.
+         03 rec-key pic x(5).
+         03 alt-key-1 pic x(5).
+         03 alt-key-2 pic x(5).
+         03 alt-key-dup-1 pic x(5).
+         03 alt-key-dup-2 pic x(5).
+         03 rec-value pic x(5).
+       working-storage section.
+       procedure division.
+       main-proc.
+           open output f.
+           move 'a0000' to rec-key.
+           move 'b0000' to alt-key-1.
+           move 'c0000' to alt-key-2.
+           move 'd0000' to alt-key-dup-1.
+           move 'e0000' to alt-key-dup-2.
+           move '00000' to rec-value.
+           write rec.
+           move 'a0001' to rec-key.
+           move 'b0001' to alt-key-1.
+           move 'c0001' to alt-key-2.
+           move 'd0001' to alt-key-dup-1.
+           move 'e0001' to alt-key-dup-2.
+           move '00001' to rec-value.
+           write rec.
+           move 'a0010' to rec-key.
+           move 'b0010' to alt-key-1.
+           move 'c0010' to alt-key-2.
+           move 'd0010' to alt-key-dup-1.
+           move 'e0010' to alt-key-dup-2.
+           move '00010' to rec-value.
+           write rec.
+           move 'a0011' to rec-key.
+           move 'b0011' to alt-key-1.
+           move 'c0011' to alt-key-2.
+           move 'd0010' to alt-key-dup-1.
+           move 'e0010' to alt-key-dup-2.
+           move '00011' to rec-value.
+           write rec.
+           close f.
+])
+
+AT_CHECK([${COMPILE} sample.cbl])
+AT_CHECK([java sample])
+
+# Shuffle the order of key definitions of an empty indexed file
+
+AT_DATA([empty.cbl],[
+       identification division.
+       program-id. empty.
+       environment division.
+       input-output section.
+       file-control.
+       select f assign to 'idx-empty-file'
+           organization is indexed
+           access mode is random
+           alternate record key is alt-key-dup-1 with duplicates
+           alternate record key is alt-key-1
+           alternate record key is alt-key-dup-2 with duplicates
+           alternate record key is alt-key-2
+           record key is rec-key.
+       data division.
+       file section.
+       fd f.
+       01 rec.
+         03 rec-key pic x(5).
+         03 alt-key-1 pic x(5).
+         03 alt-key-2 pic x(5).
+         03 alt-key-dup-1 pic x(5).
+         03 alt-key-dup-2 pic x(5).
+         03 rec-value pic x(5).
+       working-storage section.
+       procedure division.
+       main-proc.
+           open output f.
+           close f.
+])
+
+AT_CHECK([${COMPILE} empty.cbl])
+AT_CHECK([java empty])
+
+# a test for an indexed file
+AT_CHECK([${COBJ_IDX} info idx-file], [0],
+[Size of a record: 30
+Number of records: 4
+Primary key position: 1-5
+Alternate key position (Duplicates): 16-20
+Alternate key position (No duplicate): 6-10
+Alternate key position (Duplicates): 21-25
+Alternate key position (No duplicate): 11-15
+])
+
+# a test for an empty indexed file
+AT_CHECK([${COBJ_IDX} info idx-empty-file], [0],
+[Size of a record: 30
+Number of records: 0
+Primary key position: 1-5
+Alternate key position (Duplicates): 16-20
+Alternate key position (No duplicate): 6-10
+Alternate key position (Duplicates): 21-25
+Alternate key position (No duplicate): 11-15
+])
+
+AT_CLEANUP

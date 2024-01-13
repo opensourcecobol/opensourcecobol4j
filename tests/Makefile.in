@@ -571,6 +571,7 @@ SUBDIRS = cobol85
 @I18N_UTF8_FALSE@	i18n_sjis \
 @I18N_UTF8_FALSE@	jp-compat \
 @I18N_UTF8_FALSE@	command-line-options \
+@I18N_UTF8_FALSE@	cobj-idx \
 @I18N_UTF8_FALSE@	misc
 
 @I18N_UTF8_TRUE@TESTS = syntax \
@@ -581,6 +582,7 @@ SUBDIRS = cobol85
 @I18N_UTF8_TRUE@	i18n_utf8 \
 @I18N_UTF8_TRUE@	jp-compat \
 @I18N_UTF8_TRUE@	command-line-options \
+@I18N_UTF8_TRUE@	cobj-idx \
 @I18N_UTF8_TRUE@	misc
 
 syntax_DEPENDENCIES = \
@@ -707,6 +709,13 @@ command_line_options_DEPENDENCIES = \
 	command-line-options.src/debug.at \
 	command-line-options.src/jar.at
 
+cobj_idx_DEPENDENCIES = \
+	cobj-idx.at \
+	cobj-idx.src/info.at \
+	cobj-idx.src/load.at \
+	cobj-idx.src/unload.at \
+	cobj-idx.src/misc.at
+
 misc_DEPENDENCIES = \
 	misc.src/signed-comp3.at \
 	misc.src/index-comp.at \
@@ -742,6 +751,7 @@ EXTRA_DIST = $(srcdir)/package.m4 \
 	$(i18n_sjis_DEPENDENCIES) \
 	$(jp_compat_DEPENDENCIES) \
 	$(command_line_options_DEPENDENCIES) \
+	$(cobj_idx_DEPENDENCIES) \
 	$(misc_DEPENDENCIES)
 
 DISTCLEANFILES = atconfig
@@ -1083,6 +1093,13 @@ command-line-options.log: command-line-options
 	--log-file $$b.log --trs-file $$b.trs \
 	$(am__common_driver_flags) $(AM_LOG_DRIVER_FLAGS) $(LOG_DRIVER_FLAGS) -- $(LOG_COMPILE) \
 	"$$tst" $(AM_TESTS_FD_REDIRECT)
+cobj-idx.log: cobj-idx
+	@p='cobj-idx'; \
+	b='cobj-idx'; \
+	$(am__check_pre) $(LOG_DRIVER) --test-name "$$f" \
+	--log-file $$b.log --trs-file $$b.trs \
+	$(am__common_driver_flags) $(AM_LOG_DRIVER_FLAGS) $(LOG_DRIVER_FLAGS) -- $(LOG_COMPILE) \
+	"$$tst" $(AM_TESTS_FD_REDIRECT)
 misc.log: misc
 	@p='misc'; \
 	b='misc'; \
@@ -1321,6 +1338,7 @@ $(srcdir)/i18n_utf8: $(i18n_utf8_DEPENDENCIES)
 $(srcdir)/i18n_sjis: $(i18n_sjis_DEPENDENCIES)
 $(srcdir)/jp-compat: $(jp_compat_DEPENDENCIES)
 $(srcdir)/command-line-options: $(command_line_options_DEPENDENCIES)
+$(srcdir)/cobj-idx: $(cobj_idx_DEPENDENCIES)
 $(srcdir)/misc: $(misc_DEPENDENCIES)
 
 # Tell versions [3.59,3.63) of GNU make to not export all variables.

@@ -234,6 +234,10 @@ public class CobolDataStorage {
     }
   }
 
+  public void memcpy(byte[] buf, int offset, int size) {
+    System.arraycopy(buf, offset, this.data, this.index, size);
+  }
+
   public void memcpy(byte[] buf) {
     this.memcpy(buf, buf.length);
   }

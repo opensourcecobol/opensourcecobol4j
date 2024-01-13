@@ -30,6 +30,7 @@ PATH="${abs_top_builddir}/cobj:${abs_top_builddir}/bin:${abs_top_builddir}/libco
 CONF_JP_COMPAT="-conf=${abs_top_builddir}/config/jp-compat.conf"
 CONF_LIMIT_TEST="-conf=${abs_top_builddir}/config/boundary-limit.conf"
 COBJ="${abs_top_builddir}/cobj/cobj"
+COBJ_IDX="${abs_top_builddir}/libcobj/bin/cobj-idx"
 RUN_MODULE="java"
 #COBCRUN="${abs_top_builddir}/bin/cobcrun"
 
