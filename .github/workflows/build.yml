@@ -48,7 +48,7 @@ jobs:
       
       - name: Install opensource COBOL 4J
         run: |
-          ./configure --prefix=/usr/
+          ./configure --prefix=/usr/ CFLAGS=-Werror
           make
           echo ARTIFACT_NAME=${{ inputs.os }} | sed 's/:/-/g' >> $GITHUB_ENV
 

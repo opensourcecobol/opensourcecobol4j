@@ -1862,7 +1862,7 @@ static int process_library(struct filename *l) {
   ret = process(buffptr);
 #ifdef COB_STRIP_CMD
   if (strip_output && ret == 0) {
-    sprintf(buff, "%s %s", COB_STRIP_CMD, name);
+    snprintf(buff, COB_MEDIUM_BUFF, "%s %s", COB_STRIP_CMD, name);
     ret = process(buff);
   }
 #endif
@@ -1947,7 +1947,7 @@ static int process_link(struct filename *l) {
 #endif
 #ifdef COB_STRIP_CMD
   if (strip_output && ret == 0) {
-    sprintf(buff, "%s %s%s", COB_STRIP_CMD, name, COB_EXEEXT);
+    snprintf(buff, COB_MEDIUM_BUFF, "%s %s%s", COB_STRIP_CMD, name, COB_EXEEXT);
     ret = process(buff);
   }
 #endif
