@@ -1,0 +1,18 @@
+#!/bin/bash
+cppcheck --error-exitcode=1 \
+    cobj.c cobj.h codegen.c config.c error.c field.c ppparse.c ppparse.h reserved.c tree.c tree.h typeck.c \
+    --enable=style \
+    --suppress=unusedFunctions \
+    --suppress=constParameter \
+    --suppress=variableScope \
+    --suppress=knownConditionTrueFalse \
+    --suppress=shadowVariable \
+    --suppress=invalidscanf \
+    --suppress=unsignedPositive \
+    --suppress=redundantAssignment \
+    --suppress=unusedVariable \
+    --suppress=duplicateExpression \
+    --suppress=toomanyconfigs \
+    --suppress=uselessAssignmentPtrArg \
+    --suppress=unreadVariable \
+    --suppress=nullPointerRedundantCheck

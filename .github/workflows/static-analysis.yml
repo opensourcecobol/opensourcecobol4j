@@ -45,4 +45,4 @@ jobs:
       - name: Run cppcheck
         working-directory: cobj
         run: |
-          cppcheck --error-exitcode=1 cobj.c cobj.h codegen.c config.c error.c field.c ppparse.c ppparse.h reserved.c tree.c tree.h typeck.c
+          ./cpp-check
