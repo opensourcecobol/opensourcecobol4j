@@ -1688,7 +1688,7 @@ static void package_name_to_path(char *buff, char *package_name) {
 
 static int process_compile(struct filename *fn) {
   char buff[COB_MEDIUM_BUFF];
-  char buff2[COB_MEDIUM_BUFF];
+  char buff2[COB_SMALL_BUFF];
   char name[COB_MEDIUM_BUFF];
   int ret = 0;
 
@@ -1957,7 +1957,7 @@ static int process_link(struct filename *l) {
 
 static int process_build_single_jar() {
   char buff[COB_MEDIUM_BUFF];
-  char buff2[COB_MEDIUM_BUFF];
+  char buff2[COB_SMALL_BUFF];
   int ret;
 
   char *output_name_a = output_name == NULL ? (char *)"./" : output_name;
