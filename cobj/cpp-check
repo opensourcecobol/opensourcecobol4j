@@ -13,7 +13,6 @@ cppcheck --error-exitcode=1 \
     --suppress=unsignedPositive \
     --suppress=redundantAssignment \
     --suppress=unusedVariable \
-    --suppress=duplicateExpression \
     --suppress=toomanyconfigs \
     --suppress=uselessAssignmentPtrArg \
     --suppress=unreadVariable \

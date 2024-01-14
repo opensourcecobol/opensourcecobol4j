@@ -3793,7 +3793,7 @@ static void joutput_stmt(cb_tree x, enum joutput_stmt_type output_type) {
 
     f = cb_field(ap->var);
     if (f->usage == CB_USAGE_BINARY || f->usage == CB_USAGE_COMP_5 ||
-        f->usage == CB_USAGE_BINARY || f->usage == CB_USAGE_INDEX) {
+        f->usage == CB_USAGE_INDEX) {
       if (f->size == 1) {
         joutput("(byte)");
       } else if (f->size == 2) {
