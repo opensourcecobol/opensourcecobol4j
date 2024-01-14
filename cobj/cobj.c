@@ -1784,7 +1784,7 @@ static int process_library(struct filename *l) {
   size_t bufflen;
   int ret;
   char buff[COB_MEDIUM_BUFF];
-  char name[COB_MEDIUM_BUFF];
+  char name[COB_SMALL_BUFF];
   char objs[COB_MEDIUM_BUFF] = "\0";
 
   bufflen = 0;
@@ -1877,7 +1877,7 @@ static int process_link(struct filename *l) {
   size_t bufflen;
   int ret;
   char buff[COB_MEDIUM_BUFF];
-  char name[COB_MEDIUM_BUFF];
+  char name[COB_SMALL_BUFF];
   char objs[COB_MEDIUM_BUFF] = "\0";
 
   bufflen = 0;

@@ -705,7 +705,8 @@ static void create_sorted_data_storage_cache() {
     }
   }
   qsort(sorted_data_storage_cache, data_storage_cache_count,
-        sizeof(struct data_storage_list *), comp_data_storage_cache);
+        sizeof(struct data_storage_list *),
+        (int (*)(const void *, const void *))comp_data_storage_cache);
 }
 
 static void destroy_sorted_data_storage_cache() {
@@ -4199,7 +4200,7 @@ static void joutput_initial_values(struct cb_field *p) {
 }
 
 struct call_parameter_list {
-  struct call_paramter_list *next;
+  struct call_parameter_list *next;
   struct cb_field *field;
   cb_tree x;
 };
@@ -5664,7 +5665,7 @@ static void create_label_id_map(struct cb_program *prog) {
   label_id_counter = 0;
   label_id_map_head = NULL;
   label_id_map_last = NULL;
-  cb_tree *l;
+  cb_tree l;
 
   for (l = prog->exec_list; l; l = CB_CHAIN(l)) {
     if (CB_TREE_TAG(CB_VALUE(l)) == CB_TAG_LABEL) {
@@ -5760,7 +5761,7 @@ static void joutput_execution_list(struct cb_program *prog) {
       "public Optional<CobolControl> run() throws CobolRuntimeException, "
       "CobolGoBackException, CobolStopRunException {");
   joutput_indent_level += 2;
-  cb_tree *l;
+  cb_tree l;
   flag_execution_begin = EXECUTION_NORMAL;
   flag_execution_end = EXECUTION_NORMAL;
   for (l = prog->exec_list; l; l = CB_CHAIN(l)) {

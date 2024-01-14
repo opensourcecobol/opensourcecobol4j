@@ -241,7 +241,7 @@ typedef struct cb_tree_common *cb_tree;
 #ifdef __GNUC__
 #define CB_TREE_CAST(tg, ty, x)                                                \
   ({                                                                           \
-    cb_tree _x = (x);                                                          \
+    cb_tree _x = (cb_tree)(x);                                                 \
     if (!_x || CB_TREE_TAG(_x) != tg) {                                        \
       cobc_tree_cast_error(_x, __FILE__, __LINE__, tg);                        \
     }                                                                          \

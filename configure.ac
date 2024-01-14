@@ -617,7 +617,7 @@ esac
 
 if test "`basename $CC`" = "gcc"
 then
-	CFLAGS="$CFLAGS -fsigned-char -Wall -Wmissing-prototypes -Wno-format-security -Wno-incompatible-pointer-types"
+	CFLAGS="$CFLAGS -fsigned-char -Wall -Wmissing-prototypes -Wno-format-security"
 fi
 
 if test "x$lt_cv_dlopen_self" != "xyes"
