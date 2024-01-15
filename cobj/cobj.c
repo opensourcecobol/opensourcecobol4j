@@ -2035,7 +2035,7 @@ int main(int argc, char *argv[]) {
   memset(month, 0, sizeof(month));
   day = 0;
   year = 0;
-  sscanf(__DATE__, "%s %d %d", month, &day, &year);
+  sscanf(__DATE__, "%3s %2d %4d", month, &day, &year);
   if (day && year) {
     sprintf(buff, "%s %2.2d %4.4d %s", month, day, year, __TIME__);
   } else {

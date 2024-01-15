@@ -8,7 +8,6 @@ cppcheck --error-exitcode=1 \
     --suppress=constParameter \
     --suppress=variableScope \
     --suppress=shadowVariable \
-    --suppress=invalidscanf \
     --suppress=unusedVariable \
     --suppress=toomanyconfigs \
     --suppress=uselessAssignmentPtrArg \
