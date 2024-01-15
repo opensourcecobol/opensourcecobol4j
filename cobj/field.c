@@ -207,7 +207,6 @@ cb_tree cb_build_field_tree(cb_tree level, cb_tree name,
       field_fill->parent->children = field_fill;
       field_fill->sister = f;
       f->parent = field_fill->parent;
-      last_field = field_fill;
     } else {
       cb_error_x(name, _("No previous data item of level %02d"), f->level);
       return cb_error_node;

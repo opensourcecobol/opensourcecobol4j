@@ -15,5 +15,4 @@ cppcheck --error-exitcode=1 \
     --suppress=unusedVariable \
     --suppress=toomanyconfigs \
     --suppress=uselessAssignmentPtrArg \
-    --suppress=unreadVariable \
     --suppress=nullPointerRedundantCheck
