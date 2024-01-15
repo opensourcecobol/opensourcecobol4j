@@ -9,5 +9,4 @@ cppcheck --error-exitcode=1 \
     --suppress=variableScope \
     --suppress=shadowVariable \
     --suppress=unusedVariable \
-    --suppress=toomanyconfigs \
-    --suppress=uselessAssignmentPtrArg
+    --suppress=toomanyconfigs
