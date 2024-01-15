@@ -6952,8 +6952,7 @@ static void cb_validate_unstring(cb_tree name, cb_tree delimited,
         default:
           break;
         }
-        if (item_value2 != NULL &&
-            CB_FUNCALL(CB_PAIR_Y(item_value2))->argv[0] != cb_zero &&
+        if (CB_FUNCALL(CB_PAIR_Y(item_value2))->argv[0] != cb_zero &&
             CB_FUNCALL(CB_PAIR_Y(item_value2))->argv[0] != cb_space &&
             CB_FUNCALL(CB_PAIR_Y(item_value2))->argv[0] != cb_quote &&
             CB_FUNCALL(CB_PAIR_Y(item_value2))->argv[0] != cb_high &&
