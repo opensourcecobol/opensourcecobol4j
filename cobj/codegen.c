@@ -2360,7 +2360,6 @@ static void joutput_initialize_one(struct cb_initialize *p, cb_tree x) {
           lastsize = f->size;
         }
       }
-      l = CB_LITERAL(value);
       if ((int)l->size >= (int)f->size) {
         memcpy(buff, l->data, (size_t)f->size);
       } else {
@@ -3793,7 +3792,7 @@ static void joutput_stmt(cb_tree x, enum joutput_stmt_type output_type) {
 
     f = cb_field(ap->var);
     if (f->usage == CB_USAGE_BINARY || f->usage == CB_USAGE_COMP_5 ||
-        f->usage == CB_USAGE_BINARY || f->usage == CB_USAGE_INDEX) {
+        f->usage == CB_USAGE_INDEX) {
       if (f->size == 1) {
         joutput("(byte)");
       } else if (f->size == 2) {

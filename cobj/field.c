@@ -207,7 +207,7 @@ cb_tree cb_build_field_tree(cb_tree level, cb_tree name,
       field_fill->parent->children = field_fill;
       field_fill->sister = f;
       f->parent = field_fill->parent;
-      last_field = field_fill;
+      // last_field = field_fill;
     } else {
       cb_error_x(name, _("No previous data item of level %02d"), f->level);
       return cb_error_node;
@@ -381,7 +381,7 @@ static int validate_field_1(struct cb_field *f) {
   if (f->flag_occurs) {
     if ((!cb_verify(cb_top_level_occurs_clause, "01/77 OCCURS") &&
          (f->level == 01 || f->level == 77)) ||
-        (f->level == 66 || f->level == 88)) {
+        f->level == 88) {
       level_redundant_error(x, "OCCURS");
     }
     for (l = f->index_list; l; l = CB_CHAIN(l)) {
