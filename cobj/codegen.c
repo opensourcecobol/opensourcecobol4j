@@ -2360,7 +2360,6 @@ static void joutput_initialize_one(struct cb_initialize *p, cb_tree x) {
           lastsize = f->size;
         }
       }
-      l = CB_LITERAL(value);
       if ((int)l->size >= (int)f->size) {
         memcpy(buff, l->data, (size_t)f->size);
       } else {

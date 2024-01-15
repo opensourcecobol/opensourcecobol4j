@@ -11,7 +11,6 @@ cppcheck --error-exitcode=1 \
     --suppress=shadowVariable \
     --suppress=invalidscanf \
     --suppress=unsignedPositive \
-    --suppress=redundantAssignment \
     --suppress=unusedVariable \
     --suppress=toomanyconfigs \
     --suppress=uselessAssignmentPtrArg \
