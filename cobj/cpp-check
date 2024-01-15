@@ -10,7 +10,6 @@ cppcheck --error-exitcode=1 \
     --suppress=knownConditionTrueFalse \
     --suppress=shadowVariable \
     --suppress=invalidscanf \
-    --suppress=unsignedPositive \
     --suppress=unusedVariable \
     --suppress=toomanyconfigs \
     --suppress=uselessAssignmentPtrArg \

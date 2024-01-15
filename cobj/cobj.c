@@ -1041,8 +1041,7 @@ static int process_command_line(const int argc, char *argv[]) {
       if (optarg) {
         char *e;
         unsigned long byte = strtoul(optarg, &e, 0);
-        if (*e == '\0' && errno != EINVAL && errno != ERANGE && 0 <= byte &&
-            byte <= 0xFF) {
+        if (*e == '\0' && errno != EINVAL && errno != ERANGE && byte <= 0xFF) {
           cb_default_byte = byte;
           cb_default_byte_specified = 1;
           break;
