@@ -7,7 +7,6 @@ cppcheck --error-exitcode=1 \
     --suppress=unusedFunctions \
     --suppress=constParameter \
     --suppress=variableScope \
-    --suppress=knownConditionTrueFalse \
     --suppress=shadowVariable \
     --suppress=invalidscanf \
     --suppress=unusedVariable \

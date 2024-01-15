@@ -477,7 +477,7 @@ cb_tree cb_build_section_name(cb_tree name, int sect_or_para) {
        Duplicate paragraphs are allowed if not referenced;
        Checked in typeck.c */
     if (!CB_LABEL_P(x) || sect_or_para == 0 ||
-        (sect_or_para && CB_LABEL_P(x) && CB_LABEL(x)->is_section)) {
+        (CB_LABEL_P(x) && CB_LABEL(x)->is_section)) {
       redefinition_error(name);
       return cb_error_node;
     }
@@ -1996,7 +1996,7 @@ static cb_tree build_store_option(cb_tree x, cb_tree round_opt) {
     */
     if (current_statement->handler_id) {
       opt |= COB_STORE_KEEP_ON_OVERFLOW;
-    } else if (cb_binary_truncate) {
+    } else /*if (cb_binary_truncate)*/ {
       opt |= COB_STORE_TRUNC_ON_OVERFLOW;
     }
     break;
