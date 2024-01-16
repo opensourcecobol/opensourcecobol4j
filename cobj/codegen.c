@@ -485,9 +485,9 @@ static void joutput_string_write(const unsigned char *s, int size,
 
     joutput("\"");
 
+    int output_multibyte = 0;
     for (i = 0; i < size; i++) {
       int c = s[i];
-      int output_multibyte = 0;
       if (!output_multibyte && (c == '\"' || c == '\\')) {
         joutput("\\%c", c);
       } else if (!output_multibyte && (c == '\n')) {
