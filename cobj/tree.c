@@ -172,13 +172,12 @@ static void file_error(cb_tree name, const char *clause) {
 }
 
 static void increase_character_length(int *character_length, int increase) {
-  unsigned int remain;
 
   if (*character_length != CHARACTER_LENGTH_OVERFLOW) {
     if (increase == CHARACTER_LENGTH_OVERFLOW) {
       *character_length = CHARACTER_LENGTH_OVERFLOW;
     } else {
-      remain = INT_MAX - *character_length;
+      unsigned int remain = INT_MAX - *character_length;
       if (remain < increase) {
         *character_length = CHARACTER_LENGTH_OVERFLOW;
       } else {
@@ -225,7 +224,6 @@ static int cb_name_1(char *s, cb_tree x) {
   struct cb_binary_op *cbop;
   struct cb_reference *p;
   struct cb_intrinsic *cbit;
-  cb_tree l;
   int i;
 
   orig = s;
@@ -272,7 +270,7 @@ static int cb_name_1(char *s, cb_tree x) {
     p = CB_REFERENCE(x);
     s += sprintf(s, "%s", p->word->name);
     if (p->subs) {
-      l = p->subs = cb_list_reverse(p->subs);
+      cb_tree l = p->subs = cb_list_reverse(p->subs);
       s += sprintf(s, " (");
       for (; l; l = CB_CHAIN(l)) {
         s += cb_name_1(s, CB_VALUE(l));
@@ -390,12 +388,11 @@ static cb_tree global_check(struct cb_reference *r, cb_tree items,
   cb_tree candidate = NULL;
   struct cb_field *p;
   cb_tree v;
-  cb_tree c;
 
   for (; items; items = CB_CHAIN(items)) {
     /* find a candidate value by resolving qualification */
     v = CB_VALUE(items);
-    c = r->chain;
+    cb_tree c = r->chain;
     if (CB_FIELD_P(v)) {
       if (!CB_FIELD(v)->flag_is_global) {
         continue;
@@ -754,7 +751,6 @@ long long cb_get_long_long(cb_tree x) {
 }
 
 void cb_init_constants(void) {
-  char *s;
   int i;
 
   cb_error_node = make_constant(CB_CATEGORY_UNKNOWN, NULL);
@@ -778,7 +774,7 @@ void cb_init_constants(void) {
   cb_int4 = cb_int(4);
   cb_int5 = cb_int(5);
   for (i = 1; i < 8; i++) {
-    s = cobc_malloc(4);
+    char *s = cobc_malloc(4);
     sprintf(s, "i%d", i);
     cb_i[i] = make_constant(CB_CATEGORY_NUMERIC, s);
   }
@@ -804,12 +800,11 @@ cb_tree cb_build_list(cb_tree purpose, cb_tree value, cb_tree rest) {
 }
 
 cb_tree cb_list_append(cb_tree l1, cb_tree l2) {
-  cb_tree l;
 
   if (l1 == NULL) {
     return l2;
   } else {
-    l = l1;
+    cb_tree l = l1;
     while (CB_CHAIN(l)) {
       l = CB_CHAIN(l);
     }
@@ -1775,8 +1770,6 @@ static void compute_composite_key(cb_tree key,
 void finalize_file(struct cb_file *f, struct cb_field *records) {
   struct cb_field *p;
   struct cb_field *v;
-  cb_tree l;
-  cb_tree x;
   char buff[COB_MINI_BUFF];
 
   if (f->special) {
@@ -1842,6 +1835,7 @@ void finalize_file(struct cb_file *f, struct cb_field *records) {
   }
 
   if (f->same_clause) {
+    cb_tree l;
     for (l = current_program->file_list; l; l = CB_CHAIN(l)) {
       if (CB_FILE(CB_VALUE(l))->same_clause == f->same_clause) {
         if (CB_FILE(CB_VALUE(l))->finalized) {
@@ -1890,7 +1884,7 @@ void finalize_file(struct cb_file *f, struct cb_field *records) {
   f->finalized = 1;
   if (f->linage) {
     snprintf(buff, COB_MINI_MAX, "LC_%s", f->name);
-    x = cb_build_field(cb_build_reference(buff));
+    cb_tree x = cb_build_field(cb_build_reference(buff));
     CB_FIELD(x)->pic = CB_PICTURE(cb_build_picture("9(9)"));
     CB_FIELD(x)->usage = CB_USAGE_COMP_5;
     CB_FIELD(x)->values = cb_list_init(cb_zero);
@@ -2721,7 +2715,7 @@ cb_tree cb_build_intrinsic(cb_tree name, cb_tree args, cb_tree refmod) {
 char *cb_get_hexword(char *name) {
   unsigned char *p;
   int non_ascii = 0;
-  char *rt = NULL, *p2;
+  char *rt = NULL;
 
   for (p = (unsigned char *)name; *p; p++) {
     if (0x80 & *p) {
@@ -2734,7 +2728,7 @@ char *cb_get_hexword(char *name) {
   } else {
     rt = cobc_malloc(strlen(name) * 2 + 7);
     p = (unsigned char *)name;
-    p2 = rt;
+    char *p2 = rt;
     memcpy(p2, "___", 3);
     p2 += 3;
     while (*p) {
@@ -2749,11 +2743,9 @@ char *cb_get_hexword(char *name) {
 }
 
 char *cb_get_jisword_buff(const char *name, char *jbuf, size_t n) {
-  size_t siz;
-  unsigned int c;
-  const char *cp, *cs, *ce;
+  const char *cs, *ce;
   int flag_quoted = 0;
-  char *p, *rt = NULL;
+  char *rt = NULL;
 
   cs = &(name[0]);
   ce = &(name[strlen(name) - 1]);
@@ -2769,11 +2761,13 @@ char *cb_get_jisword_buff(const char *name, char *jbuf, size_t n) {
   if (ce - cs >= 5 && !memcmp(cs, "___", 3) && !memcmp(ce - 2, "___", 3)) {
     cs += 3;
     ce -= 3;
+    size_t siz;
     if (!flag_quoted) {
       siz = (ce - cs + 1) / 2 + 1;
     } else {
       siz = (ce - cs + 1) / 2 + 3;
     }
+    unsigned int c;
     if (!jbuf) {
       rt = cobc_malloc(siz);
     } else {
@@ -2785,12 +2779,14 @@ char *cb_get_jisword_buff(const char *name, char *jbuf, size_t n) {
       memset(jbuf, 0, n);
       rt = jbuf;
     }
+    char *p;
     if (flag_quoted && siz > 2) {
       rt[0] = rt[siz - 2] = '\'';
       p = &(rt[1]);
     } else {
       p = &(rt[0]);
     }
+    const char *cp;
     for (c = 1, cp = cs; cp <= ce; cp++, p += (c = !c)) {
       if (*cp >= '0' && *cp <= '9') {
         *p |= (*cp - '0') << (c << 2);

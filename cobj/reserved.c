@@ -877,11 +877,10 @@ struct cb_intrinsic_table *lookup_intrinsic(const char *name,
 void cb_list_reserved(void) {
   const char *s;
   size_t i;
-  size_t n;
 
   printf("Reserved Words (Parsed Y/N)\n\n");
   for (i = 0; i < NUM_RESERVED_WORDS; ++i) {
-    n = strlen(reserved_words[i].name);
+    size_t n = strlen(reserved_words[i].name);
     switch (n / 8) {
     case 0:
       s = "\t\t\t\t";
@@ -904,11 +903,10 @@ void cb_list_reserved(void) {
 void cb_list_intrinsics(void) {
   const char *s;
   size_t i;
-  size_t n;
 
   printf("Intrinsic Function (Implemented Y/N)\n\n");
   for (i = 0; i < NUM_INTRINSICS; ++i) {
-    n = strlen(function_list[i].name);
+    size_t n = strlen(function_list[i].name);
     switch (n / 8) {
     case 0:
       s = "\t\t\t\t";

@@ -45,13 +45,13 @@ static void print_error(char *file, int line, const char *prefix,
   void *param;
   void *allname[max_names];
   void *p_bfree[max_names];
-  char msgword[COB_MINI_BUFF];
 
   file = file ? file : cb_source_file;
   line = line ? line : cb_source_line;
 
   /* print the paragraph or section name */
   if (current_section != last_section || current_paragraph != last_paragraph) {
+    char msgword[COB_MINI_BUFF];
     if (current_paragraph && strstr((const char *)(current_paragraph->name),
                                     "_SECTION__DEFAULT_PARAGRAPH") == NULL) {
       cb_get_jisword_buff((const char *)current_paragraph->name, msgword,
@@ -271,12 +271,10 @@ void undefined_error(cb_tree x) {
 void ambiguous_error(cb_tree x) {
   struct cb_word *w;
   struct cb_field *p;
-  struct cb_label *l2;
-  cb_tree l;
-  cb_tree y;
 
   w = CB_REFERENCE(x)->word;
   if (w->error == 0) {
+    cb_tree l;
     if (!errnamebuff) {
       errnamebuff = cobc_malloc(COB_NORMAL_BUFF);
     }
@@ -291,8 +289,9 @@ void ambiguous_error(cb_tree x) {
     w->error = 1;
 
     /* display all fields with the same name */
+    struct cb_label *l2;
     for (l = w->items; l; l = CB_CHAIN(l)) {
-      y = CB_VALUE(l);
+      cb_tree y = CB_VALUE(l);
       jisword_quote(w->name, errnamebuff, COB_NORMAL_MAX);
       switch (CB_TREE_TAG(y)) {
       case CB_TAG_FIELD:

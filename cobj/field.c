@@ -290,13 +290,9 @@ struct cb_field *cb_resolve_redefines(struct cb_field *field,
 
 static int validate_field_1(struct cb_field *f) {
   cb_tree x;
-  cb_tree l;
   char *name;
   struct cb_field *p;
-  char *pp;
-  unsigned char *pstr;
   int vorint;
-  int need_picture;
   char pic[16];
 
   x = CB_TREE(f);
@@ -384,6 +380,7 @@ static int validate_field_1(struct cb_field *f) {
         f->level == 88) {
       level_redundant_error(x, "OCCURS");
     }
+    cb_tree l;
     for (l = f->index_list; l; l = CB_CHAIN(l)) {
       cb_field(CB_VALUE(l))->flag_is_global = f->flag_is_global;
     }
@@ -480,7 +477,7 @@ static int validate_field_1(struct cb_field *f) {
     /* elementary item */
 
     /* validate PICTURE */
-    need_picture = 1;
+    int need_picture = 1;
     if (f->usage == CB_USAGE_INDEX || f->usage == CB_USAGE_LENGTH ||
         f->usage == CB_USAGE_OBJECT || f->usage == CB_USAGE_POINTER ||
         f->usage == CB_USAGE_PROGRAM_POINTER || f->usage == CB_USAGE_FLOAT ||
@@ -511,7 +508,7 @@ static int validate_field_1(struct cb_field *f) {
         f->count++;
         if (CB_NUMERIC_LITERAL_P(CB_VALUE(f->values))) {
           memset(pic, 0, sizeof(pic));
-          pp = pic;
+          char *pp = pic;
           if (CB_LITERAL(CB_VALUE(f->values))->sign) {
             *pp++ = 'S';
           }
@@ -635,6 +632,7 @@ static int validate_field_1(struct cb_field *f) {
       switch (f->pic->category) {
       case CB_CATEGORY_NUMERIC:
         /* reconstruct the picture string */
+        unsigned char *pstr;
         if (f->pic->scale > 0) {
           f->pic->str = cobc_malloc(20);
           pstr = (unsigned char *)(f->pic->str);
@@ -758,8 +756,6 @@ static void setup_parameters(struct cb_field *f) {
 static int compute_size(struct cb_field *f) {
   struct cb_field *c;
   unsigned int size;
-  int align_size;
-  int pad;
 
   if (f->level == 66) {
     /* rename */
@@ -799,7 +795,7 @@ static int compute_size(struct cb_field *f) {
 
         /* word alignment */
         if (c->flag_synchronized && cb_verify(cb_synchronized_clause, "SYNC")) {
-          align_size = 1;
+          int align_size = 1;
           switch (c->usage) {
           case CB_USAGE_BINARY:
           case CB_USAGE_COMP_5:
@@ -824,7 +820,7 @@ static int compute_size(struct cb_field *f) {
             break;
           }
           if (c->offset % align_size != 0) {
-            pad = align_size - (c->offset % align_size);
+            int pad = align_size - (c->offset % align_size);
             c->offset += pad;
             size += pad;
           }

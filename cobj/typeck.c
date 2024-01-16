@@ -147,7 +147,6 @@ static const char *const bin_sub_funcs[] = {
 /* functions */
 
 static size_t cb_validate_one(cb_tree x) {
-  cb_tree y;
 
   if (x == cb_error_node) {
     return 1;
@@ -156,7 +155,7 @@ static size_t cb_validate_one(cb_tree x) {
     return 0;
   }
   if (CB_REFERENCE_P(x)) {
-    y = cb_ref(x);
+    cb_tree y = cb_ref(x);
     if (y == cb_error_node) {
       return 1;
     }
@@ -195,14 +194,13 @@ static size_t cb_validate_list(cb_tree l) {
 }
 
 static cb_tree cb_check_group_name(cb_tree x) {
-  cb_tree y;
 
   if (x == cb_error_node) {
     return cb_error_node;
   }
 
   if (CB_REFERENCE_P(x)) {
-    y = cb_ref(x);
+    cb_tree y = cb_ref(x);
     if (y == cb_error_node) {
       return cb_error_node;
     }
@@ -439,8 +437,6 @@ const char *cb_build_program_id(cb_tree name, cb_tree alt_name) {
 
 void cb_define_switch_name(cb_tree name, cb_tree sname, cb_tree flag,
                            cb_tree ref) {
-  cb_tree switch_id;
-  cb_tree value;
 
   if (name == cb_error_node) {
     return;
@@ -455,8 +451,8 @@ void cb_define_switch_name(cb_tree name, cb_tree sname, cb_tree flag,
       cb_error_x(name, _("'%s' with no Switch-name"), CB_NAME(name));
     }
   } else {
-    switch_id = cb_int(CB_SYSTEM_NAME(sname)->token);
-    value = cb_build_funcall_1("CobolUtil.getSwitch", switch_id);
+    cb_tree switch_id = cb_int(CB_SYSTEM_NAME(sname)->token);
+    cb_tree value = cb_build_funcall_1("CobolUtil.getSwitch", switch_id);
     if (flag == cb_int0) {
       value = cb_build_negation(value);
     }
@@ -465,14 +461,13 @@ void cb_define_switch_name(cb_tree name, cb_tree sname, cb_tree flag,
 }
 
 cb_tree cb_build_section_name(cb_tree name, int sect_or_para) {
-  cb_tree x;
 
   if (name == cb_error_node) {
     return cb_error_node;
   }
 
   if (CB_REFERENCE(name)->word->count > 0) {
-    x = CB_VALUE(CB_REFERENCE(name)->word->items);
+    cb_tree x = CB_VALUE(CB_REFERENCE(name)->word->items);
     /* Used as a non-label name or used as a section name.
        Duplicate paragraphs are allowed if not referenced;
        Checked in typeck.c */
@@ -610,9 +605,7 @@ cb_tree cb_build_index(cb_tree x, cb_tree values, int indexed_by,
 int cb_reference_type_check(cb_tree ref, cb_tree x, const char *name, int size,
                             int *retsize, int type) {
   struct cb_field *pTmp;
-  struct cb_binary_op *p;
   struct cb_reference *r;
-  char strbuf[256];
   int offset = 0;
   int ret = 0;
   COB_UNUSED(r);
@@ -632,6 +625,7 @@ int cb_reference_type_check(cb_tree ref, cb_tree x, const char *name, int size,
     break;
   case CB_TAG_LITERAL:
     if (!cb_is_digist_data(x)) {
+      char strbuf[256];
       memset(strbuf, 0, sizeof(strbuf));
       sprintf(strbuf, "%s", CB_LITERAL(x)->data);
       if (type) {
@@ -655,7 +649,7 @@ int cb_reference_type_check(cb_tree ref, cb_tree x, const char *name, int size,
   case CB_TAG_BINARY_OP:
     if (cb_tree_category(ref) == CB_CATEGORY_NATIONAL ||
         cb_tree_category(ref) == CB_CATEGORY_NATIONAL_EDITED) {
-      p = CB_BINARY_OP(x);
+      struct cb_binary_op *p = CB_BINARY_OP(x);
       return cb_reference_type_check(ref, p->x, name, size, retsize, type);
     }
   default:
@@ -880,7 +874,6 @@ cb_tree cb_build_identifier(cb_tree x) {
 static cb_tree cb_build_length_1(cb_tree x) {
   struct cb_field *f;
   cb_tree e;
-  cb_tree size;
 
   f = CB_FIELD(cb_ref(x));
 
@@ -891,7 +884,7 @@ static cb_tree cb_build_length_1(cb_tree x) {
     /* variable size */
     e = NULL;
     for (f = f->children; f; f = f->sister) {
-      size = cb_build_length_1(cb_build_field_reference(f, x));
+      cb_tree size = cb_build_length_1(cb_build_field_reference(f, x));
       if (f->occurs_depending) {
         size = cb_build_binary_op(size, '*', f->occurs_depending);
       } else if (f->occurs_max > 1) {
@@ -932,8 +925,6 @@ cb_tree cb_build_const_length(cb_tree x) {
 }
 
 cb_tree cb_build_length(cb_tree x) {
-  struct cb_field *f;
-  struct cb_literal *l;
   cb_tree temp;
   char buff[64];
 
@@ -946,12 +937,12 @@ cb_tree cb_build_length(cb_tree x) {
 
   memset(buff, 0, sizeof(buff));
   if (CB_LITERAL_P(x)) {
-    l = CB_LITERAL(x);
+    struct cb_literal *l = CB_LITERAL(x);
     sprintf(buff, "%d", (int)l->size);
     return cb_build_numeric_literal(0, (ucharptr)buff, 0);
   }
   if (CB_REF_OR_FIELD_P(x)) {
-    f = CB_FIELD(cb_ref(x));
+    struct cb_field *f = CB_FIELD(cb_ref(x));
     if (f->flag_any_length) {
       return cb_build_any_intrinsic(cb_list_init(x));
     }
@@ -1000,14 +991,13 @@ cb_tree cb_build_address(cb_tree x) {
 }
 
 cb_tree cb_build_ppointer(cb_tree x) {
-  struct cb_field *f;
 
   if (x == cb_error_node || (CB_REFERENCE_P(x) && cb_ref(x) == cb_error_node)) {
     return cb_error_node;
   }
 
   if (CB_REFERENCE_P(x)) {
-    f = cb_field(cb_ref(x));
+    struct cb_field *f = cb_field(cb_ref(x));
     f->count++;
   }
   return cb_build_cast_ppointer(x);
@@ -1246,7 +1236,6 @@ void cb_validate_program_data(struct cb_program *prog) {
   cb_tree assign;
   struct cb_field *p;
   struct cb_file *f;
-  unsigned char *c;
 
   for (l = current_program->file_list; l; l = CB_CHAIN(l)) {
     f = CB_FILE(CB_VALUE(l));
@@ -1270,7 +1259,8 @@ void cb_validate_program_data(struct cb_program *prog) {
         }
         p = check_level_78(CB_REFERENCE(assign)->word->name);
         if (p) {
-          c = (unsigned char *)CB_LITERAL(CB_VALUE(p->values))->data;
+          unsigned char *c =
+              (unsigned char *)CB_LITERAL(CB_VALUE(p->values))->data;
           assign = CB_TREE(
               build_literal(CB_CATEGORY_ALPHANUMERIC, c, strlen((char *)c)));
           CB_FILE(CB_VALUE(l))->assign = assign;
@@ -1462,12 +1452,10 @@ static int check_section_escape(cb_tree x) {
 void cb_validate_program_body(struct cb_program *prog) {
   /* resolve all labels */
   cb_tree l;
-  cb_tree x;
-  cb_tree v;
 
   for (l = cb_list_reverse(prog->label_list); l; l = CB_CHAIN(l)) {
-    x = CB_VALUE(l);
-    v = cb_ref(x);
+    cb_tree x = CB_VALUE(l);
+    cb_tree v = cb_ref(x);
     if (CB_LABEL_P(v)) {
       CB_LABEL(v)->need_begin = 1;
       if (CB_REFERENCE(x)->length) {
@@ -1535,11 +1523,9 @@ static int expr_reduce(int token) {
    * token: 'x' '*' 'x' '+' ...
    */
 
-  int op;
-
   while (expr_prio[TOKEN(-2)] <= expr_prio[token]) {
     /* Reduce the expression depending on the last operator */
-    op = TOKEN(-2);
+    int op = TOKEN(-2);
     switch (op) {
     case 'x':
       return 0;
@@ -1905,12 +1891,11 @@ cb_tree cb_build_expr(cb_tree list) {
   /* RXW
           cb_tree x;
   */
-  int op;
 
   cb_expr_init();
 
   for (l = list; l; l = CB_CHAIN(l)) {
-    op = CB_PURPOSE_INT(l);
+    int op = CB_PURPOSE_INT(l);
     switch (op) {
     case '9': /* NUMERIC */
       cb_expr_shift_class_method_call("isNumeric");
@@ -2163,9 +2148,7 @@ static cb_tree build_decimal_assign(cb_tree vars, int op, cb_tree val) {
 }
 
 void cb_emit_arithmetic(cb_tree vars, int op, cb_tree val) {
-  cb_tree l;
   cb_tree t;
-  struct cb_field *f;
 
   val = cb_check_numeric_value(val);
   if (op) {
@@ -2183,6 +2166,7 @@ void cb_emit_arithmetic(cb_tree vars, int op, cb_tree val) {
 
   if (!CB_BINARY_OP_P(val)) {
     if (op == '+' || op == '-') {
+      struct cb_field *f;
       if (CB_EXCEPTION_ENABLE(COB_EC_DATA_INCOMPATIBLE) &&
           (CB_REF_OR_FIELD_P(val))) {
         f = cb_field(val);
@@ -2191,6 +2175,7 @@ void cb_emit_arithmetic(cb_tree vars, int op, cb_tree val) {
               "checkNumeric", val, cb_build_string0((ucharptr)(f->name))));
         }
       }
+      cb_tree l;
       for (l = vars; l; l = CB_CHAIN(l)) {
         if (CB_EXCEPTION_ENABLE(COB_EC_DATA_INCOMPATIBLE) &&
             (CB_REF_OR_FIELD_P(CB_VALUE(l)))) {
@@ -2225,7 +2210,6 @@ void cb_emit_arithmetic(cb_tree vars, int op, cb_tree val) {
 static cb_tree build_cond_88(cb_tree x) {
   struct cb_field *f;
   cb_tree l;
-  cb_tree t;
   cb_tree c1 = NULL;
   cb_tree c2;
 
@@ -2236,7 +2220,7 @@ static cb_tree build_cond_88(cb_tree x) {
 
   /* build condition */
   for (l = f->values; l; l = CB_CHAIN(l)) {
-    t = CB_VALUE(l);
+    cb_tree t = CB_VALUE(l);
     if (CB_PAIR_P(t)) {
       /* VALUE THRU VALUE */
       c2 = cb_build_binary_op(cb_build_binary_op(CB_PAIR_X(t), '[', x), '&',
@@ -2421,12 +2405,8 @@ static int national_kanji_comparison(cb_tree x, cb_tree y) {
 }
 
 cb_tree cb_build_cond(cb_tree x) {
-  int size1;
-  int size2;
   struct cb_field *f;
   struct cb_binary_op *p;
-  cb_tree d1;
-  cb_tree d2;
   cb_tree err = NULL;
 
   if (!x) {
@@ -2471,8 +2451,8 @@ cb_tree cb_build_cond(cb_tree x) {
         x = cb_build_binary_op(p->x, '-', p->y);
       } else if (CB_BINARY_OP_P(p->x) || CB_BINARY_OP_P(p->y)) {
         /* decimal comparison */
-        d1 = decimal_alloc();
-        d2 = decimal_alloc();
+        cb_tree d1 = decimal_alloc();
+        cb_tree d2 = decimal_alloc();
 
         if (decimal_expand(d1, p->x)) {
           err = p->x;
@@ -2504,6 +2484,7 @@ cb_tree cb_build_cond(cb_tree x) {
           break;
         }
 
+        int size1, size2;
         if (cb_chk_num_cond(p->x, p->y)) {
           size1 = cb_field_size(p->x);
           cb_tree xx;
@@ -2830,14 +2811,13 @@ static void emit_move_corresponding(cb_tree x1, cb_tree x2) {
 
 void cb_emit_move_corresponding(cb_tree x1, cb_tree x2) {
   cb_tree l;
-  cb_tree v;
 
   x1 = cb_check_group_name(x1);
   if (cb_validate_one(x1)) {
     return;
   }
   for (l = x2; l; l = CB_CHAIN(l)) {
-    v = CB_VALUE(l);
+    cb_tree v = CB_VALUE(l);
     v = cb_check_group_name(v);
     if (cb_validate_one(v)) {
       return;
@@ -3092,13 +3072,12 @@ void cb_emit_accept_mnemonic(cb_tree var, cb_tree mnemonic) {
 }
 
 void cb_emit_accept_name(cb_tree var, cb_tree name) {
-  cb_tree sys;
 
   if (cb_validate_one(var)) {
     return;
   }
   if (CB_REFERENCE(name)->word->count == 0) {
-    sys = lookup_system_name(CB_NAME(name));
+    cb_tree sys = lookup_system_name(CB_NAME(name));
 
     if (sys != cb_error_node) {
       switch (CB_SYSTEM_NAME(sys)->token) {
@@ -3122,8 +3101,6 @@ void cb_emit_accept_name(cb_tree var, cb_tree name) {
 
 void cb_emit_allocate(cb_tree target1, cb_tree target2, cb_tree size,
                       cb_tree initialize) {
-  cb_tree x;
-  char buff[32];
 
   if (cb_validate_one(target1)) {
     return;
@@ -3154,8 +3131,9 @@ void cb_emit_allocate(cb_tree target1, cb_tree target2, cb_tree size,
     }
   }
   if (target1) {
+    char buff[32];
     sprintf(buff, "%d", cb_field(target1)->memory_size);
-    x = cb_build_numeric_literal(0, (ucharptr)buff, 0);
+    cb_tree x = cb_build_numeric_literal(0, (ucharptr)buff, 0);
     cb_emit(cb_build_funcall_3(
         "cob_allocate", cb_build_cast_addr_of_addr(target1), target2, x));
   } else {
@@ -3174,8 +3152,6 @@ void cb_emit_allocate(cb_tree target1, cb_tree target2, cb_tree size,
 void cb_emit_call(cb_tree prog, cb_tree cb_using, cb_tree returning,
                   cb_tree on_exception, cb_tree not_on_exception) {
   cb_tree l;
-  cb_tree x;
-  const struct system_table *psyst;
   int is_sys_call = 0;
 
   if (CB_INTRINSIC_P(prog)) {
@@ -3192,7 +3168,7 @@ void cb_emit_call(cb_tree prog, cb_tree cb_using, cb_tree returning,
     }
   }
   for (l = cb_using; l; l = CB_CHAIN(l)) {
-    x = CB_VALUE(l);
+    cb_tree x = CB_VALUE(l);
     if (x == cb_error_node) {
       continue;
     }
@@ -3214,6 +3190,7 @@ void cb_emit_call(cb_tree prog, cb_tree cb_using, cb_tree returning,
   }
 
   if (CB_LITERAL_P(prog)) {
+    const struct system_table *psyst;
     for (psyst = (const struct system_table *)&system_tab[0]; psyst->syst_name;
          psyst++) {
       if (!strcmp((const char *)CB_LITERAL(prog)->data,
@@ -3504,14 +3481,13 @@ cb_tree cb_build_display_upon(cb_tree x) {
 
 cb_tree cb_build_display_upon_direct(cb_tree x) {
   const char *name;
-  cb_tree sys;
 
   if (x == cb_error_node) {
     return cb_error_node;
   }
   name = CB_NAME(x);
   if (CB_REFERENCE(x)->word->count == 0) {
-    sys = lookup_system_name(CB_NAME(x));
+    cb_tree sys = lookup_system_name(CB_NAME(x));
     if (sys != cb_error_node) {
       switch (CB_SYSTEM_NAME(sys)->token) {
       case CB_DEVICE_CONSOLE:
@@ -3568,7 +3544,6 @@ void cb_emit_divide(cb_tree dividend, cb_tree divisor, cb_tree quotient,
 static cb_tree evaluate_test(cb_tree s, cb_tree o) {
   int flag;
   cb_tree x, y;
-  cb_tree t;
 
   /* ANY is always true */
   if (o == cb_any) {
@@ -3597,8 +3572,8 @@ static cb_tree evaluate_test(cb_tree s, cb_tree o) {
 
   /* x THRU y */
   if (y) {
-    t = cb_build_binary_op(cb_build_binary_op(x, '[', s), '&',
-                           cb_build_binary_op(s, '[', y));
+    cb_tree t = cb_build_binary_op(cb_build_binary_op(x, '[', s), '&',
+                                   cb_build_binary_op(s, '[', y));
 
     return flag ? cb_build_negation(t) : t;
   }
@@ -3908,13 +3883,12 @@ cb_tree cb_build_tarrying_value(cb_tree x, cb_tree l) {
 #ifdef I18N_UTF8
 
 static int cb_validate_single_char_data(cb_tree x) {
-  char msgbuf[256];
   int rt = 0;
 
   if (CB_LITERAL_P(x)) {
     struct cb_literal *lp = CB_LITERAL(x);
     if (lp->size != COB_U8BYTE_1(lp->data[0])) {
-
+      char msgbuf[256];
       memset(msgbuf, 0, sizeof(msgbuf));
       strncpy(msgbuf, (char *)lp->data, 253);
       cb_error_x(x, "Illegal replacement size: '%s'.", msgbuf);
@@ -5694,12 +5668,10 @@ cb_tree cb_build_perform_exit(struct cb_label *label) {
 
 static int match_compound_key(struct cb_key_component *pkcomp,
                               struct cb_list *keys) {
-  struct cb_field *pfld;
-  struct cb_reference *pref;
 
   while (pkcomp && keys) {
-    pfld = CB_FIELD(CB_REFERENCE(keys->value)->value);
-    pref = CB_REFERENCE(pkcomp->component);
+    struct cb_field *pfld = CB_FIELD(CB_REFERENCE(keys->value)->value);
+    struct cb_reference *pref = CB_REFERENCE(pkcomp->component);
     if (pfld != CB_FIELD(pref->value)) {
       break;
     }
@@ -6123,25 +6095,20 @@ void cb_emit_set_up_down(cb_tree l, cb_tree flag, cb_tree x) {
 }
 
 void cb_emit_set_on_off(cb_tree l, cb_tree flag) {
-  struct cb_system_name *s;
 
   if (cb_validate_list(l)) {
     return;
   }
   for (; l; l = CB_CHAIN(l)) {
-    s = CB_SYSTEM_NAME(cb_ref(CB_VALUE(l)));
+    struct cb_system_name *s = CB_SYSTEM_NAME(cb_ref(CB_VALUE(l)));
     cb_emit(cb_build_funcall_2("CobolUtil.setSwitch", cb_int(s->token), flag));
   }
 }
 
 void cb_emit_set_true(cb_tree l) {
-  cb_tree x;
-  struct cb_field *f;
-  cb_tree ref;
-  cb_tree val;
 
   for (; l; l = CB_CHAIN(l)) {
-    x = CB_VALUE(l);
+    cb_tree x = CB_VALUE(l);
     if (x == cb_error_node) {
       return;
     }
@@ -6150,13 +6117,13 @@ void cb_emit_set_true(cb_tree l) {
       cb_error_x(x, _("Invalid SET statement"));
       return;
     }
-    f = cb_field(x);
+    struct cb_field *f = cb_field(x);
     if (f->level != 88) {
       cb_error_x(x, _("Invalid SET statement"));
       return;
     }
-    ref = cb_build_field_reference(f->parent, x);
-    val = CB_VALUE(f->values);
+    cb_tree ref = cb_build_field_reference(f->parent, x);
+    cb_tree val = CB_VALUE(f->values);
     if (CB_PAIR_P(val)) {
       val = CB_PAIR_X(val);
     }
@@ -6165,13 +6132,8 @@ void cb_emit_set_true(cb_tree l) {
 }
 
 void cb_emit_set_false(cb_tree l) {
-  cb_tree x;
-  struct cb_field *f;
-  cb_tree ref;
-  cb_tree val;
-
   for (; l; l = CB_CHAIN(l)) {
-    x = CB_VALUE(l);
+    cb_tree x = CB_VALUE(l);
     if (x == cb_error_node) {
       return;
     }
@@ -6180,7 +6142,7 @@ void cb_emit_set_false(cb_tree l) {
       cb_error_x(x, _("Invalid SET statement"));
       return;
     }
-    f = cb_field(x);
+    struct cb_field *f = cb_field(x);
     if (f->level != 88) {
       cb_error_x(x, _("Invalid SET statement"));
       return;
@@ -6189,8 +6151,8 @@ void cb_emit_set_false(cb_tree l) {
       cb_error_x(x, _("Field does not have FALSE clause"));
       return;
     }
-    ref = cb_build_field_reference(f->parent, x);
-    val = CB_VALUE(f->false_88);
+    cb_tree ref = cb_build_field_reference(f->parent, x);
+    cb_tree val = CB_VALUE(f->false_88);
     if (CB_PAIR_P(val)) {
       val = CB_PAIR_X(val);
     }
@@ -6204,7 +6166,6 @@ void cb_emit_set_false(cb_tree l) {
 
 void cb_emit_sort_init(cb_tree name, cb_tree keys, cb_tree col) {
   cb_tree l;
-  struct cb_field *f;
 
   if (cb_validate_list(keys)) {
     return;
@@ -6236,7 +6197,7 @@ void cb_emit_sort_init(cb_tree name, cb_tree keys, cb_tree col) {
                                  cb_int(cb_field(CB_VALUE(l))->offset)));
     }
   } else {
-    f = CB_FIELD(cb_ref(name));
+    struct cb_field *f = CB_FIELD(cb_ref(name));
     if (keys == NULL) {
       cb_error_x(name, _("Table sort without keys not implemented yet"));
     }
@@ -6734,7 +6695,6 @@ void cb_emit_string(cb_tree items, cb_tree into, cb_tree pointer) {
   cb_tree start;
   cb_tree l;
   cb_tree end;
-  cb_tree dlm;
 
   if (cb_validate_one(into)) {
     return;
@@ -6755,7 +6715,7 @@ void cb_emit_string(cb_tree items, cb_tree into, cb_tree pointer) {
     }
 
     /* cob_string_delimited */
-    dlm = end ? CB_PAIR_X(CB_VALUE(end)) : cb_int0;
+    cb_tree dlm = end ? CB_PAIR_X(CB_VALUE(end)) : cb_int0;
     cb_emit(cb_build_funcall_1("CobolString.stringDelimited", dlm));
 
     /* cob_string_append */
@@ -7153,8 +7113,6 @@ cb_tree cb_build_unstring_into(cb_tree name, cb_tree delimiter, cb_tree count) {
  */
 
 void cb_emit_write(cb_tree record, cb_tree from, cb_tree opt, cb_tree lockopt) {
-  cb_tree file;
-  int val;
 
   if (record != cb_error_node && cb_ref(record) != cb_error_node) {
     if (!CB_REF_OR_FIELD_P(cb_ref(record))) {
@@ -7167,7 +7125,7 @@ void cb_emit_write(cb_tree record, cb_tree from, cb_tree opt, cb_tree lockopt) {
                  _("WRITE subject does not refer to a record name"));
       return;
     }
-    file = CB_TREE(CB_FIELD(cb_ref(record))->file);
+    cb_tree file = CB_TREE(CB_FIELD(cb_ref(record))->file);
     current_statement->file = file;
     if (CB_FILE(file)->organization == COB_ORG_SORT) {
       cb_error_x(CB_TREE(current_statement),
@@ -7197,6 +7155,7 @@ void cb_emit_write(cb_tree record, cb_tree from, cb_tree opt, cb_tree lockopt) {
     /* RXW - This is horrible */
     if (current_statement->handler_id == COB_EC_I_O_EOP &&
         current_statement->handler1) {
+      int val;
       if (CB_CAST_P(opt)) {
         val = CB_INTEGER(CB_BINARY_OP(CB_CAST(opt)->val)->x)->val;
         val |= COB_WRITE_EOP;

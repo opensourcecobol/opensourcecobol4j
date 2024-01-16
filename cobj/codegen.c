@@ -222,10 +222,10 @@ static char *get_java_identifier_base(struct cb_field *f) {
 }
 
 static void get_java_identifier_helper(struct cb_field *f, char *buf) {
-  static const char *delimitor = "__";
   strcpy_identifier_cobol_to_java(buf, f->name);
   buf += strlen(f->name);
   if (f->parent != NULL) {
+    static const char *delimitor = "__";
     strcpy(buf, delimitor);
     buf += strlen(delimitor);
     get_java_identifier_helper(f->parent, buf);
@@ -328,13 +328,12 @@ static int joutput_buffer_list_index = 0;
 static char joutput_temp_buffer[65536];
 
 static void joutput(const char *fmt, ...) {
-  va_list ap;
-  int size;
 
   if (joutput_target) {
+    va_list ap;
     if (joutput_buffered) {
       va_start(ap, fmt);
-      size = vsprintf(joutput_temp_buffer, fmt, ap);
+      int size = vsprintf(joutput_temp_buffer, fmt, ap);
       va_end(ap);
 
       joutput_buffer *buf = &joutput_buffer_list[joutput_buffer_list_index];
@@ -365,9 +364,9 @@ static void joutput_newline(void) {
 }
 
 static void joutput_prefix(void) {
-  int i;
 
   if (joutput_target) {
+    int i;
     if (joutput_buffered) {
       for (i = 0; i < joutput_indent_level; i++) {
         joutput(" ");
@@ -381,15 +380,13 @@ static void joutput_prefix(void) {
 }
 
 static void joutput_line(const char *fmt, ...) {
-  va_list ap;
-  int size;
 
   if (joutput_target) {
+    va_list ap;
     if (joutput_buffered) {
       joutput_prefix();
-
       va_start(ap, fmt);
-      size = vsprintf(joutput_temp_buffer, fmt, ap);
+      int size = vsprintf(joutput_temp_buffer, fmt, ap);
       va_end(ap);
 
       joutput_buffer *buf = &joutput_buffer_list[joutput_buffer_list_index];
@@ -478,8 +475,6 @@ static int is_string_printable(const unsigned char *s, int size) {
 static void joutput_string_write(const unsigned char *s, int size,
                                  int printable) {
   int i;
-  int c;
-  int output_multibyte = 0;
 
   if (printable) {
     if (param_wrap_string_flag) {
@@ -490,8 +485,9 @@ static void joutput_string_write(const unsigned char *s, int size,
 
     joutput("\"");
 
+    int output_multibyte = 0;
     for (i = 0; i < size; i++) {
-      c = s[i];
+      int c = s[i];
       if (!output_multibyte && (c == '\"' || c == '\\')) {
         joutput("\\%c", c);
       } else if (!output_multibyte && (c == '\n')) {
@@ -588,9 +584,8 @@ static void joutput_all_string_literals() {
 }
 
 static void joutput_local(const char *fmt, ...) {
-  va_list ap;
-
   if (current_prog->local_storage_file) {
+    va_list ap;
     va_start(ap, fmt);
     vfprintf(joutput_target, fmt, ap);
     va_end(ap);
@@ -767,9 +762,7 @@ static int joutput_field_storage(struct cb_field *f, struct cb_field *top) {
 static void joutput_base(struct cb_field *f) {
   struct cb_field *top;
   struct cb_field *p;
-  struct cb_field *v;
   struct base_list *bl;
-  char *nmp;
   char name[COB_SMALL_BUFF];
   top = cb_field_founder(f);
 
@@ -786,6 +779,7 @@ static void joutput_base(struct cb_field *f) {
   /* Base name */
   if (top->flag_external) {
     strcpy(name, top->name);
+    char *nmp;
     for (nmp = name; *nmp; nmp++) {
       if (*nmp == '-') {
         *nmp = '_';
@@ -830,7 +824,7 @@ static void joutput_base(struct cb_field *f) {
   if (cb_field_variable_address(f)) {
     for (p = f->parent; p; f = f->parent, p = f->parent) {
       for (p = p->children; p != f; p = p->sister) {
-        v = cb_field_variable_size(p);
+        struct cb_field *v = cb_field_variable_size(p);
         if (v) {
           joutput(" + %d + ", v->offset - p->offset);
           if (v->size != 1) {
@@ -849,7 +843,6 @@ static void joutput_data(cb_tree x) {
   struct cb_literal *l;
   struct cb_reference *r;
   struct cb_field *f;
-  cb_tree lsub;
 
   switch (CB_TREE_TAG(x)) {
   case CB_TAG_LITERAL:
@@ -874,7 +867,7 @@ static void joutput_data(cb_tree x) {
     /* Subscripts */
     if (r->subs) {
       joutput(".getSubDataStorage(");
-      lsub = r->subs;
+      cb_tree lsub = r->subs;
       char first_time = 1;
       for (; f; f = f->parent) {
         if (f->flag_occurs) {
@@ -1745,10 +1738,10 @@ static void joutput_funcall(cb_tree x) {
   struct cb_funcall *p;
   cb_tree l;
   int i;
-  int save_flag;
 
   p = CB_FUNCALL(x);
   if (p->name[0] == '$') {
+    int save_flag;
     switch (p->name[1]) {
     case 'E':
       /* Set of one character */
@@ -1999,8 +1992,6 @@ static void joutput_move(cb_tree src, cb_tree dst) {
 
 static int initialize_type(struct cb_initialize *p, struct cb_field *f,
                            int topfield) {
-  cb_tree l;
-  int type;
 
   if (f->flag_item_78) {
     fprintf(stderr, "Unexpected CONSTANT item\n");
@@ -2030,7 +2021,7 @@ static int initialize_type(struct cb_initialize *p, struct cb_field *f,
   }
 
   if (f->children) {
-    type = initialize_type(p, f->children, 0);
+    int type = initialize_type(p, f->children, 0);
     if (type == INITIALIZE_ONE) {
       return INITIALIZE_COMPOUND;
     }
@@ -2041,6 +2032,7 @@ static int initialize_type(struct cb_initialize *p, struct cb_field *f,
     }
     return type;
   } else {
+    cb_tree l;
     for (l = p->rep; l; l = CB_CHAIN(l)) {
       if ((int)CB_PURPOSE_INT(l) == (int)CB_TREE_CATEGORY(f)) {
         return INITIALIZE_ONE;
@@ -2080,14 +2072,12 @@ static int initialize_type(struct cb_initialize *p, struct cb_field *f,
 }
 
 static int initialize_uniform_char(struct cb_field *f, int flag_statement) {
-  int c;
-
   if (!flag_statement && cb_default_byte_specified) {
     return cb_default_byte;
   }
 
   if (f->children) {
-    c = initialize_uniform_char(f->children, flag_statement);
+    int c = initialize_uniform_char(f->children, flag_statement);
     for (f = f->children->sister; f; f = f->sister) {
       if (!f->redefines) {
         if (c != initialize_uniform_char(f, flag_statement)) {
@@ -2261,16 +2251,6 @@ static void joutput_initialize_uniform(cb_tree x, int c, int size) {
 
 static void joutput_initialize_one(struct cb_initialize *p, cb_tree x) {
   struct cb_field *f;
-  cb_tree value;
-  cb_tree lrp;
-  struct cb_literal *l;
-  int i;
-  int n;
-  int buffchar;
-  cb_tree tmpx;
-
-  static char *buff = NULL;
-  static int lastsize = 0;
 
   f = cb_field(x);
 
@@ -2284,7 +2264,7 @@ static void joutput_initialize_one(struct cb_initialize *p, cb_tree x) {
   }
   /* Initialize by value */
   if (p->val && f->values) {
-    value = CB_VALUE(f->values);
+    cb_tree value = CB_VALUE(f->values);
 
     /* NATIONAL also needs no editing but mbchar conversion. */
     if (CB_TREE_CATEGORY(x) == CB_CATEGORY_NATIONAL) {
@@ -2296,7 +2276,7 @@ static void joutput_initialize_one(struct cb_initialize *p, cb_tree x) {
       return;
     }
     if (CB_TREE_CATEGORY(x) == CB_CATEGORY_NATIONAL_EDITED) {
-      tmpx = cb_build_reference(f->name);
+      cb_tree tmpx = cb_build_reference(f->name);
       CB_REFERENCE(tmpx)->value = cb_ref(tmpx);
       CB_TREE_CATEGORY(tmpx);
       CB_REFERENCE(tmpx)->offset =
@@ -2344,7 +2324,10 @@ static void joutput_initialize_one(struct cb_initialize *p, cb_tree x) {
       /* Alphanumeric literal */
       /* We do not use joutput_move here because
          we do not want to have the value be edited. */
-      l = CB_LITERAL(value);
+
+      struct cb_literal *l = CB_LITERAL(value);
+      static char *buff = NULL;
+      static int lastsize = 0;
       if (!buff) {
         if (f->size <= COB_SMALL_BUFF) {
           buff = cobc_malloc(COB_SMALL_BUFF);
@@ -2373,7 +2356,8 @@ static void joutput_initialize_one(struct cb_initialize *p, cb_tree x) {
         joutput(".setByte(0, %s);", value_string);
         free(value_string);
       } else {
-        buffchar = *buff;
+        int buffchar = *buff;
+        int i;
         for (i = 0; i < f->size; i++) {
           if (*(buff + i) != buffchar) {
             break;
@@ -2385,7 +2369,7 @@ static void joutput_initialize_one(struct cb_initialize *p, cb_tree x) {
         } else {
           if (f->size >= 8) {
             buffchar = *(buff + f->size - 1);
-            n = 0;
+            int n = 0;
             for (i = f->size - 1; i >= 0; i--, n++) {
               if (*(buff + i) != buffchar) {
                 break;
@@ -2414,6 +2398,7 @@ static void joutput_initialize_one(struct cb_initialize *p, cb_tree x) {
 
   /* Initialize replacing */
   if (!f->children) {
+    cb_tree lrp;
     for (lrp = p->rep; lrp; lrp = CB_CHAIN(lrp)) {
       if ((int)CB_PURPOSE_INT(lrp) == (int)CB_TREE_CATEGORY(x)) {
         joutput_move(CB_VALUE(lrp), x);
@@ -2453,8 +2438,6 @@ static void joutput_initialize_compound(struct cb_initialize *p, cb_tree x) {
   struct cb_field *ff;
   struct cb_field *f;
   struct cb_field *last_field;
-  cb_tree c;
-  int type;
   int last_char;
   int i;
   size_t size;
@@ -2469,8 +2452,8 @@ static void joutput_initialize_compound(struct cb_initialize *p, cb_tree x) {
   }
   ++recurs_level;
   while (f) {
-    type = initialize_type(p, f, 0);
-    c = cb_build_field_reference(f, x);
+    int type = initialize_type(p, f, 0);
+    cb_tree c = cb_build_field_reference(f, x);
 
     switch (type) {
     case INITIALIZE_NONE:
@@ -2581,13 +2564,13 @@ static void joutput_occurs(struct cb_field *p) {
 
 static void joutput_search_whens(cb_tree table, cb_tree var, cb_tree stmt,
                                  cb_tree whens) {
-  cb_tree l;
   struct cb_field *p;
   cb_tree idx = NULL;
 
   p = cb_field(table);
   /* Determine the index to use */
   if (var) {
+    cb_tree l;
     for (l = p->index_list; l; l = CB_CHAIN(l)) {
       if (cb_ref(CB_VALUE(l)) == cb_ref(var)) {
         idx = var;
@@ -3192,15 +3175,15 @@ static void joutput_goto_1(cb_tree x) {
 }
 
 static void joutput_goto(struct cb_goto *p) {
-  cb_tree l;
-  int i = 1;
 
   if (p->depending) {
+    int i = 1;
     joutput_prefix();
     joutput("switch ((int)");
     joutput_param(cb_build_cast_integer(p->depending), 0);
     joutput(")\n");
     joutput_indent("  {");
+    cb_tree l;
     for (l = p->target; l; l = CB_CHAIN(l)) {
       joutput_indent_level -= 2;
       joutput_line("case %d:", i++);
@@ -3940,7 +3923,6 @@ static int joutput_file_allocation(struct cb_file *f) {
 
 static void joutput_file_initialization(struct cb_file *f) {
   int nkeys = 1;
-  int i_keycomp;
   struct cb_key_component *key_component;
   struct cb_alt_key *l;
 
@@ -3965,6 +3947,7 @@ static void joutput_file_initialization(struct cb_file *f) {
     joutput_prefix();
     joutput("%s%s[0].setFlag(0);\n", CB_PREFIX_KEYS, f->cname);
     joutput_prefix();
+    int i_keycomp;
     if (f->key) {
       if (f->component_list != NULL) {
         joutput("%s%s[0].setOffset(%d);\n", CB_PREFIX_KEYS, f->cname, -1);
@@ -4177,12 +4160,11 @@ static int literal_value(cb_tree x) {
 }
 
 static void joutput_initial_values(struct cb_field *p) {
-  cb_tree x;
   cb_tree def;
 
   def = cb_auto_initialize ? cb_true : NULL;
   for (; p; p = p->sister) {
-    x = cb_build_field_reference(p, NULL);
+    cb_tree x = cb_build_field_reference(p, NULL);
     if (p->flag_item_based) {
       continue;
     }
@@ -4884,10 +4866,8 @@ static void *list_cache_sort(void *inlist,
   struct sort_list *p;
   struct sort_list *q;
   struct sort_list *e;
-  struct sort_list *tail;
   struct sort_list *list;
   int insize;
-  int nmerges;
   int psize;
   int qsize;
   int i;
@@ -4900,8 +4880,9 @@ static void *list_cache_sort(void *inlist,
   for (;;) {
     p = list;
     list = NULL;
-    tail = NULL;
-    nmerges = 0;
+
+    struct sort_list *tail = NULL;
+    int nmerges = 0;
     while (p) {
       nmerges++;
       q = p;
@@ -4955,10 +4936,8 @@ static void *list_cache_sort(void *inlist,
  * メンバ変数の初期化を行うメソッドinitを出力する
  */
 static void joutput_init_method(struct cb_program *prog) {
-  int i;
   struct literal_list *m;
   struct field_list *k;
-  unsigned char *s;
   struct attr_list *j;
   struct base_list *blp;
   const char *prevprog;
@@ -4972,6 +4951,7 @@ static void joutput_init_method(struct cb_program *prog) {
 
   if (prog->decimal_index_max) {
     joutput_line("/* Decimal structures */\n");
+    int i;
     for (i = 0; i < prog->decimal_index_max; i++) {
       joutput_line("d%d = new CobolDecimal();", i);
     }
@@ -5166,6 +5146,7 @@ static void joutput_init_method(struct cb_program *prog) {
               j->scale, j->flags);
       if (j->pic) {
         joutput("\"");
+        unsigned char *s;
         for (s = j->pic; *s; s += 5) {
           if (s[0] == '\\') {
             joutput("\\%c\\%03o\\%03o\\%03o\\%03o", s[0], s[1], s[2], s[3],
@@ -5579,7 +5560,6 @@ static void joutput_declare_member_variables(struct cb_program *prog,
 
 static void joutput_class_name_definition(struct cb_class_name *p) {
   cb_tree l;
-  cb_tree x;
   unsigned char *data;
   size_t i;
   size_t size;
@@ -5593,7 +5573,7 @@ static void joutput_class_name_definition(struct cb_class_name *p) {
   joutput_prefix();
   joutput("  if (!(    ");
   for (l = p->list; l; l = CB_CHAIN(l)) {
-    x = CB_VALUE(l);
+    cb_tree x = CB_VALUE(l);
     if (CB_PAIR_P(x)) {
       lower = literal_value(CB_PAIR_X(x));
       upper = literal_value(CB_PAIR_Y(x));
@@ -5678,8 +5658,8 @@ static void create_label_id_map(struct cb_program *prog) {
 static void joutput_label_variable_name(char *s, int key,
                                         struct cb_label *section) {
   joutput(CB_PREFIX_LABEL);
-  const char *c;
   if (s) {
+    const char *c;
     if (section && section->name) {
       for (c = (const char *)section->name; *c; ++c) {
         if (*c == ' ') {
@@ -5748,9 +5728,6 @@ static void destroy_label_id_map() {
 
 static void joutput_execution_list(struct cb_program *prog) {
   control_counter = 0;
-  int seen, i, n;
-  struct handler_struct *hstr;
-  int parmnum = 0;
 
   joutput_line("public CobolControl[] contList = {");
   joutput_indent_level += 2;
@@ -5772,7 +5749,8 @@ static void joutput_execution_list(struct cb_program *prog) {
   /* Error handlers */
   if (prog->file_list || prog->gen_file_error) {
     joutput_newline();
-    seen = 0;
+    int seen = 0;
+    int i = 0;
     for (i = COB_OPEN_INPUT; i <= COB_OPEN_EXTEND; i++) {
       if (prog->global_handler[i].handler_label) {
         seen = 1;
@@ -5785,7 +5763,7 @@ static void joutput_execution_list(struct cb_program *prog) {
       joutput_line("switch (CobolFile.errorFile.last_open_mode)");
       joutput_indent("{");
       for (i = COB_OPEN_INPUT; i <= COB_OPEN_EXTEND; i++) {
-        hstr = &prog->global_handler[i];
+        struct handler_struct *hstr = &prog->global_handler[i];
         if (hstr->handler_label) {
           joutput_line("case %d:", i);
           joutput_indent("{");
@@ -5798,7 +5776,8 @@ static void joutput_execution_list(struct cb_program *prog) {
             joutput_prefix();
             joutput("%s_ (%d", hstr->handler_prog->program_id,
                     hstr->handler_label->id);
-            parmnum = cb_list_length(hstr->handler_prog->parameter_list);
+            int parmnum = cb_list_length(hstr->handler_prog->parameter_list);
+            int n;
             for (n = 0; n < parmnum; n++) {
               joutput(", null");
             }
@@ -5878,10 +5857,7 @@ void codegen(struct cb_program *prog, const int nested, char **program_id_list,
   struct field_list *k;
   struct call_list *clp;
   struct cb_program *cp;
-  cb_tree l1;
-  cb_tree l2;
   time_t loctime;
-  char locbuff[48];
 
   /* Clear local program stuff */
   current_prog = prog;
@@ -5928,13 +5904,16 @@ void codegen(struct cb_program *prog, const int nested, char **program_id_list,
     field_cache = NULL;
 
     loctime = time(NULL);
+    char locbuff[48];
     strftime(locbuff, sizeof(locbuff) - 1, "%b %d %Y %H:%M:%S %Z",
              localtime(&loctime));
 
     for (cp = prog; cp; cp = cp->next_program) {
       /* Build parameter list */
       for (l = cp->entry_list; l; l = CB_CHAIN(l)) {
+        cb_tree l1;
         for (l1 = CB_VALUE(l); l1; l1 = CB_CHAIN(l1)) {
+          cb_tree l2;
           for (l2 = cp->parameter_list; l2; l2 = CB_CHAIN(l2)) {
             if (cobc_casecmp(cb_field(CB_VALUE(l1))->name,
                              cb_field(CB_VALUE(l2))->name) == 0) {
