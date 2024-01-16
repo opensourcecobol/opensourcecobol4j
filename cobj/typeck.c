@@ -2150,7 +2150,6 @@ static cb_tree build_decimal_assign(cb_tree vars, int op, cb_tree val) {
 
 void cb_emit_arithmetic(cb_tree vars, int op, cb_tree val) {
   cb_tree t;
-  struct cb_field *f;
 
   val = cb_check_numeric_value(val);
   if (op) {
@@ -2168,6 +2167,7 @@ void cb_emit_arithmetic(cb_tree vars, int op, cb_tree val) {
 
   if (!CB_BINARY_OP_P(val)) {
     if (op == '+' || op == '-') {
+      struct cb_field *f;
       if (CB_EXCEPTION_ENABLE(COB_EC_DATA_INCOMPATIBLE) &&
           (CB_REF_OR_FIELD_P(val))) {
         f = cb_field(val);
@@ -2211,7 +2211,6 @@ void cb_emit_arithmetic(cb_tree vars, int op, cb_tree val) {
 static cb_tree build_cond_88(cb_tree x) {
   struct cb_field *f;
   cb_tree l;
-  cb_tree t;
   cb_tree c1 = NULL;
   cb_tree c2;
 
@@ -2222,7 +2221,7 @@ static cb_tree build_cond_88(cb_tree x) {
 
   /* build condition */
   for (l = f->values; l; l = CB_CHAIN(l)) {
-    t = CB_VALUE(l);
+    cb_tree t = CB_VALUE(l);
     if (CB_PAIR_P(t)) {
       /* VALUE THRU VALUE */
       c2 = cb_build_binary_op(cb_build_binary_op(CB_PAIR_X(t), '[', x), '&',
@@ -2407,12 +2406,8 @@ static int national_kanji_comparison(cb_tree x, cb_tree y) {
 }
 
 cb_tree cb_build_cond(cb_tree x) {
-  int size1;
-  int size2;
   struct cb_field *f;
   struct cb_binary_op *p;
-  cb_tree d1;
-  cb_tree d2;
   cb_tree err = NULL;
 
   if (!x) {
@@ -2457,8 +2452,8 @@ cb_tree cb_build_cond(cb_tree x) {
         x = cb_build_binary_op(p->x, '-', p->y);
       } else if (CB_BINARY_OP_P(p->x) || CB_BINARY_OP_P(p->y)) {
         /* decimal comparison */
-        d1 = decimal_alloc();
-        d2 = decimal_alloc();
+        cb_tree d1 = decimal_alloc();
+        cb_tree d2 = decimal_alloc();
 
         if (decimal_expand(d1, p->x)) {
           err = p->x;
@@ -2490,6 +2485,7 @@ cb_tree cb_build_cond(cb_tree x) {
           break;
         }
 
+        int size1, size2;
         if (cb_chk_num_cond(p->x, p->y)) {
           size1 = cb_field_size(p->x);
           cb_tree xx;
@@ -2816,14 +2812,13 @@ static void emit_move_corresponding(cb_tree x1, cb_tree x2) {
 
 void cb_emit_move_corresponding(cb_tree x1, cb_tree x2) {
   cb_tree l;
-  cb_tree v;
 
   x1 = cb_check_group_name(x1);
   if (cb_validate_one(x1)) {
     return;
   }
   for (l = x2; l; l = CB_CHAIN(l)) {
-    v = CB_VALUE(l);
+    cb_tree v = CB_VALUE(l);
     v = cb_check_group_name(v);
     if (cb_validate_one(v)) {
       return;
