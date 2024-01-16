@@ -2251,16 +2251,6 @@ static void joutput_initialize_uniform(cb_tree x, int c, int size) {
 
 static void joutput_initialize_one(struct cb_initialize *p, cb_tree x) {
   struct cb_field *f;
-  cb_tree value;
-  cb_tree lrp;
-  struct cb_literal *l;
-  int i;
-  int n;
-  int buffchar;
-  cb_tree tmpx;
-
-  static char *buff = NULL;
-  static int lastsize = 0;
 
   f = cb_field(x);
 
@@ -2274,7 +2264,7 @@ static void joutput_initialize_one(struct cb_initialize *p, cb_tree x) {
   }
   /* Initialize by value */
   if (p->val && f->values) {
-    value = CB_VALUE(f->values);
+    cb_tree value = CB_VALUE(f->values);
 
     /* NATIONAL also needs no editing but mbchar conversion. */
     if (CB_TREE_CATEGORY(x) == CB_CATEGORY_NATIONAL) {
@@ -2286,7 +2276,7 @@ static void joutput_initialize_one(struct cb_initialize *p, cb_tree x) {
       return;
     }
     if (CB_TREE_CATEGORY(x) == CB_CATEGORY_NATIONAL_EDITED) {
-      tmpx = cb_build_reference(f->name);
+      cb_tree tmpx = cb_build_reference(f->name);
       CB_REFERENCE(tmpx)->value = cb_ref(tmpx);
       CB_TREE_CATEGORY(tmpx);
       CB_REFERENCE(tmpx)->offset =
@@ -2334,7 +2324,10 @@ static void joutput_initialize_one(struct cb_initialize *p, cb_tree x) {
       /* Alphanumeric literal */
       /* We do not use joutput_move here because
          we do not want to have the value be edited. */
-      l = CB_LITERAL(value);
+
+      struct cb_literal *l = CB_LITERAL(value);
+      static char *buff = NULL;
+      static int lastsize = 0;
       if (!buff) {
         if (f->size <= COB_SMALL_BUFF) {
           buff = cobc_malloc(COB_SMALL_BUFF);
@@ -2363,7 +2356,8 @@ static void joutput_initialize_one(struct cb_initialize *p, cb_tree x) {
         joutput(".setByte(0, %s);", value_string);
         free(value_string);
       } else {
-        buffchar = *buff;
+        int buffchar = *buff;
+        int i;
         for (i = 0; i < f->size; i++) {
           if (*(buff + i) != buffchar) {
             break;
@@ -2375,7 +2369,7 @@ static void joutput_initialize_one(struct cb_initialize *p, cb_tree x) {
         } else {
           if (f->size >= 8) {
             buffchar = *(buff + f->size - 1);
-            n = 0;
+            int n = 0;
             for (i = f->size - 1; i >= 0; i--, n++) {
               if (*(buff + i) != buffchar) {
                 break;
@@ -2404,6 +2398,7 @@ static void joutput_initialize_one(struct cb_initialize *p, cb_tree x) {
 
   /* Initialize replacing */
   if (!f->children) {
+    cb_tree lrp;
     for (lrp = p->rep; lrp; lrp = CB_CHAIN(lrp)) {
       if ((int)CB_PURPOSE_INT(lrp) == (int)CB_TREE_CATEGORY(x)) {
         joutput_move(CB_VALUE(lrp), x);
