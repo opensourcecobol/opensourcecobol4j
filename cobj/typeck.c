@@ -1891,12 +1891,11 @@ cb_tree cb_build_expr(cb_tree list) {
   /* RXW
           cb_tree x;
   */
-  int op;
 
   cb_expr_init();
 
   for (l = list; l; l = CB_CHAIN(l)) {
-    op = CB_PURPOSE_INT(l);
+    int op = CB_PURPOSE_INT(l);
     switch (op) {
     case '9': /* NUMERIC */
       cb_expr_shift_class_method_call("isNumeric");
@@ -3073,13 +3072,12 @@ void cb_emit_accept_mnemonic(cb_tree var, cb_tree mnemonic) {
 }
 
 void cb_emit_accept_name(cb_tree var, cb_tree name) {
-  cb_tree sys;
 
   if (cb_validate_one(var)) {
     return;
   }
   if (CB_REFERENCE(name)->word->count == 0) {
-    sys = lookup_system_name(CB_NAME(name));
+    cb_tree sys = lookup_system_name(CB_NAME(name));
 
     if (sys != cb_error_node) {
       switch (CB_SYSTEM_NAME(sys)->token) {
@@ -3103,8 +3101,6 @@ void cb_emit_accept_name(cb_tree var, cb_tree name) {
 
 void cb_emit_allocate(cb_tree target1, cb_tree target2, cb_tree size,
                       cb_tree initialize) {
-  cb_tree x;
-  char buff[32];
 
   if (cb_validate_one(target1)) {
     return;
@@ -3135,8 +3131,9 @@ void cb_emit_allocate(cb_tree target1, cb_tree target2, cb_tree size,
     }
   }
   if (target1) {
+    char buff[32];
     sprintf(buff, "%d", cb_field(target1)->memory_size);
-    x = cb_build_numeric_literal(0, (ucharptr)buff, 0);
+    cb_tree x = cb_build_numeric_literal(0, (ucharptr)buff, 0);
     cb_emit(cb_build_funcall_3(
         "cob_allocate", cb_build_cast_addr_of_addr(target1), target2, x));
   } else {
@@ -3155,8 +3152,6 @@ void cb_emit_allocate(cb_tree target1, cb_tree target2, cb_tree size,
 void cb_emit_call(cb_tree prog, cb_tree cb_using, cb_tree returning,
                   cb_tree on_exception, cb_tree not_on_exception) {
   cb_tree l;
-  cb_tree x;
-  const struct system_table *psyst;
   int is_sys_call = 0;
 
   if (CB_INTRINSIC_P(prog)) {
@@ -3173,7 +3168,7 @@ void cb_emit_call(cb_tree prog, cb_tree cb_using, cb_tree returning,
     }
   }
   for (l = cb_using; l; l = CB_CHAIN(l)) {
-    x = CB_VALUE(l);
+    cb_tree x = CB_VALUE(l);
     if (x == cb_error_node) {
       continue;
     }
@@ -3195,6 +3190,7 @@ void cb_emit_call(cb_tree prog, cb_tree cb_using, cb_tree returning,
   }
 
   if (CB_LITERAL_P(prog)) {
+    const struct system_table *psyst;
     for (psyst = (const struct system_table *)&system_tab[0]; psyst->syst_name;
          psyst++) {
       if (!strcmp((const char *)CB_LITERAL(prog)->data,
@@ -3485,14 +3481,13 @@ cb_tree cb_build_display_upon(cb_tree x) {
 
 cb_tree cb_build_display_upon_direct(cb_tree x) {
   const char *name;
-  cb_tree sys;
 
   if (x == cb_error_node) {
     return cb_error_node;
   }
   name = CB_NAME(x);
   if (CB_REFERENCE(x)->word->count == 0) {
-    sys = lookup_system_name(CB_NAME(x));
+    cb_tree sys = lookup_system_name(CB_NAME(x));
     if (sys != cb_error_node) {
       switch (CB_SYSTEM_NAME(sys)->token) {
       case CB_DEVICE_CONSOLE:
@@ -3549,7 +3544,6 @@ void cb_emit_divide(cb_tree dividend, cb_tree divisor, cb_tree quotient,
 static cb_tree evaluate_test(cb_tree s, cb_tree o) {
   int flag;
   cb_tree x, y;
-  cb_tree t;
 
   /* ANY is always true */
   if (o == cb_any) {
@@ -3578,8 +3572,8 @@ static cb_tree evaluate_test(cb_tree s, cb_tree o) {
 
   /* x THRU y */
   if (y) {
-    t = cb_build_binary_op(cb_build_binary_op(x, '[', s), '&',
-                           cb_build_binary_op(s, '[', y));
+    cb_tree t = cb_build_binary_op(cb_build_binary_op(x, '[', s), '&',
+                                   cb_build_binary_op(s, '[', y));
 
     return flag ? cb_build_negation(t) : t;
   }
