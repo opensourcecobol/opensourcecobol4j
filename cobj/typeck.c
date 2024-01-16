@@ -3883,13 +3883,12 @@ cb_tree cb_build_tarrying_value(cb_tree x, cb_tree l) {
 #ifdef I18N_UTF8
 
 static int cb_validate_single_char_data(cb_tree x) {
-  char msgbuf[256];
   int rt = 0;
 
   if (CB_LITERAL_P(x)) {
     struct cb_literal *lp = CB_LITERAL(x);
     if (lp->size != COB_U8BYTE_1(lp->data[0])) {
-
+      char msgbuf[256];
       memset(msgbuf, 0, sizeof(msgbuf));
       strncpy(msgbuf, (char *)lp->data, 253);
       cb_error_x(x, "Illegal replacement size: '%s'.", msgbuf);
@@ -5669,12 +5668,10 @@ cb_tree cb_build_perform_exit(struct cb_label *label) {
 
 static int match_compound_key(struct cb_key_component *pkcomp,
                               struct cb_list *keys) {
-  struct cb_field *pfld;
-  struct cb_reference *pref;
 
   while (pkcomp && keys) {
-    pfld = CB_FIELD(CB_REFERENCE(keys->value)->value);
-    pref = CB_REFERENCE(pkcomp->component);
+    struct cb_field *pfld = CB_FIELD(CB_REFERENCE(keys->value)->value);
+    struct cb_reference *pref = CB_REFERENCE(pkcomp->component);
     if (pfld != CB_FIELD(pref->value)) {
       break;
     }
@@ -6098,25 +6095,20 @@ void cb_emit_set_up_down(cb_tree l, cb_tree flag, cb_tree x) {
 }
 
 void cb_emit_set_on_off(cb_tree l, cb_tree flag) {
-  struct cb_system_name *s;
 
   if (cb_validate_list(l)) {
     return;
   }
   for (; l; l = CB_CHAIN(l)) {
-    s = CB_SYSTEM_NAME(cb_ref(CB_VALUE(l)));
+    struct cb_system_name *s = CB_SYSTEM_NAME(cb_ref(CB_VALUE(l)));
     cb_emit(cb_build_funcall_2("CobolUtil.setSwitch", cb_int(s->token), flag));
   }
 }
 
 void cb_emit_set_true(cb_tree l) {
-  cb_tree x;
-  struct cb_field *f;
-  cb_tree ref;
-  cb_tree val;
 
   for (; l; l = CB_CHAIN(l)) {
-    x = CB_VALUE(l);
+    cb_tree x = CB_VALUE(l);
     if (x == cb_error_node) {
       return;
     }
@@ -6125,13 +6117,13 @@ void cb_emit_set_true(cb_tree l) {
       cb_error_x(x, _("Invalid SET statement"));
       return;
     }
-    f = cb_field(x);
+    struct cb_field *f = cb_field(x);
     if (f->level != 88) {
       cb_error_x(x, _("Invalid SET statement"));
       return;
     }
-    ref = cb_build_field_reference(f->parent, x);
-    val = CB_VALUE(f->values);
+    cb_tree ref = cb_build_field_reference(f->parent, x);
+    cb_tree val = CB_VALUE(f->values);
     if (CB_PAIR_P(val)) {
       val = CB_PAIR_X(val);
     }
@@ -6140,13 +6132,8 @@ void cb_emit_set_true(cb_tree l) {
 }
 
 void cb_emit_set_false(cb_tree l) {
-  cb_tree x;
-  struct cb_field *f;
-  cb_tree ref;
-  cb_tree val;
-
   for (; l; l = CB_CHAIN(l)) {
-    x = CB_VALUE(l);
+    cb_tree x = CB_VALUE(l);
     if (x == cb_error_node) {
       return;
     }
@@ -6155,7 +6142,7 @@ void cb_emit_set_false(cb_tree l) {
       cb_error_x(x, _("Invalid SET statement"));
       return;
     }
-    f = cb_field(x);
+    struct cb_field *f = cb_field(x);
     if (f->level != 88) {
       cb_error_x(x, _("Invalid SET statement"));
       return;
@@ -6164,8 +6151,8 @@ void cb_emit_set_false(cb_tree l) {
       cb_error_x(x, _("Field does not have FALSE clause"));
       return;
     }
-    ref = cb_build_field_reference(f->parent, x);
-    val = CB_VALUE(f->false_88);
+    cb_tree ref = cb_build_field_reference(f->parent, x);
+    cb_tree val = CB_VALUE(f->false_88);
     if (CB_PAIR_P(val)) {
       val = CB_PAIR_X(val);
     }
@@ -6179,7 +6166,6 @@ void cb_emit_set_false(cb_tree l) {
 
 void cb_emit_sort_init(cb_tree name, cb_tree keys, cb_tree col) {
   cb_tree l;
-  struct cb_field *f;
 
   if (cb_validate_list(keys)) {
     return;
@@ -6211,7 +6197,7 @@ void cb_emit_sort_init(cb_tree name, cb_tree keys, cb_tree col) {
                                  cb_int(cb_field(CB_VALUE(l))->offset)));
     }
   } else {
-    f = CB_FIELD(cb_ref(name));
+    struct cb_field *f = CB_FIELD(cb_ref(name));
     if (keys == NULL) {
       cb_error_x(name, _("Table sort without keys not implemented yet"));
     }
@@ -6709,7 +6695,6 @@ void cb_emit_string(cb_tree items, cb_tree into, cb_tree pointer) {
   cb_tree start;
   cb_tree l;
   cb_tree end;
-  cb_tree dlm;
 
   if (cb_validate_one(into)) {
     return;
@@ -6730,7 +6715,7 @@ void cb_emit_string(cb_tree items, cb_tree into, cb_tree pointer) {
     }
 
     /* cob_string_delimited */
-    dlm = end ? CB_PAIR_X(CB_VALUE(end)) : cb_int0;
+    cb_tree dlm = end ? CB_PAIR_X(CB_VALUE(end)) : cb_int0;
     cb_emit(cb_build_funcall_1("CobolString.stringDelimited", dlm));
 
     /* cob_string_append */
@@ -7128,8 +7113,6 @@ cb_tree cb_build_unstring_into(cb_tree name, cb_tree delimiter, cb_tree count) {
  */
 
 void cb_emit_write(cb_tree record, cb_tree from, cb_tree opt, cb_tree lockopt) {
-  cb_tree file;
-  int val;
 
   if (record != cb_error_node && cb_ref(record) != cb_error_node) {
     if (!CB_REF_OR_FIELD_P(cb_ref(record))) {
@@ -7142,7 +7125,7 @@ void cb_emit_write(cb_tree record, cb_tree from, cb_tree opt, cb_tree lockopt) {
                  _("WRITE subject does not refer to a record name"));
       return;
     }
-    file = CB_TREE(CB_FIELD(cb_ref(record))->file);
+    cb_tree file = CB_TREE(CB_FIELD(cb_ref(record))->file);
     current_statement->file = file;
     if (CB_FILE(file)->organization == COB_ORG_SORT) {
       cb_error_x(CB_TREE(current_statement),
@@ -7173,7 +7156,7 @@ void cb_emit_write(cb_tree record, cb_tree from, cb_tree opt, cb_tree lockopt) {
     if (current_statement->handler_id == COB_EC_I_O_EOP &&
         current_statement->handler1) {
       if (CB_CAST_P(opt)) {
-        val = CB_INTEGER(CB_BINARY_OP(CB_CAST(opt)->val)->x)->val;
+        int val = CB_INTEGER(CB_BINARY_OP(CB_CAST(opt)->val)->x)->val;
         val |= COB_WRITE_EOP;
         CB_BINARY_OP(CB_CAST(opt)->val)->x = cb_int(val);
       } else {
