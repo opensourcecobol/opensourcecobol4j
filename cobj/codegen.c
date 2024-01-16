@@ -2438,8 +2438,6 @@ static void joutput_initialize_compound(struct cb_initialize *p, cb_tree x) {
   struct cb_field *ff;
   struct cb_field *f;
   struct cb_field *last_field;
-  cb_tree c;
-  int type;
   int last_char;
   int i;
   size_t size;
@@ -2454,8 +2452,8 @@ static void joutput_initialize_compound(struct cb_initialize *p, cb_tree x) {
   }
   ++recurs_level;
   while (f) {
-    type = initialize_type(p, f, 0);
-    c = cb_build_field_reference(f, x);
+    int type = initialize_type(p, f, 0);
+    cb_tree c = cb_build_field_reference(f, x);
 
     switch (type) {
     case INITIALIZE_NONE:
@@ -2566,13 +2564,13 @@ static void joutput_occurs(struct cb_field *p) {
 
 static void joutput_search_whens(cb_tree table, cb_tree var, cb_tree stmt,
                                  cb_tree whens) {
-  cb_tree l;
   struct cb_field *p;
   cb_tree idx = NULL;
 
   p = cb_field(table);
   /* Determine the index to use */
   if (var) {
+    cb_tree l;
     for (l = p->index_list; l; l = CB_CHAIN(l)) {
       if (cb_ref(CB_VALUE(l)) == cb_ref(var)) {
         idx = var;
@@ -3178,9 +3176,9 @@ static void joutput_goto_1(cb_tree x) {
 
 static void joutput_goto(struct cb_goto *p) {
   cb_tree l;
-  int i = 1;
 
   if (p->depending) {
+    int i = 1;
     joutput_prefix();
     joutput("switch ((int)");
     joutput_param(cb_build_cast_integer(p->depending), 0);
@@ -3925,7 +3923,6 @@ static int joutput_file_allocation(struct cb_file *f) {
 
 static void joutput_file_initialization(struct cb_file *f) {
   int nkeys = 1;
-  int i_keycomp;
   struct cb_key_component *key_component;
   struct cb_alt_key *l;
 
@@ -3950,6 +3947,7 @@ static void joutput_file_initialization(struct cb_file *f) {
     joutput_prefix();
     joutput("%s%s[0].setFlag(0);\n", CB_PREFIX_KEYS, f->cname);
     joutput_prefix();
+    int i_keycomp;
     if (f->key) {
       if (f->component_list != NULL) {
         joutput("%s%s[0].setOffset(%d);\n", CB_PREFIX_KEYS, f->cname, -1);
@@ -4162,12 +4160,11 @@ static int literal_value(cb_tree x) {
 }
 
 static void joutput_initial_values(struct cb_field *p) {
-  cb_tree x;
   cb_tree def;
 
   def = cb_auto_initialize ? cb_true : NULL;
   for (; p; p = p->sister) {
-    x = cb_build_field_reference(p, NULL);
+    cb_tree x = cb_build_field_reference(p, NULL);
     if (p->flag_item_based) {
       continue;
     }
@@ -4869,10 +4866,8 @@ static void *list_cache_sort(void *inlist,
   struct sort_list *p;
   struct sort_list *q;
   struct sort_list *e;
-  struct sort_list *tail;
   struct sort_list *list;
   int insize;
-  int nmerges;
   int psize;
   int qsize;
   int i;
@@ -4885,8 +4880,9 @@ static void *list_cache_sort(void *inlist,
   for (;;) {
     p = list;
     list = NULL;
-    tail = NULL;
-    nmerges = 0;
+
+    struct sort_list *tail = NULL;
+    int nmerges = 0;
     while (p) {
       nmerges++;
       q = p;
@@ -4940,10 +4936,8 @@ static void *list_cache_sort(void *inlist,
  * メンバ変数の初期化を行うメソッドinitを出力する
  */
 static void joutput_init_method(struct cb_program *prog) {
-  int i;
   struct literal_list *m;
   struct field_list *k;
-  unsigned char *s;
   struct attr_list *j;
   struct base_list *blp;
   const char *prevprog;
@@ -4957,6 +4951,7 @@ static void joutput_init_method(struct cb_program *prog) {
 
   if (prog->decimal_index_max) {
     joutput_line("/* Decimal structures */\n");
+    int i;
     for (i = 0; i < prog->decimal_index_max; i++) {
       joutput_line("d%d = new CobolDecimal();", i);
     }
@@ -5151,6 +5146,7 @@ static void joutput_init_method(struct cb_program *prog) {
               j->scale, j->flags);
       if (j->pic) {
         joutput("\"");
+        unsigned char *s;
         for (s = j->pic; *s; s += 5) {
           if (s[0] == '\\') {
             joutput("\\%c\\%03o\\%03o\\%03o\\%03o", s[0], s[1], s[2], s[3],
