@@ -7155,8 +7155,9 @@ void cb_emit_write(cb_tree record, cb_tree from, cb_tree opt, cb_tree lockopt) {
     /* RXW - This is horrible */
     if (current_statement->handler_id == COB_EC_I_O_EOP &&
         current_statement->handler1) {
+      int val;
       if (CB_CAST_P(opt)) {
-        int val = CB_INTEGER(CB_BINARY_OP(CB_CAST(opt)->val)->x)->val;
+        val = CB_INTEGER(CB_BINARY_OP(CB_CAST(opt)->val)->x)->val;
         val |= COB_WRITE_EOP;
         CB_BINARY_OP(CB_CAST(opt)->val)->x = cb_int(val);
       } else {
