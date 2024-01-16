@@ -3175,7 +3175,6 @@ static void joutput_goto_1(cb_tree x) {
 }
 
 static void joutput_goto(struct cb_goto *p) {
-  cb_tree l;
 
   if (p->depending) {
     int i = 1;
@@ -3184,6 +3183,7 @@ static void joutput_goto(struct cb_goto *p) {
     joutput_param(cb_build_cast_integer(p->depending), 0);
     joutput(")\n");
     joutput_indent("  {");
+    cb_tree l;
     for (l = p->target; l; l = CB_CHAIN(l)) {
       joutput_indent_level -= 2;
       joutput_line("case %d:", i++);
@@ -5560,7 +5560,6 @@ static void joutput_declare_member_variables(struct cb_program *prog,
 
 static void joutput_class_name_definition(struct cb_class_name *p) {
   cb_tree l;
-  cb_tree x;
   unsigned char *data;
   size_t i;
   size_t size;
@@ -5574,7 +5573,7 @@ static void joutput_class_name_definition(struct cb_class_name *p) {
   joutput_prefix();
   joutput("  if (!(    ");
   for (l = p->list; l; l = CB_CHAIN(l)) {
-    x = CB_VALUE(l);
+    cb_tree x = CB_VALUE(l);
     if (CB_PAIR_P(x)) {
       lower = literal_value(CB_PAIR_X(x));
       upper = literal_value(CB_PAIR_Y(x));
@@ -5659,8 +5658,8 @@ static void create_label_id_map(struct cb_program *prog) {
 static void joutput_label_variable_name(char *s, int key,
                                         struct cb_label *section) {
   joutput(CB_PREFIX_LABEL);
-  const char *c;
   if (s) {
+    const char *c;
     if (section && section->name) {
       for (c = (const char *)section->name; *c; ++c) {
         if (*c == ' ') {
@@ -5729,9 +5728,6 @@ static void destroy_label_id_map() {
 
 static void joutput_execution_list(struct cb_program *prog) {
   control_counter = 0;
-  int seen, i, n;
-  struct handler_struct *hstr;
-  int parmnum = 0;
 
   joutput_line("public CobolControl[] contList = {");
   joutput_indent_level += 2;
@@ -5753,7 +5749,8 @@ static void joutput_execution_list(struct cb_program *prog) {
   /* Error handlers */
   if (prog->file_list || prog->gen_file_error) {
     joutput_newline();
-    seen = 0;
+    int seen = 0;
+    int i = 0;
     for (i = COB_OPEN_INPUT; i <= COB_OPEN_EXTEND; i++) {
       if (prog->global_handler[i].handler_label) {
         seen = 1;
@@ -5766,7 +5763,7 @@ static void joutput_execution_list(struct cb_program *prog) {
       joutput_line("switch (CobolFile.errorFile.last_open_mode)");
       joutput_indent("{");
       for (i = COB_OPEN_INPUT; i <= COB_OPEN_EXTEND; i++) {
-        hstr = &prog->global_handler[i];
+        struct handler_struct *hstr = &prog->global_handler[i];
         if (hstr->handler_label) {
           joutput_line("case %d:", i);
           joutput_indent("{");
@@ -5779,7 +5776,8 @@ static void joutput_execution_list(struct cb_program *prog) {
             joutput_prefix();
             joutput("%s_ (%d", hstr->handler_prog->program_id,
                     hstr->handler_label->id);
-            parmnum = cb_list_length(hstr->handler_prog->parameter_list);
+            int parmnum = cb_list_length(hstr->handler_prog->parameter_list);
+            int n;
             for (n = 0; n < parmnum; n++) {
               joutput(", null");
             }
@@ -5859,10 +5857,7 @@ void codegen(struct cb_program *prog, const int nested, char **program_id_list,
   struct field_list *k;
   struct call_list *clp;
   struct cb_program *cp;
-  cb_tree l1;
-  cb_tree l2;
   time_t loctime;
-  char locbuff[48];
 
   /* Clear local program stuff */
   current_prog = prog;
@@ -5909,13 +5904,16 @@ void codegen(struct cb_program *prog, const int nested, char **program_id_list,
     field_cache = NULL;
 
     loctime = time(NULL);
+    char locbuff[48];
     strftime(locbuff, sizeof(locbuff) - 1, "%b %d %Y %H:%M:%S %Z",
              localtime(&loctime));
 
     for (cp = prog; cp; cp = cp->next_program) {
       /* Build parameter list */
       for (l = cp->entry_list; l; l = CB_CHAIN(l)) {
+        cb_tree l1;
         for (l1 = CB_VALUE(l); l1; l1 = CB_CHAIN(l1)) {
+          cb_tree l2;
           for (l2 = cp->parameter_list; l2; l2 = CB_CHAIN(l2)) {
             if (cobc_casecmp(cb_field(CB_VALUE(l1))->name,
                              cb_field(CB_VALUE(l2))->name) == 0) {
