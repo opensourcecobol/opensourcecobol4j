@@ -1539,6 +1539,16 @@ static int preprocess(struct filename *fn) {
   prev_field_line_number = 0;
   ppparse();
 
+  // Register comment info to the list
+  struct comment_info_list_list *p =
+      malloc(sizeof(struct comment_info_list_list));
+  p->head = comment_info_list_head;
+  p->last = comment_info_list_last;
+  p->file = fn->source;
+  p->procedure_division_line_number = procedure_division_line_number;
+  p->next = comment_info_list_list_head;
+  comment_info_list_list_head = p;
+
   if (ppout != stdout) {
     fclose(ppout);
     if (cb_listing_file) {
@@ -1633,6 +1643,8 @@ static int process_translate(struct filename *fn) {
   if (verbose_output) {
     fprintf(stderr, "parsing %s (%s)\n", fn->preprocess, fn->source);
   }
+
+  working_storage_section_line_number = 0;
 
   /* parse */
   ret = yyparse();
@@ -2243,6 +2255,26 @@ int main(int argc, char *argv[]) {
     }
     /* Translate */
     if (cb_compile_level >= CB_LEVEL_TRANSLATE && fn->need_translate) {
+      struct comment_info_list_list *p;
+      // find the commnent info and restore it
+      for (p = comment_info_list_list_head; p; p = p->next) {
+        if (strcmp(p->file, fn->source) == 0) {
+          comment_info_list_head = p->head;
+          comment_info_list_last = p->last;
+          procedure_division_line_number = p->procedure_division_line_number;
+          break;
+        }
+      }
+      // if the comment info is not found
+      if (!p) {
+        comment_info_list_head = NULL;
+        comment_info_list_last = NULL;
+        position_in_source_code = POSITION_BEFORE_WORKING_STORAGE;
+        identification_division_line_number = 0;
+        working_storage_section_line_number = 0;
+        procedure_division_line_number = 0;
+        prev_field_line_number = 0;
+      }
       if (process_translate(fn) != 0) {
         cobc_clean_up(status);
         return status;
