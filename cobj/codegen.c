@@ -5401,8 +5401,6 @@ static void joutput_declare_member_variables(struct cb_program *prog,
       joutput("\t/* %s */\n", blp->f->name);
     }
 
-    int i;
-
     for (i = 0; i < data_storage_cache_count; ++i) {
       struct data_storage_list *entry = sorted_data_storage_cache[i];
       if (is_call_parameter(entry->top) && entry->f != entry->top) {
@@ -5518,24 +5516,24 @@ static void joutput_declare_member_variables(struct cb_program *prog,
 
   if (call_parameter_cache) {
     joutput_line("/* Call parameters */");
-    struct call_parameter_list *l;
-    for (l = call_parameter_cache; l; l = l->next) {
+    struct call_parameter_list *cp;
+    for (cp = call_parameter_cache; cp; cp = cp->next) {
       int cached = 0;
       if (field_cache) {
-        struct field_list *f;
-        for (f = field_cache; f; f = f->next) {
-          if (f->f == l->field) {
+        struct field_list *field;
+        for (field = field_cache; field; field = field->next) {
+          if (field->f == cp->field) {
             cached = 1;
             break;
           }
         }
       }
       if (!cached) {
-        char *field_name = get_java_identifier_field(l->field);
+        char *field_name = get_java_identifier_field(cp->field);
         joutput_line("private AbstractCobolField %s;", field_name);
         free(field_name);
       }
-      char *base_name = get_java_identifier_base(l->field);
+      char *base_name = get_java_identifier_base(cp->field);
       joutput_line("private CobolDataStorage %s;", base_name);
       free(base_name);
     }
