@@ -1575,7 +1575,8 @@ extern void cobc_tree_cast_error(cb_tree x, const char *filen,
 
 /* codegen.c */
 extern void codegen(struct cb_program *prog, const int nested,
-                    char **program_id_list, char *java_source_dir);
+                    char **program_id_list, char *java_source_dir,
+                    char *source_file);
 
 /* scanner.l */
 extern void cb_set_in_procedure(void);

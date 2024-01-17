@@ -1696,7 +1696,7 @@ static int process_translate(struct filename *fn) {
     program_id_list[i] = NULL;
   }
   codegen(p, 0, program_id_list,
-          java_source_dir == NULL ? (char *)"./" : java_source_dir);
+          java_source_dir == NULL ? (char *)"./" : java_source_dir, fn->source);
 
   return 0;
 }

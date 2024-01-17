@@ -274,6 +274,7 @@ static char *convert_byte_value_format(char value) {
 
 static struct comment_info *comment_info_cursor = NULL;
 static struct comment_info *working_storage_comment_info_cursor = NULL;
+char *translating_source_file = NULL;
 
 static void lookup_call(const char *p) {
   struct call_list *clp;
@@ -3533,16 +3534,19 @@ static void joutput_stmt(cb_tree x, enum joutput_stmt_type output_type) {
     /* Output source location as a comment */
     if (p->name) {
       /* Output comments in a COBOL source file */
-      if (!cb_flag_no_cobol_comment) {
+      if (!cb_flag_no_cobol_comment &&
+          strcmp((char *)x->source_file, translating_source_file) == 0) {
         char *file_name_of_last_comment = NULL;
         for (; comment_info_cursor;
              comment_info_cursor = comment_info_cursor->next) {
+          if (!comment_info_cursor->is_base_cobol_file) {
+            continue;
+          }
           if (comment_info_cursor->position_in_source_code <
               POSITION_AFTER_PROCEDURE_DIVISION) {
             continue;
           }
-          if (comment_info_cursor->is_base_cobol_file &&
-              comment_info_cursor->line <= procedure_division_line_number) {
+          if (comment_info_cursor->line <= procedure_division_line_number) {
             continue;
           }
           if (file_name_of_last_comment != NULL &&
@@ -5926,7 +5930,7 @@ static void joutput_execution_entry_func() {
 }
 
 void codegen(struct cb_program *prog, const int nested, char **program_id_list,
-             char *java_source_dir) {
+             char *java_source_dir, char *source_file) {
   int i;
   cb_tree l;
   struct field_list *k;
@@ -5960,6 +5964,7 @@ void codegen(struct cb_program *prog, const int nested, char **program_id_list,
   memset((char *)i_counters, 0, sizeof(i_counters));
   comment_info_cursor = comment_info_list_head;
   working_storage_comment_info_cursor = comment_info_list_head;
+  translating_source_file = source_file;
 
   // modify 8/29 11:00
   joutput_target = yyout;
@@ -6269,7 +6274,8 @@ void codegen(struct cb_program *prog, const int nested, char **program_id_list,
     joutput_line("}");
     fclose(joutput_target);
     ++program_id_list;
-    codegen(prog->next_program, 1, program_id_list, java_source_dir);
+    codegen(prog->next_program, 1, program_id_list, java_source_dir,
+            source_file);
     return;
   }
 
