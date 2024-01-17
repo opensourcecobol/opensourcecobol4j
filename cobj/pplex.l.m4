@@ -953,6 +953,7 @@ ppinput (char *buff, int max_size)
 	int	coln;
 	char	*str1 = NULL;
 	char	*str2 = NULL;
+	int comment_counter = 0;
 
 start:
 	/* read a line */
@@ -1022,11 +1023,13 @@ start:
 	}
 	if (cb_compile_status == CB_COMPILE_STATUS_FALSE) {
 		newline_count++;
+		comment_counter++;
 		goto start;
 	}
 	if (cb_compile_status == CB_COMPILE_STATUS_FALSE_END) {
 		cb_compile_status = CB_COMPILE_STATUS_NONE;
 		newline_count++;
+		comment_counter++;
 		goto start;
 	}
 
@@ -1038,11 +1041,15 @@ start:
 	/* line too short */
 	if (n < 8) {
 		newline_count++;
+		comment_counter++;
 		goto start;
 	}
 
 	if (cb_flag_mfcomment) {
 		if (buff[0] == '*' || buff[0] == '/') {
+			if(!cb_flag_no_cobol_comment) {
+				register_comment(0, buff, comment_counter++);
+			}
 			newline_count++;
 			goto start;
 		}
@@ -1062,10 +1069,14 @@ start:
 			break;
 		}
 		newline_count++;
+		comment_counter++;
 		goto start;
 	case '*':
 	case '/':
 		/* comment line */
+		if(!cb_flag_no_cobol_comment) {
+			register_comment(0, buff, comment_counter++);
+		}
 		newline_count++;
 		goto start;
 	default:
@@ -1081,24 +1092,28 @@ start:
 		case 8:
 			if (buff[7] == ' ') {
 				newline_count++;
+				comment_counter++;
 				goto start;
 			}
 			break;
 		case 9:
 			if (!memcmp (&buff[7], "  ", 2)) {
 				newline_count++;
+				comment_counter++;
 				goto start;
 			}
 			break;
 		case 10:
 			if (!memcmp (&buff[7], "   ", 3)) {
 				newline_count++;
+				comment_counter++;
 				goto start;
 			}
 			break;
 		default:
 			if (!memcmp (&buff[7], "    ", 4)) {
 				newline_count++;
+				comment_counter++;
 				goto start;
 			}
 			break;
@@ -1130,6 +1145,7 @@ start:
 	for (i = 7; buff[i] == ' '; i++) ;
 	if (buff[i] == '\n') {
 		newline_count++;
+		comment_counter++;
 		goto start;
 	}
 
@@ -1197,6 +1213,7 @@ start:
 	if (continuation) {
 		memmove (buff, bp, strlen (bp) + 1);
 		newline_count++;
+		comment_counter++;
 	} else {
 		/* insert newlines at the start of the buffer */
 		memmove (buff + newline_count, bp, strlen (bp) + 1);
