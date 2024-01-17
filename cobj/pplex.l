@@ -1074,7 +1074,7 @@ start:
 	case '/':
 		/* comment line */
 		if(!cb_flag_no_cobol_comment) {
-			register_comment(0, buff, comment_counter++);
+			register_comment(6, buff, comment_counter++);
 		}
 		newline_count++;
 		goto start;
