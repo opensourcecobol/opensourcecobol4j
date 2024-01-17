@@ -307,6 +307,39 @@ extern FILE *ppout;
 extern int pplex(void);
 extern int ppparse(void);
 
+#define POSITION_BEFORE_WORKING_STORAGE (0)
+#define POSITION_AFTER_WORKING_STORAGE (1)
+#define POSITION_BEFORE_PROCEDURE_DIVISION (2)
+#define POSITION_AFTER_PROCEDURE_DIVISION (3)
+struct comment_info {
+  struct comment_info *next;
+  struct comment_info *prev;
+  char *file;
+  int line;
+  int is_base_cobol_file;
+  int position_in_source_code;
+  char *comment;
+};
+
+struct comment_info_list_list {
+  struct comment_info_list_list *next;
+  struct comment_info *head;
+  struct comment_info *last;
+  int procedure_division_line_number;
+  char *file;
+};
+
+extern struct comment_info *comment_info_list_head;
+extern struct comment_info *comment_info_list_last;
+extern struct comment_info_list_list *comment_info_list_list_head;
+extern int identification_division_line_number;
+extern int procedure_division_line_number;
+extern int working_storage_section_line_number;
+extern int prev_field_line_number;
+extern int position_in_source_code;
+
+extern void register_comment(int comment_mark_index, char *buffer, int delta);
+
 extern int ppopen(const char *name, struct cb_joining_ext *joining_ext,
                   struct cb_replace_list *replace_list);
 extern int ppcopy(const char *name, const char *lib,

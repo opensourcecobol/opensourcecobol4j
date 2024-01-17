@@ -2605,7 +2605,8 @@ data_description:
   {
 	cb_tree x;
 
-	x = cb_build_field_tree ($1, $2, current_field, current_storage, current_file);
+	x = cb_build_field_tree ($1, $2, current_field, current_storage, current_file, cb_source_file, cb_source_line, prev_field_line_number);
+	prev_field_line_number = cb_source_line;
 	if (x == cb_error_node) {
 		YYERROR;
 	} else {
@@ -2629,7 +2630,8 @@ data_description:
   {
 	cb_tree x;
 
-	x = cb_build_field_tree ($1, $2, current_field, current_storage, current_file);
+	x = cb_build_field_tree ($1, $2, current_field, current_storage, current_file, cb_source_file, cb_source_line, prev_field_line_number);
+	prev_field_line_number = cb_source_line;
 	if (x == cb_error_node) {
 		YYERROR;
 	} else {
@@ -3494,7 +3496,8 @@ screen_description:
   {
 	cb_tree x;
 
-	x = cb_build_field_tree ($1, $2, current_field, current_storage, current_file);
+	x = cb_build_field_tree ($1, $2, current_field, current_storage, current_file, cb_source_file, cb_source_line, prev_field_line_number);
+	prev_field_line_number = cb_source_line;
 	if (x == cb_error_node) {
 		YYERROR;
 	}

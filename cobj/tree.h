@@ -480,19 +480,22 @@ extern cb_tree cb_build_picture(const char *str);
 
 struct cb_field {
   struct cb_tree_common common;
-  int id;                   /* field id */
-  int storage_id;           /* storage id */
-  const char *name;         /* the original name */
-  const char *ename;        /* the externalized name */
-  int size;                 /* field size */
-  int memory_size;          /* memory size */
-  int offset;               /* byte offset from top (01 field) */
-  int level;                /* level number */
-  int occurs_min;           /* OCCURS <max> */
-  int occurs_max;           /* or OCCURS <min> TO <max> */
-  int indexes;              /* number of parents who have OCCURS */
-  int count;                /* reference count */
-  cb_tree occurs_depending; /* OCCURS ... DEPENDING ON */
+  int id;                       /* field id */
+  int storage_id;               /* storage id */
+  const char *name;             /* the original name */
+  const char *ename;            /* the externalized name */
+  int size;                     /* field size */
+  int memory_size;              /* memory size */
+  int offset;                   /* byte offset from top (01 field) */
+  int level;                    /* level number */
+  int occurs_min;               /* OCCURS <max> */
+  int occurs_max;               /* or OCCURS <min> TO <max> */
+  int indexes;                  /* number of parents who have OCCURS */
+  int count;                    /* reference count */
+  char *definition_source_file; /* file name where the field is defined*/
+  int definition_source_line;   /* line number where the field is defined */
+  int prev_field_line_number;   /* line number of previous field */
+  cb_tree occurs_depending;     /* OCCURS ... DEPENDING ON */
   enum cb_storage storage;
   enum cb_usage usage;          /* USAGE */
   cb_tree values;               /* VALUE */
@@ -1370,7 +1373,10 @@ extern size_t cb_needs_01;
 extern int cb_get_level(cb_tree x);
 extern cb_tree cb_build_field_tree(cb_tree level, cb_tree name,
                                    struct cb_field *last_field,
-                                   enum cb_storage storage, struct cb_file *fn);
+                                   enum cb_storage storage, struct cb_file *fn,
+                                   char *definition_source_file,
+                                   int definition_source_line,
+                                   int prev_field_line_number);
 extern struct cb_field *cb_resolve_redefines(struct cb_field *field,
                                              cb_tree redefines);
 extern void cb_validate_field(struct cb_field *p);
@@ -1569,7 +1575,8 @@ extern void cobc_tree_cast_error(cb_tree x, const char *filen,
 
 /* codegen.c */
 extern void codegen(struct cb_program *prog, const int nested,
-                    char **program_id_list, char *java_source_dir);
+                    char **program_id_list, char *java_source_dir,
+                    char *source_file);
 
 /* scanner.l */
 extern void cb_set_in_procedure(void);
