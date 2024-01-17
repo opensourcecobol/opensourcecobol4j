@@ -5060,7 +5060,8 @@ static void joutput_init_method(struct cb_program *prog) {
         joutput("/* PROGRAM-ID : %s */\n", prevprog);
       }
 
-      if (!cb_flag_no_cobol_comment) {
+      if (!cb_flag_no_cobol_comment &&
+          strcmp(k->f->definition_source_file, translating_source_file) == 0) {
         char *file_name_of_last_comment = NULL;
         for (; working_storage_comment_info_cursor;
              working_storage_comment_info_cursor =
