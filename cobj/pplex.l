@@ -1360,3 +1360,38 @@ void pp_omit_data_redef_name (int on_off)
 {
 	omit_data_redef_name = on_off;
 }
+
+void register_comment(int comment_mark_index, char* buffer, int delta) {
+	struct comment_info* p = malloc(sizeof(struct comment_info));
+	p->file = cb_source_file;
+	p->line = cb_source_line + delta + 1;
+
+	// Remove the unnecessary part of the comment
+	int str_len_original_line = strlen(buffer);
+	int comment_end_index;
+	if(buffer[str_len_original_line - 1] == '\n') {
+		if(str_len_original_line >= 2 && buffer[str_len_original_line - 1] == '\r') {
+			comment_end_index = str_len_original_line - 2;
+		} else {
+			comment_end_index = str_len_original_line - 1;
+		}
+	} else {
+		comment_end_index = str_len_original_line;
+	}
+	int comment_len = comment_end_index - comment_mark_index - 1;
+	p->comment = malloc(comment_len + 1);
+	memcpy(p->comment, buffer + comment_mark_index + 1, comment_len);
+	p->comment[comment_len] = '\0';
+
+	p->prev = comment_info_list_last;
+	p->next = NULL;
+	p->is_base_cobol_file = copy_stack->next == NULL;
+	p->position_in_source_code = position_in_source_code;
+	if(comment_info_list_last != NULL) {
+		comment_info_list_last->next = p;
+	}
+	comment_info_list_last = p;
+	if(comment_info_list_head == NULL) {
+		comment_info_list_head = p;
+	}
+}

@@ -166,6 +166,15 @@ struct cb_text_list *cb_include_list = NULL;
 struct cb_text_list *cb_extension_list = NULL;
 struct cb_constant_list *cb_const_list = NULL;
 
+struct comment_info *comment_info_list_head;
+struct comment_info *comment_info_list_last;
+struct comment_info_list_list *comment_info_list_list_head = NULL;
+int position_in_source_code;
+int identification_division_line_number;
+int procedure_division_line_number;
+int working_storage_section_line_number;
+int prev_field_line_number;
+
 int cb_saveargc;
 char **cb_saveargv;
 
