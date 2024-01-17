@@ -3492,7 +3492,6 @@ static void joutput_stmt(cb_tree x, enum joutput_stmt_type output_type) {
   struct cb_cast *cp;
 #endif
   int code;
-  struct cb_field *f;
   int putParen = 0;
 
   stack_id = 0;
@@ -3766,7 +3765,7 @@ static void joutput_stmt(cb_tree x, enum joutput_stmt_type output_type) {
 
     joutput(".set(");
 
-    f = cb_field(ap->var);
+    struct cb_field *f = cb_field(ap->var);
     if (f->usage == CB_USAGE_BINARY || f->usage == CB_USAGE_COMP_5 ||
         f->usage == CB_USAGE_INDEX) {
       if (f->size == 1) {
@@ -4275,9 +4274,6 @@ static void joutput_internal_function(struct cb_program *prog,
   struct cb_field *f;
   struct cb_file *fl;
   char *p;
-#ifndef __GNUC__
-  struct label_list *pl;
-#endif
   int i;
   // int			n;
   int parmnum = 0;
@@ -4809,6 +4805,7 @@ static void joutput_internal_function(struct cb_program *prog,
   // output_line ("P_switch:");
   // if (label_cache) {
   //	output_line (" switch (frame_ptr->return_address) {");
+  //  struct label_list *pl;
   //	for (pl = label_cache; pl; pl = pl->next) {
   //		output_line (" case %d:", pl->call_num);
   //		output_line ("   goto %s%d;", CB_PREFIX_LABEL, pl->id);
