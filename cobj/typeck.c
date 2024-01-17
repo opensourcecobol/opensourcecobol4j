@@ -435,7 +435,7 @@ const char *cb_build_program_id(cb_tree name, cb_tree alt_name) {
   return s;
 }
 
-void cb_define_switch_name(cb_tree name, cb_tree sname, cb_tree flag,
+void cb_define_switch_name(cb_tree name, cb_tree sname, const cb_tree flag,
                            cb_tree ref) {
 
   if (name == cb_error_node) {
@@ -1951,7 +1951,7 @@ cb_tree cb_build_expr(cb_tree list) {
  * Numerical operation
  */
 
-static cb_tree build_store_option(cb_tree x, cb_tree round_opt) {
+static cb_tree build_store_option(cb_tree x, const cb_tree round_opt) {
   int opt = 0;
 
   if (round_opt == cb_int1) {
@@ -3100,7 +3100,7 @@ void cb_emit_accept_name(cb_tree var, cb_tree name) {
  */
 
 void cb_emit_allocate(cb_tree target1, cb_tree target2, cb_tree size,
-                      cb_tree initialize) {
+                      const cb_tree initialize) {
 
   if (cb_validate_one(target1)) {
     return;
@@ -3776,7 +3776,7 @@ void cb_emit_if(cb_tree cond, cb_tree stmt1, cb_tree stmt2) {
  * INITIALIZE statement
  */
 
-void cb_emit_initialize(cb_tree vars, cb_tree fillinit, cb_tree value,
+void cb_emit_initialize(cb_tree vars, const cb_tree fillinit, cb_tree value,
                         cb_tree replacing, cb_tree def) {
   cb_tree l;
   int fill_init = 1;
@@ -4157,7 +4157,7 @@ cb_tree cb_build_inspect_region_start(void) {
   return cb_list_init(cb_build_funcall_0("CobolInspect.start"));
 }
 
-cb_tree cb_build_inspect_region(cb_tree l, cb_tree pos, cb_tree x) {
+cb_tree cb_build_inspect_region(cb_tree l, const cb_tree pos, cb_tree x) {
   if (pos == CB_BEFORE) {
     return cb_list_add(l, cb_build_funcall_1("CobolInspect.before", x));
   } else {
@@ -5698,8 +5698,8 @@ static cb_tree lookup_compound_key(struct cb_file *f, struct cb_list *keys) {
   return key;
 }
 
-void cb_emit_read(cb_tree ref, cb_tree next, cb_tree into, cb_tree keys,
-                  cb_tree lock_opts) {
+void cb_emit_read(cb_tree ref, const cb_tree next, cb_tree into, cb_tree keys,
+                  const cb_tree lock_opts) {
   int read_opts = 0;
   cb_tree file;
   cb_tree rec;
@@ -5771,7 +5771,7 @@ void cb_emit_read(cb_tree ref, cb_tree next, cb_tree into, cb_tree keys,
  * REWRITE statement
  */
 
-void cb_emit_rewrite(cb_tree record, cb_tree from, cb_tree lockopt) {
+void cb_emit_rewrite(cb_tree record, cb_tree from, const cb_tree lockopt) {
   cb_tree file;
   int opts = 0;
 
@@ -7112,7 +7112,8 @@ cb_tree cb_build_unstring_into(cb_tree name, cb_tree delimiter, cb_tree count) {
  * WRITE statement
  */
 
-void cb_emit_write(cb_tree record, cb_tree from, cb_tree opt, cb_tree lockopt) {
+void cb_emit_write(cb_tree record, cb_tree from, cb_tree opt,
+                   const cb_tree lockopt) {
 
   if (record != cb_error_node && cb_ref(record) != cb_error_node) {
     if (!CB_REF_OR_FIELD_P(cb_ref(record))) {
@@ -7171,7 +7172,7 @@ void cb_emit_write(cb_tree record, cb_tree from, cb_tree opt, cb_tree lockopt) {
   }
 }
 
-cb_tree cb_build_write_advancing_lines(cb_tree pos, cb_tree lines) {
+cb_tree cb_build_write_advancing_lines(const cb_tree pos, cb_tree lines) {
   cb_tree e;
   int opt;
 
@@ -7180,7 +7181,7 @@ cb_tree cb_build_write_advancing_lines(cb_tree pos, cb_tree lines) {
   return cb_build_cast_integer(e);
 }
 
-cb_tree cb_build_write_advancing_mnemonic(cb_tree pos, cb_tree mnemonic) {
+cb_tree cb_build_write_advancing_mnemonic(const cb_tree pos, cb_tree mnemonic) {
   int opt;
   int token;
 
@@ -7209,7 +7210,7 @@ cb_tree cb_build_write_advancing_mnemonic(cb_tree pos, cb_tree mnemonic) {
   }
 }
 
-cb_tree cb_build_write_advancing_page(cb_tree pos) {
+cb_tree cb_build_write_advancing_page(const cb_tree pos) {
   int opt = (pos == CB_BEFORE) ? COB_WRITE_BEFORE : COB_WRITE_AFTER;
 
   return cb_int(opt | COB_WRITE_PAGE);

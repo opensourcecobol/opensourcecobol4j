@@ -708,7 +708,7 @@ static void destroy_sorted_data_storage_cache() {
   free(sorted_data_storage_cache);
 }
 
-static int is_call_parameter(struct cb_field *f) {
+static int is_call_parameter(const struct cb_field *f) {
   cb_tree l;
   for (l = call_parameters; l; l = CB_CHAIN(l)) {
     if (f == cb_field(CB_VALUE(l))) {

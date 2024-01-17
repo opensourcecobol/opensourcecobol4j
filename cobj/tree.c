@@ -1698,7 +1698,7 @@ struct cb_field *cb_field_variable_address(struct cb_field *f) {
 
 /* Return 1 if P is subordinate to F */
 
-int cb_field_subordinate(struct cb_field *p, struct cb_field *f) {
+int cb_field_subordinate(struct cb_field *p, const struct cb_field *f) {
   for (p = p->parent; p; p = p->parent) {
     if (p == f) {
       return 1;
