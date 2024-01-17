@@ -7,5 +7,4 @@ cppcheck --error-exitcode=1 \
     --suppress=unusedFunctions \
     --suppress=constParameter \
     --suppress=shadowVariable \
-    --suppress=unusedVariable \
     --suppress=toomanyconfigs
