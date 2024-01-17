@@ -5958,6 +5958,8 @@ void codegen(struct cb_program *prog, const int nested, char **program_id_list,
   excp_current_section = NULL;
   excp_current_paragraph = NULL;
   memset((char *)i_counters, 0, sizeof(i_counters));
+  comment_info_cursor = comment_info_list_head;
+  working_storage_comment_info_cursor = comment_info_list_head;
 
   // modify 8/29 11:00
   joutput_target = yyout;
