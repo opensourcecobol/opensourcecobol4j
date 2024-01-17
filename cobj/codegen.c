@@ -3214,10 +3214,6 @@ static void joutput_goto(struct cb_goto *p) {
  */
 
 static void joutput_perform_call(struct cb_label *lb, struct cb_label *le) {
-#ifndef __GNUC__
-  struct label_list *l;
-#endif
-
   if (lb == le) {
     joutput_line("/* PERFORM %s */", lb->name);
     joutput_prefix();
@@ -3361,9 +3357,6 @@ static void joutput_sort_init(struct cb_sort_init *p) {
 static void joutput_sort_proc(struct cb_sort_proc *p) {
   struct cb_label *lb = CB_LABEL(cb_ref(CB_PAIR_X(p->body)));
   struct cb_label *le = CB_LABEL(cb_ref(CB_PAIR_Y(p->body)));
-#ifndef __GNUC__
-  struct label_list *l;
-#endif
 
   if (lb == le) {
     joutput_line("/* PERFORM %s */", lb->name);
