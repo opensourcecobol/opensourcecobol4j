@@ -1530,6 +1530,13 @@ static int preprocess(struct filename *fn) {
     fprintf(stderr, "preprocessing %s into %s\n", fn->source, fn->preprocess);
   }
 
+  comment_info_list_head = NULL;
+  comment_info_list_last = NULL;
+  position_in_source_code = POSITION_BEFORE_WORKING_STORAGE;
+  identification_division_line_number = 0;
+  procedure_division_line_number = 0;
+  working_storage_section_line_number = 0;
+  prev_field_line_number = 0;
   ppparse();
 
   if (ppout != stdout) {
