@@ -5069,11 +5069,6 @@ static void joutput_init_method(struct cb_program *prog) {
                   POSITION_AFTER_PROCEDURE_DIVISION) {
             continue;
           }
-          if (working_storage_comment_info_cursor->is_base_cobol_file &&
-              working_storage_comment_info_cursor->line <=
-                  working_storage_section_line_number) {
-            continue;
-          }
           if (working_storage_comment_info_cursor->line <=
               k->f->prev_field_line_number) {
             continue;
