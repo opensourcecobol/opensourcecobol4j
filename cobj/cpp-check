@@ -6,5 +6,5 @@ cppcheck --error-exitcode=1 \
     --enable=portability \
     --suppress=unusedFunctions \
     --suppress=constParameter \
-    --suppress=shadowVariable \
     --suppress=toomanyconfigs
+    #--suppress=shadowVariable \

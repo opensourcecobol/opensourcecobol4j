@@ -1664,7 +1664,7 @@ static int process_translate(struct filename *fn) {
   }
 
   /* translate to Java */
-  for (int i = 0; i < PROGRAM_ID_LIST_MAX_LEN; ++i) {
+  for (i = 0; i < PROGRAM_ID_LIST_MAX_LEN; ++i) {
     program_id_list[i] = NULL;
   }
   codegen(p, 0, program_id_list,
