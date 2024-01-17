@@ -132,14 +132,28 @@ ALNUM_LITERAL	\"[^\"\n]*\"|\'[^\'\n]*\'
 	ppecho (" ");
 }
 
-"IDENTIFICATION"({ZENSPC}|[ ])+"DIVISION"({ZENSPC}|[ ])*"."	{ ppecho ("IDENTIFICATION DIVISION."); }
+"IDENTIFICATION"({ZENSPC}|[ ])+"DIVISION"({ZENSPC}|[ ])*"."	{
+	identification_division_line_number = cb_source_line;
+	ppecho ("IDENTIFICATION DIVISION.");
+}
 "ID"({ZENSPC}|[ ])+"DIVISION"({ZENSPC}|[ ])*"."			{ ppecho ("ID DIVISION."); }
 "FUNCTION"({ZENSPC}|[ ])+"DIVISION"({ZENSPC}|[ ])*"."		{ ppecho ("FUNCTION DIVISION."); }
 "PROGRAM-ID"					{ ppecho (yytext); return PROGRAM_ID; }
 "FUNCTION-ID"					{ ppecho (yytext); return FUNCTION_ID; }
 "ENVIRONMENT"({ZENSPC}|[ ])+"DIVISION"	{ ppecho ("ENVIRONMENT DIVISION"); return ENVIRONMENT_DIVISION; }
-"DATA"({ZENSPC}|[ ])+"DIVISION"		{ ppecho ("DATA DIVISION"); return DATA_DIVISION; }
-"PROCEDURE"({ZENSPC}|[ ])+"DIVISION"	{ ppecho ("PROCEDURE DIVISION"); return PROCEDURE_DIVISION; }
+"DATA"({ZENSPC}|[ ])+"DIVISION"		{
+	position_in_source_code = POSITION_AFTER_WORKING_STORAGE;
+	ppecho ("DATA DIVISION");
+	return DATA_DIVISION;
+}
+"PROCEDURE"({ZENSPC}|[ ])+"DIVISION"	{
+	if(copy_stack->next == NULL) {
+		procedure_division_line_number = cb_source_line;
+		position_in_source_code = POSITION_AFTER_PROCEDURE_DIVISION;
+	}
+	ppecho ("PROCEDURE DIVISION");
+	return PROCEDURE_DIVISION;
+}
 "END"({ZENSPC}|[ ])+"PROGRAM"		{ ppecho ("END PROGRAM"); return END_PROGRAM; }
 "END"({ZENSPC}|[ ])+"FUNCTION"		{ ppecho ("END FUNCTION"); return END_FUNCTION; }
 
