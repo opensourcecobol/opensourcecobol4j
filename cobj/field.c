@@ -76,7 +76,10 @@ level_error:
 
 cb_tree cb_build_field_tree(cb_tree level, cb_tree name,
                             struct cb_field *last_field,
-                            enum cb_storage storage, struct cb_file *fn) {
+                            enum cb_storage storage, struct cb_file *fn,
+                            char *definition_source_file,
+                            int definition_source_line,
+                            int prev_field_line_number) {
   struct cb_reference *r;
   struct cb_field *f;
   struct cb_field *p;
@@ -100,6 +103,10 @@ cb_tree cb_build_field_tree(cb_tree level, cb_tree name,
   r = CB_REFERENCE(name);
   f = CB_FIELD(cb_build_field(name));
   f->storage = storage;
+  f->definition_source_line = definition_source_line;
+  f->definition_source_file = definition_source_file;
+  f->prev_field_line_number = prev_field_line_number;
+
   last_real_field = last_field;
   if (lv == 78) {
     f->level = 01;

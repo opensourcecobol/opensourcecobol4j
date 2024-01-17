@@ -741,7 +741,8 @@ misc_DEPENDENCIES = \
 	misc.src/comp-n.at \
 	misc.src/fd-external.at \
 	misc.src/compile-multiple-files.at \
-	misc.src/compare-large-number.at
+	misc.src/compare-large-number.at \
+	misc.src/copy-comments.at
 
 EXTRA_DIST = $(srcdir)/package.m4 \
 	$(TESTS) \

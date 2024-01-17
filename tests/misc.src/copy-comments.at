@@ -1,0 +1,148 @@
+AT_SETUP([Copy comments])
+
+AT_DATA([nest1.cpy],
+[      * nest1
+        display "nest1".
+
+        copy "nest2.cpy".
+        copy "nest3.cpy".
+      * nest1 end
+])
+AT_DATA([nest2.cpy],
+[      * nest2
+        display "nest2".
+
+        copy "nest4.cpy".
+      * nest2 end
+])
+AT_DATA([nest3.cpy],
+[      * nest3
+        display "nest3".
+      * nest3 end
+])
+AT_DATA([nest4.cpy],
+[      * nest4
+        display "nest4".
+      * nest4 end
+])
+AT_DATA([working_storage1.cpy],
+[      * cpy1
+       03 WORK1-A PIC X VALUE "1".
+      * cpy2
+      * cpy3
+       03 WORK1-B PIC X VALUE "2".
+      * cpy4
+])
+
+AT_DATA([working_storage2.cpy],
+[      * cpy1
+       01 WORK2-A PIC X VALUE "1".
+      * cpy2
+      * cpy3
+       01 WORK2-B PIC X VALUE "2".
+      * cpy4
+])
+
+AT_DATA([procedure_division.cpy],
+[      * procedure division comment
+      * display
+        DISPLAY "hello".
+      * procedure division comment 2
+      * display 2
+        DISPLAY "hello 2".
+      * procedure division comment 3
+      * display 3
+        DISPLAY "hello 3".
+])
+
+AT_DATA([prog.cbl],
+[      * COMMENT IDENTIFICATION DIVISION 1
+
+      * COMMENT IDENTIFICATION DIVISION 2
+       IDENTIFICATION              DIVISION.
+      * COMMENT IDENTIFICATION DIVISION 3
+       PROGRAM-ID.                 prog.
+
+       ENVIRONMENT                 DIVISION.  
+       INPUT-OUTPUT                SECTION.
+       FILE-CONTROL.
+       DATA                        DIVISION.
+      * DATA DIVISION COMMENT
+       FILE                        SECTION.
+      * FILE SECTION COMMENT
+       WORKING-STORAGE             SECTION.
+      * COMMENT for UNUSED-1.
+       01 UNUSED-1 PIC X.
+      * COMMENT for UNUSED-2 (1).
+      * COMMENT for UNUSED-2 (2).
+       01 UNUSED-2 PIC X.
+      * COMMENT WORKING-STORAGE SECTION
+       01  DATAS.
+      * comment ONE
+           03  ONE                 PIC 9(1) VALUE 1.
+           COPY "working_storage1.cpy".
+      * comment TWO 1
+      * comment TWO 2
+           03  TWO                 PIC 9(1) VALUE 2.
+           03  RESULT              PIC 9(1).
+       COPY "working_storage2.cpy".
+      * WORKING STORAGE END
+       PROCEDURE                   DIVISION.
+       MAIN-PROC                   SECTION.
+      * COMMENT PROCEDURE DIVISON prog
+      *
+      * 日本語コメント
+       DISPLAY ONE. DISPLAY TWO.
+           DISPLAY "HELLO".
+       COPY "procedure_division.cpy".
+       COPY "nest1.cpy".
+      * IF Statement prog
+           IF 1 = 1 THEN
+      * DISPLAY Statement 1 prog
+                  DISPLAY 1
+      * ELSE prog
+           ELSE
+      * DISPLAY Statement 2 prog
+                  DISPLAY 2
+           END-IF.
+       
+       DISPLAY WORK1-A.
+       DISPLAY WORK1-B.
+       DISPLAY WORK2-A.
+       DISPLAY WORK2-B.
+
+       MAIN-PROC-999.   
+           STOP     RUN.
+      * Last comment 1 prog
+      * Last comment 2 prog
+      * Last comment 3 prog
+])
+
+AT_CHECK([cp prog.cbl prog2.cbl])
+AT_CHECK([cat prog2.cbl | sed 's/prog/prog2/g' > tmpfile.cbl])
+AT_CHECK([mv tmpfile.cbl prog2.cbl])
+AT_CHECK([${COBJ} prog.cbl prog2.cbl])
+AT_CHECK([cat prog.java | iconv --from-code=SJIS --to-code=UTF8 | grep '//' | sed 's/^@<:@ \t@:>@*//' | tee prog-out.txt | iconv --from-code=UTF8 --to-code=SJIS], [0],
+[// prog.cbl:1:  COMMENT IDENTIFICATION DIVISION 1
+// prog.cbl:3:  COMMENT IDENTIFICATION DIVISION 2
+// prog.cbl:34:  COMMENT PROCEDURE DIVISON prog
+// prog.cbl:35: @&t@
+// prog.cbl:36:  日本語コメント
+// prog.cbl:42:  IF Statement prog
+// prog.cbl:44:  DISPLAY Statement 1 prog
+// prog.cbl:45:  ELSE prog
+// prog.cbl:47:  DISPLAY Statement 2 prog
+// prog.cbl:58:  Last comment 1 prog
+// prog.cbl:59:  Last comment 2 prog
+// prog.cbl:60:  Last comment 3 prog
+// prog.cbl:23:  comment ONE
+// prog.cbl:26:  comment TWO 1
+// prog.cbl:27:  comment TWO 2
+])
+AT_CHECK([cat prog2.java | iconv --from-code=SJIS --to-code=UTF8 | grep '//' | sed 's/^@<:@ \t@:>@*//' > prog2-out.txt])
+AT_CHECK([diff <(cat prog-out.txt | sed 's/prog/prog2/g') prog2-out.txt])
+
+AT_CHECK([${COBJ} -fno-cobol-comment prog.cbl prog2.cbl])
+AT_CHECK([cat prog.java | iconv --from-code=SJIS --to-code=UTF8 | grep '//'], [1])
+AT_CHECK([cat prog2.java | iconv --from-code=SJIS --to-code=UTF8 | grep '//'], [1])
+AT_CLEANUP

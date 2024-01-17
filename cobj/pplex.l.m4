@@ -147,14 +147,28 @@ ALNUM_LITERAL	\"[^\"\n]*\"|\'[^\'\n]*\'
 	ppecho (" ");
 }
 
-"IDENTIFICATION"({ZENSPC}|[ ])+"DIVISION"({ZENSPC}|[ ])*"."	{ ppecho ("IDENTIFICATION DIVISION."); }
+"IDENTIFICATION"({ZENSPC}|[ ])+"DIVISION"({ZENSPC}|[ ])*"."	{
+	identification_division_line_number = cb_source_line;
+	ppecho ("IDENTIFICATION DIVISION.");
+}
 "ID"({ZENSPC}|[ ])+"DIVISION"({ZENSPC}|[ ])*"."			{ ppecho ("ID DIVISION."); }
 "FUNCTION"({ZENSPC}|[ ])+"DIVISION"({ZENSPC}|[ ])*"."		{ ppecho ("FUNCTION DIVISION."); }
 "PROGRAM-ID"					{ ppecho (yytext); return PROGRAM_ID; }
 "FUNCTION-ID"					{ ppecho (yytext); return FUNCTION_ID; }
 "ENVIRONMENT"({ZENSPC}|[ ])+"DIVISION"	{ ppecho ("ENVIRONMENT DIVISION"); return ENVIRONMENT_DIVISION; }
-"DATA"({ZENSPC}|[ ])+"DIVISION"		{ ppecho ("DATA DIVISION"); return DATA_DIVISION; }
-"PROCEDURE"({ZENSPC}|[ ])+"DIVISION"	{ ppecho ("PROCEDURE DIVISION"); return PROCEDURE_DIVISION; }
+"DATA"({ZENSPC}|[ ])+"DIVISION"		{
+	position_in_source_code = POSITION_AFTER_WORKING_STORAGE;
+	ppecho ("DATA DIVISION");
+	return DATA_DIVISION;
+}
+"PROCEDURE"({ZENSPC}|[ ])+"DIVISION"	{
+	if(copy_stack->next == NULL) {
+		procedure_division_line_number = cb_source_line;
+		position_in_source_code = POSITION_AFTER_PROCEDURE_DIVISION;
+	}
+	ppecho ("PROCEDURE DIVISION");
+	return PROCEDURE_DIVISION;
+}
 "END"({ZENSPC}|[ ])+"PROGRAM"		{ ppecho ("END PROGRAM"); return END_PROGRAM; }
 "END"({ZENSPC}|[ ])+"FUNCTION"		{ ppecho ("END FUNCTION"); return END_FUNCTION; }
 
@@ -953,6 +967,7 @@ ppinput (char *buff, int max_size)
 	int	coln;
 	char	*str1 = NULL;
 	char	*str2 = NULL;
+	int comment_counter = 0;
 
 start:
 	/* read a line */
@@ -1022,11 +1037,13 @@ start:
 	}
 	if (cb_compile_status == CB_COMPILE_STATUS_FALSE) {
 		newline_count++;
+		comment_counter++;
 		goto start;
 	}
 	if (cb_compile_status == CB_COMPILE_STATUS_FALSE_END) {
 		cb_compile_status = CB_COMPILE_STATUS_NONE;
 		newline_count++;
+		comment_counter++;
 		goto start;
 	}
 
@@ -1038,11 +1055,15 @@ start:
 	/* line too short */
 	if (n < 8) {
 		newline_count++;
+		comment_counter++;
 		goto start;
 	}
 
 	if (cb_flag_mfcomment) {
 		if (buff[0] == '*' || buff[0] == '/') {
+			if(!cb_flag_no_cobol_comment) {
+				register_comment(0, buff, comment_counter++);
+			}
 			newline_count++;
 			goto start;
 		}
@@ -1062,10 +1083,14 @@ start:
 			break;
 		}
 		newline_count++;
+		comment_counter++;
 		goto start;
 	case '*':
 	case '/':
 		/* comment line */
+		if(!cb_flag_no_cobol_comment) {
+			register_comment(6, buff, comment_counter++);
+		}
 		newline_count++;
 		goto start;
 	default:
@@ -1081,24 +1106,28 @@ start:
 		case 8:
 			if (buff[7] == ' ') {
 				newline_count++;
+				comment_counter++;
 				goto start;
 			}
 			break;
 		case 9:
 			if (!memcmp (&buff[7], "  ", 2)) {
 				newline_count++;
+				comment_counter++;
 				goto start;
 			}
 			break;
 		case 10:
 			if (!memcmp (&buff[7], "   ", 3)) {
 				newline_count++;
+				comment_counter++;
 				goto start;
 			}
 			break;
 		default:
 			if (!memcmp (&buff[7], "    ", 4)) {
 				newline_count++;
+				comment_counter++;
 				goto start;
 			}
 			break;
@@ -1130,6 +1159,7 @@ start:
 	for (i = 7; buff[i] == ' '; i++) ;
 	if (buff[i] == '\n') {
 		newline_count++;
+		comment_counter++;
 		goto start;
 	}
 
@@ -1197,6 +1227,7 @@ start:
 	if (continuation) {
 		memmove (buff, bp, strlen (bp) + 1);
 		newline_count++;
+		comment_counter++;
 	} else {
 		/* insert newlines at the start of the buffer */
 		memmove (buff + newline_count, bp, strlen (bp) + 1);
@@ -1374,4 +1405,39 @@ void pp_omit_data_entry_name (int on_off)
 void pp_omit_data_redef_name (int on_off)
 {
 	omit_data_redef_name = on_off;
+}
+
+void register_comment(int comment_mark_index, char* buffer, int delta) {
+	struct comment_info* p = malloc(sizeof(struct comment_info));
+	p->file = cb_source_file;
+	p->line = cb_source_line + delta + 1;
+
+	// Remove the unnecessary part of the comment
+	int str_len_original_line = strlen(buffer);
+	int comment_end_index;
+	if(buffer[str_len_original_line - 1] == '\n') {
+		if(str_len_original_line >= 2 && buffer[str_len_original_line - 1] == '\r') {
+			comment_end_index = str_len_original_line - 2;
+		} else {
+			comment_end_index = str_len_original_line - 1;
+		}
+	} else {
+		comment_end_index = str_len_original_line;
+	}
+	int comment_len = comment_end_index - comment_mark_index - 1;
+	p->comment = malloc(comment_len + 1);
+	memcpy(p->comment, buffer + comment_mark_index + 1, comment_len);
+	p->comment[comment_len] = '\0';
+
+	p->prev = comment_info_list_last;
+	p->next = NULL;
+	p->is_base_cobol_file = copy_stack->next == NULL;
+	p->position_in_source_code = position_in_source_code;
+	if(comment_info_list_last != NULL) {
+		comment_info_list_last->next = p;
+	}
+	comment_info_list_last = p;
+	if(comment_info_list_head == NULL) {
+		comment_info_list_head = p;
+	}
 }
