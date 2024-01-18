@@ -712,7 +712,7 @@ static void destroy_sorted_data_storage_cache() {
   free(sorted_data_storage_cache);
 }
 
-static int is_call_parameter(struct cb_field *f) {
+static int is_call_parameter(const struct cb_field *f) {
   cb_tree l;
   for (l = call_parameters; l; l = CB_CHAIN(l)) {
     if (f == cb_field(CB_VALUE(l))) {
@@ -3218,10 +3218,6 @@ static void joutput_goto(struct cb_goto *p) {
  */
 
 static void joutput_perform_call(struct cb_label *lb, struct cb_label *le) {
-#ifndef __GNUC__
-  struct label_list *l;
-#endif
-
   if (lb == le) {
     joutput_line("/* PERFORM %s */", lb->name);
     joutput_prefix();
@@ -3365,9 +3361,6 @@ static void joutput_sort_init(struct cb_sort_init *p) {
 static void joutput_sort_proc(struct cb_sort_proc *p) {
   struct cb_label *lb = CB_LABEL(cb_ref(CB_PAIR_X(p->body)));
   struct cb_label *le = CB_LABEL(cb_ref(CB_PAIR_Y(p->body)));
-#ifndef __GNUC__
-  struct label_list *l;
-#endif
 
   if (lb == le) {
     joutput_line("/* PERFORM %s */", lb->name);
@@ -3512,7 +3505,6 @@ static void joutput_stmt(cb_tree x, enum joutput_stmt_type output_type) {
   struct cb_cast *cp;
 #endif
   int code;
-  struct cb_field *f;
   int putParen = 0;
 
   stack_id = 0;
@@ -3815,7 +3807,7 @@ static void joutput_stmt(cb_tree x, enum joutput_stmt_type output_type) {
 
     joutput(".set(");
 
-    f = cb_field(ap->var);
+    struct cb_field *f = cb_field(ap->var);
     if (f->usage == CB_USAGE_BINARY || f->usage == CB_USAGE_COMP_5 ||
         f->usage == CB_USAGE_INDEX) {
       if (f->size == 1) {
@@ -4324,9 +4316,6 @@ static void joutput_internal_function(struct cb_program *prog,
   struct cb_field *f;
   struct cb_file *fl;
   char *p;
-#ifndef __GNUC__
-  struct label_list *pl;
-#endif
   int i;
   // int			n;
   int parmnum = 0;
@@ -4858,6 +4847,7 @@ static void joutput_internal_function(struct cb_program *prog,
   // output_line ("P_switch:");
   // if (label_cache) {
   //	output_line (" switch (frame_ptr->return_address) {");
+  //  struct label_list *pl;
   //	for (pl = label_cache; pl; pl = pl->next) {
   //		output_line (" case %d:", pl->call_num);
   //		output_line ("   goto %s%d;", CB_PREFIX_LABEL, pl->id);
@@ -5122,15 +5112,15 @@ static void joutput_init_method(struct cb_program *prog) {
 
   if (call_parameter_cache) {
     joutput_line("/* Call parameters */");
-    struct call_parameter_list *l;
-    for (l = call_parameter_cache; l; l = l->next) {
+    struct call_parameter_list *cp;
+    for (cp = call_parameter_cache; cp; cp = cp->next) {
       int cached = 0;
-      char *call_parameter_field_name = get_java_identifier_field(l->field);
+      char *call_parameter_field_name = get_java_identifier_field(cp->field);
       if (field_cache) {
         struct field_list *f;
         for (f = field_cache; f; f = f->next) {
           char *field_name = get_java_identifier_field(f->f);
-          if (f->f == l->field &&
+          if (f->f == cp->field &&
               strcmp(call_parameter_field_name, field_name) == 0) {
             cached = 1;
             free(field_name);
@@ -5143,8 +5133,8 @@ static void joutput_init_method(struct cb_program *prog) {
         joutput_prefix();
         joutput("%s = CobolFieldFactory.makeCobolField(",
                 call_parameter_field_name);
-        joutput("%d, (CobolDataStorage)null, ", l->field->size);
-        joutput_attr(l->x);
+        joutput("%d, (CobolDataStorage)null, ", cp->field->size);
+        joutput_attr(cp->x);
         joutput(");\n");
       }
       free(call_parameter_field_name);
@@ -5491,8 +5481,6 @@ static void joutput_declare_member_variables(struct cb_program *prog,
       joutput("\t/* %s */\n", blp->f->name);
     }
 
-    int i;
-
     for (i = 0; i < data_storage_cache_count; ++i) {
       struct data_storage_list *entry = sorted_data_storage_cache[i];
       if (is_call_parameter(entry->top) && entry->f != entry->top) {
@@ -5608,24 +5596,24 @@ static void joutput_declare_member_variables(struct cb_program *prog,
 
   if (call_parameter_cache) {
     joutput_line("/* Call parameters */");
-    struct call_parameter_list *l;
-    for (l = call_parameter_cache; l; l = l->next) {
+    struct call_parameter_list *cp;
+    for (cp = call_parameter_cache; cp; cp = cp->next) {
       int cached = 0;
       if (field_cache) {
-        struct field_list *f;
-        for (f = field_cache; f; f = f->next) {
-          if (f->f == l->field) {
+        struct field_list *field;
+        for (field = field_cache; field; field = field->next) {
+          if (field->f == cp->field) {
             cached = 1;
             break;
           }
         }
       }
       if (!cached) {
-        char *field_name = get_java_identifier_field(l->field);
+        char *field_name = get_java_identifier_field(cp->field);
         joutput_line("private AbstractCobolField %s;", field_name);
         free(field_name);
       }
-      char *base_name = get_java_identifier_base(l->field);
+      char *base_name = get_java_identifier_base(cp->field);
       joutput_line("private CobolDataStorage %s;", base_name);
       free(base_name);
     }

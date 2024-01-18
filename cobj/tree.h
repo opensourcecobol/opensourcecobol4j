@@ -569,7 +569,7 @@ extern int cb_field_size(cb_tree x);
 extern struct cb_field *cb_field_founder(struct cb_field *f);
 extern struct cb_field *cb_field_variable_size(struct cb_field *f);
 extern struct cb_field *cb_field_variable_address(struct cb_field *f);
-extern int cb_field_subordinate(struct cb_field *p, struct cb_field *f);
+extern int cb_field_subordinate(struct cb_field *p, const struct cb_field *f);
 
 #define CB_REF_OR_FIELD_P(x) ((CB_FIELD_P(x) || CB_REFERENCE_P(x)))
 
