@@ -77,7 +77,7 @@ public class IndexedFileUtilMain {
     }
 
     // Process -f, --format option
-    UserDataFormat userDataFormat = UserDataFormat.LINE_SEQUENTIAL;
+    UserDataFormat userDataFormat = UserDataFormat.SEQUENTIAL;
     String userDataFormatString = cmd.getOptionValue("f");
     if (userDataFormatString != null) {
       userDataFormatString = userDataFormatString.toLowerCase();
@@ -151,22 +151,23 @@ public class IndexedFileUtilMain {
 
   /** Print help message. */
   private static void printHelpMessage() {
-    System.out.println("cobj-idx - Utility tool to handle a indexed file of opensource COBOL 4J");
+    System.out.println(
+        "cobj-idx - An utility tool to handle a indexed file of opensource COBOL 4J");
     System.out.println();
     System.out.println("Usage:");
-    System.out.println("cobj-idx <a sub command> [options] <an indexed file>");
+    System.out.println("cobj-idx <sub command> [options] <indexed file>");
     System.out.println();
     System.err.println("Sub commands:");
     System.out.println();
     System.out.println("cobj-idx info <indexed-file>   - Show information of the indexed file.");
     System.out.println(
-        "cobj-idx load <indexed-file>   - Load data inputted from stdin to the indexed file.");
+        "cobj-idx load <indexed file>   - Load data inputted from stdin to the indexed file.");
     System.out.println(
-        "                                 The default format of the input data is line-sequential of COBOL.");
+        "                                 The default format of the input data is SQQUENTIAL of COBOL.");
     System.out.println(
-        "cobj-idx unload <indexed-file> - Write records stored in the indexed file to stdout.");
+        "cobj-idx unload <indexed file> - Write records stored in the indexed file to stdout.");
     System.out.println(
-        "                                 The default format of the output data is line-sequential of COBOL.");
+        "                                 The default format of the output data is SEQUENTIAL of COBOL.");
     System.out.println();
     System.out.println("Options:");
     System.out.println();
@@ -175,7 +176,7 @@ public class IndexedFileUtilMain {
     System.out.println(
         "                                 Possible values are 'bin' and 'txt' and the default value is 'txt'.");
     System.out.println(
-        "                                 'bin' means the line-sequential format and 'txt' means the sequeential format.");
+        "                                 'bin' and 'txt' means SEQUENTIAL and LINE SEQUENTIAL respectively.");
     System.out.println(
         "                                 When the sub command is 'load', this option specifies the format of input data which will be inserted to an indexed file.");
     System.out.println(

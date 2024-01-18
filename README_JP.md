@@ -159,6 +159,34 @@ rw            4        0     4     0      0    0       0       0     0   REPORT 
 ------ -------- -------- ----- -----  ----- ---- ------- ------- -----
 total        21        0    21     0      0    0       0       0     0
 ```
+## cobj-idx
+`cobj-idx` コマンドはINDEXEDファイルを扱うためのユーティリティで、opensource COBOL 4Jの一部としてインストールされます。
+
+```
+cobj-idx - An utility tool to handle a indexed file of opensource COBOL 4J
+
+Usage:
+cobj-idx <sub command> [options] <indexed file>
+
+Sub commands:
+
+cobj-idx info <indexed-file>   - Show information of the indexed file.
+cobj-idx load <indexed file>   - Load data inputted from stdin to the indexed file.
+                                 The default format of the input data is SQQUENTIAL of COBOL.
+cobj-idx unload <indexed file> - Write records stored in the indexed file to stdout.
+                                 The default format of the output data is SEQUENTIAL of COBOL.
+
+Options:
+
+-f <format>, --format=<format> - Specify the format of the input and output data.
+                                 Possible values are 'bin' and 'txt' and the default value is 'txt'.
+                                 'bin' and 'txt' means SEQUENTIAL and LINE SEQUENTIAL respectively.
+                                 When the sub command is 'load', this option specifies the format of input data which will be inserted to an indexed file.
+                                 When the sub command is 'unload', this option specifies the format of output data which will be read from an indexed file.
+-h --help                      - Print this message.
+-n, --new                      - Delete all data before inserting new data. This option is only valid when the sub command is 'load'.
+-v, --version                  - Print the version of cobj-idx.
+```
 
 ## コントリビューㇳ
 
