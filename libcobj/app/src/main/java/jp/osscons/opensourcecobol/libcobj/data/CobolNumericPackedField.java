@@ -632,10 +632,10 @@ public class CobolNumericPackedField extends AbstractCobolField {
     for (int i = 0; i < size; ++i) {
       data.setByte(i, (byte) 0);
     }
-    if (!this.getAttribute().isFlagHaveSign()) {
-      data.setByte(size - 1, (byte) 0x0D);
-    } else {
+    if (this.getAttribute().isFlagHaveSign()) {
       data.setByte(size - 1, (byte) 0x0C);
+    } else {
+      data.setByte(size - 1, (byte) 0x0F);
     }
   }
 
