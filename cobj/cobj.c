@@ -2255,18 +2255,18 @@ int main(int argc, char *argv[]) {
     }
     /* Translate */
     if (cb_compile_level >= CB_LEVEL_TRANSLATE && fn->need_translate) {
-      struct comment_info_list_list *p;
+      struct comment_info_list_list *pp;
       // find the commnent info and restore it
-      for (p = comment_info_list_list_head; p; p = p->next) {
-        if (strcmp(p->file, fn->source) == 0) {
-          comment_info_list_head = p->head;
-          comment_info_list_last = p->last;
-          procedure_division_line_number = p->procedure_division_line_number;
+      for (pp = comment_info_list_list_head; pp; pp = pp->next) {
+        if (strcmp(pp->file, fn->source) == 0) {
+          comment_info_list_head = pp->head;
+          comment_info_list_last = pp->last;
+          procedure_division_line_number = pp->procedure_division_line_number;
           break;
         }
       }
       // if the comment info is not found
-      if (!p) {
+      if (!pp) {
         comment_info_list_head = NULL;
         comment_info_list_last = NULL;
         position_in_source_code = POSITION_BEFORE_WORKING_STORAGE;
