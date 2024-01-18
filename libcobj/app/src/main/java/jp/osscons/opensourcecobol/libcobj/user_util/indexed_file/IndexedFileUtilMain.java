@@ -77,7 +77,7 @@ public class IndexedFileUtilMain {
     }
 
     // Process -f, --format option
-    UserDataFormat userDataFormat = UserDataFormat.LINE_SEQUENTIAL;
+    UserDataFormat userDataFormat = UserDataFormat.SEQUENTIAL;
     String userDataFormatString = cmd.getOptionValue("f");
     if (userDataFormatString != null) {
       userDataFormatString = userDataFormatString.toLowerCase();

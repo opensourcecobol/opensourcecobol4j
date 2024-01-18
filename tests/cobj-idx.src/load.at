@@ -147,14 +147,14 @@ AT_CHECK([echo "invalid data" > idx-invalid-file])
 # Create a directory (This is not a valid indexed file)
 AT_CHECK([mkdir dir-idx-file])
 
-####### test for the file 'sample' with valid input #######
+####### test for the file 'sample' with valid input and --format=txt option #######
 # basic test
 AT_CHECK([cp idx-file work-sample])
 AT_DATA([input.txt],
 [a0002b0002c0002d0002e000200002
 a0012b0012c0012d0012e001200012
 ])
-AT_CHECK([${COBJ_IDX} load work-sample < input.txt])
+AT_CHECK([${COBJ_IDX} load work-sample --format=txt < input.txt])
 AT_CHECK([IDX_FILE_PATH=work-sample java load], [0],
 [a0000b0000c0000d0000e000000000
 a0001b0001c0001d0001e000100001
@@ -170,7 +170,7 @@ AT_DATA([input.txt],
 [a0002b0002c0002d0000e000000002
 a0012b0012c0012d0010e001000012
 ])
-AT_CHECK([${COBJ_IDX} load work-sample < input.txt])
+AT_CHECK([${COBJ_IDX} load work-sample --format=txt < input.txt])
 AT_CHECK([IDX_FILE_PATH=work-sample java load], [0],
 [a0000b0000c0000d0000e000000000
 a0001b0001c0001d0001e000100001
@@ -184,7 +184,7 @@ a0012b0012c0012d0010e001000012
 AT_CHECK([cp idx-file work-sample])
 AT_DATA([input.txt],
 [])
-AT_CHECK([${COBJ_IDX} load work-sample < input.txt])
+AT_CHECK([${COBJ_IDX} load work-sample --format=txt < input.txt])
 AT_CHECK([IDX_FILE_PATH=work-sample java load], [0],
 [a0000b0000c0000d0000e000000000
 a0001b0001c0001d0001e000100001
@@ -192,13 +192,13 @@ a0010b0010c0010d0010e001000010
 a0011b0011c0011d0010e001000011
 ])
 
-####### test for the file 'sample' with valid input and -f bin option #######
+####### test for the file 'sample' with valid input #######
 # basic test
 AT_CHECK([cp idx-file work-sample])
 AT_DATA([input.txt],
 [a0002b0002c0002d0002e000200002a0012b0012c0012d0012e001200012
 ])
-AT_CHECK([${COBJ_IDX} load -f bin work-sample < input.txt])
+AT_CHECK([${COBJ_IDX} load work-sample < input.txt])
 AT_CHECK([IDX_FILE_PATH=work-sample java load], [0],
 [a0000b0000c0000d0000e000000000
 a0001b0001c0001d0001e000100001
@@ -213,7 +213,7 @@ AT_CHECK([cp idx-file work-sample])
 AT_DATA([input.txt],
 [a0002b0002c0002d0000e000000002a0012b0012c0012d0010e001000012
 ])
-AT_CHECK([${COBJ_IDX} load --format=bin work-sample < input.txt])
+AT_CHECK([${COBJ_IDX} load work-sample < input.txt])
 AT_CHECK([IDX_FILE_PATH=work-sample java load], [0],
 [a0000b0000c0000d0000e000000000
 a0001b0001c0001d0001e000100001
@@ -227,7 +227,7 @@ a0012b0012c0012d0010e001000012
 AT_CHECK([cp idx-file work-sample])
 AT_DATA([input.txt],
 [])
-AT_CHECK([${COBJ_IDX} load work-sample -f bin < input.txt])
+AT_CHECK([${COBJ_IDX} load work-sample < input.txt])
 AT_CHECK([IDX_FILE_PATH=work-sample java load], [0],
 [a0000b0000c0000d0000e000000000
 a0001b0001c0001d0001e000100001
@@ -235,35 +235,35 @@ a0010b0010c0010d0010e001000010
 a0011b0011c0011d0010e001000011
 ])
 
-####### test for the file 'sample' with valid input and --new option #######
+####### test for the file 'sample' with valid input and --new and  --format=txt option #######
 # basic test
 AT_CHECK([cp idx-file work-sample])
 AT_DATA([input.txt],
 [a0002b0002c0002d0002e000200002
 a0012b0012c0012d0012e001200012
 ])
-AT_CHECK([${COBJ_IDX} load --new work-sample < input.txt])
+AT_CHECK([${COBJ_IDX} load --new -f txt work-sample < input.txt])
 AT_CHECK([IDX_FILE_PATH=work-sample java load], [0],
 [a0002b0002c0002d0002e000200002
 a0012b0012c0012d0012e001200012
 ])
 
 AT_CHECK([cp idx-file work-sample])
-AT_CHECK([${COBJ_IDX} load -n work-sample < input.txt])
+AT_CHECK([${COBJ_IDX} load -n work-sample --format=txt < input.txt])
 AT_CHECK([IDX_FILE_PATH=work-sample java load], [0],
 [a0002b0002c0002d0002e000200002
 a0012b0012c0012d0012e001200012
 ])
 
 AT_CHECK([cp idx-file work-sample])
-AT_CHECK([${COBJ_IDX} load work-sample --new < input.txt])
+AT_CHECK([${COBJ_IDX} load -f txt work-sample --new < input.txt])
 AT_CHECK([IDX_FILE_PATH=work-sample java load], [0],
 [a0002b0002c0002d0002e000200002
 a0012b0012c0012d0012e001200012
 ])
 
 AT_CHECK([cp idx-file work-sample])
-AT_CHECK([${COBJ_IDX} load work-sample --n < input.txt])
+AT_CHECK([${COBJ_IDX} load work-sample --format=txt -n < input.txt])
 AT_CHECK([IDX_FILE_PATH=work-sample java load], [0],
 [a0002b0002c0002d0002e000200002
 a0012b0012c0012d0012e001200012
@@ -277,7 +277,7 @@ AT_CHECK([${COBJ_IDX} load work-sample -n < input.txt])
 AT_CHECK([IDX_FILE_PATH=work-sample java load], [0],
 [])
 
-####### test for the file 'sample' with invalid input #######
+####### test for the file 'sample' with invalid input and --format=txt option #######
 
 # test for input containing short records
 AT_CHECK([cp idx-file work-sample])
@@ -285,7 +285,7 @@ AT_DATA([input.txt],
 [a0002b0002c0002d0002e000200002
 a0012b0012c0012d0012e001200
 ])
-AT_CHECK([${COBJ_IDX} load work-sample < input.txt], [1], [],
+AT_CHECK([${COBJ_IDX} load work-sample --format=txt < input.txt], [1], [],
 [error: all record must have the length of 30 bytes.
 ])
 AT_CHECK([IDX_FILE_PATH=work-sample java load], [0],
@@ -295,13 +295,13 @@ a0010b0010c0010d0010e001000010
 a0011b0011c0011d0010e001000011
 ])
 
-# test for input containing long records
+# test for input containing long records with --format=txt option
 AT_CHECK([cp idx-file work-sample])
 AT_DATA([input.txt],
 [a0002b0002c0002d0002e000200002
 a0012b0012c0012d0012e001200012aaa
 ])
-AT_CHECK([${COBJ_IDX} load work-sample < input.txt], [1], [],
+AT_CHECK([${COBJ_IDX} load work-sample --format=txt < input.txt], [1], [],
 [error: all record must have the length of 30 bytes.
 ])
 AT_CHECK([IDX_FILE_PATH=work-sample java load], [0],
@@ -311,12 +311,12 @@ a0010b0010c0010d0010e001000010
 a0011b0011c0011d0010e001000011
 ])
 
-# test for input containing short records with -f bin option
+# test for input containing short records
 AT_CHECK([cp idx-file work-sample])
 AT_DATA([input.txt],
 [a0002b0002c0002d0002e000200002a0012b001
 ])
-AT_CHECK([${COBJ_IDX} load work-sample -f bin < input.txt], [1], [],
+AT_CHECK([${COBJ_IDX} load work-sample < input.txt], [1], [],
 [error: all record must have the length of 30 bytes.
 ])
 AT_CHECK([IDX_FILE_PATH=work-sample java load], [0],
@@ -331,7 +331,7 @@ AT_CHECK([cp idx-file work-sample])
 AT_DATA([input.txt],
 [a0000b0002c0002d0002e000200002
 ])
-AT_CHECK([${COBJ_IDX} load work-sample < input.txt], [1], [],
+AT_CHECK([${COBJ_IDX} load work-sample --format=txt < input.txt], [1], [],
 [error: loading fails because of duplicate keys.
 ])
 AT_CHECK([IDX_FILE_PATH=work-sample java load], [0],
@@ -347,7 +347,7 @@ AT_DATA([input.txt],
 [a0002b0003c0003d0003e000300003
 a0002b0003c0003d0003e000300003
 ])
-AT_CHECK([${COBJ_IDX} load work-sample < input.txt], [1], [],
+AT_CHECK([${COBJ_IDX} load work-sample --format=txt < input.txt], [1], [],
 [error: loading fails because of duplicate keys.
 ])
 AT_CHECK([IDX_FILE_PATH=work-sample java load], [0],
@@ -362,7 +362,7 @@ AT_CHECK([cp idx-file work-sample])
 AT_DATA([input.txt],
 [a0002b0001c0002d0002e000200002
 ])
-AT_CHECK([${COBJ_IDX} load work-sample < input.txt], [1], [],
+AT_CHECK([${COBJ_IDX} load work-sample --format=txt < input.txt], [1], [],
 [error: loading fails because of duplicate keys.
 ])
 AT_CHECK([IDX_FILE_PATH=work-sample java load], [0],
@@ -378,7 +378,7 @@ AT_DATA([input.txt],
 [a0002b0002c0002d0002e000200002
 a0003b0002c0003d0003e000300003
 ])
-AT_CHECK([${COBJ_IDX} load work-sample < input.txt], [1], [],
+AT_CHECK([${COBJ_IDX} load work-sample --format=txt < input.txt], [1], [],
 [error: loading fails because of duplicate keys.
 ])
 AT_CHECK([IDX_FILE_PATH=work-sample java load], [0],
@@ -448,13 +448,13 @@ a0010b0010c0010d0010e001000010
 a0011b0011c0011d0010e001000011
 ])
 
-# test for input violating the key duplication rule (primary key) with --new option
+# test for input violating the key duplication rule (primary key) with --new and --format=txt option
 AT_CHECK([cp idx-file work-sample])
 AT_DATA([input.txt],
 [a0002b0003c0003d0003e000300003
 a0002b0003c0003d0003e000300003
 ])
-AT_CHECK([${COBJ_IDX} load --new work-sample < input.txt], [1], [],
+AT_CHECK([${COBJ_IDX} load --new work-sample --format=txt < input.txt], [1], [],
 [error: loading fails because of duplicate keys.
 ])
 AT_CHECK([IDX_FILE_PATH=work-sample java load], [0],
@@ -470,7 +470,7 @@ AT_DATA([input.txt],
 [a0002b0002c0002d0002e000200002
 a0003b0002c0003d0003e000300003
 ])
-AT_CHECK([${COBJ_IDX} load --new work-sample < input.txt], [1], [],
+AT_CHECK([${COBJ_IDX} load --new work-sample --format=txt < input.txt], [1], [],
 [error: loading fails because of duplicate keys.
 ])
 AT_CHECK([IDX_FILE_PATH=work-sample java load], [0],
@@ -487,7 +487,7 @@ AT_DATA([input.txt],
 [a0002b0002c0002d0002e000200002
 a0012b0012c0012d0012e001200012
 ])
-AT_CHECK([${COBJ_IDX} load work-empty < input.txt])
+AT_CHECK([${COBJ_IDX} load work-empty --format=txt < input.txt])
 AT_CHECK([IDX_FILE_PATH=work-empty java load], [0],
 [a0002b0002c0002d0002e000200002
 a0012b0012c0012d0012e001200012
@@ -499,7 +499,7 @@ AT_DATA([input.txt],
 [a0002b0002c0002d0000e000000002
 a0012b0012c0012d0010e001000012
 ])
-AT_CHECK([${COBJ_IDX} load work-empty < input.txt])
+AT_CHECK([${COBJ_IDX} load work-empty --format=txt < input.txt])
 AT_CHECK([IDX_FILE_PATH=work-empty java load], [0],
 [a0002b0002c0002d0000e000000002
 a0012b0012c0012d0010e001000012
@@ -509,7 +509,7 @@ a0012b0012c0012d0010e001000012
 AT_CHECK([cp idx-empty-file work-empty])
 AT_DATA([input.txt],
 [])
-AT_CHECK([${COBJ_IDX} load work-empty < input.txt])
+AT_CHECK([${COBJ_IDX} load work-empty --format=txt < input.txt])
 AT_CHECK([IDX_FILE_PATH=work-empty java load], [0],
 [])
 
@@ -521,7 +521,7 @@ AT_DATA([input.txt],
 [a0002b0002c0002d0002e000200002
 a0012b0012c0012d0012e001200
 ])
-AT_CHECK([${COBJ_IDX} load work-empty < input.txt], [1], [],
+AT_CHECK([${COBJ_IDX} load work-empty --format=txt < input.txt], [1], [],
 [error: all record must have the length of 30 bytes.
 ])
 AT_CHECK([IDX_FILE_PATH=work-empty java load], [0],
@@ -533,7 +533,7 @@ AT_DATA([input.txt],
 [a0002b0002c0002d0002e000200002
 a0012b0012c0012d0012e001200012aaa
 ])
-AT_CHECK([${COBJ_IDX} load work-empty < input.txt], [1], [],
+AT_CHECK([${COBJ_IDX} load work-empty --format=txt < input.txt], [1], [],
 [error: all record must have the length of 30 bytes.
 ])
 AT_CHECK([IDX_FILE_PATH=work-empty java load], [0],
@@ -545,7 +545,7 @@ AT_DATA([input.txt],
 [a0002b0003c0003d0003e000300003
 a0002b0003c0003d0003e000300003
 ])
-AT_CHECK([${COBJ_IDX} load work-empty < input.txt], [1], [],
+AT_CHECK([${COBJ_IDX} load work-empty --format=txt < input.txt], [1], [],
 [error: loading fails because of duplicate keys.
 ])
 AT_CHECK([IDX_FILE_PATH=work-empty java load], [0],
@@ -557,7 +557,7 @@ AT_DATA([input.txt],
 [a0002b0002c0002d0002e000200002
 a0003b0002c0003d0003e000300003
 ])
-AT_CHECK([${COBJ_IDX} load work-empty < input.txt], [1], [],
+AT_CHECK([${COBJ_IDX} load work-empty --format=txt < input.txt], [1], [],
 [error: loading fails because of duplicate keys.
 ])
 AT_CHECK([IDX_FILE_PATH=work-empty java load], [0],
@@ -570,7 +570,7 @@ AT_DATA([input.txt],
 [a0002b0002c0002d0002e000200002
 a0012b0012c0012d0012e001200012
 ])
-AT_CHECK([${COBJ_IDX} load work-idx-invalid-file < input.txt], [1], [],
+AT_CHECK([${COBJ_IDX} load work-idx-invalid-file --format=txt < input.txt], [1], [],
 [error: 'work-idx-invalid-file' is not a valid indexed file.
 ])
 
@@ -580,7 +580,7 @@ AT_DATA([input.txt],
 [a0002b0002c0002d0000e000000002
 a0012b0012c0012d0010e001000012
 ])
-AT_CHECK([${COBJ_IDX} load work-idx-invalid-file < input.txt], [1], [],
+AT_CHECK([${COBJ_IDX} load work-idx-invalid-file --format=txt < input.txt], [1], [],
 [error: 'work-idx-invalid-file' is not a valid indexed file.
 ])
 
@@ -588,7 +588,7 @@ AT_CHECK([${COBJ_IDX} load work-idx-invalid-file < input.txt], [1], [],
 AT_CHECK([cp idx-invalid-file work-idx-invalid-file])
 AT_DATA([input.txt],
 [])
-AT_CHECK([${COBJ_IDX} load work-idx-invalid-file < input.txt], [1], [],
+AT_CHECK([${COBJ_IDX} load work-idx-invalid-file --format=txt < input.txt], [1], [],
 [error: 'work-idx-invalid-file' is not a valid indexed file.
 ])
 
@@ -600,7 +600,7 @@ AT_DATA([input.txt],
 [a0002b0002c0002d0002e000200002
 a0012b0012c0012d0012e001200
 ])
-AT_CHECK([${COBJ_IDX} load work-idx-invalid-file < input.txt], [1], [],
+AT_CHECK([${COBJ_IDX} load work-idx-invalid-file --format=txt < input.txt], [1], [],
 [error: 'work-idx-invalid-file' is not a valid indexed file.
 ])
 AT_CHECK([IDX_FILE_PATH=work-idx-invalid-file java load], [0],
@@ -612,7 +612,7 @@ AT_DATA([input.txt],
 [a0002b0002c0002d0002e000200002
 a0012b0012c0012d0012e001200012aaa
 ])
-AT_CHECK([${COBJ_IDX} load work-idx-invalid-file < input.txt], [1], [],
+AT_CHECK([${COBJ_IDX} load work-idx-invalid-file --format=txt < input.txt], [1], [],
 [error: 'work-idx-invalid-file' is not a valid indexed file.
 ])
 AT_CHECK([IDX_FILE_PATH=work-idx-invalid-file java load], [0],
@@ -624,7 +624,7 @@ AT_DATA([input.txt],
 [a0002b0003c0003d0003e000300003
 a0002b0003c0003d0003e000300003
 ])
-AT_CHECK([${COBJ_IDX} load work-idx-invalid-file < input.txt], [1], [],
+AT_CHECK([${COBJ_IDX} load work-idx-invalid-file --format=txt < input.txt], [1], [],
 [error: 'work-idx-invalid-file' is not a valid indexed file.
 ])
 AT_CHECK([IDX_FILE_PATH=work-idx-invalid-file java load], [0],
@@ -636,7 +636,7 @@ AT_DATA([input.txt],
 [a0002b0002c0002d0002e000200002
 a0003b0002c0003d0003e000300003
 ])
-AT_CHECK([${COBJ_IDX} load work-idx-invalid-file < input.txt], [1], [],
+AT_CHECK([${COBJ_IDX} load work-idx-invalid-file --format=txt < input.txt], [1], [],
 [error: 'work-idx-invalid-file' is not a valid indexed file.
 ])
 AT_CHECK([IDX_FILE_PATH=work-idx-invalid-file java load], [0],
@@ -649,7 +649,7 @@ AT_DATA([input.txt],
 [a0002b0002c0002d0002e000200002
 a0012b0012c0012d0012e001200012
 ])
-AT_CHECK([${COBJ_IDX} load work-dir-idx-file < input.txt], [1], [],
+AT_CHECK([${COBJ_IDX} load work-dir-idx-file --format=txt < input.txt], [1], [],
 [error: 'work-dir-idx-file' is not a valid indexed file.
 ])
 
@@ -659,7 +659,7 @@ AT_DATA([input.txt],
 [a0002b0002c0002d0000e000000002
 a0012b0012c0012d0010e001000012
 ])
-AT_CHECK([${COBJ_IDX} load work-dir-idx-file < input.txt], [1], [],
+AT_CHECK([${COBJ_IDX} load work-dir-idx-file --format=txt < input.txt], [1], [],
 [error: 'work-dir-idx-file' is not a valid indexed file.
 ])
 
@@ -667,7 +667,7 @@ AT_CHECK([${COBJ_IDX} load work-dir-idx-file < input.txt], [1], [],
 AT_CHECK([cp -r dir-idx-file work-dir-idx-file])
 AT_DATA([input.txt],
 [])
-AT_CHECK([${COBJ_IDX} load work-dir-idx-file < input.txt], [1], [],
+AT_CHECK([${COBJ_IDX} load work-dir-idx-file --format=txt < input.txt], [1], [],
 [error: 'work-dir-idx-file' is not a valid indexed file.
 ])
 
@@ -679,7 +679,7 @@ AT_DATA([input.txt],
 [a0002b0002c0002d0002e000200002
 a0012b0012c0012d0012e001200
 ])
-AT_CHECK([${COBJ_IDX} load work-dir-idx-file < input.txt], [1], [],
+AT_CHECK([${COBJ_IDX} load work-dir-idx-file --format=txt < input.txt], [1], [],
 [error: 'work-dir-idx-file' is not a valid indexed file.
 ])
 
@@ -689,7 +689,7 @@ AT_DATA([input.txt],
 [a0002b0002c0002d0002e000200002
 a0012b0012c0012d0012e001200012aaa
 ])
-AT_CHECK([${COBJ_IDX} load work-dir-idx-file < input.txt], [1], [],
+AT_CHECK([${COBJ_IDX} load work-dir-idx-file --format=txt < input.txt], [1], [],
 [error: 'work-dir-idx-file' is not a valid indexed file.
 ])
 
@@ -699,7 +699,7 @@ AT_DATA([input.txt],
 [a0002b0003c0003d0003e000300003
 a0002b0003c0003d0003e000300003
 ])
-AT_CHECK([${COBJ_IDX} load work-dir-idx-file < input.txt], [1], [],
+AT_CHECK([${COBJ_IDX} load work-dir-idx-file --format=txt < input.txt], [1], [],
 [error: 'work-dir-idx-file' is not a valid indexed file.
 ])
 
@@ -709,7 +709,7 @@ AT_DATA([input.txt],
 [a0002b0002c0002d0002e000200002
 a0003b0002c0003d0003e000300003
 ])
-AT_CHECK([${COBJ_IDX} load work-dir-idx-file < input.txt], [1], [],
+AT_CHECK([${COBJ_IDX} load work-dir-idx-file --format=txt < input.txt], [1], [],
 [error: 'work-dir-idx-file' is not a valid indexed file.
 ])
 
