@@ -41,7 +41,7 @@ jobs:
         if: inputs.os == 'almalinux:9'
         run: |
           dnf -y update
-          dnf install -y gcc make diffutils
+          dnf install -y gcc make diffutils glibc-gconv-extra
 
       - name: Install dependencies on Amazon Linux 2023
         if: inputs.os == 'amazonlinux:2023'
