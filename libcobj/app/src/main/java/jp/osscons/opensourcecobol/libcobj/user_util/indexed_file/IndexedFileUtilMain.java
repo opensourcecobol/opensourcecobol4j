@@ -117,7 +117,7 @@ public class IndexedFileUtilMain {
       System.exit(exitCode);
 
     } else if ("load".equals(subCommand)) {
-      if (unrecognizedArgs.length != 2) {
+      if (unrecognizedArgs.length < 2 || unrecognizedArgs.length > 3) {
         if (unrecognizedArgs.length < 2) {
           System.err.println("error: no indexed file is specified.");
         } else {
@@ -126,8 +126,15 @@ public class IndexedFileUtilMain {
         System.exit(1);
       }
       String indexedFilePath = unrecognizedArgs[1];
+      Optional<String> filePath;
+      if (unrecognizedArgs.length == 3) {
+        filePath = Optional.of(unrecognizedArgs[2]);
+      } else {
+        filePath = Optional.empty();
+      }
       boolean deleteBeforeLoading = cmd.hasOption("n");
-      int exitCode = processLoadCommand(indexedFilePath, deleteBeforeLoading, userDataFormat);
+      int exitCode =
+          processLoadCommand(indexedFilePath, deleteBeforeLoading, userDataFormat, filePath);
       System.exit(exitCode);
 
     } else if ("unload".equals(subCommand)) {
@@ -158,11 +165,15 @@ public class IndexedFileUtilMain {
     System.out.println();
     System.err.println("Sub commands:");
     System.out.println();
-    System.out.println("cobj-idx info <indexed-file>   - Show information of the indexed file.");
+    System.out.println("cobj-idx info <indexed-file> - Show information of the indexed file.");
     System.out.println(
-        "cobj-idx load <indexed file>   - Load data inputted from stdin to the indexed file.");
+        "cobj-idx load <indexed file> - Load data inputted from stdin to the indexed file.");
     System.out.println(
-        "                                 The default format of the input data is SQQUENTIAL of COBOL.");
+        "                               The default format of the input data is SQUENTIAL of COBOL.");
+    System.out.println(
+        "cobj-idx load <indexed file> <input file>  - Load data inputted from the input fiile to the indexed file.");
+    System.out.println(
+        "                                             The default format of the input data is SQUENTIAL of COBOL.");
     System.out.println(
         "cobj-idx unload <indexed file> - Write records stored in the indexed file to stdout.");
     System.out.println(
@@ -269,7 +280,10 @@ public class IndexedFileUtilMain {
    * @return
    */
   private static int processLoadCommand(
-      String indexedFilePath, boolean deleteBeforeLoading, UserDataFormat userDataFormat) {
+      String indexedFilePath,
+      boolean deleteBeforeLoading,
+      UserDataFormat userDataFormat,
+      Optional<String> filePath) {
     File indexedFile = new File(indexedFilePath);
     if (!indexedFile.exists()) {
       return ErrorLib.errorFileDoesNotExist(indexedFilePath);
@@ -300,7 +314,8 @@ public class IndexedFileUtilMain {
       cobolIndexedFile.deleteAllRecords();
     }
 
-    RecordReader reader = RecordReader.getInstance(userDataFormat, cobolIndexedFile.record_max);
+    RecordReader reader =
+        RecordReader.getInstance(userDataFormat, cobolIndexedFile.record_max, filePath);
     reader.open();
     LoadResult loadResult = LoadResult.LoadResultSuccess;
     // Read records from stdin and write them to the indexed file

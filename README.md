@@ -164,9 +164,11 @@ cobj-idx <sub command> [options] <indexed file>
 
 Sub commands:
 
-cobj-idx info <indexed-file>   - Show information of the indexed file.
-cobj-idx load <indexed file>   - Load data inputted from stdin to the indexed file.
-                                 The default format of the input data is SQQUENTIAL of COBOL.
+cobj-idx info <indexed-file> - Show information of the indexed file.
+cobj-idx load <indexed file> - Load data inputted from stdin to the indexed file.
+                               The default format of the input data is SQUENTIAL of COBOL.
+cobj-idx load <indexed file> <input file>  - Load data inputted from the input fiile to the indexed file.
+                                             The default format of the input data is SQUENTIAL of COBOL.
 cobj-idx unload <indexed file> - Write records stored in the indexed file to stdout.
                                  The default format of the output data is SEQUENTIAL of COBOL.
 
