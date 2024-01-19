@@ -54,6 +54,7 @@ public class FileSeqRecordReader implements RecordReader {
     try {
       this.reader.close();
     } catch (IOException e) {
+      return;
     }
   }
 }
