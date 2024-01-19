@@ -9,7 +9,6 @@ import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
-import java.util.Scanner;
 import jp.osscons.opensourcecobol.libcobj.common.CobolModule;
 import jp.osscons.opensourcecobol.libcobj.data.AbstractCobolField;
 import jp.osscons.opensourcecobol.libcobj.data.CobolDataStorage;
@@ -301,49 +300,14 @@ public class IndexedFileUtilMain {
       cobolIndexedFile.deleteAllRecords();
     }
 
-    // Read records from stdin and write them to the indexed file
-    Scanner scan = new Scanner(System.in);
+    RecordReader reader = RecordReader.getInstance(userDataFormat, cobolIndexedFile.record_max);
+    reader.open();
     LoadResult loadResult = LoadResult.LoadResultSuccess;
-    byte[] lineDataBytes = null;
-    int indexInLineDataBytes = 0;
-    CobolDataStorage recordDataStorage = cobolIndexedFile.record.getDataStorage();
-    int recordSize = cobolIndexedFile.record.getSize();
+    // Read records from stdin and write them to the indexed file
     while (true) {
-
-      // Read data if the input format is line-sequential
-      if (userDataFormat == UserDataFormat.LINE_SEQUENTIAL) {
-        if (scan.hasNextLine()) {
-          byte[] readData = scan.nextLine().getBytes();
-          if (readData.length != cobolIndexedFile.record.getSize()) {
-            loadResult = LoadResult.LoadResultDataSizeMismatch;
-            break;
-          }
-          recordDataStorage.memcpy(readData, recordSize);
-        } else {
-          loadResult = LoadResult.LoadResultSuccess;
-          break;
-        }
-
-        // Read data if the input format is sequential
-      } else {
-        if (lineDataBytes == null) {
-          if (scan.hasNextLine()) {
-            lineDataBytes = scan.nextLine().getBytes();
-            if (lineDataBytes.length % recordSize != 0) {
-              loadResult = LoadResult.LoadResultDataSizeMismatch;
-              break;
-            }
-          } else {
-            loadResult = LoadResult.LoadResultSuccess;
-            break;
-          }
-        }
-        if (indexInLineDataBytes >= lineDataBytes.length) {
-          loadResult = LoadResult.LoadResultSuccess;
-          break;
-        }
-        recordDataStorage.memcpy(lineDataBytes, indexInLineDataBytes, recordSize);
-        indexInLineDataBytes += recordSize;
+      loadResult = reader.read(cobolIndexedFile.record.getDataStorage());
+      if (loadResult != LoadResult.LoadResultSuccess) {
+        break;
       }
 
       // Write the record to the indexed file
@@ -360,7 +324,7 @@ public class IndexedFileUtilMain {
       }
     }
 
-    scan.close();
+    reader.close();
 
     if (loadResult == LoadResult.LoadResultDataSizeMismatch) {
       return ErrorLib.errorDataSizeMismatch(cobolIndexedFile.record.getSize());

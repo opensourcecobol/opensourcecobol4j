@@ -355,7 +355,10 @@ SRC_FILES = \
 	./app/src/main/java/jp/osscons/opensourcecobol/libcobj/user_util/indexed_file/IndexedFileUtilMain.java \
 	./app/src/main/java/jp/osscons/opensourcecobol/libcobj/user_util/indexed_file/ErrorLib.java \
 	./app/src/main/java/jp/osscons/opensourcecobol/libcobj/user_util/indexed_file/LoadResult.java \
-	./app/src/main/java/jp/osscons/opensourcecobol/libcobj/user_util/indexed_file/UserDataFormat.java
+	./app/src/main/java/jp/osscons/opensourcecobol/libcobj/user_util/indexed_file/UserDataFormat.java \
+	./app/src/main/java/jp/osscons/opensourcecobol/libcobj/user_util/indexed_file/RecordReader.java \
+	./app/src/main/java/jp/osscons/opensourcecobol/libcobj/user_util/indexed_file/RecordWriter.java \
+	./app/src/main/java/jp/osscons/opensourcecobol/libcobj/user_util/indexed_file/StdinRecordReader.java
 
 all: all-am
 

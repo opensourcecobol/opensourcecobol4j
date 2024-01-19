@@ -199,7 +199,7 @@ public class CobolFile {
   protected CobolDataStorage sort_collating;
   protected Object extfh_ptr;
   protected int record_min;
-  protected int record_max;
+  public int record_max;
   protected int nkeys;
 
   protected char organization;
