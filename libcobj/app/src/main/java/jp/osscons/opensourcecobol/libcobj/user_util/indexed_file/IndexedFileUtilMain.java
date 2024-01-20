@@ -9,7 +9,6 @@ import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
-import java.util.Scanner;
 import jp.osscons.opensourcecobol.libcobj.common.CobolModule;
 import jp.osscons.opensourcecobol.libcobj.data.AbstractCobolField;
 import jp.osscons.opensourcecobol.libcobj.data.CobolDataStorage;
@@ -118,7 +117,7 @@ public class IndexedFileUtilMain {
       System.exit(exitCode);
 
     } else if ("load".equals(subCommand)) {
-      if (unrecognizedArgs.length != 2) {
+      if (unrecognizedArgs.length < 2 || unrecognizedArgs.length > 3) {
         if (unrecognizedArgs.length < 2) {
           System.err.println("error: no indexed file is specified.");
         } else {
@@ -127,8 +126,15 @@ public class IndexedFileUtilMain {
         System.exit(1);
       }
       String indexedFilePath = unrecognizedArgs[1];
+      Optional<String> filePath;
+      if (unrecognizedArgs.length == 3) {
+        filePath = Optional.of(unrecognizedArgs[2]);
+      } else {
+        filePath = Optional.empty();
+      }
       boolean deleteBeforeLoading = cmd.hasOption("n");
-      int exitCode = processLoadCommand(indexedFilePath, deleteBeforeLoading, userDataFormat);
+      int exitCode =
+          processLoadCommand(indexedFilePath, deleteBeforeLoading, userDataFormat, filePath);
       System.exit(exitCode);
 
     } else if ("unload".equals(subCommand)) {
@@ -159,11 +165,15 @@ public class IndexedFileUtilMain {
     System.out.println();
     System.err.println("Sub commands:");
     System.out.println();
-    System.out.println("cobj-idx info <indexed-file>   - Show information of the indexed file.");
+    System.out.println("cobj-idx info <indexed-file> - Show information of the indexed file.");
     System.out.println(
-        "cobj-idx load <indexed file>   - Load data inputted from stdin to the indexed file.");
+        "cobj-idx load <indexed file> - Load data inputted from stdin to the indexed file.");
     System.out.println(
-        "                                 The default format of the input data is SQQUENTIAL of COBOL.");
+        "                               The default format of the input data is SQUENTIAL of COBOL.");
+    System.out.println(
+        "cobj-idx load <indexed file> <input file>  - Load data inputted from the input fiile to the indexed file.");
+    System.out.println(
+        "                                             The default format of the input data is SQUENTIAL of COBOL.");
     System.out.println(
         "cobj-idx unload <indexed file> - Write records stored in the indexed file to stdout.");
     System.out.println(
@@ -270,7 +280,10 @@ public class IndexedFileUtilMain {
    * @return
    */
   private static int processLoadCommand(
-      String indexedFilePath, boolean deleteBeforeLoading, UserDataFormat userDataFormat) {
+      String indexedFilePath,
+      boolean deleteBeforeLoading,
+      UserDataFormat userDataFormat,
+      Optional<String> filePath) {
     File indexedFile = new File(indexedFilePath);
     if (!indexedFile.exists()) {
       return ErrorLib.errorFileDoesNotExist(indexedFilePath);
@@ -301,49 +314,15 @@ public class IndexedFileUtilMain {
       cobolIndexedFile.deleteAllRecords();
     }
 
-    // Read records from stdin and write them to the indexed file
-    Scanner scan = new Scanner(System.in);
+    RecordReader reader =
+        RecordReader.getInstance(userDataFormat, cobolIndexedFile.record_max, filePath);
+    reader.open();
     LoadResult loadResult = LoadResult.LoadResultSuccess;
-    byte[] lineDataBytes = null;
-    int indexInLineDataBytes = 0;
-    CobolDataStorage recordDataStorage = cobolIndexedFile.record.getDataStorage();
-    int recordSize = cobolIndexedFile.record.getSize();
+    // Read records from stdin and write them to the indexed file
     while (true) {
-
-      // Read data if the input format is line-sequential
-      if (userDataFormat == UserDataFormat.LINE_SEQUENTIAL) {
-        if (scan.hasNextLine()) {
-          byte[] readData = scan.nextLine().getBytes();
-          if (readData.length != cobolIndexedFile.record.getSize()) {
-            loadResult = LoadResult.LoadResultDataSizeMismatch;
-            break;
-          }
-          recordDataStorage.memcpy(readData, recordSize);
-        } else {
-          loadResult = LoadResult.LoadResultSuccess;
-          break;
-        }
-
-        // Read data if the input format is sequential
-      } else {
-        if (lineDataBytes == null) {
-          if (scan.hasNextLine()) {
-            lineDataBytes = scan.nextLine().getBytes();
-            if (lineDataBytes.length % recordSize != 0) {
-              loadResult = LoadResult.LoadResultDataSizeMismatch;
-              break;
-            }
-          } else {
-            loadResult = LoadResult.LoadResultSuccess;
-            break;
-          }
-        }
-        if (indexInLineDataBytes >= lineDataBytes.length) {
-          loadResult = LoadResult.LoadResultSuccess;
-          break;
-        }
-        recordDataStorage.memcpy(lineDataBytes, indexInLineDataBytes, recordSize);
-        indexInLineDataBytes += recordSize;
+      loadResult = reader.read(cobolIndexedFile.record.getDataStorage());
+      if (loadResult != LoadResult.LoadResultSuccess) {
+        break;
       }
 
       // Write the record to the indexed file
@@ -360,7 +339,7 @@ public class IndexedFileUtilMain {
       }
     }
 
-    scan.close();
+    reader.close();
 
     if (loadResult == LoadResult.LoadResultDataSizeMismatch) {
       return ErrorLib.errorDataSizeMismatch(cobolIndexedFile.record.getSize());

@@ -8,4 +8,6 @@ public enum LoadResult {
   LoadResultDataSizeMismatch,
   /** The load operation failed because duplicate keys are detected or other error occurs. */
   LoadResultOther,
+  /** Reach the end of input data */
+  AtEnd,
 };
