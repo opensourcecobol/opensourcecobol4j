@@ -140,7 +140,7 @@ public class IndexedFileUtilMain {
       System.exit(exitCode);
 
     } else if ("unload".equals(subCommand)) {
-      if (unrecognizedArgs.length != 2) {
+      if (unrecognizedArgs.length < 2 || unrecognizedArgs.length > 3) {
         if (unrecognizedArgs.length < 2) {
           System.err.println("error: no indexed file is specified.");
         } else {
