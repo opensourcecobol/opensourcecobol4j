@@ -1,6 +1,9 @@
 package jp.osscons.opensourcecobol.libcobj.user_util.indexed_file;
 
 import java.io.File;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.OutputStream;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.ResultSet;
@@ -20,7 +23,6 @@ import jp.osscons.opensourcecobol.libcobj.file.CobolFile;
 import jp.osscons.opensourcecobol.libcobj.file.CobolFileFactory;
 import jp.osscons.opensourcecobol.libcobj.file.CobolFileKey;
 import jp.osscons.opensourcecobol.libcobj.file.CobolIndexedFile;
-import jp.osscons.opensourcecobol.libcobj.termio.CobolTerminal;
 import org.apache.commons.cli.CommandLine;
 import org.apache.commons.cli.CommandLineParser;
 import org.apache.commons.cli.DefaultParser;
@@ -147,7 +149,13 @@ public class IndexedFileUtilMain {
         System.exit(1);
       }
       String indexedFilePath = unrecognizedArgs[1];
-      int exitCode = processUnloadCommand(indexedFilePath, userDataFormat);
+      Optional<String> filePath;
+      if (unrecognizedArgs.length == 3) {
+        filePath = Optional.of(unrecognizedArgs[2]);
+      } else {
+        filePath = Optional.empty();
+      }
+      int exitCode = processUnloadCommand(indexedFilePath, userDataFormat, filePath);
       System.exit(exitCode);
     } else {
       printHelpMessage();
@@ -318,7 +326,7 @@ public class IndexedFileUtilMain {
         RecordReader.getInstance(userDataFormat, cobolIndexedFile.record_max, filePath);
     reader.open();
     LoadResult loadResult = LoadResult.LoadResultSuccess;
-    // Read records from stdin and write them to the indexed file
+    // Read records from stdin or a file and write them to the indexed file
     while (true) {
       loadResult = reader.read(cobolIndexedFile.record.getDataStorage());
       if (loadResult != LoadResult.LoadResultSuccess) {
@@ -362,7 +370,8 @@ public class IndexedFileUtilMain {
    *     separator.
    * @return 0 if success, otherwise non-zero. The return value is error code.
    */
-  private static int processUnloadCommand(String indexedFilePath, UserDataFormat userDataFormat) {
+  private static int processUnloadCommand(
+      String indexedFilePath, UserDataFormat userDataFormat, Optional<String> filePath) {
     File indexedFile = new File(indexedFilePath);
     if (!indexedFile.exists()) {
       return ErrorLib.errorFileDoesNotExist(indexedFilePath);
@@ -388,26 +397,42 @@ public class IndexedFileUtilMain {
       return ErrorLib.errorIO();
     }
 
-    // Read records from the indexed file and write them to stdout
-    boolean isIndexedFileEmpty = true;
-    while (true) {
-      CobolRuntimeException.code = 0;
-      cobolFile.read(0, null, 1);
-      if (CobolRuntimeException.code == 0) {
-        isIndexedFileEmpty = false;
-        CobolTerminal.displayAlnum(cobolFile.record, System.out);
-        if (userDataFormat == UserDataFormat.LINE_SEQUENTIAL) {
-          System.out.print('\n');
-        }
-      } else if (CobolRuntimeException.code == 0x0501) {
-        break;
-      } else {
+    // Setup the output stream
+    OutputStream stream;
+    if (filePath.isPresent()) {
+      try {
+        stream = new FileOutputStream(filePath.get());
+      } catch (Exception e) {
         return ErrorLib.errorIO();
       }
+    } else {
+      stream = System.out;
     }
 
-    if (userDataFormat == UserDataFormat.SEQUENTIAL && !isIndexedFileEmpty) {
-      System.out.print('\n');
+    // Read records from the indexed file and write them to stdout or a file
+    boolean isIndexedFileEmpty = true;
+    try {
+      while (true) {
+        CobolRuntimeException.code = 0;
+        cobolFile.read(0, null, 1);
+        if (CobolRuntimeException.code == 0) {
+          isIndexedFileEmpty = false;
+          CobolDataStorage storage = cobolFile.record.getDataStorage();
+          stream.write(storage.getRefOfData(), storage.getIndex(), cobolFile.record.getSize());
+          if (userDataFormat == UserDataFormat.LINE_SEQUENTIAL) {
+            stream.write('\n');
+          }
+        } else if (CobolRuntimeException.code == 0x0501) {
+          break;
+        } else {
+          return ErrorLib.errorIO();
+        }
+      }
+      if (userDataFormat == UserDataFormat.SEQUENTIAL && !isIndexedFileEmpty) {
+        stream.write('\n');
+      }
+    } catch (IOException e) {
+      return ErrorLib.errorIO();
     }
 
     cobolFile.close(CobolFile.COB_CLOSE_NORMAL, null);
