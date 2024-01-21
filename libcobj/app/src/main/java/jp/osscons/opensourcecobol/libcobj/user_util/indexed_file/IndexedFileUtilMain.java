@@ -173,36 +173,45 @@ public class IndexedFileUtilMain {
     System.out.println();
     System.err.println("Sub commands:");
     System.out.println();
-    System.out.println("cobj-idx info <indexed-file> - Show information of the indexed file.");
-    System.out.println(
-        "cobj-idx load <indexed file> - Load data inputted from stdin to the indexed file.");
-    System.out.println(
-        "                               The default format of the input data is SQUENTIAL of COBOL.");
-    System.out.println(
-        "cobj-idx load <indexed file> <input file>  - Load data inputted from the input fiile to the indexed file.");
-    System.out.println(
-        "                                             The default format of the input data is SQUENTIAL of COBOL.");
-    System.out.println(
-        "cobj-idx unload <indexed file> - Write records stored in the indexed file to stdout.");
-    System.out.println(
-        "                                 The default format of the output data is SEQUENTIAL of COBOL.");
+    System.out.println("cobj-idx info <indexed-file>");
+    System.out.println("    Show information of the indexed file.");
+    System.out.println();
+    System.out.println("cobj-idx load <indexed file>");
+    System.out.println("    Load data inputted from stdin to the indexed file.");
+    System.out.println("    The default format of the input data is SQUENTIAL of COBOL.");
+    System.out.println();
+    System.out.println("cobj-idx load <indexed file> <input file>");
+    System.out.println("    Load data inputted from the input fiile to the indexed file.");
+    System.out.println("    The default format of the input data is SQUENTIAL of COBOL.");
+    System.out.println();
+    System.out.println("cobj-idx unload <indexed file>");
+    System.out.println("    Write records stored in the indexed file to stdout.");
+    System.out.println("    The default format of the output data is SEQUENTIAL of COBOL.");
+    System.out.println();
+    System.out.println("cobj-idx unload <indexed file> <output file>");
+    System.out.println("    Write records stored in the indexed file to the output file.");
+    System.out.println("    The default format of the output data is SEQUENTIAL of COBOL.");
     System.out.println();
     System.out.println("Options:");
     System.out.println();
+    System.out.println("-f <format>, --format=<format>");
+    System.out.println("    Specify the format of the input and output data.");
+    System.out.println("    Possible values are 'bin' and 'txt' and the default value is 'txt'.");
+    System.out.println("    'bin' and 'txt' means SEQUENTIAL and LINE SEQUENTIAL respectively.");
     System.out.println(
-        "-f <format>, --format=<format> - Specify the format of the input and output data.");
+        "    When the sub command is 'load', this option specifies the format of input data which will be inserted to an indexed file.");
     System.out.println(
-        "                                 Possible values are 'bin' and 'txt' and the default value is 'txt'.");
+        "    When the sub command is 'unload', this option specifies the format of output data which will be read from an indexed file.");
+    System.out.println();
+    System.out.println("-h --help");
+    System.out.println("    Print this message.");
+    System.out.println();
+    System.out.println("-n, --new");
     System.out.println(
-        "                                 'bin' and 'txt' means SEQUENTIAL and LINE SEQUENTIAL respectively.");
-    System.out.println(
-        "                                 When the sub command is 'load', this option specifies the format of input data which will be inserted to an indexed file.");
-    System.out.println(
-        "                                 When the sub command is 'unload', this option specifies the format of output data which will be read from an indexed file.");
-    System.out.println("-h --help                      - Print this message.");
-    System.out.println(
-        "-n, --new                      - Delete all data before inserting new data. This option is only valid when the sub command is 'load'.");
-    System.out.println("-v, --version                  - Print the version of cobj-idx.");
+        "    Delete all data before inserting new data. This option is only valid when the sub command is 'load'.");
+    System.out.println();
+    System.out.println("-v, --version");
+    System.out.println("    Print the version of cobj-idx.");
   }
 
   /**
