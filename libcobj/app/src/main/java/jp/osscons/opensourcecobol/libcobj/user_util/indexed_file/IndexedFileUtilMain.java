@@ -1,6 +1,10 @@
 package jp.osscons.opensourcecobol.libcobj.user_util.indexed_file;
 
 import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.OutputStream;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.ResultSet;
@@ -20,7 +24,6 @@ import jp.osscons.opensourcecobol.libcobj.file.CobolFile;
 import jp.osscons.opensourcecobol.libcobj.file.CobolFileFactory;
 import jp.osscons.opensourcecobol.libcobj.file.CobolFileKey;
 import jp.osscons.opensourcecobol.libcobj.file.CobolIndexedFile;
-import jp.osscons.opensourcecobol.libcobj.termio.CobolTerminal;
 import org.apache.commons.cli.CommandLine;
 import org.apache.commons.cli.CommandLineParser;
 import org.apache.commons.cli.DefaultParser;
@@ -138,7 +141,7 @@ public class IndexedFileUtilMain {
       System.exit(exitCode);
 
     } else if ("unload".equals(subCommand)) {
-      if (unrecognizedArgs.length != 2) {
+      if (unrecognizedArgs.length < 2 || unrecognizedArgs.length > 3) {
         if (unrecognizedArgs.length < 2) {
           System.err.println("error: no indexed file is specified.");
         } else {
@@ -147,7 +150,13 @@ public class IndexedFileUtilMain {
         System.exit(1);
       }
       String indexedFilePath = unrecognizedArgs[1];
-      int exitCode = processUnloadCommand(indexedFilePath, userDataFormat);
+      Optional<String> filePath;
+      if (unrecognizedArgs.length == 3) {
+        filePath = Optional.of(unrecognizedArgs[2]);
+      } else {
+        filePath = Optional.empty();
+      }
+      int exitCode = processUnloadCommand(indexedFilePath, userDataFormat, filePath);
       System.exit(exitCode);
     } else {
       printHelpMessage();
@@ -165,36 +174,45 @@ public class IndexedFileUtilMain {
     System.out.println();
     System.err.println("Sub commands:");
     System.out.println();
-    System.out.println("cobj-idx info <indexed-file> - Show information of the indexed file.");
-    System.out.println(
-        "cobj-idx load <indexed file> - Load data inputted from stdin to the indexed file.");
-    System.out.println(
-        "                               The default format of the input data is SQUENTIAL of COBOL.");
-    System.out.println(
-        "cobj-idx load <indexed file> <input file>  - Load data inputted from the input fiile to the indexed file.");
-    System.out.println(
-        "                                             The default format of the input data is SQUENTIAL of COBOL.");
-    System.out.println(
-        "cobj-idx unload <indexed file> - Write records stored in the indexed file to stdout.");
-    System.out.println(
-        "                                 The default format of the output data is SEQUENTIAL of COBOL.");
+    System.out.println("cobj-idx info <indexed-file>");
+    System.out.println("    Show information of the indexed file.");
+    System.out.println();
+    System.out.println("cobj-idx load <indexed file>");
+    System.out.println("    Load data inputted from stdin to the indexed file.");
+    System.out.println("    The default format of the input data is SQUENTIAL of COBOL.");
+    System.out.println();
+    System.out.println("cobj-idx load <indexed file> <input file>");
+    System.out.println("    Load data inputted from the input fiile to the indexed file.");
+    System.out.println("    The default format of the input data is SQUENTIAL of COBOL.");
+    System.out.println();
+    System.out.println("cobj-idx unload <indexed file>");
+    System.out.println("    Write records stored in the indexed file to stdout.");
+    System.out.println("    The default format of the output data is SEQUENTIAL of COBOL.");
+    System.out.println();
+    System.out.println("cobj-idx unload <indexed file> <output file>");
+    System.out.println("    Write records stored in the indexed file to the output file.");
+    System.out.println("    The default format of the output data is SEQUENTIAL of COBOL.");
     System.out.println();
     System.out.println("Options:");
     System.out.println();
+    System.out.println("-f <format>, --format=<format>");
+    System.out.println("    Specify the format of the input and output data.");
+    System.out.println("    Possible values are 'bin' and 'txt' and the default value is 'txt'.");
+    System.out.println("    'bin' and 'txt' means SEQUENTIAL and LINE SEQUENTIAL respectively.");
     System.out.println(
-        "-f <format>, --format=<format> - Specify the format of the input and output data.");
+        "    When the sub command is 'load', this option specifies the format of input data which will be inserted to an indexed file.");
     System.out.println(
-        "                                 Possible values are 'bin' and 'txt' and the default value is 'txt'.");
+        "    When the sub command is 'unload', this option specifies the format of output data which will be read from an indexed file.");
+    System.out.println();
+    System.out.println("-h --help");
+    System.out.println("    Print this message.");
+    System.out.println();
+    System.out.println("-n, --new");
     System.out.println(
-        "                                 'bin' and 'txt' means SEQUENTIAL and LINE SEQUENTIAL respectively.");
-    System.out.println(
-        "                                 When the sub command is 'load', this option specifies the format of input data which will be inserted to an indexed file.");
-    System.out.println(
-        "                                 When the sub command is 'unload', this option specifies the format of output data which will be read from an indexed file.");
-    System.out.println("-h --help                      - Print this message.");
-    System.out.println(
-        "-n, --new                      - Delete all data before inserting new data. This option is only valid when the sub command is 'load'.");
-    System.out.println("-v, --version                  - Print the version of cobj-idx.");
+        "    Delete all data before inserting new data. This option is only valid when the sub command is 'load'.");
+    System.out.println();
+    System.out.println("-v, --version");
+    System.out.println("    Print the version of cobj-idx.");
   }
 
   /**
@@ -318,7 +336,7 @@ public class IndexedFileUtilMain {
         RecordReader.getInstance(userDataFormat, cobolIndexedFile.record_max, filePath);
     reader.open();
     LoadResult loadResult = LoadResult.LoadResultSuccess;
-    // Read records from stdin and write them to the indexed file
+    // Read records from stdin or a file and write them to the indexed file
     while (true) {
       loadResult = reader.read(cobolIndexedFile.record.getDataStorage());
       if (loadResult != LoadResult.LoadResultSuccess) {
@@ -362,7 +380,8 @@ public class IndexedFileUtilMain {
    *     separator.
    * @return 0 if success, otherwise non-zero. The return value is error code.
    */
-  private static int processUnloadCommand(String indexedFilePath, UserDataFormat userDataFormat) {
+  private static int processUnloadCommand(
+      String indexedFilePath, UserDataFormat userDataFormat, Optional<String> filePath) {
     File indexedFile = new File(indexedFilePath);
     if (!indexedFile.exists()) {
       return ErrorLib.errorFileDoesNotExist(indexedFilePath);
@@ -388,32 +407,45 @@ public class IndexedFileUtilMain {
       return ErrorLib.errorIO();
     }
 
-    // Read records from the indexed file and write them to stdout
+    // Read records from the indexed file and write them to stdout or a file
     boolean isIndexedFileEmpty = true;
-    while (true) {
-      CobolRuntimeException.code = 0;
-      cobolFile.read(0, null, 1);
-      if (CobolRuntimeException.code == 0) {
-        isIndexedFileEmpty = false;
-        CobolTerminal.displayAlnum(cobolFile.record, System.out);
-        if (userDataFormat == UserDataFormat.LINE_SEQUENTIAL) {
-          System.out.print('\n');
+    try (OutputStream stream = getOutputStream(filePath)) {
+      while (true) {
+        CobolRuntimeException.code = 0;
+        cobolFile.read(0, null, 1);
+        if (CobolRuntimeException.code == 0) {
+          isIndexedFileEmpty = false;
+          CobolDataStorage storage = cobolFile.record.getDataStorage();
+          stream.write(storage.getRefOfData(), storage.getIndex(), cobolFile.record.getSize());
+          if (userDataFormat == UserDataFormat.LINE_SEQUENTIAL) {
+            stream.write('\n');
+          }
+        } else if (CobolRuntimeException.code == 0x0501) {
+          break;
+        } else {
+          return ErrorLib.errorIO();
         }
-      } else if (CobolRuntimeException.code == 0x0501) {
-        break;
-      } else {
-        return ErrorLib.errorIO();
       }
-    }
-
-    if (userDataFormat == UserDataFormat.SEQUENTIAL && !isIndexedFileEmpty) {
-      System.out.print('\n');
+      if (userDataFormat == UserDataFormat.SEQUENTIAL && !isIndexedFileEmpty) {
+        stream.write('\n');
+      }
+    } catch (IOException e) {
+      return ErrorLib.errorIO();
     }
 
     cobolFile.close(CobolFile.COB_CLOSE_NORMAL, null);
 
     CobolModule.pop();
     return 0;
+  }
+
+  private static OutputStream getOutputStream(Optional<String> filePath)
+      throws FileNotFoundException {
+    if (filePath.isPresent()) {
+      return new FileOutputStream(filePath.get());
+    } else {
+      return System.out;
+    }
   }
 
   /**

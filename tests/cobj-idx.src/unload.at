@@ -111,23 +111,45 @@ AT_CHECK([mkdir dir-idx-file])
 AT_CHECK([${COBJ_IDX} unload idx-file], [0],
 [a0000b0000c0000d0000e000000000a0001b0001c0001d0001e000100001a0010b0010c0010d0010e001000010a0011b0011c0011d0010e001000011
 ])
+AT_CHECK([${COBJ_IDX} unload idx-file output-file], [0])
+AT_CHECK([cat output-file], [0],
+[a0000b0000c0000d0000e000000000a0001b0001c0001d0001e000100001a0010b0010c0010d0010e001000010a0011b0011c0011d0010e001000011
+])
 
 AT_CHECK([${COBJ_IDX} unload idx-empty-file])
+AT_CHECK([${COBJ_IDX} unload idx-empty-file output-file])
+AT_CHECK([cat output-file])
 
 AT_CHECK([${COBJ_IDX} unload idx-invalid-file], [1], [],
+[error: 'idx-invalid-file' is not a valid indexed file.
+])
+AT_CHECK([${COBJ_IDX} unload idx-invalid-file output-file], [1], [],
 [error: 'idx-invalid-file' is not a valid indexed file.
 ])
 
 AT_CHECK([${COBJ_IDX} unload not-existing-file], [1], [],
 [error: 'not-existing-file' does not exist.
 ])
+AT_CHECK([${COBJ_IDX} unload not-existing-file output-file], [1], [],
+[error: 'not-existing-file' does not exist.
+])
 
 AT_CHECK([${COBJ_IDX} unload dir-idx-file], [1], [],
+[error: 'dir-idx-file' is not a valid indexed file.
+])
+AT_CHECK([${COBJ_IDX} unload dir-idx-file output-file], [1], [],
 [error: 'dir-idx-file' is not a valid indexed file.
 ])
 
 # Tests for -f, --format option
 AT_CHECK([${COBJ_IDX} unload -f txt idx-file], [0],
+[a0000b0000c0000d0000e000000000
+a0001b0001c0001d0001e000100001
+a0010b0010c0010d0010e001000010
+a0011b0011c0011d0010e001000011
+])
+AT_CHECK([${COBJ_IDX} unload -f txt idx-file output-file])
+AT_CHECK([cat output-file], [0],
 [a0000b0000c0000d0000e000000000
 a0001b0001c0001d0001e000100001
 a0010b0010c0010d0010e001000010
@@ -140,25 +162,53 @@ a0001b0001c0001d0001e000100001
 a0010b0010c0010d0010e001000010
 a0011b0011c0011d0010e001000011
 ])
+AT_CHECK([${COBJ_IDX} unload --format=txt idx-file output-file])
+AT_CHECK([cat output-file], [0],
+[a0000b0000c0000d0000e000000000
+a0001b0001c0001d0001e000100001
+a0010b0010c0010d0010e001000010
+a0011b0011c0011d0010e001000011
+])
 
 AT_CHECK([${COBJ_IDX} unload -f bin idx-file], [0],
 [a0000b0000c0000d0000e000000000a0001b0001c0001d0001e000100001a0010b0010c0010d0010e001000010a0011b0011c0011d0010e001000011
 ])
+AT_CHECK([${COBJ_IDX} unload -f bin idx-file output-file])
+AT_CHECK([cat output-file], [0],
+[a0000b0000c0000d0000e000000000a0001b0001c0001d0001e000100001a0010b0010c0010d0010e001000010a0011b0011c0011d0010e001000011
+])
+
 
 AT_CHECK([${COBJ_IDX} unload --format=bin idx-file], [0],
+[a0000b0000c0000d0000e000000000a0001b0001c0001d0001e000100001a0010b0010c0010d0010e001000010a0011b0011c0011d0010e001000011
+])
+AT_CHECK([${COBJ_IDX} unload --format=bin idx-file output-file])
+AT_CHECK([cat output-file], [0],
 [a0000b0000c0000d0000e000000000a0001b0001c0001d0001e000100001a0010b0010c0010d0010e001000010a0011b0011c0011d0010e001000011
 ])
 
 AT_CHECK([${COBJ_IDX} unload -f txt idx-empty-file], [0],
 [])
+AT_CHECK([${COBJ_IDX} unload -f txt idx-empty-file output-file])
+AT_CHECK([cat output-file], [0],
+[])
 
 AT_CHECK([${COBJ_IDX} unload --format=txt idx-empty-file], [0],
+[])
+AT_CHECK([${COBJ_IDX} unload --format=txt idx-empty-file output-file])
+AT_CHECK([cat output-file], [0],
 [])
 
 AT_CHECK([${COBJ_IDX} unload -f bin idx-empty-file], [0],
 [])
+AT_CHECK([${COBJ_IDX} unload -f bin idx-empty-file output-file])
+AT_CHECK([cat output-file], [0],
+[])
 
 AT_CHECK([${COBJ_IDX} unload --format=bin idx-empty-file], [0],
+[])
+AT_CHECK([${COBJ_IDX} unload --format=bin idx-empty-file output-file])
+AT_CHECK([cat output-file], [0],
 [])
 
 AT_CLEANUP
