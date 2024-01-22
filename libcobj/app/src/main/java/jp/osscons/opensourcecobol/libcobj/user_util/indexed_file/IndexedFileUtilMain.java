@@ -1,6 +1,7 @@
 package jp.osscons.opensourcecobol.libcobj.user_util.indexed_file;
 
 import java.io.File;
+import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.OutputStream;
@@ -406,21 +407,9 @@ public class IndexedFileUtilMain {
       return ErrorLib.errorIO();
     }
 
-    // Setup the output stream
-    OutputStream stream;
-    if (filePath.isPresent()) {
-      try {
-        stream = new FileOutputStream(filePath.get());
-      } catch (Exception e) {
-        return ErrorLib.errorIO();
-      }
-    } else {
-      stream = System.out;
-    }
-
     // Read records from the indexed file and write them to stdout or a file
     boolean isIndexedFileEmpty = true;
-    try {
+    try (OutputStream stream = getOutputStream(filePath)) {
       while (true) {
         CobolRuntimeException.code = 0;
         cobolFile.read(0, null, 1);
@@ -448,6 +437,15 @@ public class IndexedFileUtilMain {
 
     CobolModule.pop();
     return 0;
+  }
+
+  private static OutputStream getOutputStream(Optional<String> filePath)
+      throws FileNotFoundException {
+    if (filePath.isPresent()) {
+      return new FileOutputStream(filePath.get());
+    } else {
+      return System.out;
+    }
   }
 
   /**
