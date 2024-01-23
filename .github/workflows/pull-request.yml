@@ -50,6 +50,9 @@ jobs:
       test-name: ${{ matrix.test_name }}
       check-result: false
       os: ${{ matrix.os }}
+  
+  javadoc:
+    uses: ./.github/workflows/javadoc.yml
 
   static-analysis:
     uses: ./.github/workflows/static-analysis.yml
