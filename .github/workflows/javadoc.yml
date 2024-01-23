@@ -1,0 +1,21 @@
+name: Javadoc
+
+on:
+  workflow_call:
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps: 
+      - uses: actions/setup-java@v3
+        with:
+          distribution: 'temurin'
+          java-version: '21'
+
+      - name: Checkout opensource COBOL 4J
+        uses: actions/checkout@v3
+      
+      - name: Run javadoc
+        working-directory: libcobj 
+        run: |
+          ./gradlew javadoc || true
