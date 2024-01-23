@@ -26,7 +26,6 @@ bin_SCRIPTS =
 
 include_HEADERS = libcobj.h
 
-#SUBDIRS = lib cobj config copy po texi tests libcobj
 SUBDIRS = lib cobj bin config copy tests libcobj
 
 ACLOCAL_AMFLAGS = -I m4
