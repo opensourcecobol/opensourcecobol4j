@@ -29,7 +29,7 @@ jobs:
         if: inputs.os == 'ubuntu:22.04'
         run: |
           apt update -y
-          apt install -y build-essential gettext texinfo autoconf
+          apt install -y build-essential gettext autoconf
 
       - name: Install dependencies on AlmaLinux 9
         if: inputs.os == 'almalinux:9'
