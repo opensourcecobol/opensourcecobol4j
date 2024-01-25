@@ -1046,9 +1046,9 @@ start:
 
 	if (cb_flag_mfcomment) {
 		if (buff[0] == '*' || buff[0] == '/') {
-			if(!cb_flag_no_cobol_comment) {
+			/*if(!cb_flag_no_cobol_comment) {
 				register_comment(0, buff, comment_counter++);
-			}
+			}*/
 			newline_count++;
 			goto start;
 		}
@@ -1073,9 +1073,9 @@ start:
 	case '*':
 	case '/':
 		/* comment line */
-		if(!cb_flag_no_cobol_comment) {
+		/*if(!cb_flag_no_cobol_comment) {
 			register_comment(6, buff, comment_counter++);
-		}
+		}*/
 		newline_count++;
 		goto start;
 	default:
