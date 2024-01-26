@@ -4556,7 +4556,7 @@ static void joutput_internal_function(struct cb_program *prog,
   joutput_line("/* Initialize program */");
   joutput_line("if (!this.initialized) {");
   joutput_indent_level += 2;
-  joutput("module.setProgramId(\"%s\");\n", prog->program_id);
+  joutput_line("module.setProgramId(\"%s\");\n", prog->program_id);
 
   if (prog->decimal_index_max) {
     joutput_line("/* Initialize decimal numbers */");
@@ -6067,7 +6067,6 @@ void codegen(struct cb_program *prog, const int nested, char **program_id_list,
   joutput_line("private boolean initialized = false;");
   joutput_line("private CobolModule cobolCurrentModule;");
   joutput_line("private CobolModule module;");
-  joutput_line("private boolean cobolErrorOnExitFlag;");
   joutput_line("private int entry;");
   joutput("\n");
 
