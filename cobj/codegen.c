@@ -6173,8 +6173,10 @@ void codegen(struct cb_program *prog, const int nested, char **program_id_list,
   //}
 
   joutput_line("CobolDecimal.cobInitNumeric();");
-  joutput_line("new %s().%s_(0);", prog->program_id, prog->program_id);
+  joutput_line("int exitCode = new %s().%s_(0);", prog->program_id,
+               prog->program_id);
   joutput_line("CobolStopRunException.stopRun();");
+  joutput_line("System.exit(exitCode);");
   joutput_indent_level -= 2;
   joutput_line("}\n");
 
