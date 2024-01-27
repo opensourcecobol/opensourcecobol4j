@@ -40,6 +40,12 @@ CB_FLAG (cb_flag_serial_variable, "serial-variable",
 CB_FLAG (cb_flag_short_variable, "short-variable",
 	 N_("Use short variable names in Java source code. This feature may cause compilation errors"))
 
+CB_FLAG (cb_flag_fold_copy_lower, "fold-copy-lower",
+	 N_("Fold COPY subject to lower case (Default no transformation)"))
+
+CB_FLAG (cb_flag_fold_copy_upper, "fold-copy-upper",
+	 N_("Fold COPY subject to upper case (Default no transformation)"))
+
 CB_FLAG (cb_flag_functions_all, "functions-all",
 	 N_("Allow use of intrinsic functions without FUNCTION keyword"))
 

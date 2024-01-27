@@ -159,6 +159,7 @@ command_line_options_DEPENDENCIES = \
 	command-line-options.src/fsyntax-only.at \
 	command-line-options.src/fserial-variable.at \
 	command-line-options.src/fshort-variable.at \
+	command-line-options.src/ffold-copy.at \
 	command-line-options.src/java-package.at \
 	command-line-options.src/edit-code-command.at \
 	command-line-options.src/file-path.at \
