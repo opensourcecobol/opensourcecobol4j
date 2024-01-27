@@ -1,0 +1,47 @@
+AT_SETUP([-ffold-copy-lower and -ffold-copy-upper])
+
+AT_DATA([prog1.cbl], [
+       IDENTIFICATION   DIVISION.
+       PROGRAM-ID.      prog1.
+       DATA             DIVISION.
+       WORKING-STORAGE  SECTION.
+       01  X            PIC X.
+       01  ABCD         PIC X(4).
+       PROCEDURE        DIVISION.
+           COPY "HELLO.CBL".
+           STOP RUN.
+])
+
+AT_DATA([hello.cbl], [
+       DISPLAY "hello.cbl"
+])
+
+AT_DATA([prog2.cbl], [
+       IDENTIFICATION   DIVISION.
+       PROGRAM-ID.      prog2.
+       DATA             DIVISION.
+       WORKING-STORAGE  SECTION.
+       01  X            PIC X.
+       01  ABCD         PIC X(4).
+       PROCEDURE        DIVISION.
+           COPY "world.cbl".
+           STOP RUN.
+])
+
+AT_DATA([WORLD.CBL], [
+       DISPLAY "WORLD.CBL"
+])
+
+AT_CHECK([${COBJ} -ffold-copy-lower prog1.cbl])
+AT_CHECK([java prog1], [0],
+[hello.cbl
+])
+
+AT_CHECK([${COBJ} -ffold-copy-upper prog2.cbl])
+AT_CHECK([java prog2], [0],
+[WORLD.CBL
+])
+
+AT_CHECK([${COBJ} --help | grep '\-ffold-copy-lower' > /dev/null], [0])
+AT_CHECK([${COBJ} --help | grep '\-ffold-copy-upper' > /dev/null], [0])
+AT_CLEANUP
