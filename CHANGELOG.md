@@ -4,6 +4,18 @@ All notable changes to this project will be documented in this file.
 
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 
+## [1.0.19] - 2024-01-31
+### Added
+* A new CLI tool for indexed files (#299)
+* Implement `COB_FILE_SEQ_WRITE_BUFFER_SIZE` (#294)
+* Implement options `-ffold-copy-upper` and `-ffold-copy-lower` (#319)
+### Changed
+* Change label names in Java source files based on COBOL labels (#297)
+### Fixed
+* Fix CobolUtil.isNationalPadding (#293)
+### Miscellaneous
+* Refactor source code and resolve all gcc warnings
+* Remove unused directory (#314)
 ## [1.0.18] - 2023-12-27
 ### Added
 * Support Amazon Linux 2023 (#282)
