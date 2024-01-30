@@ -167,7 +167,7 @@ public class IndexedFileUtilMain {
   /** Print help message. */
   private static void printHelpMessage() {
     System.out.println(
-        "cobj-idx - An utility tool to handle a indexed file of opensource COBOL 4J");
+        "cobj-idx - A utility tool to handle an indexed file of opensource COBOL 4J");
     System.out.println();
     System.out.println("Usage:");
     System.out.println("cobj-idx <sub command> [options] <indexed file>");
@@ -178,31 +178,31 @@ public class IndexedFileUtilMain {
     System.out.println("    Show information of the indexed file.");
     System.out.println();
     System.out.println("cobj-idx load <indexed file>");
-    System.out.println("    Load data inputted from stdin to the indexed file.");
+    System.out.println("    Load the data from stdin into the indexed file.");
     System.out.println("    The default format of the input data is SQUENTIAL of COBOL.");
     System.out.println();
     System.out.println("cobj-idx load <indexed file> <input file>");
-    System.out.println("    Load data inputted from the input fiile to the indexed file.");
+    System.out.println("    Load data from the input fiile into the indexed file.");
     System.out.println("    The default format of the input data is SQUENTIAL of COBOL.");
     System.out.println();
     System.out.println("cobj-idx unload <indexed file>");
-    System.out.println("    Write records stored in the indexed file to stdout.");
+    System.out.println("    Write the records stored in the indexed file into stdout.");
     System.out.println("    The default format of the output data is SEQUENTIAL of COBOL.");
     System.out.println();
     System.out.println("cobj-idx unload <indexed file> <output file>");
-    System.out.println("    Write records stored in the indexed file to the output file.");
+    System.out.println("    Write the records stored in the indexed file into the output file.");
     System.out.println("    The default format of the output data is SEQUENTIAL of COBOL.");
     System.out.println();
     System.out.println("Options:");
     System.out.println();
     System.out.println("-f <format>, --format=<format>");
     System.out.println("    Specify the format of the input and output data.");
-    System.out.println("    Possible values are 'bin' and 'txt' and the default value is 'txt'.");
+    System.out.println("    Possible values are 'txt' and the default value 'bin'");
     System.out.println("    'bin' and 'txt' means SEQUENTIAL and LINE SEQUENTIAL respectively.");
     System.out.println(
-        "    When the sub command is 'load', this option specifies the format of input data which will be inserted to an indexed file.");
+        "    When doing a `load`, this option specifies the format of input data which will be inserted to an indexed file.");
     System.out.println(
-        "    When the sub command is 'unload', this option specifies the format of output data which will be read from an indexed file.");
+        "    When doing an `unload`, this option specifies the format of output data which will be read from an indexed file.");
     System.out.println();
     System.out.println("-h --help");
     System.out.println("    Print this message.");

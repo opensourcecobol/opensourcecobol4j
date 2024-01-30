@@ -157,7 +157,7 @@ total        21        0    21     0      0    0       0       0     0
 `cobj-idx`, a utility for indexed files, is also installed when installing opensource COBOL 4J.
 
 ```
-cobj-idx - An utility tool to handle a indexed file of opensource COBOL 4J
+cobj-idx - A utility tool to handle an indexed file of opensource COBOL 4J
 
 Usage:
 cobj-idx <sub command> [options] <indexed file>
@@ -168,29 +168,29 @@ cobj-idx info <indexed-file>
     Show information of the indexed file.
 
 cobj-idx load <indexed file>
-    Load data inputted from stdin to the indexed file.
+    Load the data from stdin into the indexed file.
     The default format of the input data is SQUENTIAL of COBOL.
 
 cobj-idx load <indexed file> <input file>
-    Load data inputted from the input fiile to the indexed file.
+    Load data from the input fiile into the indexed file.
     The default format of the input data is SQUENTIAL of COBOL.
 
 cobj-idx unload <indexed file>
-    Write records stored in the indexed file to stdout.
+    Write the records stored in the indexed file into stdout.
     The default format of the output data is SEQUENTIAL of COBOL.
 
 cobj-idx unload <indexed file> <output file>
-    Write records stored in the indexed file to the output file.
+    Write the records stored in the indexed file into the output file.
     The default format of the output data is SEQUENTIAL of COBOL.
 
 Options:
 
 -f <format>, --format=<format>
     Specify the format of the input and output data.
-    Possible values are 'bin' and 'txt' and the default value is 'txt'.
+    Possible values are 'txt' and the default value 'bin'
     'bin' and 'txt' means SEQUENTIAL and LINE SEQUENTIAL respectively.
-    When the sub command is 'load', this option specifies the format of input data which will be inserted to an indexed file.
-    When the sub command is 'unload', this option specifies the format of output data which will be read from an indexed file.
+    When doing a `load`, this option specifies the format of input data which will be inserted to an indexed file.
+    When doing an `unload`, this option specifies the format of output data which will be read from an indexed file.
 
 -h --help
     Print this message.
