@@ -1,5 +1,21 @@
 NEWS - user visible changes				-*- outline -*-
 
+* opensource COBOL 4J 1.0.19
+
+-----------------------------------------------------------------------
+
+** New Features
+  (1) A new CLI tool for indexed files
+  (2) Implement `COB_FILE_SEQ_WRITE_BUFFER_SIZE`
+  (3) Implement options `-ffold-copy-upper` and `-ffold-copy-lower`
+** Changed
+  (1) Change label names in Java source files based on COBOL labels
+** Bug Fixes
+  (1) Fix CobolUtil.isNationalPadding
+** Miscellaneous
+  (1) Refactor source code and resolve all gcc warnings
+  (2) Remove unused directory
+
 -----------------------------------------------------------------------
 
 * opensource COBOL 4J 1.0.18
