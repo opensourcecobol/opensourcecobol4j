@@ -50,7 +50,10 @@ jobs:
       test-name: ${{ matrix.test_name }}
       check-result: false
       os: ${{ matrix.os }}
-  
+
+  build-gcc9:
+    uses: ./.github/workflows/build-gcc9.yml
+
   javadoc:
     uses: ./.github/workflows/javadoc.yml
 

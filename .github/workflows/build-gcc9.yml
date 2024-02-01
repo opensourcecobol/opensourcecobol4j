@@ -1,0 +1,26 @@
+name: build opensource COBOL 4J using gcc 9
+
+on:
+  workflow_call:
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps: 
+      - uses: actions/setup-java@v3
+        with:
+          distribution: 'temurin'
+          java-version: '21'
+
+      - name: Install dependencies on Ubuntu 22.04
+        run: |
+          sudo apt update -y
+          sudo apt install -y gcc-9 build-essential gettext autoconf
+
+      - name: Checkout opensource COBOL 4J
+        uses: actions/checkout@v3
+      
+      - name: Install opensource COBOL 4J
+        run: |
+          ./configure --prefix=/usr/ CC=gcc-9
+          make

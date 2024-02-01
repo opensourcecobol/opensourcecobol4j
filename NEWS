@@ -30,7 +30,7 @@ NEWS - user visible changes				-*- outline -*-
   (7) Add built-in subroutines
     (a) `C$CALLEDBY`
     (b) `C$LIST-DIRECTORY`
-  (8) Implement `NUMBER-OF-PARAMETERS`
+  (8) Implement `NUMBER-OF-CALL-PARAMETERS`
 ** Bug fixes
   (1) Fix the message of COB_VERBOSE file sort
   (2) Fix the process that checks MOVE statements

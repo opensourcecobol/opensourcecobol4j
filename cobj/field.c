@@ -639,10 +639,9 @@ static int validate_field_1(struct cb_field *f) {
       switch (f->pic->category) {
       case CB_CATEGORY_NUMERIC:
         /* reconstruct the picture string */
-        unsigned char *pstr;
         if (f->pic->scale > 0) {
           f->pic->str = cobc_malloc(20);
-          pstr = (unsigned char *)(f->pic->str);
+          unsigned char *pstr = (unsigned char *)(f->pic->str);
           *pstr++ = '9';
           vorint = f->pic->digits - f->pic->scale;
           memcpy(pstr, (unsigned char *)&vorint, sizeof(int));
@@ -657,7 +656,7 @@ static int validate_field_1(struct cb_field *f) {
           f->pic->size++;
         } else {
           f->pic->str = cobc_malloc(8);
-          pstr = (unsigned char *)(f->pic->str);
+          unsigned char *pstr = (unsigned char *)(f->pic->str);
           *pstr++ = '9';
           vorint = f->pic->digits;
           memcpy(pstr, (unsigned char *)&vorint, sizeof(int));
