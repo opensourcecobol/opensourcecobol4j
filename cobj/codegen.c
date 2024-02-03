@@ -5754,12 +5754,24 @@ static void joutput_label_variable_name(char *s, int key,
                                         struct cb_label *section) {
   joutput(CB_PREFIX_LABEL);
   if (s) {
+    const char *c;
+    if (section && section->name) {
+      for (c = (const char *)section->name; *c; ++c) {
+        if (*c == ' ') {
+          joutput("_");
+        } else if (*c == '-') {
+          joutput("_");
+        } else {
+          joutput("%c", *c);
+        }
+      }
+      joutput("__");
+    }
     char buf[COB_SMALL_BUFF];
     strcpy_identifier_cobol_to_java(buf, s);
     char *p = buf;
     while (*p) {
-      unsigned char c = *p;
-      if (c < 0x80) {
+      if (*p < 0x80) {
         if (*p == '-') {
           *p = '_';
         } else if (*p == ' ') {
