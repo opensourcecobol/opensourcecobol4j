@@ -5756,6 +5756,24 @@ static void joutput_label_variable_name(char *s, int key,
   if (s) {
     char buf[COB_SMALL_BUFF];
     strcpy_identifier_cobol_to_java(buf, s);
+    char *p = buf;
+    while (*p) {
+      unsigned char c = *p;
+      if (c < 0x80) {
+        if (*p == '-') {
+          *p = '_';
+        } else if (*p == ' ') {
+          *p = '_';
+        }
+        p++;
+      } else {
+        if (*(p + 1) == '\0') {
+          break;
+        } else {
+          p = p + 2;
+        }
+      }
+    }
     joutput("%s", buf);
   } else {
     joutput("anonymous__%d", key);
