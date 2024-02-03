@@ -5754,8 +5754,8 @@ static void joutput_label_variable_name(char *s, int key,
                                         struct cb_label *section) {
   joutput(CB_PREFIX_LABEL);
   if (s) {
-    const char *c;
     if (section && section->name) {
+      const char *c;
       for (c = (const char *)section->name; *c; ++c) {
         if (*c == ' ') {
           joutput("_");
