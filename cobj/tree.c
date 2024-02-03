@@ -2714,16 +2714,22 @@ cb_tree cb_build_intrinsic(cb_tree name, cb_tree args, cb_tree refmod) {
 
 char *cb_get_hexword(char *name) {
   unsigned char *p;
-  int non_ascii = 0;
+  int non_sjis = 0;
   char *rt = NULL;
 
-  for (p = (unsigned char *)name; *p; p++) {
-    if (0x80 & *p) {
-      non_ascii = 1;
+  for (p = (unsigned char *)name; *p;) {
+    char c = *p;
+    if (c <= 0x80) {
+      p++;
+    } else if ((0x81 <= c && c <= 0x9F) || (0xE0 <= c && c <= 0xEF)) {
+      p += 2;
+    } else {
+      non_sjis = 1;
       break;
     }
   }
-  if (!non_ascii) {
+
+  if (!non_sjis) {
     rt = strdup(name);
   } else {
     rt = cobc_malloc(strlen(name) * 2 + 7);
