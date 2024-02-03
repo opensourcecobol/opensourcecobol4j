@@ -237,7 +237,7 @@ static void strcpy_identifier_cobol_to_java(char *buf, const char *identifier) {
   unsigned char *p = (unsigned char *)identifier;
   for (; *p; ++p) {
     unsigned char c = *p;
-    if (c < 0xA0 || 0x80 <= c) {
+    if (c < 0x0A || 0x80 <= c) {
       all_ascii = 0;
       break;
     }

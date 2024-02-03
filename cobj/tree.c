@@ -2718,8 +2718,8 @@ char *cb_get_hexword(char *name) {
   char *rt = NULL;
 
   for (p = (unsigned char *)name; *p;) {
-    char c = *p;
-    if (c <= 0x80) {
+    unsigned char c = *p;
+    if (c < 0x80) {
       p++;
     } else if ((0x81 <= c && c <= 0x9F) || (0xE0 <= c && c <= 0xEF)) {
       p += 2;

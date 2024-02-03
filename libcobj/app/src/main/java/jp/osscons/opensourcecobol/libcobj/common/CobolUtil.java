@@ -296,7 +296,7 @@ public class CobolUtil {
     if (sourceFile != null) {
       System.err.print(String.format("%s:%d: ", sourceFile, sourceLine));
     }
-    byte[] messageBytes = ("libcobj: " + s).getBytes(AbstractCobolField.CharSetSJIS);
+    byte[] messageBytes = ("libcobj: " + s).getBytes(AbstractCobolField.charSetSJIS);
     System.err.write(messageBytes, 0, messageBytes.length);
     System.err.println();
     System.err.flush();
