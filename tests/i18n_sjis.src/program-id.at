@@ -19,7 +19,7 @@ AT_CLEANUP
 
 
 AT_SETUP([PROGRAM-ID NATIONAL C89 warning])
-
+AT_CHECK([${SKIP_TEST}])
 AT_DATA([test.conf], [
 include "default.conf"
 c89-identifier-length-check: yes

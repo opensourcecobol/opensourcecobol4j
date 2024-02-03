@@ -233,11 +233,28 @@ static void get_java_identifier_helper(struct cb_field *f, char *buf) {
 }
 
 static void strcpy_identifier_cobol_to_java(char *buf, const char *identifier) {
-  for (; *identifier != '\0'; ++identifier, ++buf) {
-    if (*identifier == '-') {
-      *buf = '_';
-    } else {
-      *buf = *identifier;
+  int all_ascii = 1;
+  unsigned char *p = (unsigned char *)identifier;
+  for (; *p; ++p) {
+    unsigned char c = *p;
+    if (c < 0x0A || 0x80 <= c) {
+      all_ascii = 0;
+      break;
+    }
+  }
+
+  if (all_ascii) {
+    for (; *identifier; ++identifier, ++buf) {
+      if (*identifier == '-') {
+        *buf = '_';
+      } else {
+        *buf = *identifier;
+      }
+    }
+  } else {
+    for (; *identifier; ++identifier) {
+      sprintf(buf, "%02x", (unsigned char)*identifier);
+      buf += 2;
     }
   }
   *buf = '\0';
@@ -432,11 +449,17 @@ static void joutput_indent(const char *str) {
   }
 }
 
+enum cb_string_category {
+  CB_STRING_CATEGORY_ALL_ASCII,
+  CB_STRING_CATEGORY_ALL_SJIS,
+  CB_STRING_CATEGORY_CONTAINS_NON_SJIS,
+};
+
 struct string_literal_cache {
   unsigned char *string_value;
   int size;
   int param_wrap_string_flag;
-  int printable;
+  enum cb_string_category category;
   char *var_name;
   struct string_literal_cache *next;
 };
@@ -461,26 +484,29 @@ static void free_string_literal_list() {
   }
 }
 
-static int is_string_printable(const unsigned char *s, int size) {
+static enum cb_string_category get_string_category(const unsigned char *s,
+                                                   int size) {
   int i;
+  enum cb_string_category category = CB_STRING_CATEGORY_ALL_ASCII;
   for (i = 0; i < size;) {
     int c = s[i];
     if (0x20 <= c && c <= 0x7e) {
       i += 1;
     } else if ((0x81 <= c && c <= 0x9f) || (0xe0 <= c && c <= 0xef)) {
       i += 2;
+      category = CB_STRING_CATEGORY_ALL_SJIS;
     } else {
-      return 0;
+      return CB_STRING_CATEGORY_CONTAINS_NON_SJIS;
     }
   }
-  return 1;
+  return category;
 }
 
 static void joutput_string_write(const unsigned char *s, int size,
-                                 int printable) {
+                                 enum cb_string_category category) {
   int i;
 
-  if (printable) {
+  if (category == CB_STRING_CATEGORY_ALL_ASCII) {
     if (param_wrap_string_flag) {
       joutput("new CobolDataStorage(");
     } else {
@@ -529,7 +555,7 @@ static void joutput_string(const unsigned char *s, int size) {
 
   new_literal_cache->size = size;
   new_literal_cache->param_wrap_string_flag = param_wrap_string_flag;
-  new_literal_cache->printable = is_string_printable(s, size);
+  new_literal_cache->category = get_string_category(s, size);
 
   new_literal_cache->string_value = malloc(size);
   memcpy(new_literal_cache->string_value, s, size);
@@ -580,7 +606,7 @@ static void joutput_all_string_literals() {
     joutput_prefix();
     joutput("public static final %s %s = ", data_type, l->var_name);
     param_wrap_string_flag = l->param_wrap_string_flag;
-    joutput_string_write(l->string_value, l->size, l->printable);
+    joutput_string_write(l->string_value, l->size, l->category);
     joutput(";\n");
     l = l->next;
   }
@@ -5728,8 +5754,8 @@ static void joutput_label_variable_name(char *s, int key,
                                         struct cb_label *section) {
   joutput(CB_PREFIX_LABEL);
   if (s) {
-    const char *c;
     if (section && section->name) {
+      const char *c;
       for (c = (const char *)section->name; *c; ++c) {
         if (*c == ' ') {
           joutput("_");
@@ -5741,15 +5767,26 @@ static void joutput_label_variable_name(char *s, int key,
       }
       joutput("__");
     }
-    for (c = s; *c; ++c) {
-      if (*c == ' ') {
-        joutput("_");
-      } else if (*c == '-') {
-        joutput("_");
+    char buf[COB_SMALL_BUFF];
+    strcpy_identifier_cobol_to_java(buf, s);
+    char *p = buf;
+    while (*p) {
+      if (*p < 0x80) {
+        if (*p == '-') {
+          *p = '_';
+        } else if (*p == ' ') {
+          *p = '_';
+        }
+        p++;
       } else {
-        joutput("%c", *c);
+        if (*(p + 1) == '\0') {
+          break;
+        } else {
+          p = p + 2;
+        }
       }
     }
+    joutput("%s", buf);
   } else {
     joutput("anonymous__%d", key);
   }

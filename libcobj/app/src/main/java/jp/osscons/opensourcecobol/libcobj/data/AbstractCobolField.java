@@ -40,7 +40,7 @@ public abstract class AbstractCobolField {
 
   static int lastsize = 0;
   static CobolDataStorage lastdata = null;
-  static Charset CharSetSJIS = Charset.forName("SHIFT-JIS");
+  public static Charset charSetSJIS = Charset.forName("SHIFT-JIS");
 
   static final int[] cobExp10 = {
     1, 10, 100, 1000, 10000, 100000, 1000000, 10000000, 100000000, 1000000000
@@ -586,7 +586,7 @@ public abstract class AbstractCobolField {
   public void moveFrom(String s) {
     // The maximum number of digits of int type in decimal is 10
 
-    byte[] bytes = s.getBytes(CharSetSJIS);
+    byte[] bytes = s.getBytes(charSetSJIS);
 
     CobolDataStorage storage = new CobolDataStorage(bytes.length);
     storage.memcpy(bytes);
@@ -682,8 +682,8 @@ public abstract class AbstractCobolField {
   public void checkNumeric(byte[] s) throws CobolStopRunException {
     if (!this.isNumeric()) {
       byte[] buff = this.getDataStorage().getByteArrayRef(0, this.getSize());
-      String name = new String(s, CharSetSJIS);
-      String content = new String(buff, CharSetSJIS);
+      String name = new String(s, charSetSJIS);
+      String content = new String(buff, charSetSJIS);
       CobolUtil.runtimeError("'" + name + "' not numeric: '" + content + "'");
       CobolStopRunException.stopRunAndThrow(1);
     }
