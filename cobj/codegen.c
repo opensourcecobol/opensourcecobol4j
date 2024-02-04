@@ -1855,6 +1855,13 @@ static void joutput_funcall(cb_tree x) {
   } else {
     screenptr = p->screenptr;
     joutput("%s (", p->name);
+
+    int flag_func_is_check_odo = strcmp(p->name, "CobolCheck.checkOdo") == 0;
+    int save_flag = param_wrap_string_flag;
+    if (flag_func_is_check_odo) {
+      param_wrap_string_flag = 0;
+    }
+
     for (i = 0; i < p->argc; i++) {
       if (p->varcnt && i + 1 == p->argc) {
         joutput("%d, ", p->varcnt);
@@ -1872,6 +1879,7 @@ static void joutput_funcall(cb_tree x) {
         }
       }
     }
+    param_wrap_string_flag = save_flag;
     joutput(")");
     screenptr = 0;
   }
