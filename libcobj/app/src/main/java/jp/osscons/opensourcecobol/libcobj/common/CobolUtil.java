@@ -108,12 +108,12 @@ public class CobolUtil {
 
   public static void cobCheckRefModNational(int offset, long length, int size, byte[] name)
       throws CobolStopRunException {
-    CobolUtil.cobCheckRefMod(offset, length, size, name);
+    CobolUtil.cobCheckRefMod((offset + 1) / 2, length / 2, size / 2, name);
   }
 
   public static void cobCheckRefModNational(int offset, long length, int size, String name)
       throws CobolStopRunException {
-    CobolUtil.cobCheckRefMod(offset, length, size, name);
+    CobolUtil.cobCheckRefMod((offset + 1) / 2, length / 2, size / 2, name);
   }
 
   public static void cobCheckRefMod(
