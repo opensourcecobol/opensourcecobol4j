@@ -30,7 +30,9 @@ public class CobolCheck {
     if (i < min || max < i) {
       CobolRuntimeException.setException(CobolExceptionId.COB_EC_BOUND_SUBSCRIPT);
       CobolUtil.runtimeError(
-          String.format("Subscript of '%s' out of bounds: %d", new String(name), i));
+          String.format(
+              "Subscript of '%s' out of bounds: %d",
+              new String(name, AbstractCobolField.charSetSJIS), i));
       CobolStopRunException.stopRunAndThrow(1);
     }
   }
