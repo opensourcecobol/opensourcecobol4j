@@ -245,7 +245,6 @@ AT_CHECK([java prog], [1], [],
 AT_CLEANUP
 
 AT_SETUP([Nihongo field name in Subscript test msg.])
-AT_CHECK([${SKIP_TEST}])
 
 AT_DATA([prog.cob], [
        IDENTIFICATION    DIVISION.
