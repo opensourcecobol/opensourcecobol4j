@@ -1529,20 +1529,18 @@ static void joutput_param(cb_tree x, int id) {
     r = CB_REFERENCE(x);
     extrefs = 0;
     if (r->check) {
-#ifdef __GNUC__
-      // joutput_indent (" ({");
-#else
-      // inside_stack[inside_check] = 0;
-      //++inside_check;
-      // joutput (" (\n");
-#endif
-      joutput("(new GetAbstractCobolField(){ public AbstractCobolField run() "
-              "throws CobolStopRunException { ");
+      joutput("(new GetAbstractCobolField() {");
+      joutput_newline();
+      joutput_indent_level += 2;
+      joutput_line(
+          "public AbstractCobolField run() throws CobolStopRunException {");
+      joutput_indent_level += 2;
       for (l = r->check; l; l = CB_CHAIN(l)) {
         sav_stack_id = stack_id;
         joutput_stmt(CB_VALUE(l), JOUTPUT_STMT_DEFAULT);
         stack_id = sav_stack_id;
       }
+      joutput_prefix();
       joutput("return ");
     }
 
@@ -1589,7 +1587,13 @@ static void joutput_param(cb_tree x, int id) {
 #else
         --inside_check;
 #endif
-        joutput(";}}).run()");
+        joutput(";");
+        joutput_newline();
+        joutput_indent_level -= 2;
+        joutput_line("}");
+        joutput_indent_level -= 2;
+        joutput_prefix();
+        joutput("}).run()");
       }
       break;
     }
@@ -1649,11 +1653,22 @@ static void joutput_param(cb_tree x, int id) {
         if (f->flag_any_length && f->flag_anylen_done) {
           joutput(field_name);
         } else {
-          joutput("new GetAbstractCobolField() { ");
-          joutput("public AbstractCobolField run() { %s.setDataStorage(",
-                  field_name);
+          joutput("new GetAbstractCobolField() {");
+          joutput_newline();
+          joutput_indent_level += 2;
+          joutput_line("public AbstractCobolField run() {");
+          joutput_indent_level += 2;
+          joutput_prefix();
+          joutput("%s.setDataStorage(", field_name);
           joutput_data(x);
-          joutput("); return %s; }}.run()", field_name);
+          joutput(");");
+          joutput_newline();
+          joutput_line("return %s;", field_name);
+          joutput_indent_level -= 2;
+          joutput_line("}");
+          joutput_indent_level -= 2;
+          joutput_prefix();
+          joutput("}.run()");
           if (f->flag_any_length) {
             f->flag_anylen_done = 1;
           }
@@ -1696,7 +1711,13 @@ static void joutput_param(cb_tree x, int id) {
       --inside_check;
 #endif
 
-      joutput(";}}).run()");
+      joutput(";");
+      joutput_newline();
+      joutput_indent_level -= 2;
+      joutput_line("}");
+      joutput_indent_level -= 2;
+      joutput_prefix();
+      joutput("}).run()");
     }
     break;
   case CB_TAG_BINARY_OP:
