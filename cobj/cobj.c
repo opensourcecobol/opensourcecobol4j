@@ -815,6 +815,8 @@ static void cobc_print_usage(void) {
          "search path"));
   puts(_("  -B <options>                      Add <options> to the Java "
          "compiler"));
+  puts(_("  -conf=<file>                      User defined dialect "
+         "configuration - See -std="));
   puts(_("  --list-reserved                   Display reserved words"));
   puts(
       _("  -assign_external                  Set the file assign to external"));
