@@ -167,7 +167,8 @@ command_line_options_DEPENDENCIES = \
 	command-line-options.src/ffunctions-all.at \
 	command-line-options.src/fmfcomment.at \
 	command-line-options.src/debug.at \
-	command-line-options.src/jar.at
+	command-line-options.src/jar.at \
+	command-line-options.src/std.at
 
 cobj_idx_DEPENDENCIES = \
 	cobj-idx.at \
