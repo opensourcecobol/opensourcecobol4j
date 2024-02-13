@@ -25,5 +25,7 @@ m4_include([ffunctions-all.at])
 m4_include([fmfcomment.at])
 m4_include([debug.at])
 m4_include([jar.at])
+m4_include([std.at])
+m4_include([conf.at])
 
 # m4_include([edit-code-command.at])

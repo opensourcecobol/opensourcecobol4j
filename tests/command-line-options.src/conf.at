@@ -1,0 +1,19 @@
+AT_SETUP([-conf])
+
+AT_DATA([prog.cbl], [
+       IDENTIFICATION              DIVISION.
+       PROGRAM-ID.                 prog.
+       DATA DIVISION.
+       WORKING-STORAGE             SECTION.
+       PROCEDURE                   DIVISION.
+       MAIN-RTN.
+           STOP RUN.
+])
+
+AT_CHECK([cp ../../../config/default.conf a.conf])
+AT_CHECK([${COBJ} -conf=a.conf prog.cbl])
+AT_CHECK([${COBJ} -conf=hello.conf prog.cbl], [1], [], 
+[hello.conf: No such file or directory
+])
+
+AT_CLEANUP
