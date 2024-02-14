@@ -1,0 +1,33 @@
+AT_SETUP([-Wcolumn-overflow])
+
+AT_DATA([prog.cbl],
+[       IDENTIFICATION   DIVISION.
+       PROGRAM-ID.      prog.
+       DATA             DIVISION.
+       WORKING-STORAGE  SECTION.
+       01  NUM   PIC   9(7) COMP-5.
+       PROCEDURE        DIVISION.
+           MOVE 10000000000 TO NUM.
+])
+
+AT_CHECK([cobj -Wconstant prog.cbl], [0], [],
+[prog.cbl:7: Warning: Numeric literal exceeds data size
+])
+
+AT_DATA([prog.cbl],
+[       IDENTIFICATION   DIVISION.
+       PROGRAM-ID.      prog.
+       DATA             DIVISION.
+       WORKING-STORAGE  SECTION.
+       01  NUM   PIC   9.
+       PROCEDURE        DIVISION.
+           MOVE -1 TO NUM.
+])
+
+AT_CHECK([cobj -Wconstant prog.cbl], [0], [],
+[prog.cbl:7: Warning: Ignoring negative sign
+])
+
+AT_CHECK([${COBJ} --help | grep '\-Wconstant' > /dev/null], [0])
+
+AT_CLEANUP
