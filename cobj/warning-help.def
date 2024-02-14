@@ -26,6 +26,9 @@
 CB_WARNDEF (cb_warn_redefinition, "redefinition", 1,
 	    N_("Warn incompatible redefinition of data items"))
 
+CB_WARNDEF (cb_warn_constant, "constant", 1,
+	    N_("Warn inconsistent constant"))
+
 CB_WARNDEF (cb_warn_parentheses, "parentheses", 1,
 	    N_("Warn lack of parentheses around AND within OR"))
 
