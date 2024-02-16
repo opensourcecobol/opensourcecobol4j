@@ -948,6 +948,9 @@ identification_division:
 	} else {
 		stack_progid[depth] = (char *)(CB_NAME ($3));
 	}
+	if(strcmp("MAIN", stack_progid[depth]) == 0) {
+		cb_error (_("PROGRAM-ID should not be MAIN"));
+	}
 	if (prog_end) {
 		if (!current_program->flag_validated) {
 			current_program->flag_validated = 1;
