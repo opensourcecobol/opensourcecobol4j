@@ -19,9 +19,11 @@
 package jp.osscons.opensourcecobol.libcobj.common;
 
 import java.math.BigDecimal;
+import java.text.DateFormat;
 import java.time.LocalDateTime;
 import java.util.Arrays;
 import java.util.Calendar;
+import java.util.Locale;
 import java.util.Random;
 import jp.osscons.opensourcecobol.libcobj.data.AbstractCobolField;
 import jp.osscons.opensourcecobol.libcobj.data.CobolDataStorage;
@@ -2332,6 +2334,97 @@ public class CobolIntrinsic {
     if (offset > 0) {
       calcRefMod(currField, offset, length);
     }
+    return currField;
+  }
+
+  public static AbstractCobolField funcLocaleDate(
+      int offset, int length, AbstractCobolField srcField, int localeField) {
+    return funcLocaleDate(offset, length, srcField, null);
+  }
+
+  public static AbstractCobolField funcLocaleDate(
+      int offset, int length, AbstractCobolField srcField, AbstractCobolField localeField) {
+    AbstractCobolField field =
+        CobolFieldFactory.makeCobolField(
+            0,
+            (CobolDataStorage) null,
+            new CobolFieldAttribute(CobolFieldAttribute.COB_TYPE_ALPHANUMERIC, 10, 0, 0, null));
+    int inDate;
+
+    // Convert the input field to an integer
+    if (srcField.getAttribute().isTypeNumeric()) {
+      inDate = srcField.getInt();
+    } else {
+      if (srcField.getSize() < 8) {
+        return errorFuncLocaleDate(field);
+      }
+      int p = 0;
+      inDate = 0;
+      for (int len = 0; len < 8; ++len, ++p) {
+        char c = (char) srcField.getDataStorage().getByte(p);
+        if ('0' <= c && c <= '9') {
+          inDate = inDate * 10 + (c - '0');
+        } else {
+          return errorFuncLocaleDate(field);
+        }
+      }
+    }
+
+    // Calculate the year, month, and days
+    int year = inDate / 10000;
+    if (year < 1601 || year > 9999) {
+      return errorFuncLocaleDate(field);
+    }
+    inDate %= 10000;
+
+    int month = inDate / 100;
+    if (month < 1 || month > 12) {
+      return errorFuncLocaleDate(field);
+    }
+
+    int days = inDate % 100;
+    if (days < 1 || days > 31) {
+      return errorFuncLocaleDate(field);
+    }
+
+    if (isLeapYear(year)) {
+      if (days > leapMonthDays[month]) {
+        return errorFuncLocaleDate(field);
+      }
+    } else {
+      if (days > normalMonthDays[month]) {
+        return errorFuncLocaleDate(field);
+      }
+    }
+
+    // Create the date string
+    Calendar cal = Calendar.getInstance();
+    cal.set(year, month - 1, days);
+
+    DateFormat df;
+    if (localeField != null) {
+      Locale locale = new Locale(localeField.getString());
+      df = DateFormat.getDateInstance(DateFormat.SHORT, locale);
+    } else {
+      df = DateFormat.getDateInstance(DateFormat.SHORT);
+    }
+    String dateString = df.format(cal.getTime());
+
+    // Return the result
+    field.setSize(dateString.length());
+    makeFieldEntry(field);
+    currField.getDataStorage().memcpy(dateString.getBytes());
+    if (offset > 0) {
+      calcRefMod(field, offset, length);
+    }
+    return currField;
+  }
+
+  private static AbstractCobolField errorFuncLocaleDate(AbstractCobolField field) {
+    field.setSize(10);
+    makeFieldEntry(field);
+    currField.getDataStorage().memset((byte) '0', 10);
+    CobolRuntimeException.setException(CobolExceptionId.COB_EC_ARGUMENT_FUNCTION);
     return currField;
   }
 }
