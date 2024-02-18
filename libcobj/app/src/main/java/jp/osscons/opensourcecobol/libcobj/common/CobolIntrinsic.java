@@ -21,6 +21,8 @@ package jp.osscons.opensourcecobol.libcobj.common;
 import java.math.BigDecimal;
 import java.text.DateFormat;
 import java.time.LocalDateTime;
+import java.time.LocalTime;
+import java.time.format.DateTimeFormatter;
 import java.util.Arrays;
 import java.util.Calendar;
 import java.util.Locale;
@@ -2425,6 +2427,79 @@ public class CobolIntrinsic {
     makeFieldEntry(field);
     currField.getDataStorage().memset((byte) '0', 10);
     CobolRuntimeException.setException(CobolExceptionId.COB_EC_ARGUMENT_FUNCTION);
+    return currField;
+  }
+
+  public static AbstractCobolField funcLocaleTime(
+      int offset, int length, AbstractCobolField srcField, int localeField) {
+    return funcLocaleTime(offset, length, srcField, null);
+  }
+
+  public static AbstractCobolField funcLocaleTime(
+      int offset, int length, AbstractCobolField srcField, AbstractCobolField localeField) {
+    AbstractCobolField field =
+        CobolFieldFactory.makeCobolField(
+            0,
+            (CobolDataStorage) null,
+            new CobolFieldAttribute(CobolFieldAttribute.COB_TYPE_ALPHANUMERIC, 10, 0, 0, null));
+    int inTime;
+
+    // Convert the input field to an integer
+    if (srcField.getAttribute().isTypeNumeric()) {
+      inTime = srcField.getInt();
+    } else {
+      if (srcField.getSize() < 6) {
+        return errorFuncLocaleDate(field);
+      }
+      int p = 0;
+      inTime = 0;
+      for (int len = 0; len < 6; ++len, ++p) {
+        char c = (char) srcField.getDataStorage().getByte(p);
+        if ('0' <= c && c <= '9') {
+          inTime = inTime * 10 + (c - '0');
+        } else {
+          return errorFuncLocaleDate(field);
+        }
+      }
+    }
+
+    // Calculate the year, month, and days
+    int hours = inTime / 10000;
+    if (hours < 0 || hours > 24) {
+      return errorFuncLocaleDate(field);
+    }
+    inTime %= 10000;
+
+    int minutes = inTime / 100;
+    if (minutes < 0 || minutes > 59) {
+      return errorFuncLocaleDate(field);
+    }
+
+    int seconds = inTime % 100;
+    if (seconds < 0 || seconds > 59) {
+      return errorFuncLocaleDate(field);
+    }
+
+    // Create the time string
+    LocalTime time = LocalTime.of(hours, minutes, seconds);
+
+    DateTimeFormatter formatter;
+    String pattern = "HH:mm:ss";
+    if (localeField != null) {
+      Locale locale = new Locale(localeField.getString());
+      formatter = DateTimeFormatter.ofPattern(pattern, locale);
+    } else {
+      formatter = DateTimeFormatter.ofPattern(pattern);
+    }
+    String timeString = time.format(formatter);
+
+    // Return the result
+    field.setSize(timeString.length());
+    makeFieldEntry(field);
+    currField.getDataStorage().memcpy(timeString.getBytes());
+    if (offset > 0) {
+      calcRefMod(field, offset, length);
+    }
     return currField;
   }
 }
