@@ -2463,7 +2463,7 @@ public class CobolIntrinsic {
       }
     }
 
-    // Calculate the year, month, and days
+    // Calculate the hours, minutes, and seconds
     int hours = inTime / 10000;
     if (hours < 0 || hours > 24) {
       return errorFuncLocaleDate(field);
@@ -2479,6 +2479,56 @@ public class CobolIntrinsic {
     if (seconds < 0 || seconds > 59) {
       return errorFuncLocaleDate(field);
     }
+
+    // Create the time string
+    LocalTime time = LocalTime.of(hours, minutes, seconds);
+
+    DateTimeFormatter formatter;
+    String pattern = "HH:mm:ss";
+    if (localeField != null) {
+      Locale locale = new Locale(localeField.getString());
+      formatter = DateTimeFormatter.ofPattern(pattern, locale);
+    } else {
+      formatter = DateTimeFormatter.ofPattern(pattern);
+    }
+    String timeString = time.format(formatter);
+
+    // Return the result
+    field.setSize(timeString.length());
+    makeFieldEntry(field);
+    currField.getDataStorage().memcpy(timeString.getBytes());
+    if (offset > 0) {
+      calcRefMod(field, offset, length);
+    }
+    return currField;
+  }
+
+  public static AbstractCobolField funcLocaleTimeFromSeconds(
+      int offset, int length, AbstractCobolField srcField, int localeField) {
+    return funcLocaleTime(offset, length, srcField, null);
+  }
+
+  public static AbstractCobolField funcLocaleTimeFromSeconds(
+      int offset, int length, AbstractCobolField srcField, AbstractCobolField localeField) {
+    AbstractCobolField field =
+        CobolFieldFactory.makeCobolField(
+            0,
+            (CobolDataStorage) null,
+            new CobolFieldAttribute(CobolFieldAttribute.COB_TYPE_ALPHANUMERIC, 10, 0, 0, null));
+    int inTime;
+
+    // Convert the input field to an integer
+    if (srcField.getAttribute().isTypeNumeric()) {
+      inTime = srcField.getInt();
+    } else {
+      return errorFuncLocaleDate(field);
+    }
+
+    // Calculate the hours, minutes, and seconds
+    int hours = inTime / 3600;
+    inTime %= 3600;
+    int minutes = inTime / 60;
+    int seconds = inTime % 60;
 
     // Create the time string
     LocalTime time = LocalTime.of(hours, minutes, seconds);
