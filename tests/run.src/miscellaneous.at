@@ -1676,7 +1676,6 @@ AT_CHECK([./caller], [0],
 AT_CLEANUP
 
 AT_SETUP([COB_PRE_LOAD test])
-AT_CHECK([${SKIP_TEST}])
 
 AT_DATA([callee.cob], [
        IDENTIFICATION   DIVISION.
@@ -1696,12 +1695,11 @@ AT_DATA([caller.cob], [
 
 AT_CHECK([${COMPILE_MODULE} callee.cob])
 AT_CHECK([${COMPILE} caller.cob])
-AT_CHECK([export COB_PRE_LOAD=callee; ./caller], [0], [OK])
+AT_CHECK([export COB_PRE_LOAD=callee; java caller], [0], [OK])
 
 AT_CLEANUP
 
 AT_SETUP([COB_LOAD_CASE=UPPER test])
-AT_CHECK([${SKIP_TEST}])
 
 AT_DATA([CALLEE.cob], [
        IDENTIFICATION   DIVISION.
@@ -1721,7 +1719,7 @@ AT_DATA([caller.cob], [
 
 AT_CHECK([${COMPILE_MODULE} CALLEE.cob])
 AT_CHECK([${COMPILE} caller.cob])
-AT_CHECK([export COB_LOAD_CASE=UPPER; ./caller], [0], [OK])
+AT_CHECK([export COB_LOAD_CASE=UPPER; java caller], [0], [OK])
 
 AT_CLEANUP
 
