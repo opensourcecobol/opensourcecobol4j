@@ -204,7 +204,7 @@ public class CobolDataStorage {
   /**
    * C言語のmemcpy
    *
-   * @param buf
+   * @param str
    * @param size
    */
   public void memcpy(String str, int size) {

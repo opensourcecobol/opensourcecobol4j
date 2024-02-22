@@ -76,7 +76,7 @@ public class CobolNationalField extends AbstractCobolField {
   /**
    * 引数で与えらえられたデータからthisへの代入を行う
    *
-   * @param field 代入元のデータ(AbstractCobolField型)
+   * @param src 代入元のデータ(AbstractCobolField型)
    */
   @Override
   public void moveFrom(AbstractCobolField src) {
@@ -1046,15 +1046,15 @@ public class CobolNationalField extends AbstractCobolField {
   /**
    * 引数で与えらえられたデータからthisへの代入を行う
    *
-   * @param field 代入元のデータ(dataStorage型)
+   * @param dataStorage 代入元のデータ(dataStorage型)
    */
   @Override
-  public void moveFrom(CobolDataStorage dataStrage) {}
+  public void moveFrom(CobolDataStorage dataStorage) {}
 
   /**
    * 引数で与えらえられたデータからthisへの代入を行う
    *
-   * @param field 代入元のデータ(byte[]型)
+   * @param bytes 代入元のデータ(byte[]型)
    */
   @Override
   public void moveFrom(byte[] bytes) {
@@ -1064,7 +1064,7 @@ public class CobolNationalField extends AbstractCobolField {
   /**
    * 引数で与えらえられたデータからthisへの代入を行う
    *
-   * @param field 代入元のデータ(String型)
+   * @param string 代入元のデータ(String型)
    */
   @Override
   public void moveFrom(String string) {
@@ -1083,7 +1083,7 @@ public class CobolNationalField extends AbstractCobolField {
   /**
    * 引数で与えらえられたデータからthisへの代入を行う
    *
-   * @param field 代入元のデータ(int型)
+   * @param number 代入元のデータ(int型)
    */
   @Override
   public void moveFrom(int number) {}
@@ -1091,7 +1091,7 @@ public class CobolNationalField extends AbstractCobolField {
   /**
    * 引数で与えらえられたデータからthisへの代入を行う
    *
-   * @param field 代入元のデータ(int型)
+   * @param number 代入元のデータ(int型)
    */
   @Override
   public void moveFrom(double number) {}
@@ -1099,7 +1099,7 @@ public class CobolNationalField extends AbstractCobolField {
   /**
    * 引数で与えらえられたデータからthisへの代入を行う
    *
-   * @param field 代入元のデータ(int型)
+   * @param number 代入元のデータ(int型)
    */
   @Override
   public void moveFrom(BigDecimal number) {}
@@ -1107,7 +1107,7 @@ public class CobolNationalField extends AbstractCobolField {
   /**
    * 引数で与えらえられたデータからthisへの代入を行う
    *
-   * @param field 代入元のデータ(int型)
+   * @param decimal 代入元のデータ(int型)
    */
   @Override
   public void setDecimal(BigDecimal decimal) {}

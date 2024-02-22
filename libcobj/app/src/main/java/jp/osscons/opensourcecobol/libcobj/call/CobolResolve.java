@@ -322,8 +322,9 @@ public class CobolResolve {
   /**
    * プログラム名に対応するCobolRunnableインスタンスを返す
    *
-   * @param name プログラム名の格納されたCOBOLの変数
-   * @return nameに対応するCobolRunnableインスタンス
+   * @param packageName
+   * @param cobolField
+   * @return
    * @throws CobolRuntimeException
    */
   public static CobolRunnable resolve(String packageName, AbstractCobolField cobolField)
@@ -420,7 +421,7 @@ public class CobolResolve {
   /**
    * 引数で与えられたプログラム名に対応するCobolRunnableのインスタンスの cancelメソッドを呼び出す
    *
-   * @param name プログラム名を保持するCOBOLの変数
+   * @param cobolField
    */
   public static void cancel(AbstractCobolField cobolField) {
     cancel(cobolField.getString());
@@ -455,7 +456,7 @@ public class CobolResolve {
   /**
    * プログラム名に対応するCobolRunnableのインスタンスに対応するポインタ(UUID) をバイト配列として返す
    *
-   * @param name プログラム名
+   * @param field プログラム名
    * @return プログラム名に対応するCobolRunnableのインスタンスに対応するポインタ(UUID)
    * @throws CobolRuntimeException
    */
@@ -487,7 +488,7 @@ public class CobolResolve {
   /**
    * ポインタ(UUID)に対応するCobolRunnableのインスタンスを返す
    *
-   * @param b_10 ポインタ(UUID)が格納されたCobolDataStorageのインスタンス
+   * @param d ポインタ(UUID)が格納されたCobolDataStorageのインスタンス
    * @return ポインタ(UUID)に対応するCobolRunnableのインスタンス
    */
   public static CobolRunnable resolveFromPointer(CobolDataStorage d) {

@@ -26,7 +26,6 @@ public class ErrorLib {
   /**
    * Error when IO operations of indexed files
    *
-   * @param indexedFilePath
    * @return 1
    */
   public static int errorIO() {
@@ -37,7 +36,7 @@ public class ErrorLib {
   /**
    * Error when some keys in input data have conflicts
    *
-   * @return
+   * @return 1
    */
   public static int errorDuplicateKeys() {
     System.err.println("error: loading fails because of duplicate keys.");

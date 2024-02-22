@@ -38,7 +38,7 @@ public class CobolTerminal {
   /**
    * cob_displayの実装 TODO 暫定実装
    *
-   * @param outorerr trueなら標準出力に,それ以外は標準エラー出力に出力する.
+   * @param dispStdout
    * @param newline trueなら出力後に改行しない,それ以外の場合は改行する
    * @param fields 出力する変数(可変長)
    */

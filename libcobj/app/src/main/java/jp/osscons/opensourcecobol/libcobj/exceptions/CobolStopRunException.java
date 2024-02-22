@@ -70,7 +70,7 @@ public class CobolStopRunException extends Exception {
   /**
    * CobolStopRunExceptionを例外として投げる
    *
-   * @param returnCode 返り値を格納したCobolDataStorageのインスタンス
+   * @param storage 返り値を格納したCobolDataStorageのインスタンス
    * @throws CobolStopRunException
    */
   public static void throwException(CobolDataStorage storage) throws CobolStopRunException {
@@ -80,7 +80,7 @@ public class CobolStopRunException extends Exception {
   /**
    * javaコンパイラの解析でthrowが発生しない部分がtry節でくくられていると判断されるとコンパイルエラーになる. これを回避するためのダミーのメソッド
    *
-   * @throws CobolGoBackException
+   * @throws CobolStopRunException
    */
   public static void dummy() throws CobolStopRunException {
     if (false) {

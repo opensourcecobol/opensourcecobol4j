@@ -1680,10 +1680,8 @@ public class CobolIntrinsic {
   /**
    * libcob/intrinsicのcob_intr_nationalの実装
    *
-   * @param prams
-   * @param fields
+   * @param srcfield
    * @return
-   * @throws CobolStopRunException
    */
   public static AbstractCobolField funcNational(AbstractCobolField srcfield) {
     int size = srcfield.getSize();

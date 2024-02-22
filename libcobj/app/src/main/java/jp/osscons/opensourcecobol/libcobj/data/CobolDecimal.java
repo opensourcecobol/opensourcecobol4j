@@ -313,7 +313,7 @@ public class CobolDecimal {
   /**
    * this.valueの値をthis.valueとotherを加算した値にする
    *
-   * @param other this.valueに加算される値
+   * @param decimal this.valueに加算される値
    */
   public void add(CobolDecimal decimal) {
     if (DECIMAL_CHECK(this, decimal)) {
@@ -326,7 +326,7 @@ public class CobolDecimal {
   /**
    * this.valueの値をthis.valueからotherを減算した値にする
    *
-   * @param other this.valueから減算される値
+   * @param decimal this.valueから減算される値
    */
   public void sub(CobolDecimal decimal) {
     if (DECIMAL_CHECK(this, decimal)) {
@@ -348,7 +348,7 @@ public class CobolDecimal {
   /**
    * this.valueの値をthis.valueとotherを乗算した値にする
    *
-   * @param other this.valueに乗算される値
+   * @param decimal this.valueに乗算される値
    */
   public void mul(CobolDecimal decimal) {
     if (DECIMAL_CHECK(this, decimal)) {
@@ -370,7 +370,7 @@ public class CobolDecimal {
   /**
    * this.valueの値をthis.valueでotherを割った値にする
    *
-   * @param other this.valueを割る数
+   * @param decimal this.valueを割る数
    */
   public void div(CobolDecimal decimal) throws CobolStopRunException {
     if (DECIMAL_CHECK(this, decimal)) {
@@ -407,7 +407,7 @@ public class CobolDecimal {
   /**
    * this.valueの値をthis.valueをdecimal乗した値にする
    *
-   * @param other this.valueを割る数
+   * @param decimal this.valueを割る数
    */
   // TODO 残りの実装
   public void pow(CobolDecimal decimal) {
