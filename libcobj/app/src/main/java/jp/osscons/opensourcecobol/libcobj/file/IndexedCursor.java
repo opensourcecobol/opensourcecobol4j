@@ -606,8 +606,7 @@ public final class IndexedCursor {
   private Optional<ResultSet> getCursorForFirstLast(
       int index, boolean isDuplicate, CursorReadOption option) {
     final String query = getQueryForFirstLast(index, isDuplicate, option);
-    try {
-      Statement statement = this.conn.createStatement();
+    try (Statement statement = this.conn.createStatement(); ) {
       return Optional.ofNullable(statement.executeQuery(query));
     } catch (SQLException e) {
       return Optional.empty();
