@@ -567,21 +567,21 @@ public abstract class AbstractCobolField {
   /**
    * 引数で与えらえられたデータからthisへの代入を行う
    *
-   * @param field 代入元のデータ(CobolDataStorage型)
+   * @param dataStorage 代入元のデータ(CobolDataStorage型)
    */
-  public abstract void moveFrom(CobolDataStorage dataStrage);
+  public abstract void moveFrom(CobolDataStorage dataStorage);
 
   /**
    * 引数で与えらえられたデータからthisへの代入を行う
    *
-   * @param field 代入元のデータ(byte[]型)
+   * @param bytes 代入元のデータ(byte[]型)
    */
   public abstract void moveFrom(byte[] bytes);
 
   /**
    * 引数で与えらえられたデータからthisへの代入を行う
    *
-   * @param field 代入元のデータ(String型)
+   * @param s 代入元のデータ(String型)
    */
   public void moveFrom(String s) {
     // The maximum number of digits of int type in decimal is 10
@@ -606,7 +606,7 @@ public abstract class AbstractCobolField {
   /**
    * 引数で与えらえられたデータからthisへの代入を行う
    *
-   * @param field 代入元のデータ(int型)
+   * @param number 代入元のデータ(int型)
    */
   public void moveFrom(int number) {
     // The maximum number of digits of int type in decimal is 10
@@ -634,7 +634,7 @@ public abstract class AbstractCobolField {
   /**
    * 引数で与えらえられたデータからthisへの代入を行う
    *
-   * @param field 代入元のデータ(double型)
+   * @param number 代入元のデータ(double型)
    */
   public void moveFrom(double number) {
     String s = Double.toString(Math.abs(number));
@@ -670,7 +670,7 @@ public abstract class AbstractCobolField {
   /**
    * 引数で与えらえられたデータからthisへの代入を行う
    *
-   * @param field 代入元のデータ(BigDecimal型)
+   * @param number 代入元のデータ(BigDecimal型)
    */
   public abstract void moveFrom(BigDecimal number);
 
@@ -693,8 +693,8 @@ public abstract class AbstractCobolField {
   /**
    * thisと引数で与えられたデータとの数値比較を行う
    *
-   * @param field thisと比較するfield
-   * @return 保持する数値データの比較を行い,this<fieldなら負の値,this==fieldなら0,this>fieldなら正の値
+   * @param other thisと比較するfield
+   * @return 保持する数値データの比較を行い,this&lt;fieldなら負の値,this==fieldなら0,this&gt;fieldなら正の値
    */
   public int compareTo(AbstractCobolField other) {
     AbstractCobolField f1 = this;

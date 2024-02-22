@@ -674,8 +674,8 @@ public class CobolFileSort {
    * libcob/fileio.cのcob_file_sort_initの実装
    *
    * @param nkeys
-   * @param collating_sequence
-   * @param sort_return
+   * @param collatingSequence
+   * @param sortReturn
    * @param fnstatus
    */
   public static void sortInit(
@@ -714,8 +714,8 @@ public class CobolFileSort {
    * libcob/fileio.cのcob_file_sort_initの実装
    *
    * @param nkeys
-   * @param collating_sequence
-   * @param sort_return
+   * @param collatingSequence
+   * @param sortReturn
    * @param fnstatus
    */
   public static void sortInit(
@@ -744,7 +744,8 @@ public class CobolFileSort {
   /**
    * libcob/fileio.cのcob_file_sort_usingの実装
    *
-   * @param data_file
+   * @param sortFile
+   * @param dataFile
    */
   public static void sortUsing(CobolFile sortFile, CobolFile dataFile) {
     dataFile.open(CobolFile.COB_OPEN_INPUT, 0, null);

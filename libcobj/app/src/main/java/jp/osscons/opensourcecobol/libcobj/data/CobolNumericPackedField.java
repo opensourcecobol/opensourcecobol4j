@@ -199,7 +199,7 @@ public class CobolNumericPackedField extends AbstractCobolField {
   /**
    * 引数で与えらえられたデータからthisへの代入を行う
    *
-   * @param field 代入元のデータ(AbstractCobolField型)
+   * @param src 代入元のデータ(AbstractCobolField型)
    */
   @Override
   public void moveFrom(AbstractCobolField src) {
@@ -311,7 +311,7 @@ public class CobolNumericPackedField extends AbstractCobolField {
   /**
    * 引数で与えらえられたデータからthisへの代入を行う
    *
-   * @param field 代入元のデータ(byte[]型)
+   * @param bytes 代入元のデータ(byte[]型)
    */
   @Override
   public void moveFrom(byte[] bytes) {
@@ -321,7 +321,7 @@ public class CobolNumericPackedField extends AbstractCobolField {
   /**
    * 引数で与えらえられたデータからthisへの代入を行う
    *
-   * @param field 代入元のデータ(String型)
+   * @param string 代入元のデータ(String型)
    */
   @Override
   public void moveFrom(String string) {
@@ -335,7 +335,7 @@ public class CobolNumericPackedField extends AbstractCobolField {
   /**
    * libcob/numeric.cのcob_set_packed_intの実装 引数で与えらえられたデータからthisへの代入を行う
    *
-   * @param field 代入元のデータ(int型)
+   * @param val 代入元のデータ(int型)
    */
   @Override
   public void moveFrom(int val) {
@@ -470,7 +470,7 @@ public class CobolNumericPackedField extends AbstractCobolField {
   /**
    * 引数で与えらえられたデータからthisへの代入を行う
    *
-   * @param field 代入元のデータ(BigDecimal型)
+   * @param number 代入元のデータ(BigDecimal型)
    */
   @Override
   public void moveFrom(BigDecimal number) {
@@ -480,10 +480,10 @@ public class CobolNumericPackedField extends AbstractCobolField {
   /**
    * 引数で与えらえられたデータからthisへの代入を行う
    *
-   * @param field 代入元のデータ(CobolDataStorage型)
+   * @param dataStorage 代入元のデータ(CobolDataStorage型)
    */
   @Override
-  public void moveFrom(CobolDataStorage dataStrage) {
+  public void moveFrom(CobolDataStorage dataStorage) {
     // TODO 自動生成されたメソッド・スタブ
   }
 
@@ -620,11 +620,7 @@ public class CobolNumericPackedField extends AbstractCobolField {
     return val;
   }
 
-  /**
-   * thisの保持する数値データを0に設定する
-   *
-   * @return thisの保持する数値データをintに変換した値
-   */
+  /** thisの保持する数値データを0に設定する */
   @Override
   public void setZero() {
     CobolDataStorage data = this.getDataStorage();
@@ -642,7 +638,8 @@ public class CobolNumericPackedField extends AbstractCobolField {
   /**
    * libcob/codegen.hのcob_add_packed_intの実装 thisの保持する数値データに加算する
    *
-   * @param in thisの保持する数値データに加算する値
+   * @param val thisの保持する数値データに加算する値
+   * @return
    */
   public int addPackedInt(int val) {
     if (val == 0) {

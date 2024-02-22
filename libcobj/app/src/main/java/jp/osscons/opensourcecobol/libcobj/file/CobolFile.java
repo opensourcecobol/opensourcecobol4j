@@ -293,7 +293,6 @@ public class CobolFile {
    *
    * @param status
    * @param fnstatus
-   * @return
    */
   protected void saveStatus(int status, AbstractCobolField fnstatus) {
     CobolFile.errorFile = this;

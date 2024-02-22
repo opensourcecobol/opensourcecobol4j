@@ -18,4 +18,4 @@ jobs:
       - name: Run javadoc
         working-directory: libcobj 
         run: |
-          ./gradlew javadoc || true
+          ./gradlew javadoc
