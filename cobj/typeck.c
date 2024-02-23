@@ -7248,8 +7248,7 @@ static void validate_indexed_file_key(const cb_tree key,
   if (!flag_valid_key) {
     if (flag_alternate) {
       cb_error_x(
-          key,
-          _("An alternative indexed key '%s' is not found in a file record"),
+          key, _("An alternate indexed key '%s' is not found in a file record"),
           cb_field(key)->name);
     } else {
       cb_error_x(key, _("An indexed key '%s' is not found in a file record"),
