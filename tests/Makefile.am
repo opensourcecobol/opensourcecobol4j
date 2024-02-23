@@ -206,6 +206,7 @@ misc_DEPENDENCIES = \
 	misc.src/fd-external.at \
 	misc.src/compile-multiple-files.at \
 	misc.src/compare-large-number.at \
+	misc.src/validate-indexed-file-keys.at \
 	misc.src/copy-comments.at
 
 EXTRA_DIST = $(srcdir)/package.m4 \

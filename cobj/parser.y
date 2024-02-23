@@ -828,7 +828,12 @@ program_definition:
   data_division		{ cb_validate_program_data (current_program); }
   procedure_division
   nested_prog
-  end_program
+  end_program {
+	cb_tree file = current_program->file_list;
+	for(; file; file = CB_CHAIN(file)) {
+		cb_validate_indexed_file_key(CB_FILE(CB_VALUE(file)));
+	}
+  }
 ;
 
 program_mandatory:
@@ -837,7 +842,12 @@ program_mandatory:
   data_division		{ cb_validate_program_data (current_program); }
   procedure_division
   nested_prog
-  end_mandatory
+  end_mandatory {
+	cb_tree file = current_program->file_list;
+	for(; file; file = CB_CHAIN(file)) {
+		cb_validate_indexed_file_key(CB_FILE(CB_VALUE(file)));
+	}
+  }
 ;
 
 function_definition:
