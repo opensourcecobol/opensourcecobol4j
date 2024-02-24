@@ -7238,6 +7238,16 @@ static void validate_indexed_file_key(const cb_tree key,
                                       const struct cb_file *f,
                                       const int flag_alternate) {
   struct cb_field *p = cb_field(key);
+  const char *cp;
+
+  // If the key is split keys, skip the check.
+  // This process should be improved in the future
+  for (cp = p->name; *cp; cp++) {
+    if (*cp == '$') {
+      return;
+    }
+  }
+
   int flag_valid_key = 0;
   for (; p; p = p->parent) {
     if (p->file && p->file == f) {

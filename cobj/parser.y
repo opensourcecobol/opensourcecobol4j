@@ -1827,7 +1827,6 @@ alternative_record_key_clause:
   }
 | ALTERNATE RECORD _key _is reference key_is_eq split_key_list flag_duplicates
   {
-#if	defined(WITH_CISAM) || defined(WITH_DISAM) || defined(WITH_VBISAM) || defined(WITH_INDEX_EXTFH)
 	struct cb_alt_key *p;
 	struct cb_alt_key *l;
 	cb_tree composite_key;
@@ -1865,9 +1864,6 @@ alternative_record_key_clause:
 			l->next = p;
 		}
 	}
-#else
-	PENDING ("SPLIT KEYS");
-#endif
   }
 ;
 
@@ -2038,7 +2034,6 @@ record_key_clause:
 | RECORD _key _is reference key_is_eq split_key_list
   {
 	/* SPLIT KEY use */
-#if	defined(WITH_CISAM) || defined(WITH_DISAM) || defined(WITH_VBISAM) || defined(WITH_INDEX_EXTFH)
 
 	cb_tree composite_key;	
 	struct cb_key_component *comp;
@@ -2063,9 +2058,6 @@ record_key_clause:
 		current_file->key = cb_build_field_reference ((struct cb_field *)composite_key, NULL);
 		current_file->component_list = key_component_list;
 	}
-#else
-	PENDING ("SPLIT KEYS");
-#endif
   }
 ;
 
@@ -5604,15 +5596,7 @@ read_key:
   /* empty */			{ $$ = NULL; }
 | KEY _is identifier_list
   {
-#if	defined(WITH_CISAM) || defined(WITH_DISAM) || defined(WITH_VBISAM) || defined(WITH_INDEX_EXTFH)
 	$$ = $3;
-#else
-	if (CB_LIST($3)->chain) {
-		PENDING ("SPLIT KEYS");
-	} else {
-		$$ = $3;
-	}
-#endif
   }
 ;
 
@@ -6010,15 +5994,7 @@ start_key:
 | KEY _is start_op identifier_list
   {
 	$0 = $3;
-#if	defined(WITH_CISAM) || defined(WITH_DISAM) || defined(WITH_VBISAM) || defined(WITH_INDEX_EXTFH)
 	$$ = $4;
-#else
-	if (CB_LIST($4)->chain) {
-		PENDING ("SPLIT KEYS");
-	} else {
-		$$ = $4;
- 	}
-#endif
   }
 ;
 
