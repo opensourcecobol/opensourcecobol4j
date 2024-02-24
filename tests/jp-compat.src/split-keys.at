@@ -1,6 +1,6 @@
 AT_SETUP([SPLIT KEYS (ALTERNATE KEY)])
 
-AT_CHECK([test $COB_SPLITKEY_FLAGS = "yes" || exit 77])
+AT_CHECK([${SKIP_TEST}])
 
 AT_DATA([prog.cob], [
        IDENTIFICATION   DIVISION.
@@ -106,7 +106,7 @@ AT_CLEANUP
 
 AT_SETUP([SPLIT KEYS (RECORD KEY)])
 
-AT_CHECK([test $COB_SPLITKEY_FLAGS = "yes" || exit 77])
+AT_CHECK([${SKIP_TEST}])
 
 AT_DATA([prog.cob], [
        IDENTIFICATION   DIVISION.
@@ -237,7 +237,7 @@ AT_CLEANUP
 
 AT_SETUP([SPLIT KEYS (START Syntax - EQUAL)])
 
-AT_CHECK([test $COB_SPLITKEY_FLAGS = "yes" || exit 77])
+AT_CHECK([${SKIP_TEST}])
 
 AT_DATA([prog.cob], [
        IDENTIFICATION   DIVISION.
@@ -368,7 +368,7 @@ AT_CLEANUP
 
 AT_SETUP([SPLIT KEYS (START Syntax - GREATER THAN)])
 
-AT_CHECK([test $COB_SPLITKEY_FLAGS = "yes" || exit 77])
+AT_CHECK([${SKIP_TEST}])
 
 AT_DATA([prog.cob], [
        IDENTIFICATION   DIVISION.
@@ -499,7 +499,7 @@ AT_CLEANUP
 
 AT_SETUP([SPLIT KEYS (key unmatch)])
 
-AT_CHECK([test $COB_SPLITKEY_FLAGS = "yes" || exit 77])
+AT_CHECK([${SKIP_TEST}])
 
 AT_DATA([prog.cob], [
        IDENTIFICATION   DIVISION.

@@ -24785,6 +24785,8 @@ then
 
 fi
 
+COB_SPLITKEY_FLAGS="yes"
+
 # Generate the output
 
 printf "%s\n" "#define COB_EXPORT_DYN \"$COB_EXPORT_DYN\"" >>confdefs.h

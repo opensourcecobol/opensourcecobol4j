@@ -4054,9 +4054,8 @@ static void joutput_file_initialization(struct cb_file *f) {
                   f->cname, i_keycomp,
                   cb_field(key_component->component)->offset);
         }
-        joutput_prefix();
-        joutput("%s%s[0].setCountComponents(%d);\n", CB_PREFIX_KEYS, f->cname,
-                i_keycomp);
+        joutput_line("%s%s[0].setCountComponents(%d);", CB_PREFIX_KEYS,
+                     f->cname, i_keycomp);
       } else {
         joutput("%s%s[0].setOffset(%d);\n", CB_PREFIX_KEYS, f->cname,
                 cb_field(f->key)->offset);
@@ -4077,6 +4076,24 @@ static void joutput_file_initialization(struct cb_file *f) {
       joutput("%s%s[%d].setOffset(%d);\n", CB_PREFIX_KEYS, f->cname, nkeys,
               (l->component_list == NULL) ? cb_field(l->key)->offset : -1);
       if (l->component_list != NULL) {
+
+        int num_key_components = 0;
+        for (key_component = l->component_list; key_component != NULL;
+             key_component = key_component->next) {
+          num_key_components++;
+        }
+        joutput_line("{");
+        joutput_indent_level += 2;
+        joutput_line("KeyComponent[] keyComponents = new KeyComponent[%d];",
+                     num_key_components);
+        joutput_line("for (int i = 0; i < %d; i++) {", num_key_components);
+        joutput_line("  keyComponents[i] = new KeyComponent();");
+        joutput_line("}");
+        joutput_line("%s%s[%d].setComponent(keyComponents);", CB_PREFIX_KEYS,
+                     f->cname, nkeys);
+        joutput_indent_level -= 2;
+        joutput_line("}");
+
         for (key_component = l->component_list, i_keycomp = 0;
              key_component != NULL;
              key_component = key_component->next, ++i_keycomp) {
