@@ -838,7 +838,6 @@ with_seqra_extfh
 enable_debug
 enable_param_check
 enable_utf8
-with_patch_level
 with_varseq
 enable_shared
 enable_static
@@ -1517,7 +1516,6 @@ Optional Packages:
   --without-PACKAGE       do not use PACKAGE (same as --with-PACKAGE=no)
   --with-cc=<cc>          (OpenCOBOL) specify the C compiler used by cobc
   --with-seqra-extfh      (OpenCOBOL) Use external SEQ/RAN file handler
-  --with-patch-level      (OpenCOBOL) define a patch level (default 0)
   --with-varseq           (OpenCOBOL) define variable sequential format (default 0)
   --with-pic[=PKGS]       try to use only PIC/non-PIC objects [default=use
                           both]
@@ -3539,7 +3537,6 @@ fi
 
 
 
-
 # AH_TEMPLATE([DLLHIDDEN], [Has visibility attribute])
 
 
@@ -4843,26 +4840,6 @@ else
   I18N_UTF8_TRUE='#'
   I18N_UTF8_FALSE=
 fi
-
-
-PATCH_LEVEL=0
-
-# Check whether --with-patch-level was given.
-if test ${with_patch_level+y}
-then :
-  withval=$with_patch_level; case $with_patch_level in
-    yes)	as_fn_error $? "\"You must give --with-patch-level an argument.\"" "$LINENO" 5
-		;;
-    no)		as_fn_error $? "\"--without-patch-level not supported.\"" "$LINENO" 5
-		;;
-    [0-9]*)	PATCH_LEVEL=$with_patch_level
-		;;
-    *)		as_fn_error $? "\"You must use a numeric patch level\"" "$LINENO" 5
-		;;
-esac
-fi
-
-printf "%s\n" "#define PATCH_LEVEL $PATCH_LEVEL" >>confdefs.h
 
 
 WITH_VARSEQ=0

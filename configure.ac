@@ -59,7 +59,6 @@ AH_TEMPLATE([COB_PIC_FLAGS], [Compile/link option for PIC code])
 AH_TEMPLATE([COB_SHARED_OPT], [Compile/link option for shared code])
 AH_TEMPLATE([COB_STRIP_CMD], [Strip command])
 AH_TEMPLATE([USE_LIBDL], [Use system dynamic loader])
-AH_TEMPLATE([PATCH_LEVEL], [Define a patch level])
 AH_TEMPLATE([WITH_VARSEQ], [Define variable sequential file format])
 # AH_TEMPLATE([DLLHIDDEN], [Has visibility attribute])
 AH_TEMPLATE([HAVE_PSIGN_OPT], [Has -Wno-pointer-sign])
@@ -131,20 +130,6 @@ AC_ARG_ENABLE(utf8,
 	COB_M4_FLAGS=-DM4.I18N_UTF8
    fi])
 AM_CONDITIONAL(I18N_UTF8, test x$COB_M4_FLAGS = x-DM4.I18N_UTF8)
-
-PATCH_LEVEL=0
-AC_ARG_WITH(patch-level, [  --with-patch-level      (OpenCOBOL) define a patch level (default 0)],
-[case $with_patch_level in  
-    yes)	AC_MSG_ERROR(["You must give --with-patch-level an argument."])
-		;;
-    no)		AC_MSG_ERROR(["--without-patch-level not supported."])
-		;;
-    [[0-9]]*)	PATCH_LEVEL=$with_patch_level
-		;;
-    *)		AC_MSG_ERROR(["You must use a numeric patch level"])
-		;;
-esac])
-AC_DEFINE_UNQUOTED(PATCH_LEVEL, $PATCH_LEVEL)
 
 WITH_VARSEQ=0
 AC_ARG_WITH(varseq, [  --with-varseq           (OpenCOBOL) define variable sequential format (default 0)],
