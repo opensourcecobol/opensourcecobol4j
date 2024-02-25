@@ -66,36 +66,6 @@
 /* curses has color_set function */
 #undef HAVE_COLOR_SET
 
-/* Define to 1 if you have the <db1/db.h> header file. */
-#undef HAVE_DB1_DB_H
-
-/* Define to 1 if you have the <db3/db_185.h> header file. */
-#undef HAVE_DB3_DB_185_H
-
-/* Define to 1 if you have the <db4.1/db_185.h> header file. */
-#undef HAVE_DB4_1_DB_185_H
-
-/* Define to 1 if you have the <db4.2/db_185.h> header file. */
-#undef HAVE_DB4_2_DB_185_H
-
-/* Define to 1 if you have the <db4.3/db_185.h> header file. */
-#undef HAVE_DB4_3_DB_185_H
-
-/* Define to 1 if you have the <db4.4/db_185.h> header file. */
-#undef HAVE_DB4_4_DB_185_H
-
-/* Define to 1 if you have the <db4.5/db_185.h> header file. */
-#undef HAVE_DB4_5_DB_185_H
-
-/* Define to 1 if you have the <db4/db_185.h> header file. */
-#undef HAVE_DB4_DB_185_H
-
-/* Define to 1 if you have the <db_185.h> header file. */
-#undef HAVE_DB_185_H
-
-/* Define to 1 if you have the <db.h> header file. */
-#undef HAVE_DB_H
-
 /* Define if the GNU dcgettext() function is already present or preinstalled.
    */
 #undef HAVE_DCGETTEXT
