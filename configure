@@ -3531,13 +3531,13 @@ fi
 
 
 # Autoheader templates
+#AH_TEMPLATE([WITH_DB], [Compile with the Berkeley DB library])
+#AH_TEMPLATE([USE_DB41], [Use Berkeley DB library new features])
 
 
-
-
-
-
-
+#AH_TEMPLATE([WITH_CISAM], [Use CISAM as ISAM handler])
+#AH_TEMPLATE([WITH_DISAM], [Use DISAM as ISAM handler])
+#AH_TEMPLATE([WITH_VBISAM], [Use VBISAM as ISAM handler])
 # AH_TEMPLATE([WITH_LFS64], [Compile with large file system 64])
 
 
