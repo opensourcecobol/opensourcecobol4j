@@ -84,8 +84,8 @@ cobjrun_print_version (void)
 	} else {
 		snprintf (buff, buff_size, "%s %s", __DATE__, __TIME__);
 	}
-	printf ("cobjrun (%s) %s.%d\n",
-		PACKAGE_NAME, PACKAGE_VERSION, PATCH_LEVEL);
+	printf ("cobjrun (%s) %s\n",
+		PACKAGE_NAME, PACKAGE_VERSION);
 	puts ("Copyright (C) 2022-2022 TOKYO SYSTEM HOUSE CO.,LTD.");
 }
 

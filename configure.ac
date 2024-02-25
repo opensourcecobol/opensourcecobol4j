@@ -50,15 +50,8 @@ AM_INIT_AUTOMAKE([gnu no-texinfo.tex])
 AM_MAINTAINER_MODE
 
 # Autoheader templates
-AH_TEMPLATE([WITH_DB], [Compile with the Berkeley DB library])
-AH_TEMPLATE([USE_DB41], [Use Berkeley DB library new features])
 AH_TEMPLATE([WITH_INDEX_EXTFH], [Compile with an external ISAM handler])
 AH_TEMPLATE([WITH_SEQRA_EXTFH], [Compile with an external SEQ/RAN handler])
-AH_TEMPLATE([WITH_CISAM], [Use CISAM as ISAM handler])
-AH_TEMPLATE([WITH_DISAM], [Use DISAM as ISAM handler])
-AH_TEMPLATE([WITH_VBISAM], [Use VBISAM as ISAM handler])
-# AH_TEMPLATE([WITH_LFS64], [Compile with large file system 64])
-AH_TEMPLATE([COB_EXPERIMENTAL], [Enable experimemental code (Developers only!)])
 AH_TEMPLATE([COB_PARAM_CHECK], [Enable CALL parameter checking])
 AH_TEMPLATE([I18N_UTF8], [Enable UTF-8 support])
 AH_TEMPLATE([COB_EXPORT_DYN], [Compile/link option for exporting symbols])
@@ -66,7 +59,6 @@ AH_TEMPLATE([COB_PIC_FLAGS], [Compile/link option for PIC code])
 AH_TEMPLATE([COB_SHARED_OPT], [Compile/link option for shared code])
 AH_TEMPLATE([COB_STRIP_CMD], [Strip command])
 AH_TEMPLATE([USE_LIBDL], [Use system dynamic loader])
-AH_TEMPLATE([PATCH_LEVEL], [Define a patch level])
 AH_TEMPLATE([WITH_VARSEQ], [Define variable sequential file format])
 # AH_TEMPLATE([DLLHIDDEN], [Has visibility attribute])
 AH_TEMPLATE([HAVE_PSIGN_OPT], [Has -Wno-pointer-sign])
@@ -115,33 +107,12 @@ AC_ARG_WITH(seqra-extfh,
 #    fi ],
 #  [ AC_DEFINE(WITH_LFS64) ])
 
-DEFINE_DL="no"
-COB_TRY_DL="yes"
-
-AC_ARG_WITH(dl,
-  [  --with-dl               (OpenCOBOL) use system dynamic loader (default)],
-  [case $with_dl in  
-    yes)	COB_TRY_DL="yes"
-		;;
-    no)		COB_TRY_DL="no"
-		;;
-    *)		AC_MSG_ERROR(["--with/without-dl can not have a value"])
-		;;
-  esac])
-
 GEN_DEBUG_OPT="no"
 AC_ARG_ENABLE(debug,
   [  --enable-debug          (OpenCOBOL) enable -g C compiler debug option],
   [if test "$enable_debug" = "yes"
    then
 	GEN_DEBUG_OPT="yes"
-   fi])
-
-AC_ARG_ENABLE(experimental,
-  [  --enable-experimental   (OpenCOBOL) enable experimental code (Developers only!)],
-  [if test "$enable_experimental" = "yes"
-   then
-	AC_DEFINE(COB_EXPERIMENTAL)
    fi])
 
 AC_ARG_ENABLE(param-check,
@@ -159,20 +130,6 @@ AC_ARG_ENABLE(utf8,
 	COB_M4_FLAGS=-DM4.I18N_UTF8
    fi])
 AM_CONDITIONAL(I18N_UTF8, test x$COB_M4_FLAGS = x-DM4.I18N_UTF8)
-
-PATCH_LEVEL=0
-AC_ARG_WITH(patch-level, [  --with-patch-level      (OpenCOBOL) define a patch level (default 0)],
-[case $with_patch_level in  
-    yes)	AC_MSG_ERROR(["You must give --with-patch-level an argument."])
-		;;
-    no)		AC_MSG_ERROR(["--without-patch-level not supported."])
-		;;
-    [[0-9]]*)	PATCH_LEVEL=$with_patch_level
-		;;
-    *)		AC_MSG_ERROR(["You must use a numeric patch level"])
-		;;
-esac])
-AC_DEFINE_UNQUOTED(PATCH_LEVEL, $PATCH_LEVEL)
 
 WITH_VARSEQ=0
 AC_ARG_WITH(varseq, [  --with-varseq           (OpenCOBOL) define variable sequential format (default 0)],
@@ -265,172 +222,6 @@ if test "x$LTLIBINTL" != "x"
 then
   COBC_LIBS="$COBC_LIBS $LTLIBINTL"
   LIBCOB_LIBS="$LIBCOB_LIBS $LTLIBINTL"
-fi
-
-# Checks for db.
-USE_DB="no"
-HAS_DB41="no"
-if test "$LIBDB" = "1"
-then
-       AC_CHECK_HEADERS([db1/db.h],
-         [AC_DEFINE(HAVE_DB1_DB_H)],
-         [AC_MSG_ERROR([db1/db.h is required])])
-       AC_CHECK_LIB([db1], [dbopen],
-         [USE_DB="yes" LIBCOB_LIBS="$LIBCOB_LIBS -ldb1"],
-         [AC_MSG_ERROR(libdb1 is required)])
-elif test "$LIBDB" = "3"
-then
-	AC_RUN_IFELSE([AC_LANG_PROGRAM([[#include <stdio.h>
-		#include <db.h>]], [[
-		printf("checking for Berkeley DB db.h version >= 4.1 ... ");
-		#if (defined(DB_VERSION_MAJOR) && defined(DB_VERSION_MINOR))
-		#if (DB_VERSION_MAJOR > 4) || ((DB_VERSION_MAJOR == 4) && (DB_VERSION_MINOR > 0))
-		printf("yes (%d.%d)\n", DB_VERSION_MAJOR, DB_VERSION_MINOR);
-		return 0;
-		#else
-		printf("no (%d.%d)\n", DB_VERSION_MAJOR, DB_VERSION_MINOR);
-		return 1;
-		#endif
-		#else
-		printf("no (version numbers not found)\n");
-		return 1;
-		#endif]])],
-		[HAS_DB41="yes"],
-		[AC_MSG_ERROR([Berkeley DB db.h is missing or has incompatible version])],
-		[])
-	if test "$HAS_DB41" = "yes"
-	then
-		AC_DEFINE(USE_DB41)
-		MYOLDLIBS="$LIBS"
-		export MYOCLIBS
-		for MYOCLIBS in db db4 db-4.5 db-4.4 db-4.3 db-4.2 db-4.1
-		do
-			LIBS="$MYOLDLIBS -l$MYOCLIBS"
-			AC_RUN_IFELSE([AC_LANG_PROGRAM([[#include <stdio.h>
-			#include <stdlib.h>
-			#include <db.h>]], [[
-			int major, minor, patch;
-			printf("checking for BDB 4.1 compatibility in %s ... ", getenv("MYOCLIBS"));
-			db_version (&major, &minor, &patch);
-			if (major == DB_VERSION_MAJOR && minor == DB_VERSION_MINOR) {
-				printf("yes\n");
-				return 0;
-			}
-			printf("no\n");
-			return 1;]])],
-			[USE_DB="yes"],
-			[],
-			[])
-			if test "$USE_DB" != "no"
-			then
-				LIBCOB_LIBS="$LIBCOB_LIBS -l$MYOCLIBS"
-				break
-			fi
-		done
-		LIBS="$MYOLDLIBS"
-		if test "$USE_DB" != "yes"
-		then
-			AC_MSG_ERROR(Include file db.h implies version >=4.1 but no library found)
-		fi
-	else
-		AC_CHECK_HEADERS([db.h db_185.h db3/db_185.h db4/db_185.h db4.1/db_185.h db4.2/db_185.h db4.3/db_185.h db4.4/db_185.h db4.5/db_185.h])
-		AC_CHECK_LIB([db-4.5], [__db_open],
-		[USE_DB="yes" LIBCOB_LIBS="$LIBCOB_LIBS -ldb-4.5"],
-		  [AC_CHECK_LIB([db-4.5], [dbopen],
-		    [USE_DB="yes" LIBCOB_LIBS="$LIBCOB_LIBS -ldb-4.5"], [])])
-		if test "$USE_DB" != "yes"
-		then
-		AC_CHECK_LIB([db-4.4], [__db_open],
-		[USE_DB="yes" LIBCOB_LIBS="$LIBCOB_LIBS -ldb-4.4"],
-		  [AC_CHECK_LIB([db-4.4], [dbopen],
-		    [USE_DB="yes" LIBCOB_LIBS="$LIBCOB_LIBS -ldb-4.4"], [])])
-		fi
-		if test "$USE_DB" != "yes"
-		then
-		AC_CHECK_LIB([db-4.3], [__db_open],
-		[USE_DB="yes" LIBCOB_LIBS="$LIBCOB_LIBS -ldb-4.3"],
-		  [AC_CHECK_LIB([db-4.3], [dbopen],
-		    [USE_DB="yes" LIBCOB_LIBS="$LIBCOB_LIBS -ldb-4.3"], [])])
-		fi
-		if test "$USE_DB" != "yes"
-		then
-		AC_CHECK_LIB([db-4.2], [__db_open],
-		[USE_DB="yes" LIBCOB_LIBS="$LIBCOB_LIBS -ldb-4.2"],
-		  [AC_CHECK_LIB([db-4.2], [dbopen],
-		    [USE_DB="yes" LIBCOB_LIBS="$LIBCOB_LIBS -ldb-4.2"], [])])
-		fi
-		if test "$USE_DB" != "yes"
-		then
-		AC_CHECK_LIB([db-4.1], [__db_open],
-		[USE_DB="yes" LIBCOB_LIBS="$LIBCOB_LIBS -ldb-4.1"],
-		  [AC_CHECK_LIB([db-4.1], [dbopen],
-		    [USE_DB="yes" LIBCOB_LIBS="$LIBCOB_LIBS -ldb-4.1"], [])])
-		fi
-		if test "$USE_DB" != "yes"
-		then
-#			if test "$HAS_DB41" != "no"
-#			then
-#				AC_MSG_ERROR(Include file db.h implies version >=4.1 but no library found)
-#			fi
-		AC_CHECK_LIB([db-4], [__db_open],
-		[USE_DB="yes" LIBCOB_LIBS="$LIBCOB_LIBS -ldb-4"],
-		  [AC_CHECK_LIB([db-4], [dbopen],
-		    [USE_DB="yes" LIBCOB_LIBS="$LIBCOB_LIBS -ldb-4"], [])])
-		fi
-		
-		if test "$USE_DB" != "yes"
-		then
-		AC_CHECK_LIB([db4], [__db_open],
-		[USE_DB="yes" LIBCOB_LIBS="$LIBCOB_LIBS -ldb4"],
-		  [AC_CHECK_LIB([db4], [dbopen],
-		    [USE_DB="yes" LIBCOB_LIBS="$LIBCOB_LIBS -ldb4"], [])])
-		fi
-		
-		if test "$USE_DB" != "yes"
-		then
-		AC_CHECK_LIB([db], [__db_open],
-		[USE_DB="yes" LIBCOB_LIBS="$LIBCOB_LIBS -ldb"],
-		  [AC_CHECK_LIB([db], [dbopen],
-		    [USE_DB="yes" LIBCOB_LIBS="$LIBCOB_LIBS -ldb"],
-			[AC_MSG_ERROR(libdb is required)])])
-		fi
-	fi
-fi
-
-# Checks for dl/ltdl.
-AC_RUN_IFELSE([AC_LANG_PROGRAM([[]], [[
-  #ifdef _WIN32
-   return 0;
-  #else
-   return 1;
-  #endif]])],
-  [DEFINE_DL="yes"],
-  [],
-  [])
-
-if test "$DEFINE_DL" = "no" -a "$COB_TRY_DL" = "yes"
-then
-  if test "x$ac_cv_header_dlfcn_h" = "xyes"
-  then
-    AC_CHECK_LIB([c], [dlopen], [DEFINE_DL="yes"], [])
-    if test "$DEFINE_DL" = "no"
-    then
-      AC_CHECK_LIB([dl], [dlopen], [DEFINE_DL="yes"], [])
-      if test "$DEFINE_DL" = "yes"
-      then
-	AC_DEFINE(USE_LIBDL)
-	LIBCOB_LIBS="$LIBCOB_LIBS -ldl"
-      fi
-    else
-	AC_DEFINE(USE_LIBDL)
-    fi
-  fi
-fi
-if test "$DEFINE_DL" = "no"
-then
-  AC_CHECK_HEADERS([ltdl.h], , AC_MSG_ERROR(ltdl.h is required))
-  AC_CHECK_LIB([ltdl], [lt_dlopen], , AC_MSG_ERROR(libltdl is required))
-  LIBCOB_LIBS="$LIBCOB_LIBS -lltdl"
 fi
 
 # Checks for workable strftime
@@ -696,12 +487,6 @@ echo "  COB_EXPORT_DYN       ${COB_EXPORT_DYN}"
 if test "x$striplib" != "x"
 then
   echo "  COB_STRIP_CMD        ${striplib}"
-fi
-if test "${DEFINE_DL}" = "yes" 
-then
-  echo "  Dynamic loading      System"
-else
-  echo "  Dynamic loading      Libtool"
 fi
 echo ""
 echo "  Use gettext for international messages:      ${USE_NLS}"
