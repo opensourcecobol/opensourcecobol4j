@@ -836,7 +836,6 @@ enable_dependency_tracking
 with_cc
 with_seqra_extfh
 enable_debug
-enable_experimental
 enable_param_check
 enable_utf8
 with_patch_level
@@ -1503,7 +1502,6 @@ Optional Features:
   --disable-dependency-tracking
                           speeds up one-time build
   --enable-debug          (OpenCOBOL) enable -g C compiler debug option
-  --enable-experimental   (OpenCOBOL) enable experimental code (Developers only!)
   --enable-param-check    (OpenCOBOL) enable CALL parameter checking
   --enable-utf8           (OpenCOBOL) enable UTF-8 support.
   --enable-shared[=PKGS]  build shared libraries [default=yes]
@@ -3531,14 +3529,7 @@ fi
 
 
 # Autoheader templates
-#AH_TEMPLATE([WITH_DB], [Compile with the Berkeley DB library])
-#AH_TEMPLATE([USE_DB41], [Use Berkeley DB library new features])
 
-
-#AH_TEMPLATE([WITH_CISAM], [Use CISAM as ISAM handler])
-#AH_TEMPLATE([WITH_DISAM], [Use DISAM as ISAM handler])
-#AH_TEMPLATE([WITH_VBISAM], [Use VBISAM as ISAM handler])
-# AH_TEMPLATE([WITH_LFS64], [Compile with large file system 64])
 
 
 
@@ -4819,17 +4810,6 @@ then :
   enableval=$enable_debug; if test "$enable_debug" = "yes"
    then
 	GEN_DEBUG_OPT="yes"
-   fi
-fi
-
-
-# Check whether --enable-experimental was given.
-if test ${enable_experimental+y}
-then :
-  enableval=$enable_experimental; if test "$enable_experimental" = "yes"
-   then
-	printf "%s\n" "#define COB_EXPERIMENTAL 1" >>confdefs.h
-
    fi
 fi
 

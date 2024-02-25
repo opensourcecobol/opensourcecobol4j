@@ -50,15 +50,8 @@ AM_INIT_AUTOMAKE([gnu no-texinfo.tex])
 AM_MAINTAINER_MODE
 
 # Autoheader templates
-#AH_TEMPLATE([WITH_DB], [Compile with the Berkeley DB library])
-#AH_TEMPLATE([USE_DB41], [Use Berkeley DB library new features])
 AH_TEMPLATE([WITH_INDEX_EXTFH], [Compile with an external ISAM handler])
 AH_TEMPLATE([WITH_SEQRA_EXTFH], [Compile with an external SEQ/RAN handler])
-#AH_TEMPLATE([WITH_CISAM], [Use CISAM as ISAM handler])
-#AH_TEMPLATE([WITH_DISAM], [Use DISAM as ISAM handler])
-#AH_TEMPLATE([WITH_VBISAM], [Use VBISAM as ISAM handler])
-# AH_TEMPLATE([WITH_LFS64], [Compile with large file system 64])
-AH_TEMPLATE([COB_EXPERIMENTAL], [Enable experimemental code (Developers only!)])
 AH_TEMPLATE([COB_PARAM_CHECK], [Enable CALL parameter checking])
 AH_TEMPLATE([I18N_UTF8], [Enable UTF-8 support])
 AH_TEMPLATE([COB_EXPORT_DYN], [Compile/link option for exporting symbols])
@@ -121,13 +114,6 @@ AC_ARG_ENABLE(debug,
   [if test "$enable_debug" = "yes"
    then
 	GEN_DEBUG_OPT="yes"
-   fi])
-
-AC_ARG_ENABLE(experimental,
-  [  --enable-experimental   (OpenCOBOL) enable experimental code (Developers only!)],
-  [if test "$enable_experimental" = "yes"
-   then
-	AC_DEFINE(COB_EXPERIMENTAL)
    fi])
 
 AC_ARG_ENABLE(param-check,

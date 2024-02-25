@@ -6,9 +6,6 @@
 /* Executable extension */
 #undef COB_EXEEXT
 
-/* Enable experimemental code (Developers only!) */
-#undef COB_EXPERIMENTAL
-
 /* Compile/link option for exporting symbols */
 #undef COB_EXPORT_DYN
 
