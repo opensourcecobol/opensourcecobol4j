@@ -115,20 +115,6 @@ AC_ARG_WITH(seqra-extfh,
 #    fi ],
 #  [ AC_DEFINE(WITH_LFS64) ])
 
-DEFINE_DL="no"
-COB_TRY_DL="yes"
-
-AC_ARG_WITH(dl,
-  [  --with-dl               (OpenCOBOL) use system dynamic loader (default)],
-  [case $with_dl in  
-    yes)	COB_TRY_DL="yes"
-		;;
-    no)		COB_TRY_DL="no"
-		;;
-    *)		AC_MSG_ERROR(["--with/without-dl can not have a value"])
-		;;
-  esac])
-
 GEN_DEBUG_OPT="no"
 AC_ARG_ENABLE(debug,
   [  --enable-debug          (OpenCOBOL) enable -g C compiler debug option],
@@ -265,42 +251,6 @@ if test "x$LTLIBINTL" != "x"
 then
   COBC_LIBS="$COBC_LIBS $LTLIBINTL"
   LIBCOB_LIBS="$LIBCOB_LIBS $LTLIBINTL"
-fi
-
-# Checks for dl/ltdl.
-AC_RUN_IFELSE([AC_LANG_PROGRAM([[]], [[
-  #ifdef _WIN32
-   return 0;
-  #else
-   return 1;
-  #endif]])],
-  [DEFINE_DL="yes"],
-  [],
-  [])
-
-if test "$DEFINE_DL" = "no" -a "$COB_TRY_DL" = "yes"
-then
-  if test "x$ac_cv_header_dlfcn_h" = "xyes"
-  then
-    AC_CHECK_LIB([c], [dlopen], [DEFINE_DL="yes"], [])
-    if test "$DEFINE_DL" = "no"
-    then
-      AC_CHECK_LIB([dl], [dlopen], [DEFINE_DL="yes"], [])
-      if test "$DEFINE_DL" = "yes"
-      then
-	AC_DEFINE(USE_LIBDL)
-	LIBCOB_LIBS="$LIBCOB_LIBS -ldl"
-      fi
-    else
-	AC_DEFINE(USE_LIBDL)
-    fi
-  fi
-fi
-if test "$DEFINE_DL" = "no"
-then
-  AC_CHECK_HEADERS([ltdl.h], , AC_MSG_ERROR(ltdl.h is required))
-  AC_CHECK_LIB([ltdl], [lt_dlopen], , AC_MSG_ERROR(libltdl is required))
-  LIBCOB_LIBS="$LIBCOB_LIBS -lltdl"
 fi
 
 # Checks for workable strftime
@@ -566,12 +516,6 @@ echo "  COB_EXPORT_DYN       ${COB_EXPORT_DYN}"
 if test "x$striplib" != "x"
 then
   echo "  COB_STRIP_CMD        ${striplib}"
-fi
-if test "${DEFINE_DL}" = "yes" 
-then
-  echo "  Dynamic loading      System"
-else
-  echo "  Dynamic loading      Libtool"
 fi
 echo ""
 echo "  Use gettext for international messages:      ${USE_NLS}"

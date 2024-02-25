@@ -100,9 +100,6 @@
 /* Define to 1 if you have the <kpathsea/getopt.h> header file. */
 #undef HAVE_KPATHSEA_GETOPT_H
 
-/* Define to 1 if you have the `ltdl' library (-lltdl). */
-#undef HAVE_LIBLTDL
-
 /* Define to 1 if you have the `posix4' library (-lposix4). */
 #undef HAVE_LIBPOSIX4
 
@@ -111,9 +108,6 @@
 
 /* Define to 1 if you have the <locale.h> header file. */
 #undef HAVE_LOCALE_H
-
-/* Define to 1 if you have the <ltdl.h> header file. */
-#undef HAVE_LTDL_H
 
 /* Define to 1 if you have the <malloc.h> header file. */
 #undef HAVE_MALLOC_H
