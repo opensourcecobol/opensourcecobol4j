@@ -4,6 +4,23 @@ All notable changes to this project will be documented in this file.
 
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 
+## [1.0.20] - 2024-02-28
+### Added
+* Add command line options
+  * `-conf`: specify the configuration file (#331)
+  * `-std`: specify the dialect (#331)
+  * `-WConstant`: Warn inconsistent constant (#335)
+  * `-Warchaic`: Warn if archaic features are used (#336)
+  * `-Wobsolete`: Warn if obsolete features are used
+* Add intrinsic functions
+  * `LOCALE-DATE` (#338)
+  * `LOCALE-TIME` (#340)
+  * `LOCALE-TIME-FROM-SECONDS` (#341)
+### Fixed
+* Fix runtime checkings (#326, #328)
+* Detect invalid indexed record keys (#346)
+* Accept field names which contain Japanese characters (#324)
+
 ## [1.0.19] - 2024-01-31
 ### Added
 * A new CLI tool for indexed files (#299)

@@ -1,8 +1,28 @@
 NEWS - user visible changes				-*- outline -*-
 
-* opensource COBOL 4J 1.0.19
+-----------------------------------------------------------------------
+
+* opensource COBOL 4J 1.0.20
+
+** New Features
+  (1) Add command line options
+    * -conf: specify the configuration file
+    * -std: specify the dialect
+    * -WConstant: Warn inconsistent constant
+    * -Warchaic: Warn if archaic features are used
+    * -Wobsolete: Warn if obsolete features are used
+  (2) Add intrinsic functions
+    * LOCALE-DATE
+    * LOCALE-TIME
+    * LOCALE-TIME-FROM-SECONDS
+** Bug Fixes
+  (1) Fix runtime checkings
+  (2) Detect invalid indexed record keys
+  (3) Accept field names which contain Japanese characters
 
 -----------------------------------------------------------------------
+
+* opensource COBOL 4J 1.0.19
 
 ** New Features
   (1) A new CLI tool for indexed files
