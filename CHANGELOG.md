@@ -11,7 +11,7 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
   * `-std`: specify the dialect (#331)
   * `-WConstant`: Warn inconsistent constant (#335)
   * `-Warchaic`: Warn if archaic features are used (#336)
-  * `-Wobsolete`: Warn if obsolete features are used
+  * `-Wobsolete`: Warn if obsolete features are used (#336)
 * Add intrinsic functions
   * `LOCALE-DATE` (#338)
   * `LOCALE-TIME` (#340)
