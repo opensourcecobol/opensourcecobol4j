@@ -785,14 +785,7 @@ static void cobc_print_usage(void) {
          "class files (an experimental feature)"));
   puts(_("  -std=<dialect>                    Warnings/features for a specific "
          "dialect :"));
-  puts(_("                                      cobol2002   Cobol 2002"));
   puts(_("                                      cobol85     Cobol 85"));
-  puts(_("                                      ibm         IBM Compatible"));
-  puts(_("                                      mvs         MVS Compatible"));
-  puts(
-      _("                                      bs2000      BS2000 Compatible"));
-  puts(_("                                      mf          Micro Focus "
-         "Compatible"));
   puts(_(
       "                                      default     When not specified"));
   puts(_("                                    See config/default.conf and "

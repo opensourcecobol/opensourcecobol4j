@@ -8,7 +8,7 @@ NEWS - user visible changes				-*- outline -*-
   (1) Add command line options
     * -conf: specify the configuration file
     * -std: specify the dialect
-    * -WConstant: Warn inconsistent constant
+    * -Wconstant: Warn inconsistent constant
     * -Warchaic: Warn if archaic features are used
     * -Wobsolete: Warn if obsolete features are used
   (2) Add intrinsic functions

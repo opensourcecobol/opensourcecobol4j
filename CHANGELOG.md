@@ -9,7 +9,7 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 * Add command line options
   * `-conf`: specify the configuration file (#331)
   * `-std`: specify the dialect (#331)
-  * `-WConstant`: Warn inconsistent constant (#335)
+  * `-Wconstant`: Warn inconsistent constant (#335)
   * `-Warchaic`: Warn if archaic features are used (#336)
   * `-Wobsolete`: Warn if obsolete features are used (#336)
 * Add intrinsic functions
