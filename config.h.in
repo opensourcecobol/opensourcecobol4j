@@ -6,9 +6,6 @@
 /* Executable extension */
 #undef COB_EXEEXT
 
-/* Enable experimemental code (Developers only!) */
-#undef COB_EXPERIMENTAL
-
 /* Compile/link option for exporting symbols */
 #undef COB_EXPORT_DYN
 
@@ -66,36 +63,6 @@
 /* curses has color_set function */
 #undef HAVE_COLOR_SET
 
-/* Define to 1 if you have the <db1/db.h> header file. */
-#undef HAVE_DB1_DB_H
-
-/* Define to 1 if you have the <db3/db_185.h> header file. */
-#undef HAVE_DB3_DB_185_H
-
-/* Define to 1 if you have the <db4.1/db_185.h> header file. */
-#undef HAVE_DB4_1_DB_185_H
-
-/* Define to 1 if you have the <db4.2/db_185.h> header file. */
-#undef HAVE_DB4_2_DB_185_H
-
-/* Define to 1 if you have the <db4.3/db_185.h> header file. */
-#undef HAVE_DB4_3_DB_185_H
-
-/* Define to 1 if you have the <db4.4/db_185.h> header file. */
-#undef HAVE_DB4_4_DB_185_H
-
-/* Define to 1 if you have the <db4.5/db_185.h> header file. */
-#undef HAVE_DB4_5_DB_185_H
-
-/* Define to 1 if you have the <db4/db_185.h> header file. */
-#undef HAVE_DB4_DB_185_H
-
-/* Define to 1 if you have the <db_185.h> header file. */
-#undef HAVE_DB_185_H
-
-/* Define to 1 if you have the <db.h> header file. */
-#undef HAVE_DB_H
-
 /* Define if the GNU dcgettext() function is already present or preinstalled.
    */
 #undef HAVE_DCGETTEXT
@@ -130,9 +97,6 @@
 /* Define to 1 if you have the <kpathsea/getopt.h> header file. */
 #undef HAVE_KPATHSEA_GETOPT_H
 
-/* Define to 1 if you have the `ltdl' library (-lltdl). */
-#undef HAVE_LIBLTDL
-
 /* Define to 1 if you have the `posix4' library (-lposix4). */
 #undef HAVE_LIBPOSIX4
 
@@ -141,9 +105,6 @@
 
 /* Define to 1 if you have the <locale.h> header file. */
 #undef HAVE_LOCALE_H
-
-/* Define to 1 if you have the <ltdl.h> header file. */
-#undef HAVE_LTDL_H
 
 /* Define to 1 if you have the <malloc.h> header file. */
 #undef HAVE_MALLOC_H
@@ -253,9 +214,6 @@
 /* Define to the version of this package. */
 #undef PACKAGE_VERSION
 
-/* Define a patch level */
-#undef PATCH_LEVEL
-
 /* If using the C implementation of alloca, define if you know the
    direction of stack growth for your system; otherwise it will be
    automatically deduced at runtime.
@@ -272,23 +230,11 @@
 /* Define to 1 if your <sys/time.h> declares `struct tm'. */
 #undef TM_IN_SYS_TIME
 
-/* Use Berkeley DB library new features */
-#undef USE_DB41
-
 /* Use system dynamic loader */
 #undef USE_LIBDL
 
 /* Version number of package */
 #undef VERSION
-
-/* Use CISAM as ISAM handler */
-#undef WITH_CISAM
-
-/* Compile with the Berkeley DB library */
-#undef WITH_DB
-
-/* Use DISAM as ISAM handler */
-#undef WITH_DISAM
 
 /* Compile with an external ISAM handler */
 #undef WITH_INDEX_EXTFH
@@ -298,9 +244,6 @@
 
 /* Define variable sequential file format */
 #undef WITH_VARSEQ
-
-/* Use VBISAM as ISAM handler */
-#undef WITH_VBISAM
 
 /* Define WORDS_BIGENDIAN to 1 if your processor stores words with the most
    significant byte first (like Motorola and SPARC, unlike Intel). */

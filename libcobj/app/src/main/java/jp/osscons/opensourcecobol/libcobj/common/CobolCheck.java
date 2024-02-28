@@ -18,6 +18,7 @@
  */
 package jp.osscons.opensourcecobol.libcobj.common;
 
+import jp.osscons.opensourcecobol.libcobj.data.AbstractCobolField;
 import jp.osscons.opensourcecobol.libcobj.data.CobolDataStorage;
 import jp.osscons.opensourcecobol.libcobj.exceptions.CobolExceptionId;
 import jp.osscons.opensourcecobol.libcobj.exceptions.CobolRuntimeException;
@@ -29,7 +30,9 @@ public class CobolCheck {
     if (i < min || max < i) {
       CobolRuntimeException.setException(CobolExceptionId.COB_EC_BOUND_SUBSCRIPT);
       CobolUtil.runtimeError(
-          String.format("Subscript of '%s' out of bounds: %d", new String(name), i));
+          String.format(
+              "Subscript of '%s' out of bounds: %d",
+              new String(name, AbstractCobolField.charSetSJIS), i));
       CobolStopRunException.stopRunAndThrow(1);
     }
   }
@@ -62,6 +65,6 @@ public class CobolCheck {
   }
 
   public static void checkOdo(int i, int min, int max, byte[] name) throws CobolStopRunException {
-    CobolCheck.checkOdo(i, min, max, new String(name));
+    CobolCheck.checkOdo(i, min, max, new String(name, AbstractCobolField.charSetSJIS));
   }
 }

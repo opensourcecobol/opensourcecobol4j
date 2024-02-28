@@ -1408,6 +1408,7 @@ extern cb_tree cb_build_ppointer(cb_tree x);
 extern void cb_validate_program_environment(struct cb_program *prog);
 extern void cb_validate_program_data(struct cb_program *prog);
 extern void cb_validate_program_body(struct cb_program *prog);
+extern void cb_validate_indexed_file_key(const struct cb_file *f);
 
 extern cb_tree cb_build_expr(cb_tree list);
 extern cb_tree cb_build_cond(cb_tree x);

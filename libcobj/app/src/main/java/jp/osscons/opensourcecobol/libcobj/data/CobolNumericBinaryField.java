@@ -131,7 +131,7 @@ public class CobolNumericBinaryField extends AbstractCobolField {
   /**
    * 引数で与えらえられたデータからthisへの代入を行う
    *
-   * @param field 代入元のデータ(AbstractCobolField型)
+   * @param src 代入元のデータ(AbstractCobolField型)
    */
   @Override
   public void moveFrom(AbstractCobolField src) {
@@ -230,15 +230,15 @@ public class CobolNumericBinaryField extends AbstractCobolField {
   /**
    * CobolNumericFieldからからthisへの代入
    *
-   * @param field 代入元のデータ(CobolDataStorage型)
+   * @param dataStorage 代入元のデータ(CobolDataStorage型)
    */
   @Override
-  public void moveFrom(CobolDataStorage dataStrage) {}
+  public void moveFrom(CobolDataStorage dataStorage) {}
 
   /**
    * CobolNumericFieldからからthisへの代入
    *
-   * @param field 代入元のデータ(byte[]型)
+   * @param bytes 代入元のデータ(byte[]型)
    */
   @Override
   public void moveFrom(byte[] bytes) {}
@@ -246,7 +246,7 @@ public class CobolNumericBinaryField extends AbstractCobolField {
   /**
    * CobolNumericFieldからからthisへの代入
    *
-   * @param field 代入元のデータ(String型)
+   * @param string 代入元のデータ(String型)
    */
   @Override
   public void moveFrom(String string) {}
@@ -254,7 +254,7 @@ public class CobolNumericBinaryField extends AbstractCobolField {
   /**
    * CobolNumericFieldからからthisへの代入
    *
-   * @param field 代入元のデータ(int型)
+   * @param number 代入元のデータ(int型)
    */
   @Override
   public void moveFrom(int number) {
@@ -264,7 +264,7 @@ public class CobolNumericBinaryField extends AbstractCobolField {
   /**
    * CobolNumericFieldからからthisへの代入
    *
-   * @param field 代入元のデータ(double型)
+   * @param number 代入元のデータ(double型)
    */
   @Override
   public void moveFrom(double number) {}
@@ -272,7 +272,7 @@ public class CobolNumericBinaryField extends AbstractCobolField {
   /**
    * CobolNumericFieldからからthisへの代入
    *
-   * @param field 代入元のデータ(BigDecimal型)
+   * @param number 代入元のデータ(BigDecimal型)
    */
   @Override
   public void moveFrom(BigDecimal number) {}
@@ -298,11 +298,7 @@ public class CobolNumericBinaryField extends AbstractCobolField {
     return field;
   }
 
-  /**
-   * libcob/numeric.cのcob_decimal_set_binaryの実装
-   *
-   * @param f
-   */
+  /** libcob/numeric.cのcob_decimal_set_binaryの実装 */
   @Override
   public CobolDecimal getDecimal() {
     CobolDecimal decimal = new CobolDecimal();

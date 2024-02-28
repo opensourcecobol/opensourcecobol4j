@@ -828,7 +828,12 @@ program_definition:
   data_division		{ cb_validate_program_data (current_program); }
   procedure_division
   nested_prog
-  end_program
+  end_program {
+	cb_tree file = current_program->file_list;
+	for(; file; file = CB_CHAIN(file)) {
+		cb_validate_indexed_file_key(CB_FILE(CB_VALUE(file)));
+	}
+  }
 ;
 
 program_mandatory:
@@ -837,7 +842,12 @@ program_mandatory:
   data_division		{ cb_validate_program_data (current_program); }
   procedure_division
   nested_prog
-  end_mandatory
+  end_mandatory {
+	cb_tree file = current_program->file_list;
+	for(; file; file = CB_CHAIN(file)) {
+		cb_validate_indexed_file_key(CB_FILE(CB_VALUE(file)));
+	}
+  }
 ;
 
 function_definition:
@@ -947,6 +957,9 @@ identification_division:
 		stack_progid[depth] = (char *)(CB_LITERAL ($3)->data);
 	} else {
 		stack_progid[depth] = (char *)(CB_NAME ($3));
+	}
+	if(strcmp("MAIN", stack_progid[depth]) == 0) {
+		cb_error (_("PROGRAM-ID should not be MAIN"));
 	}
 	if (prog_end) {
 		if (!current_program->flag_validated) {
@@ -1814,7 +1827,6 @@ alternative_record_key_clause:
   }
 | ALTERNATE RECORD _key _is reference key_is_eq split_key_list flag_duplicates
   {
-#if	defined(WITH_CISAM) || defined(WITH_DISAM) || defined(WITH_VBISAM) || defined(WITH_INDEX_EXTFH)
 	struct cb_alt_key *p;
 	struct cb_alt_key *l;
 	cb_tree composite_key;
@@ -1852,9 +1864,6 @@ alternative_record_key_clause:
 			l->next = p;
 		}
 	}
-#else
-	PENDING ("SPLIT KEYS");
-#endif
   }
 ;
 
@@ -2025,7 +2034,6 @@ record_key_clause:
 | RECORD _key _is reference key_is_eq split_key_list
   {
 	/* SPLIT KEY use */
-#if	defined(WITH_CISAM) || defined(WITH_DISAM) || defined(WITH_VBISAM) || defined(WITH_INDEX_EXTFH)
 
 	cb_tree composite_key;	
 	struct cb_key_component *comp;
@@ -2050,9 +2058,6 @@ record_key_clause:
 		current_file->key = cb_build_field_reference ((struct cb_field *)composite_key, NULL);
 		current_file->component_list = key_component_list;
 	}
-#else
-	PENDING ("SPLIT KEYS");
-#endif
   }
 ;
 
@@ -5591,15 +5596,7 @@ read_key:
   /* empty */			{ $$ = NULL; }
 | KEY _is identifier_list
   {
-#if	defined(WITH_CISAM) || defined(WITH_DISAM) || defined(WITH_VBISAM) || defined(WITH_INDEX_EXTFH)
 	$$ = $3;
-#else
-	if (CB_LIST($3)->chain) {
-		PENDING ("SPLIT KEYS");
-	} else {
-		$$ = $3;
-	}
-#endif
   }
 ;
 
@@ -5997,15 +5994,7 @@ start_key:
 | KEY _is start_op identifier_list
   {
 	$0 = $3;
-#if	defined(WITH_CISAM) || defined(WITH_DISAM) || defined(WITH_VBISAM) || defined(WITH_INDEX_EXTFH)
 	$$ = $4;
-#else
-	if (CB_LIST($4)->chain) {
-		PENDING ("SPLIT KEYS");
-	} else {
-		$$ = $4;
- 	}
-#endif
   }
 ;
 

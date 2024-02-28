@@ -150,7 +150,9 @@ command_line_options_DEPENDENCIES = \
 	command-line-options.src/B.at \
 	command-line-options.src/list-reserved.at \
 	command-line-options.src/assign_external.at \
+	command-line-options.src/Wobsolete-Warchaic.at \
 	command-line-options.src/Wredefinition.at \
+	command-line-options.src/Wconstant.at \
 	command-line-options.src/Wparentheses.at \
 	command-line-options.src/Wcolumn-overflow.at \
 	command-line-options.src/Wterminator.at \
@@ -167,7 +169,9 @@ command_line_options_DEPENDENCIES = \
 	command-line-options.src/ffunctions-all.at \
 	command-line-options.src/fmfcomment.at \
 	command-line-options.src/debug.at \
-	command-line-options.src/jar.at
+	command-line-options.src/jar.at \
+	command-line-options.src/std.at \
+	command-line-options.src/conf.at
 
 cobj_idx_DEPENDENCIES = \
 	cobj-idx.at \
@@ -202,6 +206,7 @@ misc_DEPENDENCIES = \
 	misc.src/fd-external.at \
 	misc.src/compile-multiple-files.at \
 	misc.src/compare-large-number.at \
+	misc.src/validate-indexed-file-keys.at \
 	misc.src/copy-comments.at
 
 EXTRA_DIST = $(srcdir)/package.m4 \

@@ -23,8 +23,17 @@
 
 /* CB_WARNDEF (var, name, wall, doc) */
 
+CB_WARNDEF (cb_warn_obsolete, "obsolete", 1,
+	    N_("Warn if obsolete features are used"))
+
+CB_WARNDEF (cb_warn_archaic, "archaic", 1,
+	    N_("Warn if archaic features are used"))
+
 CB_WARNDEF (cb_warn_redefinition, "redefinition", 1,
 	    N_("Warn incompatible redefinition of data items"))
+
+CB_WARNDEF (cb_warn_constant, "constant", 1,
+	    N_("Warn inconsistent constant"))
 
 CB_WARNDEF (cb_warn_parentheses, "parentheses", 1,
 	    N_("Warn lack of parentheses around AND within OR"))

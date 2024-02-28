@@ -66,7 +66,7 @@ public class CobolGoBackException extends Exception {
   /**
    * CobolGoBackExceptionを例外として投げる
    *
-   * @param returnCode 返り値を格納したCobolDataStorageのインスタンス
+   * @param storage
    * @throws CobolGoBackException
    */
   public static void throwException(CobolDataStorage storage) throws CobolGoBackException {

@@ -108,12 +108,12 @@ public class CobolUtil {
 
   public static void cobCheckRefModNational(int offset, long length, int size, byte[] name)
       throws CobolStopRunException {
-    CobolUtil.cobCheckRefMod(offset, length, size, name);
+    CobolUtil.cobCheckRefMod((offset + 1) / 2, length / 2, size / 2, name);
   }
 
   public static void cobCheckRefModNational(int offset, long length, int size, String name)
       throws CobolStopRunException {
-    CobolUtil.cobCheckRefMod(offset, length, size, name);
+    CobolUtil.cobCheckRefMod((offset + 1) / 2, length / 2, size / 2, name);
   }
 
   public static void cobCheckRefMod(
@@ -296,7 +296,9 @@ public class CobolUtil {
     if (sourceFile != null) {
       System.err.print(String.format("%s:%d: ", sourceFile, sourceLine));
     }
-    System.err.println("libcobj: " + s);
+    byte[] messageBytes = ("libcobj: " + s).getBytes(AbstractCobolField.charSetSJIS);
+    System.err.write(messageBytes, 0, messageBytes.length);
+    System.err.println();
     System.err.flush();
   }
 
@@ -762,7 +764,7 @@ public class CobolUtil {
    * get environemnt variable
    *
    * @param envVarName the name of an environment variable.
-   * @return the value of envVarName, or null if the envVarName is not defined.
+   * @param envVarName the value to be set to the environment variable.
    */
   public static void setEnv(String envVarName, String envVarValue) {
     CobolUtil.envVarTable.setProperty(envVarName, envVarValue);

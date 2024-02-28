@@ -721,7 +721,7 @@ static const struct cb_intrinsic_table function_list[] = {
     {"LOCALE-TIME", 2, 1, CB_INTR_LOCALE_TIME, "CobolIntrinsic.funcLocaleTime",
      CB_CATEGORY_ALPHANUMERIC, 1},
     {"LOCALE-TIME-FROM-SECONDS", 2, 1, CB_INTR_LOCALE_TIME_FROM_SECS,
-     "CobolIntrinsic.funcLclTimeFromSecs", CB_CATEGORY_ALPHANUMERIC, 1},
+     "CobolIntrinsic.funcLocaleTimeFromSeconds", CB_CATEGORY_ALPHANUMERIC, 1},
     {"LOG", 1, 1, CB_INTR_LOG, "CobolIntrinsic.funcLog", CB_CATEGORY_NUMERIC,
      0},
     {"LOG10", 1, 1, CB_INTR_LOG10, "CobolIntrinsic.funcLog10",

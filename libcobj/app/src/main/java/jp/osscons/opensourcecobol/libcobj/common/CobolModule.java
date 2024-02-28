@@ -97,18 +97,18 @@ public class CobolModule {
    * コンストラクタ
    *
    * @param next
-   * @param collating_sequence
-   * @param cut_status
-   * @param cursor_pos
-   * @param display_sign
-   * @param decimal_point
-   * @param currency_symbol
-   * @param numeric_separator
-   * @param flag_filename_mapping
-   * @param flag_binary_truncate
-   * @param flag_pretty_display
+   * @param collatingSequence
+   * @param cutStatus
+   * @param cursorPos
+   * @param displaySign
+   * @param decimalPoint
+   * @param currencySymbol
+   * @param numericSeparator
+   * @param flagFilenameMapping
+   * @param flagBinaryTruncate
+   * @param flagPrettyDisplay
    * @param spare8
-   * @param program_id
+   * @param programId
    */
   public CobolModule(
       CobolModule next,
@@ -176,7 +176,7 @@ public class CobolModule {
   /**
    * TODO 実装
    *
-   * @param programId
+   * @param programName
    */
   public void setProgramId(String programName) {
     if (this.program_id != null) {

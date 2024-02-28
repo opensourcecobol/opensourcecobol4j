@@ -1,0 +1,57 @@
+AT_SETUP([Validate indexed file keys])
+
+AT_DATA([prog.cbl],
+[       identification division.
+       program-id. prog.
+       environment division.
+       input-output section.
+       file-control.
+       select gg assign to 'idx-file'
+           organization is indexed
+           access mode is random
+           record key is external-field
+           alternate record key is field-2.
+       data division.
+       file section.
+       fd gg.
+       01 rec.
+         03 field-1 pic x(3).
+         03 field-2 pic x(3).
+       working-storage section.
+       01 external-field pic x(3).
+       procedure division.
+       stop run.
+])
+
+AT_CHECK([${COBJ} prog.cbl], [1], [],
+[prog.cbl:9: Error: An indexed key 'external-field' is not found in a file record
+])
+
+AT_DATA([prog.cbl],
+[       identification division.
+       program-id. prog.
+       environment division.
+       input-output section.
+       file-control.
+       select gg assign to 'idx-file'
+           organization is indexed
+           access mode is random
+           record key is field-1
+           alternate record key is external-field.
+       data division.
+       file section.
+       fd gg.
+       01 rec.
+         03 field-1 pic x(3).
+         03 field-2 pic x(3).
+       working-storage section.
+       01 external-field pic x(3).
+       procedure division.
+       stop run.
+])
+
+AT_CHECK([${COBJ} prog.cbl], [1], [],
+[prog.cbl:10: Error: An alternate indexed key 'external-field' is not found in a file record
+])
+
+AT_CLEANUP

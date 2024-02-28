@@ -1,0 +1,23 @@
+AT_SETUP([-Wobsolete and -Warchaic])
+
+AT_DATA([prog.cbl],
+[       IDENTIFICATION   DIVISION.
+       PROGRAM-ID.      prog.
+       DATA DIVISION.
+       WORKING-STORAGE SECTION.
+       PROCEDURE        DIVISION.
+           DISPLAY "HELLO".
+           STOP "hello".
+])
+
+AT_CHECK([${COBJ} -Wobsolete -conf=../../command-line-options.src/stop-literal-statement-obsolete.conf prog.cbl], [0], [],
+[prog.cbl:7: Warning: STOP literal is obsolete in OpenCOBOL
+])
+
+AT_CHECK([${COBJ} -Warchaic -conf=../../command-line-options.src/stop-literal-statement-archaic.conf prog.cbl], [0], [],
+[prog.cbl:7: Warning: STOP literal is archaic in OpenCOBOL
+])
+
+AT_CHECK([${COBJ} --help | grep '\-Warchaic' > /dev/null], [0])
+AT_CHECK([${COBJ} --help | grep '\-Wobsolete' > /dev/null], [0])
+AT_CLEANUP

@@ -1,0 +1,23 @@
+AT_SETUP([-std])
+
+AT_DATA([prog.cbl], [
+       IDENTIFICATION              DIVISION.
+       PROGRAM-ID.                 prog.
+       DATA DIVISION.
+       WORKING-STORAGE             SECTION.
+       PROCEDURE                   DIVISION.
+       MAIN-RTN.
+           STOP RUN.
+])
+
+AT_CHECK([${COBJ} -std=cobol2002 prog.cbl])
+AT_CHECK([${COBJ} -std=cobol85 prog.cbl])
+AT_CHECK([${COBJ} -std=ibm prog.cbl])
+AT_CHECK([${COBJ} -std=mvs prog.cbl])
+AT_CHECK([${COBJ} -std=bs2000 prog.cbl])
+AT_CHECK([${COBJ} -std=mf prog.cbl])
+AT_CHECK([${COBJ} -std=default prog.cbl])
+
+AT_CHECK([${COBJ} -std=aaaa prog.cbl 2> /dev/null], [1])
+
+AT_CLEANUP

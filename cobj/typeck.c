@@ -7232,3 +7232,51 @@ cb_tree cb_check_zero_division(cb_tree x) {
 
   return x;
 }
+
+// Check whether the indexed file key is contained in a file record
+static void validate_indexed_file_key(const cb_tree key,
+                                      const struct cb_file *f,
+                                      const int flag_alternate) {
+  struct cb_field *p = cb_field(key);
+  const char *cp;
+
+  // If the key is split keys, skip the check.
+  // This process should be improved in the future
+  for (cp = p->name; *cp; cp++) {
+    if (*cp == '$') {
+      return;
+    }
+  }
+
+  int flag_valid_key = 0;
+  for (; p; p = p->parent) {
+    if (p->file && p->file == f) {
+      flag_valid_key = 1;
+      break;
+    }
+  }
+  if (!flag_valid_key) {
+    if (flag_alternate) {
+      cb_error_x(
+          key, _("An alternate indexed key '%s' is not found in a file record"),
+          cb_field(key)->name);
+    } else {
+      cb_error_x(key, _("An indexed key '%s' is not found in a file record"),
+                 cb_field(key)->name);
+    }
+  }
+}
+
+// Check whether indexed file keys are contained in file records
+void cb_validate_indexed_file_key(const struct cb_file *f) {
+  if (f->organization == COB_ORG_INDEXED) {
+    if (f->key) {
+      validate_indexed_file_key(f->key, f, 0);
+    }
+
+    struct cb_alt_key *alt_key = f->alt_key_list;
+    for (; alt_key; alt_key = alt_key->next) {
+      validate_indexed_file_key(alt_key->key, f, 1);
+    }
+  }
+}

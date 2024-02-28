@@ -22,10 +22,11 @@ AT_DATA([prog.cbl], [
        fd line-seq-file.
        01 line-seq-rec pic x(30).
        fd indexed-file.
-       01 indexed-rec pic x(30).
+       01 indexed-grp.
+         03 indexed-rec pic x(30).
+         03 indexed-key pic x(30).
 
        working-storage             section.
-       01 indexed-key pic x(30).
 
        procedure                   division.
        main section.
@@ -57,7 +58,7 @@ AT_DATA([prog.cbl], [
            open output indexed-file.
            move "indexed-file-key"    to indexed-key.
            move "indexed-file-record" to indexed-rec.
-           write indexed-rec.
+           write indexed-grp.
            close indexed-file.
 
            open input indexed-file.

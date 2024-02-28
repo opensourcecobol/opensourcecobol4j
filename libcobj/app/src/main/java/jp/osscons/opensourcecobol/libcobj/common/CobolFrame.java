@@ -74,7 +74,7 @@ public class CobolFrame {
   /**
    * returnAddressのsetter
    *
-   * @param returnAddress this.returnAddressに設定する値
+   * @param currentSortMergeFile
    */
   public void setCurrentSortMergeFile(CobolFile currentSortMergeFile) {
     this.currentSortMergeFile = currentSortMergeFile;
