@@ -5198,7 +5198,8 @@ static void joutput_init_method(struct cb_program *prog) {
 
   joutput_indent_level -= 2;
   joutput_line("} catch(Exception e) {");
-  joutput_line("  e.printStackTrace();");
+  //joutput_line("  e.printStackTrace();");
+  joutput_line("CobolUtil.fatalError(CobolUtil.FERROR_INIT);");
   joutput_line("}");
   joutput_indent_level -= 2;
   joutput_line("}\n");
