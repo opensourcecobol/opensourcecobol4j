@@ -1104,7 +1104,6 @@ abcdef
 AT_CLEANUP
 
 AT_SETUP([Environment/Argument variable])
-AT_CHECK([${SKIP_TEST}])
 
 AT_DATA([prog.cob], [
        IDENTIFICATION   DIVISION.
