@@ -218,6 +218,7 @@ public class CobolTerminal {
       CobolExceptionInfo.setException(CobolExceptionId.COB_EC_IMP_DISPLAY);
       return;
     }
+    CobolUtil.setEnv(CobolUtil.cobLocalEnv, f.getString());
   }
 
   /**
