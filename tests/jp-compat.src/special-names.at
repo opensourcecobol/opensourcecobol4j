@@ -118,7 +118,6 @@ AT_CHECK([export TESTENV=envvalue && java prog], [0], [envvalue])
 AT_CLEANUP
 
 AT_SETUP([DISPLAY ENVIRONMENT-VALUE])
-AT_CHECK([${SKIP_TEST}])
 
 AT_DATA([prog.cob], [
        IDENTIFICATION   DIVISION.
