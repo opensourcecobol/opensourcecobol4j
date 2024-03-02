@@ -1,0 +1,24 @@
+AT_SETUP([-Wcolumn-overflow])
+
+AT_DATA([callee.cbl],
+[       IDENTIFICATION   DIVISION.
+       PROGRAM-ID.      callee.
+       DATA             DIVISION.
+       WORKING-STORAGE  SECTION.
+       LINKAGE          SECTION.
+       01 GRP1.
+         03 P1            PIC X(5).
+       01 GRP2.
+         03 P2 PIC X(5).
+       77 P3 PIC X(5).
+       PROCEDURE        DIVISION USING P1 GRP2 P3.
+           DISPLAY P1.
+])
+
+AT_CHECK([${COBJ} -Wcall-params callee.cbl], [1], [],
+[callee.cbl:11: Error: 'P1' not level 01 or 77
+])
+
+AT_CHECK([${COBJ} --help | grep '\-Wcall-params' > /dev/null], [0])
+
+AT_CLEANUP

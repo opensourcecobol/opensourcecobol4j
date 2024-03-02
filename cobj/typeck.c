@@ -1266,6 +1266,7 @@ void cb_validate_program_data(struct cb_program *prog) {
           CB_FILE(CB_VALUE(l))->assign = assign;
         }
       }
+      printf("[dbg] tag:%d\n", CB_TREE_TAG(assign));
       if (CB_REFERENCE_P(assign) && CB_REFERENCE(assign)->word->count == 0) {
         if (cb_warn_implicit_define) {
           cb_warning(_("'%s' will be implicitly defined"), CB_NAME(assign));
