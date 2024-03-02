@@ -695,6 +695,7 @@ command_line_options_DEPENDENCIES = \
 	command-line-options.src/Wredefinition.at \
 	command-line-options.src/Wconstant.at \
 	command-line-options.src/Wparentheses.at \
+	command-line-options.src/Wcall-params.at \
 	command-line-options.src/Wcolumn-overflow.at \
 	command-line-options.src/Wterminator.at \
 	command-line-options.src/Wunreachable.at \
