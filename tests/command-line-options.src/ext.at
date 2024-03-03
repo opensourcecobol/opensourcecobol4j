@@ -1,0 +1,22 @@
+AT_SETUP([-ext])
+
+AT_DATA([prog.cbl],
+[       IDENTIFICATION   DIVISION.
+       PROGRAM-ID.      prog.
+       PROCEDURE        DIVISION.
+           COPY "sub".
+           STOP RUN.
+])
+
+AT_DATA([sub.abc563788BBN],
+[           DISPLAY "sub".
+])
+
+AT_CHECK([${COBJ} -ext abc563788BBN prog.cbl])
+AT_CHECK([java prog], [0],
+[sub
+])
+
+AT_CHECK([${COBJ} --help | grep '\-ext' > /dev/null], [0])
+
+AT_CLEANUP
