@@ -811,6 +811,7 @@ static void cobc_print_usage(void) {
   puts(_("  -conf=<file>                      User defined dialect "
          "configuration - See -std="));
   puts(_("  --list-reserved                   Display reserved words"));
+  puts(_("  -ext <extension>      Add default file extension"));
   puts(
       _("  -assign_external                  Set the file assign to external"));
   puts(_("  -constant                         Define <name> to <value> for $IF "
