@@ -3,6 +3,16 @@ name: test on pull request
 on:
   pull_request:
     types: [opened, reopened, review_requested, synchronize]
+    paths-ignore:
+      - '*.md'
+      - 'ChangeLog'
+      - 'NEWS'
+      - 'README'
+      - 'COPYING'
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
 
 env:
   CLASSPATH: ":/usr/lib/opensourcecobol4j/libcobj.jar"
