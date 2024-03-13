@@ -4976,7 +4976,7 @@ static void joutput_init_method(struct cb_program *prog) {
   const char *prevprog;
   cb_tree l;
 
-  joutput_line("public void init()");
+  joutput_line("public void init() ");
   joutput_line("{");
   joutput_indent_level += 2;
   joutput_line("try {");
@@ -5197,9 +5197,10 @@ static void joutput_init_method(struct cb_program *prog) {
   }
 
   joutput_indent_level -= 2;
-  joutput_line("} catch(Exception e) {");
-  //joutput_line("  e.printStackTrace();");
-  joutput_line("CobolUtil.fatalError(CobolUtil.FERROR_INIT);");
+  joutput_line("} catch(NullPointerException e) {");
+  joutput_line("  System.out.println("");"); 
+  joutput_line("} catch(IndexOutOfBoundsException e) {");
+  joutput_line("  System.out.println("");");
   joutput_line("}");
   joutput_indent_level -= 2;
   joutput_line("}\n");
@@ -6036,6 +6037,8 @@ void codegen(struct cb_program *prog, const int nested, char **program_id_list,
   joutput_line("import jp.osscons.opensourcecobol.libcobj.file.*;");
   joutput_line("import jp.osscons.opensourcecobol.libcobj.ui.*;");
   joutput_line("import java.util.Optional;");
+  joutput_line("import java.lang.NullPointerException;");
+  joutput_line("import java.lang.IndexOutOfBoundsException;");
   joutput("\n");
 
   /*if (!cb_flag_no_cobol_comment) {
