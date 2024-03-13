@@ -5198,11 +5198,9 @@ static void joutput_init_method(struct cb_program *prog) {
 
   joutput_indent_level -= 2;
   joutput_line("} catch(NullPointerException e) {");
-  joutput_line("  System.out.println("
-               ");");
+  joutput_line("  System.out.println(\"Error - NullpointerException\");");
   joutput_line("} catch(IndexOutOfBoundsException e) {");
-  joutput_line("  System.out.println("
-               ");");
+  joutput_line("  System.out.println(\"Error - IndexOutOfBoundsException\");");
   joutput_line("}");
   joutput_indent_level -= 2;
   joutput_line("}\n");
