@@ -4307,7 +4307,7 @@ static void write_json_info(struct cb_program *prog) {
 
   FILE *fp = fopen(json_file_path, "w");
   if (!fp) {
-    fprintf(stderr, "Failed to open a json file %s\n", json_file_path);
+    fprintf(stderr, "Warning: failed to open a json file %s\n", json_file_path);
     return;
   }
 
