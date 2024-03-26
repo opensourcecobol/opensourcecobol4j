@@ -375,4 +375,8 @@ extern void cb_error(const char *fmt, ...) COB_A_FORMAT12;
 
 extern int cb_verify(const enum cb_support tag, const char *feature);
 
+/* others */
+extern int cb_flag_info_json;
+extern char *cb_info_json_dir;
+
 #endif /* CB_COBC_H */

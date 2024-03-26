@@ -142,6 +142,7 @@ unsigned char cb_default_byte = 0;
 #define OPTION_ID_DEFAULT_BYTE (1024)
 #define OPTION_ID_SINGLE_JAR (1025)
 #define OPTION_ID_JAR (1026)
+#define OPTION_ID_INFO_JSON (1027)
 
 int external_flg = 0;
 int errorcount = 0;
@@ -183,6 +184,9 @@ const char *cob_config_dir;
 char *cb_java_package_name = NULL;
 int cb_flag_jar = 0;
 char *cb_single_jar_name = NULL;
+
+int cb_flag_info_json = 0;
+char *cb_info_json_dir = NULL;
 
 char edit_code_command[512];
 char edit_code_command_is_set = 0;
@@ -285,6 +289,7 @@ static const struct option long_options[] = {
     {"conf", required_argument, NULL, '&'},
     {"debug", no_argument, NULL, 'd'},
     {"class-file-dir", optional_argument, NULL, 'o'},
+    {"info-json-dir", required_argument, NULL, OPTION_ID_INFO_JSON},
     {"java-source-dir", optional_argument, NULL, 'j'},
     {"jar", no_argument, NULL, OPTION_ID_JAR},
     {"single-jar", required_argument, NULL, OPTION_ID_SINGLE_JAR},
@@ -824,6 +829,8 @@ static void cobc_print_usage(void) {
          "representing a character"));
   puts(_("                                    * octodecimal 00..0377 "
          "representing a character"));
+  puts(_("  -info-json-dir=<dir>              Specify the directory path of "
+         "JSON files that hold information of COBOL programs"));
   puts(_("  -java-package(=<package name>)    Specify the package name of the "
          "generated source code"));
   puts(_("  -jar                              Create <PROGRAM-ID>.jar and "
@@ -1040,6 +1047,21 @@ static int process_command_line(const int argc, char *argv[]) {
 
     case OPTION_ID_JAR:
       cb_flag_jar = 1;
+      break;
+
+    case OPTION_ID_INFO_JSON:
+      cb_flag_info_json = 1;
+      if (optarg) {
+        int len = strlen(optarg);
+        if (len != 0) {
+          cb_info_json_dir = malloc(len + 1);
+          strcpy(cb_info_json_dir, optarg);
+          break;
+        }
+      }
+      fprintf(stderr,
+              "Warning - An invalid name of a directory for json files\n");
+      fflush(stderr);
       break;
 
     case OPTION_ID_SINGLE_JAR:
