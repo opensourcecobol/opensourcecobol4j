@@ -1,0 +1,95 @@
+AT_SETUP([-info-java-dir])
+
+AT_CHECK([${COBJ} --help | grep info-json-dir > /dev/null], [0])
+
+AT_DATA([callee.cbl], [
+       IDENTIFICATION   DIVISION.
+       PROGRAM-ID.      callee.
+       DATA             DIVISION.
+       WORKING-STORAGE  SECTION.
+       LINKAGE          SECTION.
+       01 P1            PIC X ANY LENGTH.
+       01 P2            PIC 99.
+       PROCEDURE        DIVISION USING P1 P2.
+           GOBACK.
+])
+
+AT_DATA([prog.cbl], [
+       IDENTIFICATION   DIVISION.
+       PROGRAM-ID.      prog.
+       DATA             DIVISION.
+       WORKING-STORAGE  SECTION.
+       LINKAGE          SECTION.
+       PROCEDURE        DIVISION.
+           STOP RUN.
+])
+
+# a basic usecase
+AT_CHECK([${COBJ} -info-json-dir=./ callee.cbl prog.cbl])
+AT_CHECK([cat info_callee.json], [0],
+[{
+  "json_format_version": "1.0.0",
+  "opensourcecobol4j_version": "1.0.20",
+  "program_id": "callee",
+  "procedure_division_using_parameters": @<:@
+    {
+      "name": "P1",
+      "type": "String"
+    },
+    {
+      "name": "P2",
+      "type": "int"
+    }
+  @:>@
+}
+])
+
+AT_CHECK([cat info_prog.json], [0],
+[{
+  "json_format_version": "1.0.0",
+  "opensourcecobol4j_version": "1.0.20",
+  "program_id": "prog",
+  "procedure_division_using_parameters": @<:@
+  @:>@
+}
+])
+
+# specify an invalid directory
+AT_CHECK([${COBJ} -info-json-dir=aaa callee.cbl prog.cbl], [0], [],
+[Warning: failed to open a json file aaa/info_callee.json
+Warning: failed to open a json file aaa/info_prog.json
+])
+
+# specify an existing directory
+AT_CHECK([mkdir bbb])
+AT_CHECK([${COBJ} -info-json-dir=bbb callee.cbl prog.cbl])
+
+AT_CHECK([cat bbb/info_callee.json], [0],
+[{
+  "json_format_version": "1.0.0",
+  "opensourcecobol4j_version": "1.0.20",
+  "program_id": "callee",
+  "procedure_division_using_parameters": @<:@
+    {
+      "name": "P1",
+      "type": "String"
+    },
+    {
+      "name": "P2",
+      "type": "int"
+    }
+  @:>@
+}
+])
+
+AT_CHECK([cat bbb/info_prog.json], [0],
+[{
+  "json_format_version": "1.0.0",
+  "opensourcecobol4j_version": "1.0.20",
+  "program_id": "prog",
+  "procedure_division_using_parameters": @<:@
+  @:>@
+}
+])
+
+AT_CLEANUP
