@@ -28,17 +28,16 @@ AT_DATA([prog.cbl], [
 AT_CHECK([${COBJ} -info-json-dir=./ callee.cbl prog.cbl])
 AT_CHECK([cat info_callee.json], [0],
 [{
-  "json_format_version": "1.0.0",
   "opensourcecobol4j_version": "1.0.20",
   "program_id": "callee",
   "procedure_division_using_parameters": @<:@
     {
-      "name": "P1",
-      "type": "String"
+      "variable_name": "P1",
+      "java_type": "String"
     },
     {
-      "name": "P2",
-      "type": "int"
+      "variable_name": "P2",
+      "java_type": "int"
     }
   @:>@
 }
@@ -46,7 +45,6 @@ AT_CHECK([cat info_callee.json], [0],
 
 AT_CHECK([cat info_prog.json], [0],
 [{
-  "json_format_version": "1.0.0",
   "opensourcecobol4j_version": "1.0.20",
   "program_id": "prog",
   "procedure_division_using_parameters": @<:@
@@ -66,17 +64,16 @@ AT_CHECK([${COBJ} -info-json-dir=bbb callee.cbl prog.cbl])
 
 AT_CHECK([cat bbb/info_callee.json], [0],
 [{
-  "json_format_version": "1.0.0",
   "opensourcecobol4j_version": "1.0.20",
   "program_id": "callee",
   "procedure_division_using_parameters": @<:@
     {
-      "name": "P1",
-      "type": "String"
+      "variable_name": "P1",
+      "java_type": "String"
     },
     {
-      "name": "P2",
-      "type": "int"
+      "variable_name": "P2",
+      "java_type": "int"
     }
   @:>@
 }
@@ -84,7 +81,6 @@ AT_CHECK([cat bbb/info_callee.json], [0],
 
 AT_CHECK([cat bbb/info_prog.json], [0],
 [{
-  "json_format_version": "1.0.0",
   "opensourcecobol4j_version": "1.0.20",
   "program_id": "prog",
   "procedure_division_using_parameters": @<:@
