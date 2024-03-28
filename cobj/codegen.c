@@ -4312,7 +4312,6 @@ static void write_json_info(struct cb_program *prog) {
   }
 
   fprintf(fp, "{\n");
-  fprintf(fp, "  \"json_format_version\": \"1.0.0\",\n");
   fprintf(fp, "  \"opensourcecobol4j_version\": \"%s\",\n", PACKAGE_VERSION);
   fprintf(fp, "  \"program_id\": \"%s\",\n", prog->program_id);
   fprintf(fp, "  \"procedure_division_using_parameters\": [\n");
@@ -4321,8 +4320,8 @@ static void write_json_info(struct cb_program *prog) {
     struct cb_field *arg_field = cb_field(CB_VALUE(l));
     int type = cb_tree_type(CB_TREE(arg_field));
     fprintf(fp, "    {\n");
-    fprintf(fp, "      \"name\": \"%s\",\n", arg_field->name);
-    fprintf(fp, "      \"type\": ");
+    fprintf(fp, "      \"variable_name\": \"%s\",\n", arg_field->name);
+    fprintf(fp, "      \"java_type\": ");
     if (type & COB_TYPE_NUMERIC) {
       if (arg_field->pic->scale > 0) {
         fprintf(fp, "\"double\"");
