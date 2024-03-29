@@ -3,7 +3,14 @@
 All notable changes to this project will be documented in this file.
 
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
-
+## [1.0.21] - 2024-03-29
+### Added
+* Implement a new option `-info-json-dir` (#362)
+* Fix DISPLAY/ACCEPT for environment variables (#351)
+* Implement a new option `-ext` (#354)
+* Implement a new option `-Wcall-params` (#353)
+### Miscellaneous
+* Improve the maintainability of generate Java files (#361)
 ## [1.0.20] - 2024-02-28
 ### Added
 * Add command line options

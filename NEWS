@@ -2,6 +2,18 @@ NEWS - user visible changes				-*- outline -*-
 
 -----------------------------------------------------------------------
 
+* opensource COBOL 4J 1.0.21
+
+** New Features
+  (1) Implement a new option `-info-json-dir`
+  (2) Fix DISPLAY/ACCEPT for environment variables
+  (3) Implement a new option `-ext`
+  (4) Implement a new option `-Wcall-params`
+** Miscellaneous
+  (1) Improve the maintainability of generate Java files
+
+-----------------------------------------------------------------------
+
 * opensource COBOL 4J 1.0.20
 
 ** New Features
