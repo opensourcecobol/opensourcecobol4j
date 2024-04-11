@@ -2697,12 +2697,7 @@ static void joutput_search_all(cb_tree table, cb_tree stmt, cb_tree cond,
 
   p = cb_field(table);
   idx = CB_VALUE(p->index_list);
-
-  if (p->occurs_depending) {
-    occurs = p->occurs_depending;
-  } else {
-    occurs = p->occurs_max;
-  }
+  occurs = p->occurs_max;
 
   /* Header */
   joutput_indent("{");
