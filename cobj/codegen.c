@@ -2693,22 +2693,22 @@ static void joutput_search_all(cb_tree table, cb_tree stmt, cb_tree cond,
                                cb_tree when) {
   struct cb_field *p;
   cb_tree idx;
-  int occurs;
 
   p = cb_field(table);
   idx = CB_VALUE(p->index_list);
-
-  if (p->occurs_depending) {
-    occurs = CB_INTEGER(p->occurs_depending)->val;
-  } else {
-    occurs = p->occurs_max;
-  }
 
   /* Header */
   joutput_indent("{");
   joutput_line("int ret;");
   joutput_line("int head = %d;", p->occurs_min - 1);
-  joutput_line("int tail = %d;", occurs + 1);
+  joutput_prefix();
+  joutput("int tail = ");
+  if (p->occurs_depending) {
+    joutput_integer(p->occurs_depending);
+    joutput(" + 1;\n");
+  } else {
+    joutput("%d;\n", p->occurs_max + 1);
+  }
 
   /* Start loop */
   joutput_line("for (;;)");
