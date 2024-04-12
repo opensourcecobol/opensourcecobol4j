@@ -2696,14 +2696,19 @@ static void joutput_search_all(cb_tree table, cb_tree stmt, cb_tree cond,
 
   p = cb_field(table);
   idx = CB_VALUE(p->index_list);
+
   /* Header */
   joutput_indent("{");
   joutput_line("int ret;");
-  joutput_line("int head = %d - 1;", p->occurs_min);
+  joutput_line("int head = %d;", p->occurs_min - 1);
   joutput_prefix();
   joutput("int tail = ");
-  joutput_occurs(p);
-  joutput(" + 1;\n");
+  if (p->occurs_depending) {
+    joutput_integer(p->occurs_depending);
+    joutput(" + 1;\n");
+  } else {
+    joutput("%d;\n", p->occurs_max + 1);
+  }
 
   /* Start loop */
   joutput_line("for (;;)");
