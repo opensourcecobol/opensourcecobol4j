@@ -1,0 +1,31 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.9.34728.123
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "cobj", "cobj\cobj.vcxproj", "{D69ADE50-AB78-4311-95A7-A9676E9BAC36}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|x64 = Debug|x64
+		Debug|x86 = Debug|x86
+		Release|x64 = Release|x64
+		Release|x86 = Release|x86
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{D69ADE50-AB78-4311-95A7-A9676E9BAC36}.Debug|x64.ActiveCfg = Debug|x64
+		{D69ADE50-AB78-4311-95A7-A9676E9BAC36}.Debug|x64.Build.0 = Debug|x64
+		{D69ADE50-AB78-4311-95A7-A9676E9BAC36}.Debug|x86.ActiveCfg = Debug|Win32
+		{D69ADE50-AB78-4311-95A7-A9676E9BAC36}.Debug|x86.Build.0 = Debug|Win32
+		{D69ADE50-AB78-4311-95A7-A9676E9BAC36}.Release|x64.ActiveCfg = Release|x64
+		{D69ADE50-AB78-4311-95A7-A9676E9BAC36}.Release|x64.Build.0 = Release|x64
+		{D69ADE50-AB78-4311-95A7-A9676E9BAC36}.Release|x86.ActiveCfg = Release|Win32
+		{D69ADE50-AB78-4311-95A7-A9676E9BAC36}.Release|x86.Build.0 = Release|Win32
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {26534B00-158F-4969-9F9B-BDB31692C966}
+	EndGlobalSection
+EndGlobal
