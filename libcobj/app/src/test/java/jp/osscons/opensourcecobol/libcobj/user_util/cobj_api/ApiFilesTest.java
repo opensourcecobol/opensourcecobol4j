@@ -14,7 +14,7 @@ import org.junit.jupiter.api.Test;
 class ApiFilesTest {
 
   boolean compOutputFiles(String file_name) {
-    ApiFiles.JavaCreate(file_name);
+    ApiFiles.javaCreate(file_name);
     try {
       return Arrays.equals(
               Files.readAllBytes(
@@ -33,7 +33,7 @@ class ApiFilesTest {
   }
 
   @Test
-  void CheckOutputFiles() {
+  void checkOutputFiles() {
     String file_name = "src/test/java/jp/osscons/opensourcecobol/libcobj/user_util/api/test.json";
     assertTrue(compOutputFiles(file_name));
   }

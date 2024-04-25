@@ -27,10 +27,10 @@ public class ApiFiles {
       file_path = args[0];
     }
 
-    JavaCreate(file_path);
+    javaCreate(file_path);
   }
 
-  public static void JavaCreate(String file_path) {
+  public static void javaCreate(String file_path) {
     try {
       String json = new String(Files.readAllBytes(Paths.get(file_path)));
       JSONObject obj = new JSONObject(json);
@@ -53,8 +53,8 @@ public class ApiFiles {
       PrintWriter sp_writer = new PrintWriter(sp_file);
       PrintWriter rcd_writer = new PrintWriter(rcd_file);
 
-      sp_writer.println(WriteController(sp_file, program_id, params));
-      rcd_writer.println(WriteRecord(rcd_file, program_id, params));
+      sp_writer.println(writeController(sp_file, program_id, params));
+      rcd_writer.println(writeRecord(rcd_file, program_id, params));
 
       sp_writer.close();
       rcd_writer.close();
@@ -66,7 +66,7 @@ public class ApiFiles {
     }
   }
 
-  public static String WriteController(FileWriter sp_file, String program_id, JSONArray params) {
+  public static String writeController(FileWriter sp_file, String program_id, JSONArray params) {
     JSONObject param;
     String name;
     String type;
@@ -192,7 +192,7 @@ public class ApiFiles {
     return output;
   }
 
-  public static String WriteRecord(FileWriter rcd_file, String program_id, JSONArray params) {
+  public static String writeRecord(FileWriter rcd_file, String program_id, JSONArray params) {
     JSONObject param;
     String name;
     String type;
