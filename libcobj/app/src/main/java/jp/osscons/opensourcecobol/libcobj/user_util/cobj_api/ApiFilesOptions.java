@@ -8,7 +8,7 @@ import org.apache.commons.cli.ParseException;
 
 public class ApiFilesOptions {
   public static String package_name;
-  public static String output_dir;
+  public static String outputDir;
 
   public static void getOptions(String[] args) {
     Options options = new Options();
@@ -45,8 +45,8 @@ public class ApiFilesOptions {
       setJavaPackage(package_name);
       return;
     } else if (cmd.getOptionValue("output-dir") != null) {
-      String output_dir = cmd.getOptionValue("output-dir");
-      setOutputDir(output_dir);
+      String outputDir = cmd.getOptionValue("output-dir");
+      setOutputDir(outputDir);
       return;
     }
   }
@@ -66,7 +66,7 @@ public class ApiFilesOptions {
     ApiFilesOptions.package_name = package_name;
   }
 
-  public static void setOutputDir(String output_dir) {
-    ApiFilesOptions.output_dir = output_dir;
+  public static void setOutputDir(String outputDir) {
+    ApiFilesOptions.outputDir = outputDir;
   }
 }
