@@ -7,7 +7,7 @@ import org.apache.commons.cli.Options;
 import org.apache.commons.cli.ParseException;
 
 public class ApiFilesOptions {
-  public static String package_name;
+  public static String packageName;
   public static String outputDir;
 
   public static void getOptions(String[] args) {
@@ -41,8 +41,8 @@ public class ApiFilesOptions {
       System.exit(0);
       return;
     } else if (cmd.getOptionValue("java-package") != null) {
-      String package_name = cmd.getOptionValue("java-package");
-      setJavaPackage(package_name);
+      String packageName = cmd.getOptionValue("java-package");
+      setJavaPackage(packageName);
       return;
     } else if (cmd.getOptionValue("output-dir") != null) {
       String outputDir = cmd.getOptionValue("output-dir");
@@ -62,8 +62,8 @@ public class ApiFilesOptions {
     System.out.println("  -v, --version\t\t\t\tPrints the version of the cobj-api");
   }
 
-  public static void setJavaPackage(String package_name) {
-    ApiFilesOptions.package_name = package_name;
+  public static void setJavaPackage(String packageName) {
+    ApiFilesOptions.packageName = packageName;
   }
 
   public static void setOutputDir(String outputDir) {

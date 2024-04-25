@@ -71,8 +71,8 @@ public class ApiFiles {
     String nameRecord = programId + "Record";
     int i;
 
-    if (ApiFilesOptions.package_name != null) {
-      ctlWriter.println("package " + ApiFilesOptions.package_name + ";");
+    if (ApiFilesOptions.packageName != null) {
+      ctlWriter.println("package " + ApiFilesOptions.packageName + ";");
     } else {
       ctlWriter.println("package com.example.restservice;");
     }
@@ -102,7 +102,7 @@ public class ApiFiles {
       param = params.getJSONObject(i);
       name = param.getString("variable_name");
       type = param.getString("java_type");
-      if (type.equals("String")) {
+      if ("String".equals(type)) {
         defaultValue = "\"\"";
       } else {
         defaultValue = "\"0\"";
@@ -155,9 +155,9 @@ public class ApiFiles {
       param = params.getJSONObject(i);
       name = param.getString("variable_name");
       type = param.getString("java_type");
-      if (type.equals("String")) {
+      if ("String".equals(type)) {
         methodName = "getString";
-      } else if (type.equals("int")) {
+      } else if ("int".equals(type)) {
         methodName = "getInt";
       } else {
         methodName = "getDouble";
