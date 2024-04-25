@@ -362,11 +362,11 @@ SRC_FILES = \
 	./app/src/main/java/jp/osscons/opensourcecobol/libcobj/user_util/indexed_file/StdinRecordReader.java \
 	./app/src/main/java/jp/osscons/opensourcecobol/libcobj/user_util/indexed_file/FileSeqRecordReader.java \
 	./app/src/main/java/jp/osscons/opensourcecobol/libcobj/user_util/indexed_file/FileLineSeqRecordReader.java\
-	./app/src/main/java/jp/osscons/opensourcecobol/libcobj/user_util/api/ApiFiles.java \
-	./app/src/main/java/jp/osscons/opensourcecobol/libcobj/user_util/api/ApiFilesOptions.java
+	./app/src/main/java/jp/osscons/opensourcecobol/libcobj/user_util/cobj_api/ApiFiles.java \
+	./app/src/main/java/jp/osscons/opensourcecobol/libcobj/user_util/cobj_api/ApiFilesOptions.java
 
 TEST_FILE = \
-	./app/src/test/java/jp/osscons/opensourcecobol/libcobj/user_util/api/ApiFilesTest.java
+	./app/src/test/java/jp/osscons/opensourcecobol/libcobj/user_util/cobj_api/ApiFilesTest.java
 
 all: all-am
 
