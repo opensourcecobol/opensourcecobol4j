@@ -19,12 +19,12 @@ class ApiFilesTest {
       return Arrays.equals(
               Files.readAllBytes(
                   Paths.get(
-                      "src/test/java/jp/osscons/opensourcecobol/libcobj/user_util/api/testController.txt")),
+                      "src/test/java/jp/osscons/opensourcecobol/libcobj/user_util/cobj_api/testController.txt")),
               Files.readAllBytes(Paths.get("testController.java")))
           && Arrays.equals(
               Files.readAllBytes(
                   Paths.get(
-                      "src/test/java/jp/osscons/opensourcecobol/libcobj/user_util/api/testRecord.txt")),
+                      "src/test/java/jp/osscons/opensourcecobol/libcobj/user_util/cobj_api/testRecord.txt")),
               Files.readAllBytes(Paths.get("testRecord.java")));
     } catch (IOException e) {
       e.printStackTrace();
@@ -34,7 +34,8 @@ class ApiFilesTest {
 
   @Test
   void checkOutputFiles() {
-    String file_name = "src/test/java/jp/osscons/opensourcecobol/libcobj/user_util/api/test.json";
+    String file_name =
+        "src/test/java/jp/osscons/opensourcecobol/libcobj/user_util/cobj_api/test.json";
     assertTrue(compOutputFiles(file_name));
   }
 }

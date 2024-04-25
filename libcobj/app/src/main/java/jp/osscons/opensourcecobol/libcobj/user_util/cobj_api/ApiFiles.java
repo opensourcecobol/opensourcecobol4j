@@ -50,14 +50,8 @@ public class ApiFiles {
         rcd_file = new FileWriter(program_id + "Record.java");
       }
 
-      PrintWriter sp_writer = new PrintWriter(sp_file);
-      PrintWriter rcd_writer = new PrintWriter(rcd_file);
-
-      sp_writer.println(writeController(sp_file, program_id, params));
-      rcd_writer.println(writeRecord(rcd_file, program_id, params));
-
-      sp_writer.close();
-      rcd_writer.close();
+      writeController(sp_file, program_id, params);
+      writeRecord(rcd_file, program_id, params);
 
     } catch (IOException e) {
       e.printStackTrace();
@@ -66,7 +60,8 @@ public class ApiFiles {
     }
   }
 
-  public static String writeController(FileWriter sp_file, String program_id, JSONArray params) {
+  public static void writeController(FileWriter sp_file, String program_id, JSONArray params) {
+    PrintWriter sp_writer = new PrintWriter(sp_file);
     JSONObject param;
     String name;
     String type;
@@ -78,19 +73,19 @@ public class ApiFiles {
     String output;
 
     if (ApiFilesOptions.package_name != null) {
-      output = "package " + ApiFilesOptions.package_name + ";\n";
+      sp_writer.println("package " + ApiFilesOptions.package_name + ";");
     } else {
-      output = "package com.example.restservice;\n";
+      sp_writer.println("package com.example.restservice;");
     }
 
-    output +=
+    sp_writer.println(
         "import java.util.concurrent.atomic.AtomicLong;\n"
             + "import org.springframework.web.bind.annotation.GetMapping;\n"
             + "import org.springframework.web.bind.annotation.RequestParam;\n"
             + "import org.springframework.web.bind.annotation.RestController;\n"
-            + "import jp.osscons.opensourcecobol.libcobj.ui.*;\n\n";
+            + "import jp.osscons.opensourcecobol.libcobj.ui.*;\n");
 
-    output +=
+    sp_writer.println(
         "@RestController\n"
             + "public class "
             + name_controller
@@ -102,7 +97,7 @@ public class ApiFiles {
             + name_record
             + " "
             + name_controller
-            + "(\n";
+            + "(");
 
     for (i = 0; i < params.length(); ++i) {
       param = params.getJSONObject(i);
@@ -114,7 +109,7 @@ public class ApiFiles {
         defaultValue = "\"0\"";
       }
 
-      output +=
+      sp_writer.print(
           "        @RequestParam(value = "
               + "\""
               + name
@@ -123,16 +118,16 @@ public class ApiFiles {
               + ") "
               + type
               + " "
-              + name;
+              + name);
 
       if (i < params.length() - 1) {
-        output += ",\n";
+        sp_writer.println(",");
       } else {
-        output += "\n";
+        sp_writer.println();
       }
     }
 
-    output +=
+    sp_writer.print(
         "    ) {\n"
             + "        int statuscode = 200;\n"
             + "        "
@@ -144,18 +139,18 @@ public class ApiFiles {
             + "();\n"
             + "        CobolResultSet result = "
             + program_id
-            + "Cobol.execute(";
+            + "Cobol.execute(");
 
     for (i = 0; i < params.length(); ++i) {
       param = params.getJSONObject(i);
       name = param.getString("variable_name");
-      output += name;
+      sp_writer.print(name);
 
       if (i < params.length() - 1) {
-        output += ", ";
+        sp_writer.print(", ");
       }
     }
-    output += ");\n" + "        try {\n";
+    sp_writer.println(");\n" + "        try {");
 
     for (i = 0; i < params.length(); ++i) {
       param = params.getJSONObject(i);
@@ -168,53 +163,52 @@ public class ApiFiles {
       } else {
         methodName = "getDouble";
       }
-      output += "            " + name + " = result." + methodName + "(" + (i + 1) + ");\n";
+      sp_writer.println("            " + name + " = result." + methodName + "(" + (i + 1) + ");");
     }
 
-    output +=
+    sp_writer.print(
         "        } catch (Exception e) {\n"
             + "            statuscode = 500;\n"
             + "        }\n"
             + "        return new "
             + program_id
-            + "Record(statuscode, ";
+            + "Record(statuscode, ");
 
     for (i = 0; i < params.length(); ++i) {
       param = params.getJSONObject(i);
       name = param.getString("variable_name");
-      output += name;
+      sp_writer.print(name);
       if (i < params.length() - 1) {
-        output += ", ";
+        sp_writer.print(", ");
       }
     }
-    output += ");\n" + "    }\n" + "}\n";
-
-    return output;
+    sp_writer.println(");\n" + "    }\n" + "}");
+    sp_writer.close();
   }
 
-  public static String writeRecord(FileWriter rcd_file, String program_id, JSONArray params) {
+  public static void writeRecord(FileWriter rcd_file, String program_id, JSONArray params) {
+    PrintWriter rcd_writer = new PrintWriter(rcd_file);
     JSONObject param;
     String name;
     String type;
     int i;
 
-    String output =
+    rcd_writer.print(
         "package com.example.restservice;\n"
             + "public record "
             + program_id
-            + "Record(int statuscode, ";
+            + "Record(int statuscode, ");
 
     for (i = 0; i < params.length(); ++i) {
       param = params.getJSONObject(i);
       name = param.getString("variable_name");
       type = param.getString("java_type");
-      output += type + " " + name;
+      rcd_writer.print(type + " " + name);
       if (i < params.length() - 1) {
-        output += ", ";
+        rcd_writer.print(", ");
       }
     }
-    output += ") {}";
-
-    return output;
+    rcd_writer.println(") {}");
+    rcd_writer.close();
   }
 }

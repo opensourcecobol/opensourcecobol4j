@@ -59,8 +59,7 @@ public class ApiFilesOptions {
         "  -java-package=<package name>\t\tSpecify the package name of the generated source code");
     System.out.println(
         "  -o=<dir>, --output-dir=<dir>\t\tSet the output destination of the java file to an arbitrary destination");
-    System.out.println(
-        "  -v, --version\t\t\t\tPrints the version of the cobj-api");
+    System.out.println("  -v, --version\t\t\t\tPrints the version of the cobj-api");
   }
 
   public static void setJavaPackage(String package_name) {

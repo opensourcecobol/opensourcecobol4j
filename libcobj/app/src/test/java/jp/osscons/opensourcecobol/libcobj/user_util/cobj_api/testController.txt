@@ -26,4 +26,3 @@ public class testController {
         return new testRecord(statuscode, param1, param2, param3);
     }
 }
-
