@@ -1025,6 +1025,9 @@ defaults.h: Makefile.am $(top_builddir)/config.status
 	  echo "#define LOCALEDIR        \"$(datadir)/locale\"";	\
 	} > defaults.h
 
+test-cobj-api:
+	$(MAKE) -C libcobj test
+
 # Tell versions [3.59,3.63) of GNU make to not export all variables.
 # Otherwise a system limit (for SysV at least) may be exceeded.
 .NOEXPORT:

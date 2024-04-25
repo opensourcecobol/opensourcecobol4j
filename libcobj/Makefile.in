@@ -281,6 +281,7 @@ top_builddir = @top_builddir@
 top_srcdir = @top_srcdir@
 TARGET_JAR = app/build/libs/libcobj.jar
 COBJ_IDX = bin/cobj-idx
+COBJ_API = bin/cobj-api
 SRC_FILES = \
 	settings.gradle.kts \
 	./app/build.gradle.kts \
@@ -360,7 +361,12 @@ SRC_FILES = \
 	./app/src/main/java/jp/osscons/opensourcecobol/libcobj/user_util/indexed_file/RecordWriter.java \
 	./app/src/main/java/jp/osscons/opensourcecobol/libcobj/user_util/indexed_file/StdinRecordReader.java \
 	./app/src/main/java/jp/osscons/opensourcecobol/libcobj/user_util/indexed_file/FileSeqRecordReader.java \
-	./app/src/main/java/jp/osscons/opensourcecobol/libcobj/user_util/indexed_file/FileLineSeqRecordReader.java
+	./app/src/main/java/jp/osscons/opensourcecobol/libcobj/user_util/indexed_file/FileLineSeqRecordReader.java\
+	./app/src/main/java/jp/osscons/opensourcecobol/libcobj/user_util/api/ApiFiles.java \
+	./app/src/main/java/jp/osscons/opensourcecobol/libcobj/user_util/api/ApiFilesOptions.java
+
+TEST_FILE = \
+	./app/src/test/java/jp/osscons/opensourcecobol/libcobj/user_util/api/ApiFilesTest.java
 
 all: all-am
 
@@ -561,10 +567,15 @@ $(TARGET_JAR): $(SRC_FILES)
 clean:
 	rm -rf $(TARGET_JAR)
 
-install: $(TARGET_JAR) $(COBJ_IDX)
+install: $(TARGET_JAR) $(COBJ_IDX) $(COBJ_API)
 	mkdir -p $(DESTDIR)$(prefix)/lib/opensourcecobol4j/
 	install $(TARGET_JAR) $(DESTDIR)$(prefix)/lib/opensourcecobol4j/
 	install $(COBJ_IDX) $(DESTDIR)$(prefix)/bin/
+	install $(COBJ_API) $(DESTDIR)$(prefix)/bin/
+
+test:
+	./gradlew test
+	rm -f ./app/testController.java ./app/testRecord.java
 
 # Tell versions [3.59,3.63) of GNU make to not export all variables.
 # Otherwise a system limit (for SysV at least) may be exceeded.
