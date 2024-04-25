@@ -1,4 +1,4 @@
-package jp.osscons.opensourcecobol.libcobj.user_util.api;
+package jp.osscons.opensourcecobol.libcobj.user_util.cobj_api;
 
 import org.apache.commons.cli.CommandLine;
 import org.apache.commons.cli.CommandLineParser;
@@ -20,6 +20,7 @@ public class ApiFilesOptions {
         "output-dir",
         true,
         "Set the output destination of the java file to an arbitrary destination");
+    options.addOption("v", "version", false, "Prints the version of the cobj-api");
     CommandLineParser parser = new DefaultParser();
     CommandLine cmd;
 
@@ -33,6 +34,10 @@ public class ApiFilesOptions {
 
     if (cmd.hasOption("h")) {
       printHelpMessage();
+      System.exit(0);
+      return;
+    } else if (cmd.hasOption("v")) {
+      System.out.println("version 1.0.21");
       System.exit(0);
       return;
     } else if (cmd.getOptionValue("java-package") != null) {
