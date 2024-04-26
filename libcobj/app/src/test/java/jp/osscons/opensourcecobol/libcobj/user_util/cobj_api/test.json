@@ -1,0 +1,18 @@
+{
+  "opensourcecobol4j_version": "1.0.21",
+  "program_id": "test",
+  "procedure_division_using_parameters": [
+    {
+      "variable_name": "param1",
+      "java_type": "int"
+    },
+    {
+      "variable_name": "param2",
+      "java_type": "double"
+    },
+    {
+      "variable_name": "param3",
+      "java_type": "String"
+    }
+  ]
+}

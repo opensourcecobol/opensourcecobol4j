@@ -75,3 +75,6 @@ defaults.h: Makefile.am $(top_builddir)/config.status
 	  echo "#define COB_MODULE_EXT   \"$(COB_MODULE_EXT)\"";	\
 	  echo "#define LOCALEDIR        \"$(datadir)/locale\"";	\
 	} > defaults.h
+
+test-cobj-api:
+	$(MAKE) -C libcobj test
