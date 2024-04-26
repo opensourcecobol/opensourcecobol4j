@@ -299,7 +299,6 @@ SRC_FILES = \
 	./app/src/main/java/jp/osscons/opensourcecobol/libcobj/common/GetInt.java \
 	./app/src/main/java/jp/osscons/opensourcecobol/libcobj/common/CobolCheck.java \
 	./app/src/main/java/jp/osscons/opensourcecobol/libcobj/common/CobolControl.java \
-	./app/src/main/java/jp/osscons/opensourcecobol/libcobj/common/CobolFrame.java \
 	./app/src/main/java/jp/osscons/opensourcecobol/libcobj/common/CobolIntrinsic.java \
 	./app/src/main/java/jp/osscons/opensourcecobol/libcobj/common/CobolString.java \
 	./app/src/main/java/jp/osscons/opensourcecobol/libcobj/common/GetAbstractCobolField.java \
@@ -327,7 +326,6 @@ SRC_FILES = \
 	./app/src/main/java/jp/osscons/opensourcecobol/libcobj/exceptions/CobolExceptionInfo.java \
 	./app/src/main/java/jp/osscons/opensourcecobol/libcobj/exceptions/CobolExceptionTabCode.java \
 	./app/src/main/java/jp/osscons/opensourcecobol/libcobj/exceptions/CobolRuntimeException.java \
-	./app/src/main/java/jp/osscons/opensourcecobol/libcobj/exceptions/CobolUndefinedException.java \
 	./app/src/main/java/jp/osscons/opensourcecobol/libcobj/exceptions/RuntimeExitHandler.java \
 	./app/src/main/java/jp/osscons/opensourcecobol/libcobj/file/CobolFile.java \
 	./app/src/main/java/jp/osscons/opensourcecobol/libcobj/file/CobolFileSort.java \
