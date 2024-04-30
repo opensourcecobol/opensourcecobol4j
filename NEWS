@@ -2,6 +2,17 @@ NEWS - user visible changes				-*- outline -*-
 
 -----------------------------------------------------------------------
 
+* opensource COBOL 4J 1.0.22
+
+** New Features
+  (1) Add cobj-api command
+  (2) Implement `-Wstrict-typing`
+** Miscellaneous
+  (1) Simplify generated Java code based on SonarQube analysis
+  (2) Improve the error message for record keys with duplicates
+
+-----------------------------------------------------------------------
+
 * opensource COBOL 4J 1.0.21
 
 ** New Features

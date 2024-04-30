@@ -3,6 +3,13 @@
 All notable changes to this project will be documented in this file.
 
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
+## [1.0.22] - 2024-04-30
+### Added
+* Add cobj-api command (#370)
+* Implement a -Wstrict-typing (#369)
+### Miscellaneous
+* Simplify generated Java code based on SonarQube analysis (#366)
+* Improve the error message for record keys with duplicates (#368)
 ## [1.0.21] - 2024-03-29
 ### Added
 * Implement a new option `-info-json-dir` (#362)
