@@ -37,7 +37,7 @@ public class ApiFilesOptions {
       System.exit(0);
       return;
     } else if (cmd.hasOption("v")) {
-      System.out.println("1.0.21");
+      System.out.println("1.0.22");
       System.exit(0);
       return;
     } else if (cmd.getOptionValue("java-package") != null) {
