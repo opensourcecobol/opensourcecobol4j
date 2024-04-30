@@ -28,7 +28,7 @@ AT_DATA([prog.cbl], [
 AT_CHECK([${COBJ} -info-json-dir=./ callee.cbl prog.cbl])
 AT_CHECK([cat info_callee.json], [0],
 [{
-  "opensourcecobol4j_version": "1.0.21",
+  "opensourcecobol4j_version": "1.0.22",
   "program_id": "callee",
   "procedure_division_using_parameters": @<:@
     {
@@ -45,7 +45,7 @@ AT_CHECK([cat info_callee.json], [0],
 
 AT_CHECK([cat info_prog.json], [0],
 [{
-  "opensourcecobol4j_version": "1.0.21",
+  "opensourcecobol4j_version": "1.0.22",
   "program_id": "prog",
   "procedure_division_using_parameters": @<:@
   @:>@
@@ -64,7 +64,7 @@ AT_CHECK([${COBJ} -info-json-dir=bbb callee.cbl prog.cbl])
 
 AT_CHECK([cat bbb/info_callee.json], [0],
 [{
-  "opensourcecobol4j_version": "1.0.21",
+  "opensourcecobol4j_version": "1.0.22",
   "program_id": "callee",
   "procedure_division_using_parameters": @<:@
     {
@@ -81,7 +81,7 @@ AT_CHECK([cat bbb/info_callee.json], [0],
 
 AT_CHECK([cat bbb/info_prog.json], [0],
 [{
-  "opensourcecobol4j_version": "1.0.21",
+  "opensourcecobol4j_version": "1.0.22",
   "program_id": "prog",
   "procedure_division_using_parameters": @<:@
   @:>@
