@@ -14,7 +14,7 @@ opensource COBOL 4JはCOBOLからCに変換するCOBOLコンパイラ["opensourc
 
 opensource COBOL 4J は下記の環境でテストされています.
 
-* Ubuntu 22.04 と OpenJDK 21
+* Ubuntu 24.04 と OpenJDK 21
 * AlmaLinux 9 と OpenJDK 11
 * Amazon Linux 2023 と OpenJDK 21
 
@@ -31,7 +31,7 @@ opensource COBOL 4J v1.0.22はUbuntuとAlmaLinuxで動作を確認していま�
 
 下記のコマンドを実行する.
 
-#### Ubuntu 22.04
+#### Ubuntu 24.04
 
 ```
 sudo apt-get update

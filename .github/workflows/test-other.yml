@@ -31,8 +31,8 @@ jobs:
           distribution: 'temurin'
           java-version: '11'
 
-      - name: Install dependencies on Ubuntu 22.04
-        if: inputs.os == 'ubuntu:22.04'
+      - name: Install dependencies on Ubuntu 24.04
+        if: inputs.os == 'ubuntu:24.04'
         run: |
           apt update -y
           apt install -y build-essential
