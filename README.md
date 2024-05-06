@@ -17,7 +17,7 @@ Other software and libraries are distributed under the GNU GENERAL PUBLIC LICENS
 
 opensource COBOL 4J is tested with the following platforms and dependencies
 
-* Ubuntu 22.04 and OpenJDK 21
+* Ubuntu 24.04 and OpenJDK 21
 * AlmaLinux 9 and OpenJDK 11
 * Amazon Linux 2023 and OpenJDK 21
 
@@ -30,7 +30,7 @@ see [doc/requirements-all.md](./doc/requirements-all.md).
 
 Run the following commands.
 
-#### Ubuntu 22.04
+#### Ubuntu 24.04
 
 ```
 sudo apt-get update

@@ -12,7 +12,7 @@ jobs:
           distribution: 'temurin'
           java-version: '21'
 
-      - name: Install dependencies on Ubuntu 22.04
+      - name: Install dependencies on Ubuntu
         run: |
           sudo apt update -y
           sudo apt install -y gcc-9 build-essential gettext autoconf
