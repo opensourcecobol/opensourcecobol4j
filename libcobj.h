@@ -473,8 +473,8 @@ enum cob_exception_id {
 #include "cobj/exception.def"
 #else
 #include <exception.def>
-	COB_EC_MAX
 #endif
+	COB_EC_MAX
 };
 
 #undef	COB_EXCEPTION

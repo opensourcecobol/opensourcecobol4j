@@ -23,7 +23,11 @@
  * This file describes the options shown when executing cobj --help command
  */
 
+#ifdef _WIN32
+#include "../lib/gettext.h"
+#else
 #include "lib/gettext.h"
+#endif
 
 CB_FLAG (cb_flag_trace, "trace",
 	 N_("Generate trace code (Executed SECTION/PARAGRAPH)"))
