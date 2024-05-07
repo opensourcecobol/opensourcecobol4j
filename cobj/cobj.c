@@ -62,7 +62,6 @@
 
 #include "cobj.h"
 #include "tree.h"
-#pragma warning(disable: 4996)
 
 /* Compile level */
 enum cb_compile_level {
