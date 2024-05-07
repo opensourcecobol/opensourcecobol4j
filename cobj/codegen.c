@@ -634,7 +634,11 @@ static void joutput_edit_code_command(const char *target) {
   char buf[BUF_SIZE];
   sprintf(command, "%s --target=%s", edit_code_command, target);
 
+#ifdef _WIN32
   FILE *fp = _popen(command, "r");
+#else
+  FILE *fp = popen(command, "r");
+#endif
   if (fp == NULL) {
     return;
   }
@@ -643,8 +647,11 @@ static void joutput_edit_code_command(const char *target) {
   while (fgets(buf, BUF_SIZE, fp) != NULL) {
     joutput("%s", buf);
   }
-
+#ifdef _WIN32
   _pclose(fp);
+#else
+  pclose(fp);
+#endif
 }
 
 /*
