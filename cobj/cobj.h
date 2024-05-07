@@ -24,7 +24,7 @@
 
 #include <stdio.h>
 #ifdef _WIN32
-#include "lib\gettext.h"
+#include "../lib/gettext.h"
 #else
 #include "lib/gettext.h"
 #endif
