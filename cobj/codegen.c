@@ -198,8 +198,6 @@ static void joutput_label_variable_name(char *s, int key,
                                         struct cb_label *section);
 static void joutput_label_variable_by_value(int value);
 
-
-
 static char *get_java_identifier_field(struct cb_field *f) {
   char *buf = malloc(COB_SMALL_BUFF);
   if (cb_flag_serial_variable) {
