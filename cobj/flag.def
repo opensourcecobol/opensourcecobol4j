@@ -19,8 +19,11 @@
  * Boston, MA 02110-1301 USA
  */
 
-
+#ifdef _WIN32
+#include "../lib/gettext.h"
+#else
 #include "lib/gettext.h"
+#endif
 
 /* CB_FLAG (var, name, doc) */
 

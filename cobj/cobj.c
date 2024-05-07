@@ -60,7 +60,11 @@
 #include <locale.h>
 #endif
 
+#ifdef _WIN32
+#include "../tarstamp.h"
+#else
 #include <tarstamp.h>
+#endif
 
 #include "cobj.h"
 #include "tree.h"
