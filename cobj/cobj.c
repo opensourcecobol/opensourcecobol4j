@@ -48,7 +48,7 @@
 #include <kpathsea/getopt.h>
 #else
 #ifdef _WIN32
-#include "lib/getopt.h"
+#include "lib\getopt.h"
 #elseif HAVE_GETOPT_H
 #include <getopt.h>
 #else
