@@ -49,7 +49,7 @@
 #else
 #ifdef _WIN32
 #include "../lib/getopt.h"
-#elseif HAVE_GETOPT_H
+#else HAVE_GETOPT_H
 #include <getopt.h>
 #else
 #include "lib/getopt.h"
