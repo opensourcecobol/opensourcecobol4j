@@ -28,5 +28,5 @@ jobs:
 
     - name: exec cobj
       run: |
-        cd win/x64/Debug
+        cd win/x64/Release
         cobj.exe
