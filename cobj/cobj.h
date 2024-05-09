@@ -23,16 +23,18 @@
 #define CB_COBC_H
 
 #include <stdio.h>
-#ifdef _WIN32
-#include "../lib/gettext.h"
-#else
+//#ifdef _WIN32
+//#include "../lib/gettext.h"
+//#else
+//#include "lib/gettext.h"
+//#endif
+
+//#ifdef _WIN32
+//#include "../libcobj.h"
+//#else
+#include <libcobj.h>
+//#endif
 #include "lib/gettext.h"
-#endif
-#ifdef _WIN32
-#include "../libcobj.h"
-#else
-#include "libcobj.h"
-#endif
 
 #if !defined(__i386__) && !defined(__x86_64__) && !defined(__powerpc__) &&     \
     !defined(__powerpc64__) && !defined(__ppc__) && !defined(__amd64__)

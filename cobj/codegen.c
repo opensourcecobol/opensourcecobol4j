@@ -153,11 +153,11 @@ static cb_tree call_parameters = NULL;
 static const struct system_table system_tab[] = {
 #undef COB_SYSTEM_GEN
 #define COB_SYSTEM_GEN(x, y, z) {x, #z},
-#ifdef _WIN32
-#include "system.def"
-#else
+//#ifdef _WIN32
+//#include "system.def"
+//#else
 #include <system.def>
-#endif
+//#endif
     {NULL, NULL}};
 
 /* Globals */

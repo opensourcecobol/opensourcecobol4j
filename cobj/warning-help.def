@@ -20,7 +20,8 @@
  */
 
 #ifdef _WIN32
-#include "../lib/gettext.h"
+//#include "../lib/gettext.h"
+#include <gettext.h>
 #else
 #include "lib/gettext.h"
 #endif

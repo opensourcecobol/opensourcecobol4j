@@ -94,11 +94,11 @@ static char expr_prio[256];
 static const struct system_table system_tab[] = {
 #undef COB_SYSTEM_GEN
 #define COB_SYSTEM_GEN(x, y, z) {x, y},
-#ifdef _WIN32
-#include "system.def"
-#else
+//#ifdef _WIN32
+//#include "system.def"
+//#else
 #include <system.def>
-#endif
+//#endif
     {NULL, 0}};
 
 static const char *const bin_set_funcs[] = {NULL,
