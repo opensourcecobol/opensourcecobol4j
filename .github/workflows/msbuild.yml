@@ -24,7 +24,7 @@ jobs:
     - name: Build
       # Add additional options to the MSBuild command line here (like platform or verbosity level).
       # See https://docs.microsoft.com/visualstudio/msbuild/msbuild-command-line-reference
-      run: msbuild /p:AdditionalIncludePaths=./:./cobj/ win/cobol4j.sln
+      run: msbuild /p:AdditionalIncludePaths=./:./cobj/:./win win/cobol4j.sln
 
     - name: exec cobj
       run: |

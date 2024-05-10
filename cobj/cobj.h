@@ -23,11 +23,6 @@
 #define CB_COBC_H
 
 #include <stdio.h>
-//#ifdef _WIN32
-//#include "../lib/gettext.h"
-//#else
-//#include "lib/gettext.h"
-//#endif
 
 #ifdef _WIN32
 #include <libcobj.h>
