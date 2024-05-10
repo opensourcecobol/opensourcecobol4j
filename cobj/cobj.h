@@ -29,11 +29,12 @@
 //#include "lib/gettext.h"
 //#endif
 
-//#ifdef _WIN32
-//#include "../libcobj.h"
-//#else
+#ifdef _WIN32
 #include <libcobj.h>
-//#endif
+#else
+#include "libcobj.h"
+#endif
+
 #include "lib/gettext.h"
 
 #if !defined(__i386__) && !defined(__x86_64__) && !defined(__powerpc__) &&     \
