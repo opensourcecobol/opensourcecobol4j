@@ -49,7 +49,7 @@
 //#else
 //#ifdef _WIN32
 //#include "../lib/getopt.h"
-//#elif 
+//#elif
 #else
 #ifdef HAVE_GETOPT_H
 #include <getopt.h>
@@ -127,7 +127,7 @@ struct cb_exception cb_exception_table[] = {
 //#include "exception.def"
 //#else
 #include <exception.def>
-//#endif
+    //#endif
     {NULL, 0, 0} /* CB_EC_MAX */
 };
 #undef COB_EXCEPTION

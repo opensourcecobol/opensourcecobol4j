@@ -157,7 +157,7 @@ static const struct system_table system_tab[] = {
 //#include "system.def"
 //#else
 #include <system.def>
-//#endif
+    //#endif
     {NULL, NULL}};
 
 /* Globals */

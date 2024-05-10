@@ -98,7 +98,7 @@ static const struct system_table system_tab[] = {
 //#include "system.def"
 //#else
 #include <system.def>
-//#endif
+    //#endif
     {NULL, 0}};
 
 static const char *const bin_set_funcs[] = {NULL,
