@@ -469,11 +469,7 @@ extern "C" {
 
 enum cob_exception_id {
 	COB_EC_ZERO,
-#ifdef _WIN32
-#include "cobj/exception.def"
-#else
 #include <exception.def>
-#endif
 	COB_EC_MAX
 };
 
