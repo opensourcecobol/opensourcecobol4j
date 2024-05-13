@@ -26,9 +26,13 @@
 
 #ifdef _WIN32
 #include <libcobj.h>
-#include <gettext.h>
 #else
 #include "libcobj.h"
+#endif
+
+#ifdef _WIN32
+#include <gettext.h>
+#else
 #include "lib/gettext.h"
 #endif
 
