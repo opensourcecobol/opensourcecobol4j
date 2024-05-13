@@ -40,7 +40,7 @@
 #include <signal.h>
 #endif
 
-#ifdef _WIN64
+#ifdef _WIN32
 #include <windows.h> /* for GetTempPath, GetTempFileName */
 #endif
 
@@ -58,11 +58,7 @@
 #include <locale.h>
 #endif
 
-//#ifdef _WIN32
-//#include "../tarstamp.h"
-//#else
 #include <tarstamp.h>
-//#endif
 
 #include "cobj.h"
 #include "tree.h"
@@ -119,11 +115,7 @@ int cb_display_sign = COB_DISPLAY_SIGN_ASCII; /* 0 */
 #define COB_EXCEPTION(code, tag, name, critical) {name, 0x##code, 0},
 struct cb_exception cb_exception_table[] = {
     {NULL, 0, 0}, /* CB_EC_ZERO */
-//#ifdef _WIN32
-//#include "exception.def"
-//#else
 #include <exception.def>
-    //#endif
     {NULL, 0, 0} /* CB_EC_MAX */
 };
 #undef COB_EXCEPTION

@@ -26,11 +26,11 @@
 
 #ifdef _WIN32
 #include <libcobj.h>
+#include <gettext.h>
 #else
 #include "libcobj.h"
-#endif
-
 #include "lib/gettext.h"
+#endif
 
 #if !defined(__i386__) && !defined(__x86_64__) && !defined(__powerpc__) &&     \
     !defined(__powerpc64__) && !defined(__ppc__) && !defined(__amd64__)

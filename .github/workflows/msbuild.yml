@@ -1,8 +1,3 @@
-# This workflow uses actions that are not certified by GitHub.
-# They are provided by a third-party and are governed by
-# separate terms of service, privacy policy, and support
-# documentation.
-
 name: MSBuild
 
 on:
@@ -22,9 +17,7 @@ jobs:
       run: nuget restore ./win/
 
     - name: Build
-      # Add additional options to the MSBuild command line here (like platform or verbosity level).
-      # See https://docs.microsoft.com/visualstudio/msbuild/msbuild-command-line-reference
-      run: msbuild /p:AdditionalIncludePaths=./:./cobj/:./win win/cobol4j.sln
+      run: msbuild /p:AdditionalIncludePaths=./:./cobj/:./win:./lib win/cobol4j.sln
 
     - name: exec cobj
       run: |
