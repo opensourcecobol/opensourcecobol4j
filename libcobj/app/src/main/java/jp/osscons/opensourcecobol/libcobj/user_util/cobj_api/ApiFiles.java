@@ -100,7 +100,7 @@ public class ApiFiles {
 
     for (i = 0; i < params.length(); ++i) {
       param = params.getJSONObject(i);
-      name = param.getString("variable_name");
+      name = param.getString("variable_name").replace('-', '_');
       type = param.getString("java_type");
       if ("String".equals(type)) {
         defaultValue = "\"\"";
@@ -142,7 +142,7 @@ public class ApiFiles {
 
     for (i = 0; i < params.length(); ++i) {
       param = params.getJSONObject(i);
-      name = param.getString("variable_name");
+      name = param.getString("variable_name").replace('-', '_');
       ctlWriter.print(name);
 
       if (i < params.length() - 1) {
@@ -153,7 +153,7 @@ public class ApiFiles {
 
     for (i = 0; i < params.length(); ++i) {
       param = params.getJSONObject(i);
-      name = param.getString("variable_name");
+      name = param.getString("variable_name").replace('-', '_');
       type = param.getString("java_type");
       if ("String".equals(type)) {
         methodName = "getString";
@@ -175,7 +175,7 @@ public class ApiFiles {
 
     for (i = 0; i < params.length(); ++i) {
       param = params.getJSONObject(i);
-      name = param.getString("variable_name");
+      name = param.getString("variable_name").replace('-', '_');
       ctlWriter.print(name);
       if (i < params.length() - 1) {
         ctlWriter.print(", ");
@@ -200,7 +200,7 @@ public class ApiFiles {
 
     for (i = 0; i < params.length(); ++i) {
       param = params.getJSONObject(i);
-      name = param.getString("variable_name");
+      name = param.getString("variable_name").replace('-', '_');
       type = param.getString("java_type");
       rcdWriter.print(type + " " + name);
       if (i < params.length() - 1) {
