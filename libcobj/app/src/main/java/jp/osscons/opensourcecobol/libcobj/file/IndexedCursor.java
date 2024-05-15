@@ -95,6 +95,10 @@ public final class IndexedCursor {
     this.comparator = comparator;
   }
 
+  public int getComparator() {
+    return this.comparator;
+  }
+
   private IndexedCursor(
       Connection conn, byte[] key, int tableIndex, boolean isDuplicate, int comparator) {
     this.conn = conn;

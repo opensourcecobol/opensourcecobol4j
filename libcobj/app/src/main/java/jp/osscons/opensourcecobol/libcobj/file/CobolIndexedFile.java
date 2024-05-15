@@ -348,6 +348,14 @@ public class CobolIndexedFile extends CobolFile {
       this.callStart = false;
       this.indexedFirstRead = false;
       this.record.setSize(p.data.length);
+      if (this.cursor.isPresent()) {
+        IndexedCursor cursor = this.cursor.get();
+        if (cursor.getComparator() == COB_LE
+            && this.record.getDataStorage().memcmp(p.data, p.data.length) != 0) {
+          this.callStart = false;
+          return this.readNext(readOpts);
+        }
+      }
       this.record.getDataStorage().memcpy(p.data, p.data.length);
       return COB_STATUS_00_SUCCESS;
     }
@@ -399,20 +407,20 @@ public class CobolIndexedFile extends CobolFile {
 
     Optional<FetchResult> optionalResult = cursor.read(cursorOpt);
 
-    this.indexedFirstRead = false;
-
     if (!optionalResult.isPresent()) {
+      this.indexedFirstRead = false;
       return COB_STATUS_10_END_OF_FILE;
-    } else {
-      FetchResult result = optionalResult.get();
-      p.key = result.key;
-      p.data = result.value;
-
-      this.record.setSize(p.data.length);
-      this.record.getDataStorage().memcpy(p.data, p.data.length);
-
-      return COB_STATUS_00_SUCCESS;
     }
+
+    FetchResult result = optionalResult.get();
+    p.key = result.key;
+    p.data = result.value;
+
+    this.record.setSize(p.data.length);
+    this.record.getDataStorage().memcpy(p.data, p.data.length);
+
+    this.indexedFirstRead = false;
+    return COB_STATUS_00_SUCCESS;
   }
 
   private void closeCursor() {
