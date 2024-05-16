@@ -350,7 +350,8 @@ public class CobolIndexedFile extends CobolFile {
       this.record.setSize(p.data.length);
       if (this.cursor.isPresent()) {
         IndexedCursor cursor = this.cursor.get();
-        if (cursor.getComparator() == COB_LE
+        if ((readOpts & CobolFile.COB_READ_PREVIOUS) != 0
+            && cursor.getComparator() == COB_LE
             && this.record.getDataStorage().memcmp(p.data, p.data.length) != 0) {
           this.callStart = false;
           return this.readNext(readOpts);
