@@ -66,5 +66,8 @@ jobs:
   javadoc:
     uses: ./.github/workflows/javadoc.yml
 
+  MSBuild:
+    uses: ./.github/workflows/msbuild.yml
+
   static-analysis:
     uses: ./.github/workflows/static-analysis.yml

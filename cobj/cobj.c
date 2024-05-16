@@ -1363,8 +1363,8 @@ static char *cobc_temp_name(const char *ext) {
 #ifdef _WIN32
   char temp[MAX_PATH];
 
-  GetTempPath(MAX_PATH, temp);
-  GetTempFileName(temp, "cob", 0, buff);
+  GetTempPath2A(MAX_PATH, temp);
+  GetTempFileNameA(temp, "cob", 0, buff);
   DeleteFile(buff);
   strcpy(buff + strlen(buff) - 4, ext); /* replace ".tmp" by EXT */
 #else

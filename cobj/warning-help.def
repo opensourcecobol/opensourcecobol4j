@@ -19,7 +19,11 @@
  * Boston, MA 02110-1301 USA
  */
 
+#ifdef _WIN32
+#include <gettext.h>
+#else
 #include "lib/gettext.h"
+#endif
 
 /* CB_WARNDEF (var, name, wall, doc) */
 

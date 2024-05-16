@@ -1,0 +1,25 @@
+name: MSBuild
+
+on:
+  workflow_call:
+
+jobs:
+  build:
+    runs-on: windows-latest
+
+    steps:
+    - uses: actions/checkout@v4
+
+    - name: Add MSBuild to PATH
+      uses: microsoft/setup-msbuild@v1.0.2
+
+    - name: Restore NuGet packages
+      run: nuget restore ./win/
+
+    - name: Build
+      run: msbuild /p:AdditionalIncludePaths=./:./cobj/:./win:./lib win/opensourcecobol4j.sln
+
+    - name: exec cobj
+      run: |
+        cd win/x64/Debug
+        ./cobj.exe --version
