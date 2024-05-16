@@ -17,7 +17,7 @@ jobs:
       run: nuget restore ./win/
 
     - name: Build
-      run: msbuild /p:AdditionalIncludePaths=./:./cobj/:./win:./lib win/cobol4j.sln
+      run: msbuild /p:AdditionalIncludePaths=./:./cobj/:./win:./lib win/opensourcecobol4j.sln
 
     - name: exec cobj
       run: |
