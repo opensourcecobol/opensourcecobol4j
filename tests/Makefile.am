@@ -212,7 +212,8 @@ misc_DEPENDENCIES = \
 	misc.src/compare-large-number.at \
 	misc.src/validate-indexed-file-keys.at \
 	misc.src/record-key-duplicates-error.at \
-	misc.src/copy-comments.at
+	misc.src/copy-comments.at \
+	misc.src/read_prev_after_start.at
 
 EXTRA_DIST = $(srcdir)/package.m4 \
 	$(TESTS) \
