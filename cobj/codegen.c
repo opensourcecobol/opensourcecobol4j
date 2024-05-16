@@ -44,6 +44,11 @@
 #define INITIALIZE_ONE 1
 #define INITIALIZE_DEFAULT 2
 #define INITIALIZE_COMPOUND 3
+#define EXECUTION_NORMAL 0
+#define EXECUTION_LAST 1
+#define EXECUTION_ERROR_HANDLER 2
+#define BUF_SIZE 1024
+#define MAX_LITERAL_SIZE 64
 
 #ifndef __GNUC__
 static int inside_check = 0;
@@ -188,10 +193,6 @@ static void joutput_label_variable(struct cb_label *label);
 static void joutput_label_variable_name(char *s, int key,
                                         struct cb_label *section);
 static void joutput_label_variable_by_value(int value);
-
-const int EXECUTION_NORMAL = 0;
-const int EXECUTION_LAST = 1;
-const int EXECUTION_ERROR_HANDLER = 2;
 
 static char *get_java_identifier_field(struct cb_field *f) {
   char *buf = malloc(COB_SMALL_BUFF);
@@ -627,13 +628,15 @@ static void joutput_edit_code_command(const char *target) {
     return;
   }
 
-  const int BUF_SIZE = 1024;
-
   char command[BUF_SIZE];
   char buf[BUF_SIZE];
   sprintf(command, "%s --target=%s", edit_code_command, target);
 
+#ifdef _WIN32
+  FILE *fp = _popen(command, "r");
+#else
   FILE *fp = popen(command, "r");
+#endif
   if (fp == NULL) {
     return;
   }
@@ -642,8 +645,11 @@ static void joutput_edit_code_command(const char *target) {
   while (fgets(buf, BUF_SIZE, fp) != NULL) {
     joutput("%s", buf);
   }
-
+#ifdef _WIN32
+  _pclose(fp);
+#else
   pclose(fp);
+#endif
 }
 
 /*
@@ -1188,7 +1194,6 @@ static struct literal_list *lookup_literal(cb_tree x) {
 }
 
 static void joutput_const_identifier(struct literal_list *l) {
-  const int MAX_LITERAL_SIZE = 64;
   char s[MAX_LITERAL_SIZE + 1];
   memset(s, 0, MAX_LITERAL_SIZE + 1);
   int i = 0;

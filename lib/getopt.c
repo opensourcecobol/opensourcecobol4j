@@ -213,8 +213,6 @@ static char *posixly_correct;
 
 # if HAVE_STRING_H
 #  include <string.h>
-# else
-#  include <strings.h>
 # endif
 
 /* Avoid depending on library functions or files
