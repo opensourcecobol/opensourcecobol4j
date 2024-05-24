@@ -24,10 +24,11 @@ jobs:
         cd win/x64/Debug
         ./cobj.exe --version
 
-    - name: Run test
-      uses: hogo82148/actions-setup-perl@v1
+    - uses: hogo82148/actions-setup-perl@v1
       with:
       perl-version: "5.38"
+    
+    - name: Run test
       run : |
         cd win
         ./make-test.ps1
