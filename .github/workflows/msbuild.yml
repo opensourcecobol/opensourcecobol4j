@@ -19,7 +19,15 @@ jobs:
     - name: Build
       run: msbuild /p:AdditionalIncludePaths=./:./cobj/:./win:./lib win/opensourcecobol4j.sln
 
-    - name: exec cobj
+    - name: Execute cobj
       run: |
         cd win/x64/Debug
         ./cobj.exe --version
+
+    - name: Run test
+    - uses: hogo82148/actions-setup-perl@v1
+      with:
+      perl-version: "5.38"
+      run : |
+        cd win
+        ./make-test.ps1

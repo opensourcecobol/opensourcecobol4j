@@ -1514,11 +1514,15 @@ static int process(const char *cmd) {
   p = buffptr;
   /* quote '$' */
   for (; *cmd; cmd++) {
+#ifndef _WIN32
     if (*cmd == '$') {
       p += sprintf(p, "\\$");
     } else {
+#endif
       *p++ = *cmd;
+#ifndef _WIN32
     }
+#endif
   }
   *p = 0;
 
@@ -1749,6 +1753,13 @@ static int process_compile(struct filename *fn) {
   char buff2[COB_SMALL_BUFF];
   char name[COB_MEDIUM_BUFF];
   int ret = 0;
+#ifdef _WIN32
+  char* current_dir = ".\\";
+  char* remove_cmd = "del";
+#else
+  char* current_dir = "./";
+  char* remove_cmd = "rm -rf";
+#endif
 
   if (output_name) {
     strcpy(name, output_name);
@@ -1756,7 +1767,7 @@ static int process_compile(struct filename *fn) {
     file_basename(fn->source, name);
   }
 
-  char *output_name_a = output_name == NULL ? (char *)"./" : output_name;
+  char *output_name_a = output_name == NULL ? current_dir : output_name;
   char *java_source_dir_a =
       java_source_dir == NULL ? (char *)"./" : java_source_dir;
 
@@ -1784,8 +1795,11 @@ static int process_compile(struct filename *fn) {
       if (ret) {
         return ret;
       }
-      snprintf(buff, COB_MEDIUM_BUFF, "rm -rf %s/%s.class %s/%s$*.class",
-               output_name_a, *program_id, output_name_a, *program_id);
+#ifndef _WIN32
+      *output_name_a++ = "/";
+#endif
+      snprintf(buff, COB_MEDIUM_BUFF, "%s %s%s.class %s%s$*.class",
+               remove_cmd, output_name_a, *program_id, output_name_a, *program_id);
       process(buff);
     }
   }
@@ -1800,6 +1814,11 @@ static int process_build_module(struct filename *fn) {
   char basename[COB_MEDIUM_BUFF];
   file_basename(fn->source, basename);
   struct cb_program *p;
+#ifdef _WIN32
+  char* remove_cmd = "del";
+#else
+  char* remove_cmd = "rm";
+#endif
 
   if (output_name) {
     strcpy(name, output_name);
@@ -1825,8 +1844,7 @@ static int process_build_module(struct filename *fn) {
     if (ret) {
       return ret;
     }
-
-    sprintf(buff, "rm %s*.class", p->program_id);
+    sprintf(buff, "%s %s*.class", remove_cmd, p->program_id);
     ret = process(buff);
     if (ret) {
       return ret;
@@ -2022,6 +2040,12 @@ static int process_build_single_jar() {
   char *java_source_dir_a =
       java_source_dir == NULL ? (char *)"./" : java_source_dir;
 
+#ifdef _WIN32
+  char* remove_cmd = "del";
+#else
+  char *remove_cmd = "rm -f";
+#endif
+
   sprintf(buff, "javac %s -encoding SJIS -d %s %s/*.java", cob_java_flags,
           output_name_a, java_source_dir_a);
 
@@ -2041,7 +2065,7 @@ static int process_build_single_jar() {
   snprintf(buff, COB_MEDIUM_BUFF, "cd %s && jar --create --file=%s %s/*.class",
            output_name_a, cb_single_jar_name, package_dir);
   ret = process(buff);
-  snprintf(buff, COB_MEDIUM_BUFF, "rm -f %s/%s/*.class #aaa", output_name_a,
+ snprintf(buff, COB_MEDIUM_BUFF, "%s %s/%s/*.class #aaa", remove_cmd, output_name_a,
            package_dir);
   process(buff);
   return ret;
@@ -2116,7 +2140,7 @@ int main(int argc, char *argv[]) {
 #ifdef _WIN32
     char *tmpdir = cobc_malloc(COB_SMALL_BUFF * sizeof(char));
     if ((GetTempPathA(COB_SMALL_BUFF, tmpdir)) == 0) {
-      strcpy(tmpdir, "c:\\oscobol\\tmp");
+      strcpy(tmpdir, "c:\\opensourcecobol4j\\tmp");
     }
     cob_tmpdir = tmpdir;
     sprintf(buff, "TMPDIR=%s", cob_tmpdir);

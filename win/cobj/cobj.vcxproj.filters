@@ -39,10 +39,7 @@
     <ClInclude Include="..\..\lib\gettext.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="..\config.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="..\defaults.h">
+    <ClInclude Include="..\..\cobj\config.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
