@@ -3,9 +3,6 @@ name: MSBuild
 on:
   workflow_call:
 
-env: 
-  CLASSPATH: ";./win/libcobj.jar"
-
 jobs:
   build:
     runs-on: windows-latest
@@ -33,6 +30,8 @@ jobs:
         distribution: strawberry
     
     - name: Run test
+      env:
+        CLASSPATH: ./win/libcobj.jar
       run : |
         cd win
         .\make-install.ps1
