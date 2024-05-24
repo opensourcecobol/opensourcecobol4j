@@ -3,6 +3,9 @@ name: MSBuild
 on:
   workflow_call:
 
+env: 
+  CLASSPATH: ";/usr/lib/opensourcecobol4j/libcobj.jar"
+
 jobs:
   build:
     runs-on: windows-latest
