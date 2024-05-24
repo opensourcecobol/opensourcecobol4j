@@ -24,9 +24,10 @@ jobs:
         cd win/x64/Debug
         ./cobj.exe --version
 
-    - uses: hogo82148/actions-setup-perl@v1
+    - uses: shogo82148/actions-setup-perl@v1
       with:
-        perl-version: "5.38"
+        perl-version: "5.32"
+        distribution: strawberry
     
     - name: Run test
       run : |
