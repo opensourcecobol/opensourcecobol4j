@@ -4,7 +4,7 @@ on:
   workflow_call:
 
 env: 
-  CLASSPATH: ";/usr/lib/opensourcecobol4j/libcobj.jar"
+  CLASSPATH: ";./win/libcobj.jar"
 
 jobs:
   build:
