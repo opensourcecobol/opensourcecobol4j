@@ -470,7 +470,7 @@ public class CobolResolve {
   /**
    * 引数で与えられたプログラム名に対応するCobolRunnableのインスタンスの cancelメソッドを呼び出す
    *
-   * @param cobolField
+   * @param cobolField プログラム名を示すCOBOL変数
    */
   public static void cancel(AbstractCobolField cobolField) {
     cancel(cobolField.getString());
@@ -585,10 +585,21 @@ public class CobolResolve {
     return new UUID(l1, l2);
   }
 
+  /**
+   * 指定のプログラムのcancelメソッドを呼び出す
+   *
+   * @param f cancelを呼び出すプログラム名を示すCOBOL変数
+   * @throws CobolStopRunException
+   */
   public static void fieldCancel(AbstractCobolField f) throws CobolStopRunException {
     CobolResolve.cobCancel(f.fieldToString());
   }
-
+  /**
+   * 指定のプログラムのcancelメソッドを呼び出す
+   *
+   * @param name プログラム名
+   * @throws CobolStopRunException
+   */
   public static void cobCancel(String name) throws CobolStopRunException {
     if (name == null || name.equals("")) {
       // TODO cob_runtime_errorの実装
