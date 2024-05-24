@@ -32,4 +32,5 @@ jobs:
     - name: Run test
       run : |
         cd win
+        .\make-install.ps1
         .\make-test.ps1
