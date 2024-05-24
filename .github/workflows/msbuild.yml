@@ -32,4 +32,4 @@ jobs:
     - name: Run test
       run : |
         cd win
-        ./make-test.ps1
+        .\make-test.ps1

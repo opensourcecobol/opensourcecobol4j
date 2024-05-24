@@ -1754,11 +1754,11 @@ static int process_compile(struct filename *fn) {
   char name[COB_MEDIUM_BUFF];
   int ret = 0;
 #ifdef _WIN32
-  char* current_dir = ".\\";
-  char* remove_cmd = "del";
+  char current_dir[] = ".\\";
+  char remove_cmd[] = "del";
 #else
-  char* current_dir = "./";
-  char* remove_cmd = "rm -rf";
+  char current_dir[] = "./";
+  char remove_cmd[] = "rm -rf";
 #endif
 
   if (output_name) {
@@ -1796,7 +1796,7 @@ static int process_compile(struct filename *fn) {
         return ret;
       }
 #ifndef _WIN32
-      *output_name_a++ = "/";
+      *output_name_a++ = '/';
 #endif
       snprintf(buff, COB_MEDIUM_BUFF, "%s %s%s.class %s%s$*.class",
                remove_cmd, output_name_a, *program_id, output_name_a, *program_id);
@@ -1815,9 +1815,9 @@ static int process_build_module(struct filename *fn) {
   file_basename(fn->source, basename);
   struct cb_program *p;
 #ifdef _WIN32
-  char* remove_cmd = "del";
+  char remove_cmd[] = "del";
 #else
-  char* remove_cmd = "rm";
+  char remove_cmd[] = "rm";
 #endif
 
   if (output_name) {
@@ -2041,9 +2041,9 @@ static int process_build_single_jar() {
       java_source_dir == NULL ? (char *)"./" : java_source_dir;
 
 #ifdef _WIN32
-  char* remove_cmd = "del";
+  char remove_cmd[] = "del";
 #else
-  char *remove_cmd = "rm -f";
+  char remove_cmd[] = "rm -f";
 #endif
 
   sprintf(buff, "javac %s -encoding SJIS -d %s %s/*.java", cob_java_flags,
