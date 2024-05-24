@@ -25,7 +25,7 @@ jobs:
         ./cobj.exe --version
 
     - name: Run test
-    - uses: hogo82148/actions-setup-perl@v1
+      uses: hogo82148/actions-setup-perl@v1
       with:
       perl-version: "5.38"
       run : |
