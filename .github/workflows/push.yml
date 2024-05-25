@@ -13,6 +13,9 @@ concurrency:
   group: ${{ github.workflow }}-${{ github.ref }}
   cancel-in-progress: true
 
+permissions:
+  contents: read
+
 env:
   CLASSPATH: ":/usr/lib/opensourcecobol4j/libcobj.jar"
 

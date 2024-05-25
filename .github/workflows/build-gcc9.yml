@@ -3,6 +3,9 @@ name: build opensource COBOL 4J using gcc 9
 on:
   workflow_call:
 
+permissions:
+  contents: read
+
 jobs:
   build:
     runs-on: ubuntu-latest
