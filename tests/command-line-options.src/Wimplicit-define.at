@@ -1,0 +1,24 @@
+AT_SETUP([-Wimplicit-define])
+
+AT_DATA([prog.cbl],
+[       IDENTIFICATION   DIVISION.
+       PROGRAM-ID.      prog.
+       ENVIRONMENT      DIVISION.
+       INPUT-OUTPUT     SECTION.
+       FILE-CONTROL.
+       SELECT TEST-FILE ASSIGN TEST-FILE-PATH.
+       DATA             DIVISION.
+       FILE             SECTION.
+       FD TEST-FILE  RECORD CONTAINS 8.
+       01 TEST-REC      PIC X(7).
+       PROCEDURE        DIVISION.
+           STOP RUN.
+])
+
+AT_CHECK([${COBJ} -Wimplicit-define prog.cbl], [0], [],
+[prog.cbl:11: Warning: 'TEST-FILE-PATH' will be implicitly defined
+])
+
+AT_CHECK([${COBJ} --help | grep '\-Wimplicit-define' > /dev/null])
+
+AT_CLEANUP
