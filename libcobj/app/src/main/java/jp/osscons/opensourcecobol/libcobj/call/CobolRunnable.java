@@ -22,9 +22,21 @@ import jp.osscons.opensourcecobol.libcobj.data.CobolDataStorage;
 
 /** COBOLプログラムの実行単位が実装すべきインターフェース */
 public interface CobolRunnable {
+  /**
+   * COBOLプログラムを実行する
+   *
+   * @param storages プログラムの入力データの可変長引数。CALL等の引数のデータ部分
+   * @return プログラムの終了コード
+   */
   int run(CobolDataStorage... storages);
 
+  /** CANCELのためのメソッド */
   void cancel();
 
+  /**
+   * 取り扱いについては調査中
+   *
+   * @return 調査中
+   */
   boolean isActive();
 }

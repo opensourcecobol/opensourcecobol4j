@@ -33,19 +33,43 @@ import jp.osscons.opensourcecobol.libcobj.data.AbstractCobolField;
 import jp.osscons.opensourcecobol.libcobj.data.CobolDataStorage;
 import jp.osscons.opensourcecobol.libcobj.exceptions.CobolStopRunException;
 
+/** 組み込み関数を提供するクラス */
 public class CobolSystemRoutine {
   private static final boolean runsOnWindows = "\\".equals(System.getProperty("file.separator"));
 
+  /**
+   * 組み込み関数CBL_EXIT_PROCの実装。未実装。
+   *
+   * @param x 未実装
+   * @param pptr 未実装
+   * @return 未実装
+   */
   public static int CBL_EXIT_PROC(CobolDataStorage x, CobolDataStorage pptr) {
     // TODO 実装
     return 0;
   }
 
+  /**
+   * 組み込み関数CBL_ERROR_PROCの実装。未実装。
+   *
+   * @param x 未実装
+   * @param pptr 未実装
+   * @return 未実装
+   */
   public static int CBL_ERROR_PROC(CobolDataStorage x, CobolDataStorage pptr) {
     // TODO 実装
     return 0;
   }
 
+  /**
+   * 組み込み関数SYSTEMの実装。
+   *
+   * @param cmd コマンド文字列。Linux/Unix環境であればシェルコマンド、Windows環境であればコマンドプロンプトのコマンド。
+   * @return コマンドの終了コード。
+   * @throws CobolStopRunException
+   *     このメソッドは内部でCobolModule.getCurrentModule().cob_procedure_parametersを参照する。
+   *     このリストの形式に問題がある場合にスローされる。
+   */
   public static int SYSTEM(CobolDataStorage cmd) throws CobolStopRunException {
     int size = SYSTEM_getParameterSize();
     String cmdStr = new String(cmd.getByteArray(0, size));
@@ -53,13 +77,12 @@ public class CobolSystemRoutine {
   }
 
   /**
-   * libcob/common.cのSYSTEMの実装
+   * 組み込み関数SYSTEMの実装。
    *
-   * @param cmd
-   * @return
-   * @throws CobolStopRunException
+   * @param cmd コマンド文字列。Linux/Unix環境であればシェルコマンド、Windows環境であればコマンドプロンプトのコマンド。
+   * @return コマンドの終了コード。
    */
-  public static int SYSTEM(String cmd) throws CobolStopRunException {
+  public static int SYSTEM(String cmd) {
     return SYSTEM_main(cmd);
   }
 
@@ -82,7 +105,7 @@ public class CobolSystemRoutine {
     }
   }
 
-  private static int SYSTEM_main(String cmd) throws CobolStopRunException {
+  private static int SYSTEM_main(String cmd) {
     ProcessBuilder pb;
     if (runsOnWindows) {
       pb = new ProcessBuilder("cmd", "/c", cmd);
@@ -102,13 +125,12 @@ public class CobolSystemRoutine {
   }
 
   /**
-   * libcob/common.cのSYSTEMの実装
+   * 組み込み関数SYSTEMの実装。
    *
-   * @param cmd
-   * @return
-   * @throws CobolStopRunException
+   * @param cmd コマンド文字列。Linux/Unix環境であればシェルコマンド、Windows環境であればコマンドプロンプトのコマンド。
+   * @return コマンドの終了コード。
    */
-  public static int SYSTEM(AbstractCobolField cmd) throws CobolStopRunException {
+  public static int SYSTEM(AbstractCobolField cmd) {
     return SYSTEM(cmd.getString());
   }
 
@@ -116,9 +138,8 @@ public class CobolSystemRoutine {
     byte calc(byte b1, byte b2);
   }
 
-  public static int CBL_COMMON_OPERATION(
-      String funcName, CobolDataStorage data1, CobolDataStorage data2, int length, Calculater c)
-      throws CobolStopRunException {
+  private static int CBL_COMMON_OPERATION(
+      String funcName, CobolDataStorage data1, CobolDataStorage data2, int length, Calculater c) {
     CobolUtil.COB_CHK_PARMS(funcName, 3);
     if (length <= 0) {
       return 0;
@@ -132,16 +153,14 @@ public class CobolSystemRoutine {
   }
 
   /**
-   * libcob/common.cのCBL_ANDの実装
+   * 組み込み関数CBL_ANDの実装。1バイトごとに論理積を取る。 先頭lengthバイトのデータについて論理積を計算し、計算結果を2番目の引数の先頭に格納する。
    *
-   * @param data1
-   * @param data2
-   * @param length
-   * @return
-   * @throws CobolStopRunException
+   * @param data1 計算対象の1番目のCOBOL変数のバイト列。
+   * @param data2 計算対象の2番目のCOBOL変数のバイト列。先頭lengthバイトに計算結果が格納される。
+   * @param length 計算するバイト数。
+   * @return 0
    */
-  public static int CBL_AND(CobolDataStorage data1, CobolDataStorage data2, int length)
-      throws CobolStopRunException {
+  public static int CBL_AND(CobolDataStorage data1, CobolDataStorage data2, int length) {
     return CBL_COMMON_OPERATION(
         "CBL_AND",
         data1,
@@ -153,19 +172,37 @@ public class CobolSystemRoutine {
           }
         });
   }
-
-  public static int CBL_AND(AbstractCobolField data1, CobolDataStorage data2, int length)
-      throws CobolStopRunException {
+  /**
+   * 組み込み関数CBL_ANDの実装。1バイトごとに論理積を取る。 先頭lengthバイトのデータについて論理積を計算し、計算結果を2番目の引数の先頭に格納する。
+   *
+   * @param data1 計算対象の1番目のCOBOL変数。
+   * @param data2 計算対象の2番目の引数のバイト列。先頭lengthバイトに計算結果が格納される。
+   * @param length 計算するバイト数。
+   * @return 0
+   */
+  public static int CBL_AND(AbstractCobolField data1, CobolDataStorage data2, int length) {
     return CBL_AND(data1.getDataStorage(), data2, length);
   }
-
-  public static int CBL_AND(CobolDataStorage data1, AbstractCobolField data2, int length)
-      throws CobolStopRunException {
+  /**
+   * 組み込み関数CBL_ANDの実装。1バイトごとに論理積を取る。 先頭lengthバイトのデータについて論理積を計算し、計算結果を2番目の引数の先頭に格納する。
+   *
+   * @param data1 計算対象の1番目のCOBOL変数のバイト列。
+   * @param data2 計算対象の2番目のCOBOL変数のバイト列。先頭lengthバイトに計算結果が格納される。
+   * @param length 計算するバイト数。
+   * @return 0
+   */
+  public static int CBL_AND(CobolDataStorage data1, AbstractCobolField data2, int length) {
     return CBL_AND(data1, data2.getDataStorage(), length);
   }
-
-  public static int CBL_AND(AbstractCobolField data1, AbstractCobolField data2, int length)
-      throws CobolStopRunException {
+  /**
+   * 組み込み関数CBL_ANDの実装。1バイトごとに論理積を取る。 先頭lengthバイトのデータについて論理積を計算し、計算結果を2番目の引数の先頭に格納する。
+   *
+   * @param data1 計算対象の1番目のCOBOL変数のバイト列。
+   * @param data2 計算対象の2番目のCOBOL変数のバイト列。先頭lengthバイトに計算結果が格納される。
+   * @param length 計算するバイト数。
+   * @return 0
+   */
+  public static int CBL_AND(AbstractCobolField data1, AbstractCobolField data2, int length) {
     return CBL_AND(data1.getDataStorage(), data2.getDataStorage(), length);
   }
 
@@ -176,10 +213,8 @@ public class CobolSystemRoutine {
    * @param data2
    * @param length
    * @return
-   * @throws CobolStopRunException
    */
-  public static int CBL_OR(CobolDataStorage data1, CobolDataStorage data2, int length)
-      throws CobolStopRunException {
+  public static int CBL_OR(CobolDataStorage data1, CobolDataStorage data2, int length) {
     return CBL_COMMON_OPERATION(
         "CBL_OR",
         data1,
@@ -192,18 +227,15 @@ public class CobolSystemRoutine {
         });
   }
 
-  public static int CBL_OR(AbstractCobolField data1, CobolDataStorage data2, int length)
-      throws CobolStopRunException {
+  public static int CBL_OR(AbstractCobolField data1, CobolDataStorage data2, int length) {
     return CBL_OR(data1.getDataStorage(), data2, length);
   }
 
-  public static int CBL_OR(CobolDataStorage data1, AbstractCobolField data2, int length)
-      throws CobolStopRunException {
+  public static int CBL_OR(CobolDataStorage data1, AbstractCobolField data2, int length) {
     return CBL_OR(data1, data2.getDataStorage(), length);
   }
 
-  public static int CBL_OR(AbstractCobolField data1, AbstractCobolField data2, int length)
-      throws CobolStopRunException {
+  public static int CBL_OR(AbstractCobolField data1, AbstractCobolField data2, int length) {
     return CBL_OR(data1.getDataStorage(), data2.getDataStorage(), length);
   }
 
@@ -222,10 +254,8 @@ public class CobolSystemRoutine {
    * @param data2
    * @param length
    * @return
-   * @throws CobolStopRunException
    */
-  public static int CBL_NOR(CobolDataStorage data1, CobolDataStorage data2, int length)
-      throws CobolStopRunException {
+  public static int CBL_NOR(CobolDataStorage data1, CobolDataStorage data2, int length) {
     return CBL_COMMON_OPERATION(
         "CBL_NOR",
         data1,
@@ -238,18 +268,15 @@ public class CobolSystemRoutine {
         });
   }
 
-  public static int CBL_NOR(AbstractCobolField data1, CobolDataStorage data2, int length)
-      throws CobolStopRunException {
+  public static int CBL_NOR(AbstractCobolField data1, CobolDataStorage data2, int length) {
     return CBL_NOR(data1.getDataStorage(), data2, length);
   }
 
-  public static int CBL_NOR(CobolDataStorage data1, AbstractCobolField data2, int length)
-      throws CobolStopRunException {
+  public static int CBL_NOR(CobolDataStorage data1, AbstractCobolField data2, int length) {
     return CBL_NOR(data1, data2.getDataStorage(), length);
   }
 
-  public static int CBL_NOR(AbstractCobolField data1, AbstractCobolField data2, int length)
-      throws CobolStopRunException {
+  public static int CBL_NOR(AbstractCobolField data1, AbstractCobolField data2, int length) {
     return CBL_NOR(data1.getDataStorage(), data2.getDataStorage(), length);
   }
 
@@ -260,10 +287,8 @@ public class CobolSystemRoutine {
    * @param data2
    * @param length
    * @return
-   * @throws CobolStopRunException
    */
-  public static int CBL_XOR(CobolDataStorage data1, CobolDataStorage data2, int length)
-      throws CobolStopRunException {
+  public static int CBL_XOR(CobolDataStorage data1, CobolDataStorage data2, int length) {
     return CBL_COMMON_OPERATION(
         "CBL_XOR",
         data1,
@@ -276,18 +301,15 @@ public class CobolSystemRoutine {
         });
   }
 
-  public static int CBL_XOR(AbstractCobolField data1, CobolDataStorage data2, int length)
-      throws CobolStopRunException {
+  public static int CBL_XOR(AbstractCobolField data1, CobolDataStorage data2, int length) {
     return CBL_XOR(data1.getDataStorage(), data2, length);
   }
 
-  public static int CBL_XOR(CobolDataStorage data1, AbstractCobolField data2, int length)
-      throws CobolStopRunException {
+  public static int CBL_XOR(CobolDataStorage data1, AbstractCobolField data2, int length) {
     return CBL_XOR(data1, data2.getDataStorage(), length);
   }
 
-  public static int CBL_XOR(AbstractCobolField data1, AbstractCobolField data2, int length)
-      throws CobolStopRunException {
+  public static int CBL_XOR(AbstractCobolField data1, AbstractCobolField data2, int length) {
     return CBL_XOR(data1.getDataStorage(), data2.getDataStorage(), length);
   }
 
@@ -298,10 +320,8 @@ public class CobolSystemRoutine {
    * @param data2
    * @param length
    * @return
-   * @throws CobolStopRunException
    */
-  public static int CBL_NIMP(CobolDataStorage data1, CobolDataStorage data2, int length)
-      throws CobolStopRunException {
+  public static int CBL_NIMP(CobolDataStorage data1, CobolDataStorage data2, int length) {
     return CBL_COMMON_OPERATION(
         "CBL_NIMP",
         data1,
@@ -314,18 +334,15 @@ public class CobolSystemRoutine {
         });
   }
 
-  public static int CBL_NIMP(AbstractCobolField data1, CobolDataStorage data2, int length)
-      throws CobolStopRunException {
+  public static int CBL_NIMP(AbstractCobolField data1, CobolDataStorage data2, int length) {
     return CBL_NIMP(data1.getDataStorage(), data2, length);
   }
 
-  public static int CBL_NIMP(CobolDataStorage data1, AbstractCobolField data2, int length)
-      throws CobolStopRunException {
+  public static int CBL_NIMP(CobolDataStorage data1, AbstractCobolField data2, int length) {
     return CBL_NIMP(data1, data2.getDataStorage(), length);
   }
 
-  public static int CBL_NIMP(AbstractCobolField data1, AbstractCobolField data2, int length)
-      throws CobolStopRunException {
+  public static int CBL_NIMP(AbstractCobolField data1, AbstractCobolField data2, int length) {
     return CBL_NIMP(data1.getDataStorage(), data2.getDataStorage(), length);
   }
 
@@ -336,10 +353,8 @@ public class CobolSystemRoutine {
    * @param data2
    * @param length
    * @return
-   * @throws CobolStopRunException
    */
-  public static int CBL_EQ(CobolDataStorage data1, CobolDataStorage data2, int length)
-      throws CobolStopRunException {
+  public static int CBL_EQ(CobolDataStorage data1, CobolDataStorage data2, int length) {
     return CBL_COMMON_OPERATION(
         "CBL_EQ",
         data1,
@@ -352,18 +367,15 @@ public class CobolSystemRoutine {
         });
   }
 
-  public static int CBL_EQ(AbstractCobolField data1, CobolDataStorage data2, int length)
-      throws CobolStopRunException {
+  public static int CBL_EQ(AbstractCobolField data1, CobolDataStorage data2, int length) {
     return CBL_EQ(data1.getDataStorage(), data2, length);
   }
 
-  public static int CBL_EQ(CobolDataStorage data1, AbstractCobolField data2, int length)
-      throws CobolStopRunException {
+  public static int CBL_EQ(CobolDataStorage data1, AbstractCobolField data2, int length) {
     return CBL_EQ(data1, data2.getDataStorage(), length);
   }
 
-  public static int CBL_EQ(AbstractCobolField data1, AbstractCobolField data2, int length)
-      throws CobolStopRunException {
+  public static int CBL_EQ(AbstractCobolField data1, AbstractCobolField data2, int length) {
     return CBL_EQ(data1.getDataStorage(), data2.getDataStorage(), length);
   }
 
@@ -373,9 +385,8 @@ public class CobolSystemRoutine {
    * @param data
    * @param length
    * @return
-   * @throws CobolStopRunException
    */
-  public static int CBL_NOT(CobolDataStorage data, int length) throws CobolStopRunException {
+  public static int CBL_NOT(CobolDataStorage data, int length) {
     CobolUtil.COB_CHK_PARMS("CBL_NOT", 2);
     if (length <= 0) {
       return 0;
@@ -387,7 +398,7 @@ public class CobolSystemRoutine {
     return 0;
   }
 
-  public static int CBL_NOT(AbstractCobolField data, int length) throws CobolStopRunException {
+  public static int CBL_NOT(AbstractCobolField data, int length) {
     return CBL_NOT(data.getDataStorage(), length);
   }
 
@@ -397,10 +408,8 @@ public class CobolSystemRoutine {
    * @param data1
    * @param data2
    * @return
-   * @throws CobolStopRunException
    */
-  public static int CBL_XF4(CobolDataStorage data1, CobolDataStorage data2)
-      throws CobolStopRunException {
+  public static int CBL_XF4(CobolDataStorage data1, CobolDataStorage data2) {
     CobolUtil.COB_CHK_PARMS("CBL_XF4", 2);
     for (int n = 0; n < 8; ++n) {
       byte b1 = data1.getByte(n);
@@ -410,18 +419,15 @@ public class CobolSystemRoutine {
     return 0;
   }
 
-  public static int CBL_XF4(AbstractCobolField data1, CobolDataStorage data2)
-      throws CobolStopRunException {
+  public static int CBL_XF4(AbstractCobolField data1, CobolDataStorage data2) {
     return CBL_XF4(data1.getDataStorage(), data2);
   }
 
-  public static int CBL_XF4(CobolDataStorage data1, AbstractCobolField data2)
-      throws CobolStopRunException {
+  public static int CBL_XF4(CobolDataStorage data1, AbstractCobolField data2) {
     return CBL_XF4(data1, data2.getDataStorage());
   }
 
-  public static int CBL_XF4(AbstractCobolField data1, AbstractCobolField data2)
-      throws CobolStopRunException {
+  public static int CBL_XF4(AbstractCobolField data1, AbstractCobolField data2) {
     return CBL_XF4(data1.getDataStorage(), data2.getDataStorage());
   }
 
@@ -431,10 +437,8 @@ public class CobolSystemRoutine {
    * @param data1
    * @param data2
    * @return
-   * @throws CobolStopRunException
    */
-  public static int CBL_XF5(CobolDataStorage data1, CobolDataStorage data2)
-      throws CobolStopRunException {
+  public static int CBL_XF5(CobolDataStorage data1, CobolDataStorage data2) {
     CobolUtil.COB_CHK_PARMS("CBL_XF5", 2);
     byte b1 = data1.getByte(0);
     for (int n = 0; n < 8; ++n) {
@@ -443,18 +447,15 @@ public class CobolSystemRoutine {
     return 0;
   }
 
-  public static int CBL_XF5(AbstractCobolField data1, CobolDataStorage data2)
-      throws CobolStopRunException {
+  public static int CBL_XF5(AbstractCobolField data1, CobolDataStorage data2) {
     return CBL_XF5(data1.getDataStorage(), data2);
   }
 
-  public static int CBL_XF5(CobolDataStorage data1, AbstractCobolField data2)
-      throws CobolStopRunException {
+  public static int CBL_XF5(CobolDataStorage data1, AbstractCobolField data2) {
     return CBL_XF5(data1, data2.getDataStorage());
   }
 
-  public static int CBL_XF5(AbstractCobolField data1, AbstractCobolField data2)
-      throws CobolStopRunException {
+  public static int CBL_XF5(AbstractCobolField data1, AbstractCobolField data2) {
     return CBL_XF5(data1.getDataStorage(), data2.getDataStorage());
   }
 
@@ -501,9 +502,8 @@ public class CobolSystemRoutine {
    * @param data
    * @param length
    * @return
-   * @throws CobolStopRunException
    */
-  public static int CBL_TOLOWER(CobolDataStorage data, int length) throws CobolStopRunException {
+  public static int CBL_TOLOWER(CobolDataStorage data, int length) {
     CobolUtil.COB_CHK_PARMS("CBL_TOLOWER", 2);
     if (length <= 0) {
       return 0;
@@ -518,7 +518,7 @@ public class CobolSystemRoutine {
     return 0;
   }
 
-  public static int CBL_TOLOWER(AbstractCobolField data, int length) throws CobolStopRunException {
+  public static int CBL_TOLOWER(AbstractCobolField data, int length) {
     return CBL_TOLOWER(data.getDataStorage(), length);
   }
 
@@ -528,9 +528,8 @@ public class CobolSystemRoutine {
    * @param data
    * @param length
    * @return
-   * @throws CobolStopRunException
    */
-  public static int CBL_TOUPPER(CobolDataStorage data, int length) throws CobolStopRunException {
+  public static int CBL_TOUPPER(CobolDataStorage data, int length) {
     CobolUtil.COB_CHK_PARMS("CBL_TOUPPER", 2);
     if (length <= 0) {
       return 0;
@@ -545,11 +544,11 @@ public class CobolSystemRoutine {
     return 0;
   }
 
-  public static int CBL_TOUPPER(AbstractCobolField data, int length) throws CobolStopRunException {
+  public static int CBL_TOUPPER(AbstractCobolField data, int length) {
     return CBL_TOUPPER(data.getDataStorage(), length);
   }
 
-  public static int CBL_OC_NANOSLEEP(CobolDataStorage data) throws CobolStopRunException {
+  public static int CBL_OC_NANOSLEEP(CobolDataStorage data) {
     CobolUtil.COB_CHK_PARMS("CBL_OC_NANOSLEEP", 1);
 
     AbstractCobolField param = CobolModule.getCurrentModule().cob_procedure_parameters.get(0);
@@ -566,17 +565,17 @@ public class CobolSystemRoutine {
     return 0;
   }
 
-  public static int CBL_OC_NANOSLEEP(AbstractCobolField field) throws CobolStopRunException {
+  public static int CBL_OC_NANOSLEEP(AbstractCobolField field) {
     CobolSystemRoutine.CBL_OC_NANOSLEEP(field.getDataStorage());
     return 0;
   }
 
-  public static int calledBy(CobolDataStorage data) throws CobolStopRunException {
+  public static int calledBy(CobolDataStorage data) {
     CobolUtil.COB_CHK_PARMS("calledby", 1);
     return CobolModule.calledBy(data);
   }
 
-  public static int listDir(CobolDataStorage... data) throws CobolStopRunException {
+  public static int listDir(CobolDataStorage... data) {
     CobolUtil.COB_CHK_PARMS("listDirectory", 1);
     List<AbstractCobolField> params = CobolModule.getCurrentModule().cob_procedure_parameters;
     if (params == null) {
