@@ -23,6 +23,6 @@ jobs:
       run: msbuild /p:AdditionalIncludePaths=./:./cobj/:./win:./lib win/opensourcecobol4j.sln
 
     - name: exec cobj
+      working-directory: win/x64/Debug
       run: |
-        cd win/x64/Debug
         ./cobj.exe --version
