@@ -23,7 +23,7 @@ opensource COBOL 4J は下記の環境でテストされています.
 
 ## インストール
 
-opensource COBOL 4J v1.0.22はUbuntuとAlmaLinuxで動作を確認しています.  
+opensource COBOL 4J v1.1.0はUbuntuとAlmaLinuxで動作を確認しています.  
 
 ## 手動インストール
 
@@ -57,9 +57,9 @@ dnf install -y java-21-amazon-corretto-devel gcc make bison flex automake autoco
 下記のコマンドを実行する
 
 ```
-curl -L -o opensourcecobol4j-v1.0.22.tar.gz https://github.com/opensourcecobol/opensourcecobol4j/archive/refs/tags/v1.0.22.tar.gz
-tar zxvf opensourcecobol4j-v1.0.22.tar.gz
-cd opensourcecobol4j-1.0.22
+curl -L -o opensourcecobol4j-v1.1.0.tar.gz https://github.com/opensourcecobol/opensourcecobol4j/archive/refs/tags/v1.1.0.tar.gz
+tar zxvf opensourcecobol4j-v1.1.0.tar.gz
+cd opensourcecobol4j-1.1.0
 ./configure --prefix=/usr/
 make
 sudo make install
@@ -73,10 +73,10 @@ sudo make install
 
 ## Dockerによるインストール
 
-opensource COBOL 4J v1.0.22をインストールしたDockerイメージを利用できます.
+opensource COBOL 4J v1.1.0をインストールしたDockerイメージを利用できます.
 
 ```bash
-docker pull opensourcecobol/opensourcecobol4j:1.0.22
+docker pull opensourcecobol/opensourcecobol4j:1.1.0
 ```
 
 コンテナ内で下記のコマンドを実行すると、Hello Worldプログラムをコンパイル&実行できる。
