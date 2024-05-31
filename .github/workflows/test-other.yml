@@ -23,7 +23,7 @@ jobs:
       image: ${{ inputs.os }}
     steps:
       - name: Get the artifact name
-        run: echo ARTIFACT_NAME=${{ inputs.os }} | sed 's/:/-/g' >> $GITHUB_ENV
+        run: echo "ARTIFACT_NAME=${{ inputs.os }}" | sed 's/:/-/g' >> "$GITHUB_ENV"
 
       - uses: actions/download-artifact@v4
         with:
