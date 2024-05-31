@@ -20,9 +20,9 @@ jobs:
       run: nuget restore ./win/
 
     - name: Build
-      run: msbuild /p:AdditionalIncludePaths=./:./cobj/:./win:./lib win/opensourcecobol4j.sln
+      run: msbuild /p:Configuration=Release /p:AdditionalIncludePaths=./:./cobj/:./win:./lib win/opensourcecobol4j.sln
 
     - name: exec cobj
-      working-directory: win/x64/Debug
+      working-directory: win/x64/Release
       run: |
         ./cobj.exe --version
