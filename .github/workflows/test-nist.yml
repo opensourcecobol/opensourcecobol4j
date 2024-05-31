@@ -29,7 +29,7 @@ jobs:
       image: ${{ inputs.os }}
     steps:
       - name: Get the artifact name
-        run: echo ARTIFACT_NAME=${{ inputs.os }} | sed 's/:/-/g' >> $GITHUB_ENV
+        run: echo "ARTIFACT_NAME=${{ inputs.os }}" | sed 's/:/-/g' >> "$GITHUB_ENV"
 
       - uses: actions/download-artifact@v4
         with:
@@ -76,7 +76,7 @@ jobs:
         working-directory: tests/cobol85/${{ inputs.test-name }}
         run: |
           make test
-          test "$(cat report.txt | tail -n 3 | head -n 1 | awk '{print $4}')" = '(100.00%)'
+          test "$(tail -n 3 < report.txt | head -n 1 | awk '{print $4}')" = '(100.00%)'
 
       - name: Run tests ${{ inputs.test-name }} (No check result)
         if: ${{ inputs.check-result  == 'false' }}

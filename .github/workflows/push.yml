@@ -20,7 +20,11 @@ env:
   CLASSPATH: ":/usr/lib/opensourcecobol4j/libcobj.jar"
 
 jobs:
+  check-workflows:
+    uses: ./.github/workflows/check-workflows.yml
+
   build:
+    needs: check-workflows
     strategy:
       matrix:
         os: ["ubuntu:24.04"]
@@ -64,13 +68,17 @@ jobs:
       os: ${{ matrix.os }}
 
   build-gcc9:
+    needs: check-workflows
     uses: ./.github/workflows/build-gcc9.yml
 
   javadoc:
+    needs: check-workflows
     uses: ./.github/workflows/javadoc.yml
 
   MSBuild:
+    needs: check-workflows
     uses: ./.github/workflows/msbuild.yml
 
   static-analysis:
+    needs: check-workflows
     uses: ./.github/workflows/static-analysis.yml
