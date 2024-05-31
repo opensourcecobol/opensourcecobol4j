@@ -1,10 +1,16 @@
 name: Publish package to GitHub Packages
+
 on:
   workflow_dispatch:
   release:
     types: [published]
+
 jobs:
+  check-workflows:
+    uses: ./.github/workflows/check-workflows.yml
+
   publish:
+    needs: check-workflows
     runs-on: ubuntu-latest
     permissions:
       contents: read
