@@ -24,7 +24,7 @@ opensource COBOL 4J is tested with the following platforms and dependencies
 In order to check requirements of older versions,
 see [doc/requirements-all.md](./doc/requirements-all.md).
 
-## Installation
+## Installation (Linux)
 
 ### Install dependencies
 
@@ -66,6 +66,19 @@ Add /usr/lib/opensourcecobol4j/libcobj.jar to the environment variable $CLASSPAT
 
 In order to check installations of older versions,
 [doc/installation/](./doc/installation) directory respectively
+
+
+## Installation (Windows)
+
+1. Visit the [Release page](https://github.com/opensourcecobol/opensourcecobol4j/releases/tag/v1.1.0)
+  1. Download Source code and extract it.
+  1. Download `cobj.exe`.
+  1. Download `libcobj.jar`.
+1. Rename the directory `opensourcecobol4j-1.1.0\opensourcecobol4j-1.1.0` to `opensourcecobol4j-1.1.0\opensourcecobol4j`.
+1. Move the directory `opensourcecobol4j-1.1.0\opensourcecobol4j` to `C:\`.
+  1. Make sure that there exists a directory `C:\opensourcecobol4j\config`.
+1. Update the environment variable `Path` so that it contains the directory containing `cobj.exe` 
+1. Update the environment variable `CLASSPATH` so that it contains the path to `libcobj.jar`.
 
 ### Install with Docker
 
