@@ -33,6 +33,8 @@ jobs:
       env:
         CLASSPATH: ":./win/libcobj.jar"
       run : |
+        $env:CLASSPATHPATH+=./win/libcobj.jar
+        $env:PATH+=";C:\opensourcecobol4j\bin\;C:\opensourcecobol4j\config\"
         cd win
         .\make-install.ps1
         .\make-test.ps1
