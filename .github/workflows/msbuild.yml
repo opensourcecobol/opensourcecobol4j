@@ -33,6 +33,6 @@ jobs:
       run : |
         cd win
         .\make-install.ps1
-        $env:CLASSPATH+=";C:\opensourcecobol4j\bin\"
+        $env:CLASSPATH="C:\opensourcecobol4j\bin\libcobj.jar"
         $env:PATH+=";C:\opensourcecobol4j\bin\;C:\opensourcecobol4j\config\"
         .\make-test.ps1
