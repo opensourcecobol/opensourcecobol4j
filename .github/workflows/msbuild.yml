@@ -28,6 +28,12 @@ jobs:
       with:
         perl-version: "5.32"
         distribution: strawberry
+
+    - name: Install Java
+        uses: actions/setup-java@v4
+        with:
+          distribution: 'temurin'
+          java-version: '11'
     
     - name: Run test
       run : |
