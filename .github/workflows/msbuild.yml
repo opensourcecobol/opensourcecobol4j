@@ -31,7 +31,7 @@ jobs:
     
     - name: Run test
       run : |
-        $env:CLASSPATH+=";C:\opensourcecobol4j\config\"
+        $env:CLASSPATH+=";C:\opensourcecobol4j\bin\"
         $env:PATH+=";C:\opensourcecobol4j\bin\;C:\opensourcecobol4j\config\"
         cd win
         .\make-install.ps1
