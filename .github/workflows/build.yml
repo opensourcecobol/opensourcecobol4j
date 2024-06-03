@@ -31,8 +31,8 @@ jobs:
       - name: Install dependencies on Ubuntu 24.04
         if: inputs.os == 'ubuntu:24.04'
         run: |
-          apt update -y
-          apt install -y build-essential gettext autoconf
+          apt-get update -y
+          apt-get install -y build-essential gettext autoconf
 
       - name: Install dependencies on AlmaLinux 9
         if: inputs.os == 'almalinux:9'

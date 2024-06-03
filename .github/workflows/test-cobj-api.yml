@@ -1,14 +1,8 @@
-name: NIST tests
+name: cobj-api tests
 
 on:
   workflow_call:
     inputs:
-      test-name:
-        required: true
-        type: string
-      check-result:
-        required: true
-        type: boolean
       os:
         required: true
         type: string
@@ -21,9 +15,6 @@ env:
 
 jobs:
   test-other:
-    strategy:
-      matrix:
-        os: ["ubuntu:24.04", "almalinux:9"]
     runs-on: ubuntu-latest
     container:
       image: ${{ inputs.os }}
@@ -35,8 +26,7 @@ jobs:
         with:
           name: opensourcecobol4j-${{ env.ARTIFACT_NAME }}
 
-      - name: Install Java
-        uses: actions/setup-java@v4
+      - uses: actions/setup-java@v4
         if: inputs.os != 'amazonlinux:2023'
         with:
           distribution: 'temurin'
@@ -52,17 +42,17 @@ jobs:
         if: inputs.os == 'almalinux:9'
         run: |
           dnf -y update
-          dnf install -y gcc make perl
+          dnf install -y gcc make diffutils glibc-gconv-extra
 
       - name: Install dependencies on Amazon Linux 2023
         if: inputs.os == 'amazonlinux:2023'
         run: |
           dnf -y update
-          dnf install -y gcc make perl tar gzip
-      
+          dnf install -y gcc make diffutils tar gzip
+
       - name: Install Java
         if: inputs.os == 'amazonlinux:2023'
-        run:
+        run: |
           dnf install -y java-11-amazon-corretto-devel
 
       - name: Install opensource COBOL 4J
@@ -70,16 +60,7 @@ jobs:
           tar zxf opensourcecobol4j.tar.gz
           mv opensourcecobol4j/* .
           make install
-      
-      - name: Run tests ${{ inputs.test-name }}
-        if: ${{ inputs.check-result }}
-        working-directory: tests/cobol85/${{ inputs.test-name }}
-        run: |
-          make test
-          test "$(tail -n 3 < report.txt | head -n 1 | awk '{print $4}')" = '(100.00%)'
 
-      - name: Run tests ${{ inputs.test-name }} (No check result)
-        if: ${{ inputs.check-result  == 'false' }}
-        working-directory: tests/cobol85/${{ inputs.test-name }}
+      - name: Run tests cobj-api
         run:
-          make test
+          make test-cobj-api

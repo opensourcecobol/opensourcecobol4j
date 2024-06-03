@@ -37,11 +37,28 @@ jobs:
     needs: build
     strategy:
       matrix:
-        test_name: ["command-line-options", "data-rep", "i18n_sjis", "jp-compat", "run", "syntax", "cobj-idx", "misc"]
+        test_name:
+          - "command-line-options"
+          - "data-rep"
+          - "i18n_sjis"
+          - "jp-compat"
+          - "run"
+          - "syntax"
+          - "cobj-idx"
+          - "misc"
         os: ["ubuntu:24.04", "almalinux:9", "amazonlinux:2023"]
     uses: ./.github/workflows/test-other.yml
     with:
       test-name: ${{ matrix.test_name }}
+      os: ${{ matrix.os }}
+
+  run-test-cobj-api:
+    needs: build
+    strategy:
+      matrix:
+        os: ["ubuntu:24.04", "almalinux:9", "amazonlinux:2023"]
+    uses: ./.github/workflows/test-cobj-api.yml
+    with:
       os: ${{ matrix.os }}
 
   run-test-nist:
