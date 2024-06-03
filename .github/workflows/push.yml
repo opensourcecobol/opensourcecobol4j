@@ -51,6 +51,15 @@ jobs:
       test-name: ${{ matrix.test_name }}
       os: ${{ matrix.os }}
 
+  run-test-cobj-api:
+    needs: build
+    strategy:
+      matrix:
+        os: ["ubuntu:24.04"]
+    uses: ./.github/workflows/test-cobj-api.yml
+    with:
+      os: ${{ matrix.os }}
+
   run-test-nist:
     needs: build
     strategy:
