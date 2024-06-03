@@ -30,10 +30,8 @@ jobs:
         distribution: strawberry
     
     - name: Run test
-      env:
-        CLASSPATH: ":./win/libcobj.jar"
       run : |
-        $env:CLASSPATH+=";./win/libcobj.jar"
+        $env:CLASSPATH+=";C:\opensourcecobol4j\config\"
         $env:PATH+=";C:\opensourcecobol4j\bin\;C:\opensourcecobol4j\config\"
         cd win
         .\make-install.ps1
