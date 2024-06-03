@@ -1769,7 +1769,7 @@ static int process_compile(struct filename *fn) {
 
   char *output_name_a = output_name == NULL ? current_dir : output_name;
   char *java_source_dir_a =
-      java_source_dir == NULL ? (char *)"./" : java_source_dir;
+      java_source_dir == NULL ? current_dir : java_source_dir;
 
   char **program_id;
   for (program_id = program_id_list; *program_id; ++program_id) {
@@ -1796,10 +1796,10 @@ static int process_compile(struct filename *fn) {
         return ret;
       }
 #ifndef _WIN32
-      *output_name_a++ = '/';
+      output_name_a += '/';
 #endif
-      snprintf(buff, COB_MEDIUM_BUFF, "%s %s%s.class %s%s$*.class",
-               remove_cmd, output_name_a, *program_id, output_name_a, *program_id);
+      snprintf(buff, COB_MEDIUM_BUFF, "%s %s%s.class %s%s$*.class", remove_cmd,
+               output_name_a, *program_id, output_name_a, *program_id);
       process(buff);
     }
   }
@@ -2045,7 +2045,6 @@ static int process_build_single_jar() {
 #else
   char remove_cmd[] = "rm -f";
 #endif
-
   sprintf(buff, "javac %s -encoding SJIS -d %s %s/*.java", cob_java_flags,
           output_name_a, java_source_dir_a);
 
@@ -2065,8 +2064,8 @@ static int process_build_single_jar() {
   snprintf(buff, COB_MEDIUM_BUFF, "cd %s && jar --create --file=%s %s/*.class",
            output_name_a, cb_single_jar_name, package_dir);
   ret = process(buff);
- snprintf(buff, COB_MEDIUM_BUFF, "%s %s/%s/*.class #aaa", remove_cmd, output_name_a,
-           package_dir);
+  snprintf(buff, COB_MEDIUM_BUFF, "%s %s/%s/*.class #aaa", remove_cmd,
+           output_name_a, package_dir);
   process(buff);
   return ret;
 }
