@@ -6,9 +6,9 @@ on:
       test-name:
         required: true
         type: string
-      check-result:
-        required: true
-        type: boolean
+      # check-result:
+      #   required: true
+      #   type: boolean
 
 jobs:
   build:
@@ -27,7 +27,7 @@ jobs:
         distribution: strawberry
 
     - name: Run tests ${{ inputs.test-name }}
-        if: ${{ inputs.check-result }}
+       # if: ${{ inputs.check-result }}
         working-directory: tests/cobol85/${{ inputs.test-name }}
         run: |
           perl ../report.pl
