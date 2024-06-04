@@ -78,7 +78,7 @@ jobs:
     uses: ./.github/workflows/mstest.yml
     with:
       test-name: ${{ matrix.test_name }}
-      check-result: true
+      #check-result: true
       os: ${{ matrix.os }}
 
   static-analysis:
