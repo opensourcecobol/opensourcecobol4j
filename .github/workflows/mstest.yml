@@ -16,7 +16,10 @@ jobs:
 
     steps:
     - uses: actions/checkout@v4
-    
+
+    - name: Add MSBuild to PATH
+      uses: microsoft/setup-msbuild@v1.0.2
+        
     - name: Install Java
       uses: actions/setup-java@v4
       with:
@@ -28,6 +31,18 @@ jobs:
       with:
         perl-version: "5.32"
         distribution: strawberry
+
+    - name: Restore NuGet packages
+      run: nuget restore ./win/
+
+    - name: Build
+      run: msbuild /p:Configuration=Release /p:AdditionalIncludePaths=./:./cobj/:./win:./lib win/opensourcecobol4j.sln
+
+    # - name: Execute cobj
+    #   run: |
+    #     cd win/x64/Release
+    #     ./cobj.exe --version
+
     
     - name: Preparation of test
       run : |
