@@ -16,6 +16,25 @@ jobs:
 
     steps:
     - uses: actions/checkout@v4
+        - name: Install Java
+      uses: actions/setup-java@v4
+      with:
+        distribution: 'temurin'
+        java-version: '11'
+    
+    - name: Install perl
+      uses: shogo82148/actions-setup-perl@v1
+      with:
+        perl-version: "5.32"
+        distribution: strawberry
+    
+    - name: Preparation of test
+      run : |
+        cd win
+        .\make-install.ps1
+        $env:CLASSPATH="C:\opensourcecobol4j\bin\libcobj.jar"
+        $env:PATH+=";C:\opensourcecobol4j\bin\;C:\opensourcecobol4j\config\"
+        
     - name: Run tests ${{ inputs.test-name }}
        # if: ${{ inputs.check-result }}
       #working-directory: tests\cobol85\${{ inputs.test-name }}\
