@@ -43,19 +43,16 @@ jobs:
     #     cd win/x64/Release
     #     ./cobj.exe --version
 
-    
-    - name: Preparation of test
-      run : |
-        cd win
-        .\make-install.ps1
-        $env:CLASSPATH="C:\opensourcecobol4j\bin\libcobj.jar"
-        $env:PATH+=";C:\opensourcecobol4j\bin\;C:\opensourcecobol4j\config\"
 
     - name: Run tests ${{ inputs.test-name }}
        # if: ${{ inputs.check-result }}
       #working-directory: tests\cobol85\${{ inputs.test-name }}\
       run: |
-        cd .\tests\cobol85\${{ inputs.test-name }}
+        cd win
+        .\make-install.ps1
+        $env:CLASSPATH="C:\opensourcecobol4j\bin\libcobj.jar"
+        $env:PATH+=";C:\opensourcecobol4j\bin\;C:\opensourcecobol4j\config\"
+        cd ..\tests\cobol85\${{ inputs.test-name }}
         perl ..\report.pl
         type report.txt
 
