@@ -19,7 +19,8 @@ jobs:
        # if: ${{ inputs.check-result }}
       #working-directory: tests\cobol85\${{ inputs.test-name }}\
       run: |
-        dir
+        cd win
+        
 
      # cd .\tests\cobol85\${{ inputs.test-name }}
      # perl ..\report.pl
