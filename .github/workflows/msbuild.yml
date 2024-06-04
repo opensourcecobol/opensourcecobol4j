@@ -24,3 +24,15 @@ jobs:
         cd win/x64/Release
         ./cobj.exe --version
 
+    - name: Install Java
+      uses: actions/setup-java@v4
+      with:
+        distribution: 'temurin'
+        java-version: '11'
+    
+    - name: Install perl
+      uses: shogo82148/actions-setup-perl@v1
+      with:
+        perl-version: "5.32"
+        distribution: strawberry
+

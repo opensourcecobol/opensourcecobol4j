@@ -15,23 +15,11 @@ jobs:
     runs-on: windows-latest
 
     steps:
-    - name: Install Java
-      uses: actions/setup-java@v4
-      with:
-        distribution: 'temurin'
-        java-version: '11'
-    
-    - name: Install perl
-      uses: shogo82148/actions-setup-perl@v1
-      with:
-        perl-version: "5.32"
-        distribution: strawberry
-
     - name: Run tests ${{ inputs.test-name }}
        # if: ${{ inputs.check-result }}
-      working-directory: tests/cobol85/${{ inputs.test-name }}
+      working-directory: tests\cobol85\${{ inputs.test-name }}
       run: |
-        perl ../report.pl
+        perl ..\report.pl
         type report.txt
 
     # - name: Run test
