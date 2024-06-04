@@ -57,5 +57,4 @@ jobs:
     - name: Check result of tests
       run: |
         $success_pr = findstr "Successfully executed:" .\report.txt
-        $result =  $success_pr.Contains("100.00%")
-      if: $result == 'True'
+        $success_pr.Contains("100.00%")
