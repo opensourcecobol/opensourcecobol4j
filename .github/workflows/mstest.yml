@@ -21,17 +21,18 @@ jobs:
         distribution: 'temurin'
         java-version: '11'
     
-    - uses: shogo82148/actions-setup-perl@v1
+    - name: Install perl
+      uses: shogo82148/actions-setup-perl@v1
       with:
         perl-version: "5.32"
         distribution: strawberry
 
     - name: Run tests ${{ inputs.test-name }}
        # if: ${{ inputs.check-result }}
-        working-directory: tests/cobol85/${{ inputs.test-name }}
-        run: |
-          perl ../report.pl
-          type report.txt
+      working-directory: tests/cobol85/${{ inputs.test-name }}
+      run: |
+        perl ../report.pl
+        type report.txt
 
     # - name: Run test
     #   run : |
