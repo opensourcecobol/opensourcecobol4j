@@ -15,16 +15,14 @@ jobs:
     runs-on: windows-latest
 
     steps:
+    - uses: actions/checkout@v4
     - name: Run tests ${{ inputs.test-name }}
        # if: ${{ inputs.check-result }}
       #working-directory: tests\cobol85\${{ inputs.test-name }}\
       run: |
-        cd win
-        
-
-     # cd .\tests\cobol85\${{ inputs.test-name }}
-     # perl ..\report.pl
-     # type report.txt
+        cd .\tests\cobol85\${{ inputs.test-name }}
+        perl ..\report.pl
+        type report.txt
 
     # - name: Run test
     #   run : |
