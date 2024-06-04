@@ -11,7 +11,7 @@ on:
       #   type: boolean
 
 jobs:
-  build:
+  test:
     runs-on: windows-latest
 
     steps:
@@ -45,8 +45,6 @@ jobs:
 
 
     - name: Run tests ${{ inputs.test-name }}
-       # if: ${{ inputs.check-result }}
-      #working-directory: tests\cobol85\${{ inputs.test-name }}\
       run: |
         cd win
         .\make-install.ps1
@@ -56,10 +54,8 @@ jobs:
         perl ..\report.pl
         type report.txt
 
-    # - name: Run test
-    #   run : |
-    #     cd win
-    #     .\make-install.ps1
-    #     $env:CLASSPATH="C:\opensourcecobol4j\bin\libcobj.jar"
-    #     $env:PATH+=";C:\opensourcecobol4j\bin\;C:\opensourcecobol4j\config\"
-    #     .\make-test.ps1
+    - name: Check result of tests
+      run: |
+        $success_pr = findstr "Successfully executed:" .\report.txt
+        $result =  $success_pr.Contains("100.00%")
+      if: $result == 'True'
