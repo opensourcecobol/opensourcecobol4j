@@ -35,4 +35,11 @@ jobs:
       with:
         perl-version: "5.32"
         distribution: strawberry
+    
+    - name: Preparation of test
+      run : |
+        cd win
+        .\make-install.ps1
+        $env:CLASSPATH="C:\opensourcecobol4j\bin\libcobj.jar"
+        $env:PATH+=";C:\opensourcecobol4j\bin\;C:\opensourcecobol4j\config\"
 

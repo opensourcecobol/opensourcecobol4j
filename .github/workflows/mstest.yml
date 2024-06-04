@@ -17,7 +17,7 @@ jobs:
     steps:
     - name: Run tests ${{ inputs.test-name }}
        # if: ${{ inputs.check-result }}
-      working-directory: tests\cobol85\${{ inputs.test-name }}
+      working-directory: tests\cobol85\${{ inputs.test-name }}\
       run: |
         perl ..\report.pl
         type report.txt
