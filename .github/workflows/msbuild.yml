@@ -1,4 +1,4 @@
-name: MSBuild
+name: msbuild
 
 on:
   workflow_call:
@@ -24,21 +24,3 @@ jobs:
         cd win/x64/Release
         ./cobj.exe --version
 
-    - uses: shogo82148/actions-setup-perl@v1
-      with:
-        perl-version: "5.32"
-        distribution: strawberry
-
-    - name: Install Java
-      uses: actions/setup-java@v4
-      with:
-        distribution: 'temurin'
-        java-version: '11'
-    
-    - name: Run test
-      run : |
-        cd win
-        .\make-install.ps1
-        $env:CLASSPATH="C:\opensourcecobol4j\bin\libcobj.jar"
-        $env:PATH+=";C:\opensourcecobol4j\bin\;C:\opensourcecobol4j\config\"
-        .\make-test.ps1

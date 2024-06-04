@@ -66,8 +66,19 @@ jobs:
   javadoc:
     uses: ./.github/workflows/javadoc.yml
 
-  MSBuild:
+  msbuild:
     uses: ./.github/workflows/msbuild.yml
-
+  
+  mstest:
+    needs: ms-build
+   strategy:
+      matrix:
+        test_name: ["IC", "IF", "IX", "NC", "OB", "RL", "SG", "SM", "SQ", "ST"]
+        os: ["windows-latest"]
+    uses: ./.github/workflows/mstest.yml
+    with:
+      test-name: ${{ matrix.test_name }}
+      check-result: true
+      os: ${{ matrix.os }}
   static-analysis:
     uses: ./.github/workflows/static-analysis.yml

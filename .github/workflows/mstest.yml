@@ -1,0 +1,42 @@
+name: mstest
+
+on:
+  workflow_call:
+    inputs:
+      test-name:
+        required: true
+        type: string
+      check-result:
+        required: true
+        type: boolean
+
+jobs:
+  build:
+    runs-on: windows-latest
+
+    steps:
+    - name: Install Java
+      uses: actions/setup-java@v4
+      with:
+        distribution: 'temurin'
+        java-version: '11'
+    
+    - uses: shogo82148/actions-setup-perl@v1
+      with:
+        perl-version: "5.32"
+        distribution: strawberry
+
+    - name: Run tests ${{ inputs.test-name }}
+        if: ${{ inputs.check-result }}
+        working-directory: tests/cobol85/${{ inputs.test-name }}
+        run: |
+          perl ../report.pl
+          type report.txt
+
+    # - name: Run test
+    #   run : |
+    #     cd win
+    #     .\make-install.ps1
+    #     $env:CLASSPATH="C:\opensourcecobol4j\bin\libcobj.jar"
+    #     $env:PATH+=";C:\opensourcecobol4j\bin\;C:\opensourcecobol4j\config\"
+    #     .\make-test.ps1
