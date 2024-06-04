@@ -16,7 +16,8 @@ jobs:
 
     steps:
     - uses: actions/checkout@v4
-        - name: Install Java
+    
+    - name: Install Java
       uses: actions/setup-java@v4
       with:
         distribution: 'temurin'
@@ -34,7 +35,7 @@ jobs:
         .\make-install.ps1
         $env:CLASSPATH="C:\opensourcecobol4j\bin\libcobj.jar"
         $env:PATH+=";C:\opensourcecobol4j\bin\;C:\opensourcecobol4j\config\"
-        
+
     - name: Run tests ${{ inputs.test-name }}
        # if: ${{ inputs.check-result }}
       #working-directory: tests\cobol85\${{ inputs.test-name }}\
