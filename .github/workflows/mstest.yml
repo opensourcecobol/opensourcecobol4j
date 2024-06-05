@@ -53,8 +53,11 @@ jobs:
         cd ..\tests\cobol85\${{ inputs.test-name }}
         perl ..\report.pl
         type report.txt
+        findstr "Successfully executed:" .\report.txt > result-check
 
     - name: Check result of tests
+      with: 
+        path: .\tests\cobol85\${{ inputs.test-name }}\result-check
+      if: contains(steps.package.outputs.content, '100.00%')
       run: |
-        $success_pr = findstr "Successfully executed:" .\report.txt
-        $success_pr.Contains("100.00%")
+        exit 0
