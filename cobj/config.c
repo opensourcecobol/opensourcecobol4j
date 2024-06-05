@@ -128,7 +128,11 @@ int cb_load_conf(const char *fname, const int check_nodef,
   }
 
   if (prefix_dir) {
+#ifdef _WIN32
+    snprintf(buff, COB_SMALL_MAX, "%s\\%s", cob_config_dir, fname);
+#else
     snprintf(buff, COB_SMALL_MAX, "%s/%s", cob_config_dir, fname);
+#endif
     name = buff;
   } else {
     name = fname;

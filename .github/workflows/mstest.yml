@@ -1,0 +1,58 @@
+name: mstest
+
+on:
+  workflow_call:
+    inputs:
+      test-name:
+        required: true
+        type: string
+
+jobs:
+  test:
+    runs-on: windows-latest
+
+    steps:
+    - uses: actions/checkout@v4
+
+    - name: Add MSBuild to PATH
+      uses: microsoft/setup-msbuild@v1.0.2
+        
+    - name: Install Java
+      uses: actions/setup-java@v4
+      with:
+        distribution: 'temurin'
+        java-version: '11'
+    
+    - name: Install perl
+      uses: shogo82148/actions-setup-perl@v1
+      with:
+        perl-version: "5.32"
+        distribution: strawberry
+
+    - name: Restore NuGet packages
+      run: nuget restore ./win/
+
+    - name: Build
+      run: msbuild /p:Configuration=Release /p:AdditionalIncludePaths=./:./cobj/:./win:./lib win/opensourcecobol4j.sln
+
+    - name: Run tests ${{ inputs.test-name }}
+      run: |
+        cd win
+        .\make-install.ps1
+        $env:CLASSPATH="C:\opensourcecobol4j\bin\libcobj.jar"
+        $env:PATH+=";C:\opensourcecobol4j\bin\;C:\opensourcecobol4j\config\"
+        cd ..\tests\cobol85\${{ inputs.test-name }}
+        perl ..\report.pl
+        type report.txt
+        findstr "Successfully executed:" .\report.txt > result-check
+
+    - name: Read file
+      id: package
+      uses: juliangruber/read-file-action@v1
+      with: 
+        path: .\tests\cobol85\${{ inputs.test-name }}\result-check
+    
+    - name: Check result of tests
+      if: ${{ !contains(steps.package.outputs.content, '100.00%') }}
+      run: |
+        exit 1

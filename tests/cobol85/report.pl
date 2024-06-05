@@ -78,18 +78,37 @@ foreach $in (glob("lib/*.CBL")) {
 	system ("$compile_module $in");
 }
 
-foreach $in (sort (glob("*.{CBL,SUB}"))) {
+foreach $in (sort (glob("*.{,CBL,SUB}"))) {
+  if($in =~ "tmp"){
+	next;
+  }
   my $exe = $in;
   my $cmd;
+  my $copy_cmd;
+  my $remove_cmd;
+  my $classpath;
+  my $sprt;
+  if($^O eq MSWin32){
+	$copy_cmd = "copy";
+	$remove_cmd = "del /f";
+	$classpath = "\%CLASSPATH\%";
+	$sprt = ";";
+  }	else {
+	$copy_cmd = "cp";
+	$remove_cmd = "rm -rf";
+	$classpath = "\$CLASSPATH";
+	$sprt = ":"
+  }
   $exe =~ s/\.CBL//;
   $exe =~ s/\.SUB//;
   $cmd = "";
 
   if (-e "./$exe.DAT") {
-    $cmd = "java -cp \"\$CLASSPATH\":./* $exe < $exe.DAT";
+  	$cmd = "java -cp \"$classpath\"$sprt./* $exe < $exe.DAT";
   } else {
-    $cmd = "java -cp \"\$CLASSPATH\":./* $exe";
+  	$cmd = "java -cp \"$classpath\"$sprt./* $exe";
   }
+  
   printf LOG "%-12s", $in;
   if ($skip{$exe} || $exe =~ /^..[34]0/) {
     $test_skipped++;
@@ -97,11 +116,11 @@ foreach $in (sort (glob("*.{CBL,SUB}"))) {
   } else {
     $num_progs++;
     $copy = ($exe =~ /^SM/) ? "-I ../copy" : "";
-    print "$compile_module $copy $in && $cmd\n";
-    if ($in eq "SM206A.CBL") {
+	print "$compile_module $copy $in && $cmd\n";
+	if ($in eq "SM206A.CBL") {
       $ret = system ("$compile_module -fdebugging-line $copy $in");
     } else {
-      system ("cp $in tmp.cbl");
+      system ("$copy_cmd $in tmp.cbl");
       $ret = system ("$compile_module $copy $in");
     }
     if ($ret != 0) {
@@ -109,51 +128,54 @@ foreach $in (sort (glob("*.{CBL,SUB}"))) {
       print LOG "  ===== compile error =====\n";
     } else {
       if ($in =~ /\.CBL/) {
-	if ($ENV{'DB_HOME'}) {
-		system ("rm -rf XXXXX*; rm -rf $ENV{'DB_HOME'}/XXXXX*");
-	} else {
-		system ("rm -rf XXXXX*");
-	}
+		my @file_X = glob("XXXXX*");
+		if(@file_X){
+			if ($ENV{'DB_HOME'}) {
+				system ("$remove_cmd XXXXX*; $remove_cmd $ENV{'DB_HOME'}/XXXXX*");
+			} else {
+				system ("$remove_cmd XXXXX*");
+			}
+		}
       }
       $exec_result = 0;
       $exec_result = system ("$cmd > $exe.out");
       if ($exec_result != 0) {
-	$execute_error++;
-	print LOG "  ***** execute error *****\n";
+		$execute_error++;
+		print LOG "  ***** execute error *****\n";
       } else {
-	my $total   = 0;
-	my $pass    = 0;
-	my $fail    = 0;
-	my $deleted = 0;
-	my $inspect = 0;
-	if (open (PRT, "report.log")) {
-	  while (<PRT>) {
-	    if (/^ *([0-9]+) *OF *([0-9]+) *TESTS WERE/) {
-	      $total += $2;
-	      $pass += $1;
-	    } elsif (/^ *([0-9NO]+) *TEST\(S\) ([A-Z]+)/) {
-	      my $num = $1 eq "NO" ? 0 : $1;
-	      if ($2 eq "FAILED") {
-		$fail += $num;
-	      } elsif ($2 eq "DELETED") {
-		$deleted += $num;
-	      } elsif ($2 eq "REQUIRE") {
-		$inspect += $num;
-	      }
-	    }
-	  }
-	}
-	printf LOG ("%5s %4s %4s %7s %7s %s\n",
-		    $total, $pass, $fail, $deleted, $inspect,
-		    $fail == 0 ? "OK" : "");
-	$total_all += $total;
-	$total_pass += $pass;
-	$total_fail += $fail;
-	$total_deleted += $deleted;
-	$total_inspect += $inspect;
-	$total_ok++ if $fail == 0;
-	rename ("report.log", "$exe.log");
-	unlink "$exe.out" if (-s "$exe.out" == 0);
+		my $total   = 0;
+		my $pass    = 0;
+		my $fail    = 0;
+		my $deleted = 0;
+		my $inspect = 0;
+		if (open (PRT, "report.log")) {
+		  while (<PRT>) {
+		    if (/^ *([0-9]+) *OF *([0-9]+) *TESTS WERE/) {
+		      $total += $2;
+		      $pass += $1;
+		    } elsif (/^ *([0-9NO]+) *TEST\(S\) ([A-Z]+)/) {
+		      my $num = $1 eq "NO" ? 0 : $1;
+		      if ($2 eq "FAILED") {
+			$fail += $num;
+		      } elsif ($2 eq "DELETED") {
+			$deleted += $num;
+		      } elsif ($2 eq "REQUIRE") {
+			$inspect += $num;
+		      }
+		    }
+		  }
+		}
+		printf LOG ("%5s %4s %4s %7s %7s %s\n",
+			    $total, $pass, $fail, $deleted, $inspect,
+			    $fail == 0 ? "OK" : "");
+		$total_all += $total;
+		$total_pass += $pass;
+		$total_fail += $fail;
+		$total_deleted += $deleted;
+		$total_inspect += $inspect;
+		$total_ok++ if $fail == 0;
+		rename ("report.log", "$exe.log");
+		unlink "$exe.out" if (-s "$exe.out" == 0);
       }
     }
   }
