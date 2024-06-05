@@ -56,6 +56,7 @@ jobs:
         findstr "Successfully executed:" .\report.txt > result-check
 
     - name: Read file
+      id: package
       uses: juliangruber/read-file-action@v1
       with: 
         path: .\tests\cobol85\${{ inputs.test-name }}\result-check
@@ -64,6 +65,6 @@ jobs:
       run: echo "${{ steps.package.outputs.content }}"
   
     - name: Check result of tests
-      if: contains(steps.package.outputs.content, '100.00%')
+      if: ${{ !contains(steps.package.outputs.content, '100.00%') }}
       run: |
-        exit 0
+        exit 1
