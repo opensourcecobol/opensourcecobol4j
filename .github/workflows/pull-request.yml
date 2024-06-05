@@ -93,7 +93,7 @@ jobs:
     needs: check-workflows
     uses: ./.github/workflows/javadoc.yml
 
- mstest:
+  mstest:
     strategy:
        matrix:
          test_name: ["IC", "IF", "IX", "NC", "OB", "RL", "SG", "SM", "SQ", "ST"]
