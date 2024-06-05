@@ -6,9 +6,6 @@ on:
       test-name:
         required: true
         type: string
-      # check-result:
-      #   required: true
-      #   type: boolean
 
 jobs:
   test:
@@ -38,12 +35,6 @@ jobs:
     - name: Build
       run: msbuild /p:Configuration=Release /p:AdditionalIncludePaths=./:./cobj/:./win:./lib win/opensourcecobol4j.sln
 
-    # - name: Execute cobj
-    #   run: |
-    #     cd win/x64/Release
-    #     ./cobj.exe --version
-
-
     - name: Run tests ${{ inputs.test-name }}
       run: |
         cd win
@@ -61,9 +52,6 @@ jobs:
       with: 
         path: .\tests\cobol85\${{ inputs.test-name }}\result-check
     
-    # - name: Echo file
-    #   run: echo "${{ steps.package.outputs.content }}"
-  
     - name: Check result of tests
       if: ${{ !contains(steps.package.outputs.content, '100.00%') }}
       run: |

@@ -65,10 +65,7 @@ jobs:
 
   javadoc:
     uses: ./.github/workflows/javadoc.yml
-
-  # msbuild:
-  #   uses: ./.github/workflows/msbuild.yml
-  
+    
   mstest:
     strategy:
        matrix:
@@ -77,8 +74,6 @@ jobs:
     uses: ./.github/workflows/mstest.yml
     with:
       test-name: ${{ matrix.test_name }}
-      #check-result: true
-      #os: ${{ matrix.os }}
 
   static-analysis:
     uses: ./.github/workflows/static-analysis.yml
