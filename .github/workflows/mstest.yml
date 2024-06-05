@@ -59,6 +59,9 @@ jobs:
       uses: juliangruber/read-file-action@v1
       with: 
         path: .\tests\cobol85\${{ inputs.test-name }}\result-check
+    
+    - name: Echo file
+      run: echo "${{ steps.package.outputs.content }}"
   
     - name: Check result of tests
       if: contains(steps.package.outputs.content, '100.00%')
