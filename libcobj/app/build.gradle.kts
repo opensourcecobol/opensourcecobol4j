@@ -33,7 +33,7 @@ dependencies {
     testImplementation("org.junit.jupiter:junit-jupiter:5.9.3")
     testRuntimeOnly("org.junit.platform:junit-platform-launcher")
     implementation("org.json:json:20231013")
-    spotbugs("com.github.spotbugs:spotbugs:4.8.0")
+    spotbugs("com.github.spotbugs:spotbugs:4.8.5")
 }
 
 java {
