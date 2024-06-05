@@ -101,10 +101,6 @@ jobs:
     with:
       test-name: ${{ matrix.test_name }}
 
-  MSBuild:
-    needs: check-workflows
-    uses: ./.github/workflows/msbuild.yml
-
   static-analysis:
     needs: check-workflows
     uses: ./.github/workflows/static-analysis.yml
