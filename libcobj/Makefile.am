@@ -1,5 +1,6 @@
 TARGET_JAR = app/build/libs/libcobj.jar
 COBJ_IDX = bin/cobj-idx
+COBJ_API = bin/cobj-api
 
 SRC_FILES = \
 	settings.gradle.kts \
@@ -18,7 +19,6 @@ SRC_FILES = \
 	./app/src/main/java/jp/osscons/opensourcecobol/libcobj/common/GetInt.java \
 	./app/src/main/java/jp/osscons/opensourcecobol/libcobj/common/CobolCheck.java \
 	./app/src/main/java/jp/osscons/opensourcecobol/libcobj/common/CobolControl.java \
-	./app/src/main/java/jp/osscons/opensourcecobol/libcobj/common/CobolFrame.java \
 	./app/src/main/java/jp/osscons/opensourcecobol/libcobj/common/CobolIntrinsic.java \
 	./app/src/main/java/jp/osscons/opensourcecobol/libcobj/common/CobolString.java \
 	./app/src/main/java/jp/osscons/opensourcecobol/libcobj/common/GetAbstractCobolField.java \
@@ -46,7 +46,6 @@ SRC_FILES = \
 	./app/src/main/java/jp/osscons/opensourcecobol/libcobj/exceptions/CobolExceptionInfo.java \
 	./app/src/main/java/jp/osscons/opensourcecobol/libcobj/exceptions/CobolExceptionTabCode.java \
 	./app/src/main/java/jp/osscons/opensourcecobol/libcobj/exceptions/CobolRuntimeException.java \
-	./app/src/main/java/jp/osscons/opensourcecobol/libcobj/exceptions/CobolUndefinedException.java \
 	./app/src/main/java/jp/osscons/opensourcecobol/libcobj/exceptions/RuntimeExitHandler.java \
 	./app/src/main/java/jp/osscons/opensourcecobol/libcobj/file/CobolFile.java \
 	./app/src/main/java/jp/osscons/opensourcecobol/libcobj/file/CobolFileSort.java \
@@ -71,7 +70,7 @@ SRC_FILES = \
 	./app/src/main/java/jp/osscons/opensourcecobol/libcobj/ui/CobolCallResult.java \
 	./app/src/main/java/jp/osscons/opensourcecobol/libcobj/ui/CobolResultInt.java \
 	./app/src/main/java/jp/osscons/opensourcecobol/libcobj/ui/CobolResultString.java \
-	./app/src/main/java/jp/osscons/opensourcecobol/libcobj/ui/CobolResultDouble.java \
+	./app/src/main/java/jp/osscons/opensourcecobol/libcobj/ui/CobolResultDouble.java \ 
 	./app/src/main/java/jp/osscons/opensourcecobol/libcobj/user_util/indexed_file/IndexedFileUtilMain.java \
 	./app/src/main/java/jp/osscons/opensourcecobol/libcobj/user_util/indexed_file/ErrorLib.java \
 	./app/src/main/java/jp/osscons/opensourcecobol/libcobj/user_util/indexed_file/LoadResult.java \
@@ -80,7 +79,12 @@ SRC_FILES = \
 	./app/src/main/java/jp/osscons/opensourcecobol/libcobj/user_util/indexed_file/RecordWriter.java \
 	./app/src/main/java/jp/osscons/opensourcecobol/libcobj/user_util/indexed_file/StdinRecordReader.java \
 	./app/src/main/java/jp/osscons/opensourcecobol/libcobj/user_util/indexed_file/FileSeqRecordReader.java \
-	./app/src/main/java/jp/osscons/opensourcecobol/libcobj/user_util/indexed_file/FileLineSeqRecordReader.java
+	./app/src/main/java/jp/osscons/opensourcecobol/libcobj/user_util/indexed_file/FileLineSeqRecordReader.java\
+	./app/src/main/java/jp/osscons/opensourcecobol/libcobj/user_util/cobj_api/ApiFiles.java \
+	./app/src/main/java/jp/osscons/opensourcecobol/libcobj/user_util/cobj_api/ApiFilesOptions.java
+
+TEST_FILE = \
+	./app/src/test/java/jp/osscons/opensourcecobol/libcobj/user_util/cobj_api/ApiFilesTest.java
 
 all: $(TARGET_JAR)
 
@@ -90,7 +94,12 @@ $(TARGET_JAR): $(SRC_FILES)
 clean:
 	rm -rf $(TARGET_JAR)
 
-install: $(TARGET_JAR) $(COBJ_IDX)
+install: $(TARGET_JAR) $(COBJ_IDX) $(COBJ_API)
 	mkdir -p $(DESTDIR)$(prefix)/lib/opensourcecobol4j/
 	install $(TARGET_JAR) $(DESTDIR)$(prefix)/lib/opensourcecobol4j/
 	install $(COBJ_IDX) $(DESTDIR)$(prefix)/bin/
+	install $(COBJ_API) $(DESTDIR)$(prefix)/bin/
+
+test:
+	./gradlew test
+	rm -f ./app/testController.java ./app/testRecord.java

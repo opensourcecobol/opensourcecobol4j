@@ -2027,16 +2027,25 @@ record_delimiter_clause:
 /* RECORD KEY clause */
 
 record_key_clause:
-  RECORD _key _is reference
+  RECORD _key _is reference flag_duplicates
   {
+
+	if($5 == cb_int1) {
+		cb_error (_("Record keys with duplicates are not yet supported"));
+	}
+
 	current_file->key = $4;
   }
-| RECORD _key _is reference key_is_eq split_key_list
+| RECORD _key _is reference key_is_eq split_key_list flag_duplicates
   {
 	/* SPLIT KEY use */
 
 	cb_tree composite_key;	
 	struct cb_key_component *comp;
+
+	if($7 == cb_int1) {
+		cb_error (_("Record keys with duplicates are not yet supported"));
+	}
 
 	/* generate field (in w-s) for composite-key */
 	if (!$5) {

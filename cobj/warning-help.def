@@ -42,6 +42,12 @@ CB_WARNDEF (cb_warn_constant, "constant", 1,
 CB_WARNDEF (cb_warn_parentheses, "parentheses", 1,
 	    N_("Warn lack of parentheses around AND within OR"))
 
+CB_WARNDEF (cb_warn_strict_typing, "strict-typing", 1,
+	    N_("Warn type mismatch strictly"))
+
+CB_WARNDEF (cb_warn_implicit_define, "implicit-define", 1,
+	    N_("Warn implicitly defined data items"))
+
 CB_WARNDEF (cb_warn_call_params, "call-params", 0,
 	    N_("Warn non 01/77 items for CALL params"))
 

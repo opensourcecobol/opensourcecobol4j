@@ -322,9 +322,8 @@ public class CobolUtil {
    *
    * @param funcName
    * @param numParams
-   * @throws CobolStopRunException
    */
-  public static void COB_CHK_PARMS(String funcName, int numParams) throws CobolStopRunException {}
+  public static void COB_CHK_PARMS(String funcName, int numParams) {}
 
   /**
    * libcob/common.cのcob_get_switchの実装

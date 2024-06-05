@@ -7,6 +7,9 @@ on:
         required: true
         type: string
 
+permissions:
+  contents: read
+
 jobs:
   build:
     runs-on: ubuntu-latest
@@ -14,7 +17,7 @@ jobs:
       image: ${{ inputs.os }}
     steps: 
       - uses: actions/setup-java@v4
-        if: inputs.os == 'ubuntu:22.04'
+        if: inputs.os == 'ubuntu:24.04'
         with:
           distribution: 'temurin'
           java-version: '21'
@@ -25,11 +28,11 @@ jobs:
           distribution: 'temurin'
           java-version: '11'
 
-      - name: Install dependencies on Ubuntu 22.04
-        if: inputs.os == 'ubuntu:22.04'
+      - name: Install dependencies on Ubuntu 24.04
+        if: inputs.os == 'ubuntu:24.04'
         run: |
-          apt update -y
-          apt install -y build-essential gettext autoconf
+          apt-get update -y
+          apt-get install -y build-essential gettext autoconf
 
       - name: Install dependencies on AlmaLinux 9
         if: inputs.os == 'almalinux:9'
@@ -50,7 +53,7 @@ jobs:
         run: |
           ./configure --prefix=/usr/ CFLAGS=-Werror
           make
-          echo ARTIFACT_NAME=${{ inputs.os }} | sed 's/:/-/g' >> $GITHUB_ENV
+          echo "ARTIFACT_NAME=${{ inputs.os }}" | sed 's/:/-/g' >> "$GITHUB_ENV"
 
       - name: Create an artifact file
         run: |

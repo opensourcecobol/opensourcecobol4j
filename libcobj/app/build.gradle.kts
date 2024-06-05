@@ -30,6 +30,9 @@ dependencies {
     implementation("com.google.guava:guava:31.1-jre")
     implementation("org.xerial:sqlite-jdbc:3.30.1")
     implementation("commons-cli:commons-cli:1.6.0")
+    testImplementation("org.junit.jupiter:junit-jupiter:5.9.3")
+    testRuntimeOnly("org.junit.platform:junit-platform-launcher")
+    implementation("org.json:json:20231013")
     spotbugs("com.github.spotbugs:spotbugs:4.8.0")
 }
 
@@ -64,7 +67,7 @@ publishing {
         register<MavenPublication>("gpr") {
             groupId = "jp.osscons.opensourcecobol"
             artifactId = "libcobj"
-            version = "1.0.22"
+            version = "1.1.0"
             from(components["java"])
         }
     }
@@ -81,3 +84,16 @@ tasks.withType<Jar>().configureEach {
 tasks.withType<ShadowJar> {
     archiveClassifier.set("")
 }
+
+tasks.test {
+	useJUnitPlatform()
+	testLogging {
+		events("passed", "skipped", "failed")
+	}
+}
+
+tasks.named<Test>("test") {
+    // Use JUnit Platform for unit tests.
+    useJUnitPlatform()
+}
+

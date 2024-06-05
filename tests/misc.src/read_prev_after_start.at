@@ -1,0 +1,249 @@
+AT_SETUP([READ PREV after START])
+
+AT_DATA([STARTTEST.cbl], [
+       IDENTIFICATION          DIVISION.
+       PROGRAM-ID.             STARTTEST.
+       ENVIRONMENT             DIVISION.
+       CONFIGURATION           SECTION.
+       SOURCE-COMPUTER.        OPEN-COBOL.
+       OBJECT-COMPUTER.        OPEN-COBOL.
+       INPUT-OUTPUT SECTION.
+       FILE-CONTROL.
+           SELECT LOAN-FILE ASSIGN TO "LOANFILE"
+                  ORGANIZATION IS  INDEXED
+                  ACCESS MODE  IS  DYNAMIC
+                  RECORD KEY   IS  LOAN-KEY.
+      ****************************************************************
+       DATA                    DIVISION.
+      ****************************************************************
+       FILE SECTION.
+       FD  LOAN-FILE.
+       01  LOAN-REC.
+           03  LOAN-KEY.
+               05  LOAN-PROCDATE     PIC 9(08).
+               05  LOAN-PROCTIME     PIC 9(08).
+           03  LOAN-LOAN             PIC 9(09).
+           03  LOAN-INTEREST-RATE    PIC 9(02)V9(03).
+           03  LOAN-PERIODS          PIC 999.
+           03  LOAN-PAYMENT          PIC 9(09).
+       
+       WORKING-STORAGE         SECTION.
+       01  END-FLG                   PIC 9(01).
+       01  IDX                       PIC 9(03).
+       
+      *LINKAGE                 SECTION.
+       01  WK-FROM-DATE              PIC 9(08).
+       01  WK-TO-DATE                PIC 9(08).
+       01  WK-DETAILS.       
+           03  WK-L-REC        OCCURS 30.
+             05  WK-L-KEY.
+               07  WK-L-PROCDATE       PIC 9(08).
+               07  WK-L-PROCTIME       PIC 9(08).
+             05  WK-L-LOAN             PIC 9(09).
+             05  WK-L-INTEREST-RATE    PIC 9(02)V9(03).
+             05  WK-L-PERIODS          PIC 999.
+             05  WK-L-PAYMENT          PIC 9(09).
+
+      ****************************************************************
+       PROCEDURE               DIVISION.
+      ****************************************************************
+       HAJIME.
+           OPEN OUTPUT LOAN-FILE.
+
+           WRITE LOAN-REC FROM
+           "202401250954457503000000002000360000110886".
+           WRITE LOAN-REC FROM
+           "202401250854457503000000002000360000110886".
+           WRITE LOAN-REC FROM
+           "202401191207326603000000002000360000110886".
+           WRITE LOAN-REC FROM
+           "202401191201516303000000002000360000110886".
+           WRITE LOAN-REC FROM
+           "202311081549498603000000002000360000110886".
+           WRITE LOAN-REC FROM
+           "202311081549087603000000002000360000110886".
+           WRITE LOAN-REC FROM
+           "202311021644053103000000002000360000110886".
+           WRITE LOAN-REC FROM
+           "202311021144297703000000002000360000110886".
+           WRITE LOAN-REC FROM
+           "202310271809114703000000002000360000110886".
+           WRITE LOAN-REC FROM
+           "202310271807441003000000002000360000110886".
+
+           CLOSE LOAN-FILE.
+
+           OPEN INPUT LOAN-FILE.
+
+           MOVE 20231001 TO WK-FROM-DATE. 
+           MOVE 20240119 TO WK-TO-DATE. 
+           MOVE ZERO           TO END-FLG.
+           MOVE WK-TO-DATE     TO LOAN-PROCDATE.
+           MOVE 99999999       TO LOAN-PROCTIME.
+           DISPLAY LOAN-KEY.
+           START LOAN-FILE KEY IS <= LOAN-KEY
+               INVALID KEY
+                   MOVE 1  TO END-FLG
+           END-START.
+
+           PERFORM VARYING IDX FROM 1 BY 1 
+                           UNTIL END-FLG = 1 OR IDX > 30
+               READ LOAN-FILE PREVIOUS
+                   AT END
+                       DISPLAY "END"
+                       MOVE 1 TO END-FLG
+                   NOT AT END
+                       IF  LOAN-PROCDATE >= WK-FROM-DATE
+                           MOVE LOAN-REC TO WK-L-REC(IDX)
+                           DISPLAY LOAN-REC
+                       ELSE
+                           MOVE 1 TO END-FLG
+                      END-IF
+               END-READ
+           END-PERFORM.
+      * 終了処理
+       OWARI.
+           CLOSE LOAN-FILE.
+           GOBACK.
+      *--------------------<< END OF PROGRAM >>-----------------------*
+])
+
+AT_CHECK([cobj STARTTEST.cbl])
+AT_CHECK([java STARTTEST], [0],
+[2024011999999999
+202401191207326603000000002000360000110886
+202401191201516303000000002000360000110886
+202311081549498603000000002000360000110886
+202311081549087603000000002000360000110886
+202311021644053103000000002000360000110886
+202311021144297703000000002000360000110886
+202310271809114703000000002000360000110886
+202310271807441003000000002000360000110886
+END
+])
+
+AT_DATA([prog.cbl],
+[       identification   division.
+       program-id.      prog.
+       environment      division.
+       input-output     section.
+       file-control.    
+           select f assign to "idx-file"
+             organization  is  indexed
+             access  mode  is  dynamic
+             record  key   is  f-rec-key
+             file  status  is  st.
+       data division.
+       file section.
+       fd f.
+       01 f-rec.
+           05 f-rec-key pic x(02).
+       working-storage section.
+       01 st pic 9(2).
+
+       procedure division.
+       write-data.
+      * write sample data in an indexed file
+         open output f.
+
+         move "10" to f-rec-key.
+         write f-rec.
+         move "20" to f-rec-key.
+         write f-rec.
+         move "30" to f-rec-key.
+         write f-rec.
+         move "40" to f-rec-key.
+         write f-rec.
+         move "50" to f-rec-key.
+         write f-rec.
+
+         close f.
+
+       read-data.
+      * read data in an indexed file
+         open input f.
+
+         move "25" to f-rec-key.
+         start f key is <= f-rec-key.
+
+         perform until st not = 0
+           read f previous record
+           at end
+               exit perform
+           end-read
+           display f-rec-key
+         end-perform.
+
+         close f.
+
+         display "-------".
+
+         open input f.
+
+         move "25" to f-rec-key.
+         start f key is <= f-rec-key.
+
+         perform until st not = 0
+           read f next record
+           at end
+               exit perform
+           end-read
+           display f-rec-key
+         end-perform.
+
+         close f.
+
+         display "-------".
+
+         open input f.
+
+         move "25" to f-rec-key.
+         start f key is >= f-rec-key.
+
+         perform until st not = 0
+           read f previous record
+           at end
+               exit perform
+           end-read
+           display f-rec-key
+         end-perform.
+
+         close f.
+
+         display "-------".
+
+         open input f.
+
+         move "25" to f-rec-key.
+         start f key is >= f-rec-key.
+
+         perform until st not = 0
+           read f next record
+           at end
+               exit perform
+           end-read
+           display f-rec-key
+         end-perform.
+
+         close f.
+])
+
+AT_CHECK([cobj prog.cbl])
+AT_CHECK([java prog], [0],
+[20
+10
+-------
+30
+40
+50
+-------
+30
+20
+10
+-------
+30
+40
+50
+])
+
+AT_CLEANUP

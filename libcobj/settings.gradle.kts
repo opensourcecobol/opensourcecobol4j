@@ -4,3 +4,4 @@ plugins {
 
 rootProject.name = "opensourcecobol4j"
 include("app")
+include("cobj-api")

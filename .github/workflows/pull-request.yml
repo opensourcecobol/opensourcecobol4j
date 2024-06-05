@@ -14,14 +14,21 @@ concurrency:
   group: ${{ github.workflow }}-${{ github.ref }}
   cancel-in-progress: true
 
+permissions:
+  contents: read
+
 env:
   CLASSPATH: ":/usr/lib/opensourcecobol4j/libcobj.jar"
 
 jobs:
+  check-workflows:
+    uses: ./.github/workflows/check-workflows.yml
+
   build:
+    needs: check-workflows
     strategy:
       matrix:
-        os: ["ubuntu:22.04", "almalinux:9", "amazonlinux:2023"]
+        os: ["ubuntu:24.04", "almalinux:9", "amazonlinux:2023"]
     uses: ./.github/workflows/build.yml
     with:
       os: ${{ matrix.os }}
@@ -30,11 +37,28 @@ jobs:
     needs: build
     strategy:
       matrix:
-        test_name: ["command-line-options", "data-rep", "i18n_sjis", "jp-compat", "run", "syntax", "cobj-idx", "misc"]
-        os: ["ubuntu:22.04", "almalinux:9", "amazonlinux:2023"]
+        test_name:
+          - "command-line-options"
+          - "data-rep"
+          - "i18n_sjis"
+          - "jp-compat"
+          - "run"
+          - "syntax"
+          - "cobj-idx"
+          - "misc"
+        os: ["ubuntu:24.04", "almalinux:9", "amazonlinux:2023"]
     uses: ./.github/workflows/test-other.yml
     with:
       test-name: ${{ matrix.test_name }}
+      os: ${{ matrix.os }}
+
+  run-test-cobj-api:
+    needs: build
+    strategy:
+      matrix:
+        os: ["ubuntu:24.04", "almalinux:9", "amazonlinux:2023"]
+    uses: ./.github/workflows/test-cobj-api.yml
+    with:
       os: ${{ matrix.os }}
 
   run-test-nist:
@@ -42,7 +66,7 @@ jobs:
     strategy:
       matrix:
         test_name: ["IC", "IF", "IX", "NC", "OB", "RL", "SG", "SM", "SQ", "ST"]
-        os: ["ubuntu:22.04", "almalinux:9", "amazonlinux:2023"]
+        os: ["ubuntu:24.04", "almalinux:9", "amazonlinux:2023"]
     uses: ./.github/workflows/test-nist.yml
     with:
       test-name: ${{ matrix.test_name }}
@@ -54,7 +78,7 @@ jobs:
     strategy:
       matrix:
         test_name: ["CM", "DB", "RW"]
-        os: ["ubuntu:22.04", "almalinux:9", "amazonlinux:2023"]
+        os: ["ubuntu:24.04", "almalinux:9", "amazonlinux:2023"]
     uses: ./.github/workflows/test-nist.yml
     with:
       test-name: ${{ matrix.test_name }}
@@ -62,9 +86,11 @@ jobs:
       os: ${{ matrix.os }}
 
   build-gcc9:
+    needs: check-workflows
     uses: ./.github/workflows/build-gcc9.yml
 
   javadoc:
+    needs: check-workflows
     uses: ./.github/workflows/javadoc.yml
 
  mstest:
@@ -76,6 +102,6 @@ jobs:
     with:
       test-name: ${{ matrix.test_name }}
 
-
   static-analysis:
+    needs: check-workflows
     uses: ./.github/workflows/static-analysis.yml

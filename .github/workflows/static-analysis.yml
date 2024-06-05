@@ -3,6 +3,9 @@ name: static analysis
 on:
   workflow_call:
 
+permissions:
+  contents: read
+
 jobs:
   static_analysis:
     runs-on: ubuntu-latest
@@ -23,7 +26,7 @@ jobs:
 
       - name: Install opensource COBOL 4J
         run: |
-          sudo apt install -y build-essential bison flex gettext texinfo autoconf
+          sudo apt-get install -y build-essential bison flex gettext texinfo autoconf
           ./configure --prefix=/usr/
           make
           sudo make install

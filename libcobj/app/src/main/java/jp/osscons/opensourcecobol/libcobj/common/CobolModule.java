@@ -22,7 +22,6 @@ import java.util.ArrayList;
 import java.util.List;
 import jp.osscons.opensourcecobol.libcobj.data.AbstractCobolField;
 import jp.osscons.opensourcecobol.libcobj.data.CobolDataStorage;
-import jp.osscons.opensourcecobol.libcobj.exceptions.CobolStopRunException;
 
 /** libcob/common.hのcob_moduleに対応するクラス */
 public class CobolModule {
@@ -49,7 +48,7 @@ public class CobolModule {
     currentModule = moduleStack.remove(moduleStack.size() - 1);
   }
 
-  public static int calledBy(CobolDataStorage data) throws CobolStopRunException {
+  public static int calledBy(CobolDataStorage data) {
     AbstractCobolField param = CobolModule.getCurrentModule().cob_procedure_parameters.get(0);
     if (param != null) {
       if (moduleStack.size() >= 2) {

@@ -1,0 +1,37 @@
+AT_SETUP([-Wstrict-typing])
+
+AT_DATA([prog.cbl],
+[       IDENTIFICATION DIVISION.
+       PROGRAM-ID. prog.
+       DATA DIVISION.
+       WORKING-STORAGE SECTION.
+       01 X PIC X(5).
+       01 X-EDIT PIC X(3),X(2).
+       01 N PIC N(5).
+       01 NUM PIC 9(5).
+       01 NUM-EDIT PIC 9(3),9(2).
+       PROCEDURE DIVISION.
+       MAIN SECTION.
+         MOVE 12345 TO X. 
+         MOVE 12345 TO X-EDIT. 
+         MOVE 12345 TO N.
+         MOVE "12345" TO NUM.
+         MOVE "12345" TO NUM-EDIT.
+])
+
+AT_CHECK([${COBJ} -Wstrict-typing prog.cbl], [0], [],
+[prog.cbl:12: Warning: Alphanumeric value is expected
+prog.cbl:5: Warning: 'X' defined here as PIC X(5)
+prog.cbl:13: Warning: Alphanumeric value is expected
+prog.cbl:6: Warning: 'X-EDIT' defined here as PIC X(3),X(2)
+prog.cbl:14: Warning: National value is expected
+prog.cbl:7: Warning: 'N' defined here as PIC N(5)
+prog.cbl:15: Warning: Numeric value is expected
+prog.cbl:8: Warning: 'NUM' defined here as PIC 9(5)
+prog.cbl:16: Warning: Numeric value is expected
+prog.cbl:9: Warning: 'NUM-EDIT' defined here as PIC 9(3),9(2)
+])
+
+AT_CHECK([${COBJ} --help | grep '\-Wstrict-typing' > /dev/null], [0])
+
+AT_CLEANUP
