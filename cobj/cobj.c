@@ -98,6 +98,12 @@ enum cb_compile_level {
 #define CB_COPT_S " -Os"
 #endif
 
+#ifdef _WIN32
+const char file_path_delimitor = '\\';
+#else
+const char file_path_delimitor = '/';
+#endif
+
 /*
  * Global variables
  */
@@ -1795,11 +1801,9 @@ static int process_compile(struct filename *fn) {
       if (ret) {
         return ret;
       }
-#ifndef _WIN32
-      output_name_a += '/';
-#endif
-      snprintf(buff, COB_MEDIUM_BUFF, "%s %s%s.class %s%s$*.class", remove_cmd,
-               output_name_a, *program_id, output_name_a, *program_id);
+      snprintf(buff, COB_MEDIUM_BUFF, "%s %s%c%s.class %s%c%s$*.class",
+               remove_cmd, output_name_a, file_path_delimitor, *program_id,
+               output_name_a, file_path_delimitor, *program_id);
       process(buff);
     }
   }

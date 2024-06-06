@@ -68,3 +68,10 @@ jobs:
         working-directory: tests/
         run:
           ./${{ inputs.test-name }}
+      
+      - name: Upload log files if tests fail
+        if: failure()
+        uses: actions/upload-artifact@v4
+        with:
+          name: ${{ inputs.test-name }}-${{ env.ARTIFACT_NAME }}-log
+          path: tests/${{ inputs.test-name }}.dir/
