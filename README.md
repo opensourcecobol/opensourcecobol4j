@@ -69,18 +69,37 @@ In order to check installations of older versions,
 
 
 ## Installation (Windows)
+### Install Visual Studio
+The Windows version of opensource COBOL 4J uses the CL compiler included in Visual Studio. Therefore, please install [Visual Studio](https://visualstudio.microsoft.com/) first.
 
-1. Visit the [Release page](https://github.com/opensourcecobol/opensourcecobol4j/releases/tag/v1.1.0)
-  1. Download Source code and extract it.
-  1. Download `cobj.exe`.
-  1. Download `libcobj.jar`.
-1. Rename the directory `opensourcecobol4j-1.1.0\opensourcecobol4j-1.1.0` to `opensourcecobol4j-1.1.0\opensourcecobol4j`.
-1. Move the directory `opensourcecobol4j-1.1.0\opensourcecobol4j` to `C:\`.
-  1. Make sure that there exists a directory `C:\opensourcecobol4j\config`.
-1. Update the environment variable `Path` so that it contains the directory containing `cobj.exe` 
-1. Update the environment variable `CLASSPATH` so that it contains the path to `libcobj.jar`.
 
-### Install with Docker
+### Build a solution file
+1. Download the complete set of files for open source COBOL 4J.
+2.  Open win/opensourcecobol4j.sln using Visual Studio.
+3. Select "Debug" or "Release" mode.
+![alt text](image/readme1_en.png)
+4. Click "Build" -> "Build Solution".
+![alt text](image/readme2_en.png)
+5. Upon completion of the build, cobj.exe will be created in win/x64/Debug or win/x64/Release.
+
+### Place files in the appropriate location
+1. If you build in Debug mode, change the 5th line of win/make-install.ps1 from `\x64\Release\cobj.exe` to `\x64\Debug\cobj.exe`.
+2. Execute make-install.ps1.  
+* The files will be placed in the following locations respectively. 
+*  If you want to change the placement location of the files, modify make-install.ps1.
+
+| Files name | Location |
+|---|---|
+| cobj.exe | C:\opensourcecobol4j\bin |
+| libcobj.jar | C:\opensourcecobol4j\lib |
+| config files | C:\opensourcecobol4j\config |
+
+### Set the environment variables
+1. Add C:\opensourcecobol4j\bin to the PATH environment variable.
+2. Add C:\opensourcecobol4j\lib\libcobj.jar to the CLASSPATH environment variable.
+
+
+## Install with Docker
 
 The docker container for opensource COBOL 4J is available.
 
