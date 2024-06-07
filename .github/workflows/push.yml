@@ -91,12 +91,16 @@ jobs:
   javadoc:
     needs: check-workflows
     uses: ./.github/workflows/javadoc.yml
-    
+
+  build-libcobj:
+    needs: check-workflows
+    uses: ./.github/workflows/build-libcobj.yml
+
   mstest:
+    needs: build-libcobj
     strategy:
        matrix:
          test_name: ["IC", "IF", "IX", "NC", "OB", "RL", "SG", "SM", "SQ", "ST"]
-         os: ["windows-latest"]
     uses: ./.github/workflows/mstest.yml
     with:
       test-name: ${{ matrix.test_name }}

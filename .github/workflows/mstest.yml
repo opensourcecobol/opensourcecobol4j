@@ -14,6 +14,11 @@ jobs:
     steps:
     - uses: actions/checkout@v4
 
+    - uses: actions/download-artifact@v4
+      with:
+        name: libcobj.jar
+        path: win/
+
     - name: Add MSBuild to PATH
       uses: microsoft/setup-msbuild@v2.0.0
         
@@ -32,7 +37,7 @@ jobs:
     - name: Restore NuGet packages
       run: nuget restore ./win/
 
-    - name: Build
+    - name: Build cobj.exe
       run: msbuild /p:Configuration=Release /p:AdditionalIncludePaths=./:./cobj/:./win:./lib win/opensourcecobol4j.sln
 
     - name: Run tests ${{ inputs.test-name }}
