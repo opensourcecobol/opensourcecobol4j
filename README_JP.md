@@ -72,16 +72,33 @@ sudo make install
 古いバージョンのインストール方法は、[doc/installation_jp](./doc/installation_jp)をご覧ください.
 
 ## opensource COBOL 4Jのインストール (Windows)
+### Visual Studioのインストール
+Windows版のopensource COBOL 4JはVisual Studioに含まれるCLコンパイラを使用します. そのため、まず[Visual Studio](https://visualstudio.microsoft.com/)をインストールしてください.
 
-1. [リリースページ](https://github.com/opensourcecobol/opensourcecobol4j/releases/tag/v1.1.0)を開く
-  1. ソースコードをダウンロードして、回答する。
-  1. `cobj.exe`をダウンロードする.
-  1. `libcobj.jar`をダウンロードする.
-1. `opensourcecobol4j-1.1.0\opensourcecobol4j-1.1.0`ディレクトリを`opensourcecobol4j-1.1.0\opensourcecobol4j`にリネームする。
-1. `opensourcecobol4j-1.1.0\opensourcecobol4j`ディレクトリを`C:\`に移動する.
-  1. これによりディレクトリ`C:\opensourcecobol4j\config`が存在することを確認する.
-1. 環境変数`Path`を設定して`cobj.exe`にパスを通す.
-1. 環境変数`CLASSPATH`を設定して`libcobj.jar`にパスを通す.
+### ソリューションファイルのビルド
+1. opensource COBOL 4Jのファイル一式をダウンロードする。
+2. win/opensourcecobol4j.slnをVisual Studioで開く。
+3. ”Debug”または”Release”モードを選択する。
+![alt text](image/readme1.png)
+4. ”ビルド” -> ”ソリューションのビルド” を選択する。
+![alt text](image/readme2.png)
+5. ビルドが完了したら、win/x64/Debugまたはwin/x64/Releaseにcobj.exeが生成される。
+
+### ファイルの配置
+1. Debugモードでビルドした場合、win/make-install.ps1の5行目を`\x64\Release\cobj.exe`から`\x64\Debug\cobj.exe`に変更する。
+2. make-install.ps1を実行する。
+* ファイルは下記の場所にそれぞれ配置される。
+* ファイルの配置場所を変更したい場合は、make-install.ps1に記載してあるパスを編集する。
+
+| ファイル名 | 配置場所 |
+|---|---|
+| cobj.exe | C:\opensourcecobol4j\bin |
+| libcobj.jar | C:\opensourcecobol4j\lib |
+| configファイル | C:\opensourcecobol4j\config |
+
+### 環境変数の設定
+1. 環境変数PATHに`C:\opensourcecobol4j\bin`を追加する。
+2. 環境変数CLASSPATHに`C:\opensourcecobol4j\lib\libcobj.jar`を追加する。
 
 ## Dockerによるインストール
 
