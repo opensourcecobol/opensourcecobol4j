@@ -1,0 +1,30 @@
+name: build opensource COBOL 4J
+
+on:
+  workflow_call:
+
+permissions:
+  contents: read
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps: 
+      - uses: actions/setup-java@v4
+        with:
+          distribution: 'temurin'
+          java-version: '21'
+
+      - name: Checkout opensource COBOL 4J
+        uses: actions/checkout@v4
+      
+      - name: Install opensource COBOL 4J
+        working-directory: libcobj
+        run: |
+          ./gradlew shadowJar
+      
+      - name: Upload an artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: libcobj.jar
+          path: libcobj/app/build/libs/libcobj.jar 
