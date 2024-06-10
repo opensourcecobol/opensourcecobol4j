@@ -32,7 +32,7 @@ public class CobolCallDataContent {
   /**
    * TODO: 調査中
    *
-   * @param size
+   * @param size TODO: 調査中
    */
   public CobolCallDataContent(int size) {
     this.data = new CobolDataStorage(size);

@@ -281,7 +281,15 @@ public class CobolIndexedFile extends CobolFile {
     return COB_STATUS_00_SUCCESS;
   }
 
-  /** Equivalent to indexed_start_internal in libcob/fileio.c */
+  /**
+   * Equivalent to indexed_start_internal in libcob/fileio.c
+   *
+   * @param cond TODO: 調査中
+   * @param key TODO: 調査中
+   * @param readOpts TODO: 調査中
+   * @param testLock TODO: 調査中
+   * @return TODO: 調査中
+   */
   public int indexed_start_internal(
       int cond, AbstractCobolField key, int readOpts, boolean testLock) {
     IndexedFile p = this.filei;

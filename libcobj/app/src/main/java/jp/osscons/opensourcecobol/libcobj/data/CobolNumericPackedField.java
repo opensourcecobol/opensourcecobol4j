@@ -139,7 +139,11 @@ public class CobolNumericPackedField extends AbstractCobolField {
     super(size, dataStorage, attribute);
   }
 
-  /** TODO */
+  /**
+   * TODO: 調査中
+   *
+   * @param s TODO: 調査中
+   */
   public void checkNumeric(String s) {}
 
   /** this.dataの保持するバイト配列のコピーを返す */
@@ -588,7 +592,7 @@ public class CobolNumericPackedField extends AbstractCobolField {
   /**
    * byte型データを右に4回シフトした値を返す CとJavaのビット演算の仕様に差異があるため実装した
    *
-   * @param b
+   * @param b TODO: 調査中
    * @return b>>4
    */
   private byte upper4bits(byte b) {
@@ -639,7 +643,7 @@ public class CobolNumericPackedField extends AbstractCobolField {
    * libcob/codegen.hのcob_add_packed_intの実装 thisの保持する数値データに加算する
    *
    * @param val thisの保持する数値データに加算する値
-   * @return
+   * @return TODO: 調査中
    */
   public int addPackedInt(int val) {
     if (val == 0) {
@@ -684,7 +688,7 @@ public class CobolNumericPackedField extends AbstractCobolField {
    * libcob/numeric.cのcob_add_intおよびcob_add_packedの実装
    *
    * @param ival thisに 加算する値
-   * @return
+   * @return TODO: 調査中
    */
   @Override
   public int addInt(int ival) {
@@ -830,8 +834,8 @@ public class CobolNumericPackedField extends AbstractCobolField {
   /**
    * libcob/codegen.hのcob_cmp_packed_intの実装
    *
-   * @param n
-   * @return
+   * @param n TODO: 調査中
+   * @return TODO: 調査中
    */
   private int cmpPackedInt(int n) {
     CobolDataStorage data = this.getDataStorage();
@@ -856,8 +860,8 @@ public class CobolNumericPackedField extends AbstractCobolField {
   /**
    * libcob/numeric.cのcob_cmp_packedの実装
    *
-   * @param n
-   * @return
+   * @param n TODO: 調査中
+   * @return TODO: 調査中
    */
   private int cmpPacked(int n) {
     int sign = this.getSign();

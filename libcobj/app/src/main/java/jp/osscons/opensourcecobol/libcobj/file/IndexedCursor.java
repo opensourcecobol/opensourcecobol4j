@@ -139,7 +139,11 @@ public final class IndexedCursor {
     }
   }
 
-  /** reload a cursor */
+  /**
+   * reload a cursor
+   *
+   * @return TODO: 調査中
+   */
   public Optional<IndexedCursor> reloadCursor() {
     if (this.firstFetch) {
       return createCursor(this.conn, this.key, this.tableIndex, this.isDuplicate, this.comparator);

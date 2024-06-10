@@ -312,7 +312,7 @@ public class CobolResolve {
    * @param runner CobolRunnableを実装したクラス。nullでもよい。
    * @return runnerがnullでない場合はrunnerを返し、そうでないときはクラス名とパッケージ名を元に検索処理を実施する。
    *     検索して動的にクラスの読み込みに成功したら、それを返す。検索に失敗したら nullを返す。
-   * @throws CobolRuntimeException
+   * @throws CobolRuntimeException TODO: 調査中
    */
   public static CobolRunnable resolve(
       String packageName, AbstractCobolField cobolField, CobolRunnable runner)
@@ -337,7 +337,7 @@ public class CobolResolve {
    * @param runner CobolRunnableを実装したクラス。nullでもよい。
    * @return runnerがnullでない場合はrunnerを返し、そうでないときはクラス名とパッケージ名を元に検索処理を実施する。
    *     検索して動的にクラスの読み込みに成功したら、それを返す。検索に失敗したら nullを返す。
-   * @throws CobolRuntimeException
+   * @throws CobolRuntimeException TODO: 調査中
    */
   public static CobolRunnable resolve(String packageName, String name, CobolRunnable runner)
       throws CobolRuntimeException {
@@ -359,7 +359,7 @@ public class CobolResolve {
    * @param packageName パッケージ名
    * @param cobolField 読み込むクラスの名前
    * @return クラス名とパッケージ名を元に検索処理を実施する。 検索して動的にクラスの読み込みに成功したら、それを返す。検索に失敗したら nullを返す。
-   * @throws CobolRuntimeException
+   * @throws CobolRuntimeException TODO: 調査中
    */
   public static CobolRunnable resolve(String packageName, AbstractCobolField cobolField)
       throws CobolRuntimeException {
@@ -377,7 +377,7 @@ public class CobolResolve {
    * @param packageName パッケージ名
    * @param name 読み込むクラスの名前
    * @return クラス名とパッケージ名を元に検索処理を実施する。 検索して動的にクラスの読み込みに成功したら、それを返す。検索に失敗したら nullを返す。
-   * @throws CobolRuntimeException
+   * @throws CobolRuntimeException TODO: 調査中
    */
   public static CobolRunnable resolve(String packageName, String name)
       throws CobolRuntimeException {
@@ -488,7 +488,7 @@ public class CobolResolve {
    * 指定のプログラムのcancelメソッドを呼び出す
    *
    * @param f cancelを呼び出すプログラム名を示すCOBOL変数
-   * @throws CobolStopRunException
+   * @throws CobolStopRunException TODO: 調査中
    */
   public static void fieldCancel(AbstractCobolField f) throws CobolStopRunException {
     CobolResolve.cobCancel(f.fieldToString());
@@ -497,7 +497,7 @@ public class CobolResolve {
    * 指定のプログラムのcancelメソッドを呼び出す
    *
    * @param name プログラム名
-   * @throws CobolStopRunException
+   * @throws CobolStopRunException TODO: 調査中
    */
   public static void cobCancel(String name) throws CobolStopRunException {
     if (name == null || name.equals("")) {
