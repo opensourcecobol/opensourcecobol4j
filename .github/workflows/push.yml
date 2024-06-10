@@ -98,6 +98,7 @@ jobs:
 
   windows-test:
   #  needs: build-libcobj
+    needs: check-workflows
     strategy:
        fail-fast: false
        matrix:
