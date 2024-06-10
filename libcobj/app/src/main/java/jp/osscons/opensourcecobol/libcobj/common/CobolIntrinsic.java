@@ -151,7 +151,7 @@ public class CobolIntrinsic {
    * @param op TODO: 調査中
    * @param f2 TODO: 調査中
    * @return TODO: 調査中
-   * @throws CobolStopRunException
+   * @throws CobolStopRunException TODO: 調査中
    */
   public static AbstractCobolField intrBinop(AbstractCobolField f1, int op, AbstractCobolField f2)
       throws CobolStopRunException {
@@ -1345,7 +1345,7 @@ public class CobolIntrinsic {
    * @param srcfield1 TODO: 調査中
    * @param srcfield2 TODO: 調査中
    * @return TODO: 調査中
-   * @throws CobolStopRunException
+   * @throws CobolStopRunException TODO: 調査中
    */
   public static AbstractCobolField funcMod(
       AbstractCobolField srcfield1, AbstractCobolField srcfield2) throws CobolStopRunException {
@@ -1381,7 +1381,7 @@ public class CobolIntrinsic {
    * @param params TODO: 調査中
    * @param fields TODO: 調査中
    * @return TODO: 調査中
-   * @throws CobolStopRunException
+   * @throws CobolStopRunException TODO: 調査中
    */
   public static AbstractCobolField funcRange(int params, AbstractCobolField... fields)
       throws CobolStopRunException {
@@ -1426,7 +1426,7 @@ public class CobolIntrinsic {
    * @param srcfield1 TODO: 調査中
    * @param srcfield2 TODO: 調査中
    * @return TODO: 調査中
-   * @throws CobolStopRunException
+   * @throws CobolStopRunException TODO: 調査中
    */
   public static AbstractCobolField funcRem(
       AbstractCobolField srcfield1, AbstractCobolField srcfield2) throws CobolStopRunException {
@@ -1508,7 +1508,7 @@ public class CobolIntrinsic {
    * @param prams TODO: 調査中
    * @param fields TODO: 調査中
    * @return TODO: 調査中
-   * @throws CobolStopRunException
+   * @throws CobolStopRunException TODO: 調査中
    */
   public static AbstractCobolField funcVariance(int prams, AbstractCobolField... fields)
       throws CobolStopRunException {
@@ -1581,7 +1581,7 @@ public class CobolIntrinsic {
    * @param prams TODO: 調査中
    * @param fields TODO: 調査中
    * @return TODO: 調査中
-   * @throws CobolStopRunException
+   * @throws CobolStopRunException TODO: 調査中
    */
   public static AbstractCobolField funcStandardDeviation(int prams, AbstractCobolField... fields)
       throws CobolStopRunException {
@@ -1643,7 +1643,7 @@ public class CobolIntrinsic {
    * @param prams TODO: 調査中
    * @param fields TODO: 調査中
    * @return TODO: 調査中
-   * @throws CobolStopRunException
+   * @throws CobolStopRunException TODO: 調査中
    */
   public static AbstractCobolField funcPresentValue(int prams, AbstractCobolField... fields)
       throws CobolStopRunException {

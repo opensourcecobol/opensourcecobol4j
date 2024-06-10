@@ -50,11 +50,11 @@ public class CobolCheck {
   /**
    * libcob/common.cのcob_check_odoの実装
    *
-   * @param i
-   * @param min
-   * @param max
-   * @param name
-   * @throws CobolStopRunException
+   * @param i TODO: 調査中
+   * @param min TODO: 調査中
+   * @param max TODO: 調査中
+   * @param name TODO: 調査中
+   * @throws CobolStopRunException TODO: 調査中
    */
   public static void checkOdo(int i, int min, int max, String name) throws CobolStopRunException {
     if (i < min || max < i) {

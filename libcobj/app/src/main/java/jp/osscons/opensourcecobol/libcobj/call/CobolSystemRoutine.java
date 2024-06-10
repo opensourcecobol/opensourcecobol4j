@@ -66,7 +66,7 @@ public class CobolSystemRoutine {
    *
    * @param cmd コマンド文字列。Linux/Unix環境であればシェルコマンド、Windows環境であればコマンドプロンプトのコマンド。
    * @return コマンドの終了コード。
-   * @throws CobolStopRunException
+   * @throws CobolStopRunException TODO: 調査中
    *     このメソッドは内部でCobolModule.getCurrentModule().cob_procedure_parametersを参照する。
    *     このリストの形式に問題がある場合にスローされる。
    */

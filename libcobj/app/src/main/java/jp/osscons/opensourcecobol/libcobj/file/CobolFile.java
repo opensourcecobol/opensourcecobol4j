@@ -393,7 +393,7 @@ public class CobolFile {
    *
    * @param opt TODO: 調査中
    * @return TODO: 調査中
-   * @throws CobolStopRunException
+   * @throws CobolStopRunException TODO: 調査中
    */
   protected int linage_write_opt(int opt) throws CobolStopRunException {
     int i, n;
@@ -1140,7 +1140,7 @@ public class CobolFile {
    *
    * @param opt TODO: 調査中
    * @return TODO: 調査中
-   * @throws CobolStopRunException
+   * @throws CobolStopRunException TODO: 調査中
    */
   protected int file_write_opt(int opt) throws CobolStopRunException {
     if ((this.flag_select_features & COB_SELECT_LINAGE) != 0) {

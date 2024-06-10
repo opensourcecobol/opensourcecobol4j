@@ -255,7 +255,7 @@ public class CobolInspect {
    * libcob/strings.cのcob_inspect_charactersの実装
    *
    * @param f1 TODO: 調査中
-   * @throws CobolStopRunException
+   * @throws CobolStopRunException TODO: 調査中
    */
   public static void characters(AbstractCobolField f1) throws CobolStopRunException {
     int mark = inspectStart;
@@ -294,7 +294,7 @@ public class CobolInspect {
    *
    * @param f1 TODO: 調査中
    * @param f2 TODO: 調査中
-   * @throws CobolStopRunException
+   * @throws CobolStopRunException TODO: 調査中
    */
   public static void all(AbstractCobolField f1, AbstractCobolField f2)
       throws CobolStopRunException {
@@ -306,7 +306,7 @@ public class CobolInspect {
    *
    * @param f1 TODO: 調査中
    * @param f2 TODO: 調査中
-   * @throws CobolStopRunException
+   * @throws CobolStopRunException TODO: 調査中
    */
   public static void leading(AbstractCobolField f1, AbstractCobolField f2)
       throws CobolStopRunException {
@@ -318,7 +318,7 @@ public class CobolInspect {
    *
    * @param f1 TODO: 調査中
    * @param f2 TODO: 調査中
-   * @throws CobolStopRunException
+   * @throws CobolStopRunException TODO: 調査中
    */
   public static void first(AbstractCobolField f1, AbstractCobolField f2)
       throws CobolStopRunException {
@@ -330,7 +330,7 @@ public class CobolInspect {
    *
    * @param f1 TODO: 調査中
    * @param f2 TODO: 調査中
-   * @throws CobolStopRunException
+   * @throws CobolStopRunException TODO: 調査中
    */
   public static void trailing(AbstractCobolField f1, AbstractCobolField f2)
       throws CobolStopRunException {

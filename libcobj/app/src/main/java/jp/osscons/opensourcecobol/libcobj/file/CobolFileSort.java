@@ -768,7 +768,7 @@ public class CobolFileSort {
    *
    * @param varcnt TODO: 調査中
    * @param fbase TODO: 調査中
-   * @throws CobolStopRunException
+   * @throws CobolStopRunException TODO: 調査中
    */
   public static void sortGiving(CobolFile sortFile, int varcnt, CobolFile... fbase)
       throws CobolStopRunException {
