@@ -49,5 +49,5 @@ jobs:
         cd ..\tests\cobol85\${{ inputs.test-name }}
         perl ..\report.pl
         type report.txt
-        findstr "Successfully executed:" .\report.txt
-        findstr "100.00%" .\result-check .\report.txt
+        findstr "Successfully executed:" .\report.txt > .\result-check
+        findstr "100.00%" .\result-check
