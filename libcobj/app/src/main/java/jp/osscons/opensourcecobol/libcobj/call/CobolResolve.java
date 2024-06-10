@@ -475,7 +475,7 @@ public class CobolResolve {
   public static void cancel(String name) {
     if (name == null) {
       throw new CobolRuntimeException(
-          CobolRuntimeException.COBOL_FITAL_ERROR, "NULL name parameter passed to 'cobcancel'");
+          CobolRuntimeException.COBOL_FATAL_ERROR, "NULL name parameter passed to 'cobcancel'");
     }
 
     CobolRunnable runnable = callTable.get(name);

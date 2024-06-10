@@ -21,17 +21,18 @@ package jp.osscons.opensourcecobol.libcobj.exceptions;
 import jp.osscons.opensourcecobol.libcobj.call.CobolResolve;
 import jp.osscons.opensourcecobol.libcobj.common.CobolUtil;
 
-/** 実行時エラーを示す例外 */
+/** 実行時エラーを示す例外。エラー番号とエラーメッセージを保持する */
 public class CobolRuntimeException extends RuntimeException {
   public static int code;
-  public static int cobException = 0;
-  public static String origProgramId;
-  public static String origSection;
-  public static String origParagraph;
-  public static int origLine = 0;
-  public static String origStatement;
+  private static int cobException = 0;
+  private static String origProgramId;
+  private static String origSection;
+  private static String origParagraph;
+  private static int origLine = 0;
+  private static String origStatement;
 
-  public static final int COBOL_FITAL_ERROR = 9000;
+  /** 重大なエラーを示すエラーコード */
+  public static final int COBOL_FATAL_ERROR = 9000;
 
   /** エラー番号 */
   private int errorCode;
@@ -42,22 +43,13 @@ public class CobolRuntimeException extends RuntimeException {
   /**
    * コンストラクタ
    *
-   * @param errorCode this.errorCodeに設定する値
-   * @param message this.messageに設定する値
+   * @param errorCode エラーコード
+   * @param message エラーメッセージ
    */
   public CobolRuntimeException(int errorCode, String message) {
     super();
     this.errorCode = errorCode;
     this.message = message;
-  }
-
-  /**
-   * コンストラクタ
-   *
-   * @param e
-   */
-  public CobolRuntimeException(Throwable e) {
-    super(e);
   }
 
   /** エラーメッセージの文字列表現を返す */
@@ -74,6 +66,12 @@ public class CobolRuntimeException extends RuntimeException {
     super.printStackTrace();
   }
 
+  /**
+   * 実行時例外を設定する。 エラーIDをベースに、CobolExceptioTabCode.codeテーブルを参照して、対応するエラーコードが設定される。
+   * また、エラー発生時のプログラムID、セクション名、パラグラフ名、行番号、ステートメントを取得し、このクラスの静的変数に保持する。
+   *
+   * @param id エラーID
+   */
   public static void setException(int id) {
     code = CobolExceptionTabCode.code[id];
     cobException = 1;
@@ -84,34 +82,75 @@ public class CobolRuntimeException extends RuntimeException {
     origStatement = CobolUtil.getSourceStatement();
   }
 
+  /**
+   * エラーコード名を取得する
+   *
+   * @param exceptionCode エラーコード
+   * @return エラーコードに対応するエラーコード名
+   */
   public static String getExceptionName(int exceptionCode) {
     return CobolResolve.cobException.get(exceptionCode);
   }
 
+  /**
+   * エラーコードを取得する
+   *
+   * @return エラーコード
+   */
   public static int getExceptionCode() {
     return code;
   }
 
+  /**
+   * 常に0を返す。TODO: 必要に応じてこのメソッドは削除ないし修正する。
+   *
+   * @return 0
+   */
   public static int getException() {
     return cobException;
   }
 
+  /**
+   * エラー発生時のプログラムIDを取得する
+   *
+   * @return エラー発生時のプログラムID
+   */
   public static String getOrigProgramId() {
     return origProgramId;
   }
 
+  /**
+   * エラー発生時のセクション名を取得する
+   *
+   * @return エラー発生時のセクション名
+   */
   public static String getOrigSection() {
     return origSection;
   }
 
+  /**
+   * エラー発生時のパラグラフ名を取得する
+   *
+   * @return エラー発生時のパラグラフ名
+   */
   public static String getOrigParagragh() {
     return origParagraph;
   }
 
+  /**
+   * エラー発生時の行番号を取得する
+   *
+   * @return エラー発生時の行番号
+   */
   public static int getOrigLine() {
     return origLine;
   }
 
+  /**
+   * エラー発生時のステートメントを取得する
+   *
+   * @return エラー発生時のステートメント
+   */
   public static String getOrigStatement() {
     return origStatement;
   }
