@@ -24,9 +24,9 @@ public class CobolExceptionId {
   public static final int COB_EC_ZERO = 0;
   /** この例外コードは使用されない */
   public static final int COB_EC_ALL = 1;
-  /** 調査中 */
+  /** TODO: 調査中 */
   public static final int COB_EC_ARGUMENT = 2;
-  /** 調査中 */
+  /** TODO: 調査中 */
   public static final int COB_EC_ARGUMENT_FUNCTION = 3;
   /** この例外コードは使用されない */
   public static final int COB_EC_ARGUMENT_IMP = 4;
@@ -38,13 +38,13 @@ public class CobolExceptionId {
   public static final int COB_EC_BOUND_ODO = 7;
   /** この例外コードは使用されない */
   public static final int COB_EC_BOUND_OVERFLOW = 8;
-  /** 調査中 */
+  /** TODO: 調査中 */
   public static final int COB_EC_BOUND_PTR = 9;
-  /** 調査中 */
+  /** TODO: 調査中 */
   public static final int COB_EC_BOUND_REF_MOD = 10;
   /** この例外コードは使用されない */
   public static final int COB_EC_BOUND_SET = 11;
-  /** 調査中 */
+  /** TODO: 調査中 */
   public static final int COB_EC_BOUND_SUBSCRIPT = 12;
   /** この例外コードは使用されない */
   public static final int COB_EC_BOUND_TABLE_LIMIT = 13;
@@ -84,33 +84,33 @@ public class CobolExceptionId {
   public static final int COB_EC_FLOW_SEARCH = 30;
   /** この例外コードは使用されない */
   public static final int COB_EC_FLOW_USE = 31;
-  /** 調査中 */
+  /** TODO: 調査中 */
   public static final int COB_EC_I_O = 32;
-  /** 調査中 */
+  /** TODO: 調査中 */
   public static final int COB_EC_I_O_AT_END = 33;
-  /** 調査中 */
+  /** TODO: 調査中 */
   public static final int COB_EC_I_O_EOP = 34;
-  /** 調査中 */
+  /** TODO: 調査中 */
   public static final int COB_EC_I_O_EOP_OVERFLOW = 35;
-  /** 調査中 */
+  /** TODO: 調査中 */
   public static final int COB_EC_I_O_FILE_SHARING = 36;
-  /** 調査中 */
+  /** TODO: 調査中 */
   public static final int COB_EC_I_O_IMP = 37;
-  /** 調査中 */
+  /** TODO: 調査中 */
   public static final int COB_EC_I_O_INVALID_KEY = 38;
-  /** 調査中 */
+  /** TODO: 調査中 */
   public static final int COB_EC_I_O_LINAGE = 39;
-  /** 調査中 */
+  /** TODO: 調査中 */
   public static final int COB_EC_I_O_LOGIC_ERROR = 40;
-  /** 調査中 */
+  /** TODO: 調査中 */
   public static final int COB_EC_I_O_PERMANENT_ERROR = 41;
-  /** 調査中 */
+  /** TODO: 調査中 */
   public static final int COB_EC_I_O_RECORD_OPERATION = 42;
-  /** 調査中 */
+  /** TODO: 調査中 */
   public static final int COB_EC_IMP = 43;
-  /** 調査中 */
+  /** TODO: 調査中 */
   public static final int COB_EC_IMP_ACCEPT = 44;
-  /** 調査中 */
+  /** TODO: 調査中 */
   public static final int COB_EC_IMP_DISPLAY = 45;
   /** この例外コードは使用されない */
   public static final int COB_EC_LOCALE = 46;
@@ -148,13 +148,13 @@ public class CobolExceptionId {
   public static final int COB_EC_ORDER_IMP = 62;
   /** この例外コードは使用されない */
   public static final int COB_EC_ORDER_NOT_SUPPORTED = 63;
-  /** 調査中 */
+  /** TODO: 調査中 */
   public static final int COB_EC_OVERFLOW = 64;
-  /** 調査中 */
+  /** TODO: 調査中 */
   public static final int COB_EC_OVERFLOW_IMP = 65;
-  /** 調査中 */
+  /** TODO: 調査中 */
   public static final int COB_EC_OVERFLOW_STRING = 66;
-  /** 調査中 */
+  /** TODO: 調査中 */
   public static final int COB_EC_OVERFLOW_UNSTRING = 67;
   /** この例外コードは使用されない */
   public static final int COB_EC_PROGRAM = 68;
@@ -166,7 +166,7 @@ public class CobolExceptionId {
   public static final int COB_EC_PROGRAM_CANCEL_ACTIVE = 71;
   /** この例外コードは使用されない */
   public static final int COB_EC_PROGRAM_IMP = 72;
-  /** 調査中 */
+  /** TODO: 調査中 */
   public static final int COB_EC_PROGRAM_NOT_FOUND = 73;
   /** この例外コードは使用されない */
   public static final int COB_EC_PROGRAM_PTR_NULL = 74;
@@ -186,7 +186,7 @@ public class CobolExceptionId {
   public static final int COB_EC_RANGE_IMP = 81;
   /** この例外コードは使用されない */
   public static final int COB_EC_RANGE_INDEX = 82;
-  /** 調査中 */
+  /** TODO: 調査中 */
   public static final int COB_EC_RANGE_INSPECT_SIZE = 83;
   /** この例外コードは使用されない */
   public static final int COB_EC_RANGE_INVALID = 84;
@@ -242,7 +242,7 @@ public class CobolExceptionId {
   public static final int COB_EC_SIZE_EXPONENTIATION = 109;
   /** この例外コードは使用されない */
   public static final int COB_EC_SIZE_IMP = 110;
-  /** 調査中 */
+  /** TODO: 調査中 */
   public static final int COB_EC_SIZE_OVERFLOW = 111;
   /** この例外コードは使用されない */
   public static final int COB_EC_SIZE_TRUNCATION = 112;
