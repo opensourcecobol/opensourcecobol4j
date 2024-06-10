@@ -318,7 +318,19 @@ public class CobolFile {
     }
   }
 
-  /** libcob/fileio.のcob_invoke_funの実装 */
+  /**
+   * libcob/fileio.のcob_invoke_funの実装
+   *
+   * @param operate TODO: 調査中
+   * @param f TODO: 調査中
+   * @param key TODO: 調査中
+   * @param rec TODO: 調査中
+   * @param fnstatus TODO: 調査中
+   * @param openMode TODO: 調査中
+   * @param startCond TODO: 調査中
+   * @param readOpts TODO: 調査中
+   * @return TODO: 調査中
+   */
   public static int invokeFun(
       int operate,
       Object f,
@@ -1284,7 +1296,12 @@ public class CobolFile {
     }
   }
 
-  /** libcob/fileio.cのcob_syncの実装 */
+  /**
+   * libcob/fileio.cのcob_syncの実装
+   *
+   * @param f TODO: 調査中
+   * @param mode TODO: 調査中
+   */
   protected void cob_sync(CobolFile f, int mode) {
     // TODO
     // INDEXEDファイル実装時にやる
