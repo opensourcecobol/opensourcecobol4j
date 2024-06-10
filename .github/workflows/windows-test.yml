@@ -19,8 +19,8 @@ jobs:
     #     name: libcobj.jar
     #     path: win/
 
-    - name: Add MSBuild to PATH
-      uses: microsoft/setup-msbuild@v2.0.0
+    # - name: Add MSBuild to PATH
+    #   uses: microsoft/setup-msbuild@v2.0.0
         
     - name: Install Java
       uses: actions/setup-java@v4
@@ -34,26 +34,27 @@ jobs:
         perl-version: "5.32"
         distribution: strawberry
 
-    - name: Restore NuGet packages
-      run: nuget restore .\win\
+    # - name: Restore NuGet packages
+    #   run: nuget restore .\win\
 
    
 
-    - name: Build cobj.exe
-      run: msbuild /p:Configuration=Release /p:AdditionalIncludePaths=./:./cobj/:./win:./lib win/opensourcecobol4j.sln
+    # - name: Build cobj.exe
+    #   run: msbuild /p:Configuration=Release /p:AdditionalIncludePaths=./:./cobj/:./win:./lib win/opensourcecobol4j.sln
 
-    - name: Install files
-      run: .\make-install.ps1
+    # - name: Install files
+    #   run: .\make-install.ps1
 
-    - name: Build libcobj.jar
-      working-directory: libcobj
-      run: |
-        .\gradlew shadowJar
-        copy .\app\build\libs\libcobj.jar C:\opensourcecobol4j\lib\
+    # - name: Build libcobj.jar
+    #   working-directory: libcobj
+    #   run: |
+    #     .\gradlew shadowJar
+    #     copy .\app\build\libs\libcobj.jar C:\opensourcecobol4j\lib\
     
     - name: Run tests ${{ inputs.test-name }}
       run: |
         cd win
+        .\make-install.ps1
         $env:CLASSPATH="C:\opensourcecobol4j\lib\libcobj.jar"
         $env:PATH+=";C:\opensourcecobol4j\bin\;C:\opensourcecobol4j\config\"
         cd ..\tests\cobol85\${{ inputs.test-name }}
