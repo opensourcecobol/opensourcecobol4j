@@ -23,7 +23,11 @@ public class CobolExceptionInfo {
   /* エラーコード。TODO: 調査中 */
   public static int code = 0;
 
-  /** エラーコードを設定する。TODO: 調査中 */
+  /**
+   * エラーコードを設定する。TODO: 調査中
+   *
+   * @param id TODO: 調査中
+   */
   public static void setException(int id) {
     CobolExceptionInfo.code = CobolExceptionTabCode.code[id];
   }

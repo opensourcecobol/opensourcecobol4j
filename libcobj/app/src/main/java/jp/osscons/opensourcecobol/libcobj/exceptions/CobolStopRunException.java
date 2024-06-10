@@ -91,6 +91,7 @@ public final class CobolStopRunException extends Exception {
    * デフォルトの終了処理では、COBOLプログラムによってオープンされたファイルのクローズが行われる。
    *
    * @param status STOP RUNの返り値
+   * @throws CobolStopRunException このメソッドでは必ずCobolStopRunExceptionがスローされる。
    */
   public static void stopRunAndThrow(int status) throws CobolStopRunException {
     stopRun();
