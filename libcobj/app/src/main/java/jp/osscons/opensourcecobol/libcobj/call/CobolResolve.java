@@ -493,15 +493,6 @@ public class CobolResolve {
     }
   }
 
-  /** callTableに保存されているすべてのCallRunnableのインスタンスのcancelメソッドを呼び出す */
-  public static void cancelAll() {
-    for (CobolRunnable runnable : callTable.values()) {
-      if (runnable.isActive() == false) {
-        runnable.cancel();
-      }
-    }
-  }
-
   /**
    * プログラム名に対応するCobolRunnableのインスタンスに対応するポインタ(UUID) をバイト配列として返す
    *
