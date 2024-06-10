@@ -139,7 +139,11 @@ public class CobolNumericPackedField extends AbstractCobolField {
     super(size, dataStorage, attribute);
   }
 
-  /** TODO */
+  /**
+   * TODO: 調査中
+   *
+   * @param s TODO: 調査中
+   */
   public void checkNumeric(String s) {}
 
   /** this.dataの保持するバイト配列のコピーを返す */
