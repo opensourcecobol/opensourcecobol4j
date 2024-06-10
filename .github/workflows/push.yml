@@ -101,7 +101,7 @@ jobs:
     strategy:
        matrix:
          test_name: ["IC", "IF", "IX", "NC", "OB", "RL", "SG", "SM", "SQ", "ST"]
-    uses: ./.github/workflows/mstest.yml
+    uses: ./.github/workflows/windows-test.yml
     with:
       test-name: ${{ matrix.test_name }}
 
