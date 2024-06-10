@@ -20,18 +20,13 @@ package jp.osscons.opensourcecobol.libcobj.call;
 
 import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
-import java.nio.ByteBuffer;
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
-import java.util.Map.Entry;
-import java.util.UUID;
 import jp.osscons.opensourcecobol.libcobj.common.CobolConstant;
 import jp.osscons.opensourcecobol.libcobj.common.CobolUtil;
 import jp.osscons.opensourcecobol.libcobj.data.AbstractCobolField;
-import jp.osscons.opensourcecobol.libcobj.data.CobolDataStorage;
 import jp.osscons.opensourcecobol.libcobj.exceptions.CobolExceptionId;
 import jp.osscons.opensourcecobol.libcobj.exceptions.CobolRuntimeException;
 import jp.osscons.opensourcecobol.libcobj.exceptions.CobolStopRunException;
@@ -41,9 +36,6 @@ public class CobolResolve {
 
   /** プログラム名とCobolRunnableインスタンスの対応表 */
   private static Map<String, CobolRunnable> callTable;
-
-  /** ポインタ(UUID)のCobolRunnableインスタンスの対応表 */
-  private static Map<UUID, String> pointerTable;
 
   /** 例外コードと例外名の対応を表現する */
   public static Map<Integer, String> cobException;
@@ -60,7 +52,6 @@ public class CobolResolve {
 
   static {
     callTable = new HashMap<>();
-    pointerTable = new HashMap<>();
     name_convert = 0;
     resolve_paths = new ArrayList<String>();
     package_paths = new ArrayList<String>();
@@ -491,89 +482,6 @@ public class CobolResolve {
     if (runnable.isActive() == false) {
       runnable.cancel();
     }
-  }
-
-  /**
-   * プログラム名に対応するCobolRunnableのインスタンスに対応するポインタ(UUID) をバイト配列として返す
-   *
-   * @param field プログラム名
-   * @return プログラム名に対応するCobolRunnableのインスタンスに対応するポインタ(UUID)
-   * @throws CobolRuntimeException
-   */
-  public static byte[] resolveToPointer(AbstractCobolField field) throws CobolRuntimeException {
-    return resolveToPointer(field.getString());
-  }
-
-  /**
-   * プログラム名に対応するCobolRunnableのインスタンスに対応するポインタ(UUID) をバイト配列として返す
-   *
-   * @param name プログラム名
-   * @return プログラム名に対応するCobolRunnableのインスタンスに対応するポインタ(UUID)
-   * @throws CobolRuntimeException
-   */
-  public static byte[] resolveToPointer(String name) throws CobolRuntimeException {
-    Iterator<Entry<UUID, String>> i = pointerTable.entrySet().iterator();
-    while (i.hasNext()) {
-      Entry<UUID, String> e = i.next();
-      if (e.getValue().equals(name)) {
-        return uuidToByteBuffer(e.getKey());
-      }
-    }
-    resolve(null, name); // TODO
-    UUID uuid = UUID.randomUUID();
-    pointerTable.put(uuid, name);
-    return uuidToByteBuffer(uuid);
-  }
-
-  /**
-   * ポインタ(UUID)に対応するCobolRunnableのインスタンスを返す
-   *
-   * @param d ポインタ(UUID)が格納されたCobolDataStorageのインスタンス
-   * @return ポインタ(UUID)に対応するCobolRunnableのインスタンス
-   */
-  public static CobolRunnable resolveFromPointer(CobolDataStorage d) {
-    byte[] uuidBytes = new byte[Long.BYTES * 2];
-    System.arraycopy(d.getData(), 0, uuidBytes, 0, uuidBytes.length);
-    UUID uuid = uuidFromByteBuffer(uuidBytes);
-    String name = pointerTable.get(uuid);
-    try {
-      return resolve(null, name); // TODO
-    } catch (CobolRuntimeException e) {
-      return null;
-    }
-  }
-
-  // TODO 設置場所
-  /**
-   * UUIDをバイト配列に変換する
-   *
-   * @param uuid 変前のUUID
-   * @return uuidから変換したバイト配列
-   */
-  public static byte[] uuidToByteBuffer(UUID uuid) {
-    byte[] uuidBytes = new byte[16];
-
-    byte[] hi = ByteBuffer.allocate(Long.BYTES).putLong(uuid.getMostSignificantBits()).array();
-    byte[] low = ByteBuffer.allocate(Long.BYTES).putLong(uuid.getLeastSignificantBits()).array();
-
-    System.arraycopy(hi, 0, uuidBytes, 0, hi.length);
-    System.arraycopy(low, 0, uuidBytes, hi.length, low.length);
-
-    return uuidBytes;
-  }
-
-  // TODO 設置場所
-  /**
-   * バイト配列に保存されたポインタ(UUID)を取り出す
-   *
-   * @param bytes ポインタ(UUID)が保存されているバイト配列
-   * @return bytesからと取り出したポインタ(UUID)
-   */
-  public static UUID uuidFromByteBuffer(byte[] bytes) {
-    long l1 = ByteBuffer.wrap(bytes, 0, Long.BYTES).getLong();
-    long l2 = ByteBuffer.wrap(bytes, Long.BYTES, Long.BYTES).getLong();
-
-    return new UUID(l1, l2);
   }
 
   /**
