@@ -639,7 +639,7 @@ public class CobolNumericPackedField extends AbstractCobolField {
    * libcob/codegen.hのcob_add_packed_intの実装 thisの保持する数値データに加算する
    *
    * @param val thisの保持する数値データに加算する値
-   * @return
+   * @return TODO: 調査中
    */
   public int addPackedInt(int val) {
     if (val == 0) {
@@ -684,7 +684,7 @@ public class CobolNumericPackedField extends AbstractCobolField {
    * libcob/numeric.cのcob_add_intおよびcob_add_packedの実装
    *
    * @param ival thisに 加算する値
-   * @return
+   * @return TODO: 調査中
    */
   @Override
   public int addInt(int ival) {

@@ -163,7 +163,7 @@ public class CobolFileSort {
   /**
    * libcob/fileio.cのcob_tmpfileの実装
    *
-   * @return
+   * @return TODO: 調査中
    */
   private static FileIO tmpfile() {
     FileIO fp = new FileIO();

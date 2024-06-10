@@ -834,7 +834,7 @@ public abstract class AbstractCobolField {
    * libcob/common.cのcob_cmp_allの実装
    *
    * @param field thisと比較するフィールド
-   * @return
+   * @return TODO: 調査中
    */
   protected int compareAll(AbstractCobolField field) {
     int size = this.getSize();
@@ -1063,7 +1063,7 @@ public abstract class AbstractCobolField {
   /**
    * libcob/common.cのcob_is_omittedの実装
    *
-   * @return
+   * @return TODO: 調査中
    */
   public boolean isOmitted() {
     return this.dataStorage == null;
@@ -1072,7 +1072,7 @@ public abstract class AbstractCobolField {
   /**
    * libcob/common.cのcob_is_numericの実装
    *
-   * @return
+   * @return TODO: 調査中
    */
   public boolean isNumeric() {
     int i;
@@ -1137,7 +1137,7 @@ public abstract class AbstractCobolField {
   /**
    * libcob/common.cのcob_is_alphaの実装
    *
-   * @return
+   * @return TODO: 調査中
    */
   public boolean isAlpha() {
     for (int i = 0; i < this.size; ++i) {
@@ -1152,7 +1152,7 @@ public abstract class AbstractCobolField {
   /**
    * libcob/common.cのcob_is_upperの実装
    *
-   * @return
+   * @return TODO: 調査中
    */
   public boolean isUpper() {
     for (int i = 0; i < this.size; ++i) {
@@ -1167,7 +1167,7 @@ public abstract class AbstractCobolField {
   /**
    * libcob/common.cのcob_is_lowerの実装
    *
-   * @return
+   * @return TODO: 調査中
    */
   public boolean isLower() {
     for (int i = 0; i < this.size; ++i) {
@@ -1346,7 +1346,7 @@ public abstract class AbstractCobolField {
   /**
    * libcob/common.cのcob_real_get_signの実装
    *
-   * @return
+   * @return TODO: 調査中
    */
   public int realGetSign() {
     CobolDataStorage p;
@@ -1438,7 +1438,7 @@ public abstract class AbstractCobolField {
   /**
    * libcob/move.cのcob_get_long_longの実装
    *
-   * @return
+   * @return TODO: 調査中
    */
   public long getLong() {
     CobolFieldAttribute attr =

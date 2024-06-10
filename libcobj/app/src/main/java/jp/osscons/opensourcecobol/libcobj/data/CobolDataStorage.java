@@ -134,7 +134,7 @@ public class CobolDataStorage {
   /**
    * 保持するバイト配列のコピーを返す
    *
-   * @return
+   * @return TODO: 調査中
    */
   public byte[] getData() {
     return this.getData(0);

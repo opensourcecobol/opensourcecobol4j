@@ -1901,7 +1901,7 @@ public class CobolIntrinsic {
   /**
    * cob_intr_exception_fileの実装
    *
-   * @return
+   * @return TODO: 調査中
    */
   public static AbstractCobolField funcExceptionFile() {
     int flen;
@@ -1930,7 +1930,7 @@ public class CobolIntrinsic {
   /**
    * cob_intr_exception_locationの実装
    *
-   * @return
+   * @return TODO: 調査中
    */
   public static AbstractCobolField funcExceptionLocation() {
     String buff;
@@ -1984,7 +1984,7 @@ public class CobolIntrinsic {
   /**
    * cob_intr_exception_statementの実装
    *
-   * @return
+   * @return TODO: 調査中
    */
   public static AbstractCobolField funcExceptionStatement() {
     CobolFieldAttribute attr =
@@ -2007,7 +2007,7 @@ public class CobolIntrinsic {
   /**
    * cob_intr_exception_statusの実装
    *
-   * @return
+   * @return TODO: 調査中
    */
   public static AbstractCobolField funcExceptionStatus() {
     byte[] exceptName;
@@ -2121,7 +2121,7 @@ public class CobolIntrinsic {
   /**
    * cob_intr_seconds_past_midnightの実装
    *
-   * @return
+   * @return TODO: 調査中
    */
   public static AbstractCobolField funcSecondsPastMidnight() {
     int seconds;

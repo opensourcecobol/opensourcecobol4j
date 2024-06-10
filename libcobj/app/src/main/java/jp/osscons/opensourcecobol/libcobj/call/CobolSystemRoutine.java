@@ -212,7 +212,7 @@ public class CobolSystemRoutine {
    * @param data1 TODO: 調査中
    * @param data2 TODO: 調査中
    * @param length TODO: 調査中
-   * @return
+   * @return TODO: 調査中
    */
   public static int CBL_OR(CobolDataStorage data1, CobolDataStorage data2, int length) {
     return CBL_COMMON_OPERATION(
@@ -253,7 +253,7 @@ public class CobolSystemRoutine {
    * @param data1 TODO: 調査中
    * @param data2 TODO: 調査中
    * @param length TODO: 調査中
-   * @return
+   * @return TODO: 調査中
    */
   public static int CBL_NOR(CobolDataStorage data1, CobolDataStorage data2, int length) {
     return CBL_COMMON_OPERATION(
@@ -286,7 +286,7 @@ public class CobolSystemRoutine {
    * @param data1 TODO: 調査中
    * @param data2 TODO: 調査中
    * @param length TODO: 調査中
-   * @return
+   * @return TODO: 調査中
    */
   public static int CBL_XOR(CobolDataStorage data1, CobolDataStorage data2, int length) {
     return CBL_COMMON_OPERATION(
@@ -319,7 +319,7 @@ public class CobolSystemRoutine {
    * @param data1 TODO: 調査中
    * @param data2 TODO: 調査中
    * @param length TODO: 調査中
-   * @return
+   * @return TODO: 調査中
    */
   public static int CBL_NIMP(CobolDataStorage data1, CobolDataStorage data2, int length) {
     return CBL_COMMON_OPERATION(
@@ -352,7 +352,7 @@ public class CobolSystemRoutine {
    * @param data1 TODO: 調査中
    * @param data2 TODO: 調査中
    * @param length TODO: 調査中
-   * @return
+   * @return TODO: 調査中
    */
   public static int CBL_EQ(CobolDataStorage data1, CobolDataStorage data2, int length) {
     return CBL_COMMON_OPERATION(
@@ -465,7 +465,7 @@ public class CobolSystemRoutine {
    * @param result TODO: 調査中
    * @param func TODO: 調査中
    * @param parm TODO: 調査中
-   * @return
+   * @return TODO: 調査中
    */
   public static int CBL_X91(CobolDataStorage result, CobolDataStorage func, CobolDataStorage parm) {
     switch (func.getByte(0)) {

@@ -241,7 +241,7 @@ public class CobolUtil {
   /**
    * libcob/common.cとcob_localtime
    *
-   * @return
+   * @return TODO: 調査中
    */
   public static LocalDateTime localtime() {
     LocalDateTime rt = LocalDateTime.now();
@@ -597,7 +597,7 @@ public class CobolUtil {
    * @param s1 TODO: 調査中
    * @param c TODO: 調査中
    * @param size TODO: 調査中
-   * @return
+   * @return TODO: 調査中
    */
   public static int commonCmpc(CobolDataStorage s1, byte c, int size) {
     CobolDataStorage s = CobolModule.getCurrentModule().collating_sequence;

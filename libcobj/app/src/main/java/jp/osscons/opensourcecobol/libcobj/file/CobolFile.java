@@ -346,7 +346,7 @@ public class CobolFile {
   /**
    * libcob/fileio.cのcob_file_linage_checkの実装 TODO 実装
    *
-   * @return
+   * @return TODO: 調査中
    */
   protected boolean file_linage_check() {
     Linage lingptr = getLinorkeyptr();

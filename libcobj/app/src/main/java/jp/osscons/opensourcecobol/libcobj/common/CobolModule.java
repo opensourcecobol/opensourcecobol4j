@@ -69,7 +69,7 @@ public class CobolModule {
   /**
    * モジュールキューが空かどうか
    *
-   * @return
+   * @return TODO: 調査中
    */
   public static boolean isQueueEmpty() {
     return moduleStack.isEmpty();

@@ -122,7 +122,7 @@ public class CobolTerminal {
   /**
    * libcob/common.c job_or_current_localtime
    *
-   * @return
+   * @return TODO: 調査中
    */
   private static LocalDateTime jobOrCurrentLocalTime() {
     if (CobolUtil.cobLocalTm != null) {
