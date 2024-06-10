@@ -42,7 +42,11 @@ public class CobolNumericField extends AbstractCobolField {
     super(size, dataStorage, attribute);
   }
 
-  /** TODO実装 */
+  /**
+   * TODO: 調査中
+   *
+   * @param s TODO: 調査中
+   */
   public void checkNumeric(String s) {}
 
   /** this.dataの保持するバイト配列のコピーを返す */
@@ -564,6 +568,7 @@ public class CobolNumericField extends AbstractCobolField {
    *
    * @param field TODO: 調査中
    * @param data TODO: 調査中
+   * @param dataStartIndex TODO: 調査中
    * @param size TODO: 調査中
    * @param scale TODO: 調査中
    */
@@ -660,6 +665,8 @@ public class CobolNumericField extends AbstractCobolField {
    * thisの保持する数値データに加算する
    *
    * @param in thisの保持する数値データに加算する値
+   * @param opt TODO: 調査中
+   * @return 0
    */
   public int addInt(int in, int opt) {
     if (in == 0) {
