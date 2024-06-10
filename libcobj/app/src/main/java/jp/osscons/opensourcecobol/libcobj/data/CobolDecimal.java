@@ -217,7 +217,11 @@ public class CobolDecimal {
     this.scale = 0;
   }
 
-  /** libcob/numeric.cのcob_decimal_setの実装 */
+  /**
+   * libcob/numeric.cのcob_decimal_setの実装
+   *
+   * @param decimal TODO: 調査中
+   */
   public void set(CobolDecimal decimal) {
     // TODO よりよいコピーの方法を考える
     this.value = decimal.value.add(BigDecimal.ZERO);
@@ -319,6 +323,7 @@ public class CobolDecimal {
    * this.valueの値をthis.valueでotherを割った値にする
    *
    * @param decimal this.valueを割る数
+   * @throws CobolStopRunException TODO: 調査中
    */
   public void div(CobolDecimal decimal) throws CobolStopRunException {
     if (DECIMAL_CHECK(this, decimal)) {
@@ -406,6 +411,7 @@ public class CobolDecimal {
    * @param f TODO: 調査中
    * @param opt TODO: 調査中
    * @return TODO: 調査中
+   * @throws CobolStopRunException TODO: 調査中
    */
   public int getField(AbstractCobolField f, int opt) throws CobolStopRunException {
     if (this.getScale() == CobolDecimal.DECIMAL_NAN) {
@@ -499,7 +505,12 @@ public class CobolDecimal {
     this.setScale(this.getScale() + n);
   }
 
-  /** libcob/numeric.cのalign_decimalの実装 */
+  /**
+   * libcob/numeric.cのalign_decimalの実装
+   *
+   * @param d1 TODO: 調査中
+   * @param d2 TODO: 調査中
+   */
   public void alignDecimal(CobolDecimal d1, CobolDecimal d2) {
     if (d1.getScale() < d2.getScale()) {
       d1.shiftDecimal(d2.getScale() - d1.getScale());
@@ -527,6 +538,7 @@ public class CobolDecimal {
    * @param f TODO: 調査中
    * @param opt TODO: 調査中
    * @return TODO: 調査中
+   * @throws CobolStopRunException TODO: 調査中
    */
   public int getDisplayField(AbstractCobolField f, int opt) throws CobolStopRunException {
     int sign = this.value.signum();

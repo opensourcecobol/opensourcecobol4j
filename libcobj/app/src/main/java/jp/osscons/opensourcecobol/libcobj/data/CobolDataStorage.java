@@ -267,6 +267,7 @@ public class CobolDataStorage {
   /**
    * C言語のmemset
    *
+   * @param offset TODO: 調査中
    * @param ch TODO: 調査中
    * @param size TODO: 調査中
    */
@@ -279,6 +280,7 @@ public class CobolDataStorage {
   /**
    * C言語のmemset
    *
+   * @param offset TODO: 調査中
    * @param ch TODO: 調査中
    * @param size TODO: 調査中
    */
