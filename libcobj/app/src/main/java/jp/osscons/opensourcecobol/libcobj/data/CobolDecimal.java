@@ -87,7 +87,7 @@ public class CobolDecimal {
   /**
    * コンストラクタ this.valueを引数で指定された値に設定する.
    *
-   * @param value
+   * @param value TODO: 調査中
    */
   public CobolDecimal(BigDecimal value) {
     this.setValue(value);
@@ -97,8 +97,8 @@ public class CobolDecimal {
   /**
    * コンストラクタ this.valueを指定された値に設定し,scaleも指定された値に設定する.
    *
-   * @param value
-   * @param scale
+   * @param value TODO: 調査中
+   * @param scale TODO: 調査中
    */
   public CobolDecimal(BigDecimal value, int scale) {
     this(value);
@@ -108,7 +108,7 @@ public class CobolDecimal {
   /**
    * コンストラクタ. this.valueを指定されたint型の値に対応する値に設定する
    *
-   * @param n
+   * @param n TODO: 調査中
    */
   public CobolDecimal(long n) {
     if (n == 0L) {
@@ -126,7 +126,7 @@ public class CobolDecimal {
   /**
    * コンストラクタ. this.valueを指定されたint型の値に対応する値に設定する
    *
-   * @param n
+   * @param n TODO: 調査中
    */
   public CobolDecimal(int n) {
     if (n == 0) {
@@ -144,7 +144,7 @@ public class CobolDecimal {
   /**
    * コピーコンストラクタ
    *
-   * @param other
+   * @param other TODO: 調査中
    */
   public CobolDecimal(CobolDecimal other) {
     this.setValue(other.getValue());
@@ -227,7 +227,7 @@ public class CobolDecimal {
   /**
    * libcob/numeric.cのcob_decimal_set_fieldの実装
    *
-   * @param f
+   * @param f TODO: 調査中
    */
   public void setField(AbstractCobolField f) {
     CobolDecimal decimal = f.getDecimal();
@@ -236,62 +236,10 @@ public class CobolDecimal {
   }
 
   /**
-   * libcob/numeric.cのcob_decimal_set_displayの実装
-   *
-   * @param f
-   */
-  /*
-   * public void decimalSetDisplay(AbstractCobolField f) {
-   * int firstIndex = f.getFirstDataIndex();
-   * int p = 0;
-   * int size = f.getFieldSize();
-   *
-   * CobolDataStorage data = f.getDataStorage();
-   * if(data.getByte(firstIndex + p) == 255) {
-   * this.value = BigDecimal.TEN.pow(size);
-   * this.setScale(f.getAttribute().getScale());
-   * return;
-   * }
-   * if(data.getByte(firstIndex + p) == 0) {
-   * this.value = BigDecimal.TEN.pow(size).negate();
-   * this.setScale(f.getAttribute().getScale());
-   * return;
-   * }
-   * int sign = f.getSign();
-   * // skip leading zeros
-   * while(size > 1 && data.getByte(p) == '0') {
-   * size--;
-   * p++;
-   * }
-   *
-   * // set value
-   * if(size < 10) {
-   * int n = 10;
-   * while(size-- != 0) {
-   * n = n * 10 + data.getByte(firstIndex + p++) - '0';
-   * }
-   * this.set(n);
-   * } else {
-   * byte[] numBuffPtr = new byte[size];
-   * for(int i=0; i<size; ++i) {
-   * numBuffPtr[i] = data.getByte(firstIndex + i);
-   * }
-   * this.value = new BigDecimal(new String(numBuffPtr));
-   * }
-   *
-   * if(sign < 0) {
-   * this.value = this.value.negate();
-   * }
-   * this.setScale(f.getAttribute().getScale());
-   * f.putSign(sign);
-   * }
-   */
-
-  /**
    * libcob/numeric.cのDECIMAL_CHECKマクロの代替
    *
-   * @param d1
-   * @param d2
+   * @param d1 TODO: 調査中
+   * @param d2 TODO: 調査中
    */
   private static boolean DECIMAL_CHECK(CobolDecimal d1, CobolDecimal d2) {
     if (d1.getScale() == DECIMAL_NAN || d2.getScale() == DECIMAL_NAN) {
@@ -427,7 +375,7 @@ public class CobolDecimal {
   /**
    * libcob/numeric.cのcob_decimal_set_doubleの実装
    *
-   * @param v
+   * @param v TODO: 調査中
    */
   private void decimalSetDouble(double v) {
     this.setValue(new BigDecimal(v * 1.0e9));
@@ -455,9 +403,9 @@ public class CobolDecimal {
   /**
    * libcob/numeric.c cob_decimal_get_fieldの実装 AbstractCobolFieldの保持する値をthisに設定する
    *
-   * @param f
-   * @param opt
-   * @return
+   * @param f TODO: 調査中
+   * @param opt TODO: 調査中
+   * @return TODO: 調査中
    */
   public int getField(AbstractCobolField f, int opt) throws CobolStopRunException {
     if (this.getScale() == CobolDecimal.DECIMAL_NAN) {
@@ -535,7 +483,7 @@ public class CobolDecimal {
   /**
    * libcob/numeric.c shift_decimalの実装 this.valueを値10^n,スケールをn増加させる
    *
-   * @param n
+   * @param n TODO: 調査中
    */
   public void shiftDecimal(int n) {
     if (n == 0) {
@@ -576,9 +524,9 @@ public class CobolDecimal {
   /**
    * libcob/numeric.cのcob_decimal_get_displayの実装
    *
-   * @param f
-   * @param opt
-   * @return
+   * @param f TODO: 調査中
+   * @param opt TODO: 調査中
+   * @return TODO: 調査中
    */
   public int getDisplayField(AbstractCobolField f, int opt) throws CobolStopRunException {
     int sign = this.value.signum();
@@ -622,9 +570,9 @@ public class CobolDecimal {
   /**
    * libcob/numeric.cのcob_decimal_get_packedの実装
    *
-   * @param f
-   * @param opt
-   * @return
+   * @param f TODO: 調査中
+   * @param opt TODO: 調査中
+   * @return TODO: 調査中
    */
   public int getPackedField(AbstractCobolField f, int opt) {
     int sign = this.value.signum();
@@ -686,9 +634,9 @@ public class CobolDecimal {
   /**
    * libcob/numeric.cのcob_decimal_get_binaryの実装
    *
-   * @param f
-   * @param opt
-   * @return
+   * @param f TODO: 調査中
+   * @param opt TODO: 調査中
+   * @return TODO: 調査中
    */
   private int getBinaryField(AbstractCobolField f, int opt) {
     CobolDataStorage data = f.getDataStorage();
@@ -746,11 +694,11 @@ public class CobolDecimal {
   /**
    * libcob/numeric.cのnum_byte_memcpyの実装
    *
-   * @param s1
+   * @param s1 TODO: 調査中
    * @param s1StartIndex s1のコピー開始位置
-   * @param s2
+   * @param s2 TODO: 調査中
    * @param s2StartIndex s1のコピー開始位置
-   * @param size
+   * @param size TODO: 調査中
    */
   public static void numByteMemcpy(
       CobolDataStorage s1, int s1StartIndex, CobolDataStorage s2, int s2StartIndex, int size) {

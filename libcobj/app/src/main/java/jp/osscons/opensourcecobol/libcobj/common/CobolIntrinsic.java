@@ -91,8 +91,8 @@ public class CobolIntrinsic {
   /**
    * libcob/intrinsicのcob_intr_ordの実装
    *
-   * @param year
-   * @return
+   * @param year TODO: 調査中
+   * @return TODO: 調査中
    */
   private static boolean isLeapYear(int year) {
     return ((year % 4 == 0 && year % 100 != 0) || (year % 400 == 0));
@@ -124,9 +124,9 @@ public class CobolIntrinsic {
   /**
    * libcob/intrinsicのcalc_ref_modの実装
    *
-   * @param f
-   * @param offset
-   * @param length
+   * @param f TODO: 調査中
+   * @param offset TODO: 調査中
+   * @param length TODO: 調査中
    */
   private static void calcRefMod(AbstractCobolField f, int offset, int length) {
     if (offset <= f.getSize()) {
@@ -147,10 +147,10 @@ public class CobolIntrinsic {
   /**
    * libcob/intrinsicのcob_intr_get_binopの実装
    *
-   * @param f1
-   * @param op
-   * @param f2
-   * @return
+   * @param f1 TODO: 調査中
+   * @param op TODO: 調査中
+   * @param f2 TODO: 調査中
+   * @return TODO: 調査中
    * @throws CobolStopRunException
    */
   public static AbstractCobolField intrBinop(AbstractCobolField f1, int op, AbstractCobolField f2)
@@ -204,8 +204,8 @@ public class CobolIntrinsic {
   /**
    * libcob/intrinsicのcob_intr_lengthの実装
    *
-   * @param srcfield
-   * @return
+   * @param srcfield TODO: 調査中
+   * @return TODO: 調査中
    */
   public static AbstractCobolField funcLength(AbstractCobolField srcfield) {
     CobolFieldAttribute attr =
@@ -219,8 +219,8 @@ public class CobolIntrinsic {
   /**
    * libcob/intrinsicのcob_intr_integerの実装
    *
-   * @param srcfield
-   * @return
+   * @param srcfield TODO: 調査中
+   * @return TODO: 調査中
    */
   public static AbstractCobolField funcInteger(AbstractCobolField srcfield) {
     CobolFieldAttribute attr =
@@ -271,8 +271,8 @@ public class CobolIntrinsic {
   /**
    * libcob/intrinsicのcob_intr_integer_partの実装
    *
-   * @param srcfield
-   * @return
+   * @param srcfield TODO: 調査中
+   * @return TODO: 調査中
    */
   public static AbstractCobolField funcIntegerPart(AbstractCobolField srcfield) {
     CobolFieldAttribute attr =
@@ -292,8 +292,8 @@ public class CobolIntrinsic {
   /**
    * libcob/intrinsicのcob_intr_upper_caseの実装
    *
-   * @param srcfield
-   * @return
+   * @param srcfield TODO: 調査中
+   * @return TODO: 調査中
    */
   public static AbstractCobolField funcUpperCase(
       int offset, int length, AbstractCobolField srcfield) {
@@ -313,8 +313,8 @@ public class CobolIntrinsic {
   /**
    * libcob/intrinsicのcob_intr_lower_caseの実装
    *
-   * @param srcfield
-   * @return
+   * @param srcfield TODO: 調査中
+   * @return TODO: 調査中
    */
   public static AbstractCobolField funcLowerCase(
       int offset, int length, AbstractCobolField srcfield) {
@@ -334,8 +334,8 @@ public class CobolIntrinsic {
   /**
    * libcob/intrinsicのcob_intr_reverseの実装
    *
-   * @param srcfield
-   * @return
+   * @param srcfield TODO: 調査中
+   * @return TODO: 調査中
    */
   public static AbstractCobolField funcReverse(
       int offset, int length, AbstractCobolField srcfield) {
@@ -355,10 +355,10 @@ public class CobolIntrinsic {
   /**
    * libcob/intrinsicのcob_intr_when_compiledの実装
    *
-   * @param offset
-   * @param length
-   * @param f
-   * @return
+   * @param offset TODO: 調査中
+   * @param length TODO: 調査中
+   * @param f TODO: 調査中
+   * @return TODO: 調査中
    */
   public static AbstractCobolField funcWhenCompiled(int offset, int length, AbstractCobolField f) {
     makeFieldEntry(f);
@@ -372,9 +372,9 @@ public class CobolIntrinsic {
   /**
    * libcob/intrinsicのcob_intr_current_dateの実装
    *
-   * @param offset
-   * @param length
-   * @return
+   * @param offset TODO: 調査中
+   * @param length TODO: 調査中
+   * @return TODO: 調査中
    */
   public static AbstractCobolField funcCurrentDate(int offset, int length) {
     CobolFieldAttribute attr =
@@ -404,8 +404,8 @@ public class CobolIntrinsic {
   /**
    * libcob/intrinsicのcob_intr_charの実装
    *
-   * @param srcfield
-   * @return
+   * @param srcfield TODO: 調査中
+   * @return TODO: 調査中
    */
   public static AbstractCobolField funcChar(AbstractCobolField srcfield) {
     CobolFieldAttribute attr =
@@ -425,8 +425,8 @@ public class CobolIntrinsic {
   /**
    * libcob/intrinsicのcob_intr_ordの実装
    *
-   * @param srcfield
-   * @return
+   * @param srcfield TODO: 調査中
+   * @return TODO: 調査中
    */
   public static AbstractCobolField funcOrd(AbstractCobolField srcfield) {
     CobolFieldAttribute attr =
@@ -441,8 +441,8 @@ public class CobolIntrinsic {
   /**
    * libcob/intrinsicのcob_intr_date_of_integerの実装
    *
-   * @param srcdays
-   * @return
+   * @param srcdays TODO: 調査中
+   * @return TODO: 調査中
    */
   public static AbstractCobolField funcDateOfInteger(AbstractCobolField srcdays) {
     CobolFieldAttribute attr =
@@ -492,8 +492,8 @@ public class CobolIntrinsic {
   /**
    * libcob/intrinsicのcob_intr_day_of_integerの実装
    *
-   * @param srcdays
-   * @return
+   * @param srcdays TODO: 調査中
+   * @return TODO: 調査中
    */
   public static AbstractCobolField funcDayOfInteger(AbstractCobolField srcdays) {
     CobolFieldAttribute attr =
@@ -529,8 +529,8 @@ public class CobolIntrinsic {
   /**
    * libcob/intrinsicのcob_intr_integer_of_dateの実装
    *
-   * @param srcfield
-   * @return
+   * @param srcfield TODO: 調査中
+   * @return TODO: 調査中
    */
   public static AbstractCobolField funcIntegerOfDate(AbstractCobolField srcfield) {
     CobolFieldAttribute attr =
@@ -598,8 +598,8 @@ public class CobolIntrinsic {
   /**
    * libcob/intrinsicのcob_intr_integer_of_dayの実装
    *
-   * @param srcfield
-   * @return
+   * @param srcfield TODO: 調査中
+   * @return TODO: 調査中
    */
   public static AbstractCobolField funcIntegerOfDay(AbstractCobolField srcfield) {
     CobolFieldAttribute attr =
@@ -639,8 +639,8 @@ public class CobolIntrinsic {
   /**
    * libcob/intrinsicのcob_intr_factorialの実装
    *
-   * @param srcfield
-   * @return
+   * @param srcfield TODO: 調査中
+   * @return TODO: 調査中
    */
   public static AbstractCobolField funcFactorial(AbstractCobolField srcfield) {
     CobolFieldAttribute attr =
@@ -813,8 +813,8 @@ public class CobolIntrinsic {
   /**
    * libcob/intrinsicのcob_intr_numvalの実装
    *
-   * @param srcfield
-   * @return
+   * @param srcfield TODO: 調査中
+   * @return TODO: 調査中
    */
   public static AbstractCobolField funcNumval(AbstractCobolField srcfield) {
     CobolFieldAttribute attr =
@@ -897,8 +897,8 @@ public class CobolIntrinsic {
   /**
    * libcob/intrinsicのcob_intr_numval_cの実装
    *
-   * @param srcfield
-   * @return
+   * @param srcfield TODO: 調査中
+   * @return TODO: 調査中
    */
   public static AbstractCobolField funcNumvalC(
       AbstractCobolField srcfield, AbstractCobolField currency) {
@@ -1014,9 +1014,9 @@ public class CobolIntrinsic {
   /**
    * libcob/intrinsicのcob_intr_annuityの実装
    *
-   * @param srcfield1
-   * @param srcfield2
-   * @return
+   * @param srcfield1 TODO: 調査中
+   * @param srcfield2 TODO: 調査中
+   * @return TODO: 調査中
    */
   public static AbstractCobolField funcAnnuity(
       AbstractCobolField srcfield1, AbstractCobolField srcfield2) {
@@ -1050,9 +1050,9 @@ public class CobolIntrinsic {
   /**
    * libcob/intrinsicのcob_intr_sumの実装
    *
-   * @param params
-   * @param fields
-   * @return
+   * @param params TODO: 調査中
+   * @param fields TODO: 調査中
+   * @return TODO: 調査中
    */
   public static AbstractCobolField funcSum(int params, AbstractCobolField... fields) {
     CobolDecimal d1 = new CobolDecimal();
@@ -1107,9 +1107,9 @@ public class CobolIntrinsic {
   /**
    * libcob/intrinsicのcob_intr_ord_minの実装
    *
-   * @param params
-   * @param fields
-   * @return
+   * @param params TODO: 調査中
+   * @param fields TODO: 調査中
+   * @return TODO: 調査中
    */
   public static AbstractCobolField funcOrdMin(int params, AbstractCobolField... fields) {
     CobolFieldAttribute attr =
@@ -1139,9 +1139,9 @@ public class CobolIntrinsic {
   /**
    * libcob/intrinsicのcob_intr_ord_maxの実装
    *
-   * @param params
-   * @param fields
-   * @return
+   * @param params TODO: 調査中
+   * @param fields TODO: 調査中
+   * @return TODO: 調査中
    */
   public static AbstractCobolField funcOrdMax(int params, AbstractCobolField... fields) {
     CobolFieldAttribute attr =
@@ -1171,9 +1171,9 @@ public class CobolIntrinsic {
   /**
    * libcob/intrinsicのcob_intr_minの実装
    *
-   * @param params
-   * @param fields
-   * @return
+   * @param params TODO: 調査中
+   * @param fields TODO: 調査中
+   * @return TODO: 調査中
    */
   public static AbstractCobolField funcMin(int params, AbstractCobolField... fields) {
     AbstractCobolField beasef = fields[0];
@@ -1190,9 +1190,9 @@ public class CobolIntrinsic {
   /**
    * libcob/intrinsicのcob_intr_maxの実装
    *
-   * @param params
-   * @param fields
-   * @return
+   * @param params TODO: 調査中
+   * @param fields TODO: 調査中
+   * @return TODO: 調査中
    */
   public static AbstractCobolField funcMax(int params, AbstractCobolField... fields) {
     AbstractCobolField beasef = fields[0];
@@ -1209,9 +1209,9 @@ public class CobolIntrinsic {
   /**
    * libcob/intrinsicのcob_intr_midrangeの実装
    *
-   * @param params
-   * @param fields
-   * @return
+   * @param params TODO: 調査中
+   * @param fields TODO: 調査中
+   * @return TODO: 調査中
    */
   public static AbstractCobolField funcMidrange(int params, AbstractCobolField... fields) {
     makeDoubleEntry();
@@ -1245,9 +1245,9 @@ public class CobolIntrinsic {
   /**
    * libcob/intrinsicのcob_intr_medianの実装
    *
-   * @param params
-   * @param fields
-   * @return
+   * @param params TODO: 調査中
+   * @param fields TODO: 調査中
+   * @return TODO: 調査中
    */
   public static AbstractCobolField funcMedian(int params, AbstractCobolField... fields) {
     if (fields.length == 1) {
@@ -1285,9 +1285,9 @@ public class CobolIntrinsic {
   /**
    * libcob/intrinsicのcob_intr_medianの実装
    *
-   * @param pramas
-   * @param fields
-   * @return
+   * @param pramas TODO: 調査中
+   * @param fields TODO: 調査中
+   * @return TODO: 調査中
    */
   public static AbstractCobolField funcMean(int pramas, AbstractCobolField... fields) {
     CobolFieldAttribute attr =
@@ -1342,9 +1342,9 @@ public class CobolIntrinsic {
   /**
    * libcob/intrinsicのcob_intr_modの実装
    *
-   * @param srcfield1
-   * @param srcfield2
-   * @return
+   * @param srcfield1 TODO: 調査中
+   * @param srcfield2 TODO: 調査中
+   * @return TODO: 調査中
    * @throws CobolStopRunException
    */
   public static AbstractCobolField funcMod(
@@ -1378,9 +1378,9 @@ public class CobolIntrinsic {
   /**
    * libcob/intrinsicのcob_intr_rangeの実装
    *
-   * @param params
-   * @param fields
-   * @return
+   * @param params TODO: 調査中
+   * @param fields TODO: 調査中
+   * @return TODO: 調査中
    * @throws CobolStopRunException
    */
   public static AbstractCobolField funcRange(int params, AbstractCobolField... fields)
@@ -1423,9 +1423,9 @@ public class CobolIntrinsic {
   /**
    * libcob/intrinsicのcob_intr_remの実装
    *
-   * @param srcfield1
-   * @param srcfield2
-   * @return
+   * @param srcfield1 TODO: 調査中
+   * @param srcfield2 TODO: 調査中
+   * @return TODO: 調査中
    * @throws CobolStopRunException
    */
   public static AbstractCobolField funcRem(
@@ -1460,9 +1460,9 @@ public class CobolIntrinsic {
   /**
    * libcob/intrinsicのcob_intr_randomの実装
    *
-   * @param prams
-   * @param fields
-   * @return
+   * @param prams TODO: 調査中
+   * @param fields TODO: 調査中
+   * @return TODO: 調査中
    */
   public static AbstractCobolField funcRandom(int prams, AbstractCobolField... fields) {
     CobolFieldAttribute attr =
@@ -1505,9 +1505,9 @@ public class CobolIntrinsic {
   /**
    * libcob/intrinsicのcob_intr_varianceの実装
    *
-   * @param prams
-   * @param fields
-   * @return
+   * @param prams TODO: 調査中
+   * @param fields TODO: 調査中
+   * @return TODO: 調査中
    * @throws CobolStopRunException
    */
   public static AbstractCobolField funcVariance(int prams, AbstractCobolField... fields)
@@ -1578,9 +1578,9 @@ public class CobolIntrinsic {
   /**
    * libcob/intrinsicのcob_intr_standard_deviationの実装
    *
-   * @param prams
-   * @param fields
-   * @return
+   * @param prams TODO: 調査中
+   * @param fields TODO: 調査中
+   * @return TODO: 調査中
    * @throws CobolStopRunException
    */
   public static AbstractCobolField funcStandardDeviation(int prams, AbstractCobolField... fields)
@@ -1640,9 +1640,9 @@ public class CobolIntrinsic {
   /**
    * libcob/intrinsicのcob_intr_present_valueの実装
    *
-   * @param prams
-   * @param fields
-   * @return
+   * @param prams TODO: 調査中
+   * @param fields TODO: 調査中
+   * @return TODO: 調査中
    * @throws CobolStopRunException
    */
   public static AbstractCobolField funcPresentValue(int prams, AbstractCobolField... fields)
@@ -1680,8 +1680,8 @@ public class CobolIntrinsic {
   /**
    * libcob/intrinsicのcob_intr_nationalの実装
    *
-   * @param srcfield
-   * @return
+   * @param srcfield TODO: 調査中
+   * @return TODO: 調査中
    */
   public static AbstractCobolField funcNational(AbstractCobolField srcfield) {
     int size = srcfield.getSize();
@@ -1700,9 +1700,9 @@ public class CobolIntrinsic {
   /**
    * cob_intr_combined_datetimeの実装
    *
-   * @param srcdays
-   * @param srctime
-   * @return
+   * @param srcdays TODO: 調査中
+   * @param srctime TODO: 調査中
+   * @return TODO: 調査中
    */
   public static AbstractCobolField funcCombinedDatetime(
       AbstractCobolField srcdays, AbstractCobolField srctime) {
@@ -1741,11 +1741,11 @@ public class CobolIntrinsic {
   /**
    * cob_intr_concatenateの実装
    *
-   * @param offset
-   * @param length
-   * @param params
-   * @param fields
-   * @return
+   * @param offset TODO: 調査中
+   * @param length TODO: 調査中
+   * @param params TODO: 調査中
+   * @param fields TODO: 調査中
+   * @return TODO: 調査中
    */
   public static AbstractCobolField funcConcatenate(
       int offset, int length, int params, AbstractCobolField... fields) {
@@ -1780,9 +1780,9 @@ public class CobolIntrinsic {
   /**
    * cob_intr_date_to_yyyymmddの実装
    *
-   * @param params
-   * @param fields
-   * @return
+   * @param params TODO: 調査中
+   * @param fields TODO: 調査中
+   * @return TODO: 調査中
    */
   public static AbstractCobolField funcDateToYyyymmdd(int params, AbstractCobolField... fields) {
     int year;
@@ -1840,9 +1840,9 @@ public class CobolIntrinsic {
   /**
    * cob_intr_day_to_yyyydddの実装
    *
-   * @param params
-   * @param fields
-   * @return
+   * @param params TODO: 調査中
+   * @param fields TODO: 調査中
+   * @return TODO: 調査中
    */
   public static AbstractCobolField funcDayToYyyyddd(int params, AbstractCobolField... fields) {
     int year;
@@ -2034,8 +2034,8 @@ public class CobolIntrinsic {
   /**
    * cob_intr_fraction_partの実装
    *
-   * @param srcfield
-   * @return
+   * @param srcfield TODO: 調査中
+   * @return TODO: 調査中
    */
   public static AbstractCobolField funcFractionPart(AbstractCobolField srcfield) {
     CobolFieldAttribute attr =
@@ -2055,9 +2055,9 @@ public class CobolIntrinsic {
   /**
    * cob_intr_seconds_from_formatted_timeの実装
    *
-   * @param format
-   * @param value
-   * @return
+   * @param format TODO: 調査中
+   * @param value TODO: 調査中
+   * @return TODO: 調査中
    */
   public static AbstractCobolField funcSecondsFromFormattedTime(
       AbstractCobolField format, AbstractCobolField value) {
@@ -2138,8 +2138,8 @@ public class CobolIntrinsic {
   /**
    * cob_intr_signの実装
    *
-   * @param srcfield
-   * @return
+   * @param srcfield TODO: 調査中
+   * @return TODO: 調査中
    */
   public static AbstractCobolField funcSign(AbstractCobolField srcfield) {
     CobolFieldAttribute attr =
@@ -2165,8 +2165,8 @@ public class CobolIntrinsic {
   /**
    * cob_intr_stored_char_lengthの実装
    *
-   * @param srcfield
-   * @return
+   * @param srcfield TODO: 調査中
+   * @return TODO: 調査中
    */
   public static AbstractCobolField funcStoredCharLength(AbstractCobolField srcfield) {
     int count;

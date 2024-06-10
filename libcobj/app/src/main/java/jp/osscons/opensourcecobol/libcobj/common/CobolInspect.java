@@ -160,8 +160,8 @@ public class CobolInspect {
   /**
    * libcob/strings.cのcob_inspect_initの実装
    *
-   * @param var
-   * @param replacing
+   * @param var TODO: 調査中
+   * @param replacing TODO: 調査中
    */
   public static void init(AbstractCobolField var, int replacing) {
     CobolInspect.inspectVarCopy = var;
@@ -194,7 +194,7 @@ public class CobolInspect {
   /**
    * libcob/strings.cのcob_inspect_beforeの実装
    *
-   * @param str
+   * @param str TODO: 調査中
    */
   public static void before(AbstractCobolField str) {
     CobolDataStorage p2 = null;
@@ -237,7 +237,7 @@ public class CobolInspect {
   /**
    * libcob/strings.cのcob_inspect_afterの実装
    *
-   * @param str
+   * @param str TODO: 調査中
    */
   public static void after(AbstractCobolField str) {
     CobolDataStorage data = str.getDataStorage();
@@ -254,7 +254,7 @@ public class CobolInspect {
   /**
    * libcob/strings.cのcob_inspect_charactersの実装
    *
-   * @param f1
+   * @param f1 TODO: 調査中
    * @throws CobolStopRunException
    */
   public static void characters(AbstractCobolField f1) throws CobolStopRunException {
@@ -292,8 +292,8 @@ public class CobolInspect {
   /**
    * libcob/strings.cのcob_inspect_allの実装
    *
-   * @param f1
-   * @param f2
+   * @param f1 TODO: 調査中
+   * @param f2 TODO: 調査中
    * @throws CobolStopRunException
    */
   public static void all(AbstractCobolField f1, AbstractCobolField f2)
@@ -304,8 +304,8 @@ public class CobolInspect {
   /**
    * libcob/strings.cのcob_inspect_leadingの実装
    *
-   * @param f1
-   * @param f2
+   * @param f1 TODO: 調査中
+   * @param f2 TODO: 調査中
    * @throws CobolStopRunException
    */
   public static void leading(AbstractCobolField f1, AbstractCobolField f2)
@@ -316,8 +316,8 @@ public class CobolInspect {
   /**
    * libcob/strings.cのcob_inspect_firstの実装
    *
-   * @param f1
-   * @param f2
+   * @param f1 TODO: 調査中
+   * @param f2 TODO: 調査中
    * @throws CobolStopRunException
    */
   public static void first(AbstractCobolField f1, AbstractCobolField f2)
@@ -328,8 +328,8 @@ public class CobolInspect {
   /**
    * libcob/strings.cのcob_inspect_trailingの実装
    *
-   * @param f1
-   * @param f2
+   * @param f1 TODO: 調査中
+   * @param f2 TODO: 調査中
    * @throws CobolStopRunException
    */
   public static void trailing(AbstractCobolField f1, AbstractCobolField f2)
@@ -340,8 +340,8 @@ public class CobolInspect {
   /**
    * libcob/strings.cのcob_inspect_convertingの実装
    *
-   * @param f1
-   * @param f2
+   * @param f1 TODO: 調査中
+   * @param f2 TODO: 調査中
    */
   public static void converting(AbstractCobolField f1, AbstractCobolField f2) {
     int type1 = f1.getAttribute().getType();

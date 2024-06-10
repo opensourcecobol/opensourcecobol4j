@@ -549,10 +549,10 @@ public class CobolNumericField extends AbstractCobolField {
   /**
    * libcob/move.cのstore_common_regionの実装
    *
-   * @param field
-   * @param data
-   * @param size
-   * @param scale
+   * @param field TODO: 調査中
+   * @param data TODO: 調査中
+   * @param size TODO: 調査中
+   * @param scale TODO: 調査中
    */
   public void storeCommonRegion(
       AbstractCobolField field, CobolDataStorage data, int size, int scale) {
@@ -562,10 +562,10 @@ public class CobolNumericField extends AbstractCobolField {
   /**
    * libcob/move.cのstore_common_regionの実装
    *
-   * @param field
-   * @param data
-   * @param size
-   * @param scale
+   * @param field TODO: 調査中
+   * @param data TODO: 調査中
+   * @param size TODO: 調査中
+   * @param scale TODO: 調査中
    */
   public void storeCommonRegion(
       AbstractCobolField field, CobolDataStorage data, int dataStartIndex, int size, int scale) {
@@ -729,11 +729,11 @@ public class CobolNumericField extends AbstractCobolField {
   /**
    * libcob/numeric.cのdisplay_add_intの実装
    *
-   * @param data
+   * @param data TODO: 調査中
    * @param firstDataIndex dataにアクセスするときの開始位置
-   * @param size
-   * @param n
-   * @return
+   * @param size TODO: 調査中
+   * @param n TODO: 調査中
+   * @return TODO: 調査中
    */
   private int displayAddInt(CobolDataStorage data, int firstDataIndex, int size, long n) {
     int carry = 0;
@@ -785,11 +785,11 @@ public class CobolNumericField extends AbstractCobolField {
   /**
    * libcob/numeric.cのdisplay_sub_intの実装
    *
-   * @param data
+   * @param data TODO: 調査中
    * @param firstDataIndex dataにアクセスするときの開始位置
-   * @param size
-   * @param n
-   * @return
+   * @param size TODO: 調査中
+   * @param n TODO: 調査中
+   * @return TODO: 調査中
    */
   public static int displaySubInt(CobolDataStorage data, int firstDataIndex, int size, long n) {
     int carry = 0;

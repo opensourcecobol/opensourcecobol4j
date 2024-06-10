@@ -588,7 +588,7 @@ public class CobolNumericPackedField extends AbstractCobolField {
   /**
    * byte型データを右に4回シフトした値を返す CとJavaのビット演算の仕様に差異があるため実装した
    *
-   * @param b
+   * @param b TODO: 調査中
    * @return b>>4
    */
   private byte upper4bits(byte b) {
@@ -830,8 +830,8 @@ public class CobolNumericPackedField extends AbstractCobolField {
   /**
    * libcob/codegen.hのcob_cmp_packed_intの実装
    *
-   * @param n
-   * @return
+   * @param n TODO: 調査中
+   * @return TODO: 調査中
    */
   private int cmpPackedInt(int n) {
     CobolDataStorage data = this.getDataStorage();
@@ -856,8 +856,8 @@ public class CobolNumericPackedField extends AbstractCobolField {
   /**
    * libcob/numeric.cのcob_cmp_packedの実装
    *
-   * @param n
-   * @return
+   * @param n TODO: 調査中
+   * @return TODO: 調査中
    */
   private int cmpPacked(int n) {
     int sign = this.getSign();

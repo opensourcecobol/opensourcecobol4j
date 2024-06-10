@@ -95,19 +95,19 @@ public class CobolModule {
   /**
    * コンストラクタ
    *
-   * @param next
-   * @param collatingSequence
-   * @param cutStatus
-   * @param cursorPos
-   * @param displaySign
-   * @param decimalPoint
-   * @param currencySymbol
-   * @param numericSeparator
-   * @param flagFilenameMapping
-   * @param flagBinaryTruncate
-   * @param flagPrettyDisplay
-   * @param spare8
-   * @param programId
+   * @param next TODO: 調査中
+   * @param collatingSequence TODO: 調査中
+   * @param cutStatus TODO: 調査中
+   * @param cursorPos TODO: 調査中
+   * @param displaySign TODO: 調査中
+   * @param decimalPoint TODO: 調査中
+   * @param currencySymbol TODO: 調査中
+   * @param numericSeparator TODO: 調査中
+   * @param flagFilenameMapping TODO: 調査中
+   * @param flagBinaryTruncate TODO: 調査中
+   * @param flagPrettyDisplay TODO: 調査中
+   * @param spare8 TODO: 調査中
+   * @param programId TODO: 調査中
    */
   public CobolModule(
       CobolModule next,
@@ -143,14 +143,14 @@ public class CobolModule {
   /**
    * TODO 実装
    *
-   * @param m
+   * @param m TODO: 調査中
    */
   public void setNext(CobolModule m) {}
 
   /**
    * TODO 実装
    *
-   * @return
+   * @return TODO: 調査中
    */
   public boolean hasNext() {
     return false;
@@ -159,14 +159,14 @@ public class CobolModule {
   /**
    * TODO 実装
    *
-   * @param string
+   * @param string TODO: 調査中
    */
   public void setProgramID(String string) {}
 
   /**
    * TODO 実装
    *
-   * @return
+   * @return TODO: 調査中
    */
   public CobolModule getNext() {
     return null;
@@ -175,7 +175,7 @@ public class CobolModule {
   /**
    * TODO 実装
    *
-   * @param programName
+   * @param programName TODO: 調査中
    */
   public void setProgramId(String programName) {
     if (this.program_id != null) {
@@ -225,8 +225,8 @@ public class CobolModule {
   /**
    * パラメータリストの指定の要素を取得する
    *
-   * @param index
-   * @return
+   * @param index TODO: 調査中
+   * @return TODO: 調査中
    */
   public AbstractCobolField getParameter(int index) {
     return cob_procedure_parameters.get(index);

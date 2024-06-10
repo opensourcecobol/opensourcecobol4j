@@ -291,8 +291,8 @@ public class CobolFile {
   /**
    * libcob/fileio.cのsave_statusの実装 RETURN_STATUSマクロは実装できないため,本メソッドの呼び出し後の次の文はreturn;を書くこと.
    *
-   * @param status
-   * @param fnstatus
+   * @param status TODO: 調査中
+   * @param fnstatus TODO: 調査中
    */
   protected void saveStatus(int status, AbstractCobolField fnstatus) {
     CobolFile.errorFile = this;
@@ -334,7 +334,7 @@ public class CobolFile {
   /**
    * libcob/cob_cache_fileのj実装
    *
-   * @param f
+   * @param f TODO: 調査中
    */
   protected static void cacheFile(CobolFile f) {
     if (file_cache.contains(f)) {
@@ -391,8 +391,8 @@ public class CobolFile {
   /**
    * libcob/fileio.cのcob_linage_write_optの実装 TODO 実装
    *
-   * @param opt
-   * @return
+   * @param opt TODO: 調査中
+   * @return TODO: 調査中
    * @throws CobolStopRunException
    */
   protected int linage_write_opt(int opt) throws CobolStopRunException {
@@ -1138,8 +1138,8 @@ public class CobolFile {
   /**
    * libcob/fileio.cのcob_file_write_optの実装
    *
-   * @param opt
-   * @return
+   * @param opt TODO: 調査中
+   * @return TODO: 調査中
    * @throws CobolStopRunException
    */
   protected int file_write_opt(int opt) throws CobolStopRunException {
