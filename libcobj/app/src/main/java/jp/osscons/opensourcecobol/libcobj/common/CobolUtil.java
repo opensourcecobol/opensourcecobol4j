@@ -165,8 +165,14 @@ public class CobolUtil {
     }
   }
 
-  /** libcob/common.cのcob_initの実装 TODO 未完成 */
+  /**
+   * libcob/common.cのcob_initの実装
+   *
+   * @param argv TODO: 調査中
+   * @param cobInitialized TODO: 調査中
+   */
   public static void cob_init(String[] argv, boolean cobInitialized) {
+    // TODO 未完成
     if (!cobInitialized) {
       CobolUtil.commandLineArgs = argv;
       CobolInspect.initString();
@@ -624,6 +630,7 @@ public class CobolUtil {
   /**
    * libcob/common.cのis_national_paddingの実装
    *
+   * @param offset TODO: 調査中
    * @param s TODO: 調査中
    * @param size TODO: 調査中
    * @return TODO: 調査中
@@ -763,7 +770,7 @@ public class CobolUtil {
    * get environemnt variable
    *
    * @param envVarName the name of an environment variable.
-   * @param envVarName the value to be set to the environment variable.
+   * @param envVarValue the value to be set to the environment variable.
    */
   public static void setEnv(String envVarName, String envVarValue) {
     CobolUtil.envVarTable.setProperty(envVarName, envVarValue);
