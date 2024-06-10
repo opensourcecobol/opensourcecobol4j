@@ -96,8 +96,8 @@ jobs:
     needs: check-workflows
     uses: ./.github/workflows/build-libcobj.yml
 
-  mstest:
-    needs: build-libcobj
+  windows-test:
+  #  needs: build-libcobj
     strategy:
        matrix:
          test_name: ["IC", "IF", "IX", "NC", "OB", "RL", "SG", "SM", "SQ", "ST"]
