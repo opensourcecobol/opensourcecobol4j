@@ -99,6 +99,7 @@ jobs:
   windows-test:
   #  needs: build-libcobj
     strategy:
+       fail-fast: false
        matrix:
          test_name: ["IC", "IF", "IX", "NC", "OB", "RL", "SG", "SM", "SQ", "ST"]
     uses: ./.github/workflows/windows-test.yml
