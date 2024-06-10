@@ -292,6 +292,8 @@ public class CobolIntrinsic {
   /**
    * libcob/intrinsicのcob_intr_upper_caseの実装
    *
+   * @param offset TODO: 調査中
+   * @param length TODO: 調査中
    * @param srcfield TODO: 調査中
    * @return TODO: 調査中
    */
@@ -313,6 +315,8 @@ public class CobolIntrinsic {
   /**
    * libcob/intrinsicのcob_intr_lower_caseの実装
    *
+   * @param offset TODO: 調査中
+   * @param length TODO: 調査中
    * @param srcfield TODO: 調査中
    * @return TODO: 調査中
    */
@@ -334,6 +338,8 @@ public class CobolIntrinsic {
   /**
    * libcob/intrinsicのcob_intr_reverseの実装
    *
+   * @param offset TODO: 調査中
+   * @param length TODO: 調査中
    * @param srcfield TODO: 調査中
    * @return TODO: 調査中
    */
@@ -720,21 +726,36 @@ public class CobolIntrinsic {
     return currField;
   }
 
-  /** libcob/intrinsicのcob_intr_expの実装 */
+  /**
+   * libcob/intrinsicのcob_intr_expの実装
+   *
+   * @param srcfield TODO: 調査中
+   * @return TODO: 調査中
+   */
   public static AbstractCobolField funcExp(AbstractCobolField srcfield) {
     CobolDecimal d1 = mathFunctionBefore2(srcfield);
     double mathd2 = Math.pow(2.7182818284590452354, intrGetDouble(d1));
     return mathFunctionAfter2(mathd2);
   }
 
-  /** libcob/intrinsicのcob_intr_exp10の実装 */
+  /**
+   * libcob/intrinsicのcob_intr_exp10の実装
+   *
+   * @param srcfield TODO: 調査中
+   * @return TODO: 調査中
+   */
   public static AbstractCobolField funcExp10(AbstractCobolField srcfield) {
     CobolDecimal d1 = mathFunctionBefore2(srcfield);
     double mathd2 = Math.pow(10, intrGetDouble(d1));
     return mathFunctionAfter2(mathd2);
   }
 
-  /** libcob/intrinsicのcob_intr_absの実装 */
+  /**
+   * libcob/intrinsicのcob_intr_absの実装
+   *
+   * @param srcfield TODO: 調査中
+   * @return TODO: 調査中
+   */
   public static AbstractCobolField funcAbs(AbstractCobolField srcfield) {
     makeFieldEntry(srcfield);
     CobolDecimal d1 = srcfield.getDecimal();
@@ -747,63 +768,108 @@ public class CobolIntrinsic {
     return currField;
   }
 
-  /** libcob/intrinsicのcob_intr_acosの実装 */
+  /**
+   * libcob/intrinsicのcob_intr_acosの実装
+   *
+   * @param srcfield TODO: 調査中
+   * @return TODO: 調査中
+   */
   public static AbstractCobolField funcAcos(AbstractCobolField srcfield) {
     CobolDecimal d1 = mathFunctionBefore1(srcfield);
     double mathd2 = Math.acos(intrGetDouble(d1));
     return mathFunctionAfter1(mathd2);
   }
 
-  /** libcob/intrinsicのcob_intr_asinの実装 */
+  /**
+   * libcob/intrinsicのcob_intr_asinの実装
+   *
+   * @param srcfield TODO: 調査中
+   * @return TODO: 調査中
+   */
   public static AbstractCobolField funcAsin(AbstractCobolField srcfield) {
     CobolDecimal d1 = mathFunctionBefore1(srcfield);
     double mathd2 = Math.asin(intrGetDouble(d1));
     return mathFunctionAfter1(mathd2);
   }
 
-  /** libcob/intrinsicのcob_intr_atanの実装 */
+  /**
+   * libcob/intrinsicのcob_intr_atanの実装
+   *
+   * @param srcfield TODO: 調査中
+   * @return TODO: 調査中
+   */
   public static AbstractCobolField funcAtan(AbstractCobolField srcfield) {
     CobolDecimal d1 = mathFunctionBefore1(srcfield);
     double mathd2 = Math.atan(intrGetDouble(d1));
     return mathFunctionAfter1(mathd2);
   }
 
-  /** libcob/intrinsicのcob_intr_cosの実装 */
+  /**
+   * libcob/intrinsicのcob_intr_cosの実装
+   *
+   * @param srcfield TODO: 調査中
+   * @return TODO: 調査中
+   */
   public static AbstractCobolField funcCos(AbstractCobolField srcfield) {
     CobolDecimal d1 = mathFunctionBefore1(srcfield);
     double mathd2 = Math.cos(intrGetDouble(d1));
     return mathFunctionAfter1(mathd2);
   }
 
-  /** libcob/intrinsicのcob_intr_logの実装 */
+  /**
+   * libcob/intrinsicのcob_intr_logの実装
+   *
+   * @param srcfield TODO: 調査中
+   * @return TODO: 調査中
+   */
   public static AbstractCobolField funcLog(AbstractCobolField srcfield) {
     CobolDecimal d1 = mathFunctionBefore2(srcfield);
     double mathd2 = Math.log(intrGetDouble(d1));
     return mathFunctionAfter2(mathd2);
   }
 
-  /** libcob/intrinsicのcob_intr_log10の実装 */
+  /**
+   * libcob/intrinsicのcob_intr_log10の実装
+   *
+   * @param srcfield TODO: 調査中
+   * @return TODO: 調査中
+   */
   public static AbstractCobolField funcLog10(AbstractCobolField srcfield) {
     CobolDecimal d1 = mathFunctionBefore2(srcfield);
     double mathd2 = Math.log10(intrGetDouble(d1));
     return mathFunctionAfter2(mathd2);
   }
 
-  /** libcob/intrinsicのcob_intr_sinの実装 */
+  /**
+   * libcob/intrinsicのcob_intr_sinの実装
+   *
+   * @param srcfield TODO: 調査中
+   * @return TODO: 調査中
+   */
   public static AbstractCobolField funcSin(AbstractCobolField srcfield) {
     CobolDecimal d1 = mathFunctionBefore1(srcfield);
     double mathd2 = Math.sin(intrGetDouble(d1));
     return mathFunctionAfter1(mathd2);
   }
 
-  /** libcob/intrinsicのcob_intr_sqrtの実装 */
+  /**
+   * libcob/intrinsicのcob_intr_sqrtの実装
+   *
+   * @param srcfield TODO: 調査中
+   * @return TODO: 調査中
+   */
   public static AbstractCobolField funcSqrt(AbstractCobolField srcfield) {
     CobolDecimal d1 = mathFunctionBefore2(srcfield);
     double mathd2 = Math.sqrt(intrGetDouble(d1));
     return mathFunctionAfter2(mathd2);
   }
 
-  /** libcob/intrinsicのcob_intr_tanの実装 */
+  /**
+   * libcob/intrinsicのcob_intr_tanの実装
+   *
+   * @param srcfield TODO: 調査中
+   * @return TODO: 調査中
+   */
   public static AbstractCobolField funcTan(AbstractCobolField srcfield) {
     CobolDecimal d1 = mathFunctionBefore2(srcfield);
     double mathd2 = Math.tan(intrGetDouble(d1));
@@ -898,6 +964,7 @@ public class CobolIntrinsic {
    * libcob/intrinsicのcob_intr_numval_cの実装
    *
    * @param srcfield TODO: 調査中
+   * @param currency TODO: 調査中
    * @return TODO: 調査中
    */
   public static AbstractCobolField funcNumvalC(
@@ -997,15 +1064,36 @@ public class CobolIntrinsic {
     return currField;
   }
 
+  /**
+   * このメソッドは未実装
+   *
+   * @param n このメソッドは未実装
+   * @param currency このメソッドは未実装
+   * @return null
+   */
   public static AbstractCobolField funcNumvalC(int n, AbstractCobolField currency) {
     // TODO
     return null;
   }
 
+  /**
+   * TODO: 調査中
+   *
+   * @param srcfield TODO: 調査中
+   * @param n TODO: 調査中
+   * @return TODO: 調査中
+   */
   public static AbstractCobolField funcNumvalC(AbstractCobolField srcfield, int n) {
     return funcNumvalC(srcfield, null);
   }
 
+  /**
+   * このメソッドは未実装
+   *
+   * @param n このメソッドは未実装
+   * @param m このメソッドは未実装
+   * @return null
+   */
   public static AbstractCobolField funcNumvalC(int n, int m) {
     // TODO
     return null;
@@ -2297,7 +2385,15 @@ public class CobolIntrinsic {
     return currField;
   }
 
-  /** Equivalent to cob_intr_trim */
+  /**
+   * Equivalent to cob_intr_trim
+   *
+   * @param offset TODO: 調査中
+   * @param length TODO: 調査中
+   * @param srcField TODO: 調査中
+   * @param direction TODO: 調査中
+   * @return TODO: 調査中
+   */
   public static AbstractCobolField funcTrim(
       int offset, int length, AbstractCobolField srcField, int direction) {
     makeFieldEntry(srcField);
@@ -2337,11 +2433,29 @@ public class CobolIntrinsic {
     return currField;
   }
 
+  /**
+   * TODO: 調査中
+   *
+   * @param offset TODO: 調査中
+   * @param length TODO: 調査中
+   * @param srcField TODO: 調査中
+   * @param localeField TODO: 調査中
+   * @return TODO: 調査中
+   */
   public static AbstractCobolField funcLocaleDate(
       int offset, int length, AbstractCobolField srcField, int localeField) {
     return funcLocaleDate(offset, length, srcField, null);
   }
 
+  /**
+   * TODO: 調査中
+   *
+   * @param offset TODO: 調査中
+   * @param length TODO: 調査中
+   * @param srcField TODO: 調査中
+   * @param localeField TODO: 調査中
+   * @return TODO: 調査中
+   */
   public static AbstractCobolField funcLocaleDate(
       int offset, int length, AbstractCobolField srcField, AbstractCobolField localeField) {
     AbstractCobolField field =
@@ -2428,6 +2542,15 @@ public class CobolIntrinsic {
     return currField;
   }
 
+  /**
+   * TODO: 調査中
+   *
+   * @param offset TODO: 調査中
+   * @param length TODO: 調査中
+   * @param srcField TODO: 調査中
+   * @param localeField TODO: 調査中
+   * @return TODO: 調査中
+   */
   public static AbstractCobolField funcLocaleTime(
       int offset, int length, AbstractCobolField srcField, int localeField) {
     return funcLocaleTime(offset, length, srcField, null);
@@ -2501,11 +2624,29 @@ public class CobolIntrinsic {
     return currField;
   }
 
+  /**
+   * TODO: 調査中
+   *
+   * @param offset TODO: 調査中
+   * @param length TODO: 調査中
+   * @param srcField TODO: 調査中
+   * @param localeField TODO: 調査中
+   * @return TODO: 調査中
+   */
   public static AbstractCobolField funcLocaleTimeFromSeconds(
       int offset, int length, AbstractCobolField srcField, int localeField) {
     return funcLocaleTime(offset, length, srcField, null);
   }
 
+  /**
+   * TODO: 調査中
+   *
+   * @param offset TODO: 調査中
+   * @param length TODO: 調査中
+   * @param srcField TODO: 調査中
+   * @param localeField TODO: 調査中
+   * @return TODO: 調査中
+   */
   public static AbstractCobolField funcLocaleTimeFromSeconds(
       int offset, int length, AbstractCobolField srcField, AbstractCobolField localeField) {
     AbstractCobolField field =
