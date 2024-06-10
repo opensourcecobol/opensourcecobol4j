@@ -68,12 +68,20 @@ public abstract class AbstractCobolField {
     return dataStorage;
   }
 
-  /** メンバ変数dataStorageのsetter */
+  /**
+   * メンバ変数dataStorageのsetter
+   *
+   * @param dataStorage TODO: 調査中
+   */
   public void setDataStorage(CobolDataStorage dataStorage) {
     this.dataStorage = dataStorage;
   }
 
-  /** メンバ変数attirbuteのsetter */
+  /**
+   * メンバ変数attributeのsetter
+   *
+   * @param attribute TODO: 調査中
+   */
   public void setAttribute(CobolFieldAttribute attribute) {
     this.attribute = attribute;
   }
@@ -153,7 +161,11 @@ public abstract class AbstractCobolField {
    */
   public abstract String getString();
 
-  /** @return */
+  /**
+   * TODO: 調査中
+   *
+   * @return TODO: 調査中
+   */
   public int getInt() {
     CobolFieldAttribute attr =
         new CobolFieldAttribute(
@@ -168,7 +180,11 @@ public abstract class AbstractCobolField {
     return ByteBuffer.wrap(n.getByteArray(0, 4)).getInt();
   }
 
-  /** @return */
+  /**
+   * TODO: 調査中
+   *
+   * @return TODO: 調査中
+   */
   public double getDouble() {
     try {
       return Double.parseDouble(this.getString());
@@ -244,6 +260,7 @@ public abstract class AbstractCobolField {
   /**
    * thisの保持する数値データをint型で返す
    *
+   * @param size TODO: 調査中
    * @return thisの保持する数値データをintに変換した値
    */
   public int getInt(int size) {
@@ -272,6 +289,7 @@ public abstract class AbstractCobolField {
    * @param field 加算する数値を保持するフィールド
    * @param opt 加算に関するオプション.詳しくはopensourceCOBOLを参照
    * @return 加算後のthisの保持する数値データ
+   * @throws CobolStopRunException TODO: 調査中
    */
   public int add(AbstractCobolField field, int opt) throws CobolStopRunException {
     CobolDecimal d1 = this.getDecimal();
@@ -286,6 +304,7 @@ public abstract class AbstractCobolField {
    * @param field 減算する数値を保持するフィールド
    * @param opt 減算に関するオプション.詳しくはopensourceCOBOLを参照
    * @return 減算後のthisの保持する数値データ
+   * @throws CobolStopRunException TODO: 調査中
    */
   public int sub(AbstractCobolField field, int opt) throws CobolStopRunException {
     CobolDecimal d1 = this.getDecimal();
@@ -299,6 +318,7 @@ public abstract class AbstractCobolField {
    *
    * @param n thisの保持する数値データから加算する数値
    * @return 基本的に0が返される.詳しくはopensource COBOLを参照
+   * @throws CobolStopRunException TODO: 調査中
    */
   public int addInt(int n) throws CobolStopRunException {
     if (n == 0) {
@@ -329,12 +349,21 @@ public abstract class AbstractCobolField {
    *
    * @param n thisの保持する数値データから減算する数値
    * @return 基本的に0が返される.詳しくはopensource COBOLを参照
+   * @throws CobolStopRunException TODO: 調査中
    */
   public int subInt(int n) throws CobolStopRunException {
     return n == 0 ? 0 : this.addInt(-n);
   }
 
-  /** libcob/numeric.cのcob_div_quotientの実装 */
+  /**
+   * libcob/numeric.cのcob_div_quotientの実装
+   *
+   * @param divisor TODO: 調査中
+   * @param quotient TODO: 調査中
+   * @param opt TODO: 調査中
+   * @return TODO: 調査中
+   * @throws CobolStopRunException TODO: 調査中
+   */
   public int divQuotient(AbstractCobolField divisor, AbstractCobolField quotient, int opt)
       throws CobolStopRunException {
     AbstractCobolField dividend = this;
@@ -365,6 +394,7 @@ public abstract class AbstractCobolField {
    *
    * @param opt TODO: 調査中
    * @return TODO: 調査中
+   * @throws CobolStopRunException TODO: 調査中
    */
   public int divRemainder(int opt) throws CobolStopRunException {
     return CobolDecimal.cobD3.getField(this, opt);
@@ -678,6 +708,7 @@ public abstract class AbstractCobolField {
    * opensourceCOBOLのcob_check_numericの実装
    *
    * @param s TODO: 調査中
+   * @throws CobolStopRunException TODO: 調査中
    */
   public void checkNumeric(byte[] s) throws CobolStopRunException {
     if (!this.isNumeric()) {
@@ -913,6 +944,7 @@ public abstract class AbstractCobolField {
    * libcob/common.cのcob_check_mvstrnumの実装
    *
    * @param field TODO: 調査中
+   * @throws CobolStopRunException TODO: 調査中
    */
   public void checkMoveStrNum(AbstractCobolField field) throws CobolStopRunException {
     switch (this.getAttribute().getType()) {
@@ -985,7 +1017,11 @@ public abstract class AbstractCobolField {
     return new String(data.getByteArray(0, i + 1));
   }
 
-  /** libcob/move.cのcob_set_intの実装 */
+  /**
+   * libcob/move.cのcob_set_intの実装
+   *
+   * @param n TODO: 調査中
+   */
   public void setInt(int n) {
     CobolFieldAttribute attr =
         new CobolFieldAttribute(
@@ -999,7 +1035,11 @@ public abstract class AbstractCobolField {
     this.moveFrom(temp);
   }
 
-  /** libcob/move.cのcob_set_intの実装 */
+  /**
+   * libcob/move.cのcob_set_intの実装
+   *
+   * @param data TODO: 調査中
+   */
   public void setInt(CobolDataStorage data) {
     this.setInt((int) data.intValue());
   }
