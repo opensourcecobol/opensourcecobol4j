@@ -142,7 +142,7 @@ public final class IndexedCursor {
   /**
    * reload a cursor
    *
-   * @return TODO: 調査中
+   * @return TODO: 準備中
    */
   public Optional<IndexedCursor> reloadCursor() {
     if (this.firstFetch) {

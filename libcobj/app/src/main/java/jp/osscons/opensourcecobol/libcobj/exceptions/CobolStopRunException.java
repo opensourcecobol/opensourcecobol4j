@@ -58,7 +58,7 @@ public final class CobolStopRunException extends Exception {
    * CobolStopRunExceptionを例外としてスローする。 COBOLプログラム終了時のデフォルトの終了処理は実行されない。
    *
    * @param returnCode STOP RUNの返り値
-   * @throws CobolStopRunException TODO: 調査中
+   * @throws CobolStopRunException TODO: 準備中
    */
   public static void throwException(int returnCode) throws CobolStopRunException {
     throw new CobolStopRunException(returnCode);
@@ -68,7 +68,7 @@ public final class CobolStopRunException extends Exception {
    * CobolStopRunExceptionを例外としてスローする。 COBOLプログラム終了時のデフォルトの終了処理は実行されない。
    *
    * @param storage STOP RUNの返り値
-   * @throws CobolStopRunException TODO: 調査中
+   * @throws CobolStopRunException TODO: 準備中
    */
   public static void throwException(CobolDataStorage storage) throws CobolStopRunException {
     throw new CobolStopRunException(storage);
@@ -78,7 +78,7 @@ public final class CobolStopRunException extends Exception {
    * javaコンパイラは、try節の中にthrowが発生しないと判断するとコンパイルエラーになる。 Javaコード生成時にこの問題を回避するため、このメソッドが挿入される。 throws
    * CobolRunExceptionが指定されているが、このメソッドは決して例外をスローせず、その他の処理も実行しない。
    *
-   * @throws CobolStopRunException TODO: 調査中
+   * @throws CobolStopRunException TODO: 準備中
    */
   public static void dummy() throws CobolStopRunException {
     if (false) {

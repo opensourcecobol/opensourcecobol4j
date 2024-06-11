@@ -284,11 +284,11 @@ public class CobolIndexedFile extends CobolFile {
   /**
    * Equivalent to indexed_start_internal in libcob/fileio.c
    *
-   * @param cond TODO: 調査中
-   * @param key TODO: 調査中
-   * @param readOpts TODO: 調査中
-   * @param testLock TODO: 調査中
-   * @return TODO: 調査中
+   * @param cond TODO: 準備中
+   * @param key TODO: 準備中
+   * @param readOpts TODO: 準備中
+   * @param testLock TODO: 準備中
+   * @return TODO: 準備中
    */
   public int indexed_start_internal(
       int cond, AbstractCobolField key, int readOpts, boolean testLock) {

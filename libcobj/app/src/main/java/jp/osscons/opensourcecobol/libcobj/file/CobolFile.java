@@ -291,8 +291,8 @@ public class CobolFile {
   /**
    * libcob/fileio.cのsave_statusの実装 RETURN_STATUSマクロは実装できないため,本メソッドの呼び出し後の次の文はreturn;を書くこと.
    *
-   * @param status TODO: 調査中
-   * @param fnstatus TODO: 調査中
+   * @param status TODO: 準備中
+   * @param fnstatus TODO: 準備中
    */
   protected void saveStatus(int status, AbstractCobolField fnstatus) {
     CobolFile.errorFile = this;
@@ -321,15 +321,15 @@ public class CobolFile {
   /**
    * libcob/fileio.のcob_invoke_funの実装
    *
-   * @param operate TODO: 調査中
-   * @param f TODO: 調査中
-   * @param key TODO: 調査中
-   * @param rec TODO: 調査中
-   * @param fnstatus TODO: 調査中
-   * @param openMode TODO: 調査中
-   * @param startCond TODO: 調査中
-   * @param readOpts TODO: 調査中
-   * @return TODO: 調査中
+   * @param operate TODO: 準備中
+   * @param f TODO: 準備中
+   * @param key TODO: 準備中
+   * @param rec TODO: 準備中
+   * @param fnstatus TODO: 準備中
+   * @param openMode TODO: 準備中
+   * @param startCond TODO: 準備中
+   * @param readOpts TODO: 準備中
+   * @return TODO: 準備中
    */
   public static int invokeFun(
       int operate,
@@ -346,7 +346,7 @@ public class CobolFile {
   /**
    * libcob/cob_cache_fileのj実装
    *
-   * @param f TODO: 調査中
+   * @param f TODO: 準備中
    */
   protected static void cacheFile(CobolFile f) {
     if (file_cache.contains(f)) {
@@ -358,7 +358,7 @@ public class CobolFile {
   /**
    * libcob/fileio.cのcob_file_linage_checkの実装 TODO 実装
    *
-   * @return TODO: 調査中
+   * @return TODO: 準備中
    */
   protected boolean file_linage_check() {
     Linage lingptr = getLinorkeyptr();
@@ -403,9 +403,9 @@ public class CobolFile {
   /**
    * libcob/fileio.cのcob_linage_write_optの実装 TODO 実装
    *
-   * @param opt TODO: 調査中
-   * @return TODO: 調査中
-   * @throws CobolStopRunException TODO: 調査中
+   * @param opt TODO: 準備中
+   * @return TODO: 準備中
+   * @throws CobolStopRunException TODO: 準備中
    */
   protected int linage_write_opt(int opt) throws CobolStopRunException {
     int i, n;
@@ -1150,9 +1150,9 @@ public class CobolFile {
   /**
    * libcob/fileio.cのcob_file_write_optの実装
    *
-   * @param opt TODO: 調査中
-   * @return TODO: 調査中
-   * @throws CobolStopRunException TODO: 調査中
+   * @param opt TODO: 準備中
+   * @return TODO: 準備中
+   * @throws CobolStopRunException TODO: 準備中
    */
   protected int file_write_opt(int opt) throws CobolStopRunException {
     if ((this.flag_select_features & COB_SELECT_LINAGE) != 0) {
@@ -1299,8 +1299,8 @@ public class CobolFile {
   /**
    * libcob/fileio.cのcob_syncの実装
    *
-   * @param f TODO: 調査中
-   * @param mode TODO: 調査中
+   * @param f TODO: 準備中
+   * @param mode TODO: 準備中
    */
   protected void cob_sync(CobolFile f, int mode) {
     // TODO
