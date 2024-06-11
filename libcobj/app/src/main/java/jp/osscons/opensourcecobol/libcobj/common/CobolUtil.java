@@ -84,9 +84,9 @@ public class CobolUtil {
   /**
    * libcob/common.cのcob_check_envの実装
    *
-   * @param name
-   * @param value
-   * @return
+   * @param name TODO: 調査中
+   * @param value TODO: 調査中
+   * @return TODO: 調査中
    */
   public static int checkEnv(String name, String value) {
     if (name == null || value == null) {
@@ -165,8 +165,14 @@ public class CobolUtil {
     }
   }
 
-  /** libcob/common.cのcob_initの実装 TODO 未完成 */
+  /**
+   * libcob/common.cのcob_initの実装
+   *
+   * @param argv TODO: 調査中
+   * @param cobInitialized TODO: 調査中
+   */
   public static void cob_init(String[] argv, boolean cobInitialized) {
+    // TODO 未完成
     if (!cobInitialized) {
       CobolUtil.commandLineArgs = argv;
       CobolInspect.initString();
@@ -241,7 +247,7 @@ public class CobolUtil {
   /**
    * libcob/common.cとcob_localtime
    *
-   * @return
+   * @return TODO: 調査中
    */
   public static LocalDateTime localtime() {
     LocalDateTime rt = LocalDateTime.now();
@@ -272,7 +278,7 @@ public class CobolUtil {
    * libcob/fileio.cのcob_rintime_errorの実装 opensourceCOBOLではprintfのように可変長引数を取るが,
    * こちらは呼び出し側で事前にString.format等を使用することを期待している.
    *
-   * @param s
+   * @param s TODO: 調査中
    */
   public static void runtimeError(String s) {
     if (hdlrs != null) {
@@ -305,8 +311,8 @@ public class CobolUtil {
   /**
    * libcob/common.c cob_get_environment
    *
-   * @param envname
-   * @param envval
+   * @param envname TODO: 調査中
+   * @param envval TODO: 調査中
    */
   public static void getEnvironment(AbstractCobolField envname, AbstractCobolField envval) {
     String p = CobolUtil.getEnv(envname.fieldToString());
@@ -320,16 +326,16 @@ public class CobolUtil {
   /**
    * libcob/common.cのCOB_CHK_PARMSの実装
    *
-   * @param funcName
-   * @param numParams
+   * @param funcName TODO: 調査中
+   * @param numParams TODO: 調査中
    */
   public static void COB_CHK_PARMS(String funcName, int numParams) {}
 
   /**
    * libcob/common.cのcob_get_switchの実装
    *
-   * @param n
-   * @return
+   * @param n TODO: 調査中
+   * @return TODO: 調査中
    */
   public static boolean getSwitch(int n) {
     return CobolUtil.cobSwitch[n];
@@ -338,8 +344,8 @@ public class CobolUtil {
   /**
    * libcob/common.cのcob_set_switchの実装
    *
-   * @param n
-   * @param flag
+   * @param n TODO: 調査中
+   * @param flag TODO: 調査中
    */
   public static void setSwitch(int n, int flag) {
     if (flag == 0) {
@@ -352,7 +358,7 @@ public class CobolUtil {
   /**
    * libcob/common.cのcob_get_sign_asciiの実装
    *
-   * @param p
+   * @param p TODO: 調査中
    */
   public static void getSignAscii(CobolDataStorage p) {
     switch (p.getByte(0)) {
@@ -394,8 +400,8 @@ public class CobolUtil {
   /**
    * libcob/common.cのcob_get_sign_ebcdicの実装
    *
-   * @param p
-   * @return
+   * @param p TODO: 調査中
+   * @return TODO: 調査中
    */
   public static int getSignEbcdic(CobolDataStorage p) {
     switch (p.getByte(0)) {
@@ -469,7 +475,7 @@ public class CobolUtil {
   /**
    * libcob/common.cのcob_put_sign_asciiの実装
    *
-   * @param p
+   * @param p TODO: 調査中
    */
   public static void putSignAscii(CobolDataStorage p) {
     switch (p.getByte(0)) {
@@ -511,8 +517,8 @@ public class CobolUtil {
   /**
    * libcob/common.cのcob_put_sign_ebcdicの実装
    *
-   * @param p
-   * @param sign
+   * @param p TODO: 調査中
+   * @param sign TODO: 調査中
    */
   public static void putSignEbcdic(CobolDataStorage p, int sign) {
     if (sign < 0) {
@@ -594,10 +600,10 @@ public class CobolUtil {
   /**
    * libcob/common.cのcommon_compcの実装
    *
-   * @param s1
-   * @param c
-   * @param size
-   * @return
+   * @param s1 TODO: 調査中
+   * @param c TODO: 調査中
+   * @param size TODO: 調査中
+   * @return TODO: 調査中
    */
   public static int commonCmpc(CobolDataStorage s1, byte c, int size) {
     CobolDataStorage s = CobolModule.getCurrentModule().collating_sequence;
@@ -624,9 +630,10 @@ public class CobolUtil {
   /**
    * libcob/common.cのis_national_paddingの実装
    *
-   * @param s
-   * @param size
-   * @return
+   * @param offset TODO: 調査中
+   * @param s TODO: 調査中
+   * @param size TODO: 調査中
+   * @return TODO: 調査中
    */
   public static int isNationalPadding(int offset, CobolDataStorage s, int size) {
     int ret = 1;
@@ -651,11 +658,11 @@ public class CobolUtil {
   /**
    * libcob/common.cのalnum_cmpsの実装
    *
-   * @param s1
-   * @param s2
-   * @param size
-   * @param col
-   * @return
+   * @param s1 TODO: 調査中
+   * @param s2 TODO: 調査中
+   * @param size TODO: 調査中
+   * @param col TODO: 調査中
+   * @return TODO: 調査中
    */
   public static int alnumCmps(
       CobolDataStorage s1, CobolDataStorage s2, int size, CobolDataStorage col) {
@@ -682,11 +689,11 @@ public class CobolUtil {
   /**
    * libcob/common.cのnational_cmpsの実装
    *
-   * @param s1
-   * @param s2
-   * @param size
-   * @param col
-   * @return
+   * @param s1 TODO: 調査中
+   * @param s2 TODO: 調査中
+   * @param size TODO: 調査中
+   * @param col TODO: 調査中
+   * @return TODO: 調査中
    */
   public static int nationalCmps(
       CobolDataStorage s1, CobolDataStorage s2, int size, CobolDataStorage col) {
@@ -763,7 +770,7 @@ public class CobolUtil {
    * get environemnt variable
    *
    * @param envVarName the name of an environment variable.
-   * @param envVarName the value to be set to the environment variable.
+   * @param envVarValue the value to be set to the environment variable.
    */
   public static void setEnv(String envVarName, String envVarValue) {
     CobolUtil.envVarTable.setProperty(envVarName, envVarValue);

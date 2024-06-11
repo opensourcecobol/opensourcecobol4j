@@ -38,7 +38,7 @@ public class CobolTerminal {
   /**
    * cob_displayの実装 TODO 暫定実装
    *
-   * @param dispStdout
+   * @param dispStdout TODO: 調査中
    * @param newline trueなら出力後に改行しない,それ以外の場合は改行する
    * @param fields 出力する変数(可変長)
    */
@@ -94,7 +94,7 @@ public class CobolTerminal {
   /**
    * cob_acceptの実装(暫定)
    *
-   * @param f
+   * @param f TODO: 調査中
    */
   public static void accept(AbstractCobolField f) {
     try {
@@ -122,7 +122,7 @@ public class CobolTerminal {
   /**
    * libcob/common.c job_or_current_localtime
    *
-   * @return
+   * @return TODO: 調査中
    */
   private static LocalDateTime jobOrCurrentLocalTime() {
     if (CobolUtil.cobLocalTm != null) {
@@ -135,7 +135,7 @@ public class CobolTerminal {
   /**
    * libcob/common.c cob_accept_date
    *
-   * @param f
+   * @param f TODO: 調査中
    */
   public static void acceptDate(AbstractCobolField f) {
     LocalDateTime date = jobOrCurrentLocalTime();
@@ -146,7 +146,7 @@ public class CobolTerminal {
   /**
    * libcob/common.c cob_accept_date_yyyymmdd
    *
-   * @param f
+   * @param f TODO: 調査中
    */
   public static void acceptDate_yyyymmdd(AbstractCobolField f) {
     LocalDateTime date = jobOrCurrentLocalTime();
@@ -157,7 +157,7 @@ public class CobolTerminal {
   /**
    * libcob/common.c cob_accept_day
    *
-   * @param f
+   * @param f TODO: 調査中
    */
   public static void acceptDay(AbstractCobolField f) {
     LocalDateTime date = jobOrCurrentLocalTime();
@@ -168,7 +168,7 @@ public class CobolTerminal {
   /**
    * libcob/common.c cob_accept_date_yyyyddd
    *
-   * @param f
+   * @param f TODO: 調査中
    */
   public static void acceptDay_yyyyddd(AbstractCobolField f) {
     LocalDateTime date = jobOrCurrentLocalTime();
@@ -179,7 +179,7 @@ public class CobolTerminal {
   /**
    * libcob/common.c cob_accept_day_of_week
    *
-   * @param f
+   * @param f TODO: 調査中
    */
   public static void acceptDayOfWeek(AbstractCobolField f) {
     LocalDateTime date = jobOrCurrentLocalTime();
@@ -189,7 +189,7 @@ public class CobolTerminal {
   /**
    * libcob/common.c cob_accept_time
    *
-   * @param f
+   * @param f TODO: 調査中
    */
   public static void acceptTime(AbstractCobolField f) {
     LocalDateTime date = LocalDateTime.now();
@@ -202,7 +202,7 @@ public class CobolTerminal {
   /**
    * libcob/common.c cob_display_environment
    *
-   * @param f
+   * @param f TODO: 調査中
    */
   public static void displayEnvironment(AbstractCobolField f) {
     CobolUtil.cobLocalEnv = f.fieldToString();
@@ -211,7 +211,7 @@ public class CobolTerminal {
   /**
    * libcob/common.c cob_display_env_value
    *
-   * @param f
+   * @param f TODO: 調査中
    */
   public static void displayEnvValue(AbstractCobolField f) {
     if (CobolUtil.cobLocalEnv == null || CobolUtil.cobLocalEnv.equals("")) {
@@ -224,7 +224,7 @@ public class CobolTerminal {
   /**
    * libcob/common.c cob_accept_environment
    *
-   * @param f
+   * @param f TODO: 調査中
    */
   public static void acceptEnvironment(AbstractCobolField f) {
     String p = null;
@@ -246,7 +246,7 @@ public class CobolTerminal {
   /**
    * libcob/common.c cob_display_command_line
    *
-   * @param f
+   * @param f TODO: 調査中
    */
   public static void displayCommandLine(AbstractCobolField f) {
     CobolUtil.commlnptr = new byte[f.getSize()];
@@ -259,7 +259,7 @@ public class CobolTerminal {
   /**
    * libcob/common.c cob_accept_command_line
    *
-   * @param f
+   * @param f TODO: 調査中
    */
   public static void acceptCommandLine(AbstractCobolField f) {
     if (CobolUtil.commlncnt != 0) {
@@ -273,7 +273,7 @@ public class CobolTerminal {
   /**
    * libcob/common.c cob_display_arg_number
    *
-   * @param f
+   * @param f TODO: 調査中
    */
   public static void displayArgNumber(AbstractCobolField f) {
     CobolFieldAttribute attr =
@@ -293,7 +293,7 @@ public class CobolTerminal {
   /**
    * libcob/common.c cob_accept_arg_number
    *
-   * @param f
+   * @param f TODO: 調査中
    */
   public static void acceptArgNumber(AbstractCobolField f) {
     CobolFieldAttribute attr =
@@ -308,7 +308,7 @@ public class CobolTerminal {
   /**
    * libcob/common.c cob_accept_arg_value
    *
-   * @param f
+   * @param f TODO: 調査中
    */
   public static void acceptArgValue(AbstractCobolField f) {
     if (CobolUtil.currentArgIndex > CobolUtil.commandLineArgs.length) {

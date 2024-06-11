@@ -18,69 +18,67 @@
  */
 package jp.osscons.opensourcecobol.libcobj.exceptions;
 
-import java.util.List;
 import jp.osscons.opensourcecobol.libcobj.data.CobolDataStorage;
 import jp.osscons.opensourcecobol.libcobj.file.CobolFile;
 
-/** STOP RUN機能の実装に用いられる例外 */
-public class CobolStopRunException extends Exception {
+/** STOP RUNの呼び出し時にスローされる例外。返り値を保持する。 */
+public final class CobolStopRunException extends Exception {
 
   /** 返り値 */
   private int returnCode;
-
-  public static List<RuntimeExitHandler> exitHandlers = null;
 
   /**
    * コンストラクタ
    *
    * @param returnCode 返り値
    */
-  public CobolStopRunException(int returnCode) {
+  private CobolStopRunException(int returnCode) {
     this.returnCode = returnCode;
   }
 
   /**
    * コンストラクタ
    *
-   * @param storage 返り血を格納したCobolDataStorageのインスタンス
+   * @param storage 返り値を格納したCobolDataStorageのインスタンス
    */
-  public CobolStopRunException(CobolDataStorage storage) {
+  private CobolStopRunException(CobolDataStorage storage) {
     this(storage.intValue());
   }
 
   /**
-   * returnCodeのgetter
+   * このクラスが保持するSTOP RUNの返り値を取得する。
    *
-   * @return this.returnCode
+   * @return このクラスが保持するSTOP RUNの返り値
    */
   public int getReturnCode() {
     return returnCode;
   }
 
   /**
-   * CobolStopRunExceptionを例外として投げる
+   * CobolStopRunExceptionを例外としてスローする。 COBOLプログラム終了時のデフォルトの終了処理は実行されない。
    *
-   * @param returnCode 返り値
-   * @throws CobolStopRunException
+   * @param returnCode STOP RUNの返り値
+   * @throws CobolStopRunException TODO: 調査中
    */
   public static void throwException(int returnCode) throws CobolStopRunException {
     throw new CobolStopRunException(returnCode);
   }
 
   /**
-   * CobolStopRunExceptionを例外として投げる
+   * CobolStopRunExceptionを例外としてスローする。 COBOLプログラム終了時のデフォルトの終了処理は実行されない。
    *
-   * @param storage 返り値を格納したCobolDataStorageのインスタンス
-   * @throws CobolStopRunException
+   * @param storage STOP RUNの返り値
+   * @throws CobolStopRunException TODO: 調査中
    */
   public static void throwException(CobolDataStorage storage) throws CobolStopRunException {
     throw new CobolStopRunException(storage);
   }
 
   /**
-   * javaコンパイラの解析でthrowが発生しない部分がtry節でくくられていると判断されるとコンパイルエラーになる. これを回避するためのダミーのメソッド
+   * javaコンパイラは、try節の中にthrowが発生しないと判断するとコンパイルエラーになる。 Javaコード生成時にこの問題を回避するため、このメソッドが挿入される。 throws
+   * CobolRunExceptionが指定されているが、このメソッドは決して例外をスローせず、その他の処理も実行しない。
    *
-   * @throws CobolStopRunException
+   * @throws CobolStopRunException TODO: 調査中
    */
   public static void dummy() throws CobolStopRunException {
     if (false) {
@@ -88,18 +86,20 @@ public class CobolStopRunException extends Exception {
     }
   }
 
-  /** libcob/common.cのcob_stop_runの実装 */
+  /**
+   * デフォルトの終了処理を実行してから、CobolStopRunExceptionをスローする。
+   * デフォルトの終了処理では、COBOLプログラムによってオープンされたファイルのクローズが行われる。
+   *
+   * @param status STOP RUNの返り値
+   * @throws CobolStopRunException このメソッドでは必ずCobolStopRunExceptionがスローされる。
+   */
   public static void stopRunAndThrow(int status) throws CobolStopRunException {
     stopRun();
     CobolStopRunException.throwException(status);
   }
 
+  /** デフォルトの終了処理を実行する。CobolStopRunExceptionをスローしない。 */
   public static void stopRun() {
-    if (exitHandlers != null) {
-      for (RuntimeExitHandler handler : exitHandlers) {
-        handler.proc();
-      }
-    }
     // TODO screen実装時に追加
     // cob_screen_terminate();
     CobolFile.exitFileIO();

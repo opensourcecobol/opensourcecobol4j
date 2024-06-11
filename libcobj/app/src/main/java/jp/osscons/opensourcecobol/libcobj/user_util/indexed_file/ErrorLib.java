@@ -5,7 +5,7 @@ public class ErrorLib {
   /**
    * Error when indexed file does not exist
    *
-   * @param indexedFilePath
+   * @param indexedFilePath TODO: 調査中
    * @return 1
    */
   public static int errorFileDoesNotExist(String indexedFilePath) {
@@ -15,7 +15,7 @@ public class ErrorLib {
   /**
    * Error when indexed file is not a valid indexed file
    *
-   * @param indexedFilePath
+   * @param indexedFilePath TODO: 調査中
    * @return 1
    */
   public static int errorInvalidIndexedFile(String indexedFilePath) {
@@ -46,8 +46,8 @@ public class ErrorLib {
   /**
    * Error when some records in input data have invalid size
    *
-   * @param correctSize
-   * @return
+   * @param correctSize TODO: 調査中
+   * @return TODO: 調査中
    */
   public static int errorDataSizeMismatch(int correctSize) {
     System.err.println("error: all record must have the length of " + correctSize + " bytes.");

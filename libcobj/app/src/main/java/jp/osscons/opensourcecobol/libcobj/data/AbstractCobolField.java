@@ -68,12 +68,20 @@ public abstract class AbstractCobolField {
     return dataStorage;
   }
 
-  /** メンバ変数dataStorageのsetter */
+  /**
+   * メンバ変数dataStorageのsetter
+   *
+   * @param dataStorage TODO: 調査中
+   */
   public void setDataStorage(CobolDataStorage dataStorage) {
     this.dataStorage = dataStorage;
   }
 
-  /** メンバ変数attirbuteのsetter */
+  /**
+   * メンバ変数attributeのsetter
+   *
+   * @param attribute TODO: 調査中
+   */
   public void setAttribute(CobolFieldAttribute attribute) {
     this.attribute = attribute;
   }
@@ -90,7 +98,7 @@ public abstract class AbstractCobolField {
   /**
    * メンバ変数sizeのsetter
    *
-   * @param size
+   * @param size TODO: 調査中
    */
   public void setSize(int size) {
     this.size = size;
@@ -153,7 +161,11 @@ public abstract class AbstractCobolField {
    */
   public abstract String getString();
 
-  /** @return */
+  /**
+   * TODO: 調査中
+   *
+   * @return TODO: 調査中
+   */
   public int getInt() {
     CobolFieldAttribute attr =
         new CobolFieldAttribute(
@@ -168,7 +180,11 @@ public abstract class AbstractCobolField {
     return ByteBuffer.wrap(n.getByteArray(0, 4)).getInt();
   }
 
-  /** @return */
+  /**
+   * TODO: 調査中
+   *
+   * @return TODO: 調査中
+   */
   public double getDouble() {
     try {
       return Double.parseDouble(this.getString());
@@ -237,13 +253,14 @@ public abstract class AbstractCobolField {
   /**
    * TODO 確認 未使用?
    *
-   * @param decimal
+   * @param decimal TODO: 調査中
    */
   public abstract void setDecimal(BigDecimal decimal);
 
   /**
    * thisの保持する数値データをint型で返す
    *
+   * @param size TODO: 調査中
    * @return thisの保持する数値データをintに変換した値
    */
   public int getInt(int size) {
@@ -272,6 +289,7 @@ public abstract class AbstractCobolField {
    * @param field 加算する数値を保持するフィールド
    * @param opt 加算に関するオプション.詳しくはopensourceCOBOLを参照
    * @return 加算後のthisの保持する数値データ
+   * @throws CobolStopRunException TODO: 調査中
    */
   public int add(AbstractCobolField field, int opt) throws CobolStopRunException {
     CobolDecimal d1 = this.getDecimal();
@@ -286,6 +304,7 @@ public abstract class AbstractCobolField {
    * @param field 減算する数値を保持するフィールド
    * @param opt 減算に関するオプション.詳しくはopensourceCOBOLを参照
    * @return 減算後のthisの保持する数値データ
+   * @throws CobolStopRunException TODO: 調査中
    */
   public int sub(AbstractCobolField field, int opt) throws CobolStopRunException {
     CobolDecimal d1 = this.getDecimal();
@@ -299,6 +318,7 @@ public abstract class AbstractCobolField {
    *
    * @param n thisの保持する数値データから加算する数値
    * @return 基本的に0が返される.詳しくはopensource COBOLを参照
+   * @throws CobolStopRunException TODO: 調査中
    */
   public int addInt(int n) throws CobolStopRunException {
     if (n == 0) {
@@ -319,8 +339,8 @@ public abstract class AbstractCobolField {
   /**
    * libcob/numeric.cのcob_add_packed
    *
-   * @param n
-   * @return
+   * @param n TODO: 調査中
+   * @return TODO: 調査中
    */
   public abstract int addPackedInt(int n);
 
@@ -329,12 +349,21 @@ public abstract class AbstractCobolField {
    *
    * @param n thisの保持する数値データから減算する数値
    * @return 基本的に0が返される.詳しくはopensource COBOLを参照
+   * @throws CobolStopRunException TODO: 調査中
    */
   public int subInt(int n) throws CobolStopRunException {
     return n == 0 ? 0 : this.addInt(-n);
   }
 
-  /** libcob/numeric.cのcob_div_quotientの実装 */
+  /**
+   * libcob/numeric.cのcob_div_quotientの実装
+   *
+   * @param divisor TODO: 調査中
+   * @param quotient TODO: 調査中
+   * @param opt TODO: 調査中
+   * @return TODO: 調査中
+   * @throws CobolStopRunException TODO: 調査中
+   */
   public int divQuotient(AbstractCobolField divisor, AbstractCobolField quotient, int opt)
       throws CobolStopRunException {
     AbstractCobolField dividend = this;
@@ -363,8 +392,9 @@ public abstract class AbstractCobolField {
   /**
    * libcob/numeric.cのcob_div_remainderの実装
    *
-   * @param opt
-   * @return
+   * @param opt TODO: 調査中
+   * @return TODO: 調査中
+   * @throws CobolStopRunException TODO: 調査中
    */
   public int divRemainder(int opt) throws CobolStopRunException {
     return CobolDecimal.cobD3.getField(this, opt);
@@ -373,8 +403,8 @@ public abstract class AbstractCobolField {
   /**
    * libcob/numeric.cのcob_cmp_intの実装
    *
-   * @param n
-   * @return
+   * @param n TODO: 調査中
+   * @return TODO: 調査中
    */
   public int cmpInt(int n) {
     CobolDecimal d1 = this.getDecimal();
@@ -386,8 +416,8 @@ public abstract class AbstractCobolField {
   /**
    * libcob/numeric.cのcob_cmp_intの実装
    *
-   * @param n
-   * @return
+   * @param n TODO: 調査中
+   * @return TODO: 調査中
    */
   public int cmpInt(long n) {
     return this.cmpInt((int) n);
@@ -396,8 +426,8 @@ public abstract class AbstractCobolField {
   /**
    * libcob/numeric.cのcob_cmp_uintの実装
    *
-   * @param n
-   * @return
+   * @param n TODO: 調査中
+   * @return TODO: 調査中
    */
   public int cmpUint(int n) {
     return this.cmpInt(n);
@@ -406,8 +436,8 @@ public abstract class AbstractCobolField {
   /**
    * libcob/numeric.cのcob_cmp_uintの実装
    *
-   * @param n
-   * @return
+   * @param n TODO: 調査中
+   * @return TODO: 調査中
    */
   public int cmpUint(long n) {
     return this.cmpUint((int) n);
@@ -416,8 +446,8 @@ public abstract class AbstractCobolField {
   /**
    * libcob/numeric.cのcob_numeric_cmpの実装
    *
-   * @param field
-   * @return
+   * @param field TODO: 調査中
+   * @return TODO: 調査中
    */
   public int numericCompareTo(AbstractCobolField field) {
     CobolDecimal d1 = this.getDecimal();
@@ -677,7 +707,8 @@ public abstract class AbstractCobolField {
   /**
    * opensourceCOBOLのcob_check_numericの実装
    *
-   * @param s
+   * @param s TODO: 調査中
+   * @throws CobolStopRunException TODO: 調査中
    */
   public void checkNumeric(byte[] s) throws CobolStopRunException {
     if (!this.isNumeric()) {
@@ -812,11 +843,11 @@ public abstract class AbstractCobolField {
   /**
    * libcob/common.cのcommon_cmpcの実装
    *
-   * @param s1
+   * @param s1 TODO: 調査中
    * @param s1StartIndex s1のバイトデータにアクセスるするときの最小の添え字の相対位置
-   * @param c
-   * @param size
-   * @return
+   * @param c TODO: 調査中
+   * @param size TODO: 調査中
+   * @return TODO: 調査中
    */
   protected int commonCmpc(CobolDataStorage s1, int s1StartIndex, int c, int size) {
     // TODO moduleを参照するコードを書く
@@ -834,7 +865,7 @@ public abstract class AbstractCobolField {
    * libcob/common.cのcob_cmp_allの実装
    *
    * @param field thisと比較するフィールド
-   * @return
+   * @return TODO: 調査中
    */
   protected int compareAll(AbstractCobolField field) {
     int size = this.getSize();
@@ -865,13 +896,13 @@ public abstract class AbstractCobolField {
   /**
    * libcob/common.cのalnum_cmpsの実装
    *
-   * @param s1
+   * @param s1 TODO: 調査中
    * @param s1Start s1のバイトデータにアクセスるするときの最初の添え字の相対位置
-   * @param s2
+   * @param s2 TODO: 調査中
    * @param s2Start s2のバイトデータにアクセスるするときの最初の添え字の相対位置
-   * @param size
-   * @param col
-   * @return
+   * @param size TODO: 調査中
+   * @param col TODO: 調査中
+   * @return TODO: 調査中
    */
   protected int alnumCmps(
       CobolDataStorage s1,
@@ -912,7 +943,8 @@ public abstract class AbstractCobolField {
   /**
    * libcob/common.cのcob_check_mvstrnumの実装
    *
-   * @param field
+   * @param field TODO: 調査中
+   * @throws CobolStopRunException TODO: 調査中
    */
   public void checkMoveStrNum(AbstractCobolField field) throws CobolStopRunException {
     switch (this.getAttribute().getType()) {
@@ -949,11 +981,11 @@ public abstract class AbstractCobolField {
   /**
    * libcob/move.c own_byte_memcpyの実装
    *
-   * @param s1
+   * @param s1 TODO: 調査中
    * @param s1StartIndex s1のバイトデータにアクセスるするときの最初の添え字の相対位置
-   * @param s2
+   * @param s2 TODO: 調査中
    * @param s2StartIndex s2のバイトデータにアクセスるするときの最初の添え字の相対位置
-   * @param size
+   * @param size TODO: 調査中
    */
   protected void ownByteMemcpy(
       CobolDataStorage s1, int s1StartIndex, CobolDataStorage s2, int s2StartIndex, int size) {
@@ -985,7 +1017,11 @@ public abstract class AbstractCobolField {
     return new String(data.getByteArray(0, i + 1));
   }
 
-  /** libcob/move.cのcob_set_intの実装 */
+  /**
+   * libcob/move.cのcob_set_intの実装
+   *
+   * @param n TODO: 調査中
+   */
   public void setInt(int n) {
     CobolFieldAttribute attr =
         new CobolFieldAttribute(
@@ -999,7 +1035,11 @@ public abstract class AbstractCobolField {
     this.moveFrom(temp);
   }
 
-  /** libcob/move.cのcob_set_intの実装 */
+  /**
+   * libcob/move.cのcob_set_intの実装
+   *
+   * @param data TODO: 調査中
+   */
   public void setInt(CobolDataStorage data) {
     this.setInt((int) data.intValue());
   }
@@ -1020,8 +1060,8 @@ public abstract class AbstractCobolField {
   /**
    * libcob/common.cのcob_memcpyの実装
    *
-   * @param src
-   * @param size
+   * @param src TODO: 調査中
+   * @param size TODO: 調査中
    */
   public void memcpy(byte[] src, int size) {
     CobolFieldAttribute attr =
@@ -1034,7 +1074,7 @@ public abstract class AbstractCobolField {
   /**
    * libcob/common.cのcob_memcpyの実装
    *
-   * @param src
+   * @param src TODO: 調査中
    */
   public void memcpy(byte[] src) {
     this.memcpy(src, src.length);
@@ -1043,8 +1083,8 @@ public abstract class AbstractCobolField {
   /**
    * libcob/common.cのcob_memcpyの実装
    *
-   * @param src
-   * @param size
+   * @param src TODO: 調査中
+   * @param size TODO: 調査中
    */
   public void memcpy(String src, int size) {
     byte[] bytes = src.getBytes();
@@ -1054,7 +1094,7 @@ public abstract class AbstractCobolField {
   /**
    * libcob/common.cのcob_memcpyの実装
    *
-   * @param src
+   * @param src TODO: 調査中
    */
   public void memcpy(String src) {
     this.memcpy(src.getBytes());
@@ -1063,7 +1103,7 @@ public abstract class AbstractCobolField {
   /**
    * libcob/common.cのcob_is_omittedの実装
    *
-   * @return
+   * @return TODO: 調査中
    */
   public boolean isOmitted() {
     return this.dataStorage == null;
@@ -1072,7 +1112,7 @@ public abstract class AbstractCobolField {
   /**
    * libcob/common.cのcob_is_numericの実装
    *
-   * @return
+   * @return TODO: 調査中
    */
   public boolean isNumeric() {
     int i;
@@ -1137,7 +1177,7 @@ public abstract class AbstractCobolField {
   /**
    * libcob/common.cのcob_is_alphaの実装
    *
-   * @return
+   * @return TODO: 調査中
    */
   public boolean isAlpha() {
     for (int i = 0; i < this.size; ++i) {
@@ -1152,7 +1192,7 @@ public abstract class AbstractCobolField {
   /**
    * libcob/common.cのcob_is_upperの実装
    *
-   * @return
+   * @return TODO: 調査中
    */
   public boolean isUpper() {
     for (int i = 0; i < this.size; ++i) {
@@ -1167,7 +1207,7 @@ public abstract class AbstractCobolField {
   /**
    * libcob/common.cのcob_is_lowerの実装
    *
-   * @return
+   * @return TODO: 調査中
    */
   public boolean isLower() {
     for (int i = 0; i < this.size; ++i) {
@@ -1182,8 +1222,8 @@ public abstract class AbstractCobolField {
   /**
    * libcob/common.cのcob_cmp_charの実装
    *
-   * @param c
-   * @return
+   * @param c TODO: 調査中
+   * @return TODO: 調査中
    */
   public int cmpChar(byte c) {
     int sign = this.getSign();
@@ -1219,8 +1259,8 @@ public abstract class AbstractCobolField {
   /**
    * libcob/common.cのcob_cmp_allの実装
    *
-   * @param other
-   * @return
+   * @param other TODO: 調査中
+   * @return TODO: 調査中
    */
   public int cmpAll(AbstractCobolField other) {
     int ret = 0;
@@ -1278,8 +1318,8 @@ public abstract class AbstractCobolField {
   /**
    * libcob/common.cのcob_cmp_simple_strの実装
    *
-   * @param other
-   * @return
+   * @param other TODO: 調査中
+   * @return TODO: 調査中
    */
   public int cmpSimpleStr(AbstractCobolField other) {
     AbstractCobolField lf, sf;
@@ -1318,8 +1358,8 @@ public abstract class AbstractCobolField {
   /**
    * libcob/common.cのcob_alnum_cmpsの実装
    *
-   * @param other
-   * @return
+   * @param other TODO: 調査中
+   * @return TODO: 調査中
    */
   public int cmpAlnum(AbstractCobolField other) {
     int sign1 = this.getSign();
@@ -1346,7 +1386,7 @@ public abstract class AbstractCobolField {
   /**
    * libcob/common.cのcob_real_get_signの実装
    *
-   * @return
+   * @return TODO: 調査中
    */
   public int realGetSign() {
     CobolDataStorage p;
@@ -1395,7 +1435,7 @@ public abstract class AbstractCobolField {
   /**
    * libcob/common.cのcob_real_put_signの実装
    *
-   * @param sign
+   * @param sign TODO: 調査中
    */
   public void realPutSign(int sign) {
     CobolDataStorage p;
@@ -1438,7 +1478,7 @@ public abstract class AbstractCobolField {
   /**
    * libcob/move.cのcob_get_long_longの実装
    *
-   * @return
+   * @return TODO: 調査中
    */
   public long getLong() {
     CobolFieldAttribute attr =
@@ -1462,7 +1502,7 @@ public abstract class AbstractCobolField {
   /**
    * libcob/move.cのcob_hankaku_moveの実装
    *
-   * @param src
+   * @param src TODO: 調査中
    */
   public void hankakuMoveFrom(AbstractCobolField src) {
     // TODO 暫定実装

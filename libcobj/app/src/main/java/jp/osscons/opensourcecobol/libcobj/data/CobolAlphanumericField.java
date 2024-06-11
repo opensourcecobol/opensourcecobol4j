@@ -59,7 +59,7 @@ public class CobolAlphanumericField extends AbstractCobolField {
 
   // @Override
   // public int getInt() {
-  // throw new CobolRuntimeException(CobolRuntimeException.COBOL_FITAL_ERROR,
+  // throw new CobolRuntimeException(CobolRuntimeException.COBOL_FATAL_ERROR,
   // "未対応");
   // }
 

@@ -117,7 +117,7 @@ public class CobolDataStorage {
   /**
    * コンストラクタ.文字列からバイト配列を構成する.
    *
-   * @param str
+   * @param str TODO: 調査中
    */
   public CobolDataStorage(String str) {
     try {
@@ -134,7 +134,7 @@ public class CobolDataStorage {
   /**
    * 保持するバイト配列のコピーを返す
    *
-   * @return
+   * @return TODO: 調査中
    */
   public byte[] getData() {
     return this.getData(0);
@@ -180,8 +180,8 @@ public class CobolDataStorage {
   /**
    * C言語のmemcpy
    *
-   * @param buf
-   * @param size
+   * @param buf TODO: 調査中
+   * @param size TODO: 調査中
    */
   public void memcpy(CobolDataStorage buf, int size) {
     for (int i = 0; i < size; ++i) {
@@ -192,8 +192,8 @@ public class CobolDataStorage {
   /**
    * C言語のmemcpy
    *
-   * @param buf
-   * @param size
+   * @param buf TODO: 調査中
+   * @param size TODO: 調査中
    */
   public void memcpy(byte[] buf, int size) {
     for (int i = 0; i < size; ++i) {
@@ -204,8 +204,8 @@ public class CobolDataStorage {
   /**
    * C言語のmemcpy
    *
-   * @param str
-   * @param size
+   * @param str TODO: 調査中
+   * @param size TODO: 調査中
    */
   public void memcpy(String str, int size) {
     try {
@@ -218,9 +218,9 @@ public class CobolDataStorage {
   /**
    * C言語のmemcpy (offset指定あり)
    *
-   * @param offset
-   * @param buf
-   * @param size
+   * @param offset TODO: 調査中
+   * @param buf TODO: 調査中
+   * @param size TODO: 調査中
    */
   public void memcpy(int offset, byte[] buf, int size) {
     for (int i = 0; i < size; ++i) {
@@ -245,8 +245,8 @@ public class CobolDataStorage {
   /**
    * C言語のmemset
    *
-   * @param ch
-   * @param size
+   * @param ch TODO: 調査中
+   * @param size TODO: 調査中
    */
   public void memset(byte ch, int size) {
     for (int i = 0; i < size; ++i) {
@@ -257,8 +257,8 @@ public class CobolDataStorage {
   /**
    * C言語のmemset
    *
-   * @param ch
-   * @param size
+   * @param ch TODO: 調査中
+   * @param size TODO: 調査中
    */
   public void memset(int ch, int size) {
     this.memset((byte) ch, size);
@@ -267,8 +267,9 @@ public class CobolDataStorage {
   /**
    * C言語のmemset
    *
-   * @param ch
-   * @param size
+   * @param offset TODO: 調査中
+   * @param ch TODO: 調査中
+   * @param size TODO: 調査中
    */
   public void memset(int offset, byte ch, int size) {
     for (int i = 0; i < size; ++i) {
@@ -279,8 +280,9 @@ public class CobolDataStorage {
   /**
    * C言語のmemset
    *
-   * @param ch
-   * @param size
+   * @param offset TODO: 調査中
+   * @param ch TODO: 調査中
+   * @param size TODO: 調査中
    */
   public void memset(int offset, int ch, int size) {
     this.memset(offset, (byte) ch, size);
@@ -289,9 +291,9 @@ public class CobolDataStorage {
   /**
    * C言語のmemcmp
    *
-   * @param buf
-   * @param size
-   * @return
+   * @param buf TODO: 調査中
+   * @param size TODO: 調査中
+   * @return TODO: 調査中
    */
   public int memcmp(byte[] buf, int size) {
     for (int i = 0; i < size; ++i) {
@@ -307,9 +309,9 @@ public class CobolDataStorage {
   /**
    * C言語のmemcmp
    *
-   * @param buf
-   * @param size
-   * @return
+   * @param buf TODO: 調査中
+   * @param size TODO: 調査中
+   * @return TODO: 調査中
    */
   public int memcmp(String buf, int size) {
     return this.memcmp(buf.getBytes(), size);
@@ -318,9 +320,9 @@ public class CobolDataStorage {
   /**
    * C言語のmemcmp
    *
-   * @param buf
-   * @param size
-   * @return
+   * @param buf TODO: 調査中
+   * @param size TODO: 調査中
+   * @return TODO: 調査中
    */
   public int memcmp(CobolDataStorage buf, int size) {
     for (int i = 0; i < size; ++i) {
@@ -347,7 +349,7 @@ public class CobolDataStorage {
   /**
    * 引数で与えられたバイト配列をthis.dataの先頭からコピーする
    *
-   * @param data
+   * @param data TODO: 調査中
    */
   public void setData(byte[] data) {
     setData(data, 0);
@@ -583,7 +585,7 @@ public class CobolDataStorage {
   /**
    * TODO 暫定的な実装
    *
-   * @param str
+   * @param str TODO: 調査中
    */
   public void setString(String str) {
     this.fillBytes((byte) 0x20, this.data.length);
@@ -597,7 +599,7 @@ public class CobolDataStorage {
   /**
    * TODO 暫定的な実装(対応未定)
    *
-   * @param pointer
+   * @param pointer TODO: 調査中
    */
   public void setPointer(int pointer) {
     System.err.println("setPointer is not implemented");
@@ -661,8 +663,8 @@ public class CobolDataStorage {
   /**
    * this.dataにindexバイト目から4バイトでvalueを書き込む
    *
-   * @param value
-   * @param index
+   * @param value TODO: 調査中
+   * @param index TODO: 調査中
    */
   public void set(int value, int index) {
     ByteBuffer buffer = ByteBuffer.wrap(this.data, this.index + index, 4);
@@ -1430,9 +1432,9 @@ public class CobolDataStorage {
   /**
    * libcob/numeric.cのcob_cmp_numdispの実装
    *
-   * @param size
-   * @param n
-   * @return
+   * @param size TODO: 調査中
+   * @param n TODO: 調査中
+   * @return TODO: 調査中
    */
   public int cmpNumdisp(int size, long n) {
     int p = 0;
@@ -1446,18 +1448,18 @@ public class CobolDataStorage {
   /**
    * libcob/numeric.cのcob_cmp_long_numdispの実装
    *
-   * @param size
-   * @param n
-   * @return
+   * @param size TODO: 調査中
+   * @param n TODO: 調査中
+   * @return TODO: 調査中
    */
   public int cmpLongNumdisp(int size, long n) {
     return this.cmpNumdisp(size, n);
   }
 
   /**
-   * @param size
-   * @param n
-   * @return
+   * @param size TODO: 調査中
+   * @param n TODO: 調査中
+   * @return TODO: 調査中
    */
   public int cmpSignNumdisp(int size, long n) {
     int p = 0;

@@ -20,11 +20,20 @@ package jp.osscons.opensourcecobol.libcobj.call;
 
 import jp.osscons.opensourcecobol.libcobj.data.CobolDataStorage;
 
+/** CALLに関連するクラス。TODO: 調査中 */
 public class CobolCallDataContent {
+  /** TODO: 調査中 */
   public CobolDataStorage data;
+  /** TODO: 調査中 */
   public long datall;
+  /** TODO: 調査中 */
   public int dataint;
 
+  /**
+   * TODO: 調査中
+   *
+   * @param size TODO: 調査中
+   */
   public CobolCallDataContent(int size) {
     this.data = new CobolDataStorage(size);
   }

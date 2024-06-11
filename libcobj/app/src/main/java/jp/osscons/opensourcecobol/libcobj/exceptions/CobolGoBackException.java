@@ -20,8 +20,8 @@ package jp.osscons.opensourcecobol.libcobj.exceptions;
 
 import jp.osscons.opensourcecobol.libcobj.data.CobolDataStorage;
 
-/** GOBACK機能の実装に用いられる例外 */
-public class CobolGoBackException extends Exception {
+/** GOBACKの呼び出し時にスローされる例外。返り値を保持する */
+public final class CobolGoBackException extends Exception {
 
   /** 返り値 */
   private int returnCode;
@@ -31,52 +31,53 @@ public class CobolGoBackException extends Exception {
    *
    * @param returnCode 返り値
    */
-  public CobolGoBackException(int returnCode) {
+  private CobolGoBackException(int returnCode) {
     this.returnCode = returnCode;
   }
 
   /**
    * コンストラクタ
    *
-   * @param storage 返り値を格納したCobolDataStorageのインスタンス
+   * @param returnCode 返り値
    */
-  public CobolGoBackException(CobolDataStorage storage) {
+  private CobolGoBackException(CobolDataStorage storage) {
     this(storage.intValue());
   }
 
   /**
-   * returnCodeのgetter
+   * このクラスが保持するGOBACKの返り値を取得する。
    *
-   * @return this.returnCode
+   * @return このクラスが保持するGOBACKの返り値
    */
   public int getReturnCode() {
     return returnCode;
   }
 
   /**
-   * CobolGoBackExceptionを例外として投げる
+   * CobolGoBackExceptionを例外として投げる。
    *
-   * @param returnCode 返り値
-   * @throws CobolGoBackException
+   * @param returnCode GOBACKの返り値
+   * @throws CobolGoBackException TODO: 調査中
    */
   public static void throwException(int returnCode) throws CobolGoBackException {
     throw new CobolGoBackException(returnCode);
   }
 
   /**
-   * CobolGoBackExceptionを例外として投げる
+   * CobolGoBackExceptionを例外として投げる。
    *
-   * @param storage
-   * @throws CobolGoBackException
+   * @param storage GOBACKの返り値
+   * @throws CobolGoBackException TODO: 調査中
    */
   public static void throwException(CobolDataStorage storage) throws CobolGoBackException {
     throw new CobolGoBackException(storage);
   }
 
   /**
-   * javaコンパイラの解析でthrowが発生しない部分がtry節でくくられていると判断されるとコンパイルエラーになる. これを回避するためのダミーのメソッド
+   * javaコンパイラは、try節の中にthrowが発生しないと判断するとコンパイルエラーになる。 Javaコード生成時にこの問題を回避するため、このメソッドが挿入される。 throws
+   * CobolGoBackExceptionが指定されているが、このメソッドは決して例外をスローせず、その他の処理も実行しない。
    *
-   * @throws CobolGoBackException
+   * @throws CobolGoBackException TODO: 調査中
    */
   public static void dummy() throws CobolGoBackException {
     if (false) {
