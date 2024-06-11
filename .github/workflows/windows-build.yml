@@ -27,13 +27,16 @@ jobs:
       - name: Install opensource COBOL 4J
         working-directory: libcobj
         run: |
-          ./gradlew shadowJar
+          .\gradlew shadowJar
 
       - name: Build cobj.exe
-        run: msbuild /p:Configuration=Release /p:AdditionalIncludePaths=./:./cobj/:./win:./lib win/opensourcecobol4j.sln
+        run: msbuild /p:Configuration=Release /p:AdditionalIncludePaths=.\:.\cobj\:.\win:.\lib win\opensourcecobol4j.sln
       
       - name: Upload an artifact
         uses: actions/upload-artifact@v4
         with:
           name: libcobj.jar
-          path: libcobj/app/build/libs/libcobj.jar 
+          path: libcobj\app\build\libs\libcobj.jar 
+        with:
+          name: cobj.exe
+          path: win\cobj.exe
