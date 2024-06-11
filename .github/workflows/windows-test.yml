@@ -41,11 +41,11 @@ jobs:
     - name: Run tests ${{ inputs.test-name }}
       run: |
         cd win
-        .\make-install.ps1
+        ./make-install.ps1
         $env:CLASSPATH="C:\opensourcecobol4j\lib\libcobj.jar"
         $env:PATH+=";C:\opensourcecobol4j\bin\;C:\opensourcecobol4j\config\"
-        cd ..\tests\cobol85\${{ inputs.test-name }}
-        perl ..\report.pl
+        cd ../tests/cobol85/${{ inputs.test-name }}
+        perl ../report.pl
         type report.txt
-        findstr "Successfully executed:" .\report.txt > .\result-check
-        findstr "100.00%" .\result-check
+        findstr "Successfully executed:" ./report.txt > ./result-check
+        findstr "100.00%" ./result-check

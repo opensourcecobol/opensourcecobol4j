@@ -80,11 +80,21 @@ The Windows version of opensource COBOL 4J uses the CL compiler included in Visu
 ![alt text](image/readme1_en.png)
 4. Click "Build" -> "Build Solution".
 ![alt text](image/readme2_en.png)
-5. Upon completion of the build, cobj.exe will be created in win/x64/Debug or win/x64/Release.
+Upon completion of the build, "cobj.exe" will be created in `win/x64/Debug` or `win/x64/Release`.
+
+### Build Java Files
+1. Install JDK.  
+https://www.oracle.com/java/technologies/downloads/?er=221886#java8-windows
+2. Open PowerShell.
+3. Move to "libcobj" directory and execute `./gradlew shadowJar`
+![alt text](image/readme3.png)
+This will create libcobj.jar in `libcobj/app/build/libs/`.
 
 ### Place files in the appropriate location
 1. If you build in Debug mode, change the 5th line of win/make-install.ps1 from `\x64\Release\cobj.exe` to `\x64\Debug\cobj.exe`.
-2. Execute make-install.ps1.  
+2. Open PowerShell
+3. Move to "win" directory and execute make-install.ps1.  
+![alt text](image/readme4.png)
 * The files will be placed in the following locations respectively. 
 *  If you want to change the placement location of the files, modify make-install.ps1.
 
