@@ -172,8 +172,8 @@ public class CobolNationalField extends AbstractCobolField {
   /**
    * libcob/move.cのjudge_hankakujpn_existの実装
    *
-   * @param src TODO: 調査中
-   * @return TODO: 調査中
+   * @param src TODO: 準備中
+   * @return TODO: 準備中
    */
   public static byte[] judge_hankakujpn_exist(AbstractCobolField src) {
     byte[] tmpZenJpnWord = null;
@@ -191,9 +191,9 @@ public class CobolNationalField extends AbstractCobolField {
   /**
    * libcob/move.c han2zenの実装
    *
-   * @param str TODO: 調査中
-   * @param size TODO: 調査中
-   * @return TODO: 調査中
+   * @param str TODO: 準備中
+   * @param size TODO: 準備中
+   * @return TODO: 準備中
    */
   public static byte[] han2zen(byte[] str, int size) {
     byte[] buf;

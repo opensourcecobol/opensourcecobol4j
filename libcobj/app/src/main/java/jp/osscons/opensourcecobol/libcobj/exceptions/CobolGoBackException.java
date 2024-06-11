@@ -57,7 +57,7 @@ public final class CobolGoBackException extends Exception {
    * CobolGoBackExceptionを例外として投げる。
    *
    * @param returnCode GOBACKの返り値
-   * @throws CobolGoBackException TODO: 調査中
+   * @throws CobolGoBackException TODO: 準備中
    */
   public static void throwException(int returnCode) throws CobolGoBackException {
     throw new CobolGoBackException(returnCode);
@@ -67,7 +67,7 @@ public final class CobolGoBackException extends Exception {
    * CobolGoBackExceptionを例外として投げる。
    *
    * @param storage GOBACKの返り値
-   * @throws CobolGoBackException TODO: 調査中
+   * @throws CobolGoBackException TODO: 準備中
    */
   public static void throwException(CobolDataStorage storage) throws CobolGoBackException {
     throw new CobolGoBackException(storage);
@@ -77,7 +77,7 @@ public final class CobolGoBackException extends Exception {
    * javaコンパイラは、try節の中にthrowが発生しないと判断するとコンパイルエラーになる。 Javaコード生成時にこの問題を回避するため、このメソッドが挿入される。 throws
    * CobolGoBackExceptionが指定されているが、このメソッドは決して例外をスローせず、その他の処理も実行しない。
    *
-   * @throws CobolGoBackException TODO: 調査中
+   * @throws CobolGoBackException TODO: 準備中
    */
   public static void dummy() throws CobolGoBackException {
     if (false) {

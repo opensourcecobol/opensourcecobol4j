@@ -66,7 +66,7 @@ public class CobolSystemRoutine {
    *
    * @param cmd コマンド文字列。Linux/Unix環境であればシェルコマンド、Windows環境であればコマンドプロンプトのコマンド。
    * @return コマンドの終了コード。
-   * @throws CobolStopRunException TODO: 調査中
+   * @throws CobolStopRunException TODO: 準備中
    *     このメソッドは内部でCobolModule.getCurrentModule().cob_procedure_parametersを参照する。
    *     このリストの形式に問題がある場合にスローされる。
    */
@@ -209,10 +209,10 @@ public class CobolSystemRoutine {
   /**
    * libcob/common.cのCBL_ORの実装
    *
-   * @param data1 TODO: 調査中
-   * @param data2 TODO: 調査中
-   * @param length TODO: 調査中
-   * @return TODO: 調査中
+   * @param data1 TODO: 準備中
+   * @param data2 TODO: 準備中
+   * @param length TODO: 準備中
+   * @return TODO: 準備中
    */
   public static int CBL_OR(CobolDataStorage data1, CobolDataStorage data2, int length) {
     return CBL_COMMON_OPERATION(
@@ -250,10 +250,10 @@ public class CobolSystemRoutine {
   /**
    * libcob/common.cのCBL_NORの実装
    *
-   * @param data1 TODO: 調査中
-   * @param data2 TODO: 調査中
-   * @param length TODO: 調査中
-   * @return TODO: 調査中
+   * @param data1 TODO: 準備中
+   * @param data2 TODO: 準備中
+   * @param length TODO: 準備中
+   * @return TODO: 準備中
    */
   public static int CBL_NOR(CobolDataStorage data1, CobolDataStorage data2, int length) {
     return CBL_COMMON_OPERATION(
@@ -283,10 +283,10 @@ public class CobolSystemRoutine {
   /**
    * libcob/common.cのCBL_XORの実装
    *
-   * @param data1 TODO: 調査中
-   * @param data2 TODO: 調査中
-   * @param length TODO: 調査中
-   * @return TODO: 調査中
+   * @param data1 TODO: 準備中
+   * @param data2 TODO: 準備中
+   * @param length TODO: 準備中
+   * @return TODO: 準備中
    */
   public static int CBL_XOR(CobolDataStorage data1, CobolDataStorage data2, int length) {
     return CBL_COMMON_OPERATION(
@@ -316,10 +316,10 @@ public class CobolSystemRoutine {
   /**
    * libcob/common.cのCBL_NIMPの実装
    *
-   * @param data1 TODO: 調査中
-   * @param data2 TODO: 調査中
-   * @param length TODO: 調査中
-   * @return TODO: 調査中
+   * @param data1 TODO: 準備中
+   * @param data2 TODO: 準備中
+   * @param length TODO: 準備中
+   * @return TODO: 準備中
    */
   public static int CBL_NIMP(CobolDataStorage data1, CobolDataStorage data2, int length) {
     return CBL_COMMON_OPERATION(
@@ -349,10 +349,10 @@ public class CobolSystemRoutine {
   /**
    * libcob/common.cのCBL_EQの実装
    *
-   * @param data1 TODO: 調査中
-   * @param data2 TODO: 調査中
-   * @param length TODO: 調査中
-   * @return TODO: 調査中
+   * @param data1 TODO: 準備中
+   * @param data2 TODO: 準備中
+   * @param length TODO: 準備中
+   * @return TODO: 準備中
    */
   public static int CBL_EQ(CobolDataStorage data1, CobolDataStorage data2, int length) {
     return CBL_COMMON_OPERATION(
@@ -382,9 +382,9 @@ public class CobolSystemRoutine {
   /**
    * TODO libcob/common.cのCBL_NOTの実装
    *
-   * @param data TODO: 調査中
-   * @param length TODO: 調査中
-   * @return TODO: 調査中
+   * @param data TODO: 準備中
+   * @param length TODO: 準備中
+   * @return TODO: 準備中
    */
   public static int CBL_NOT(CobolDataStorage data, int length) {
     CobolUtil.COB_CHK_PARMS("CBL_NOT", 2);
@@ -405,9 +405,9 @@ public class CobolSystemRoutine {
   /**
    * libcob/common.cのCBL_XF4の実装
    *
-   * @param data1 TODO: 調査中
-   * @param data2 TODO: 調査中
-   * @return TODO: 調査中
+   * @param data1 TODO: 準備中
+   * @param data2 TODO: 準備中
+   * @return TODO: 準備中
    */
   public static int CBL_XF4(CobolDataStorage data1, CobolDataStorage data2) {
     CobolUtil.COB_CHK_PARMS("CBL_XF4", 2);
@@ -434,9 +434,9 @@ public class CobolSystemRoutine {
   /**
    * libcob/common.cのCBL_XF5の実装
    *
-   * @param data1 TODO: 調査中
-   * @param data2 TODO: 調査中
-   * @return TODO: 調査中
+   * @param data1 TODO: 準備中
+   * @param data2 TODO: 準備中
+   * @return TODO: 準備中
    */
   public static int CBL_XF5(CobolDataStorage data1, CobolDataStorage data2) {
     CobolUtil.COB_CHK_PARMS("CBL_XF5", 2);
@@ -462,10 +462,10 @@ public class CobolSystemRoutine {
   /**
    * libcob/common.cのCBL_X91の実装
    *
-   * @param result TODO: 調査中
-   * @param func TODO: 調査中
-   * @param parm TODO: 調査中
-   * @return TODO: 調査中
+   * @param result TODO: 準備中
+   * @param func TODO: 準備中
+   * @param parm TODO: 準備中
+   * @return TODO: 準備中
    */
   public static int CBL_X91(CobolDataStorage result, CobolDataStorage func, CobolDataStorage parm) {
     switch (func.getByte(0)) {
@@ -499,9 +499,9 @@ public class CobolSystemRoutine {
   /**
    * TODO libcob/common.cのCBL_TOLOWERの実装
    *
-   * @param data TODO: 調査中
-   * @param length TODO: 調査中
-   * @return TODO: 調査中
+   * @param data TODO: 準備中
+   * @param length TODO: 準備中
+   * @return TODO: 準備中
    */
   public static int CBL_TOLOWER(CobolDataStorage data, int length) {
     CobolUtil.COB_CHK_PARMS("CBL_TOLOWER", 2);
@@ -525,9 +525,9 @@ public class CobolSystemRoutine {
   /**
    * TODO libcob/common.cのCBL_TOUPPERの実装
    *
-   * @param data TODO: 調査中
-   * @param length TODO: 調査中
-   * @return TODO: 調査中
+   * @param data TODO: 準備中
+   * @param length TODO: 準備中
+   * @return TODO: 準備中
    */
   public static int CBL_TOUPPER(CobolDataStorage data, int length) {
     CobolUtil.COB_CHK_PARMS("CBL_TOUPPER", 2);

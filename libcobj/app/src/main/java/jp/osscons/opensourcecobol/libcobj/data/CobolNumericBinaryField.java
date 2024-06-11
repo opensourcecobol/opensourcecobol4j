@@ -216,7 +216,7 @@ public class CobolNumericBinaryField extends AbstractCobolField {
   /**
    * libcob/move.cのcob_binary_mset_int64の実装
    *
-   * @param n TODO: 調査中
+   * @param n TODO: 準備中
    */
   public void binaryMsetInt64(long n) {
     byte bytes[] = new byte[8];
@@ -310,7 +310,7 @@ public class CobolNumericBinaryField extends AbstractCobolField {
   /**
    * libcob/numeric.cのcob_binary_get_int64の実装
    *
-   * @param f TODO: 調査中
+   * @param f TODO: 準備中
    */
   private long binaryGetInt64() {
     int fsiz = 8 - this.getSize();

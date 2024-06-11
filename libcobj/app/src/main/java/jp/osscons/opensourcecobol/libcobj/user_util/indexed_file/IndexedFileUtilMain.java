@@ -42,7 +42,7 @@ public class IndexedFileUtilMain {
   /**
    * Main method
    *
-   * @param args TODO: 調査中
+   * @param args TODO: 準備中
    */
   public static void main(String[] args) {
 
@@ -218,7 +218,7 @@ public class IndexedFileUtilMain {
   /**
    * Process info sub command, which shows information of the indexed file.
    *
-   * @param indexedFilePath TODO: 調査中
+   * @param indexedFilePath TODO: 準備中
    * @return 0 if success, otherwise non-zero. The return value is error code.
    */
   private static int processInfoCommand(String indexedFilePath) {
@@ -294,8 +294,8 @@ public class IndexedFileUtilMain {
   /**
    * Process load sub command, which loads data inputted from stdin to the indexed file.
    *
-   * @param indexedFilePath TODO: 調査中
-   * @return TODO: 調査中
+   * @param indexedFilePath TODO: 準備中
+   * @return TODO: 準備中
    */
   private static int processLoadCommand(
       String indexedFilePath,
@@ -451,7 +451,7 @@ public class IndexedFileUtilMain {
   /**
    * Create a CobolFile instance from the path of the indexed file.
    *
-   * @param indexedFilePath TODO: 調査中
+   * @param indexedFilePath TODO: 準備中
    * @return CobolFile instance if success, otherwise empty.
    */
   private static Optional<CobolFile> createCobolFileFromIndexedFilePath(String indexedFilePath) {
