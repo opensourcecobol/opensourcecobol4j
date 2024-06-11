@@ -26,10 +26,6 @@ jobs:
         name: cobj.exe
         path: win/cobj.exe
       
-
-    # - name: Add MSBuild to PATH
-    #   uses: microsoft/setup-msbuild@v2.0.0
-        
     - name: Install Java
       uses: actions/setup-java@v4
       with:
@@ -41,23 +37,6 @@ jobs:
       with:
         perl-version: "5.32"
         distribution: strawberry
-
-    # - name: Restore NuGet packages
-    #   run: nuget restore .\win\
-
-   
-
-    # - name: Build cobj.exe
-    #   run: msbuild /p:Configuration=Release /p:AdditionalIncludePaths=./:./cobj/:./win:./lib win/opensourcecobol4j.sln
-
-    # - name: Install files
-    #   run: .\make-install.ps1
-
-    # - name: Build libcobj.jar
-    #   working-directory: libcobj
-    #   run: |
-    #     .\gradlew shadowJar
-    #     copy .\app\build\libs\libcobj.jar C:\opensourcecobol4j\lib\
     
     - name: Run tests ${{ inputs.test-name }}
       run: |

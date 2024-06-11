@@ -92,10 +92,6 @@ jobs:
     needs: check-workflows
     uses: ./.github/workflows/javadoc.yml
 
-  # build-libcobj:
-  #   needs: check-workflows
-  #   uses: ./.github/workflows/build-libcobj.yml
-
   windows-build:
     needs: check-workflows
     strategy:

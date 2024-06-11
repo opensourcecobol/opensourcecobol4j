@@ -93,13 +93,14 @@ jobs:
     needs: check-workflows
     uses: ./.github/workflows/javadoc.yml
 
-  build-libcobj:
+  windows-build:
     needs: check-workflows
-    uses: ./.github/workflows/build-libcobj.yml
+    strategy:
+       fail-fast: false
+    uses: ./.github/workflows/windows-build.yml
 
   windows-test:
-#    needs: build-libcobj
-    needs: check-workflows
+    needs: windows-build
     strategy:
        matrix:
          test_name: ["IC", "IF", "IX", "NC", "OB", "RL", "SG", "SM", "SQ", "ST"]
