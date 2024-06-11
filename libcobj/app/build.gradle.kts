@@ -18,8 +18,7 @@ tasks {
     javadoc {
         options.encoding = "UTF-8"
         options {
-            (this as CoreJavadocOptions).addStringOption("Xdoclint:none", "-quiet")
-            (this as CoreJavadocOptions).addStringOption("Xdoclint:all,-missing/private")
+            (this as CoreJavadocOptions).addStringOption("Xdoclint:missing")
         }
         //options.addStringOption('Xdoclint:all,-missing')
     }

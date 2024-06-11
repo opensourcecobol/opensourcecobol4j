@@ -1,0 +1,40 @@
+# This workflow detects missing Javadoc comments in the source code of the project.
+# Although it works correctly, the process should be improved to use gradle instead of javadoc directly.
+name: Javadoc
+
+on:
+  workflow_call:
+
+permissions:
+  contents: read
+
+env:
+  CLASSPATH: ":/usr/lib/opensourcecobol4j/libcobj.jar"
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps: 
+      - uses: actions/setup-java@v4
+        with:
+          distribution: 'temurin'
+          java-version: '21'
+
+      - name: Install dependencies on Ubuntu
+        run: |
+          sudo apt-get update -y
+          sudo apt-get install -y gcc-9 build-essential gettext autoconf
+
+      - name: Checkout opensource COBOL 4J
+        uses: actions/checkout@v4
+
+      - name: Install opensource COBOL 4J
+        run: |
+          ./configure --prefix=/usr/
+          make
+          sudo make install
+
+      - name: Check javadoc comments
+        working-directory: libcobj/
+        run: |
+          sh check-missing-javadoc.sh
