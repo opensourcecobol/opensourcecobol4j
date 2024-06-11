@@ -8,3 +8,5 @@ sqlite/sqlite.jar
 
 # Ignore Gradle build output directory
 build
+
+app/src/main/java/javadoc.log
