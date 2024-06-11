@@ -73,14 +73,15 @@ sudo make install
 
 ## opensource COBOL 4Jのインストール (Windows)
 ### Visual Studioのインストール
-Windows版のopensource COBOL 4JはVisual Studioに含まれるCLコンパイラを使用します. そのため、まず[Visual Studio](https://visualstudio.microsoft.com/)をインストールしてください.
+Windows版のopensource COBOL 4JはVisual Studioに含まれるCLコンパイラを使用します.   
+そのため、まずは[Visual Studio](https://visualstudio.microsoft.com/)をインストールしてください.
 
 ### Javaファイルのビルド
 1. JDKをインストールする.
 https://www.oracle.com/java/technologies/downloads/?er=221886#java8-windows
 2. PowerShellを開く.
 3. libcobjディレクトリに移動し、`./gradlew shadowJar`を実行する.
-![alt text](image/readme3.png)
+![alt text](image/readme3.png)  
 これにより、"libcobj.jar"が`libcobj/app/build/libs/`に作成される.
 
 ### ソリューションファイルのビルド

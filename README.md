@@ -87,7 +87,7 @@ Upon completion of the build, "cobj.exe" will be created in `win/x64/Debug` or `
 https://www.oracle.com/java/technologies/downloads/?er=221886#java8-windows
 2. Open PowerShell.
 3. Move to "libcobj" directory and execute `./gradlew shadowJar`
-![alt text](image/readme3.png)
+![alt text](image/readme3.png)  
 This will create libcobj.jar in `libcobj/app/build/libs/`.
 
 ### Place files in the appropriate location
