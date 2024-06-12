@@ -227,14 +227,38 @@ public class CobolSystemRoutine {
         });
   }
 
+  /**
+   * TODO: 準備中
+   *
+   * @param data1 TODO: 準備中
+   * @param data2 TODO: 準備中
+   * @param length TODO: 準備中
+   * @return TODO: 準備中
+   */
   public static int CBL_OR(AbstractCobolField data1, CobolDataStorage data2, int length) {
     return CBL_OR(data1.getDataStorage(), data2, length);
   }
 
+  /**
+   * TODO: 準備中
+   *
+   * @param data1 TODO: 準備中
+   * @param data2 TODO: 準備中
+   * @param length TODO: 準備中
+   * @return TODO: 準備中
+   */
   public static int CBL_OR(CobolDataStorage data1, AbstractCobolField data2, int length) {
     return CBL_OR(data1, data2.getDataStorage(), length);
   }
 
+  /**
+   * TODO: 準備中
+   *
+   * @param data1 TODO: 準備中
+   * @param data2 TODO: 準備中
+   * @param length TODO: 準備中
+   * @return TODO: 準備中
+   */
   public static int CBL_OR(AbstractCobolField data1, AbstractCobolField data2, int length) {
     return CBL_OR(data1.getDataStorage(), data2.getDataStorage(), length);
   }
@@ -268,14 +292,38 @@ public class CobolSystemRoutine {
         });
   }
 
+  /**
+   * TODO: 準備中
+   *
+   * @param data1 TODO: 準備中
+   * @param data2 TODO: 準備中
+   * @param length TODO: 準備中
+   * @return TODO: 準備中
+   */
   public static int CBL_NOR(AbstractCobolField data1, CobolDataStorage data2, int length) {
     return CBL_NOR(data1.getDataStorage(), data2, length);
   }
 
+  /**
+   * TODO: 準備中
+   *
+   * @param data1 TODO: 準備中
+   * @param data2 TODO: 準備中
+   * @param length TODO: 準備中
+   * @return TODO: 準備中
+   */
   public static int CBL_NOR(CobolDataStorage data1, AbstractCobolField data2, int length) {
     return CBL_NOR(data1, data2.getDataStorage(), length);
   }
 
+  /**
+   * TODO: 準備中
+   *
+   * @param data1 TODO: 準備中
+   * @param data2 TODO: 準備中
+   * @param length TODO: 準備中
+   * @return TODO: 準備中
+   */
   public static int CBL_NOR(AbstractCobolField data1, AbstractCobolField data2, int length) {
     return CBL_NOR(data1.getDataStorage(), data2.getDataStorage(), length);
   }
@@ -301,14 +349,38 @@ public class CobolSystemRoutine {
         });
   }
 
+  /**
+   * TODO: 準備中
+   *
+   * @param data1 TODO: 準備中
+   * @param data2 TODO: 準備中
+   * @param length TODO: 準備中
+   * @return TODO: 準備中
+   */
   public static int CBL_XOR(AbstractCobolField data1, CobolDataStorage data2, int length) {
     return CBL_XOR(data1.getDataStorage(), data2, length);
   }
 
+  /**
+   * TODO: 準備中
+   *
+   * @param data1 TODO: 準備中
+   * @param data2 TODO: 準備中
+   * @param length TODO: 準備中
+   * @return TODO: 準備中
+   */
   public static int CBL_XOR(CobolDataStorage data1, AbstractCobolField data2, int length) {
     return CBL_XOR(data1, data2.getDataStorage(), length);
   }
 
+  /**
+   * TODO: 準備中
+   *
+   * @param data1 TODO: 準備中
+   * @param data2 TODO: 準備中
+   * @param length TODO: 準備中
+   * @return TODO: 準備中
+   */
   public static int CBL_XOR(AbstractCobolField data1, AbstractCobolField data2, int length) {
     return CBL_XOR(data1.getDataStorage(), data2.getDataStorage(), length);
   }
@@ -334,14 +406,38 @@ public class CobolSystemRoutine {
         });
   }
 
+  /**
+   * TODO: 準備中
+   *
+   * @param data1 TODO: 準備中
+   * @param data2 TODO: 準備中
+   * @param length TODO: 準備中
+   * @return TODO: 準備中
+   */
   public static int CBL_NIMP(AbstractCobolField data1, CobolDataStorage data2, int length) {
     return CBL_NIMP(data1.getDataStorage(), data2, length);
   }
 
+  /**
+   * TODO: 準備中
+   *
+   * @param data1 TODO: 準備中
+   * @param data2 TODO: 準備中
+   * @param length TODO: 準備中
+   * @return TODO: 準備中
+   */
   public static int CBL_NIMP(CobolDataStorage data1, AbstractCobolField data2, int length) {
     return CBL_NIMP(data1, data2.getDataStorage(), length);
   }
 
+  /**
+   * TODO: 準備中
+   *
+   * @param data1 TODO: 準備中
+   * @param data2 TODO: 準備中
+   * @param length TODO: 準備中
+   * @return TODO: 準備中
+   */
   public static int CBL_NIMP(AbstractCobolField data1, AbstractCobolField data2, int length) {
     return CBL_NIMP(data1.getDataStorage(), data2.getDataStorage(), length);
   }
@@ -367,14 +463,38 @@ public class CobolSystemRoutine {
         });
   }
 
+  /**
+   * TODO: 準備中
+   *
+   * @param data1 TODO: 準備中
+   * @param data2 TODO: 準備中
+   * @param length TODO: 準備中
+   * @return TODO: 準備中
+   */
   public static int CBL_EQ(AbstractCobolField data1, CobolDataStorage data2, int length) {
     return CBL_EQ(data1.getDataStorage(), data2, length);
   }
 
+  /**
+   * TODO: 準備中
+   *
+   * @param data1 TODO: 準備中
+   * @param data2 TODO: 準備中
+   * @param length TODO: 準備中
+   * @return TODO: 準備中
+   */
   public static int CBL_EQ(CobolDataStorage data1, AbstractCobolField data2, int length) {
     return CBL_EQ(data1, data2.getDataStorage(), length);
   }
 
+  /**
+   * TODO: 準備中
+   *
+   * @param data1 TODO: 準備中
+   * @param data2 TODO: 準備中
+   * @param length TODO: 準備中
+   * @return TODO: 準備中
+   */
   public static int CBL_EQ(AbstractCobolField data1, AbstractCobolField data2, int length) {
     return CBL_EQ(data1.getDataStorage(), data2.getDataStorage(), length);
   }
@@ -398,6 +518,13 @@ public class CobolSystemRoutine {
     return 0;
   }
 
+  /**
+   * TODO: 準備中
+   *
+   * @param data TODO: 準備中
+   * @param length TODO: 準備中
+   * @return TODO: 準備中
+   */
   public static int CBL_NOT(AbstractCobolField data, int length) {
     return CBL_NOT(data.getDataStorage(), length);
   }
@@ -419,14 +546,35 @@ public class CobolSystemRoutine {
     return 0;
   }
 
+  /**
+   * TODO: 準備中
+   *
+   * @param data1 TODO: 準備中
+   * @param data2 TODO: 準備中
+   * @return TODO: 準備中
+   */
   public static int CBL_XF4(AbstractCobolField data1, CobolDataStorage data2) {
     return CBL_XF4(data1.getDataStorage(), data2);
   }
 
+  /**
+   * TODO: 準備中
+   *
+   * @param data1 TODO: 準備中
+   * @param data2 TODO: 準備中
+   * @return TODO: 準備中
+   */
   public static int CBL_XF4(CobolDataStorage data1, AbstractCobolField data2) {
     return CBL_XF4(data1, data2.getDataStorage());
   }
 
+  /**
+   * TODO: 準備中
+   *
+   * @param data1 TODO: 準備中
+   * @param data2 TODO: 準備中
+   * @return TODO: 準備中
+   */
   public static int CBL_XF4(AbstractCobolField data1, AbstractCobolField data2) {
     return CBL_XF4(data1.getDataStorage(), data2.getDataStorage());
   }
@@ -447,14 +595,35 @@ public class CobolSystemRoutine {
     return 0;
   }
 
+  /**
+   * TODO: 準備中
+   *
+   * @param data1 TODO: 準備中
+   * @param data2 TODO: 準備中
+   * @return TODO: 準備中
+   */
   public static int CBL_XF5(AbstractCobolField data1, CobolDataStorage data2) {
     return CBL_XF5(data1.getDataStorage(), data2);
   }
 
+  /**
+   * TODO: 準備中
+   *
+   * @param data1 TODO: 準備中
+   * @param data2 TODO: 準備中
+   * @return TODO: 準備中
+   */
   public static int CBL_XF5(CobolDataStorage data1, AbstractCobolField data2) {
     return CBL_XF5(data1, data2.getDataStorage());
   }
 
+  /**
+   * TODO: 準備中
+   *
+   * @param data1 TODO: 準備中
+   * @param data2 TODO: 準備中
+   * @return TODO: 準備中
+   */
   public static int CBL_XF5(AbstractCobolField data1, AbstractCobolField data2) {
     return CBL_XF5(data1.getDataStorage(), data2.getDataStorage());
   }
@@ -518,6 +687,13 @@ public class CobolSystemRoutine {
     return 0;
   }
 
+  /**
+   * TODO: 準備中
+   *
+   * @param data TODO: 準備中
+   * @param length TODO: 準備中
+   * @return TODO: 準備中
+   */
   public static int CBL_TOLOWER(AbstractCobolField data, int length) {
     return CBL_TOLOWER(data.getDataStorage(), length);
   }
@@ -544,10 +720,23 @@ public class CobolSystemRoutine {
     return 0;
   }
 
+  /**
+   * TODO: 準備中
+   *
+   * @param data TODO: 準備中
+   * @param length TODO: 準備中
+   * @return TODO: 準備中
+   */
   public static int CBL_TOUPPER(AbstractCobolField data, int length) {
     return CBL_TOUPPER(data.getDataStorage(), length);
   }
 
+  /**
+   * TODO: 準備中
+   *
+   * @param data TODO: 準備中
+   * @return TODO: 準備中
+   */
   public static int CBL_OC_NANOSLEEP(CobolDataStorage data) {
     CobolUtil.COB_CHK_PARMS("CBL_OC_NANOSLEEP", 1);
 
@@ -565,16 +754,34 @@ public class CobolSystemRoutine {
     return 0;
   }
 
+  /**
+   * TODO: 準備中
+   *
+   * @param field TODO: 準備中
+   * @return TODO: 準備中
+   */
   public static int CBL_OC_NANOSLEEP(AbstractCobolField field) {
     CobolSystemRoutine.CBL_OC_NANOSLEEP(field.getDataStorage());
     return 0;
   }
 
+  /**
+   * TODO: 準備中
+   *
+   * @param data TODO: 準備中
+   * @return TODO: 準備中
+   */
   public static int calledBy(CobolDataStorage data) {
     CobolUtil.COB_CHK_PARMS("calledby", 1);
     return CobolModule.calledBy(data);
   }
 
+  /**
+   * TODO: 準備中
+   *
+   * @param data TODO: 準備中
+   * @return TODO: 準備中
+   */
   public static int listDir(CobolDataStorage... data) {
     CobolUtil.COB_CHK_PARMS("listDirectory", 1);
     List<AbstractCobolField> params = CobolModule.getCurrentModule().cob_procedure_parameters;
