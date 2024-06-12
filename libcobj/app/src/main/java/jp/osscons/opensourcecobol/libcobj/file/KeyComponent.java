@@ -20,7 +20,10 @@ package jp.osscons.opensourcecobol.libcobj.file;
 
 import jp.osscons.opensourcecobol.libcobj.data.AbstractCobolField;
 
+/** TODO: 準備中 */
 public class KeyComponent {
+  /** TODO: 準備中 */
   public AbstractCobolField field;
+  /** TODO: 準備中 */
   public int rb;
 }

@@ -18,6 +18,12 @@
  */
 package jp.osscons.opensourcecobol.libcobj.common;
 
+/** TODO: 準備中 */
 public interface GetInt {
+  /**
+   * TODO: 準備中
+   *
+   * @return TODO: 準備中
+   */
   int run();
 }
