@@ -23,8 +23,38 @@ import java.nio.ByteBuffer;
 import jp.osscons.opensourcecobol.libcobj.data.AbstractCobolField;
 import jp.osscons.opensourcecobol.libcobj.exceptions.CobolStopRunException;
 
+/** TODO: 準備中 */
 public class CobolSequentialFile extends CobolFile {
 
+  /**
+   * TODO: 準備中
+   *
+   * @param selectName TODO: 準備中
+   * @param fileStatus TODO: 準備中
+   * @param assign TODO: 準備中
+   * @param record TODO: 準備中
+   * @param recordSize TODO: 準備中
+   * @param recordMin TODO: 準備中
+   * @param recordMax TODO: 準備中
+   * @param nkeys TODO: 準備中
+   * @param keys TODO: 準備中
+   * @param organization TODO: 準備中
+   * @param accessMode TODO: 準備中
+   * @param lockMode TODO: 準備中
+   * @param openMode TODO: 準備中
+   * @param flagOptional TODO: 準備中
+   * @param lastOpenMode TODO: 準備中
+   * @param special TODO: 準備中
+   * @param flagNonexistent TODO: 準備中
+   * @param flagEndOfFile TODO: 準備中
+   * @param flagBeginOfFile TODO: 準備中
+   * @param flagFirstRead TODO: 準備中
+   * @param flagReadDone TODO: 準備中
+   * @param flagSelectFeatures TODO: 準備中
+   * @param flagNeedsNl TODO: 準備中
+   * @param flagNeedsTop TODO: 準備中
+   * @param fileVersion TODO: 準備中
+   */
   public CobolSequentialFile(
       String selectName,
       byte[] fileStatus,
