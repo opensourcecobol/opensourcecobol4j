@@ -23,6 +23,7 @@ import java.util.HashMap;
 import jp.osscons.opensourcecobol.libcobj.data.CobolDataStorage;
 import jp.osscons.opensourcecobol.libcobj.file.CobolFile;
 
+/** TODO: 準備中 */
 public final class CobolExternal {
 
   private CobolFile extAllocFile;

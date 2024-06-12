@@ -226,7 +226,7 @@ public class CobolFieldAttribute {
   /**
    * TODO: 準備中
    *
-   * @returnTODO: 準備中
+   * @return TODO: 準備中
    */
   public boolean isTypeGroup() {
     return type == COB_TYPE_GROUP;
