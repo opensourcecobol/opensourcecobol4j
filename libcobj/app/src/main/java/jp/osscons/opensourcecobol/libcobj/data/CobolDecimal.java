@@ -29,22 +29,35 @@ import jp.osscons.opensourcecobol.libcobj.exceptions.CobolStopRunException;
 
 /** BigDecimalを扱うクラス COMPUTE等で計算をするときに使用する */
 public class CobolDecimal {
+  /** TODO: 準備中 */
   public static final int DECIMAL_NAN = -128;
+  /** TODO: 準備中 */
   public static final int COB_STORE_ROUND = 0x01;
+  /** TODO: 準備中 */
   public static final int COB_STORE_KEEP_ON_OVERFLOW = 0x02;
+  /** TODO: 準備中 */
   public static final int COB_STORE_TRUNC_ON_OVERFLOW = 0x04;
 
+  /** TODO: 準備中 */
   public static final int COB_MAX_BINARY = 36;
 
   private static BigDecimal cobMexp = BigDecimal.ZERO;
+  /** TODO: 準備中 */
   public static CobolDecimal cobD1 = new CobolDecimal();
+  /** TODO: 準備中 */
   public static CobolDecimal cobD2 = new CobolDecimal();
+  /** TODO: 準備中 */
   public static CobolDecimal cobD3 = new CobolDecimal();
+  /** TODO: 準備中 */
   public static CobolDecimal cobD4 = new CobolDecimal();
+  /** TODO: 準備中 */
   public static BigDecimal[] cobMpze10 = new BigDecimal[COB_MAX_BINARY];
+  /** TODO: 準備中 */
   public static byte[] packedValue = new byte[20];
+  /** TODO: 準備中 */
   public static int packedValueInt = 0;
 
+  /** TODO: 準備中 */
   public static void cobInitNumeric() {
     cobD1 = new CobolDecimal();
     cobD2 = new CobolDecimal();
@@ -76,6 +89,7 @@ public class CobolDecimal {
   /** 保持する数値データ */
   public BigDecimal value;
 
+  /** TODO: 準備中 */
   public int scale;
 
   /** コンストラクタ this.valueは0に設定する */
@@ -470,6 +484,13 @@ public class CobolDecimal {
     }
   }
 
+  /**
+   * TODO: 準備中
+   *
+   * @param f TODO: 準備中
+   * @param opt TODO: 準備中
+   * @return TODO: 準備中
+   */
   public int getDoubleField(AbstractCobolField f, int opt) {
     CobolDataStorage storage = new CobolDataStorage(8);
     double val = this.value.doubleValue();
