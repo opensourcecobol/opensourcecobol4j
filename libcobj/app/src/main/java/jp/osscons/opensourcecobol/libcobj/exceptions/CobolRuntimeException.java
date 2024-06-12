@@ -23,7 +23,9 @@ import jp.osscons.opensourcecobol.libcobj.common.CobolUtil;
 
 /** 実行時エラーを示す例外。エラー番号とエラーメッセージを保持する */
 public class CobolRuntimeException extends RuntimeException {
+  /** TODO: 調査中 */
   public static int code;
+
   private static int cobException = 0;
   private static String origProgramId;
   private static String origSection;
