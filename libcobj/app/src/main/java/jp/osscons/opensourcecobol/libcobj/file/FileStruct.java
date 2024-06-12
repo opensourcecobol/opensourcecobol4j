@@ -18,22 +18,43 @@
  */
 package jp.osscons.opensourcecobol.libcobj.file;
 
+/** TODO: 準備中 */
 public class FileStruct {
   private FileIO fp;
   private int count;
 
+  /**
+   * TODO: 準備中
+   *
+   * @return TODO: 準備中
+   */
   public FileIO getFp() {
     return fp;
   }
 
+  /**
+   * TODO: 準備中
+   *
+   * @param fp TODO: 準備中
+   */
   public void setFp(FileIO fp) {
     this.fp = fp;
   }
 
+  /**
+   * TODO: 準備中
+   *
+   * @return TODO: 準備中
+   */
   public int getCount() {
     return count;
   }
 
+  /**
+   * TODO: 準備中
+   *
+   * @param count TODO: 準備中
+   */
   public void setCount(int count) {
     this.count = count;
   }
