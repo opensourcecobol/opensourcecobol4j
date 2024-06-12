@@ -18,6 +18,8 @@
  */
 package jp.osscons.opensourcecobol.libcobj.common;
 
+/** TODO: 準備中 */
 public class CobolCallParams {
+  /** TODO: 準備中 */
   public static int callParams = 0;
 }
