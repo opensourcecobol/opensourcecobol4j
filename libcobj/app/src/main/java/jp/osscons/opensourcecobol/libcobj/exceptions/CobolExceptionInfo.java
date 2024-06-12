@@ -20,7 +20,7 @@ package jp.osscons.opensourcecobol.libcobj.exceptions;
 
 /** エラーコードを保持する。 */
 public class CobolExceptionInfo {
-  /* エラーコード。TODO: 準備中 */
+  /** エラーコード。TODO: 準備中 */
   public static int code = 0;
 
   /**

@@ -40,6 +40,7 @@ public abstract class AbstractCobolField {
 
   static int lastsize = 0;
   static CobolDataStorage lastdata = null;
+  /** TODO: 準備中 */
   public static Charset charSetSJIS = Charset.forName("SHIFT-JIS");
 
   static final int[] cobExp10 = {
@@ -122,6 +123,11 @@ public abstract class AbstractCobolField {
     return this.size - (this.attribute.isFlagSignSeparate() ? 1 : 0);
   }
 
+  /**
+   * TODO: 準備中
+   *
+   * @return TODO: 準備中
+   */
   public CobolDataStorage getFieldData() {
     if (this.attribute.isFlagSignSeparate() && this.attribute.isFlagSignLeading()) {
       return new CobolDataStorage(this.dataStorage.getRefOfData(), this.dataStorage.getIndex() + 1);
@@ -140,6 +146,11 @@ public abstract class AbstractCobolField {
     return (this.attribute.isFlagSignSeparate() && this.attribute.isFlagSignLeading()) ? 1 : 0;
   }
 
+  /**
+   * TODO: 準備中
+   *
+   * @return TODO: 準備中
+   */
   public byte[] getBytes() {
     CobolFieldAttribute attr =
         new CobolFieldAttribute(
@@ -475,6 +486,12 @@ public abstract class AbstractCobolField {
     }
   }
 
+  /**
+   * TODO: 準備中
+   *
+   * @param src TODO: 準備中
+   * @return TODO: 準備中
+   */
   protected AbstractCobolField preprocessOfMoving(AbstractCobolField src) {
     AbstractCobolField src1 = src;
 
@@ -517,16 +534,11 @@ public abstract class AbstractCobolField {
     return src;
   }
 
-  public static class TmpTuple {
-    public CobolDataStorage storage;
-    public int size;
-
-    TmpTuple(CobolDataStorage storage, int size) {
-      this.storage = storage;
-      this.size = size;
-    }
-  }
-
+  /**
+   * TODO: 準備中
+   *
+   * @param src TODO: 準備中
+   */
   protected void moveFromAll(AbstractCobolField src) {
     int size = 0;
     CobolDataStorage tmpSrcStorage = null;
@@ -926,7 +938,11 @@ public abstract class AbstractCobolField {
     return 0;
   }
 
-  // TODO abstract指定
+  /**
+   * TODO: 準備中
+   *
+   * @return TODO: 準備中
+   */
   public BigDecimal getBigDecimal() {
     return BigDecimal.ZERO;
   }
@@ -1044,6 +1060,11 @@ public abstract class AbstractCobolField {
     this.setInt((int) data.intValue());
   }
 
+  /**
+   * TODO: 準備中
+   *
+   * @param n TODO: 準備中
+   */
   public void setLong(Long n) {
     CobolFieldAttribute attr =
         new CobolFieldAttribute(
@@ -1495,6 +1516,11 @@ public abstract class AbstractCobolField {
     return ByteBuffer.wrap(data).getLong();
   }
 
+  /**
+   * TODO: 準備中
+   *
+   * @return TODO: 準備中
+   */
   public long getLongValue() {
     return 0;
   }

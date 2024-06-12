@@ -20,7 +20,9 @@ package jp.osscons.opensourcecobol.libcobj.file;
 
 import jp.osscons.opensourcecobol.libcobj.data.AbstractCobolField;
 
+/** TODO: 準備中 */
 public class CobolFileKey {
+  /** TODO: 準備中 */
   public static final int COB_MAX_KEY_COMPONENTS = 8;
 
   private AbstractCobolField field;
@@ -29,46 +31,101 @@ public class CobolFileKey {
   private int countComponents;
   private KeyComponent[] component = new KeyComponent[COB_MAX_KEY_COMPONENTS];
 
+  /**
+   * TODO: 準備中
+   *
+   * @return TODO: 準備中
+   */
   public AbstractCobolField getField() {
     return field;
   }
 
+  /**
+   * TODO: 準備中
+   *
+   * @param field TODO: 準備中
+   */
   public void setField(AbstractCobolField field) {
     this.field = field;
   }
 
+  /**
+   * TODO: 準備中
+   *
+   * @return TODO: 準備中
+   */
   public int getFlag() {
     return flag;
   }
 
+  /**
+   * TODO: 準備中
+   *
+   * @param flag TODO: 準備中
+   */
   public void setFlag(int flag) {
     this.flag = flag;
   }
 
+  /**
+   * TODO: 準備中
+   *
+   * @return TODO: 準備中
+   */
   public int getOffset() {
     return offset;
   }
 
+  /**
+   * TODO: 準備中
+   *
+   * @param offset TODO: 準備中
+   */
   public void setOffset(int offset) {
     this.offset = offset;
   }
 
+  /**
+   * TODO: 準備中
+   *
+   * @return TODO: 準備中
+   */
   public int getCountComponents() {
     return countComponents;
   }
 
+  /**
+   * TODO: 準備中
+   *
+   * @param countComponents TODO: 準備中
+   */
   public void setCountComponents(int countComponents) {
     this.countComponents = countComponents;
   }
 
+  /**
+   * TODO: 準備中
+   *
+   * @return TODO: 準備中
+   */
   public KeyComponent[] getComponent() {
     return component;
   }
 
+  /**
+   * TODO: 準備中
+   *
+   * @param component TODO: 準備中
+   */
   public void setComponent(KeyComponent[] component) {
     this.component = component;
   }
 
+  /**
+   * TODO: 準備中
+   *
+   * @return TODO: 準備中
+   */
   public static int getCobMaxKeyComponents() {
     return COB_MAX_KEY_COMPONENTS;
   }

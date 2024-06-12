@@ -21,21 +21,37 @@ package jp.osscons.opensourcecobol.libcobj.file;
 import java.sql.Connection;
 import jp.osscons.opensourcecobol.libcobj.data.CobolDataStorage;
 
+/** TODO: 準備中 */
 public class IndexedFile {
+  /** TODO: 準備中 */
   public int key_index;
+  /** TODO: 準備中 */
   public CobolDataStorage last_key;
+  /** TODO: 準備中 */
   public CobolDataStorage temp_key;
+  /** TODO: 準備中 */
   public Connection connection;
+  /** TODO: 準備中 */
   public byte[] key;
+  /** TODO: 準備中 */
   public byte[] data;
+  /** TODO: 準備中 */
   public byte[][] last_readkey;
+  /** TODO: 準備中 */
   public int[] last_dupno;
+  /** TODO: 準備中 */
   public int[] rewrite_sec_key;
 
+  /** TODO: 準備中 */
   public String filename;
+  /** TODO: 準備中 */
   public Object record_lock;
+  /** TODO: 準備中 */
   public boolean write_cursor_open;
+  /** TODO: 準備中 */
   public int lock_id;
+  /** TODO: 準備中 */
   public boolean record_locked;
+  /** TODO: 準備中 */
   public int filenamelen;
 }

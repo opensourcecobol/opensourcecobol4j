@@ -33,39 +33,59 @@ import jp.osscons.opensourcecobol.libcobj.exceptions.CobolRuntimeException;
 import jp.osscons.opensourcecobol.libcobj.exceptions.CobolStopRunException;
 import jp.osscons.opensourcecobol.libcobj.file.CobolFile;
 
+/** TDOD: 準備中 */
 public class CobolUtil {
   private static boolean cob_io_assume_rewrite = false;
   private static boolean cob_verbose = false;
   private static HandlerList hdlrs = null;
   private static String runtime_err_str = null;
 
+  /** TDOD: 準備中 */
   public static LocalDateTime cobLocalTm = null;
+  /** TDOD: 準備中 */
   public static String cobLocalEnv = null;
 
+  /** TDOD: 準備中 */
   public static String[] commandLineArgs = null;
+  /** TDOD: 準備中 */
   public static int currentArgIndex = 1;
 
+  /** TDOD: 準備中 */
   public static boolean nibbleCForUnsigned = false;
 
+  /** TDOD: 準備中 */
   public static int commlncnt = 0;
+  /** TDOD: 準備中 */
   public static byte[] commlnptr = null;
 
+  /** TDOD: 準備中 */
   public static boolean[] cobSwitch = new boolean[8];
+  /** TDOD: 準備中 */
   public static int cobSaveCallParams = 0;
 
+  /** TDOD: 準備中 */
   public static boolean verbose = false;
+  /** TDOD: 準備中 */
   public static boolean cobErrorOnExitFlag = false;
+  /** TDOD: 準備中 */
   public static Calendar cal;
 
+  /** TDOD: 準備中 */
   public static int fileSeqWriteBufferSize = 10;
 
   private static boolean lineTrace = false;
 
+  /** TDOD: 準備中 */
   public static String sourceFile;
+  /** TDOD: 準備中 */
   public static int sourceLine;
+  /** TDOD: 準備中 */
   public static String currProgramId;
+  /** TDOD: 準備中 */
   public static String currSection;
+  /** TDOD: 準備中 */
   public static String currParagraph;
+  /** TDOD: 準備中 */
   public static String sourceStatement;
 
   abstract static class HandlerList {
@@ -74,9 +94,13 @@ public class CobolUtil {
     public abstract int proc(String s);
   }
 
+  /** TDOD: 準備中 */
   public static final int FERROR_INITIALIZED = 0;
+  /** TDOD: 準備中 */
   public static final int FERROR_CODEGEN = 1;
+  /** TDOD: 準備中 */
   public static final int FERROR_CHAINING = 2;
+  /** TDOD: 準備中 */
   public static final int FERROR_STACK = 3;
 
   private static Properties envVarTable = new Properties();
@@ -102,31 +126,83 @@ public class CobolUtil {
     return 0;
   }
 
+  /**
+   * TODO: 準備中
+   *
+   * @return TODO: 準備中
+   */
   public static boolean cob_io_rewwrite_assumed() {
     return cob_io_assume_rewrite;
   }
 
+  /**
+   * TODO: 準備中
+   *
+   * @param offset TODO: 準備中
+   * @param length TODO: 準備中
+   * @param size TODO: 準備中
+   * @param name TODO: 準備中
+   * @throws CobolStopRunException TODO: 準備中
+   */
   public static void cobCheckRefModNational(int offset, long length, int size, byte[] name)
       throws CobolStopRunException {
     CobolUtil.cobCheckRefMod((offset + 1) / 2, length / 2, size / 2, name);
   }
 
+  /**
+   * TODO: 準備中
+   *
+   * @param offset TODO: 準備中
+   * @param length TODO: 準備中
+   * @param size TODO: 準備中
+   * @param name TODO: 準備中
+   * @throws CobolStopRunException TODO: 準備中
+   */
   public static void cobCheckRefModNational(int offset, long length, int size, String name)
       throws CobolStopRunException {
     CobolUtil.cobCheckRefMod((offset + 1) / 2, length / 2, size / 2, name);
   }
 
+  /**
+   * TODO: 準備中
+   *
+   * @param offset TODO: 準備中
+   * @param length TODO: 準備中
+   * @param size TODO: 準備中
+   * @param name TODO: 準備中
+   * @param nameLen TODO: 準備中
+   * @throws CobolStopRunException TODO: 準備中
+   */
   public static void cobCheckRefMod(
       int offset, long length, int size, CobolDataStorage name, int nameLen)
       throws CobolStopRunException {
     cobCheckRefMod(offset, length, size, name.getByteArrayRef(0, nameLen));
   }
 
+  /**
+   * TODO: 準備中
+   *
+   * @param offset TODO: 準備中
+   * @param length TODO: 準備中
+   * @param size TODO: 準備中
+   * @param name TODO: 準備中
+   * @param nameLen TODO: 準備中
+   * @throws CobolStopRunException TODO: 準備中
+   */
   public static void cobCheckRefMod(int offset, long length, int size, byte[] name, int nameLen)
       throws CobolStopRunException {
     cobCheckRefMod(offset, length, size, name);
   }
 
+  /**
+   * TODO: 準備中
+   *
+   * @param offset TODO: 準備中
+   * @param length TODO: 準備中
+   * @param size TODO: 準備中
+   * @param name TODO: 準備中
+   * @throws CobolStopRunException TODO: 準備中
+   */
   public static void cobCheckRefMod(int offset, long length, int size, byte[] name)
       throws CobolStopRunException {
     try {
@@ -136,11 +212,30 @@ public class CobolUtil {
     }
   }
 
+  /**
+   * TODO: 準備中
+   *
+   * @param offset TODO: 準備中
+   * @param length TODO: 準備中
+   * @param size TODO: 準備中
+   * @param name TODO: 準備中
+   * @param nameLen TODO: 準備中
+   * @throws CobolStopRunException TODO: 準備中
+   */
   public static void cobCheckRefMod(int offset, long length, int size, String name, int nameLen)
       throws CobolStopRunException {
     cobCheckRefMod(offset, length, size, name);
   }
 
+  /**
+   * TODO: 準備中
+   *
+   * @param offset TODO: 準備中
+   * @param length TODO: 準備中
+   * @param size TODO: 準備中
+   * @param name TODO: 準備中
+   * @throws CobolStopRunException TODO: 準備中
+   */
   public static void cobCheckRefMod(int offset, long length, int size, String name)
       throws CobolStopRunException {
     /* check the offset */
@@ -158,6 +253,13 @@ public class CobolUtil {
     }
   }
 
+  /**
+   * TODO: 準備中
+   *
+   * @param x TODO: 準備中
+   * @param name TODO: 準備中
+   * @throws CobolStopRunException TODO: 準備中
+   */
   public static void cobCheckBased(CobolDataStorage x, byte[] name) throws CobolStopRunException {
     if (x == null) {
       CobolUtil.runtimeError(String.format("BASED/LINKAGE item '%s' has NULL address", name));
@@ -708,14 +810,22 @@ public class CobolUtil {
     return ret;
   }
 
+  /** TODO: 準備中 */
   public static void readyTrace() {
     CobolUtil.lineTrace = true;
   }
 
+  /** TODO: 準備中 */
   public static void resetTrace() {
     CobolUtil.lineTrace = false;
   }
 
+  /**
+   * TODO: 準備中
+   *
+   * @param fatalError TODO: 準備中
+   * @throws CobolStopRunException TODO: 準備中
+   */
   public static void fatalError(int fatalError) throws CobolStopRunException {
     switch (fatalError) {
       case CobolUtil.FERROR_INITIALIZED:
@@ -737,6 +847,16 @@ public class CobolUtil {
     CobolStopRunException.stopRunAndThrow(1);
   }
 
+  /**
+   * TODO: 準備中
+   *
+   * @param progId TODO: 準備中
+   * @param sfile TODO: 準備中
+   * @param sline TODO: 準備中
+   * @param csect TODO: 準備中
+   * @param cpara TODO: 準備中
+   * @param cstatement TODO: 準備中
+   */
   public static void setLocation(
       String progId, String sfile, int sline, String csect, String cpara, String cstatement) {
     CobolUtil.sourceFile = sfile;
@@ -757,6 +877,12 @@ public class CobolUtil {
     }
   }
 
+  /**
+   * TODO: 準備中
+   *
+   * @param envVarName TODO: 準備中
+   * @return TODO: 準備中
+   */
   public static String getEnv(String envVarName) {
     String envVarInTable = CobolUtil.envVarTable.getProperty(envVarName);
     if (envVarInTable != null) {
@@ -787,6 +913,12 @@ public class CobolUtil {
     CobolUtil.envVarTable.setProperty(envVarName.getString().trim(), envVarValue.getString());
   }
 
+  /**
+   * TODO: 準備中
+   *
+   * @param s TODO: 準備中
+   * @return TODO: 準備中
+   */
   public static byte[] stringToBytes(String s) {
     try {
       return s.getBytes("Shift_JIS");
@@ -795,26 +927,57 @@ public class CobolUtil {
     }
   }
 
+  /**
+   * TODO: 準備中
+   *
+   * @param bytes TODO: 準備中
+   * @return TODO: 準備中
+   */
   public static byte[] toBytes(byte... bytes) {
     return bytes;
   }
 
+  /**
+   * TODO: 準備中
+   *
+   * @return TODO: 準備中
+   */
   public static String getCurrProgramId() {
     return currProgramId;
   }
 
+  /**
+   * TODO: 準備中
+   *
+   * @return TODO: 準備中
+   */
   public static String getCurrSection() {
     return currSection;
   }
 
+  /**
+   * TODO: 準備中
+   *
+   * @return TODO: 準備中
+   */
   public static String getCurrParagraph() {
     return currParagraph;
   }
 
+  /**
+   * TODO: 準備中
+   *
+   * @return TODO: 準備中
+   */
   public static int getSourceLine() {
     return sourceLine;
   }
 
+  /**
+   * TODO: 準備中
+   *
+   * @return TODO: 準備中
+   */
   public static String getSourceStatement() {
     return sourceStatement;
   }

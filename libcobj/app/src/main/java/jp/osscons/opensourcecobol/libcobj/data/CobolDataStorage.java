@@ -62,32 +62,65 @@ public class CobolDataStorage {
     this(data, 0);
   }
 
+  /**
+   * TODO: 準備中
+   *
+   * @param bytes TODO: 準備中
+   * @return TODO: 準備中
+   */
   public static CobolDataStorage makeCobolDataStorage(byte... bytes) {
     return new CobolDataStorage(bytes);
   }
 
+  /** TODO: 準備中 */
   public CobolDataStorage() {
     this.index = 0;
     this.data = null;
   }
 
+  /**
+   * TODO: 準備中
+   *
+   * @param data TODO: 準備中
+   * @param index TODO: 準備中
+   */
   public void setDataRefAndIndex(CobolDataStorage data, int index) {
     this.data = data.data;
     this.index = index;
   }
 
+  /**
+   * TODO: 準備中
+   *
+   * @return TODO: 準備中
+   */
   public int getIndex() {
     return this.index;
   }
 
+  /**
+   * TODO: 準備中
+   *
+   * @param index TODO: 準備中
+   */
   public void setIndex(int index) {
     this.index = index;
   }
 
+  /**
+   * TODO: 準備中
+   *
+   * @return TODO: 準備中
+   */
   public byte[] getRefOfData() {
     return this.data;
   }
 
+  /**
+   * TODO: 準備中
+   *
+   * @return TODO: 準備中
+   */
   public CobolDataStorage copy() {
     CobolDataStorage ret = new CobolDataStorage();
     ret.index = this.index;
@@ -95,14 +128,31 @@ public class CobolDataStorage {
     return ret;
   }
 
+  /**
+   * TODO: 準備中
+   *
+   * @param size TODO: 準備中
+   * @return TODO: 準備中
+   */
   public ByteBuffer getByteBuffer(int size) {
     return ByteBuffer.wrap(this.data, this.index, size);
   }
 
+  /**
+   * TODO: 準備中
+   *
+   * @param n TODO: 準備中
+   */
   public void addIndex(int n) {
     this.index += n;
   }
 
+  /**
+   * TODO: 準備中
+   *
+   * @param n TODO: 準備中
+   * @return TODO: 準備中
+   */
   public static CobolDataStorage primitiveToDataStorage(int n) {
     byte[] bytes = new byte[4];
     ByteBuffer buffer = ByteBuffer.wrap(bytes);
@@ -110,6 +160,12 @@ public class CobolDataStorage {
     return new CobolDataStorage(bytes);
   }
 
+  /**
+   * TODO: 準備中
+   *
+   * @param s TODO: 準備中
+   * @return TODO: 準備中
+   */
   public static CobolDataStorage primitiveToDataStorage(String s) {
     return new CobolDataStorage(s);
   }
@@ -167,10 +223,12 @@ public class CobolDataStorage {
     return result;
   }
 
-  /*
-   * Returns a reference to the byte array holded by this object.
-   * Modification of the returned array will affect the data holded by this
-   * object.
+  /**
+   * TODO: 準備中
+   *
+   * @param index TODO: 準備中
+   * @param length TODO: 準備中
+   * @return TODO: 準備中
    */
   public byte[] getByteArrayRef(int index, int length) {
     ByteBuffer buffer = ByteBuffer.wrap(this.data, this.index + index, length);
@@ -228,16 +286,35 @@ public class CobolDataStorage {
     }
   }
 
+  /**
+   * TODO: 準備中
+   *
+   * @param offset TODO: 準備中
+   * @param buf TODO: 準備中
+   * @param size TODO: 準備中
+   */
   public void memcpy(int offset, CobolDataStorage buf, int size) {
     for (int i = 0; i < size; ++i) {
       this.setByte(offset + i, buf.getByte(i));
     }
   }
 
+  /**
+   * TODO: 準備中
+   *
+   * @param buf TODO: 準備中
+   * @param offset TODO: 準備中
+   * @param size TODO: 準備中
+   */
   public void memcpy(byte[] buf, int offset, int size) {
     System.arraycopy(buf, offset, this.data, this.index, size);
   }
 
+  /**
+   * TODO: 準備中
+   *
+   * @param buf TODO: 準備中
+   */
   public void memcpy(byte[] buf) {
     this.memcpy(buf, buf.length);
   }
@@ -335,6 +412,14 @@ public class CobolDataStorage {
     return 0;
   }
 
+  /**
+   * TODO: 準備中
+   *
+   * @param offset TODO: 準備中
+   * @param buf TODO: 準備中
+   * @param size TODO: 準備中
+   * @return TODO: 準備中
+   */
   public int memcmp(int offset, CobolDataStorage buf, int size) {
     for (int i = 0; i < size; ++i) {
       byte x = this.getByte(offset + i);
@@ -410,14 +495,29 @@ public class CobolDataStorage {
     this.setByte(index, (byte) value);
   }
 
+  /**
+   * TODO: 準備中
+   *
+   * @param value TODO: 準備中
+   */
   public void setByte(byte value) {
     this.setByte(0, value);
   }
 
+  /**
+   * TODO: 準備中
+   *
+   * @param value TODO: 準備中
+   */
   public void setByte(int value) {
     this.setByte((byte) value);
   }
 
+  /**
+   * TODO: 準備中
+   *
+   * @param value TODO: 準備中
+   */
   public void setByte(char value) {
     this.setByte((byte) value);
   }
@@ -616,6 +716,11 @@ public class CobolDataStorage {
     }
   }
 
+  /**
+   * TODO: 準備中
+   *
+   * @param value TODO: 準備中
+   */
   public void set(byte value) {
     this.setByte(0, value);
   }
@@ -656,6 +761,11 @@ public class CobolDataStorage {
     ByteBuffer.wrap(this.data, this.index, 8).putDouble(value);
   }
 
+  /**
+   * TODO: 準備中
+   *
+   * @param other TODO: 準備中
+   */
   public void set(CobolDataStorage other) {
     this.set(other.intValue());
   }
@@ -671,6 +781,12 @@ public class CobolDataStorage {
     buffer.putInt(value);
   }
 
+  /**
+   * TODO: 準備中
+   *
+   * @param other TODO: 準備中
+   * @return TODO: 準備中
+   */
   public boolean isSame(CobolDataStorage other) {
     return this.data == other.data && this.index == other.index;
   }
@@ -702,6 +818,11 @@ public class CobolDataStorage {
     return ByteBuffer.wrap(this.data, this.index, Long.BYTES).getLong();
   }
 
+  /**
+   * TODO: 準備中
+   *
+   * @return TODO: 準備中
+   */
   public double doubleValue() {
     return ByteBuffer.wrap(this.data, this.index, Double.BYTES).getDouble();
   }
@@ -717,6 +838,12 @@ public class CobolDataStorage {
     return new CobolDataStorage(this.data, this.index + index);
   }
 
+  /**
+   * TODO: 準備中
+   *
+   * @param index TODO: 準備中
+   * @return TODO: 準備中
+   */
   public CobolDataStorage getSubDataStorage(long index) {
     return this.getDataStorage((int) index);
   }
@@ -759,6 +886,15 @@ public class CobolDataStorage {
         }
       };
 
+  /**
+   * TODO: 準備中
+   *
+   * @param n TODO: 準備中
+   * @param numOfBytes TODO: 準備中
+   * @param signed TODO: 準備中
+   * @param isBigEndian TODO: 準備中
+   * @return TODO: 準備中
+   */
   public int compareToBinary(long n, int numOfBytes, boolean signed, boolean isBigEndian) {
     long val = this.toLong(numOfBytes, signed, isBigEndian);
     Cmpr comparator = signed ? compareS : compareU;
@@ -779,12 +915,28 @@ public class CobolDataStorage {
     }
   }
 
+  /**
+   * TODO: 準備中
+   *
+   * @param n TODO: 準備中
+   * @param numOfBytes TODO: 準備中
+   * @param signed TODO: 準備中
+   * @param isBigEndian TODO: 準備中
+   */
   public void addBinary(long n, int numOfBytes, boolean signed, boolean isBigEndian) {
     long x = this.toLong(numOfBytes, signed, isBigEndian);
     x += n;
     this.fromLong(numOfBytes, isBigEndian, x);
   }
 
+  /**
+   * TODO: 準備中
+   *
+   * @param n TODO: 準備中
+   * @param numOfBytes TODO: 準備中
+   * @param signed TODO: 準備中
+   * @param isBigEndian TODO: 準備中
+   */
   public void subBinary(long n, int numOfBytes, boolean signed, boolean isBigEndian) {
     long x = this.toLong(numOfBytes, signed, isBigEndian);
     x -= n;
@@ -792,639 +944,1381 @@ public class CobolDataStorage {
   }
 
   // n numofBytes signed isBigEndian
+  /**
+   * TODO: 準備中
+   *
+   * @param n TODO: 準備中
+   * @return TODO: 準備中
+   */
   public int cmpU8Binary(long n) {
     return compareToBinary(n, 1, false, true);
   }
 
+  /**
+   * TODO: 準備中
+   *
+   * @param n TODO: 準備中
+   * @return TODO: 準備中
+   */
   public int cmpS8Binary(long n) {
     return compareToBinary(n, 1, true, true);
   }
 
+  /**
+   * TODO: 準備中
+   *
+   * @param n TODO: 準備中
+   * @return TODO: 準備中
+   */
   public int cmpU16Binary(long n) {
     return compareToBinary(n, 2, false, true);
   }
 
+  /**
+   * TODO: 準備中
+   *
+   * @param n TODO: 準備中
+   * @return TODO: 準備中
+   */
   public int cmpS16Binary(long n) {
     return compareToBinary(n, 2, true, true);
   }
 
+  /**
+   * TODO: 準備中
+   *
+   * @param n TODO: 準備中
+   * @return TODO: 準備中
+   */
   public int cmpU24Binary(long n) {
     return compareToBinary(n, 3, false, true);
   }
 
+  /**
+   * TODO: 準備中
+   *
+   * @param n TODO: 準備中
+   * @return TODO: 準備中
+   */
   public int cmpS24Binary(long n) {
     return compareToBinary(n, 3, true, true);
   }
 
+  /**
+   * TODO: 準備中
+   *
+   * @param n TODO: 準備中
+   * @return TODO: 準備中
+   */
   public int cmpU32Binary(long n) {
     return compareToBinary(n, 4, false, true);
   }
 
+  /**
+   * TODO: 準備中
+   *
+   * @param n TODO: 準備中
+   * @return TODO: 準備中
+   */
   public int cmpS32Binary(long n) {
     return compareToBinary(n, 4, true, true);
   }
 
+  /**
+   * TODO: 準備中
+   *
+   * @param n TODO: 準備中
+   * @return TODO: 準備中
+   */
   public int cmpU40Binary(long n) {
     return compareToBinary(n, 5, false, true);
   }
 
+  /**
+   * TODO: 準備中
+   *
+   * @param n TODO: 準備中
+   * @return TODO: 準備中
+   */
   public int cmpS40Binary(long n) {
     return compareToBinary(n, 5, true, true);
   }
 
+  /**
+   * TODO: 準備中
+   *
+   * @param n TODO: 準備中
+   * @return TODO: 準備中
+   */
   public int cmpU48Binary(long n) {
     return compareToBinary(n, 6, false, true);
   }
 
+  /**
+   * TODO: 準備中
+   *
+   * @param n TODO: 準備中
+   * @return TODO: 準備中
+   */
   public int cmpS48Binary(long n) {
     return compareToBinary(n, 6, true, true);
   }
 
+  /**
+   * TODO: 準備中
+   *
+   * @param n TODO: 準備中
+   * @return TODO: 準備中
+   */
   public int cmpU56Binary(long n) {
     return compareToBinary(n, 7, false, true);
   }
 
+  /**
+   * TODO: 準備中
+   *
+   * @param n TODO: 準備中
+   * @return TODO: 準備中
+   */
   public int cmpS56Binary(long n) {
     return compareToBinary(n, 7, true, true);
   }
 
+  /**
+   * TODO: 準備中
+   *
+   * @param n TODO: 準備中
+   * @return TODO: 準備中
+   */
   public int cmpU64Binary(long n) {
     return compareToBinary(n, 8, false, true);
   }
 
+  /**
+   * TODO: 準備中
+   *
+   * @param n TODO: 準備中
+   * @return TODO: 準備中
+   */
   public int cmpS64Binary(long n) {
     return compareToBinary(n, 8, true, true);
   }
 
+  /**
+   * TODO: 準備中
+   *
+   * @param n TODO: 準備中
+   * @return TODO: 準備中
+   */
   public int cmpAlignU8Binary(long n) {
     return compareToBinary(n, 1, false, true);
   }
 
+  /**
+   * TODO: 準備中
+   *
+   * @param n TODO: 準備中
+   * @return TODO: 準備中
+   */
   public int cmpAlignS8Binary(long n) {
     return compareToBinary(n, 1, true, true);
   }
 
+  /**
+   * TODO: 準備中
+   *
+   * @param n TODO: 準備中
+   * @return TODO: 準備中
+   */
   public int cmpAlignU16Binary(long n) {
     return compareToBinary(n, 2, false, true);
   }
 
+  /**
+   * TODO: 準備中
+   *
+   * @param n TODO: 準備中
+   * @return TODO: 準備中
+   */
   public int cmpAlignS16Binary(long n) {
     return compareToBinary(n, 2, true, true);
   }
 
+  /**
+   * TODO: 準備中
+   *
+   * @param n TODO: 準備中
+   * @return TODO: 準備中
+   */
   public int cmpAlignU32Binary(long n) {
     return compareToBinary(n, 4, false, true);
   }
 
+  /**
+   * TODO: 準備中
+   *
+   * @param n TODO: 準備中
+   * @return TODO: 準備中
+   */
   public int cmpAlignS32Binary(long n) {
     return compareToBinary(n, 4, true, true);
   }
 
+  /**
+   * TODO: 準備中
+   *
+   * @param n TODO: 準備中
+   * @return TODO: 準備中
+   */
   public int cmpAlignU64Binary(long n) {
     return compareToBinary(n, 8, false, true);
   }
 
+  /**
+   * TODO: 準備中
+   *
+   * @param n TODO: 準備中
+   * @return TODO: 準備中
+   */
   public int cmpAlignS64Binary(long n) {
     return compareToBinary(n, 8, true, true);
   }
 
   // n numofBytes signed isBigEndian
+  /**
+   * TODO: 準備中
+   *
+   * @param n TODO: 準備中
+   */
   public void addU8Binary(long n) {
     addBinary(n, 1, false, true);
   }
 
+  /**
+   * TODO: 準備中
+   *
+   * @param n TODO: 準備中
+   */
   public void addS8Binary(long n) {
     addBinary(n, 1, true, true);
   }
 
+  /**
+   * TODO: 準備中
+   *
+   * @param n TODO: 準備中
+   */
   public void addU16Binary(long n) {
     addBinary(n, 2, false, true);
   }
 
+  /**
+   * TODO: 準備中
+   *
+   * @param n TODO: 準備中
+   */
   public void addS16Binary(long n) {
     addBinary(n, 2, true, true);
   }
 
+  /**
+   * TODO: 準備中
+   *
+   * @param n TODO: 準備中
+   */
   public void addU24Binary(long n) {
     addBinary(n, 3, false, true);
   }
 
+  /**
+   * TODO: 準備中
+   *
+   * @param n TODO: 準備中
+   */
   public void addS24Binary(long n) {
     addBinary(n, 3, true, true);
   }
 
+  /**
+   * TODO: 準備中
+   *
+   * @param n TODO: 準備中
+   */
   public void addU32Binary(long n) {
     addBinary(n, 4, false, true);
   }
 
+  /**
+   * TODO: 準備中
+   *
+   * @param n TODO: 準備中
+   */
   public void addS32Binary(long n) {
     addBinary(n, 4, true, true);
   }
 
+  /**
+   * TODO: 準備中
+   *
+   * @param n TODO: 準備中
+   */
   public void addU40Binary(long n) {
     addBinary(n, 5, false, true);
   }
 
+  /**
+   * TODO: 準備中
+   *
+   * @param n TODO: 準備中
+   */
   public void addS40Binary(long n) {
     addBinary(n, 5, true, true);
   }
 
+  /**
+   * TODO: 準備中
+   *
+   * @param n TODO: 準備中
+   */
   public void addU48Binary(long n) {
     addBinary(n, 6, false, true);
   }
 
+  /**
+   * TODO: 準備中
+   *
+   * @param n TODO: 準備中
+   */
   public void addS48Binary(long n) {
     addBinary(n, 6, true, true);
   }
 
+  /**
+   * TODO: 準備中
+   *
+   * @param n TODO: 準備中
+   */
   public void addU56Binary(long n) {
     addBinary(n, 7, false, true);
   }
 
+  /**
+   * TODO: 準備中
+   *
+   * @param n TODO: 準備中
+   */
   public void addS56Binary(long n) {
     addBinary(n, 7, true, true);
   }
 
+  /**
+   * TODO: 準備中
+   *
+   * @param n TODO: 準備中
+   */
   public void addU64Binary(long n) {
     addBinary(n, 8, false, true);
   }
 
+  /**
+   * TODO: 準備中
+   *
+   * @param n TODO: 準備中
+   */
   public void addS64Binary(long n) {
     addBinary(n, 8, true, true);
   }
 
+  /**
+   * TODO: 準備中
+   *
+   * @param n TODO: 準備中
+   */
   public void addAlignU8Binary(long n) {
     addBinary(n, 1, false, true);
   }
 
+  /**
+   * TODO: 準備中
+   *
+   * @param n TODO: 準備中
+   */
   public void addAlignS8Binary(long n) {
     addBinary(n, 1, true, true);
   }
 
+  /**
+   * TODO: 準備中
+   *
+   * @param n TODO: 準備中
+   */
   public void addAlignU16Binary(long n) {
     addBinary(n, 2, false, true);
   }
 
+  /**
+   * TODO: 準備中
+   *
+   * @param n TODO: 準備中
+   */
   public void addAlignS16Binary(long n) {
     addBinary(n, 2, true, true);
   }
 
+  /**
+   * TODO: 準備中
+   *
+   * @param n TODO: 準備中
+   */
   public void addAlignU32Binary(long n) {
     addBinary(n, 4, false, true);
   }
 
+  /**
+   * TODO: 準備中
+   *
+   * @param n TODO: 準備中
+   */
   public void addAlignS32Binary(long n) {
     addBinary(n, 4, true, true);
   }
 
+  /**
+   * TODO: 準備中
+   *
+   * @param n TODO: 準備中
+   */
   public void addAlignU64Binary(long n) {
     addBinary(n, 8, false, true);
   }
 
+  /**
+   * TODO: 準備中
+   *
+   * @param n TODO: 準備中
+   */
   public void addAlignS64Binary(long n) {
     addBinary(n, 8, true, true);
   }
 
   // n numofBytes signed isBigEndian
+  /**
+   * TODO: 準備中
+   *
+   * @param n TODO: 準備中
+   */
   public void subU8Binary(long n) {
     subBinary(n, 1, false, true);
   }
 
+  /**
+   * TODO: 準備中
+   *
+   * @param n TODO: 準備中
+   */
   public void subS8Binary(long n) {
     subBinary(n, 1, true, true);
   }
 
+  /**
+   * TODO: 準備中
+   *
+   * @param n TODO: 準備中
+   */
   public void subU16Binary(long n) {
     subBinary(n, 2, false, true);
   }
 
+  /**
+   * TODO: 準備中
+   *
+   * @param n TODO: 準備中
+   */
   public void subS16Binary(long n) {
     subBinary(n, 2, true, true);
   }
 
+  /**
+   * TODO: 準備中
+   *
+   * @param n TODO: 準備中
+   */
   public void subU24Binary(long n) {
     subBinary(n, 3, false, true);
   }
 
+  /**
+   * TODO: 準備中
+   *
+   * @param n TODO: 準備中
+   */
   public void subS24Binary(long n) {
     subBinary(n, 3, true, true);
   }
 
+  /**
+   * TODO: 準備中
+   *
+   * @param n TODO: 準備中
+   */
   public void subU32Binary(long n) {
     subBinary(n, 4, false, true);
   }
 
+  /**
+   * TODO: 準備中
+   *
+   * @param n TODO: 準備中
+   */
   public void subS32Binary(long n) {
     subBinary(n, 4, true, true);
   }
 
+  /**
+   * TODO: 準備中
+   *
+   * @param n TODO: 準備中
+   */
   public void subU40Binary(long n) {
     subBinary(n, 5, false, true);
   }
 
+  /**
+   * TODO: 準備中
+   *
+   * @param n TODO: 準備中
+   */
   public void subS40Binary(long n) {
     subBinary(n, 5, true, true);
   }
-
+  /**
+   * TODO: 準備中
+   *
+   * @param n TODO: 準備中
+   */
   public void subU48Binary(long n) {
     subBinary(n, 6, false, true);
   }
-
+  /**
+   * TODO: 準備中
+   *
+   * @param n TODO: 準備中
+   */
   public void subS48Binary(long n) {
     subBinary(n, 6, true, true);
   }
-
+  /**
+   * TODO: 準備中
+   *
+   * @param n TODO: 準備中
+   */
   public void subU56Binary(long n) {
     subBinary(n, 7, false, true);
   }
-
+  /**
+   * TODO: 準備中
+   *
+   * @param n TODO: 準備中
+   */
   public void subS56Binary(long n) {
     subBinary(n, 7, true, true);
   }
-
+  /**
+   * TODO: 準備中
+   *
+   * @param n TODO: 準備中
+   */
   public void subU64Binary(long n) {
     subBinary(n, 8, false, true);
   }
-
+  /**
+   * TODO: 準備中
+   *
+   * @param n TODO: 準備中
+   */
   public void subS64Binary(long n) {
     subBinary(n, 8, true, true);
   }
-
+  /**
+   * TODO: 準備中
+   *
+   * @param n TODO: 準備中
+   */
   public void subAlignU8Binary(long n) {
     subBinary(n, 1, false, true);
   }
-
+  /**
+   * TODO: 準備中
+   *
+   * @param n TODO: 準備中
+   */
   public void subAlignS8Binary(long n) {
     subBinary(n, 1, true, true);
   }
-
+  /**
+   * TODO: 準備中
+   *
+   * @param n TODO: 準備中
+   */
   public void subAlignU16Binary(long n) {
     subBinary(n, 2, false, true);
   }
-
+  /**
+   * TODO: 準備中
+   *
+   * @param n TODO: 準備中
+   */
   public void subAlignS16Binary(long n) {
     subBinary(n, 2, true, true);
   }
-
+  /**
+   * TODO: 準備中
+   *
+   * @param n TODO: 準備中
+   */
   public void subAlignU32Binary(long n) {
     subBinary(n, 4, false, true);
   }
-
+  /**
+   * TODO: 準備中
+   *
+   * @param n TODO: 準備中
+   */
   public void subAlignS32Binary(long n) {
     subBinary(n, 4, true, true);
   }
-
+  /**
+   * TODO: 準備中
+   *
+   * @param n TODO: 準備中
+   */
   public void subAlignU64Binary(long n) {
     subBinary(n, 8, false, true);
   }
-
+  /**
+   * TODO: 準備中
+   *
+   * @param n TODO: 準備中
+   */
   public void subAlignS64Binary(long n) {
     subBinary(n, 8, true, true);
   }
 
   // n numofBytes signed isBigEndian
+  /**
+   * TODO: 準備中
+   *
+   * @param n TODO: 準備中
+   * @return TODO: 準備中
+   */
   public int cmpSwpU8Binary(long n) {
     return compareToBinary(n, 1, false, true);
   }
-
+  /**
+   * TODO: 準備中
+   *
+   * @param n TODO: 準備中
+   * @return TODO: 準備中
+   */
   public int cmpSwpS8Binary(long n) {
     return compareToBinary(n, 1, true, true);
   }
-
+  /**
+   * TODO: 準備中
+   *
+   * @param n TODO: 準備中
+   * @return TODO: 準備中
+   */
   public int cmpSwpU16Binary(long n) {
     return compareToBinary(n, 2, false, true);
   }
-
+  /**
+   * TODO: 準備中
+   *
+   * @param n TODO: 準備中
+   * @return TODO: 準備中
+   */
   public int cmpSwpS16Binary(long n) {
     return compareToBinary(n, 2, true, true);
   }
-
+  /**
+   * TODO: 準備中
+   *
+   * @param n TODO: 準備中
+   * @return TODO: 準備中
+   */
   public int cmpSwpU24Binary(long n) {
     return compareToBinary(n, 3, false, true);
   }
-
+  /**
+   * TODO: 準備中
+   *
+   * @param n TODO: 準備中
+   * @return TODO: 準備中
+   */
   public int cmpSwpS24Binary(long n) {
     return compareToBinary(n, 3, true, true);
   }
-
+  /**
+   * TODO: 準備中
+   *
+   * @param n TODO: 準備中
+   * @return TODO: 準備中
+   */
   public int cmpSwpU32Binary(long n) {
     return compareToBinary(n, 4, false, true);
   }
-
+  /**
+   * TODO: 準備中
+   *
+   * @param n TODO: 準備中
+   * @return TODO: 準備中
+   */
   public int cmpSwpS32Binary(long n) {
     return compareToBinary(n, 4, true, true);
   }
-
+  /**
+   * TODO: 準備中
+   *
+   * @param n TODO: 準備中
+   * @return TODO: 準備中
+   */
   public int cmpSwpU40Binary(long n) {
     return compareToBinary(n, 5, false, true);
   }
-
+  /**
+   * TODO: 準備中
+   *
+   * @param n TODO: 準備中
+   * @return TODO: 準備中
+   */
   public int cmpSwpS40Binary(long n) {
     return compareToBinary(n, 5, true, true);
   }
-
+  /**
+   * TODO: 準備中
+   *
+   * @param n TODO: 準備中
+   * @return TODO: 準備中
+   */
   public int cmpSwpU48Binary(long n) {
     return compareToBinary(n, 6, false, true);
   }
-
+  /**
+   * TODO: 準備中
+   *
+   * @param n TODO: 準備中
+   * @return TODO: 準備中
+   */
   public int cmpSwpS48Binary(long n) {
     return compareToBinary(n, 6, true, true);
   }
-
+  /**
+   * TODO: 準備中
+   *
+   * @param n TODO: 準備中
+   * @return TODO: 準備中
+   */
   public int cmpSwpU56Binary(long n) {
     return compareToBinary(n, 7, false, true);
   }
-
+  /**
+   * TODO: 準備中
+   *
+   * @param n TODO: 準備中
+   * @return TODO: 準備中
+   */
   public int cmpSwpS56Binary(long n) {
     return compareToBinary(n, 7, true, true);
   }
-
+  /**
+   * TODO: 準備中
+   *
+   * @param n TODO: 準備中
+   * @return TODO: 準備中
+   */
   public int cmpSwpU64Binary(long n) {
     return compareToBinary(n, 8, false, true);
   }
-
+  /**
+   * TODO: 準備中
+   *
+   * @param n TODO: 準備中
+   * @return TODO: 準備中
+   */
   public int cmpSwpS64Binary(long n) {
     return compareToBinary(n, 8, true, true);
   }
-
+  /**
+   * TODO: 準備中
+   *
+   * @param n TODO: 準備中
+   * @return TODO: 準備中
+   */
   public int cmpSwpAlignU8Binary(long n) {
     return compareToBinary(n, 1, false, true);
   }
-
+  /**
+   * TODO: 準備中
+   *
+   * @param n TODO: 準備中
+   * @return TODO: 準備中
+   */
   public int cmpSwpAlignS8Binary(long n) {
     return compareToBinary(n, 1, true, true);
   }
-
+  /**
+   * TODO: 準備中
+   *
+   * @param n TODO: 準備中
+   * @return TODO: 準備中
+   */
   public int cmpSwpAlignU16Binary(long n) {
     return compareToBinary(n, 2, false, true);
   }
-
+  /**
+   * TODO: 準備中
+   *
+   * @param n TODO: 準備中
+   * @return TODO: 準備中
+   */
   public int cmpSwpAlignS16Binary(long n) {
     return compareToBinary(n, 2, true, true);
   }
-
+  /**
+   * TODO: 準備中
+   *
+   * @param n TODO: 準備中
+   * @return TODO: 準備中
+   */
   public int cmpSwpAlignU32Binary(long n) {
     return compareToBinary(n, 4, false, true);
   }
-
+  /**
+   * TODO: 準備中
+   *
+   * @param n TODO: 準備中
+   * @return TODO: 準備中
+   */
   public int cmpSwpAlignS32Binary(long n) {
     return compareToBinary(n, 4, true, true);
   }
-
+  /**
+   * TODO: 準備中
+   *
+   * @param n TODO: 準備中
+   * @return TODO: 準備中
+   */
   public int cmpSwpAlignU64Binary(long n) {
     return compareToBinary(n, 8, false, true);
   }
-
+  /**
+   * TODO: 準備中
+   *
+   * @param n TODO: 準備中
+   * @return TODO: 準備中
+   */
   public int cmpSwpAlignS64Binary(long n) {
     return compareToBinary(n, 8, true, true);
   }
 
   // n numofBytes signed isBigEndian
+  /**
+   * TODO: 準備中
+   *
+   * @param n TODO: 準備中
+   */
   public void addSwpU8Binary(long n) {
     addBinary(n, 1, false, true);
   }
-
+  /**
+   * TODO: 準備中
+   *
+   * @param n TODO: 準備中
+   */
   public void addSwpS8Binary(long n) {
     addBinary(n, 1, true, true);
   }
-
+  /**
+   * TODO: 準備中
+   *
+   * @param n TODO: 準備中
+   */
   public void addSwpU16Binary(long n) {
     addBinary(n, 2, false, true);
   }
-
+  /**
+   * TODO: 準備中
+   *
+   * @param n TODO: 準備中
+   */
   public void addSwpS16Binary(long n) {
     addBinary(n, 2, true, true);
   }
-
+  /**
+   * TODO: 準備中
+   *
+   * @param n TODO: 準備中
+   */
   public void addSwpU24Binary(long n) {
     addBinary(n, 3, false, true);
   }
-
+  /**
+   * TODO: 準備中
+   *
+   * @param n TODO: 準備中
+   */
   public void addSwpS24Binary(long n) {
     addBinary(n, 3, true, true);
   }
-
+  /**
+   * TODO: 準備中
+   *
+   * @param n TODO: 準備中
+   */
   public void addSwpU32Binary(long n) {
     addBinary(n, 4, false, true);
   }
-
+  /**
+   * TODO: 準備中
+   *
+   * @param n TODO: 準備中
+   */
   public void addSwpS32Binary(long n) {
     addBinary(n, 4, true, true);
   }
-
+  /**
+   * TODO: 準備中
+   *
+   * @param n TODO: 準備中
+   */
   public void addSwpU40Binary(long n) {
     addBinary(n, 5, false, true);
   }
-
+  /**
+   * TODO: 準備中
+   *
+   * @param n TODO: 準備中
+   */
   public void addSwpS40Binary(long n) {
     addBinary(n, 5, true, true);
   }
-
+  /**
+   * TODO: 準備中
+   *
+   * @param n TODO: 準備中
+   */
   public void addSwpU48Binary(long n) {
     addBinary(n, 6, false, true);
   }
-
+  /**
+   * TODO: 準備中
+   *
+   * @param n TODO: 準備中
+   */
   public void addSwpS48Binary(long n) {
     addBinary(n, 6, true, true);
   }
-
+  /**
+   * TODO: 準備中
+   *
+   * @param n TODO: 準備中
+   */
   public void addSwpU56Binary(long n) {
     addBinary(n, 7, false, true);
   }
-
+  /**
+   * TODO: 準備中
+   *
+   * @param n TODO: 準備中
+   */
   public void addSwpS56Binary(long n) {
     addBinary(n, 7, true, true);
   }
-
+  /**
+   * TODO: 準備中
+   *
+   * @param n TODO: 準備中
+   */
   public void addSwpU64Binary(long n) {
     addBinary(n, 8, false, true);
   }
-
+  /**
+   * TODO: 準備中
+   *
+   * @param n TODO: 準備中
+   */
   public void addSwpS64Binary(long n) {
     addBinary(n, 8, true, true);
   }
-
+  /**
+   * TODO: 準備中
+   *
+   * @param n TODO: 準備中
+   */
   public void addSwpAlignU8Binary(long n) {
     addBinary(n, 1, false, true);
   }
-
+  /**
+   * TODO: 準備中
+   *
+   * @param n TODO: 準備中
+   */
   public void addSwpAlignS8Binary(long n) {
     addBinary(n, 1, true, true);
   }
-
+  /**
+   * TODO: 準備中
+   *
+   * @param n TODO: 準備中
+   */
   public void addSwpAlignU16Binary(long n) {
     addBinary(n, 2, false, true);
   }
-
+  /**
+   * TODO: 準備中
+   *
+   * @param n TODO: 準備中
+   */
   public void addSwpAlignS16Binary(long n) {
     addBinary(n, 2, true, true);
   }
-
+  /**
+   * TODO: 準備中
+   *
+   * @param n TODO: 準備中
+   */
   public void addSwpAlignU32Binary(long n) {
     addBinary(n, 4, false, true);
   }
-
+  /**
+   * TODO: 準備中
+   *
+   * @param n TODO: 準備中
+   */
   public void addSwpAlignS32Binary(long n) {
     addBinary(n, 4, true, true);
   }
-
+  /**
+   * TODO: 準備中
+   *
+   * @param n TODO: 準備中
+   */
   public void addSwpAlignU64Binary(long n) {
     addBinary(n, 8, false, true);
   }
-
+  /**
+   * TODO: 準備中
+   *
+   * @param n TODO: 準備中
+   */
   public void addSwpAlignS64Binary(long n) {
     addBinary(n, 8, true, true);
   }
 
   // n numofBytes signed isBigEndian
+  /**
+   * TODO: 準備中
+   *
+   * @param n TODO: 準備中
+   */
   public void subSwpU8Binary(int n) {
     subBinary(n, 1, false, true);
   }
-
+  /**
+   * TODO: 準備中
+   *
+   * @param n TODO: 準備中
+   */
   public void subSwpS8Binary(int n) {
     subBinary(n, 1, true, true);
   }
-
+  /**
+   * TODO: 準備中
+   *
+   * @param n TODO: 準備中
+   */
   public void subSwpU16Binary(int n) {
     subBinary(n, 2, false, true);
   }
-
+  /**
+   * TODO: 準備中
+   *
+   * @param n TODO: 準備中
+   */
   public void subSwpS16Binary(int n) {
     subBinary(n, 2, true, true);
   }
-
+  /**
+   * TODO: 準備中
+   *
+   * @param n TODO: 準備中
+   */
   public void subSwpU24Binary(int n) {
     subBinary(n, 3, false, true);
   }
-
+  /**
+   * TODO: 準備中
+   *
+   * @param n TODO: 準備中
+   */
   public void subSwpS24Binary(int n) {
     subBinary(n, 3, true, true);
   }
-
+  /**
+   * TODO: 準備中
+   *
+   * @param n TODO: 準備中
+   */
   public void subSwpU32Binary(int n) {
     subBinary(n, 4, false, true);
   }
-
+  /**
+   * TODO: 準備中
+   *
+   * @param n TODO: 準備中
+   */
   public void subSwpS32Binary(int n) {
     subBinary(n, 4, true, true);
   }
-
+  /**
+   * TODO: 準備中
+   *
+   * @param n TODO: 準備中
+   */
   public void subSwpU40Binary(int n) {
     subBinary(n, 5, false, true);
   }
-
+  /**
+   * TODO: 準備中
+   *
+   * @param n TODO: 準備中
+   */
   public void subSwpS40Binary(int n) {
     subBinary(n, 5, true, true);
   }
-
+  /**
+   * TODO: 準備中
+   *
+   * @param n TODO: 準備中
+   */
   public void subSwpU48Binary(int n) {
     subBinary(n, 6, false, true);
   }
-
+  /**
+   * TODO: 準備中
+   *
+   * @param n TODO: 準備中
+   */
   public void subSwpS48Binary(int n) {
     subBinary(n, 6, true, true);
   }
-
+  /**
+   * TODO: 準備中
+   *
+   * @param n TODO: 準備中
+   */
   public void subSwpU56Binary(int n) {
     subBinary(n, 7, false, true);
   }
-
+  /**
+   * TODO: 準備中
+   *
+   * @param n TODO: 準備中
+   */
   public void subSwpS56Binary(int n) {
     subBinary(n, 7, true, true);
   }
-
+  /**
+   * TODO: 準備中
+   *
+   * @param n TODO: 準備中
+   */
   public void subSwpU64Binary(int n) {
     subBinary(n, 8, false, true);
   }
-
+  /**
+   * TODO: 準備中
+   *
+   * @param n TODO: 準備中
+   */
   public void subSwpS64Binary(int n) {
     subBinary(n, 8, true, true);
   }
-
+  /**
+   * TODO: 準備中
+   *
+   * @param n TODO: 準備中
+   */
   public void subSwpAlignU8Binary(int n) {
     subBinary(n, 1, false, true);
   }
-
+  /**
+   * TODO: 準備中
+   *
+   * @param n TODO: 準備中
+   */
   public void subSwpAlignS8Binary(int n) {
     subBinary(n, 1, true, true);
   }
-
+  /**
+   * TODO: 準備中
+   *
+   * @param n TODO: 準備中
+   */
   public void subSwpAlignU16Binary(int n) {
     subBinary(n, 2, false, true);
   }
-
+  /**
+   * TODO: 準備中
+   *
+   * @param n TODO: 準備中
+   */
   public void subSwpAlignS16Binary(int n) {
     subBinary(n, 2, true, true);
   }
-
+  /**
+   * TODO: 準備中
+   *
+   * @param n TODO: 準備中
+   */
   public void subSwpAlignU32Binary(int n) {
     subBinary(n, 4, false, true);
   }
-
+  /**
+   * TODO: 準備中
+   *
+   * @param n TODO: 準備中
+   */
   public void subSwpAlignS32Binary(int n) {
     subBinary(n, 4, true, true);
   }
-
+  /**
+   * TODO: 準備中
+   *
+   * @param n TODO: 準備中
+   */
   public void subSwpAlignU64Binary(int n) {
     subBinary(n, 8, false, true);
   }
-
+  /**
+   * TODO: 準備中
+   *
+   * @param n TODO: 準備中
+   */
   public void subSwpAlignS64Binary(int n) {
     subBinary(n, 8, true, true);
   }
-
+  /**
+   * TODO: 準備中
+   *
+   * @param n TODO: 準備中
+   */
   public void setSwpU16Binary(int n) {
     this.fromLong(2, true, n);
   }
-
+  /**
+   * TODO: 準備中
+   *
+   * @param n TODO: 準備中
+   */
   public void setSwpS16Binary(int n) {
     this.fromLong(2, true, n);
   }
-
+  /**
+   * TODO: 準備中
+   *
+   * @param n TODO: 準備中
+   */
   public void setSwpU24Binary(int n) {
     this.fromLong(3, true, n);
   }
-
+  /**
+   * TODO: 準備中
+   *
+   * @param n TODO: 準備中
+   */
   public void setSwpS24Binary(int n) {
     this.fromLong(3, true, n);
   }
-
+  /**
+   * TODO: 準備中
+   *
+   * @param n TODO: 準備中
+   */
   public void setSwpU32Binary(int n) {
     this.fromLong(4, true, n);
   }
-
+  /**
+   * TODO: 準備中
+   *
+   * @param n TODO: 準備中
+   */
   public void setSwpS32Binary(int n) {
     this.fromLong(4, true, n);
   }
-
+  /**
+   * TODO: 準備中
+   *
+   * @param n TODO: 準備中
+   */
   public void setSwpU40Binary(int n) {
     this.fromLong(5, true, n);
   }
-
+  /**
+   * TODO: 準備中
+   *
+   * @param n TODO: 準備中
+   */
   public void setSwpS40Binary(int n) {
     this.fromLong(5, true, n);
   }
-
+  /**
+   * TODO: 準備中
+   *
+   * @param n TODO: 準備中
+   */
   public void setSwpU48Binary(int n) {
     this.fromLong(6, true, n);
   }
 
+  /**
+   * TODO: 準備中
+   *
+   * @param n TODO: 準備中
+   */
   public void setSwpS48Binary(int n) {
     this.fromLong(6, true, n);
   }
-
+  /**
+   * TODO: 準備中
+   *
+   * @param n TODO: 準備中
+   */
   public void setSwpU56Binary(int n) {
     this.fromLong(7, true, n);
   }
-
+  /**
+   * TODO: 準備中
+   *
+   * @param n TODO: 準備中
+   */
   public void setSwpS56Binary(int n) {
     this.fromLong(7, true, n);
   }
-
+  /**
+   * TODO: 準備中
+   *
+   * @param n TODO: 準備中
+   */
   public void setSwpU64Binary(int n) {
     this.fromLong(8, true, n);
   }
-
+  /**
+   * TODO: 準備中
+   *
+   * @param n TODO: 準備中
+   */
   public void setSwpS64Binary(int n) {
     this.fromLong(8, true, n);
   }
@@ -1457,6 +2351,8 @@ public class CobolDataStorage {
   }
 
   /**
+   * TODO: 準備中
+   *
    * @param size TODO: 準備中
    * @param n TODO: 準備中
    * @return TODO: 準備中
@@ -1485,6 +2381,13 @@ public class CobolDataStorage {
     return (val < n) ? -1 : (val > n) ? 1 : 0;
   }
 
+  /**
+   * TODO: 準備中
+   *
+   * @param size TODO: 準備中
+   * @param n TODO: 準備中
+   * @return TODO: 準備中
+   */
   public int cmpLongSignNumdisp(int size, long n) {
     int p = 0;
     int val = 0;
@@ -1509,6 +2412,12 @@ public class CobolDataStorage {
     return (val < n) ? -1 : (val > n) ? 1 : 0;
   }
 
+  /**
+   * TODO: 準備中
+   *
+   * @param size TODO: 準備中
+   * @return TODO: 準備中
+   */
   public int getNumdisp(int size) {
     int retval = 0;
     for (int n = 0; n < size; ++n) {
@@ -1533,6 +2442,13 @@ public class CobolDataStorage {
     }
   }
 
+  /**
+   * TODO: 準備中
+   *
+   * @param p TODO: 準備中
+   * @param val TODO: 準備中
+   * @return TODO: 準備中
+   */
   public PairInt getEbcdicSign(int p, int val) {
     switch (this.getByte(p)) {
       case '{':
@@ -1580,6 +2496,13 @@ public class CobolDataStorage {
     }
   }
 
+  /**
+   * TODO: 準備中
+   *
+   * @param p TODO: 準備中
+   * @param val TODO: 準備中
+   * @return TODO: 準備中
+   */
   public PairInt getLongEbcdicSign(int p, int val) {
     switch (this.getByte(p)) {
       case '{':
@@ -1630,14 +2553,29 @@ public class CobolDataStorage {
   // TODO 修正
   // opensource COBOLにはない実装 COB_BSWAP_32などの代替
   // 本家opensource COBOLのcobc/codegen.cの894行目付近を参照
+  /**
+   * TODO: 準備中
+   *
+   * @return TODO: 準備中
+   */
   public long bswap_16() {
     return this.toLong(2, true, true);
   }
 
+  /**
+   * TODO: 準備中
+   *
+   * @return TODO: 準備中
+   */
   public long bswap_32() {
     return this.toLong(4, true, true);
   }
 
+  /**
+   * TODO: 準備中
+   *
+   * @return TODO: 準備中
+   */
   public long bswap_64() {
     return this.toLong(8, true, true);
   }

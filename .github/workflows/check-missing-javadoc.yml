@@ -37,4 +37,4 @@ jobs:
       - name: Check javadoc comments
         working-directory: libcobj/
         run: |
-          sh check-missing-javadoc.sh || true
+          sh check-missing-javadoc.sh

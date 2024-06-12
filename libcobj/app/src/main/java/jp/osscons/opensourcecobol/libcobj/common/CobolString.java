@@ -32,6 +32,7 @@ class Dlm {
   public int all;
 }
 
+/** TODO: 準備中 */
 public class CobolString {
   private static final int DLM_DEFAULT_NUM = 8;
 
@@ -54,18 +55,42 @@ public class CobolString {
   private static int unstringCount;
   private static int unstringNdlms;
 
+  /**
+   * TODO: 準備中
+   *
+   * @param dst TODO: 準備中
+   * @param ptr TODO: 準備中
+   */
   public static void stringInit(int dst, AbstractCobolField ptr) {
     stringInit(null, ptr);
   }
 
+  /**
+   * TODO: 準備中
+   *
+   * @param dst TODO: 準備中
+   * @param ptr TODO: 準備中
+   */
   public static void stringInit(AbstractCobolField dst, int ptr) {
     stringInit(dst, null);
   }
 
+  /**
+   * TODO: 準備中
+   *
+   * @param dst TODO: 準備中
+   * @param ptr TODO: 準備中
+   */
   public static void stringInit(int dst, int ptr) {
     stringInit(null, null);
   }
 
+  /**
+   * TODO: 準備中
+   *
+   * @param dst TODO: 準備中
+   * @param ptr TODO: 準備中
+   */
   public static void stringInit(AbstractCobolField dst, AbstractCobolField ptr) {
     stringDstCopy = dst;
     stringDst = stringDstCopy;
@@ -94,10 +119,20 @@ public class CobolString {
     }
   }
 
+  /**
+   * TODO: 準備中
+   *
+   * @param dlm TODO: 準備中
+   */
   public static void stringDelimited(int dlm) {
     stringDelimited(null);
   }
 
+  /**
+   * TODO: 準備中
+   *
+   * @param dlm TODO: 準備中
+   */
   public static void stringDelimited(AbstractCobolField dlm) {
     switch (stringDst.getAttribute().getType()) {
       case CobolFieldAttribute.COB_TYPE_NATIONAL:
@@ -120,10 +155,20 @@ public class CobolString {
     }
   }
 
+  /**
+   * TODO: 準備中
+   *
+   * @param src TODO: 準備中
+   */
   public static void stringAppend(int src) {
     stringAppend(null);
   }
 
+  /**
+   * TODO: 準備中
+   *
+   * @param src TODO: 準備中
+   */
   public static void stringAppend(AbstractCobolField src) {
     if (CobolRuntimeException.code != 0) {
       return;
@@ -157,6 +202,7 @@ public class CobolString {
     }
   }
 
+  /** TODO: 準備中 */
   public static void stringFinish() {
     int type = stringDst.getAttribute().getType();
     if (type == CobolFieldAttribute.COB_TYPE_NATIONAL
@@ -169,18 +215,46 @@ public class CobolString {
     }
   }
 
+  /**
+   * TODO: 準備中
+   *
+   * @param src TODO: 準備中
+   * @param ptr TODO: 準備中
+   * @param numDlm TODO: 準備中
+   */
   public static void unstringInit(int src, int ptr, int numDlm) {
     unstringInit(null, null, numDlm);
   }
 
+  /**
+   * TODO: 準備中
+   *
+   * @param src TODO: 準備中
+   * @param ptr TODO: 準備中
+   * @param numDlm TODO: 準備中
+   */
   public static void unstringInit(AbstractCobolField src, int ptr, int numDlm) {
     unstringInit(src, null, numDlm);
   }
 
+  /**
+   * TODO: 準備中
+   *
+   * @param src TODO: 準備中
+   * @param ptr TODO: 準備中
+   * @param numDlm TODO: 準備中
+   */
   public static void unstringInit(int src, AbstractCobolField ptr, int numDlm) {
     unstringInit(null, ptr, numDlm);
   }
 
+  /**
+   * TODO: 準備中
+   *
+   * @param src TODO: 準備中
+   * @param ptr TODO: 準備中
+   * @param numDlm TODO: 準備中
+   */
   public static void unstringInit(AbstractCobolField src, AbstractCobolField ptr, int numDlm) {
     unstringSrcCopy = src;
     unstringSrc = unstringSrcCopy;
@@ -231,10 +305,22 @@ public class CobolString {
     }
   }
 
+  /**
+   * TODO: 準備中
+   *
+   * @param dlm TODO: 準備中
+   * @param all TODO: 準備中
+   */
   public static void unstringDelimited(int dlm, int all) {
     unstringDelimited(null, all);
   }
 
+  /**
+   * TODO: 準備中
+   *
+   * @param dlm TODO: 準備中
+   * @param all TODO: 準備中
+   */
   public static void unstringDelimited(AbstractCobolField dlm, int all) {
     AbstractCobolField addDlm = null;
 
@@ -265,34 +351,90 @@ public class CobolString {
     }
   }
 
+  /**
+   * TODO: 準備中
+   *
+   * @param dst TODO: 準備中
+   * @param dlm TODO: 準備中
+   * @param cnt TODO: 準備中
+   */
   public static void unstringInto(AbstractCobolField dst, AbstractCobolField dlm, int cnt) {
     unstringInto(dst, dlm, null);
   }
 
+  /**
+   * TODO: 準備中
+   *
+   * @param dst TODO: 準備中
+   * @param dlm TODO: 準備中
+   * @param cnt TODO: 準備中
+   */
   public static void unstringInto(AbstractCobolField dst, int dlm, AbstractCobolField cnt) {
     unstringInto(dst, null, cnt);
   }
 
+  /**
+   * TODO: 準備中
+   *
+   * @param dst TODO: 準備中
+   * @param dlm TODO: 準備中
+   * @param cnt TODO: 準備中
+   */
   public static void unstringInto(AbstractCobolField dst, int dlm, int cnt) {
     unstringInto(dst, null, null);
   }
 
+  /**
+   * TODO: 準備中
+   *
+   * @param dst TODO: 準備中
+   * @param dlm TODO: 準備中
+   * @param cnt TODO: 準備中
+   */
   public static void unstringInto(int dst, int dlm, int cnt) {
     unstringInto(null, null, null);
   }
 
+  /**
+   * TODO: 準備中
+   *
+   * @param dst TODO: 準備中
+   * @param dlm TODO: 準備中
+   * @param cnt TODO: 準備中
+   */
   public static void unstringInto(int dst, AbstractCobolField dlm, int cnt) {
     unstringInto(null, dlm, null);
   }
 
+  /**
+   * TODO: 準備中
+   *
+   * @param dst TODO: 準備中
+   * @param dlm TODO: 準備中
+   * @param cnt TODO: 準備中
+   */
   public static void unstringInto(int dst, int dlm, AbstractCobolField cnt) {
     unstringInto(null, null, cnt);
   }
 
+  /**
+   * TODO: 準備中
+   *
+   * @param dst TODO: 準備中
+   * @param dlm TODO: 準備中
+   * @param cnt TODO: 準備中
+   */
   public static void unstringInto(int dst, AbstractCobolField dlm, AbstractCobolField cnt) {
     unstringInto(null, dlm, cnt);
   }
 
+  /**
+   * TODO: 準備中
+   *
+   * @param dst TODO: 準備中
+   * @param dlm TODO: 準備中
+   * @param cnt TODO: 準備中
+   */
   public static void unstringInto(
       AbstractCobolField dst, AbstractCobolField dlm, AbstractCobolField cnt) {
     if (CobolExceptionInfo.code != 0) {
@@ -406,12 +548,25 @@ public class CobolString {
     }
   }
 
+  /**
+   * TODO: 準備中
+   *
+   * @param f TODO: 準備中
+   * @throws CobolStopRunException TODO: 準備中
+   */
   public static void unstringTallying(int f) throws CobolStopRunException {}
 
+  /**
+   * TODO: 準備中
+   *
+   * @param f TODO: 準備中
+   * @throws CobolStopRunException TODO: 準備中
+   */
   public static void unstringTallying(AbstractCobolField f) throws CobolStopRunException {
     f.addInt(unstringCount);
   }
 
+  /** TODO: 準備中 */
   public static void unstringFinish() {
     if (unstringOffset < unstringSrc.getSize()) {
       CobolRuntimeException.setException(CobolExceptionId.COB_EC_OVERFLOW_UNSTRING);

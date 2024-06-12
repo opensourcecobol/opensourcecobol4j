@@ -25,6 +25,7 @@ import jp.osscons.opensourcecobol.libcobj.exceptions.CobolRuntimeException;
 /** PIC 文字列がN(5)やN(9)の変数を表現するクラス. */
 public class CobolNationalField extends AbstractCobolField {
 
+  /** TODO: 準備中 */
   public static int workReturnSize;
 
   /**
@@ -58,11 +59,13 @@ public class CobolNationalField extends AbstractCobolField {
     }
   }
 
+  /** TODO: 準備中 */
   @Override
   public int getInt() {
     return 0;
   }
 
+  /** TODO: 準備中 */
   @Override
   public CobolDecimal getDecimal() {
     return null;

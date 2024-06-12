@@ -4,11 +4,18 @@ import java.io.FileInputStream;
 import java.io.IOException;
 import jp.osscons.opensourcecobol.libcobj.data.CobolDataStorage;
 
+/** TODO: 準備中 */
 public class FileSeqRecordReader implements RecordReader {
   private FileInputStream reader;
   private String filePath;
   private byte[] readData;
 
+  /**
+   * TODO: 準備中
+   *
+   * @param recordSize TODO: 準備中
+   * @param filePath TODO: 準備中
+   */
   public FileSeqRecordReader(int recordSize, String filePath) {
     this.filePath = filePath;
     this.readData = new byte[recordSize];
