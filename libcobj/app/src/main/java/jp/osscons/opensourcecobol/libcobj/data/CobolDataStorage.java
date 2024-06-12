@@ -223,10 +223,12 @@ public class CobolDataStorage {
     return result;
   }
 
-  /*
-   * Returns a reference to the byte array holded by this object.
-   * Modification of the returned array will affect the data holded by this
-   * object.
+  /**
+   * TODO: 準備中
+   *
+   * @param index TODO: 準備中
+   * @param length TODO: 準備中
+   * @return TODO: 準備中
    */
   public byte[] getByteArrayRef(int index, int length) {
     ByteBuffer buffer = ByteBuffer.wrap(this.data, this.index + index, length);
@@ -1318,6 +1320,11 @@ public class CobolDataStorage {
     addBinary(n, 8, false, true);
   }
 
+  /**
+   * TODO: 準備中
+   *
+   * @param n TODO: 準備中
+   */
   public void addS64Binary(long n) {
     addBinary(n, 8, true, true);
   }
@@ -2275,6 +2282,11 @@ public class CobolDataStorage {
     this.fromLong(6, true, n);
   }
 
+  /**
+   * TODO: 準備中
+   *
+   * @param n TODO: 準備中
+   */
   public void setSwpS48Binary(int n) {
     this.fromLong(6, true, n);
   }
