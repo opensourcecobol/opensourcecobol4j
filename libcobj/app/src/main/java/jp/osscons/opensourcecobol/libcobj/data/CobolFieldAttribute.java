@@ -23,38 +23,63 @@ public class CobolFieldAttribute {
 
   /* field types */
 
+  /** TODO: 準備中 */
   public static final int COB_TYPE_UNKNOWN = 0x00;
+  /** TODO: 準備中 */
   public static final int COB_TYPE_GROUP = 0x01;
+  /** TODO: 準備中 */
   public static final int COB_TYPE_BOOLEAN = 0x02;
 
+  /** TODO: 準備中 */
   public static final int COB_TYPE_NUMERIC = 0x10;
+  /** TODO: 準備中 */
   public static final int COB_TYPE_NUMERIC_DISPLAY = 0x10;
+  /** TODO: 準備中 */
   public static final int COB_TYPE_NUMERIC_BINARY = 0x11;
+  /** TODO: 準備中 */
   public static final int COB_TYPE_NUMERIC_PACKED = 0x12;
+  /** TODO: 準備中 */
   public static final int COB_TYPE_NUMERIC_FLOAT = 0x13;
+  /** TODO: 準備中 */
   public static final int COB_TYPE_NUMERIC_DOUBLE = 0x14;
+  /** TODO: 準備中 */
   public static final int COB_TYPE_NUMERIC_EDITED = 0x24;
 
+  /** TODO: 準備中 */
   public static final int COB_TYPE_ALPHANUMERIC = 0x21;
+  /** TODO: 準備中 */
   public static final int COB_TYPE_ALPHANUMERIC_ALL = 0x22;
+  /** TODO: 準備中 */
   public static final int COB_TYPE_ALPHANUMERIC_EDITED = 0x23;
 
+  /** TODO: 準備中 */
   public static final int COB_TYPE_NATIONAL = 0x40;
+  /** TODO: 準備中 */
   public static final int COB_TYPE_NATIONAL_EDITED = 0x41;
+  /** TODO: 準備中 */
   public static final int COB_TYPE_NATIONAL_ALL = 0x42;
 
   /* field flags */
 
+  /** TODO: 準備中 */
   public static final int COB_FLAG_HAVE_SIGN = 0x01;
+  /** TODO: 準備中 */
   public static final int COB_FLAG_SIGN_SEPARATE = 0x02;
+  /** TODO: 準備中 */
   public static final int COB_FLAG_SIGN_LEADING = 0x04;
+  /** TODO: 準備中 */
   public static final int COB_FLAG_BLANK_ZERO = 0x08;
+  /** TODO: 準備中 */
   public static final int COB_FLAG_JUSTIFIED = 0x10;
+  /** TODO: 準備中 */
   public static final int COB_FLAG_BINARY_SWAP = 0x20;
+  /** TODO: 準備中 */
   public static final int COB_FLAG_REAL_BINARY = 0x40;
+  /** TODO: 準備中 */
   public static final int COB_FLAG_IS_POINTER = 0x80;
 
   /** 変数の種類 */
+  /** TODO: 準備中 */
   private int type;
 
   /** 数値の時,桁数を示す */
@@ -86,6 +111,11 @@ public class CobolFieldAttribute {
     this.pic = pic;
   }
 
+  /**
+   * TODO: 準備中
+   *
+   * @param other TODO: 準備中
+   */
   public CobolFieldAttribute(CobolFieldAttribute other) {
     this.type = other.type;
     this.digits = other.digits;
@@ -184,14 +214,29 @@ public class CobolFieldAttribute {
     this.pic = pic;
   }
 
+  /**
+   * TODO: 準備中
+   *
+   * @return TODO: 準備中
+   */
   public boolean isTypeUnknown() {
     return type == COB_TYPE_UNKNOWN;
   }
 
+  /**
+   * TODO: 準備中
+   *
+   * @returnTODO: 準備中
+   */
   public boolean isTypeGroup() {
     return type == COB_TYPE_GROUP;
   }
 
+  /**
+   * TODO: 準備中
+   *
+   * @return TODO: 準備中
+   */
   public boolean isTypeBoolean() {
     return type == COB_TYPE_BOOLEAN;
   }
@@ -205,82 +250,182 @@ public class CobolFieldAttribute {
     return (type & COB_TYPE_NUMERIC) > 0;
   }
 
+  /**
+   * TODO: 準備中
+   *
+   * @return TODO: 準備中
+   */
   public boolean isTypeNumericDisplay() {
     return type == COB_TYPE_NUMERIC_DISPLAY;
   }
 
+  /**
+   * TODO: 準備中
+   *
+   * @return TODO: 準備中
+   */
   public boolean isTypeNumericBinary() {
     return type == COB_TYPE_NUMERIC_BINARY;
   }
 
+  /**
+   * TODO: 準備中
+   *
+   * @return TODO: 準備中
+   */
   public boolean isTypeNumericPacked() {
     return type == COB_TYPE_NUMERIC_PACKED;
   }
 
+  /**
+   * TODO: 準備中
+   *
+   * @return TODO: 準備中
+   */
   public boolean isTypeNumericFloat() {
     return type == COB_TYPE_NUMERIC_FLOAT;
   }
 
+  /**
+   * TODO: 準備中
+   *
+   * @return TODO: 準備中
+   */
   public boolean isTypeNumericDouble() {
     return type == COB_TYPE_NUMERIC_DOUBLE;
   }
 
+  /**
+   * TODO: 準備中
+   *
+   * @return TODO: 準備中
+   */
   public boolean isTypeNumericEdited() {
     return type == COB_TYPE_NUMERIC_EDITED;
   }
 
+  /**
+   * TODO: 準備中
+   *
+   * @return TODO: 準備中
+   */
   public boolean isTypeAlphanum() {
     return type == COB_TYPE_ALPHANUMERIC;
   }
 
+  /**
+   * TODO: 準備中
+   *
+   * @return TODO: 準備中
+   */
   public boolean isTypeAlphanumAll() {
     return type == COB_TYPE_ALPHANUMERIC_ALL;
   }
 
+  /**
+   * TODO: 準備中
+   *
+   * @return TODO: 準備中
+   */
   public boolean isTypeAlphanumEdited() {
     return type == COB_TYPE_ALPHANUMERIC_EDITED;
   }
 
+  /**
+   * TODO: 準備中
+   *
+   * @return TODO: 準備中
+   */
   public boolean isTypeNational() {
     return type == COB_TYPE_NATIONAL;
   }
 
+  /**
+   * TODO: 準備中
+   *
+   * @return TODO: 準備中
+   */
   public boolean isTypeNationalEdited() {
     return type == COB_TYPE_NATIONAL_EDITED;
   }
 
+  /**
+   * TODO: 準備中
+   *
+   * @return TODO: 準備中
+   */
   public boolean isTypeNationalAll() {
     return type == COB_TYPE_NATIONAL_ALL;
   }
 
+  /**
+   * TODO: 準備中
+   *
+   * @return TODO: 準備中
+   */
   public boolean isFlagHaveSign() {
     return (flags & COB_FLAG_HAVE_SIGN) != 0;
   }
 
+  /**
+   * TODO: 準備中
+   *
+   * @return TODO: 準備中
+   */
   public boolean isFlagSignSeparate() {
     return (flags & COB_FLAG_SIGN_SEPARATE) != 0;
   }
 
+  /**
+   * TODO: 準備中
+   *
+   * @return TODO: 準備中
+   */
   public boolean isFlagSignLeading() {
     return (flags & COB_FLAG_SIGN_LEADING) != 0;
   }
 
+  /**
+   * TODO: 準備中
+   *
+   * @return TODO: 準備中
+   */
   public boolean isFlagBlankZero() {
     return (flags & COB_FLAG_BLANK_ZERO) != 0;
   }
 
+  /**
+   * TODO: 準備中
+   *
+   * @return TODO: 準備中
+   */
   public boolean isFlagJustified() {
     return (flags & COB_FLAG_JUSTIFIED) != 0;
   }
 
+  /**
+   * TODO: 準備中
+   *
+   * @return TODO: 準備中
+   */
   public boolean isFlagBinarySwap() {
     return (flags & COB_FLAG_BINARY_SWAP) != 0;
   }
 
+  /**
+   * TODO: 準備中
+   *
+   * @return TODO: 準備中
+   */
   public boolean isFlagRealBinary() {
     return (flags & COB_FLAG_REAL_BINARY) != 0;
   }
 
+  /**
+   * TODO: 準備中
+   *
+   * @return TODO: 準備中
+   */
   public boolean isFlagIsPointer() {
     return (flags & COB_FLAG_IS_POINTER) != 0;
   }
