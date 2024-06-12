@@ -35,18 +35,26 @@ import jp.osscons.opensourcecobol.libcobj.data.CobolFieldAttribute;
 import jp.osscons.opensourcecobol.libcobj.data.CobolFieldFactory;
 import jp.osscons.opensourcecobol.libcobj.exceptions.CobolStopRunException;
 
+/** TODO: 準備中 */
 public class CobolFileSort {
+  /** TODO: 準備中 */
   protected static final int COBSORTEND = 1;
+  /** TODO: 準備中 */
   protected static final int COBSORTABORT = 2;
+  /** TODO: 準備中 */
   protected static final int COBSORTFILEERR = 3;
+  /** TODO: 準備中 */
   protected static final int COBSORTNOTOPEN = 4;
 
+  /** TODO: 準備中 */
   protected static final int COB_ASCENDING = 0;
+  /** TODO: 準備中 */
   protected static final int COB_DESCENDING = 1;
 
   private static String cob_process_id = "";
   private static int cob_iteration = 0;
 
+  /** TODO: 準備中 */
   protected static int cob_sort_memory = 128 * 1024 * 1024;
 
   // Javaの標準ライブラリでソートするならtrue
@@ -946,10 +954,22 @@ public class CobolFileSort {
           cmpStorage2,
           new CobolFieldAttribute(CobolFieldAttribute.COB_TYPE_ALPHANUMERIC, 0, 0, 0, null));
 
+  /**
+   * TODO: 準備中
+   *
+   * @param nkeys TODO: 準備中
+   * @param collatingSequence TODO: 準備中
+   */
   public static void sortTableInit(int nkeys, int collatingSequence) {
     sortTableInit(nkeys, null);
   }
 
+  /**
+   * TODO: 準備中
+   *
+   * @param nkeys TODO: 準備中
+   * @param collatingSequence TODO: 準備中
+   */
   public static void sortTableInit(int nkeys, CobolDataStorage collatingSequence) {
     sortNKeys = 0;
     if (sortKeys == null || sortKeys.length < nkeys) {
@@ -962,6 +982,13 @@ public class CobolFileSort {
     }
   }
 
+  /**
+   * TODO: 準備中
+   *
+   * @param flag TODO: 準備中
+   * @param field TODO: 準備中
+   * @param offset TODO: 準備中
+   */
   public static void sortTableInitKey(int flag, AbstractCobolField field, int offset) {
     if (sortKeys[sortNKeys] == null) {
       sortKeys[sortNKeys] = new CobolFileKey();
@@ -974,6 +1001,12 @@ public class CobolFileSort {
     sortNKeys++;
   }
 
+  /**
+   * TODO: 準備中
+   *
+   * @param f TODO: 準備中
+   * @param n TODO: 準備中
+   */
   public static void sortTable(AbstractCobolField f, int n) {
     int recordSize = f.getSize();
     if (sortBuffer == null || sortBuffer.length < n) {
