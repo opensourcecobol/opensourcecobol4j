@@ -2351,6 +2351,8 @@ public class CobolDataStorage {
   }
 
   /**
+   * TODO: 準備中
+   *
    * @param size TODO: 準備中
    * @param n TODO: 準備中
    * @return TODO: 準備中
