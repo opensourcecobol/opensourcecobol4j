@@ -38,6 +38,7 @@ import jp.osscons.opensourcecobol.libcobj.exceptions.CobolRuntimeException;
 import jp.osscons.opensourcecobol.libcobj.exceptions.CobolStopRunException;
 import jp.osscons.opensourcecobol.libcobj.file.CobolFile;
 
+/** TODO: 準備中 */
 public class CobolIntrinsic {
 
   private static int[] normalDays = {0, 31, 59, 90, 120, 151, 181, 212, 243, 273, 304, 334, 365};
@@ -2275,6 +2276,15 @@ public class CobolIntrinsic {
     return currField;
   }
 
+  /**
+   * TODO: 準備中
+   *
+   * @param offset TODO: 準備中
+   * @param length TODO: 準備中
+   * @param params TODO: 準備中
+   * @param fields TODO: 準備中
+   * @return TODO: 準備中
+   */
   public static AbstractCobolField funcSubstitute(
       int offset, int length, int params, AbstractCobolField... fields) {
     int i, j, k;
@@ -2329,6 +2339,15 @@ public class CobolIntrinsic {
     return currField;
   }
 
+  /**
+   * TODO: 準備中
+   *
+   * @param offset TODO: 準備中
+   * @param length TODO: 準備中
+   * @param params TODO: 準備中
+   * @param fields TODO: 準備中
+   * @return TODO: 準備中
+   */
   public static AbstractCobolField funcSubstituteCase(
       int offset, int length, int params, AbstractCobolField... fields) {
     int i, j, k;
@@ -2556,6 +2575,15 @@ public class CobolIntrinsic {
     return funcLocaleTime(offset, length, srcField, null);
   }
 
+  /**
+   * TODO: 準備中
+   *
+   * @param offset TODO: 準備中
+   * @param length TODO: 準備中
+   * @param srcField TODO: 準備中
+   * @param localeField TODO: 準備中
+   * @return TODO: 準備中
+   */
   public static AbstractCobolField funcLocaleTime(
       int offset, int length, AbstractCobolField srcField, AbstractCobolField localeField) {
     AbstractCobolField field =

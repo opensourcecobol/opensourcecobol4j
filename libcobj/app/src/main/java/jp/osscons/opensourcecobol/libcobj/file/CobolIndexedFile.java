@@ -34,6 +34,7 @@ import jp.osscons.opensourcecobol.libcobj.data.CobolDataStorage;
 import org.sqlite.SQLiteConfig;
 import org.sqlite.SQLiteErrorCode;
 
+/** TODO: 準備中 */
 public class CobolIndexedFile extends CobolFile {
   private Optional<IndexedCursor> cursor;
   private boolean updateWhileReading = false;
@@ -41,13 +42,48 @@ public class CobolIndexedFile extends CobolFile {
   private boolean callStart = false;
   private boolean commitOnModification = true;
 
+  /** TODO: 準備中 */
   public static final int COB_EQ = 1;
+  /** TODO: 準備中 */
   public static final int COB_LT = 2;
+  /** TODO: 準備中 */
   public static final int COB_LE = 3;
+  /** TODO: 準備中 */
   public static final int COB_GT = 4;
+  /** TODO: 準備中 */
   public static final int COB_GE = 5;
+  /** TODO: 準備中 */
   public static final int COB_NE = 6;
 
+  /**
+   * TODO: 準備中
+   *
+   * @param selectName TODO: 準備中
+   * @param fileStatus TODO: 準備中
+   * @param assign TODO: 準備中
+   * @param record TODO: 準備中
+   * @param recordSize TODO: 準備中
+   * @param recordMin TODO: 準備中
+   * @param recordMax TODO: 準備中
+   * @param nkeys TODO: 準備中
+   * @param keys TODO: 準備中
+   * @param organization TODO: 準備中
+   * @param accessMode TODO: 準備中
+   * @param lockMode TODO: 準備中
+   * @param openMode TODO: 準備中
+   * @param flagOptional TODO: 準備中
+   * @param lastOpenMode TODO: 準備中
+   * @param special TODO: 準備中
+   * @param flagNonexistent TODO: 準備中
+   * @param flagEndOfFile TODO: 準備中
+   * @param flagBeginOfFile TODO: 準備中
+   * @param flagFirstRead TODO: 準備中
+   * @param flagReadDone TODO: 準備中
+   * @param flagSelectFeatures TODO: 準備中
+   * @param flagNeedsNl TODO: 準備中
+   * @param flagNeedsTop TODO: 準備中
+   * @param fileVersion TODO: 準備中
+   */
   public CobolIndexedFile(
       String selectName,
       byte[] fileStatus,
@@ -110,10 +146,22 @@ public class CobolIndexedFile extends CobolFile {
     return String.format("subindex%d", index);
   }
 
+  /**
+   * TODO: 準備中
+   *
+   * @param index TODO: 準備中
+   * @return TODO: 準備中
+   */
   public static String getTableName(int index) {
     return String.format("table%d", index);
   }
 
+  /**
+   * TODO: 準備中
+   *
+   * @param index TODO: 準備中
+   * @return TODO: 準備中
+   */
   public static String getCursorName(int index) {
     return String.format("cursor%d", index);
   }
@@ -122,6 +170,11 @@ public class CobolIndexedFile extends CobolFile {
     return String.format("constraint%d", index);
   }
 
+  /**
+   * TODO: 準備中
+   *
+   * @param commitOnModification TODO: 準備中
+   */
   public void setCommitOnModification(boolean commitOnModification) {
     this.commitOnModification = commitOnModification;
   }
@@ -701,6 +754,7 @@ public class CobolIndexedFile extends CobolFile {
     System.err.println("Unlocking INDEXED file is not implemented");
   }
 
+  /** TODO: 準備中 */
   public void commitJdbcTransaction() {
     IndexedFile p = this.filei;
     try {

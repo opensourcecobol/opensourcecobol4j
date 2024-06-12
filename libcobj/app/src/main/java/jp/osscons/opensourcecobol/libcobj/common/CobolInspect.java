@@ -26,6 +26,7 @@ import jp.osscons.opensourcecobol.libcobj.exceptions.CobolExceptionId;
 import jp.osscons.opensourcecobol.libcobj.exceptions.CobolRuntimeException;
 import jp.osscons.opensourcecobol.libcobj.exceptions.CobolStopRunException;
 
+/** TODO: 準備中 */
 public class CobolInspect {
   private static final int INSPECT_ALL = 0;
   private static final int INSPECT_LEADING = 1;
@@ -402,6 +403,7 @@ public class CobolInspect {
     inspectVar.putSign(inspectSign);
   }
 
+  /** TODO: 準備中 */
   public static void initString() {
     CobolInspect.inspectMark = new int[CobolConstant.COB_MEDIUM_BUFF];
     lastsize = CobolConstant.COB_MEDIUM_BUFF;
