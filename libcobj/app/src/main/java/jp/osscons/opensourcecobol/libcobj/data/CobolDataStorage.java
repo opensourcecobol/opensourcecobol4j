@@ -1341,7 +1341,7 @@ public class CobolDataStorage {
   /**
    * TODO: 準備中
    *
-   * @param n
+   * @param n TODO: 準備中
    */
   public void addAlignS8Binary(long n) {
     addBinary(n, 1, true, true);

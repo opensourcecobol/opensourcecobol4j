@@ -30,6 +30,7 @@ public final class CobolExternal {
   private int status;
   private int size;
 
+  /** TODO: 準備中 */
   public static boolean initialExternal = false;
 
   private static AbstractMap<String, CobolExternal> externalMap =
@@ -49,6 +50,12 @@ public final class CobolExternal {
     this.size = size;
   }
 
+  /**
+   * TODO: 準備中
+   *
+   * @param name TODO: 準備中
+   * @return TODO: 準備中
+   */
   public static CobolFile getFileAddress(String name) {
     if (externalMap.containsKey(name)) {
       return externalMap.get(name).extAllocFile;
@@ -60,6 +67,13 @@ public final class CobolExternal {
     }
   }
 
+  /**
+   * TODO: 準備中
+   *
+   * @param name TODO: 準備中
+   * @param size TODO: 準備中
+   * @return TODO: 準備中
+   */
   public static CobolDataStorage getStorageAddress(String name, int size) {
     if (externalMap.containsKey(name)) {
       return externalMap.get(name).extAllocStorage;
@@ -73,6 +87,11 @@ public final class CobolExternal {
 
   // TODO remove this function
   // This function is added in order to supress VSCode warnings
+  /**
+   * TODO: 準備中
+   *
+   * @return TODO: 準備中
+   */
   public int dummyFunc() {
     return this.size + this.status;
   }
