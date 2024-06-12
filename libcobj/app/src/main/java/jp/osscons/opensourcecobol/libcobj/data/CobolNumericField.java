@@ -652,6 +652,13 @@ public class CobolNumericField extends AbstractCobolField {
     return this.addInt(-in, CobolDecimal.COB_STORE_KEEP_ON_OVERFLOW);
   }
 
+  /**
+   * TODO: 準備中
+   *
+   * @param in TODO: 準備中
+   * @param opt TODO: 準備中
+   * @return TODO: 準備中
+   */
   public int subInt(int in, int opt) {
     return this.addInt(-in, opt);
   }

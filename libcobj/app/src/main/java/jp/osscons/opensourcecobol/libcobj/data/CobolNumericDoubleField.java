@@ -21,8 +21,16 @@ package jp.osscons.opensourcecobol.libcobj.data;
 import java.math.BigDecimal;
 import jp.osscons.opensourcecobol.libcobj.exceptions.CobolRuntimeException;
 
+/** TODO: 準備中 */
 public class CobolNumericDoubleField extends AbstractCobolField {
 
+  /**
+   * TODO: 準備中
+   *
+   * @param size TODO: 準備中
+   * @param dataStorage TODO: 準備中
+   * @param attribute TODO: 準備中
+   */
   public CobolNumericDoubleField(
       int size, CobolDataStorage dataStorage, CobolFieldAttribute attribute) {
     super(size, dataStorage, attribute);
@@ -101,6 +109,11 @@ public class CobolNumericDoubleField extends AbstractCobolField {
     }
   }
 
+  /**
+   * TODO: 準備中
+   *
+   * @param src TODO: 準備中
+   */
   public void moveDisplayToDouble(AbstractCobolField src) {
     double dval = 0;
     CobolDataStorage storage = src.getDataStorage();

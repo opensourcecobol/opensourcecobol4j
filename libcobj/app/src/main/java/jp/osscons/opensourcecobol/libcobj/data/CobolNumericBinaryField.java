@@ -24,6 +24,7 @@ import jp.osscons.opensourcecobol.libcobj.common.CobolConstant;
 import jp.osscons.opensourcecobol.libcobj.common.CobolModule;
 import jp.osscons.opensourcecobol.libcobj.exceptions.CobolRuntimeException;
 
+/** TODO: 準備中 */
 public class CobolNumericBinaryField extends AbstractCobolField {
 
   /**
@@ -80,6 +81,11 @@ public class CobolNumericBinaryField extends AbstractCobolField {
     return this.getBinaryValue();
   }
 
+  /**
+   * TODO: 準備中
+   *
+   * @param n TODO: 準備中
+   */
   public void setLongValue(long n) {
     this.setBinaryValue(n);
   }
