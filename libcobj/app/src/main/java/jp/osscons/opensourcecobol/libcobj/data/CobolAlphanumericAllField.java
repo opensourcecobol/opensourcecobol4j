@@ -18,6 +18,7 @@
  */
 package jp.osscons.opensourcecobol.libcobj.data;
 
+/** TODO: 準備中 */
 public class CobolAlphanumericAllField extends CobolAlphanumericField {
   /**
    * コンストラクタ

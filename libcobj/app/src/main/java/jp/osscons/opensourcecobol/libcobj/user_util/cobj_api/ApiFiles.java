@@ -11,7 +11,13 @@ import java.nio.file.Paths;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
+/** TODO: 準備中 */
 public class ApiFiles {
+  /**
+   * TODO: 準備中
+   *
+   * @param args TODO: 準備中
+   */
   public static void main(String[] args) {
     ApiFilesOptions.getOptions(args);
 
@@ -30,6 +36,11 @@ public class ApiFiles {
     javaCreate(filePath);
   }
 
+  /**
+   * TODO: 準備中
+   *
+   * @param filePath TODO: 準備中
+   */
   public static void javaCreate(String filePath) {
     try {
       String json = new String(Files.readAllBytes(Paths.get(filePath)));
@@ -60,6 +71,13 @@ public class ApiFiles {
     }
   }
 
+  /**
+   * TODO: 準備中
+   *
+   * @param ctlFile TODO: 準備中
+   * @param programId TODO: 準備中
+   * @param params TODO: 準備中
+   */
   public static void writeController(FileWriter ctlFile, String programId, JSONArray params) {
     PrintWriter ctlWriter = new PrintWriter(ctlFile);
     JSONObject param;
@@ -185,6 +203,13 @@ public class ApiFiles {
     ctlWriter.close();
   }
 
+  /**
+   * TODO: 準備中
+   *
+   * @param rcdFile TODO: 準備中
+   * @param programId TODO: 準備中
+   * @param params TODO: 準備中
+   */
   public static void writeRecord(FileWriter rcdFile, String programId, JSONArray params) {
     PrintWriter rcdWriter = new PrintWriter(rcdFile);
     JSONObject param;

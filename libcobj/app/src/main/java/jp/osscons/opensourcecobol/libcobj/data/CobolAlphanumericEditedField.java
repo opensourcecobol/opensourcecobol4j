@@ -22,6 +22,7 @@ import java.math.BigDecimal;
 import java.nio.ByteBuffer;
 import java.nio.ByteOrder;
 
+/** TODO: 準備中 */
 public class CobolAlphanumericEditedField extends AbstractCobolField {
   /**
    * コンストラクタ
@@ -105,6 +106,12 @@ public class CobolAlphanumericEditedField extends AbstractCobolField {
     }
   }
 
+  /**
+   * TODO: 準備中
+   *
+   * @param dst TODO: 準備中
+   * @param src TODO: 準備中
+   */
   public static void moveAlphanumToEdited(AbstractCobolField dst, AbstractCobolField src) {
     CobolDataStorage srcd = src.getDataStorage();
     CobolDataStorage dstd = dst.getDataStorage();

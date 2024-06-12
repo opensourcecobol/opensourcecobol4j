@@ -6,10 +6,18 @@ import org.apache.commons.cli.DefaultParser;
 import org.apache.commons.cli.Options;
 import org.apache.commons.cli.ParseException;
 
+/** TODO: 準備中 */
 public class ApiFilesOptions {
+  /** TODO: 準備中 */
   public static String packageName;
+  /** TODO: 準備中 */
   public static String outputDir;
 
+  /**
+   * TODO: 準備中
+   *
+   * @param args TODO: 準備中
+   */
   public static void getOptions(String[] args) {
     Options options = new Options();
     options.addOption("h", "help", false, "Prints the help message");
@@ -66,10 +74,20 @@ public class ApiFilesOptions {
     System.out.println("  -v, --version\t\t\t\tPrints the version of the cobj-api");
   }
 
+  /**
+   * TODO: 準備中
+   *
+   * @param packageName TODO: 準備中
+   */
   public static void setJavaPackage(String packageName) {
     ApiFilesOptions.packageName = packageName;
   }
 
+  /**
+   * TODO: 準備中
+   *
+   * @param outputDir TODO: 準備中
+   */
   public static void setOutputDir(String outputDir) {
     ApiFilesOptions.outputDir = outputDir;
   }
