@@ -62,7 +62,7 @@ public class CobolSystemRoutine {
   }
 
   /**
-   * 組み込み関数SYSTEMの実装。
+   * 組み込み関数SYSTEMの実装。cmdに指定されたコマンドを実行する。
    *
    * @param cmd コマンド文字列。Linux/Unix環境であればシェルコマンド、Windows環境であればコマンドプロンプトのコマンド。
    * @return コマンドの終了コード。
@@ -77,7 +77,7 @@ public class CobolSystemRoutine {
   }
 
   /**
-   * 組み込み関数SYSTEMの実装。
+   * 組み込み関数SYSTEMの実装。cmdに指定されたコマンドを実行する。
    *
    * @param cmd コマンド文字列。Linux/Unix環境であればシェルコマンド、Windows環境であればコマンドプロンプトのコマンド。
    * @return コマンドの終了コード。
@@ -125,7 +125,7 @@ public class CobolSystemRoutine {
   }
 
   /**
-   * 組み込み関数SYSTEMの実装。
+   * 組み込み関数SYSTEMの実装。cmdに指定されたコマンドを実行する。
    *
    * @param cmd コマンド文字列。Linux/Unix環境であればシェルコマンド、Windows環境であればコマンドプロンプトのコマンド。
    * @return コマンドの終了コード。
@@ -187,7 +187,7 @@ public class CobolSystemRoutine {
    * 組み込み関数CBL_ANDの実装。1バイトごとに論理積を取る。 先頭lengthバイトのデータについて論理積を計算し、計算結果を2番目の引数の先頭に格納する。
    *
    * @param data1 計算対象の1番目のCOBOL変数のバイト列。
-   * @param data2 計算対象の2番目のCOBOL変数のバイト列。先頭lengthバイトに計算結果が格納される。
+   * @param data2 計算対象の2番目のCOBOL変数のバイト列。その変数のバイト列の先頭lengthバイトに計算結果が格納される。
    * @param length 計算するバイト数。
    * @return 0
    */
@@ -197,8 +197,8 @@ public class CobolSystemRoutine {
   /**
    * 組み込み関数CBL_ANDの実装。1バイトごとに論理積を取る。 先頭lengthバイトのデータについて論理積を計算し、計算結果を2番目の引数の先頭に格納する。
    *
-   * @param data1 計算対象の1番目のCOBOL変数のバイト列。
-   * @param data2 計算対象の2番目のCOBOL変数のバイト列。先頭lengthバイトに計算結果が格納される。
+   * @param data1 計算対象の1番目のCOBOL変数。
+   * @param data2 計算対象の2番目のCOBOL変数。その変数のバイト列の先頭lengthバイトに計算結果が格納される。
    * @param length 計算するバイト数。
    * @return 0
    */
@@ -207,12 +207,12 @@ public class CobolSystemRoutine {
   }
 
   /**
-   * libcob/common.cのCBL_ORの実装
+   * 組み込み関数CBL_ORの実装。1バイトごとに論理和を取る。 先頭lengthバイトのデータについて論理和を計算し、計算結果を2番目の引数の先頭に格納する。
    *
-   * @param data1 TODO: 準備中
-   * @param data2 TODO: 準備中
-   * @param length TODO: 準備中
-   * @return TODO: 準備中
+   * @param data1 計算対象の1番目のCOBOL変数のバイト列。
+   * @param data2 計算対象の2番目のCOBOL変数のバイト列。先頭lengthバイトに計算結果が格納される。
+   * @param length 計算するバイト数
+   * @return 0
    */
   public static int CBL_OR(CobolDataStorage data1, CobolDataStorage data2, int length) {
     return CBL_COMMON_OPERATION(
@@ -228,31 +228,31 @@ public class CobolSystemRoutine {
   }
 
   /**
-   * TODO: 準備中
+   * 組み込み関数CBL_ORの実装。1バイトごとに論理和を取る。 先頭lengthバイトのデータについて論理和を計算し、計算結果を2番目の引数の先頭に格納する。
    *
-   * @param data1 TODO: 準備中
-   * @param data2 TODO: 準備中
-   * @param length TODO: 準備中
-   * @return TODO: 準備中
+   * @param data1 計算対象の1番目のCOBOL変数のバイト列。
+   * @param data2 計算対象の2番目のCOBOL変数。そのバイト列の先頭lengthバイトに計算結果が格納される。
+   * @param length 計算するバイト数
+   * @return 0
    */
   public static int CBL_OR(AbstractCobolField data1, CobolDataStorage data2, int length) {
     return CBL_OR(data1.getDataStorage(), data2, length);
   }
 
   /**
-   * TODO: 準備中
+   * 組み込み関数CBL_ORの実装。1バイトごとに論理和を取る。 先頭lengthバイトのデータについて論理和を計算し、計算結果を2番目の引数の先頭に格納する。
    *
-   * @param data1 TODO: 準備中
-   * @param data2 TODO: 準備中
-   * @param length TODO: 準備中
-   * @return TODO: 準備中
+   * @param data1 計算対象の1番目のCOBOL変数のバイト列。
+   * @param data2 計算対象の2番目のCOBOL変数。先頭lengthバイトに計算結果が格納される。
+   * @param length 計算するバイト数
+   * @return 0
    */
   public static int CBL_OR(CobolDataStorage data1, AbstractCobolField data2, int length) {
     return CBL_OR(data1, data2.getDataStorage(), length);
   }
 
   /**
-   * TODO: 準備中
+   * 組み込み関数CBL_ORの実装。詳しい説明はTODO: 準備中
    *
    * @param data1 TODO: 準備中
    * @param data2 TODO: 準備中
@@ -272,7 +272,7 @@ public class CobolSystemRoutine {
   }
 
   /**
-   * libcob/common.cのCBL_NORの実装
+   * 組み込み関数CBL_NORの実装。1バイトごとに排他的論理和を取る。 先頭lengthバイトのデータについて論理否定を計算し、計算結果を2番目の引数の先頭に格納する。
    *
    * @param data1 TODO: 準備中
    * @param data2 TODO: 準備中
@@ -329,7 +329,7 @@ public class CobolSystemRoutine {
   }
 
   /**
-   * libcob/common.cのCBL_XORの実装
+   * 組み込み関数CBL_XORの実装。1バイトごとに排他的論理和を取る。 先頭lengthバイトのデータについて排他的論理和を計算し、計算結果を2番目の引数の先頭に格納する。
    *
    * @param data1 TODO: 準備中
    * @param data2 TODO: 準備中
@@ -350,7 +350,7 @@ public class CobolSystemRoutine {
   }
 
   /**
-   * TODO: 準備中
+   * 組み込み関数CBL_XORの実装。詳しい説明はTODO: 準備中
    *
    * @param data1 TODO: 準備中
    * @param data2 TODO: 準備中
@@ -362,7 +362,7 @@ public class CobolSystemRoutine {
   }
 
   /**
-   * TODO: 準備中
+   * 組み込み関数CBL_XORの実装。詳しい説明はTODO: 準備中
    *
    * @param data1 TODO: 準備中
    * @param data2 TODO: 準備中
@@ -374,7 +374,7 @@ public class CobolSystemRoutine {
   }
 
   /**
-   * TODO: 準備中
+   * 組み込み関数CBL_XORの実装。詳しい説明はTODO: 準備中
    *
    * @param data1 TODO: 準備中
    * @param data2 TODO: 準備中
@@ -386,7 +386,7 @@ public class CobolSystemRoutine {
   }
 
   /**
-   * libcob/common.cのCBL_NIMPの実装
+   * 組み込み関数CBL_NIMPの実装。詳しい説明はTODO: 準備中
    *
    * @param data1 TODO: 準備中
    * @param data2 TODO: 準備中
@@ -407,7 +407,7 @@ public class CobolSystemRoutine {
   }
 
   /**
-   * TODO: 準備中
+   * 組み込み関数CBL_NIMPの実装。詳しい説明はTODO: 準備中
    *
    * @param data1 TODO: 準備中
    * @param data2 TODO: 準備中
@@ -443,7 +443,7 @@ public class CobolSystemRoutine {
   }
 
   /**
-   * libcob/common.cのCBL_EQの実装
+   * TODO: 準備中
    *
    * @param data1 TODO: 準備中
    * @param data2 TODO: 準備中
@@ -500,7 +500,7 @@ public class CobolSystemRoutine {
   }
 
   /**
-   * TODO libcob/common.cのCBL_NOTの実装
+   * 組み込み関数CBL_NOTの実装。詳しい説明はTODO: 準備中
    *
    * @param data TODO: 準備中
    * @param length TODO: 準備中
@@ -530,7 +530,7 @@ public class CobolSystemRoutine {
   }
 
   /**
-   * libcob/common.cのCBL_XF4の実装
+   * 組み込み関数CBL_XF4の実装。詳しい説明はTODO: 準備中
    *
    * @param data1 TODO: 準備中
    * @param data2 TODO: 準備中
@@ -580,7 +580,7 @@ public class CobolSystemRoutine {
   }
 
   /**
-   * libcob/common.cのCBL_XF5の実装
+   * 組み込み関数CBL_XF5の実装。詳しい説明はTODO: 準備中
    *
    * @param data1 TODO: 準備中
    * @param data2 TODO: 準備中
@@ -629,7 +629,7 @@ public class CobolSystemRoutine {
   }
 
   /**
-   * libcob/common.cのCBL_X91の実装
+   * 組み込み関数CBL_X91の実装。詳しい説明はTODO: 準備中
    *
    * @param result TODO: 準備中
    * @param func TODO: 準備中
@@ -666,7 +666,7 @@ public class CobolSystemRoutine {
   }
 
   /**
-   * TODO libcob/common.cのCBL_TOLOWERの実装
+   * 組み込み関数CBL_TOLOWERの実装。詳しい説明はTODO: 準備中
    *
    * @param data TODO: 準備中
    * @param length TODO: 準備中
@@ -699,7 +699,7 @@ public class CobolSystemRoutine {
   }
 
   /**
-   * TODO libcob/common.cのCBL_TOUPPERの実装
+   * 組み込み関数CBL_TOUPPERの実装。詳しい説明はTODO: 準備中
    *
    * @param data TODO: 準備中
    * @param length TODO: 準備中
