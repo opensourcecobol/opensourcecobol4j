@@ -159,7 +159,7 @@ public class CobolInspect {
   }
 
   /**
-   * libcob/strings.cのcob_inspect_initの実装
+   * libcob/strings.cのcob_inspect_initの実装。詳しい説明はTODO: 準備中。
    *
    * @param var TODO: 準備中
    * @param replacing TODO: 準備中
@@ -193,7 +193,7 @@ public class CobolInspect {
   }
 
   /**
-   * libcob/strings.cのcob_inspect_beforeの実装
+   * libcob/strings.cのcob_inspect_beforeの実装。詳しい説明はTODO: 準備中。
    *
    * @param str TODO: 準備中
    */
@@ -236,7 +236,7 @@ public class CobolInspect {
   }
 
   /**
-   * libcob/strings.cのcob_inspect_afterの実装
+   * libcob/strings.cのcob_inspect_afterの実装。詳しい説明はTODO: 準備中。
    *
    * @param str TODO: 準備中
    */
@@ -253,7 +253,7 @@ public class CobolInspect {
   }
 
   /**
-   * libcob/strings.cのcob_inspect_charactersの実装
+   * libcob/strings.cのcob_inspect_charactersの実装。詳しい説明はTODO: 準備中。
    *
    * @param f1 TODO: 準備中
    * @throws CobolStopRunException TODO: 準備中
@@ -291,7 +291,7 @@ public class CobolInspect {
   }
 
   /**
-   * libcob/strings.cのcob_inspect_allの実装
+   * libcob/strings.cのcob_inspect_allの実装。詳しい説明はTODO: 準備中。
    *
    * @param f1 TODO: 準備中
    * @param f2 TODO: 準備中
@@ -303,7 +303,7 @@ public class CobolInspect {
   }
 
   /**
-   * libcob/strings.cのcob_inspect_leadingの実装
+   * libcob/strings.cのcob_inspect_leadingの実装。詳しい説明はTODO: 準備中。
    *
    * @param f1 TODO: 準備中
    * @param f2 TODO: 準備中
@@ -315,7 +315,7 @@ public class CobolInspect {
   }
 
   /**
-   * libcob/strings.cのcob_inspect_firstの実装
+   * libcob/strings.cのcob_inspect_firstの実装。詳しい説明はTODO: 準備中。
    *
    * @param f1 TODO: 準備中
    * @param f2 TODO: 準備中
@@ -327,7 +327,7 @@ public class CobolInspect {
   }
 
   /**
-   * libcob/strings.cのcob_inspect_trailingの実装
+   * libcob/strings.cのcob_inspect_trailingの実装。詳しい説明はTODO: 準備中。
    *
    * @param f1 TODO: 準備中
    * @param f2 TODO: 準備中
@@ -339,7 +339,7 @@ public class CobolInspect {
   }
 
   /**
-   * libcob/strings.cのcob_inspect_convertingの実装
+   * libcob/strings.cのcob_inspect_convertingの実装。詳しい説明はTODO: 準備中。
    *
    * @param f1 TODO: 準備中
    * @param f2 TODO: 準備中
@@ -391,7 +391,7 @@ public class CobolInspect {
     }
   }
 
-  /** libcob/strings.cのcob_inspect_finishの実装 */
+  /** libcob/strings.cのcob_inspect_finishの実装。詳しい説明はTODO: 準備中。 */
   public static void finish() {
     if (inspectReplacing != 0) {
       for (int i = 0; i < inspectSize; ++i) {

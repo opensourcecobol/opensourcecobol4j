@@ -79,7 +79,7 @@ public class CobolCheck {
   }
 
   /**
-   * libcob/common.cのcob_check_odoの実装
+   * TODO: 準備中
    *
    * @param i TODO: 準備中
    * @param min TODO: 準備中
