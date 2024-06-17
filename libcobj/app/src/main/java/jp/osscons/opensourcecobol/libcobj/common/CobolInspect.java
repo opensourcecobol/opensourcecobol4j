@@ -26,6 +26,7 @@ import jp.osscons.opensourcecobol.libcobj.exceptions.CobolExceptionId;
 import jp.osscons.opensourcecobol.libcobj.exceptions.CobolRuntimeException;
 import jp.osscons.opensourcecobol.libcobj.exceptions.CobolStopRunException;
 
+/** TODO: 準備中 */
 public class CobolInspect {
   private static final int INSPECT_ALL = 0;
   private static final int INSPECT_LEADING = 1;
@@ -158,10 +159,10 @@ public class CobolInspect {
   }
 
   /**
-   * libcob/strings.cのcob_inspect_initの実装
+   * libcob/strings.cのcob_inspect_initの実装。詳しい説明はTODO: 準備中。
    *
-   * @param var TODO: 調査中
-   * @param replacing TODO: 調査中
+   * @param var TODO: 準備中
+   * @param replacing TODO: 準備中
    */
   public static void init(AbstractCobolField var, int replacing) {
     CobolInspect.inspectVarCopy = var;
@@ -192,9 +193,9 @@ public class CobolInspect {
   }
 
   /**
-   * libcob/strings.cのcob_inspect_beforeの実装
+   * libcob/strings.cのcob_inspect_beforeの実装。詳しい説明はTODO: 準備中。
    *
-   * @param str TODO: 調査中
+   * @param str TODO: 準備中
    */
   public static void before(AbstractCobolField str) {
     CobolDataStorage p2 = null;
@@ -235,9 +236,9 @@ public class CobolInspect {
   }
 
   /**
-   * libcob/strings.cのcob_inspect_afterの実装
+   * libcob/strings.cのcob_inspect_afterの実装。詳しい説明はTODO: 準備中。
    *
-   * @param str TODO: 調査中
+   * @param str TODO: 準備中
    */
   public static void after(AbstractCobolField str) {
     CobolDataStorage data = str.getDataStorage();
@@ -252,10 +253,10 @@ public class CobolInspect {
   }
 
   /**
-   * libcob/strings.cのcob_inspect_charactersの実装
+   * libcob/strings.cのcob_inspect_charactersの実装。詳しい説明はTODO: 準備中。
    *
-   * @param f1 TODO: 調査中
-   * @throws CobolStopRunException TODO: 調査中
+   * @param f1 TODO: 準備中
+   * @throws CobolStopRunException TODO: 準備中
    */
   public static void characters(AbstractCobolField f1) throws CobolStopRunException {
     int mark = inspectStart;
@@ -290,11 +291,11 @@ public class CobolInspect {
   }
 
   /**
-   * libcob/strings.cのcob_inspect_allの実装
+   * libcob/strings.cのcob_inspect_allの実装。詳しい説明はTODO: 準備中。
    *
-   * @param f1 TODO: 調査中
-   * @param f2 TODO: 調査中
-   * @throws CobolStopRunException TODO: 調査中
+   * @param f1 TODO: 準備中
+   * @param f2 TODO: 準備中
+   * @throws CobolStopRunException TODO: 準備中
    */
   public static void all(AbstractCobolField f1, AbstractCobolField f2)
       throws CobolStopRunException {
@@ -302,11 +303,11 @@ public class CobolInspect {
   }
 
   /**
-   * libcob/strings.cのcob_inspect_leadingの実装
+   * libcob/strings.cのcob_inspect_leadingの実装。詳しい説明はTODO: 準備中。
    *
-   * @param f1 TODO: 調査中
-   * @param f2 TODO: 調査中
-   * @throws CobolStopRunException TODO: 調査中
+   * @param f1 TODO: 準備中
+   * @param f2 TODO: 準備中
+   * @throws CobolStopRunException TODO: 準備中
    */
   public static void leading(AbstractCobolField f1, AbstractCobolField f2)
       throws CobolStopRunException {
@@ -314,11 +315,11 @@ public class CobolInspect {
   }
 
   /**
-   * libcob/strings.cのcob_inspect_firstの実装
+   * libcob/strings.cのcob_inspect_firstの実装。詳しい説明はTODO: 準備中。
    *
-   * @param f1 TODO: 調査中
-   * @param f2 TODO: 調査中
-   * @throws CobolStopRunException TODO: 調査中
+   * @param f1 TODO: 準備中
+   * @param f2 TODO: 準備中
+   * @throws CobolStopRunException TODO: 準備中
    */
   public static void first(AbstractCobolField f1, AbstractCobolField f2)
       throws CobolStopRunException {
@@ -326,11 +327,11 @@ public class CobolInspect {
   }
 
   /**
-   * libcob/strings.cのcob_inspect_trailingの実装
+   * libcob/strings.cのcob_inspect_trailingの実装。詳しい説明はTODO: 準備中。
    *
-   * @param f1 TODO: 調査中
-   * @param f2 TODO: 調査中
-   * @throws CobolStopRunException TODO: 調査中
+   * @param f1 TODO: 準備中
+   * @param f2 TODO: 準備中
+   * @throws CobolStopRunException TODO: 準備中
    */
   public static void trailing(AbstractCobolField f1, AbstractCobolField f2)
       throws CobolStopRunException {
@@ -338,10 +339,10 @@ public class CobolInspect {
   }
 
   /**
-   * libcob/strings.cのcob_inspect_convertingの実装
+   * libcob/strings.cのcob_inspect_convertingの実装。詳しい説明はTODO: 準備中。
    *
-   * @param f1 TODO: 調査中
-   * @param f2 TODO: 調査中
+   * @param f1 TODO: 準備中
+   * @param f2 TODO: 準備中
    */
   public static void converting(AbstractCobolField f1, AbstractCobolField f2) {
     int type1 = f1.getAttribute().getType();
@@ -390,7 +391,7 @@ public class CobolInspect {
     }
   }
 
-  /** libcob/strings.cのcob_inspect_finishの実装 */
+  /** libcob/strings.cのcob_inspect_finishの実装。詳しい説明はTODO: 準備中。 */
   public static void finish() {
     if (inspectReplacing != 0) {
       for (int i = 0; i < inspectSize; ++i) {
@@ -402,6 +403,7 @@ public class CobolInspect {
     inspectVar.putSign(inspectSign);
   }
 
+  /** TODO: 準備中 */
   public static void initString() {
     CobolInspect.inspectMark = new int[CobolConstant.COB_MEDIUM_BUFF];
     lastsize = CobolConstant.COB_MEDIUM_BUFF;

@@ -29,6 +29,11 @@ public class CobolModule {
   private static List<CobolModule> moduleStack = new ArrayList<CobolModule>();
   private static CobolModule currentModule;
 
+  /**
+   * TODO: 準備中
+   *
+   * @return TODO: 準備中
+   */
   public static CobolModule getCurrentModule() {
     return currentModule;
   }
@@ -48,6 +53,12 @@ public class CobolModule {
     currentModule = moduleStack.remove(moduleStack.size() - 1);
   }
 
+  /**
+   * TODO: 準備中
+   *
+   * @param data TODO: 準備中
+   * @return TODO: 準備中
+   */
   public static int calledBy(CobolDataStorage data) {
     AbstractCobolField param = CobolModule.getCurrentModule().cob_procedure_parameters.get(0);
     if (param != null) {
@@ -69,45 +80,60 @@ public class CobolModule {
   /**
    * モジュールキューが空かどうか
    *
-   * @return TODO: 調査中
+   * @return TODO: 準備中
    */
   public static boolean isQueueEmpty() {
     return moduleStack.isEmpty();
   }
 
+  /** TODO: 準備中 */
   public CobolModule next;
+  /** TODO: 準備中 */
   public CobolDataStorage collating_sequence;
+  /** TODO: 準備中 */
   public AbstractCobolField cut_status;
+  /** TODO: 準備中 */
   public AbstractCobolField cursor_pos;
+  /** TODO: 準備中 */
   public int display_sign;
+  /** TODO: 準備中 */
   public char decimal_point;
+  /** TODO: 準備中 */
   public char currency_symbol;
+  /** TODO: 準備中 */
   public char numeric_separator;
+  /** TODO: 準備中 */
   public int flag_filename_mapping;
+  /** TODO: 準備中 */
   public int flag_binary_truncate;
+  /** TODO: 準備中 */
   public int flag_pretty_display;
+  /** TODO: 準備中 */
   public int spare8;
+  /** TODO: 準備中 */
   public String program_id;
+  /** TODO: 準備中 */
   public String packageName;
 
+  /** TODO: 準備中 */
   public List<AbstractCobolField> cob_procedure_parameters;
 
   /**
    * コンストラクタ
    *
-   * @param next TODO: 調査中
-   * @param collatingSequence TODO: 調査中
-   * @param cutStatus TODO: 調査中
-   * @param cursorPos TODO: 調査中
-   * @param displaySign TODO: 調査中
-   * @param decimalPoint TODO: 調査中
-   * @param currencySymbol TODO: 調査中
-   * @param numericSeparator TODO: 調査中
-   * @param flagFilenameMapping TODO: 調査中
-   * @param flagBinaryTruncate TODO: 調査中
-   * @param flagPrettyDisplay TODO: 調査中
-   * @param spare8 TODO: 調査中
-   * @param programId TODO: 調査中
+   * @param next TODO: 準備中
+   * @param collatingSequence TODO: 準備中
+   * @param cutStatus TODO: 準備中
+   * @param cursorPos TODO: 準備中
+   * @param displaySign TODO: 準備中
+   * @param decimalPoint TODO: 準備中
+   * @param currencySymbol TODO: 準備中
+   * @param numericSeparator TODO: 準備中
+   * @param flagFilenameMapping TODO: 準備中
+   * @param flagBinaryTruncate TODO: 準備中
+   * @param flagPrettyDisplay TODO: 準備中
+   * @param spare8 TODO: 準備中
+   * @param programId TODO: 準備中
    */
   public CobolModule(
       CobolModule next,
@@ -143,14 +169,14 @@ public class CobolModule {
   /**
    * TODO 実装
    *
-   * @param m TODO: 調査中
+   * @param m TODO: 準備中
    */
   public void setNext(CobolModule m) {}
 
   /**
    * TODO 実装
    *
-   * @return TODO: 調査中
+   * @return TODO: 準備中
    */
   public boolean hasNext() {
     return false;
@@ -159,14 +185,14 @@ public class CobolModule {
   /**
    * TODO 実装
    *
-   * @param string TODO: 調査中
+   * @param string TODO: 準備中
    */
   public void setProgramID(String string) {}
 
   /**
    * TODO 実装
    *
-   * @return TODO: 調査中
+   * @return TODO: 準備中
    */
   public CobolModule getNext() {
     return null;
@@ -175,7 +201,7 @@ public class CobolModule {
   /**
    * TODO 実装
    *
-   * @param programName TODO: 調査中
+   * @param programName TODO: 準備中
    */
   public void setProgramId(String programName) {
     if (this.program_id != null) {
@@ -198,6 +224,11 @@ public class CobolModule {
     cob_procedure_parameters.add(field);
   }
 
+  /**
+   * TODO: 準備中
+   *
+   * @param field TODO: 準備中
+   */
   public void setParameters(AbstractCobolField... field) {
     cob_procedure_parameters.clear();
     for (AbstractCobolField f : field) {
@@ -214,10 +245,20 @@ public class CobolModule {
     return cob_procedure_parameters.size();
   }
 
+  /**
+   * TODO: 準備中
+   *
+   * @param packageName TODO: 準備中
+   */
   public void setPackageName(String packageName) {
     this.packageName = packageName;
   }
 
+  /**
+   * TODO: 準備中
+   *
+   * @return TODO: 準備中
+   */
   public String getPackageName() {
     return packageName;
   }
@@ -225,13 +266,18 @@ public class CobolModule {
   /**
    * パラメータリストの指定の要素を取得する
    *
-   * @param index TODO: 調査中
-   * @return TODO: 調査中
+   * @param index TODO: 準備中
+   * @return TODO: 準備中
    */
   public AbstractCobolField getParameter(int index) {
     return cob_procedure_parameters.get(index);
   }
 
+  /**
+   * TODO: 準備中
+   *
+   * @return TODO: 準備中
+   */
   public static int getDecimalPoint() {
     return currentModule.decimal_point;
   }

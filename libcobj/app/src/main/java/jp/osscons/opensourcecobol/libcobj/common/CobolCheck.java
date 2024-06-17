@@ -24,7 +24,18 @@ import jp.osscons.opensourcecobol.libcobj.exceptions.CobolExceptionId;
 import jp.osscons.opensourcecobol.libcobj.exceptions.CobolRuntimeException;
 import jp.osscons.opensourcecobol.libcobj.exceptions.CobolStopRunException;
 
+/** TODO: 準備中 */
 public class CobolCheck {
+  /**
+   * TODO: 準備中
+   *
+   * @param i TODO: 準備中
+   * @param min TODO: 準備中
+   * @param max TODO: 準備中
+   * @param name TODO: 準備中
+   * @param len TODO: 準備中
+   * @throws CobolStopRunException TODO: 準備中
+   */
   public static void checkSubscript(int i, int min, int max, byte[] name, int len)
       throws CobolStopRunException {
     if (i < min || max < i) {
@@ -37,24 +48,44 @@ public class CobolCheck {
     }
   }
 
+  /**
+   * TODO: 準備中
+   *
+   * @param i TODO: 準備中
+   * @param min TODO: 準備中
+   * @param max TODO: 準備中
+   * @param name TODO: 準備中
+   * @param len TODO: 準備中
+   * @throws CobolStopRunException TODO: 準備中
+   */
   public static void checkSubscript(long i, int min, int max, byte[] name, int len)
       throws CobolStopRunException {
     CobolCheck.checkSubscript((int) i, min, max, name, len);
   }
 
+  /**
+   * TODO: 準備中
+   *
+   * @param i TODO: 準備中
+   * @param min TODO: 準備中
+   * @param max TODO: 準備中
+   * @param name TODO: 準備中
+   * @param len TODO: 準備中
+   * @throws CobolStopRunException TODO: 準備中
+   */
   public static void checkSubscript(long i, int min, int max, CobolDataStorage name, int len)
       throws CobolStopRunException {
     CobolCheck.checkSubscript((int) i, min, max, name.getByteArrayRef(0, len), len);
   }
 
   /**
-   * libcob/common.cのcob_check_odoの実装
+   * TODO: 準備中
    *
-   * @param i TODO: 調査中
-   * @param min TODO: 調査中
-   * @param max TODO: 調査中
-   * @param name TODO: 調査中
-   * @throws CobolStopRunException TODO: 調査中
+   * @param i TODO: 準備中
+   * @param min TODO: 準備中
+   * @param max TODO: 準備中
+   * @param name TODO: 準備中
+   * @throws CobolStopRunException TODO: 準備中
    */
   public static void checkOdo(int i, int min, int max, String name) throws CobolStopRunException {
     if (i < min || max < i) {
@@ -64,6 +95,15 @@ public class CobolCheck {
     }
   }
 
+  /**
+   * TODO: 準備中
+   *
+   * @param i TODO: 準備中
+   * @param min TODO: 準備中
+   * @param max TODO: 準備中
+   * @param name TODO: 準備中
+   * @throws CobolStopRunException TODO: 準備中
+   */
   public static void checkOdo(int i, int min, int max, byte[] name) throws CobolStopRunException {
     CobolCheck.checkOdo(i, min, max, new String(name, AbstractCobolField.charSetSJIS));
   }

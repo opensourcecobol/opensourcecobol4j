@@ -206,10 +206,10 @@ public class CobolResolve {
   }
 
   /**
-   * 下記の環境変数を読み込み、CobolResolve内で定義されたメソッドの動作が変わる。
-   * 環境変数COB_LOAD_CASEにLOWERが指定されているときは、resolveメソッドに渡された引数を小文字に変換してから処理を開始する。
-   * 環境変数COB_LOAD_CASEにUPPERが指定されているときは、resolveメソッドに渡された引数を大文字に変換してから処理を開始する。
-   * 環境変数COB_LIBRARY_PATHにディレクトリパスが指定されている場合、 resolveメソッドが検索するモジュールのディレクトリパスのリストにそれを追加する。
+   * 下記の環境変数を読み込み、CobolResolve内で定義されたメソッドの動作が変わる。<br>
+   * 環境変数COB_LOAD_CASEにLOWERが指定されているときは、resolveメソッドに渡された引数を小文字に変換してから処理を開始する。<br>
+   * 環境変数COB_LOAD_CASEにUPPERが指定されているときは、resolveメソッドに渡された引数を大文字に変換してから処理を開始する。<br>
+   * 環境変数COB_LIBRARY_PATHにディレクトリパスが指定されている場合、 resolveメソッドが検索するモジュールのディレクトリパスのリストにそれを追加する。<br>
    * 環境変数COB_PACKAGE_PATHにディレクトリパスが指定されている場合、 resolveメソッドが検索するモジュールのパッケージパスのリストにそれを追加する。
    * 環境変数COB_PRE_LOADは未実装
    */
@@ -300,11 +300,10 @@ public class CobolResolve {
   }
 
   /**
-   * パッケージ名とクラス名から、クラスを動的に読み込む。 このメソッドは以下のように、環境変数の設定値によって動作が変わる。
-   *
-   * <p>環境変数COB_LOAD_CASEにLOWERが指定されているときは、cobolFieldの示す文字列全体を小文字に変換したものを検索する。
-   * 環境変数COB_LOAD_CASEにUPPERが指定されているときは、cobolFieldの示す文字列全体を小文字に変換したものを検索する。
-   * 環境変数COB_LIBRARY_PATHにディレクトリパスが指定されている場合、 このメソッドが検索するモジュールのディレクトリパスのリストにそれを追加する。
+   * パッケージ名とクラス名から、クラスを動的に読み込む。 このメソッドは以下のように、環境変数の設定値によって動作が変わる。<br>
+   * 環境変数COB_LOAD_CASEにLOWERが指定されているときは、cobolFieldの示す文字列全体を小文字に変換したものを検索する。<br>
+   * 環境変数COB_LOAD_CASEにUPPERが指定されているときは、cobolFieldの示す文字列全体を小文字に変換したものを検索する。<br>
+   * 環境変数COB_LIBRARY_PATHにディレクトリパスが指定されている場合、 このメソッドが検索するモジュールのディレクトリパスのリストにそれを追加する。<br>
    * 環境変数COB_PACKAGE_PATHにディレクトリパスが指定されている場合、 このメソッドが検索するモジュールのパッケージパスのリストにそれを追加する。
    *
    * @param packageName 検索するクラスのパッケージ名
@@ -312,7 +311,7 @@ public class CobolResolve {
    * @param runner CobolRunnableを実装したクラス。nullでもよい。
    * @return runnerがnullでない場合はrunnerを返し、そうでないときはクラス名とパッケージ名を元に検索処理を実施する。
    *     検索して動的にクラスの読み込みに成功したら、それを返す。検索に失敗したら nullを返す。
-   * @throws CobolRuntimeException TODO: 調査中
+   * @throws CobolRuntimeException TODO: 準備中
    */
   public static CobolRunnable resolve(
       String packageName, AbstractCobolField cobolField, CobolRunnable runner)
@@ -325,11 +324,10 @@ public class CobolResolve {
   }
 
   /**
-   * パッケージ名とクラス名から、クラスを動的に読み込む。 このメソッドは以下のように、環境変数の設定値によって動作が変わる。
-   *
-   * <p>環境変数COB_LOAD_CASEにLOWERが指定されているときは、nameの示す文字列全体を小文字に変換したものを検索する。
-   * 環境変数COB_LOAD_CASEにUPPERが指定されているときは、nameの示す文字列全体を小文字に変換したものを検索する。
-   * 環境変数COB_LIBRARY_PATHにディレクトリパスが指定されている場合、 このメソッドが検索するモジュールのディレクトリパスのリストにそれを追加する。
+   * パッケージ名とクラス名から、クラスを動的に読み込む。 このメソッドは以下のように、環境変数の設定値によって動作が変わる。<br>
+   * 環境変数COB_LOAD_CASEにLOWERが指定されているときは、nameの示す文字列全体を小文字に変換したものを検索する。<br>
+   * 環境変数COB_LOAD_CASEにUPPERが指定されているときは、nameの示す文字列全体を小文字に変換したものを検索する。<br>
+   * 環境変数COB_LIBRARY_PATHにディレクトリパスが指定されている場合、 このメソッドが検索するモジュールのディレクトリパスのリストにそれを追加する。<br>
    * 環境変数COB_PACKAGE_PATHにディレクトリパスが指定されている場合、 このメソッドが検索するモジュールのパッケージパスのリストにそれを追加する。
    *
    * @param packageName 検索するクラスのパッケージ名
@@ -337,7 +335,7 @@ public class CobolResolve {
    * @param runner CobolRunnableを実装したクラス。nullでもよい。
    * @return runnerがnullでない場合はrunnerを返し、そうでないときはクラス名とパッケージ名を元に検索処理を実施する。
    *     検索して動的にクラスの読み込みに成功したら、それを返す。検索に失敗したら nullを返す。
-   * @throws CobolRuntimeException TODO: 調査中
+   * @throws CobolRuntimeException TODO: 準備中
    */
   public static CobolRunnable resolve(String packageName, String name, CobolRunnable runner)
       throws CobolRuntimeException {
@@ -349,17 +347,16 @@ public class CobolResolve {
   }
 
   /**
-   * パッケージ名とクラス名から、クラスを動的に読み込む。 このメソッドは以下のように、環境変数の設定値によって動作が変わる。
-   *
-   * <p>環境変数COB_LOAD_CASEにLOWERが指定されているときは、cobolFieldの示す文字列全体を小文字に変換したものを検索する。
-   * 環境変数COB_LOAD_CASEにUPPERが指定されているときは、cobolFieldの示す文字列全体を小文字に変換したものを検索する。
-   * 環境変数COB_LIBRARY_PATHにディレクトリパスが指定されている場合、 このメソッドが検索するモジュールのディレクトリパスのリストにそれを追加する。
+   * パッケージ名とクラス名から、クラスを動的に読み込む。 このメソッドは以下のように、環境変数の設定値によって動作が変わる。<br>
+   * 環境変数COB_LOAD_CASEにLOWERが指定されているときは、cobolFieldの示す文字列全体を小文字に変換したものを検索する。<br>
+   * 環境変数COB_LOAD_CASEにUPPERが指定されているときは、cobolFieldの示す文字列全体を小文字に変換したものを検索する。<br>
+   * 環境変数COB_LIBRARY_PATHにディレクトリパスが指定されている場合、 このメソッドが検索するモジュールのディレクトリパスのリストにそれを追加する。<br>
    * 環境変数COB_PACKAGE_PATHにディレクトリパスが指定されている場合、 このメソッドが検索するモジュールのパッケージパスのリストにそれを追加する。
    *
    * @param packageName パッケージ名
    * @param cobolField 読み込むクラスの名前
    * @return クラス名とパッケージ名を元に検索処理を実施する。 検索して動的にクラスの読み込みに成功したら、それを返す。検索に失敗したら nullを返す。
-   * @throws CobolRuntimeException TODO: 調査中
+   * @throws CobolRuntimeException TODO: 準備中
    */
   public static CobolRunnable resolve(String packageName, AbstractCobolField cobolField)
       throws CobolRuntimeException {
@@ -367,17 +364,16 @@ public class CobolResolve {
   }
 
   /**
-   * パッケージ名とクラス名から、クラスを動的に読み込む。 このメソッドは以下のように、環境変数の設定値によって動作が変わる。
-   *
-   * <p>環境変数COB_LOAD_CASEにLOWERが指定されているときは、nameの示す文字列全体を小文字に変換したものを検索する。
-   * 環境変数COB_LOAD_CASEにUPPERが指定されているときは、nameの示す文字列全体を小文字に変換したものを検索する。
-   * 環境変数COB_LIBRARY_PATHにディレクトリパスが指定されている場合、 このメソッドが検索するモジュールのディレクトリパスのリストにそれを追加する。
+   * パッケージ名とクラス名から、クラスを動的に読み込む。 このメソッドは以下のように、環境変数の設定値によって動作が変わる。<br>
+   * 環境変数COB_LOAD_CASEにLOWERが指定されているときは、nameの示す文字列全体を小文字に変換したものを検索する。<br>
+   * 環境変数COB_LOAD_CASEにUPPERが指定されているときは、nameの示す文字列全体を小文字に変換したものを検索する。<br>
+   * 環境変数COB_LIBRARY_PATHにディレクトリパスが指定されている場合、 このメソッドが検索するモジュールのディレクトリパスのリストにそれを追加する。<br>
    * 環境変数COB_PACKAGE_PATHにディレクトリパスが指定されている場合、 このメソッドが検索するモジュールのパッケージパスのリストにそれを追加する。
    *
    * @param packageName パッケージ名
    * @param name 読み込むクラスの名前
    * @return クラス名とパッケージ名を元に検索処理を実施する。 検索して動的にクラスの読み込みに成功したら、それを返す。検索に失敗したら nullを返す。
-   * @throws CobolRuntimeException TODO: 調査中
+   * @throws CobolRuntimeException TODO: 準備中
    */
   public static CobolRunnable resolve(String packageName, String name)
       throws CobolRuntimeException {
@@ -488,7 +484,7 @@ public class CobolResolve {
    * 指定のプログラムのcancelメソッドを呼び出す
    *
    * @param f cancelを呼び出すプログラム名を示すCOBOL変数
-   * @throws CobolStopRunException TODO: 調査中
+   * @throws CobolStopRunException TODO: 準備中
    */
   public static void fieldCancel(AbstractCobolField f) throws CobolStopRunException {
     CobolResolve.cobCancel(f.fieldToString());
@@ -497,7 +493,7 @@ public class CobolResolve {
    * 指定のプログラムのcancelメソッドを呼び出す
    *
    * @param name プログラム名
-   * @throws CobolStopRunException TODO: 調査中
+   * @throws CobolStopRunException TODO: 準備中
    */
   public static void cobCancel(String name) throws CobolStopRunException {
     if (name == null || name.equals("")) {

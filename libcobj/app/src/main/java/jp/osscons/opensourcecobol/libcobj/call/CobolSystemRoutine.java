@@ -62,11 +62,11 @@ public class CobolSystemRoutine {
   }
 
   /**
-   * 組み込み関数SYSTEMの実装。
+   * 組み込み関数SYSTEMの実装。cmdに指定されたコマンドを実行する。
    *
    * @param cmd コマンド文字列。Linux/Unix環境であればシェルコマンド、Windows環境であればコマンドプロンプトのコマンド。
    * @return コマンドの終了コード。
-   * @throws CobolStopRunException TODO: 調査中
+   * @throws CobolStopRunException TODO: 準備中
    *     このメソッドは内部でCobolModule.getCurrentModule().cob_procedure_parametersを参照する。
    *     このリストの形式に問題がある場合にスローされる。
    */
@@ -77,7 +77,7 @@ public class CobolSystemRoutine {
   }
 
   /**
-   * 組み込み関数SYSTEMの実装。
+   * 組み込み関数SYSTEMの実装。cmdに指定されたコマンドを実行する。
    *
    * @param cmd コマンド文字列。Linux/Unix環境であればシェルコマンド、Windows環境であればコマンドプロンプトのコマンド。
    * @return コマンドの終了コード。
@@ -125,7 +125,7 @@ public class CobolSystemRoutine {
   }
 
   /**
-   * 組み込み関数SYSTEMの実装。
+   * 組み込み関数SYSTEMの実装。cmdに指定されたコマンドを実行する。
    *
    * @param cmd コマンド文字列。Linux/Unix環境であればシェルコマンド、Windows環境であればコマンドプロンプトのコマンド。
    * @return コマンドの終了コード。
@@ -187,7 +187,7 @@ public class CobolSystemRoutine {
    * 組み込み関数CBL_ANDの実装。1バイトごとに論理積を取る。 先頭lengthバイトのデータについて論理積を計算し、計算結果を2番目の引数の先頭に格納する。
    *
    * @param data1 計算対象の1番目のCOBOL変数のバイト列。
-   * @param data2 計算対象の2番目のCOBOL変数のバイト列。先頭lengthバイトに計算結果が格納される。
+   * @param data2 計算対象の2番目のCOBOL変数のバイト列。その変数のバイト列の先頭lengthバイトに計算結果が格納される。
    * @param length 計算するバイト数。
    * @return 0
    */
@@ -197,8 +197,8 @@ public class CobolSystemRoutine {
   /**
    * 組み込み関数CBL_ANDの実装。1バイトごとに論理積を取る。 先頭lengthバイトのデータについて論理積を計算し、計算結果を2番目の引数の先頭に格納する。
    *
-   * @param data1 計算対象の1番目のCOBOL変数のバイト列。
-   * @param data2 計算対象の2番目のCOBOL変数のバイト列。先頭lengthバイトに計算結果が格納される。
+   * @param data1 計算対象の1番目のCOBOL変数。
+   * @param data2 計算対象の2番目のCOBOL変数。その変数のバイト列の先頭lengthバイトに計算結果が格納される。
    * @param length 計算するバイト数。
    * @return 0
    */
@@ -207,12 +207,12 @@ public class CobolSystemRoutine {
   }
 
   /**
-   * libcob/common.cのCBL_ORの実装
+   * 組み込み関数CBL_ORの実装。1バイトごとに論理和を取る。 先頭lengthバイトのデータについて論理和を計算し、計算結果を2番目の引数の先頭に格納する。
    *
-   * @param data1 TODO: 調査中
-   * @param data2 TODO: 調査中
-   * @param length TODO: 調査中
-   * @return TODO: 調査中
+   * @param data1 計算対象の1番目のCOBOL変数のバイト列。
+   * @param data2 計算対象の2番目のCOBOL変数のバイト列。先頭lengthバイトに計算結果が格納される。
+   * @param length 計算するバイト数
+   * @return 0
    */
   public static int CBL_OR(CobolDataStorage data1, CobolDataStorage data2, int length) {
     return CBL_COMMON_OPERATION(
@@ -227,14 +227,38 @@ public class CobolSystemRoutine {
         });
   }
 
+  /**
+   * 組み込み関数CBL_ORの実装。1バイトごとに論理和を取る。 先頭lengthバイトのデータについて論理和を計算し、計算結果を2番目の引数の先頭に格納する。
+   *
+   * @param data1 計算対象の1番目のCOBOL変数のバイト列。
+   * @param data2 計算対象の2番目のCOBOL変数。そのバイト列の先頭lengthバイトに計算結果が格納される。
+   * @param length 計算するバイト数
+   * @return 0
+   */
   public static int CBL_OR(AbstractCobolField data1, CobolDataStorage data2, int length) {
     return CBL_OR(data1.getDataStorage(), data2, length);
   }
 
+  /**
+   * 組み込み関数CBL_ORの実装。1バイトごとに論理和を取る。 先頭lengthバイトのデータについて論理和を計算し、計算結果を2番目の引数の先頭に格納する。
+   *
+   * @param data1 計算対象の1番目のCOBOL変数のバイト列。
+   * @param data2 計算対象の2番目のCOBOL変数。先頭lengthバイトに計算結果が格納される。
+   * @param length 計算するバイト数
+   * @return 0
+   */
   public static int CBL_OR(CobolDataStorage data1, AbstractCobolField data2, int length) {
     return CBL_OR(data1, data2.getDataStorage(), length);
   }
 
+  /**
+   * 組み込み関数CBL_ORの実装。詳しい説明はTODO: 準備中
+   *
+   * @param data1 TODO: 準備中
+   * @param data2 TODO: 準備中
+   * @param length TODO: 準備中
+   * @return TODO: 準備中
+   */
   public static int CBL_OR(AbstractCobolField data1, AbstractCobolField data2, int length) {
     return CBL_OR(data1.getDataStorage(), data2.getDataStorage(), length);
   }
@@ -248,12 +272,12 @@ public class CobolSystemRoutine {
   }
 
   /**
-   * libcob/common.cのCBL_NORの実装
+   * 組み込み関数CBL_NORの実装。1バイトごとに排他的論理和を取る。 先頭lengthバイトのデータについて論理否定を計算し、計算結果を2番目の引数の先頭に格納する。
    *
-   * @param data1 TODO: 調査中
-   * @param data2 TODO: 調査中
-   * @param length TODO: 調査中
-   * @return TODO: 調査中
+   * @param data1 TODO: 準備中
+   * @param data2 TODO: 準備中
+   * @param length TODO: 準備中
+   * @return TODO: 準備中
    */
   public static int CBL_NOR(CobolDataStorage data1, CobolDataStorage data2, int length) {
     return CBL_COMMON_OPERATION(
@@ -268,25 +292,49 @@ public class CobolSystemRoutine {
         });
   }
 
+  /**
+   * TODO: 準備中
+   *
+   * @param data1 TODO: 準備中
+   * @param data2 TODO: 準備中
+   * @param length TODO: 準備中
+   * @return TODO: 準備中
+   */
   public static int CBL_NOR(AbstractCobolField data1, CobolDataStorage data2, int length) {
     return CBL_NOR(data1.getDataStorage(), data2, length);
   }
 
+  /**
+   * TODO: 準備中
+   *
+   * @param data1 TODO: 準備中
+   * @param data2 TODO: 準備中
+   * @param length TODO: 準備中
+   * @return TODO: 準備中
+   */
   public static int CBL_NOR(CobolDataStorage data1, AbstractCobolField data2, int length) {
     return CBL_NOR(data1, data2.getDataStorage(), length);
   }
 
+  /**
+   * TODO: 準備中
+   *
+   * @param data1 TODO: 準備中
+   * @param data2 TODO: 準備中
+   * @param length TODO: 準備中
+   * @return TODO: 準備中
+   */
   public static int CBL_NOR(AbstractCobolField data1, AbstractCobolField data2, int length) {
     return CBL_NOR(data1.getDataStorage(), data2.getDataStorage(), length);
   }
 
   /**
-   * libcob/common.cのCBL_XORの実装
+   * 組み込み関数CBL_XORの実装。1バイトごとに排他的論理和を取る。 先頭lengthバイトのデータについて排他的論理和を計算し、計算結果を2番目の引数の先頭に格納する。
    *
-   * @param data1 TODO: 調査中
-   * @param data2 TODO: 調査中
-   * @param length TODO: 調査中
-   * @return TODO: 調査中
+   * @param data1 TODO: 準備中
+   * @param data2 TODO: 準備中
+   * @param length TODO: 準備中
+   * @return TODO: 準備中
    */
   public static int CBL_XOR(CobolDataStorage data1, CobolDataStorage data2, int length) {
     return CBL_COMMON_OPERATION(
@@ -301,25 +349,49 @@ public class CobolSystemRoutine {
         });
   }
 
+  /**
+   * 組み込み関数CBL_XORの実装。詳しい説明はTODO: 準備中
+   *
+   * @param data1 TODO: 準備中
+   * @param data2 TODO: 準備中
+   * @param length TODO: 準備中
+   * @return TODO: 準備中
+   */
   public static int CBL_XOR(AbstractCobolField data1, CobolDataStorage data2, int length) {
     return CBL_XOR(data1.getDataStorage(), data2, length);
   }
 
+  /**
+   * 組み込み関数CBL_XORの実装。詳しい説明はTODO: 準備中
+   *
+   * @param data1 TODO: 準備中
+   * @param data2 TODO: 準備中
+   * @param length TODO: 準備中
+   * @return TODO: 準備中
+   */
   public static int CBL_XOR(CobolDataStorage data1, AbstractCobolField data2, int length) {
     return CBL_XOR(data1, data2.getDataStorage(), length);
   }
 
+  /**
+   * 組み込み関数CBL_XORの実装。詳しい説明はTODO: 準備中
+   *
+   * @param data1 TODO: 準備中
+   * @param data2 TODO: 準備中
+   * @param length TODO: 準備中
+   * @return TODO: 準備中
+   */
   public static int CBL_XOR(AbstractCobolField data1, AbstractCobolField data2, int length) {
     return CBL_XOR(data1.getDataStorage(), data2.getDataStorage(), length);
   }
 
   /**
-   * libcob/common.cのCBL_NIMPの実装
+   * 組み込み関数CBL_NIMPの実装。詳しい説明はTODO: 準備中
    *
-   * @param data1 TODO: 調査中
-   * @param data2 TODO: 調査中
-   * @param length TODO: 調査中
-   * @return TODO: 調査中
+   * @param data1 TODO: 準備中
+   * @param data2 TODO: 準備中
+   * @param length TODO: 準備中
+   * @return TODO: 準備中
    */
   public static int CBL_NIMP(CobolDataStorage data1, CobolDataStorage data2, int length) {
     return CBL_COMMON_OPERATION(
@@ -334,25 +406,49 @@ public class CobolSystemRoutine {
         });
   }
 
+  /**
+   * 組み込み関数CBL_NIMPの実装。詳しい説明はTODO: 準備中
+   *
+   * @param data1 TODO: 準備中
+   * @param data2 TODO: 準備中
+   * @param length TODO: 準備中
+   * @return TODO: 準備中
+   */
   public static int CBL_NIMP(AbstractCobolField data1, CobolDataStorage data2, int length) {
     return CBL_NIMP(data1.getDataStorage(), data2, length);
   }
 
+  /**
+   * TODO: 準備中
+   *
+   * @param data1 TODO: 準備中
+   * @param data2 TODO: 準備中
+   * @param length TODO: 準備中
+   * @return TODO: 準備中
+   */
   public static int CBL_NIMP(CobolDataStorage data1, AbstractCobolField data2, int length) {
     return CBL_NIMP(data1, data2.getDataStorage(), length);
   }
 
+  /**
+   * TODO: 準備中
+   *
+   * @param data1 TODO: 準備中
+   * @param data2 TODO: 準備中
+   * @param length TODO: 準備中
+   * @return TODO: 準備中
+   */
   public static int CBL_NIMP(AbstractCobolField data1, AbstractCobolField data2, int length) {
     return CBL_NIMP(data1.getDataStorage(), data2.getDataStorage(), length);
   }
 
   /**
-   * libcob/common.cのCBL_EQの実装
+   * TODO: 準備中
    *
-   * @param data1 TODO: 調査中
-   * @param data2 TODO: 調査中
-   * @param length TODO: 調査中
-   * @return TODO: 調査中
+   * @param data1 TODO: 準備中
+   * @param data2 TODO: 準備中
+   * @param length TODO: 準備中
+   * @return TODO: 準備中
    */
   public static int CBL_EQ(CobolDataStorage data1, CobolDataStorage data2, int length) {
     return CBL_COMMON_OPERATION(
@@ -367,24 +463,48 @@ public class CobolSystemRoutine {
         });
   }
 
+  /**
+   * TODO: 準備中
+   *
+   * @param data1 TODO: 準備中
+   * @param data2 TODO: 準備中
+   * @param length TODO: 準備中
+   * @return TODO: 準備中
+   */
   public static int CBL_EQ(AbstractCobolField data1, CobolDataStorage data2, int length) {
     return CBL_EQ(data1.getDataStorage(), data2, length);
   }
 
+  /**
+   * TODO: 準備中
+   *
+   * @param data1 TODO: 準備中
+   * @param data2 TODO: 準備中
+   * @param length TODO: 準備中
+   * @return TODO: 準備中
+   */
   public static int CBL_EQ(CobolDataStorage data1, AbstractCobolField data2, int length) {
     return CBL_EQ(data1, data2.getDataStorage(), length);
   }
 
+  /**
+   * TODO: 準備中
+   *
+   * @param data1 TODO: 準備中
+   * @param data2 TODO: 準備中
+   * @param length TODO: 準備中
+   * @return TODO: 準備中
+   */
   public static int CBL_EQ(AbstractCobolField data1, AbstractCobolField data2, int length) {
     return CBL_EQ(data1.getDataStorage(), data2.getDataStorage(), length);
   }
 
   /**
-   * TODO libcob/common.cのCBL_NOTの実装
+   * 組み込み関数CBL_NOTの実装。詳しい説明はTODO: 準備中
    *
-   * @param data TODO: 調査中
-   * @param length TODO: 調査中
-   * @return TODO: 調査中
+   * @param data TODO: 準備中
+   * @param length TODO: 準備中
+   * @return TODO: 準備中
    */
   public static int CBL_NOT(CobolDataStorage data, int length) {
     CobolUtil.COB_CHK_PARMS("CBL_NOT", 2);
@@ -398,16 +518,23 @@ public class CobolSystemRoutine {
     return 0;
   }
 
+  /**
+   * TODO: 準備中
+   *
+   * @param data TODO: 準備中
+   * @param length TODO: 準備中
+   * @return TODO: 準備中
+   */
   public static int CBL_NOT(AbstractCobolField data, int length) {
     return CBL_NOT(data.getDataStorage(), length);
   }
 
   /**
-   * libcob/common.cのCBL_XF4の実装
+   * 組み込み関数CBL_XF4の実装。詳しい説明はTODO: 準備中
    *
-   * @param data1 TODO: 調査中
-   * @param data2 TODO: 調査中
-   * @return TODO: 調査中
+   * @param data1 TODO: 準備中
+   * @param data2 TODO: 準備中
+   * @return TODO: 準備中
    */
   public static int CBL_XF4(CobolDataStorage data1, CobolDataStorage data2) {
     CobolUtil.COB_CHK_PARMS("CBL_XF4", 2);
@@ -419,24 +546,45 @@ public class CobolSystemRoutine {
     return 0;
   }
 
+  /**
+   * TODO: 準備中
+   *
+   * @param data1 TODO: 準備中
+   * @param data2 TODO: 準備中
+   * @return TODO: 準備中
+   */
   public static int CBL_XF4(AbstractCobolField data1, CobolDataStorage data2) {
     return CBL_XF4(data1.getDataStorage(), data2);
   }
 
+  /**
+   * TODO: 準備中
+   *
+   * @param data1 TODO: 準備中
+   * @param data2 TODO: 準備中
+   * @return TODO: 準備中
+   */
   public static int CBL_XF4(CobolDataStorage data1, AbstractCobolField data2) {
     return CBL_XF4(data1, data2.getDataStorage());
   }
 
+  /**
+   * TODO: 準備中
+   *
+   * @param data1 TODO: 準備中
+   * @param data2 TODO: 準備中
+   * @return TODO: 準備中
+   */
   public static int CBL_XF4(AbstractCobolField data1, AbstractCobolField data2) {
     return CBL_XF4(data1.getDataStorage(), data2.getDataStorage());
   }
 
   /**
-   * libcob/common.cのCBL_XF5の実装
+   * 組み込み関数CBL_XF5の実装。詳しい説明はTODO: 準備中
    *
-   * @param data1 TODO: 調査中
-   * @param data2 TODO: 調査中
-   * @return TODO: 調査中
+   * @param data1 TODO: 準備中
+   * @param data2 TODO: 準備中
+   * @return TODO: 準備中
    */
   public static int CBL_XF5(CobolDataStorage data1, CobolDataStorage data2) {
     CobolUtil.COB_CHK_PARMS("CBL_XF5", 2);
@@ -447,25 +595,46 @@ public class CobolSystemRoutine {
     return 0;
   }
 
+  /**
+   * TODO: 準備中
+   *
+   * @param data1 TODO: 準備中
+   * @param data2 TODO: 準備中
+   * @return TODO: 準備中
+   */
   public static int CBL_XF5(AbstractCobolField data1, CobolDataStorage data2) {
     return CBL_XF5(data1.getDataStorage(), data2);
   }
 
+  /**
+   * TODO: 準備中
+   *
+   * @param data1 TODO: 準備中
+   * @param data2 TODO: 準備中
+   * @return TODO: 準備中
+   */
   public static int CBL_XF5(CobolDataStorage data1, AbstractCobolField data2) {
     return CBL_XF5(data1, data2.getDataStorage());
   }
 
+  /**
+   * TODO: 準備中
+   *
+   * @param data1 TODO: 準備中
+   * @param data2 TODO: 準備中
+   * @return TODO: 準備中
+   */
   public static int CBL_XF5(AbstractCobolField data1, AbstractCobolField data2) {
     return CBL_XF5(data1.getDataStorage(), data2.getDataStorage());
   }
 
   /**
-   * libcob/common.cのCBL_X91の実装
+   * 組み込み関数CBL_X91の実装。詳しい説明はTODO: 準備中
    *
-   * @param result TODO: 調査中
-   * @param func TODO: 調査中
-   * @param parm TODO: 調査中
-   * @return TODO: 調査中
+   * @param result TODO: 準備中
+   * @param func TODO: 準備中
+   * @param parm TODO: 準備中
+   * @return TODO: 準備中
    */
   public static int CBL_X91(CobolDataStorage result, CobolDataStorage func, CobolDataStorage parm) {
     switch (func.getByte(0)) {
@@ -497,11 +666,11 @@ public class CobolSystemRoutine {
   }
 
   /**
-   * TODO libcob/common.cのCBL_TOLOWERの実装
+   * 組み込み関数CBL_TOLOWERの実装。詳しい説明はTODO: 準備中
    *
-   * @param data TODO: 調査中
-   * @param length TODO: 調査中
-   * @return TODO: 調査中
+   * @param data TODO: 準備中
+   * @param length TODO: 準備中
+   * @return TODO: 準備中
    */
   public static int CBL_TOLOWER(CobolDataStorage data, int length) {
     CobolUtil.COB_CHK_PARMS("CBL_TOLOWER", 2);
@@ -518,16 +687,23 @@ public class CobolSystemRoutine {
     return 0;
   }
 
+  /**
+   * TODO: 準備中
+   *
+   * @param data TODO: 準備中
+   * @param length TODO: 準備中
+   * @return TODO: 準備中
+   */
   public static int CBL_TOLOWER(AbstractCobolField data, int length) {
     return CBL_TOLOWER(data.getDataStorage(), length);
   }
 
   /**
-   * TODO libcob/common.cのCBL_TOUPPERの実装
+   * 組み込み関数CBL_TOUPPERの実装。詳しい説明はTODO: 準備中
    *
-   * @param data TODO: 調査中
-   * @param length TODO: 調査中
-   * @return TODO: 調査中
+   * @param data TODO: 準備中
+   * @param length TODO: 準備中
+   * @return TODO: 準備中
    */
   public static int CBL_TOUPPER(CobolDataStorage data, int length) {
     CobolUtil.COB_CHK_PARMS("CBL_TOUPPER", 2);
@@ -544,10 +720,23 @@ public class CobolSystemRoutine {
     return 0;
   }
 
+  /**
+   * TODO: 準備中
+   *
+   * @param data TODO: 準備中
+   * @param length TODO: 準備中
+   * @return TODO: 準備中
+   */
   public static int CBL_TOUPPER(AbstractCobolField data, int length) {
     return CBL_TOUPPER(data.getDataStorage(), length);
   }
 
+  /**
+   * TODO: 準備中
+   *
+   * @param data TODO: 準備中
+   * @return TODO: 準備中
+   */
   public static int CBL_OC_NANOSLEEP(CobolDataStorage data) {
     CobolUtil.COB_CHK_PARMS("CBL_OC_NANOSLEEP", 1);
 
@@ -565,16 +754,34 @@ public class CobolSystemRoutine {
     return 0;
   }
 
+  /**
+   * TODO: 準備中
+   *
+   * @param field TODO: 準備中
+   * @return TODO: 準備中
+   */
   public static int CBL_OC_NANOSLEEP(AbstractCobolField field) {
     CobolSystemRoutine.CBL_OC_NANOSLEEP(field.getDataStorage());
     return 0;
   }
 
+  /**
+   * TODO: 準備中
+   *
+   * @param data TODO: 準備中
+   * @return TODO: 準備中
+   */
   public static int calledBy(CobolDataStorage data) {
     CobolUtil.COB_CHK_PARMS("calledby", 1);
     return CobolModule.calledBy(data);
   }
 
+  /**
+   * TODO: 準備中
+   *
+   * @param data TODO: 準備中
+   * @return TODO: 準備中
+   */
   public static int listDir(CobolDataStorage... data) {
     CobolUtil.COB_CHK_PARMS("listDirectory", 1);
     List<AbstractCobolField> params = CobolModule.getCurrentModule().cob_procedure_parameters;

@@ -3,10 +3,18 @@ package jp.osscons.opensourcecobol.libcobj.user_util.indexed_file;
 import java.util.Scanner;
 import jp.osscons.opensourcecobol.libcobj.data.CobolDataStorage;
 
+/** TODO: 準備中 */
 public class StdinRecordReader implements RecordReader {
+  /** TODO: 準備中 */
   protected int recordSize;
+  /** TODO: 準備中 */
   protected Scanner scan;
 
+  /**
+   * TODO: 準備中
+   *
+   * @param recordSize TODO: 準備中
+   */
   protected StdinRecordReader(int recordSize) {
     this.recordSize = recordSize;
   }
@@ -27,6 +35,11 @@ public class StdinRecordReader implements RecordReader {
   }
 
   static class StdinLineSeqReader extends StdinRecordReader {
+    /**
+     * TODO: 準備中
+     *
+     * @param recordSize TODO: 準備中
+     */
     public StdinLineSeqReader(int recordSize) {
       super(recordSize);
     }
@@ -51,6 +64,11 @@ public class StdinRecordReader implements RecordReader {
     private byte[] readData;
     private int readDataOffset;
 
+    /**
+     * TODO: 準備中
+     *
+     * @param recordSize TODO: 準備中
+     */
     public StdinSeqReader(int recordSize) {
       super(recordSize);
     }
@@ -87,6 +105,13 @@ public class StdinRecordReader implements RecordReader {
     }
   }
 
+  /**
+   * TODO: 準備中
+   *
+   * @param userDataFormat TODO: 準備中
+   * @param recordSize TODO: 準備中
+   * @return TODO: 準備中
+   */
   public static RecordReader getInstance(UserDataFormat userDataFormat, int recordSize) {
     switch (userDataFormat) {
       case LINE_SEQUENTIAL:

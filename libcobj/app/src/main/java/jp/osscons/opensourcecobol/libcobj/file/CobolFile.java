@@ -40,140 +40,254 @@ import jp.osscons.opensourcecobol.libcobj.exceptions.CobolExceptionId;
 import jp.osscons.opensourcecobol.libcobj.exceptions.CobolRuntimeException;
 import jp.osscons.opensourcecobol.libcobj.exceptions.CobolStopRunException;
 
+/** TODO: 準備中 */
 public class CobolFile {
+  /** TODO: 準備中 */
   protected static final int COB_ORG_SEQUENTIAL = 0;
+  /** TODO: 準備中 */
   protected static final int COB_ORG_LINE_SEQUENTIAL = 1;
+  /** TODO: 準備中 */
   protected static final int COB_ORG_RELATIVE = 2;
+  /** TODO: 準備中 */
   protected static final int COB_ORG_INDEXED = 3;
+  /** TODO: 準備中 */
   protected static final int COB_ORG_SORT = 4;
+  /** TODO: 準備中 */
   protected static final int COB_ORG_MAX = 5;
 
+  /** TODO: 準備中 */
   protected static final int COB_ACCESS_SEQUENTIAL = 1;
+  /** TODO: 準備中 */
   protected static final int COB_ACCESS_DYNAMIC = 2;
+  /** TODO: 準備中 */
   protected static final int COB_ACCESS_RANDOM = 3;
 
+  /** TODO: 準備中 */
   protected static final int COB_IO_OPEN = 0;
+  /** TODO: 準備中 */
   protected static final int COB_IO_READ = 1;
+  /** TODO: 準備中 */
   protected static final int COB_IO_WRITE = 2;
+  /** TODO: 準備中 */
   protected static final int COB_IO_CLOSE = 3;
+  /** TODO: 準備中 */
   protected static final int COB_IO_DELETE = 4;
+  /** TODO: 準備中 */
   protected static final int COB_IO_REWRITE = 5;
+  /** TODO: 準備中 */
   protected static final int COB_IO_START = 6;
+  /** TODO: 準備中 */
   protected static final int COB_IO_COMMIT = 7;
+  /** TODO: 準備中 */
   protected static final int COB_IO_ROLLBACK = 8;
+  /** TODO: 準備中 */
   protected static final int COB_IO_UNLOCK = 9;
+  /** TODO: 準備中 */
   protected static final int COB_IO_DELETE_FILE = 10;
 
+  /** TODO: 準備中 */
   public static final int COB_OPEN_CLOSED = 0;
+  /** TODO: 準備中 */
   public static final int COB_OPEN_INPUT = 1;
+  /** TODO: 準備中 */
   public static final int COB_OPEN_OUTPUT = 2;
+  /** TODO: 準備中 */
   public static final int COB_OPEN_I_O = 3;
+  /** TODO: 準備中 */
   public static final int COB_OPEN_EXTEND = 4;
+  /** TODO: 準備中 */
   public static final int COB_OPEN_LOCKED = 5;
 
+  /** TODO: 準備中 */
   public static final int COB_CLOSE_NORMAL = 0;
+  /** TODO: 準備中 */
   public static final int COB_CLOSE_LOCK = 1;
+  /** TODO: 準備中 */
   public static final int COB_CLOSE_NO_REWIND = 2;
+  /** TODO: 準備中 */
   public static final int COB_CLOSE_UNIT = 3;
+  /** TODO: 準備中 */
   public static final int COB_CLOSE_UNIT_REMOVAL = 4;
 
+  /** TODO: 準備中 */
   public static final int COB_WRITE_MASK = 0x0000ffff;
+  /** TODO: 準備中 */
   public static final int COB_WRITE_LINES = 0x00010000;
+  /** TODO: 準備中 */
   public static final int COB_WRITE_PAGE = 0x00020000;
+  /** TODO: 準備中 */
   public static final int COB_WRITE_CHANNEL = 0x00040000;
+  /** TODO: 準備中 */
   public static final int COB_WRITE_AFTER = 0x00100000;
+  /** TODO: 準備中 */
   public static final int COB_WRITE_BEFORE = 0x00200000;
+  /** TODO: 準備中 */
   public static final int COB_WRITE_EOP = 0x00400000;
+  /** TODO: 準備中 */
   public static final int COB_WRITE_LOCK = 0x00800000;
 
+  /** TODO: 準備中 */
   public static final int COB_READ_NEXT = 0x01;
+  /** TODO: 準備中 */
   public static final int COB_READ_PREVIOUS = 0x2;
+  /** TODO: 準備中 */
   public static final int COB_READ_FIRST = 0x04;
+  /** TODO: 準備中 */
   public static final int COB_READ_LAST = 0x08;
+  /** TODO: 準備中 */
   public static final int COB_READ_LOCK = 0x10;
+  /** TODO: 準備中 */
   public static final int COB_READ_NO_LOCK = 0x20;
+  /** TODO: 準備中 */
   public static final int COB_READ_KEPT_LOCK = 0x40;
+  /** TODO: 準備中 */
   public static final int COB_READ_WAIT_LOCK = 0x80;
+  /** TODO: 準備中 */
   public static final int COB_READ_IGNORE_LOCK = 0x100;
 
+  /** TODO: 準備中 */
   protected static final String TIS_DEFINE_USERFH = "OC_USERFH";
+  /** TODO: 準備中 */
   protected static final String COB_IO_CREATES = "OC_IO_CREATES";
+  /** TODO: 準備中 */
   protected static final String COB_EXTEND_CREATES = "OC_EXTEND_CREATES";
 
+  /** TODO: 準備中 */
   protected static final int COB_STATUS_00_SUCCESS = 0;
+  /** TODO: 準備中 */
   protected static final int COB_STATUS_02_SUCCESS_DUPLICATE = 2;
+  /** TODO: 準備中 */
   protected static final int COB_STATUS_04_SUCCESS_INCOMPLETE = 4;
+  /** TODO: 準備中 */
   protected static final int COB_STATUS_05_SUCCESS_OPTIONAL = 5;
+  /** TODO: 準備中 */
   protected static final int COB_STATUS_07_SUCCESS_NO_UNIT = 7;
+  /** TODO: 準備中 */
   protected static final int COB_STATUS_10_END_OF_FILE = 10;
+  /** TODO: 準備中 */
   protected static final int COB_STATUS_14_OUT_OF_KEY_RANGE = 14;
+  /** TODO: 準備中 */
   protected static final int COB_STATUS_21_KEY_INVALID = 21;
+  /** TODO: 準備中 */
   protected static final int COB_STATUS_22_KEY_EXISTS = 22;
+  /** TODO: 準備中 */
   protected static final int COB_STATUS_23_KEY_NOT_EXISTS = 23;
+  /** TODO: 準備中 */
   protected static final int COB_STATUS_30_PERMANENT_ERROR = 30;
+  /** TODO: 準備中 */
   protected static final int COB_STATUS_31_INCONSISTENT_FILENAME = 31;
+  /** TODO: 準備中 */
   protected static final int COB_STATUS_34_BOUNDARY_VIOLATION = 34;
+  /** TODO: 準備中 */
   protected static final int COB_STATUS_35_NOT_EXISTS = 35;
+  /** TODO: 準備中 */
   protected static final int COB_STATUS_37_PERMISSION_DENIED = 37;
+  /** TODO: 準備中 */
   protected static final int COB_STATUS_38_CLOSED_WITH_LOCK = 38;
+  /** TODO: 準備中 */
   protected static final int COB_STATUS_39_CONFLICT_ATTRIBUTE = 39;
+  /** TODO: 準備中 */
   protected static final int COB_STATUS_41_ALREADY_OPEN = 41;
+  /** TODO: 準備中 */
   protected static final int COB_STATUS_42_NOT_OPEN = 42;
+  /** TODO: 準備中 */
   protected static final int COB_STATUS_43_READ_NOT_DONE = 43;
+  /** TODO: 準備中 */
   protected static final int COB_STATUS_44_RECORD_OVERFLOW = 44;
+  /** TODO: 準備中 */
   protected static final int COB_STATUS_46_READ_ERROR = 46;
+  /** TODO: 準備中 */
   protected static final int COB_STATUS_47_INPUT_DENIED = 47;
+  /** TODO: 準備中 */
   protected static final int COB_STATUS_48_OUTPUT_DENIED = 48;
+  /** TODO: 準備中 */
   protected static final int COB_STATUS_49_I_O_DENIED = 49;
+  /** TODO: 準備中 */
   protected static final int COB_STATUS_51_RECORD_LOCKED = 51;
+  /** TODO: 準備中 */
   protected static final int COB_STATUS_52_EOP = 52;
+  /** TODO: 準備中 */
   protected static final int COB_STATUS_57_I_O_LINAGE = 57;
+  /** TODO: 準備中 */
   protected static final int COB_STATUS_61_FILE_SHARING = 61;
+  /** TODO: 準備中 */
   protected static final int COB_STATUS_91_NOT_AVAILABLE = 91;
 
+  /** TODO: 準備中 */
   protected static final int COB_LINAGE_INVALID = 16384;
+  /** TODO: 準備中 */
   protected static final int COB_NOT_CONFIGURED = 32768;
 
+  /** TODO: 準備中 */
   public static final int COB_SELECT_FILE_STATUS = 0x01;
+  /** TODO: 準備中 */
   public static final int COB_SELECT_EXTERNAL = 0x02;
+  /** TODO: 準備中 */
   public static final int COB_SELECT_LINAGE = 0x04;
+  /** TODO: 準備中 */
   public static final int COB_SELECT_SPLITKEY = 0x08;
 
+  /** TODO: 準備中 */
   protected static final int FNSTATUSSIZE = 3;
 
+  /** TODO: 準備中 */
   protected static final int ENOENT = 2;
+  /** TODO: 準備中 */
   protected static final int EBADF = 9;
+  /** TODO: 準備中 */
   protected static final int EACCESS = 13;
+  /** TODO: 準備中 */
   protected static final int EISDIR = 21;
+  /** TODO: 準備中 */
   protected static final int EROFS = 30;
+  /** TODO: 準備中 */
   protected static final int EAGAIN = 11;
 
+  /** TODO: 準備中 */
   public static CobolFile errorFile;
 
+  /** TODO: 準備中 */
   protected static int COB_SMALL_BUFF = 1024;
+  /** TODO: 準備中 */
   protected static int COB_SMALL_MAX = COB_SMALL_BUFF - 1;
 
+  /** TODO: 準備中 */
   protected static final int COB_LOCK_EXCLUSIVE = 1;
+  /** TODO: 準備中 */
   protected static final int COB_LOCK_MANUAL = 2;
+  /** TODO: 準備中 */
   protected static final int COB_LOCK_AUTOMATIC = 3;
+  /** TODO: 準備中 */
   protected static final int COB_LOCK_MULTIPLE = 1;
+  /** TODO: 準備中 */
   protected static final int COB_LOCK_MASK = 0x7;
 
+  /** TODO: 準備中 */
   protected static String cob_file_path = null;
+  /** TODO: 準備中 */
   protected static String cob_ls_nulls = null;
+  /** TODO: 準備中 */
   protected static String cob_ls_fixed = null;
+  /** TODO: 準備中 */
   protected static byte[] file_open_env = new byte[1024];
+  /** TODO: 準備中 */
   protected static String file_open_name;
+  /** TODO: 準備中 */
   protected static byte[] file_open_buff = new byte[1024];
 
+  /** TODO: 準備中 */
   protected static final String[] prefix = {"DD_", "dd_", ""};
+  /** TODO: 準備中 */
   protected static final int NUM_PREFIX = prefix.length;
 
+  /** TODO: 準備中 */
   protected static int eop_status = 0;
+  /** TODO: 準備中 */
   protected static int cob_do_sync = 0;
 
   private static List<CobolFile> file_cache = new ArrayList<CobolFile>();
 
+  /** TODO: 準備中 */
   protected static int[] status_exception = {
     0,
     CobolExceptionId.COB_EC_I_O_AT_END,
@@ -186,54 +300,128 @@ public class CobolFile {
     CobolExceptionId.COB_EC_I_O,
     CobolExceptionId.COB_EC_I_O_IMP
   };
+  /** TODO: 準備中 */
   public String select_name;
+  /** TODO: 準備中 */
   public byte[] file_status;
+  /** TODO: 準備中 */
   protected AbstractCobolField assign;
+  /** TODO: 準備中 */
   public AbstractCobolField record;
+  /** TODO: 準備中 */
   protected AbstractCobolField record_size;
+  /** TODO: 準備中 */
   protected CobolFileKey[] keys;
+  /** TODO: 準備中 */
   public FileIO file;
+  /** TODO: 準備中 */
   protected CobolSort filex;
+  /** TODO: 準備中 */
   protected IndexedFile filei;
+  /** TODO: 準備中 */
   protected Linage linorkeyptr;
+  /** TODO: 準備中 */
   protected CobolDataStorage sort_collating;
+  /** TODO: 準備中 */
   protected Object extfh_ptr;
+  /** TODO: 準備中 */
   protected int record_min;
+  /** TODO: 準備中 */
   public int record_max;
+  /** TODO: 準備中 */
   protected int nkeys;
 
+  /** TODO: 準備中 */
   protected char organization;
+  /** TODO: 準備中 */
   protected char access_mode;
+  /** TODO: 準備中 */
   protected char lock_mode;
+  /** TODO: 準備中 */
   protected char open_mode;
+  /** TODO: 準備中 */
   protected boolean flag_optional;
+  /** TODO: 準備中 */
   public char last_open_mode;
+  /** TODO: 準備中 */
   protected char special;
+  /** TODO: 準備中 */
   protected boolean flag_nonexistent;
 
+  /** TODO: 準備中 */
   protected boolean flag_end_of_file;
+  /** TODO: 準備中 */
   protected boolean flag_begin_of_file;
+  /** TODO: 準備中 */
   protected char flag_first_read;
+  /** TODO: 準備中 */
   protected boolean flag_read_done;
+  /** TODO: 準備中 */
   public char flag_select_features;
+  /** TODO: 準備中 */
   protected boolean flag_needs_nl;
+  /** TODO: 準備中 */
   protected boolean flag_needs_top;
+  /** TODO: 準備中 */
   protected char file_version;
 
+  /** TODO: 準備中 */
   protected static String runtime_buffer;
+  /** TODO: 準備中 */
   protected static String name;
+  /** TODO: 準備中 */
   protected static byte[] status;
 
+  /**
+   * TODO: 準備中
+   *
+   * @return TODO: 準備中
+   */
   public Linage getLinorkeyptr() {
     return this.linorkeyptr;
   }
 
+  /**
+   * TODO: 準備中
+   *
+   * @param ptr TODO: 準備中
+   */
   public void setLinorkeyptr(Linage ptr) {
     this.linorkeyptr = ptr;
   }
 
+  /** TODO: 準備中 */
   public CobolFile() {}
 
+  /**
+   * TODO: 準備中
+   *
+   * @param selectName TODO: 準備中
+   * @param fileStatus TODO: 準備中
+   * @param assign TODO: 準備中
+   * @param record TODO: 準備中
+   * @param recordSize TODO: 準備中
+   * @param recordMin TODO: 準備中
+   * @param recordMax TODO: 準備中
+   * @param nkeys TODO: 準備中
+   * @param keys TODO: 準備中
+   * @param organization TODO: 準備中
+   * @param accessMode TODO: 準備中
+   * @param lockMode TODO: 準備中
+   * @param openMode TODO: 準備中
+   * @param flagOptional TODO: 準備中
+   * @param lastOpenMode TODO: 準備中
+   * @param special TODO: 準備中
+   * @param flagNonexistent TODO: 準備中
+   * @param flagEndOfFile TODO: 準備中
+   * @param flagBeginOfFile TODO: 準備中
+   * @param flagFirstRead TODO: 準備中
+   * @param flagReadDone TODO: 準備中
+   * @param flagSelectFeatures TODO: 準備中
+   * @param flagNeedsNl TODO: 準備中
+   * @param flagNeedsTop TODO: 準備中
+   * @param fileVersion TODO: 準備中
+   */
   public CobolFile(
       String selectName,
       byte[] fileStatus,
@@ -291,8 +479,8 @@ public class CobolFile {
   /**
    * libcob/fileio.cのsave_statusの実装 RETURN_STATUSマクロは実装できないため,本メソッドの呼び出し後の次の文はreturn;を書くこと.
    *
-   * @param status TODO: 調査中
-   * @param fnstatus TODO: 調査中
+   * @param status TODO: 準備中
+   * @param fnstatus TODO: 準備中
    */
   protected void saveStatus(int status, AbstractCobolField fnstatus) {
     CobolFile.errorFile = this;
@@ -321,15 +509,15 @@ public class CobolFile {
   /**
    * libcob/fileio.のcob_invoke_funの実装
    *
-   * @param operate TODO: 調査中
-   * @param f TODO: 調査中
-   * @param key TODO: 調査中
-   * @param rec TODO: 調査中
-   * @param fnstatus TODO: 調査中
-   * @param openMode TODO: 調査中
-   * @param startCond TODO: 調査中
-   * @param readOpts TODO: 調査中
-   * @return TODO: 調査中
+   * @param operate TODO: 準備中
+   * @param f TODO: 準備中
+   * @param key TODO: 準備中
+   * @param rec TODO: 準備中
+   * @param fnstatus TODO: 準備中
+   * @param openMode TODO: 準備中
+   * @param startCond TODO: 準備中
+   * @param readOpts TODO: 準備中
+   * @return TODO: 準備中
    */
   public static int invokeFun(
       int operate,
@@ -346,7 +534,7 @@ public class CobolFile {
   /**
    * libcob/cob_cache_fileのj実装
    *
-   * @param f TODO: 調査中
+   * @param f TODO: 準備中
    */
   protected static void cacheFile(CobolFile f) {
     if (file_cache.contains(f)) {
@@ -358,7 +546,7 @@ public class CobolFile {
   /**
    * libcob/fileio.cのcob_file_linage_checkの実装 TODO 実装
    *
-   * @return TODO: 調査中
+   * @return TODO: 準備中
    */
   protected boolean file_linage_check() {
     Linage lingptr = getLinorkeyptr();
@@ -403,9 +591,9 @@ public class CobolFile {
   /**
    * libcob/fileio.cのcob_linage_write_optの実装 TODO 実装
    *
-   * @param opt TODO: 調査中
-   * @return TODO: 調査中
-   * @throws CobolStopRunException TODO: 調査中
+   * @param opt TODO: 準備中
+   * @return TODO: 準備中
+   * @throws CobolStopRunException TODO: 準備中
    */
   protected int linage_write_opt(int opt) throws CobolStopRunException {
     int i, n;
@@ -468,6 +656,14 @@ public class CobolFile {
     return 0;
   }
 
+  /**
+   * TODO: 準備中
+   *
+   * @param name TODO: 準備中
+   * @param jbuf TODO: 準備中
+   * @param n TODO: 準備中
+   * @return TODO: 準備中
+   */
   protected byte[] cb_get_jisword_buff(byte[] name, byte[] jbuf, int n) {
     int cs = 0;
     int ce = name.length - 1;
@@ -570,6 +766,13 @@ public class CobolFile {
     return sb.toString();
   }
 
+  /**
+   * TODO: 準備中
+   *
+   * @param mode TODO: 準備中
+   * @param sharing TODO: 準備中
+   * @param fnstatus TODO: 準備中
+   */
   public void open(int mode, int sharing, AbstractCobolField fnstatus) {
     String openMode = openModeToString(mode);
     if (invokeFun(COB_IO_OPEN, this, null, null, fnstatus, openMode, null, null) != 0) {
@@ -768,10 +971,26 @@ public class CobolFile {
   // protected long start;
   // protected long end;
 
+  /**
+   * TODO: 準備中
+   *
+   * @param mode TODO: 準備中
+   * @param sharing TODO: 準備中
+   * @param fnstatus TODO: 準備中
+   */
   public void openEx(int mode, int sharing, AbstractCobolField fnstatus) {
     // this.open_("", mode, sharing);
   }
 
+  /**
+   * TODO: 準備中
+   *
+   * @param filename TODO: 準備中
+   * @param mode TODO: 準備中
+   * @param sharing TODO: 準備中
+   * @return TODO: 準備中
+   * @throws IOException TODO: 準備中
+   */
   public int open_(String filename, int mode, int sharing) throws IOException {
     FileChannel fp = null;
     try {
@@ -853,6 +1072,12 @@ public class CobolFile {
     return 0;
   }
 
+  /**
+   * TODO: 準備中
+   *
+   * @param opt TODO: 準備中
+   * @param fnstatus TODO: 準備中
+   */
   public void close(int opt, AbstractCobolField fnstatus) {
     String openMode = openModeToString(this.last_open_mode);
     if (invokeFun(COB_IO_CLOSE, this, null, null, fnstatus, openMode, null, null) != 0) {
@@ -895,6 +1120,12 @@ public class CobolFile {
   // this.close_(opt);
   // }
 
+  /**
+   * TODO: 準備中
+   *
+   * @param opt TODO: 準備中
+   * @return TODO: 準備中
+   */
   public int close_(int opt) {
     switch (opt) {
       case COB_CLOSE_NORMAL:
@@ -921,6 +1152,13 @@ public class CobolFile {
     }
   }
 
+  /**
+   * TODO: 準備中
+   *
+   * @param cond TODO: 準備中
+   * @param key TODO: 準備中
+   * @param fnstatus TODO: 準備中
+   */
   public void start(int cond, AbstractCobolField key, AbstractCobolField fnstatus) {
     String openMode = openModeToString(this.last_open_mode);
     String startCond = String.format("%01d", cond);
@@ -954,15 +1192,36 @@ public class CobolFile {
     saveStatus(ret, fnstatus);
   }
 
+  /**
+   * TODO: 準備中
+   *
+   * @param cond TODO: 準備中
+   * @param key TODO: 準備中
+   * @param fnstatus TODO: 準備中
+   */
   public void startEx(int cond, AbstractCobolField key, AbstractCobolField fnstatus) {
     this.start_(cond, key);
   }
 
+  /**
+   * TODO: 準備中
+   *
+   * @param cond TODO: 準備中
+   * @param key TODO: 準備中
+   * @return TODO: 準備中
+   */
   public int start_(int cond, AbstractCobolField key) {
     System.out.println("super.start");
     return 0;
   }
 
+  /**
+   * TODO: 準備中
+   *
+   * @param key TODO: 準備中
+   * @param fnstatus TODO: 準備中
+   * @param readOpts TODO: 準備中
+   */
   public void read(AbstractCobolField key, AbstractCobolField fnstatus, int readOpts) {
     byte[] sbuff = new byte[3];
     String openMode = openModeToString(this.last_open_mode);
@@ -1065,24 +1324,59 @@ public class CobolFile {
     saveStatus(ret, fnstatus);
   }
 
+  /**
+   * TODO: 準備中
+   *
+   * @param key TODO: 準備中
+   * @param fnstatus TODO: 準備中
+   * @param readOpts TODO: 準備中
+   */
   public void read(int key, AbstractCobolField fnstatus, int readOpts) {
     this.read(null, fnstatus, readOpts);
   }
 
+  /**
+   * TODO: 準備中
+   *
+   * @param key TODO: 準備中
+   * @param fnstatus TODO: 準備中
+   * @param readOpts TODO: 準備中
+   */
   public void readEx(AbstractCobolField key, AbstractCobolField fnstatus, int readOpts) {
     this.read_(key, readOpts);
   }
 
+  /**
+   * TODO: 準備中
+   *
+   * @param key TODO: 準備中
+   * @param readOpts TODO: 準備中
+   * @return TODO: 準備中
+   */
   public int read_(AbstractCobolField key, int readOpts) {
     System.out.println("super.read");
     return 0;
   }
 
+  /**
+   * TODO: 準備中
+   *
+   * @param readOpts TODO: 準備中
+   * @return TODO: 準備中
+   */
   public int readNext(int readOpts) {
     System.out.println("super.readNext");
     return 0;
   }
 
+  /**
+   * TODO: 準備中
+   *
+   * @param rec TODO: 準備中
+   * @param opt TODO: 準備中
+   * @param fnstatus TODO: 準備中
+   * @throws CobolStopRunException TODO: 準備中
+   */
   public void write(AbstractCobolField rec, int opt, AbstractCobolField fnstatus)
       throws CobolStopRunException {
     if (this.access_mode == COB_ACCESS_SEQUENTIAL
@@ -1137,11 +1431,26 @@ public class CobolFile {
     saveStatus(ret, fnstatus);
   }
 
+  /**
+   * TODO: 準備中
+   *
+   * @param rec TODO: 準備中
+   * @param opt TODO: 準備中
+   * @param fnstatus TODO: 準備中
+   * @throws CobolStopRunException TODO: 準備中
+   */
   public void writeEx(AbstractCobolField rec, int opt, AbstractCobolField fnstatus)
       throws CobolStopRunException {
     this.write_(opt);
   }
 
+  /**
+   * TODO: 準備中
+   *
+   * @param opt TODO: 準備中
+   * @return TODO: 準備中
+   * @throws CobolStopRunException TODO: 準備中
+   */
   public int write_(int opt) throws CobolStopRunException {
     System.out.println("super.write");
     return 0;
@@ -1150,9 +1459,9 @@ public class CobolFile {
   /**
    * libcob/fileio.cのcob_file_write_optの実装
    *
-   * @param opt TODO: 調査中
-   * @return TODO: 調査中
-   * @throws CobolStopRunException TODO: 調査中
+   * @param opt TODO: 準備中
+   * @return TODO: 準備中
+   * @throws CobolStopRunException TODO: 準備中
    */
   protected int file_write_opt(int opt) throws CobolStopRunException {
     if ((this.flag_select_features & COB_SELECT_LINAGE) != 0) {
@@ -1168,6 +1477,13 @@ public class CobolFile {
     return 0;
   }
 
+  /**
+   * TODO: 準備中
+   *
+   * @param rec TODO: 準備中
+   * @param opt TODO: 準備中
+   * @param fnstatus TODO: 準備中
+   */
   public void rewrite(AbstractCobolField rec, int opt, AbstractCobolField fnstatus) {
     String openMode = openModeToString(this.last_open_mode);
     if (invokeFun(COB_IO_REWRITE, this, null, null, fnstatus, openMode, null, null) != 0) {
@@ -1206,15 +1522,33 @@ public class CobolFile {
     saveStatus(ret, fnstatus);
   }
 
+  /**
+   * TODO: 準備中
+   *
+   * @param rec TODO: 準備中
+   * @param opt TODO: 準備中
+   * @param fnstatus TODO: 準備中
+   */
   public void rewriteEx(AbstractCobolField rec, int opt, AbstractCobolField fnstatus) {
     this.rewrite_(opt);
   }
 
+  /**
+   * TODO: 準備中
+   *
+   * @param opt TODO: 準備中
+   * @return TODO: 準備中
+   */
   public int rewrite_(int opt) {
     System.out.println("super.rewrite");
     return 0;
   }
 
+  /**
+   * TODO: 準備中
+   *
+   * @param fnstatus TODO: 準備中
+   */
   public void delete(AbstractCobolField fnstatus) {
     String openMode = openModeToString(this.last_open_mode);
     if (invokeFun(COB_IO_DELETE, this, null, null, fnstatus, openMode, null, null) != 0) {
@@ -1242,15 +1576,30 @@ public class CobolFile {
     saveStatus(ret, fnstatus);
   }
 
+  /**
+   * TODO: 準備中
+   *
+   * @param fnstatus TODO: 準備中
+   */
   public void deleteEx(AbstractCobolField fnstatus) {
     this.delete_();
   }
 
+  /**
+   * TODO: 準備中
+   *
+   * @return TODO: 準備中
+   */
   public int delete_() {
     System.out.println("super.delete");
     return 0;
   }
 
+  /**
+   * TODO: 準備中
+   *
+   * @param fnstatus TODO: 準備中
+   */
   public void unlock(AbstractCobolField fnstatus) {
     String openMode = openModeToString(this.last_open_mode);
     if (invokeFun(COB_IO_UNLOCK, this, null, null, fnstatus, openMode, null, null) != 0) {
@@ -1260,12 +1609,14 @@ public class CobolFile {
     saveStatus(COB_STATUS_00_SUCCESS, fnstatus);
   }
 
+  /** TODO: 準備中 */
   public void unlock_() {
     if (this.open_mode != COB_OPEN_CLOSED && this.open_mode != COB_OPEN_LOCKED) {
       this.file.flush();
     }
   }
 
+  /** TODO: 準備中 */
   public static void commit() {
     if (invokeFun(COB_IO_COMMIT, null, null, null, null, null, null, null) != 0) {
       return;
@@ -1275,6 +1626,7 @@ public class CobolFile {
     }
   }
 
+  /** TODO: 準備中 */
   public static void rollback() {
     if (invokeFun(COB_IO_ROLLBACK, null, null, null, null, null, null, null) != 0) {
       return;
@@ -1299,8 +1651,8 @@ public class CobolFile {
   /**
    * libcob/fileio.cのcob_syncの実装
    *
-   * @param f TODO: 調査中
-   * @param mode TODO: 調査中
+   * @param f TODO: 準備中
+   * @param mode TODO: 準備中
    */
   protected void cob_sync(CobolFile f, int mode) {
     // TODO
@@ -1342,6 +1694,7 @@ public class CobolFile {
     file_open_buff = new byte[COB_SMALL_BUFF];
   }
 
+  /** TODO: 準備中 */
   public static void defaultErrorHandle() {
     byte[] fileStatus = CobolFile.errorFile.file_status;
     int status = (fileStatus[0] - '0') * 10 + (fileStatus[1] - '0');
@@ -1418,6 +1771,11 @@ public class CobolFile {
     CobolUtil.runtimeError(String.format("%s (STATUS = %02d) File : '%s'", msg, status, filename));
   }
 
+  /**
+   * TODO: 準備中
+   *
+   * @param fnstatus TODO: 準備中
+   */
   public void cob_delete_file(AbstractCobolField fnstatus) {
     String openMode = openModeToString(this.last_open_mode);
     if (invokeFun(COB_IO_DELETE_FILE, this, null, null, fnstatus, openMode, null, null) != 0) {
@@ -1554,11 +1912,21 @@ public class CobolFile {
     }
   }
 
+  /**
+   * TODO: 準備中
+   *
+   * @return TODO: 準備中
+   */
   public String getSelectName() {
     // CobolFile cobolFile = new CobolFile();
     return this.select_name;
   }
 
+  /**
+   * TODO: 準備中
+   *
+   * @return TODO: 準備中
+   */
   public byte[] getFileStatus() {
     // CobolFile cobolFile = new CobolFile();
     return this.file_status;
@@ -1566,6 +1934,12 @@ public class CobolFile {
 
   private static Map<String, byte[]> externalFileStatusTable = new HashMap<String, byte[]>();
 
+  /**
+   * TODO: 準備中
+   *
+   * @param key TODO: 準備中
+   * @return TODO: 準備中
+   */
   public static byte[] getExternalFileStatus(String key) {
     byte[] bytes = externalFileStatusTable.get(key);
     if (bytes == null) {
@@ -1579,10 +1953,23 @@ public class CobolFile {
 
   private static Map<String, CobolFile> externalFileTable = new HashMap<String, CobolFile>();
 
+  /**
+   * TODO: 準備中
+   *
+   * @param key TODO: 準備中
+   * @return TODO: 準備中
+   */
   public static CobolFile getExternalFile(String key) {
     return externalFileTable.get(key);
   }
 
+  /**
+   * TODO: 準備中
+   *
+   * @param key TODO: 準備中
+   * @param value TODO: 準備中
+   * @return TODO: 準備中
+   */
   public static CobolFile putExternalFile(String key, CobolFile value) {
     return externalFileTable.put(key, value);
   }

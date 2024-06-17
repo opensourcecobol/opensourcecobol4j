@@ -153,6 +153,12 @@ public class CobolAlphanumericField extends AbstractCobolField {
     CobolAlphanumericField.moveAlphanumToAlphanum(this, field);
   }
 
+  /**
+   * TODO: 準備中
+   *
+   * @param dst TODO: 準備中
+   * @param src TODO: 準備中
+   */
   public static void moveAlphanumToAlphanum(AbstractCobolField dst, AbstractCobolField src) {
     CobolDataStorage data1 = src.getDataStorage();
     int size1 = src.getSize();

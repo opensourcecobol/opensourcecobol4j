@@ -23,6 +23,7 @@ import java.nio.ByteBuffer;
 import java.nio.ByteOrder;
 import jp.osscons.opensourcecobol.libcobj.common.CobolConstant;
 
+/** TODO: 準備中 */
 public class CobolNationalEditedField extends AbstractCobolField {
   /**
    * コンストラクタ

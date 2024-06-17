@@ -92,6 +92,10 @@ jobs:
     needs: check-workflows
     uses: ./.github/workflows/javadoc.yml
 
+  check-missing-javadoc:
+    needs: check-workflows
+    uses: ./.github/workflows/check-missing-javadoc.yml
+
   windows-build:
     needs: check-workflows
     strategy:

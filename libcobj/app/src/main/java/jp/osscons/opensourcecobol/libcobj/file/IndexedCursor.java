@@ -29,16 +29,32 @@ import java.util.Optional;
 
 /** Represents a result of fetching a data from SQLite tables. */
 class FetchResult {
+  /** TODO: 準備中 */
   public byte[] key;
+  /** TODO: 準備中 */
   public byte[] value;
+  /** TODO: 準備中 */
   public int dupNo;
 
+  /**
+   * TODO: 準備中
+   *
+   * @param key TODO: 準備中
+   * @param value TODO: 準備中
+   * @param dupNo TODO: 準備中
+   */
   public FetchResult(byte[] key, byte[] value, int dupNo) {
     this.key = key;
     this.value = value;
     this.dupNo = dupNo;
   }
 
+  /**
+   * TODO: 準備中
+   *
+   * @param key TODO: 準備中
+   * @param value TODO: 準備中
+   */
   public FetchResult(byte[] key, byte[] value) {
     this.key = key;
     this.value = value;
@@ -91,10 +107,20 @@ public final class IndexedCursor {
   private boolean nextCursorFetchKeyDiffrent;
   private boolean prevCursorFetchKeyDiffrent;
 
+  /**
+   * TODO: 準備中
+   *
+   * @param comparator TODO: 準備中
+   */
   public void setComparator(int comparator) {
     this.comparator = comparator;
   }
 
+  /**
+   * TODO: 準備中
+   *
+   * @return TODO: 準備中
+   */
   public int getComparator() {
     return this.comparator;
   }
@@ -142,7 +168,7 @@ public final class IndexedCursor {
   /**
    * reload a cursor
    *
-   * @return TODO: 調査中
+   * @return TODO: 準備中
    */
   public Optional<IndexedCursor> reloadCursor() {
     if (this.firstFetch) {
@@ -342,6 +368,13 @@ public final class IndexedCursor {
     }
   }
 
+  /**
+   * TODO: 準備中
+   *
+   * @param originalKey TODO: 準備中
+   * @param fetchKey TODO: 準備中
+   * @return TODO: 準備中
+   */
   public static boolean matchKeyHead(byte[] originalKey, byte[] fetchKey) {
     if (originalKey.length > fetchKey.length) {
       return false;
@@ -513,6 +546,12 @@ public final class IndexedCursor {
     }
   }
 
+  /**
+   * TODO: 準備中
+   *
+   * @param opt TODO: 準備中
+   * @return TODO: 準備中
+   */
   public Optional<FetchResult> read(CursorReadOption opt) {
     if (opt == CursorReadOption.NEXT) {
       return this.next();
@@ -622,6 +661,11 @@ public final class IndexedCursor {
     }
   }
 
+  /**
+   * TODO: 準備中
+   *
+   * @return TODO: 準備中
+   */
   public boolean moveToFirst() {
     Optional<ResultSet> cursor =
         getCursorForFirstLast(this.tableIndex, this.isDuplicate, CursorReadOption.FIRST);
@@ -635,6 +679,11 @@ public final class IndexedCursor {
     return true;
   }
 
+  /**
+   * TODO: 準備中
+   *
+   * @return TODO: 準備中
+   */
   public boolean moveToLast() {
     Optional<ResultSet> cursor =
         getCursorForFirstLast(this.tableIndex, this.isDuplicate, CursorReadOption.LAST);

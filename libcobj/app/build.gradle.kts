@@ -7,7 +7,7 @@ plugins {
     id("com.github.sherter.google-java-format") version "0.9"
     id("maven-publish")
     pmd
-    id("com.github.spotbugs") version "6.0.15"
+    id("com.github.spotbugs") version "6.0.16"
 }
 
 repositories {
@@ -17,6 +17,10 @@ repositories {
 tasks {
     javadoc {
         options.encoding = "UTF-8"
+        options {
+            // It seems that the following line does not work.
+            (this as CoreJavadocOptions).addStringOption("Xdoclint:missing")
+        }
     }
     compileJava {
         options.encoding = "UTF-8"

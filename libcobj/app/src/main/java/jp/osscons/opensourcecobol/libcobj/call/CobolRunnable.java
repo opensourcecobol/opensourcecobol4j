@@ -34,9 +34,9 @@ public interface CobolRunnable {
   void cancel();
 
   /**
-   * 取り扱いについては調査中
+   * 取り扱いについては準備中
    *
-   * @return 調査中
+   * @return 準備中
    */
   boolean isActive();
 }

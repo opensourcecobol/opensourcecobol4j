@@ -24,6 +24,7 @@ import jp.osscons.opensourcecobol.libcobj.common.CobolConstant;
 import jp.osscons.opensourcecobol.libcobj.common.CobolModule;
 import jp.osscons.opensourcecobol.libcobj.exceptions.CobolRuntimeException;
 
+/** TODO: 準備中 */
 public class CobolNumericBinaryField extends AbstractCobolField {
 
   /**
@@ -80,6 +81,11 @@ public class CobolNumericBinaryField extends AbstractCobolField {
     return this.getBinaryValue();
   }
 
+  /**
+   * TODO: 準備中
+   *
+   * @param n TODO: 準備中
+   */
   public void setLongValue(long n) {
     this.setBinaryValue(n);
   }
@@ -216,7 +222,7 @@ public class CobolNumericBinaryField extends AbstractCobolField {
   /**
    * libcob/move.cのcob_binary_mset_int64の実装
    *
-   * @param n TODO: 調査中
+   * @param n TODO: 準備中
    */
   public void binaryMsetInt64(long n) {
     byte bytes[] = new byte[8];
@@ -310,7 +316,7 @@ public class CobolNumericBinaryField extends AbstractCobolField {
   /**
    * libcob/numeric.cのcob_binary_get_int64の実装
    *
-   * @param f TODO: 調査中
+   * @param f TODO: 準備中
    */
   private long binaryGetInt64() {
     int fsiz = 8 - this.getSize();

@@ -43,9 +43,9 @@ public class CobolNumericField extends AbstractCobolField {
   }
 
   /**
-   * TODO: 調査中
+   * TODO: 準備中
    *
-   * @param s TODO: 調査中
+   * @param s TODO: 準備中
    */
   public void checkNumeric(String s) {}
 
@@ -553,10 +553,10 @@ public class CobolNumericField extends AbstractCobolField {
   /**
    * libcob/move.cのstore_common_regionの実装
    *
-   * @param field TODO: 調査中
-   * @param data TODO: 調査中
-   * @param size TODO: 調査中
-   * @param scale TODO: 調査中
+   * @param field TODO: 準備中
+   * @param data TODO: 準備中
+   * @param size TODO: 準備中
+   * @param scale TODO: 準備中
    */
   public void storeCommonRegion(
       AbstractCobolField field, CobolDataStorage data, int size, int scale) {
@@ -566,11 +566,11 @@ public class CobolNumericField extends AbstractCobolField {
   /**
    * libcob/move.cのstore_common_regionの実装
    *
-   * @param field TODO: 調査中
-   * @param data TODO: 調査中
-   * @param dataStartIndex TODO: 調査中
-   * @param size TODO: 調査中
-   * @param scale TODO: 調査中
+   * @param field TODO: 準備中
+   * @param data TODO: 準備中
+   * @param dataStartIndex TODO: 準備中
+   * @param size TODO: 準備中
+   * @param scale TODO: 準備中
    */
   public void storeCommonRegion(
       AbstractCobolField field, CobolDataStorage data, int dataStartIndex, int size, int scale) {
@@ -652,6 +652,13 @@ public class CobolNumericField extends AbstractCobolField {
     return this.addInt(-in, CobolDecimal.COB_STORE_KEEP_ON_OVERFLOW);
   }
 
+  /**
+   * TODO: 準備中
+   *
+   * @param in TODO: 準備中
+   * @param opt TODO: 準備中
+   * @return TODO: 準備中
+   */
   public int subInt(int in, int opt) {
     return this.addInt(-in, opt);
   }
@@ -665,7 +672,7 @@ public class CobolNumericField extends AbstractCobolField {
    * thisの保持する数値データに加算する
    *
    * @param in thisの保持する数値データに加算する値
-   * @param opt TODO: 調査中
+   * @param opt TODO: 準備中
    * @return 0
    */
   public int addInt(int in, int opt) {
@@ -736,11 +743,11 @@ public class CobolNumericField extends AbstractCobolField {
   /**
    * libcob/numeric.cのdisplay_add_intの実装
    *
-   * @param data TODO: 調査中
+   * @param data TODO: 準備中
    * @param firstDataIndex dataにアクセスするときの開始位置
-   * @param size TODO: 調査中
-   * @param n TODO: 調査中
-   * @return TODO: 調査中
+   * @param size TODO: 準備中
+   * @param n TODO: 準備中
+   * @return TODO: 準備中
    */
   private int displayAddInt(CobolDataStorage data, int firstDataIndex, int size, long n) {
     int carry = 0;
@@ -792,11 +799,11 @@ public class CobolNumericField extends AbstractCobolField {
   /**
    * libcob/numeric.cのdisplay_sub_intの実装
    *
-   * @param data TODO: 調査中
+   * @param data TODO: 準備中
    * @param firstDataIndex dataにアクセスするときの開始位置
-   * @param size TODO: 調査中
-   * @param n TODO: 調査中
-   * @return TODO: 調査中
+   * @param size TODO: 準備中
+   * @param n TODO: 準備中
+   * @return TODO: 準備中
    */
   public static int displaySubInt(CobolDataStorage data, int firstDataIndex, int size, long n) {
     int carry = 0;
