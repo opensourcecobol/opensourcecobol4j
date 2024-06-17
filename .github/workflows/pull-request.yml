@@ -98,7 +98,7 @@ jobs:
     needs: check-workflows
     uses: ./.github/workflows/check-missing-javadoc.yml
 
- windows-build:
+  windows-build:
     needs: check-workflows
     strategy:
        fail-fast: false
