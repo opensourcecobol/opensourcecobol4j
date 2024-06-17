@@ -15,14 +15,13 @@ Other software and libraries are distributed under the GNU GENERAL PUBLIC LICENS
 
 ## Requirements
 
-opensource COBOL 4J is tested with the following platforms and dependencies
+opensource COBOL 4J is tested with the following platforms and dependencies:
 
 * Ubuntu 24.04 and OpenJDK 21
 * AlmaLinux 9 and OpenJDK 11
 * Amazon Linux 2023 and OpenJDK 21
 
-In order to check requirements of older versions,
-see [doc/requirements-all.md](./doc/requirements-all.md).
+If you want to check requirements of older versions, see [doc/requirements-all.md](./doc/requirements-all.md).
 
 ## Installation (Linux)
 
@@ -64,23 +63,22 @@ sudo make install
 ### Set $CLASSPATH
 Add /usr/lib/opensourcecobol4j/libcobj.jar to the environment variable $CLASSPATH.
 
-In order to check installations of older versions,
-[doc/installation/](./doc/installation) directory respectively
+If you want to check installations of older versions, see [doc/installation/](./doc/installation) directory respectively.
 
 
 ## Installation (Windows)
 ### Install Visual Studio
-The Windows version of opensource COBOL 4J uses the CL compiler included in Visual Studio. Therefore, please install [Visual Studio](https://visualstudio.microsoft.com/) first.
+The Windows version of opensource COBOL 4J uses the CL compiler included in Visual Studio, so you must have [Visual Studio](https://visualstudio.microsoft.com/) installed　beforehand.
 
 
 ### Build a solution file
-1. Download the complete set of files for open source COBOL 4J.
-2.  Open win/opensourcecobol4j.sln using Visual Studio.
+1. Download the complete set of files for opensource COBOL 4J.
+2.  Open win/opensourcecobol4j.sln with Visual Studio.
 3. Select "Debug" or "Release" mode.
 ![alt text](image/readme1_en.png)
 4. Click "Build" -> "Build Solution".
 ![alt text](image/readme2_en.png)
-Upon completion of the build, "cobj.exe" will be created in `win/x64/Debug` or `win/x64/Release`.
+After the build is completed, "cobj.exe" will be created in `win/x64/Debug` or `win/x64/Release`.
 
 ### Build Java Files
 1. Install JDK.  
@@ -88,7 +86,7 @@ https://www.oracle.com/java/technologies/downloads/?er=221886#java8-windows
 2. Open PowerShell.
 3. Move to "libcobj" directory and execute `./gradlew shadowJar`
 ![alt text](image/readme3.png)  
-This will create libcobj.jar in `libcobj/app/build/libs/`.
+Then, libcobj.jar will be created in `libcobj/app/build/libs/`.
 
 ### Place files in the appropriate location
 1. If you build in Debug mode, change the 5th line of win/make-install.ps1 from `\x64\Release\cobj.exe` to `\x64\Debug\cobj.exe`.
