@@ -1,0 +1,44 @@
+name: build opensource COBOL 4J on Windows
+
+on:
+  workflow_call:
+
+permissions:
+  contents: read
+
+jobs:
+  build:
+    runs-on: windows-latest
+    steps: 
+      - uses: actions/setup-java@v4
+        with:
+          distribution: 'temurin'
+          java-version: '21'
+      
+      - name: Add MSBuild to PATH
+        uses: microsoft/setup-msbuild@v2.0.0
+
+      - name: Checkout opensource COBOL 4J
+        uses: actions/checkout@v4
+
+      - name: Restore NuGet packages
+        run: nuget restore ./win/
+      
+      - name: Install opensource COBOL 4J
+        working-directory: libcobj
+        run: ./gradlew shadowJar
+
+      - name: Build cobj.exe
+        run: msbuild /p:Configuration=Release /p:AdditionalIncludePaths=./:./cobj/:./win:./lib win/opensourcecobol4j.sln
+      
+      - name: Upload libcobj.jar
+        uses: actions/upload-artifact@v4
+        with:
+          name: libcobj.jar
+          path: libcobj/app/build/libs/libcobj.jar 
+      
+      - name: Upload cobj.exe
+        uses: actions/upload-artifact@v4
+        with:
+          name: cobj.exe
+          path: win/x64/Release/cobj.exe

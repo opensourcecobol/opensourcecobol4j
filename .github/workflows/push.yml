@@ -96,16 +96,18 @@ jobs:
     needs: check-workflows
     uses: ./.github/workflows/check-missing-javadoc.yml
 
-  build-libcobj:
+  windows-build:
     needs: check-workflows
-    uses: ./.github/workflows/build-libcobj.yml
+    strategy:
+       fail-fast: false
+    uses: ./.github/workflows/windows-build.yml
 
-  mstest:
-    needs: build-libcobj
+  windows-test:
+    needs: windows-build
     strategy:
        matrix:
          test_name: ["IC", "IF", "IX", "NC", "OB", "RL", "SG", "SM", "SQ", "ST"]
-    uses: ./.github/workflows/mstest.yml
+    uses: ./.github/workflows/windows-test.yml
     with:
       test-name: ${{ matrix.test_name }}
 

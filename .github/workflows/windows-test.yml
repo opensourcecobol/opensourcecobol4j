@@ -1,4 +1,4 @@
-name: mstest
+name: windows-test
 
 on:
   workflow_call:
@@ -14,14 +14,18 @@ jobs:
     steps:
     - uses: actions/checkout@v4
 
-    - uses: actions/download-artifact@v4
+    - name: Download libcobj.jar
+      uses: actions/download-artifact@v4
       with:
         name: libcobj.jar
-        path: win/
-
-    - name: Add MSBuild to PATH
-      uses: microsoft/setup-msbuild@v2.0.0
-        
+        path: libcobj/app/build/libs/
+    
+    - name: Download cobj.exe
+      uses: actions/download-artifact@v4
+      with:
+        name: cobj.exe
+        path: win/cobj.exe
+      
     - name: Install Java
       uses: actions/setup-java@v4
       with:
@@ -33,21 +37,15 @@ jobs:
       with:
         perl-version: "5.32"
         distribution: strawberry
-
-    - name: Restore NuGet packages
-      run: nuget restore ./win/
-
-    - name: Build cobj.exe
-      run: msbuild /p:Configuration=Release /p:AdditionalIncludePaths=./:./cobj/:./win:./lib win/opensourcecobol4j.sln
-
+    
     - name: Run tests ${{ inputs.test-name }}
       run: |
         cd win
-        .\make-install.ps1
+        ./make-install.ps1
         $env:CLASSPATH="C:\opensourcecobol4j\lib\libcobj.jar"
         $env:PATH+=";C:\opensourcecobol4j\bin\;C:\opensourcecobol4j\config\"
-        cd ..\tests\cobol85\${{ inputs.test-name }}
-        perl ..\report.pl
+        cd ../tests/cobol85/${{ inputs.test-name }}
+        perl ../report.pl
         type report.txt
-        findstr "Successfully executed:" .\report.txt > .\result-check
-        findstr "100.00%" .\result-check
+        findstr "Successfully executed:" ./report.txt > ./result-check
+        findstr "100.00%" ./result-check
