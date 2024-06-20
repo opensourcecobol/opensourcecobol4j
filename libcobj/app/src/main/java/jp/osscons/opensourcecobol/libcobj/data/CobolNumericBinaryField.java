@@ -39,13 +39,12 @@ public class CobolNumericBinaryField extends AbstractCobolField {
     super(size, dataStorage, attribute);
   }
 
-  /** TODO */
   @Override
   public byte[] getBytes() {
     return new byte[0];
   }
 
-  /** 実装しないメソッド */
+  @Override
   public int addPackedInt(int n) {
     throw new CobolRuntimeException(0, "実装しないコード");
   }
@@ -90,11 +89,6 @@ public class CobolNumericBinaryField extends AbstractCobolField {
     this.setBinaryValue(n);
   }
 
-  /**
-   * thisの文字列表現をかえす.(toStringだけで十分か?)
-   *
-   * @return thisの文字列表現
-   */
   @Override
   public String getString() {
     CobolFieldAttribute thisAttr = this.getAttribute();
@@ -112,11 +106,6 @@ public class CobolNumericBinaryField extends AbstractCobolField {
     return numericField.getString();
   }
 
-  /**
-   * thisの保持する数値データの符号を返す
-   *
-   * @return thisの保持する数値データが負ならば負数,0なら0,正なら正数を返す
-   */
   @Override
   public int getSign() {
     long n = this.getBinaryValue();
@@ -130,15 +119,9 @@ public class CobolNumericBinaryField extends AbstractCobolField {
     }
   }
 
-  /** TODO */
   @Override
   public void setDecimal(BigDecimal decimal) {}
 
-  /**
-   * 引数で与えらえられたデータからthisへの代入を行う
-   *
-   * @param src 代入元のデータ(AbstractCobolField型)
-   */
   @Override
   public void moveFrom(AbstractCobolField src) {
     AbstractCobolField src1 = this.preprocessOfMoving(src);
@@ -219,75 +202,27 @@ public class CobolNumericBinaryField extends AbstractCobolField {
     field.putSign(sign);
   }
 
-  /**
-   * libcob/move.cのcob_binary_mset_int64の実装
-   *
-   * @param n TODO: 準備中
-   */
-  public void binaryMsetInt64(long n) {
-    byte bytes[] = new byte[8];
-    for (int i = 0; i < 8; ++i) {
-      bytes[i] = (byte) ((byte) (n >> ((7 - i) * 8)) & 0x00000000000000FFL);
-    }
-    CobolDataStorage nData = new CobolDataStorage(bytes, 0);
-    this.ownByteMemcpy(this.getDataStorage(), 0, nData, 8 - this.size, this.size);
-  }
-
-  /**
-   * CobolNumericFieldからからthisへの代入
-   *
-   * @param dataStorage 代入元のデータ(CobolDataStorage型)
-   */
   @Override
   public void moveFrom(CobolDataStorage dataStorage) {}
 
-  /**
-   * CobolNumericFieldからからthisへの代入
-   *
-   * @param bytes 代入元のデータ(byte[]型)
-   */
   @Override
   public void moveFrom(byte[] bytes) {}
 
-  /**
-   * CobolNumericFieldからからthisへの代入
-   *
-   * @param string 代入元のデータ(String型)
-   */
   @Override
   public void moveFrom(String string) {}
 
-  /**
-   * CobolNumericFieldからからthisへの代入
-   *
-   * @param number 代入元のデータ(int型)
-   */
   @Override
   public void moveFrom(int number) {
     this.getDataStorage().setSwpU32Binary(number);
   }
 
-  /**
-   * CobolNumericFieldからからthisへの代入
-   *
-   * @param number 代入元のデータ(double型)
-   */
   @Override
   public void moveFrom(double number) {}
 
-  /**
-   * CobolNumericFieldからからthisへの代入
-   *
-   * @param number 代入元のデータ(BigDecimal型)
-   */
   @Override
   public void moveFrom(BigDecimal number) {}
 
-  /**
-   * thisをCobolNumericFieldに変換する. indirect moveをするときに使用されることを想定している.
-   *
-   * @return thisからCobolNumericField型へ変換した値
-   */
+  @Override
   public CobolNumericField getNumericField() {
     int size = this.getAttribute().getDigits();
     int scale = this.getAttribute().getScale();
@@ -304,7 +239,6 @@ public class CobolNumericBinaryField extends AbstractCobolField {
     return field;
   }
 
-  /** libcob/numeric.cのcob_decimal_set_binaryの実装 */
   @Override
   public CobolDecimal getDecimal() {
     CobolDecimal decimal = new CobolDecimal();
@@ -313,11 +247,7 @@ public class CobolNumericBinaryField extends AbstractCobolField {
     return decimal;
   }
 
-  /**
-   * libcob/numeric.cのcob_binary_get_int64の実装
-   *
-   * @param f TODO: 準備中
-   */
+  // libcob/numeric.cのcob_binary_get_int64の実装
   private long binaryGetInt64() {
     int fsiz = 8 - this.getSize();
     long n = 0;
@@ -334,7 +264,6 @@ public class CobolNumericBinaryField extends AbstractCobolField {
     return n;
   }
 
-  /** libcob/common.cのcob_get_long_longの実装 */
   @Override
   public long getLong() {
     return this.binaryGetInt64();

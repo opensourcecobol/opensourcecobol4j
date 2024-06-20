@@ -364,11 +364,7 @@ public class CobolNumericEditedField extends AbstractCobolField {
   @Override
   public void moveFrom(BigDecimal number) {}
 
-  /**
-   * thisをCobolNumericFieldに変換する. indirect moveをするときに使用されることを想定している.
-   *
-   * @return thisからCobolNumericField型へ変換した値
-   */
+  @Override
   public CobolNumericField getNumericField() {
     int size = 36;
     int scale = 18;

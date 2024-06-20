@@ -36,17 +36,11 @@ public class CobolGroupField extends AbstractCobolField {
     super(size, dataStorage, attribute);
   }
 
-  /** this.dataの保持するバイト配列のコピーを返す */
   @Override
   public byte[] getBytes() {
     return dataStorage.getData(size);
   }
 
-  /**
-   * thisの文字列表現をかえす.(toStringだけで十分か?)
-   *
-   * @return thisの文字列表現
-   */
   @Override
   public String getString() {
     try {
@@ -56,27 +50,19 @@ public class CobolGroupField extends AbstractCobolField {
     }
   }
 
-  /** TODO */
   @Override
   public int getInt() {
     return 0;
   }
 
-  /** TODO */
   @Override
   public CobolDecimal getDecimal() {
     return null;
   }
 
-  /** TODO */
   @Override
   public void setDecimal(BigDecimal decimal) {}
 
-  /**
-   * 引数で与えらえられたデータからthisへの代入を行う
-   *
-   * @param src 代入元のデータ(AbstractCobolField型)
-   */
   @Override
   public void moveFrom(AbstractCobolField src) {
     AbstractCobolField src1 = this.preprocessOfMoving(src);
@@ -87,19 +73,9 @@ public class CobolGroupField extends AbstractCobolField {
     CobolAlphanumericField.moveAlphanumToAlphanum(this, src1);
   }
 
-  /**
-   * 引数で与えらえられたデータからthisへの代入を行う
-   *
-   * @param dataStorage 代入元のデータ(CobolDataStorage型)
-   */
   @Override
   public void moveFrom(CobolDataStorage dataStorage) {}
 
-  /**
-   * 引数で与えらえられたデータからthisへの代入を行う
-   *
-   * @param bytes 代入元のデータ(byte[]型)
-   */
   @Override
   public void moveFrom(byte[] bytes) {
     if (bytes.length >= this.size) {
@@ -110,11 +86,6 @@ public class CobolGroupField extends AbstractCobolField {
     }
   }
 
-  /**
-   * 引数で与えらえられたデータからthisへの代入を行う
-   *
-   * @param string 代入元のデータ(String型)
-   */
   @Override
   public void moveFrom(String string) {
     byte[] bytes;
@@ -127,31 +98,16 @@ public class CobolGroupField extends AbstractCobolField {
     this.moveFrom(bytes);
   }
 
-  /**
-   * 引数で与えらえられたデータからthisへの代入を行う
-   *
-   * @param number 代入元のデータ(int型)
-   */
   @Override
   public void moveFrom(int number) {}
 
-  /**
-   * 引数で与えらえられたデータからthisへの代入を行う
-   *
-   * @param number 代入元のデータ(double型)
-   */
   @Override
   public void moveFrom(double number) {}
 
-  /**
-   * 引数で与えらえられたデータからthisへの代入を行う
-   *
-   * @param number 代入元のデータ(BigDecimal型)
-   */
   @Override
   public void moveFrom(BigDecimal number) {}
 
-  /** 実装しないメソッド */
+  @Override
   public int addPackedInt(int n) {
     throw new CobolRuntimeException(0, "実装しないコード");
   }
