@@ -449,11 +449,6 @@ public class CobolNumericPackedField extends AbstractCobolField {
     }
   }
 
-  /**
-   * thisをCobolNumericFieldに変換する. indirect moveをするときに使用されることを想定している.
-   *
-   * @return thisからCobolNumericField型へ変換した値
-   */
   @Override
   public CobolNumericField getNumericField() {
     int size = this.getAttribute().getDigits();

@@ -222,11 +222,7 @@ public class CobolNumericBinaryField extends AbstractCobolField {
   @Override
   public void moveFrom(BigDecimal number) {}
 
-  /**
-   * このオブジェクトの示す数値と同等の値を保持するCobolNumericFieldを計算する
-   *
-   * @return このオブジェクトの示す数値と同等の値を保持するCobolNumericFieldのインスタンス
-   */
+  @Override
   public CobolNumericField getNumericField() {
     int size = this.getAttribute().getDigits();
     int scale = this.getAttribute().getScale();
