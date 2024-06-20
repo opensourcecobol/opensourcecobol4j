@@ -146,17 +146,11 @@ public class CobolNumericPackedField extends AbstractCobolField {
    */
   public void checkNumeric(String s) {}
 
-  /** this.dataの保持するバイト配列のコピーを返す */
   @Override
   public byte[] getBytes() {
     return dataStorage.getData();
   }
 
-  /**
-   * thisの文字列表現をかえす.(toStringだけで十分か?)
-   *
-   * @return thisの文字列表現
-   */
   @Override
   public String getString() {
     StringBuilder sb = new StringBuilder();
@@ -200,11 +194,6 @@ public class CobolNumericPackedField extends AbstractCobolField {
     }
   }
 
-  /**
-   * 引数で与えらえられたデータからthisへの代入を行う
-   *
-   * @param src 代入元のデータ(AbstractCobolField型)
-   */
   @Override
   public void moveFrom(AbstractCobolField src) {
     AbstractCobolField src1 = this.preprocessOfMoving(src);
@@ -312,21 +301,11 @@ public class CobolNumericPackedField extends AbstractCobolField {
     }
   }
 
-  /**
-   * 引数で与えらえられたデータからthisへの代入を行う
-   *
-   * @param bytes 代入元のデータ(byte[]型)
-   */
   @Override
   public void moveFrom(byte[] bytes) {
     this.dataStorage.setData(bytes);
   }
 
-  /**
-   * 引数で与えらえられたデータからthisへの代入を行う
-   *
-   * @param string 代入元のデータ(String型)
-   */
   @Override
   public void moveFrom(String string) {
     try {
@@ -336,11 +315,6 @@ public class CobolNumericPackedField extends AbstractCobolField {
     }
   }
 
-  /**
-   * libcob/numeric.cのcob_set_packed_intの実装 引数で与えらえられたデータからthisへの代入を行う
-   *
-   * @param val 代入元のデータ(int型)
-   */
   @Override
   public void moveFrom(int val) {
     int n;
@@ -466,31 +440,16 @@ public class CobolNumericPackedField extends AbstractCobolField {
     return field;
   }
 
-  /**
-   * 引数で与えらえられたデータからthisへの代入を行う
-   *
-   * @param number 代入元のデータ(BigDecimal型)
-   */
   @Override
   public void moveFrom(BigDecimal number) {
     // TODO 自動生成されたメソッド・スタブ
   }
 
-  /**
-   * 引数で与えらえられたデータからthisへの代入を行う
-   *
-   * @param dataStorage 代入元のデータ(CobolDataStorage型)
-   */
   @Override
   public void moveFrom(CobolDataStorage dataStorage) {
     // TODO 自動生成されたメソッド・スタブ
   }
 
-  /**
-   * libcob/numeric.cのcob_packed_get_signの実装 thisの保持する数値データの符号を返す
-   *
-   * @return thisの保持する数値データが負ならば負数,0なら0,正なら正数を返す
-   */
   @Override
   public int getSign() {
     if (!this.getAttribute().isFlagHaveSign()) {
@@ -500,11 +459,6 @@ public class CobolNumericPackedField extends AbstractCobolField {
     return (this.dataStorage.getByte(index) & 0x0f) == 0x0d ? -1 : 1;
   }
 
-  /**
-   * thisの保持する数値データの符号を設定する
-   *
-   * @param sign 正符号を設定するときは正数,負符号を設定するときは負数,それ以外は0
-   */
   @Override
   public void putSign(int sign) {
     int index = this.getSize() - 1;
@@ -516,11 +470,6 @@ public class CobolNumericPackedField extends AbstractCobolField {
     }
   }
 
-  /**
-   * 数値を表すデータが実装すべきメソッド. 保持する数値データをCobolDecimal型に変換する.
-   *
-   * @return 保持する数値データをCobolDecimal型に変換した値
-   */
   @Override
   public CobolDecimal getDecimal() {
     CobolDataStorage data = this.getDataStorage();
@@ -594,11 +543,6 @@ public class CobolNumericPackedField extends AbstractCobolField {
     return (byte) ((b >>> 4) & 0x0F);
   }
 
-  /**
-   * thisの保持する数値データをint型で返す
-   *
-   * @return thisの保持する数値データをintに変換した値
-   */
   @Override
   public int getInt() {
     int p = 0;
@@ -634,12 +578,7 @@ public class CobolNumericPackedField extends AbstractCobolField {
     }
   }
 
-  /**
-   * libcob/codegen.hのcob_add_packed_intの実装 thisの保持する数値データに加算する
-   *
-   * @param val thisの保持する数値データに加算する値
-   * @return TODO: 準備中
-   */
+  @Override
   public int addPackedInt(int val) {
     if (val == 0) {
       return 0;
@@ -679,12 +618,6 @@ public class CobolNumericPackedField extends AbstractCobolField {
     return 0;
   }
 
-  /**
-   * libcob/numeric.cのcob_add_intおよびcob_add_packedの実装
-   *
-   * @param ival thisに 加算する値
-   * @return TODO: 準備中
-   */
   @Override
   public int addInt(int ival) {
     if (ival == 0) {
@@ -816,7 +749,6 @@ public class CobolNumericPackedField extends AbstractCobolField {
     }
   }
 
-  /** */
   @Override
   public int cmpInt(int n) {
     if (this.getAttribute().getDigits() < 10) {
@@ -918,7 +850,6 @@ public class CobolNumericPackedField extends AbstractCobolField {
     return 0;
   }
 
-  /** libcob/move.cのcob_packed_get_long_longの実装 */
   @Override
   public long getLong() {
     int digits = this.getAttribute().getDigits();
