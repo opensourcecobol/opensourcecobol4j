@@ -868,6 +868,7 @@ public class CobolDataStorage {
 
   private static final Cmpr compareS =
       new Cmpr() {
+        @Override
         public int run(long a, long b) {
           if (a < b) {
             return -1;
@@ -881,6 +882,7 @@ public class CobolDataStorage {
 
   private static final Cmpr compareU =
       new Cmpr() {
+        @Override
         public int run(long a, long b) {
           return Long.compareUnsigned(a, b);
         }

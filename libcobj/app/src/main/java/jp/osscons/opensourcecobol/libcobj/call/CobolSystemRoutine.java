@@ -167,6 +167,7 @@ public class CobolSystemRoutine {
         data2,
         length,
         new Calculater() {
+          @Override
           public byte calc(byte b1, byte b2) {
             return (byte) (b1 & b2);
           }
@@ -221,6 +222,7 @@ public class CobolSystemRoutine {
         data2,
         length,
         new Calculater() {
+          @Override
           public byte calc(byte b1, byte b2) {
             return (byte) (b1 | b2);
           }
@@ -286,6 +288,7 @@ public class CobolSystemRoutine {
         data2,
         length,
         new Calculater() {
+          @Override
           public byte calc(byte b1, byte b2) {
             return int2Byte(~(byte2Int(b1) | int2Byte(b2)));
           }
@@ -343,6 +346,7 @@ public class CobolSystemRoutine {
         data2,
         length,
         new Calculater() {
+          @Override
           public byte calc(byte b1, byte b2) {
             return (byte) (b1 ^ b2);
           }
@@ -400,6 +404,7 @@ public class CobolSystemRoutine {
         data2,
         length,
         new Calculater() {
+          @Override
           public byte calc(byte b1, byte b2) {
             return (byte) (b1 & (~b2));
           }
@@ -457,6 +462,7 @@ public class CobolSystemRoutine {
         data2,
         length,
         new Calculater() {
+          @Override
           public byte calc(byte b1, byte b2) {
             return (byte) ~(b1 ^ b2);
           }

@@ -645,6 +645,7 @@ public class CobolFileSort {
   private static void memorySort(CobolFile f) {
     dataList.sort(
         new Comparator<CobolDataStorage>() {
+          @Override
           public int compare(CobolDataStorage data1, CobolDataStorage data2) {
             int cmp;
 

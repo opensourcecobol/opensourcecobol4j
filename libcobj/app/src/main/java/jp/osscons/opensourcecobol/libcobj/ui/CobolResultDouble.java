@@ -14,6 +14,7 @@ public class CobolResultDouble extends CobolCallResult {
   }
 
   /** TODO: 準備中 */
+  @Override
   public double getDouble() throws CobolResultSetException {
     return this.value;
   }

@@ -5,14 +5,15 @@
          xsi:schemaLocation="http://pmd.sourceforge.net/ruleset/2.0.0 https://pmd.sourceforge.io/ruleset_2_0_0.xsd">
     <description>Quickstart configuration of PMD. Includes the rules that are most likely to apply everywhere.</description>
 
-    <!-- <rule ref="category/java/bestpractices.xml/AbstractClassWithoutAbstractMethod" /> -->
-    <!-- <rule ref="category/java/bestpractices.xml/AccessorClassGeneration" /> -->
-    <!-- <rule ref="category/java/bestpractices.xml/AccessorMethodGeneration" /> -->
+    <rule ref="category/java/bestpractices.xml/AbstractClassWithoutAbstractMethod" />
+    <rule ref="category/java/bestpractices.xml/AccessorClassGeneration" />
+    <rule ref="category/java/bestpractices.xml/AccessorMethodGeneration" />
     <!-- <rule ref="category/java/bestpractices.xml/ArrayIsStoredDirectly" /> -->
     <!-- <rule ref="category/java/bestpractices.xml/AvoidPrintStackTrace" /> -->
-    <!-- <rule ref="category/java/bestpractices.xml/AvoidReassigningCatchVariables" /> -->
+    <rule ref="category/java/bestpractices.xml/AvoidReassigningCatchVariables" />
     <!-- <rule ref="category/java/bestpractices.xml/AvoidReassigningLoopVariables" /> -->
     <!-- <rule ref="category/java/bestpractices.xml/AvoidReassigningParameters" /> -->
+
     <rule ref="category/java/bestpractices.xml/AvoidMessageDigestField"/>
     <rule ref="category/java/bestpractices.xml/AvoidStringBufferField"/>
     <rule ref="category/java/bestpractices.xml/AvoidUsingHardCodedIP"/>
@@ -21,28 +22,29 @@
     <rule ref="category/java/bestpractices.xml/DefaultLabelNotLastInSwitchStmt"/>
     <rule ref="category/java/bestpractices.xml/DoubleBraceInitialization"/>
     <rule ref="category/java/bestpractices.xml/ForLoopCanBeForeach"/>
-    <!-- <rule ref="category/java/bestpractices.xml/ForLoopVariableCount" /> -->
+    <rule ref="category/java/bestpractices.xml/ForLoopVariableCount" />
     <rule ref="category/java/bestpractices.xml/GuardLogStatement"/>
-    <!-- <rule ref="category/java/bestpractices.xml/JUnit4SuitesShouldUseSuiteAnnotation" /> -->
-    <!-- <rule ref="category/java/bestpractices.xml/JUnit4TestShouldUseAfterAnnotation" /> -->
-    <!-- <rule ref="category/java/bestpractices.xml/JUnit4TestShouldUseBeforeAnnotation" /> -->
-    <!-- <rule ref="category/java/bestpractices.xml/JUnit4TestShouldUseTestAnnotation" /> -->
-    <!-- <rule ref="category/java/bestpractices.xml/JUnit5TestShouldBePackagePrivate" /> -->
-    <!-- <rule ref="category/java/bestpractices.xml/JUnitAssertionsShouldIncludeMessage" /> -->
-    <!-- <rule ref="category/java/bestpractices.xml/JUnitTestContainsTooManyAsserts" /> -->
-    <!-- <rule ref="category/java/bestpractices.xml/JUnitTestsShouldIncludeAssert" /> -->
-    <!-- <rule ref="category/java/bestpractices.xml/JUnitUseExpected" /> -->
+
+    <rule ref="category/java/bestpractices.xml/JUnit4SuitesShouldUseSuiteAnnotation" />
+    <rule ref="category/java/bestpractices.xml/JUnit4TestShouldUseAfterAnnotation" />
+    <rule ref="category/java/bestpractices.xml/JUnit4TestShouldUseBeforeAnnotation" />
+    <rule ref="category/java/bestpractices.xml/JUnit4TestShouldUseTestAnnotation" />
+    <rule ref="category/java/bestpractices.xml/JUnit5TestShouldBePackagePrivate" />
+    <rule ref="category/java/bestpractices.xml/JUnitAssertionsShouldIncludeMessage" />
+    <rule ref="category/java/bestpractices.xml/JUnitTestContainsTooManyAsserts" />
+    <rule ref="category/java/bestpractices.xml/JUnitTestsShouldIncludeAssert" />
+    <rule ref="category/java/bestpractices.xml/JUnitUseExpected" />
+
     <rule ref="category/java/bestpractices.xml/LiteralsFirstInComparisons" />
     <rule ref="category/java/bestpractices.xml/LooseCoupling"/>
     <!-- <rule ref="category/java/bestpractices.xml/MethodReturnsInternalArray" /> -->
-    <!-- TODO enable MissingOverride-->
-    <!-- <rule ref="category/java/bestpractices.xml/MissingOverride"/> -->
-    <!-- <rule ref="category/java/bestpractices.xml/OneDeclarationPerLine"/>-->
+    <rule ref="category/java/bestpractices.xml/MissingOverride"/>
+    <!-- <rule ref="category/java/bestpractices.xml/OneDeclarationPerLine"/> -->
     <rule ref="category/java/bestpractices.xml/PrimitiveWrapperInstantiation"/>
     <rule ref="category/java/bestpractices.xml/PreserveStackTrace"/>
-    <!-- <rule ref="category/java/bestpractices.xml/ReplaceEnumerationWithIterator" /> -->
-    <!-- <rule ref="category/java/bestpractices.xml/ReplaceHashtableWithMap" /> -->
-    <!-- <rule ref="category/java/bestpractices.xml/ReplaceVectorWithList" /> -->
+    <rule ref="category/java/bestpractices.xml/ReplaceEnumerationWithIterator" />
+    <rule ref="category/java/bestpractices.xml/ReplaceHashtableWithMap" />
+    <rule ref="category/java/bestpractices.xml/ReplaceVectorWithList" />
     <rule ref="category/java/bestpractices.xml/SimplifiableTestAssertion"/>
     <rule ref="category/java/bestpractices.xml/SwitchStmtsShouldHaveDefault"/>
     <!-- <rule ref="category/java/bestpractices.xml/SystemPrintln" /> -->
@@ -54,7 +56,7 @@
     <rule ref="category/java/bestpractices.xml/UnusedPrivateMethod"/>
     <rule ref="category/java/bestpractices.xml/UseCollectionIsEmpty"/>
     <rule ref="category/java/bestpractices.xml/UseStandardCharsets" />
-    <!-- <rule ref="category/java/bestpractices.xml/UseTryWithResources" /> -->
+    <rule ref="category/java/bestpractices.xml/UseTryWithResources" />
     <!-- <rule ref="category/java/bestpractices.xml/UseVarargs" /> -->
     <!-- <rule ref="category/java/bestpractices.xml/WhileLoopWithLiteralBoolean" /> -->
 
