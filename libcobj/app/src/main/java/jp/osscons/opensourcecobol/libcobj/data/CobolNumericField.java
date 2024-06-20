@@ -49,17 +49,11 @@ public class CobolNumericField extends AbstractCobolField {
    */
   public void checkNumeric(String s) {}
 
-  /** this.dataの保持するバイト配列のコピーを返す */
   @Override
   public byte[] getBytes() {
     return dataStorage.getData();
   }
 
-  /**
-   * thisの文字列表現をかえす.(toStringだけで十分か?)
-   *
-   * @return thisの文字列表現
-   */
   @Override
   public String getString() {
     CobolDataStorage data = this.getDataStorage();
@@ -123,11 +117,6 @@ public class CobolNumericField extends AbstractCobolField {
     return sb.toString();
   }
 
-  /**
-   * thisの保持する数値データをint型で返す
-   *
-   * @return thisの保持する数値データをintに変換した値
-   */
   @Override
   public int getInt() {
     int size = this.getFieldSize();
@@ -178,11 +167,6 @@ public class CobolNumericField extends AbstractCobolField {
     }
   }
 
-  /**
-   * 引数で与えらえられたデータからthisへの代入を行う
-   *
-   * @param src 代入元のデータ(AbstractCobolField型)
-   */
   @Override
   public void moveFrom(AbstractCobolField src) {
     AbstractCobolField src1 = this.preprocessOfMoving(src);
@@ -468,11 +452,6 @@ public class CobolNumericField extends AbstractCobolField {
     this.putSign(sign);
   }
 
-  /**
-   * thisの保持する数値データの符号を返す
-   *
-   * @return thisの保持する数値データが負ならば負数,0なら0,正なら正数を返す
-   */
   @Override
   public int getSign() {
     CobolFieldAttribute attr = this.getAttribute();
@@ -512,11 +491,6 @@ public class CobolNumericField extends AbstractCobolField {
     }
   }
 
-  /**
-   * thisの保持する数値データの符号を設定する
-   *
-   * @param sign 正符号を設定するときは正数,負符号を設定するときは負数,それ以外は0
-   */
   @Override
   public void putSign(int sign) {
     CobolFieldAttribute attr = this.getAttribute();
@@ -558,7 +532,7 @@ public class CobolNumericField extends AbstractCobolField {
    * @param size TODO: 準備中
    * @param scale TODO: 準備中
    */
-  public void storeCommonRegion(
+  private void storeCommonRegion(
       AbstractCobolField field, CobolDataStorage data, int size, int scale) {
     this.storeCommonRegion(field, data, 0, size, scale);
   }
@@ -572,7 +546,7 @@ public class CobolNumericField extends AbstractCobolField {
    * @param size TODO: 準備中
    * @param scale TODO: 準備中
    */
-  public void storeCommonRegion(
+  private void storeCommonRegion(
       AbstractCobolField field, CobolDataStorage data, int dataStartIndex, int size, int scale) {
     int lf1 = -scale;
     int lf2 = -field.getAttribute().getScale();
@@ -601,21 +575,11 @@ public class CobolNumericField extends AbstractCobolField {
     }
   }
 
-  /**
-   * 引数で与えらえられたデータからthisへの代入を行う
-   *
-   * @param bytes 代入元のデータ(byte[]型)
-   */
   @Override
   public void moveFrom(byte[] bytes) {
     this.dataStorage.setData(bytes);
   }
 
-  /**
-   * 引数で与えらえられたデータからthisへの代入を行う
-   *
-   * @param string 代入元のデータ(String型)
-   */
   @Override
   public void moveFrom(String string) {
     try {
@@ -625,11 +589,6 @@ public class CobolNumericField extends AbstractCobolField {
     }
   }
 
-  /**
-   * 引数で与えらえられたデータからthisへの代入を行う
-   *
-   * @param number 代入元のデータ(int型)
-   */
   @Override
   public void moveFrom(int number) {
     int n = Math.abs(number);
@@ -652,14 +611,7 @@ public class CobolNumericField extends AbstractCobolField {
     return this.addInt(-in, CobolDecimal.COB_STORE_KEEP_ON_OVERFLOW);
   }
 
-  /**
-   * TODO: 準備中
-   *
-   * @param in TODO: 準備中
-   * @param opt TODO: 準備中
-   * @return TODO: 準備中
-   */
-  public int subInt(int in, int opt) {
+  private int subInt(int in, int opt) {
     return this.addInt(-in, opt);
   }
 
@@ -668,14 +620,7 @@ public class CobolNumericField extends AbstractCobolField {
     return this.addInt(in, CobolDecimal.COB_STORE_KEEP_ON_OVERFLOW);
   }
 
-  /**
-   * thisの保持する数値データに加算する
-   *
-   * @param in thisの保持する数値データに加算する値
-   * @param opt TODO: 準備中
-   * @return 0
-   */
-  public int addInt(int in, int opt) {
+  private int addInt(int in, int opt) {
     if (in == 0) {
       return 0;
     }
@@ -796,16 +741,7 @@ public class CobolNumericField extends AbstractCobolField {
     return 1;
   }
 
-  /**
-   * libcob/numeric.cのdisplay_sub_intの実装
-   *
-   * @param data TODO: 準備中
-   * @param firstDataIndex dataにアクセスするときの開始位置
-   * @param size TODO: 準備中
-   * @param n TODO: 準備中
-   * @return TODO: 準備中
-   */
-  public static int displaySubInt(CobolDataStorage data, int firstDataIndex, int size, long n) {
+  private static int displaySubInt(CobolDataStorage data, int firstDataIndex, int size, long n) {
     int carry = 0;
     int sp = firstDataIndex + size;
     int i;
@@ -876,11 +812,6 @@ public class CobolNumericField extends AbstractCobolField {
     return this;
   }
 
-  /**
-   * 引数で与えらえられたデータからthisへの代入を行う
-   *
-   * @param field 代入元のデータ(double型)
-   */
   /*
    * @Override
    * public void moveFrom(double number) {
@@ -888,28 +819,17 @@ public class CobolNumericField extends AbstractCobolField {
    * }
    */
 
-  /**
-   * 引数で与えらえられたデータからthisへの代入を行う
-   *
-   * @param number 代入元のデータ(BigDecimal型)
-   */
   @Override
   public void moveFrom(BigDecimal number) {}
 
-  /**
-   * 引数で与えらえられたデータからthisへの代入を行う
-   *
-   * @param dataStorage 代入元のデータ(CobolDataStorage型)
-   */
   @Override
   public void moveFrom(CobolDataStorage dataStorage) {}
 
-  /** 実装しないメソッド */
+  @Override
   public int addPackedInt(int n) {
     throw new CobolRuntimeException(0, "実装しないコード");
   }
 
-  /** libcob/move.cのcob_display_get_long_longの実装 */
   @Override
   public long getLong() {
     int size = this.getSize();
@@ -943,6 +863,7 @@ public class CobolNumericField extends AbstractCobolField {
     return val;
   }
 
+  @Override
   public int numericCompareTo(AbstractCobolField field) {
     CobolFieldAttribute attr1 = this.getAttribute();
     CobolFieldAttribute attr2 = field.getAttribute();
