@@ -247,11 +247,7 @@ public class CobolNumericBinaryField extends AbstractCobolField {
     return decimal;
   }
 
-  /**
-   * libcob/numeric.cのcob_binary_get_int64の実装
-   *
-   * @param f TODO: 準備中
-   */
+  // libcob/numeric.cのcob_binary_get_int64の実装
   private long binaryGetInt64() {
     int fsiz = 8 - this.getSize();
     long n = 0;
