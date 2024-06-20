@@ -14,6 +14,7 @@ public class CobolResultString extends CobolCallResult {
   }
 
   /** TODO: 準備中 */
+  @Override
   public String getString() throws CobolResultSetException {
     return this.value;
   }

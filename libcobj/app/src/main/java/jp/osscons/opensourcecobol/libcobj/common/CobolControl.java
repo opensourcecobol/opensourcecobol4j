@@ -73,6 +73,7 @@ public abstract class CobolControl {
    */
   public static CobolControl pure() {
     return new CobolControl() {
+      @Override
       public Optional<CobolControl> run()
           throws CobolRuntimeException, CobolGoBackException, CobolStopRunException {
         return Optional.empty();
@@ -88,6 +89,7 @@ public abstract class CobolControl {
    */
   public static CobolControl goTo(CobolControl cont) {
     return new CobolControl() {
+      @Override
       public Optional<CobolControl> run()
           throws CobolRuntimeException, CobolGoBackException, CobolStopRunException {
         return cont.run();
@@ -105,6 +107,7 @@ public abstract class CobolControl {
    */
   public static CobolControl performThrough(CobolControl[] contList, int begin, int end) {
     return new CobolControl() {
+      @Override
       public Optional<CobolControl> run()
           throws CobolRuntimeException, CobolGoBackException, CobolStopRunException {
         Optional<CobolControl> nextCont = Optional.of(contList[begin]);

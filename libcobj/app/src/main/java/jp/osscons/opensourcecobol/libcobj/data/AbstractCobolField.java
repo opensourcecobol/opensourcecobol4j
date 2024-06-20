@@ -1262,6 +1262,7 @@ public abstract class AbstractCobolField {
   private static DataComparator getComparator(AbstractCobolField f) {
     if (f.getAttribute().isTypeNational()) {
       return new DataComparator() {
+        @Override
         public int compare(
             CobolDataStorage s1, CobolDataStorage s2, int size, CobolDataStorage col) {
           return CobolUtil.nationalCmps(s1, s2, size, col);
@@ -1269,6 +1270,7 @@ public abstract class AbstractCobolField {
       };
     } else {
       return new DataComparator() {
+        @Override
         public int compare(
             CobolDataStorage s1, CobolDataStorage s2, int size, CobolDataStorage col) {
           return CobolUtil.alnumCmps(s1, s2, size, col);
