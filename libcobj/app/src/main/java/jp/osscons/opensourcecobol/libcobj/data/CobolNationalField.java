@@ -39,17 +39,11 @@ public class CobolNationalField extends AbstractCobolField {
     super(size, dataStorage, attribute);
   }
 
-  /** this.dataの保持するバイト配列のコピーを返す */
   @Override
   public byte[] getBytes() {
     return dataStorage.getData(size);
   }
 
-  /**
-   * thisの文字列表現をかえす.(toStringだけで十分か?)
-   *
-   * @return thisの文字列表現
-   */
   @Override
   public String getString() {
     try {
@@ -59,28 +53,21 @@ public class CobolNationalField extends AbstractCobolField {
     }
   }
 
-  /** TODO: 準備中 */
   @Override
   public int getInt() {
     return 0;
   }
 
-  /** TODO: 準備中 */
   @Override
   public CobolDecimal getDecimal() {
     return null;
   }
 
-  /** 実装しないメソッド */
+  @Override
   public int addPackedInt(int n) {
     throw new CobolRuntimeException(0, "実装しないコード");
   }
 
-  /**
-   * 引数で与えらえられたデータからthisへの代入を行う
-   *
-   * @param src 代入元のデータ(AbstractCobolField型)
-   */
   @Override
   public void moveFrom(AbstractCobolField src) {
 
@@ -173,7 +160,7 @@ public class CobolNationalField extends AbstractCobolField {
   }
 
   /**
-   * libcob/move.cのjudge_hankakujpn_existの実装
+   * TODO: 準備中
    *
    * @param src TODO: 準備中
    * @return TODO: 準備中
@@ -192,7 +179,7 @@ public class CobolNationalField extends AbstractCobolField {
   }
 
   /**
-   * libcob/move.c han2zenの実装
+   * TODO: 準備中
    *
    * @param str TODO: 準備中
    * @param size TODO: 準備中
@@ -1046,29 +1033,14 @@ public class CobolNationalField extends AbstractCobolField {
     return buf;
   }
 
-  /**
-   * 引数で与えらえられたデータからthisへの代入を行う
-   *
-   * @param dataStorage 代入元のデータ(dataStorage型)
-   */
   @Override
   public void moveFrom(CobolDataStorage dataStorage) {}
 
-  /**
-   * 引数で与えらえられたデータからthisへの代入を行う
-   *
-   * @param bytes 代入元のデータ(byte[]型)
-   */
   @Override
   public void moveFrom(byte[] bytes) {
     dataStorage.setBytes(bytes);
   }
 
-  /**
-   * 引数で与えらえられたデータからthisへの代入を行う
-   *
-   * @param string 代入元のデータ(String型)
-   */
   @Override
   public void moveFrom(String string) {
     try {
@@ -1083,43 +1055,18 @@ public class CobolNationalField extends AbstractCobolField {
     }
   }
 
-  /**
-   * 引数で与えらえられたデータからthisへの代入を行う
-   *
-   * @param number 代入元のデータ(int型)
-   */
   @Override
   public void moveFrom(int number) {}
 
-  /**
-   * 引数で与えらえられたデータからthisへの代入を行う
-   *
-   * @param number 代入元のデータ(int型)
-   */
   @Override
   public void moveFrom(double number) {}
 
-  /**
-   * 引数で与えらえられたデータからthisへの代入を行う
-   *
-   * @param number 代入元のデータ(int型)
-   */
   @Override
   public void moveFrom(BigDecimal number) {}
 
-  /**
-   * 引数で与えらえられたデータからthisへの代入を行う
-   *
-   * @param decimal 代入元のデータ(int型)
-   */
   @Override
   public void setDecimal(BigDecimal decimal) {}
 
-  /**
-   * thisをCobolNumericFieldに変換する. indirect moveをするときに使用されることを想定している.
-   *
-   * @return thisからCobolNumericField型へ変換した値
-   */
   @Override
   public CobolNumericField getNumericField() {
     int size = this.getSize() / 2;
