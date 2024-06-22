@@ -679,8 +679,9 @@ public class CobolFileSort {
         });
   }
 
+  // libcob/fileio.cのcob_file_sort_initの実装
   /**
-   * libcob/fileio.cのcob_file_sort_initの実装
+   * TODO: 準備中
    *
    * @param f TODO: 準備中
    * @param nkeys TODO: 準備中
@@ -720,8 +721,9 @@ public class CobolFileSort {
     f.saveStatus(CobolFile.COB_STATUS_00_SUCCESS, fnstatus);
   }
 
+  // libcob/fileio.cのcob_file_sort_initの実装
   /**
-   * libcob/fileio.cのcob_file_sort_initの実装
+   * TODO: 準備中
    *
    * @param f TODO: 準備中
    * @param nkeys TODO: 準備中
@@ -738,8 +740,9 @@ public class CobolFileSort {
     sortInit(f, nkeys, null, sortReturn, fnstatus);
   }
 
+  // libcob/fileio.cのcob_file_sort_init_keyの実装
   /**
-   * libcob/fileio.cのcob_file_sort_init_keyの実装
+   * TODO: 準備中
    *
    * @param f TODO: 準備中
    * @param flag TODO: 準備中
@@ -753,8 +756,9 @@ public class CobolFileSort {
     f.nkeys++;
   }
 
+  // libcob/fileio.cのcob_file_sort_usingの実装
   /**
-   * libcob/fileio.cのcob_file_sort_usingの実装
+   * TODO: 準備中
    *
    * @param sortFile TODO: 準備中
    * @param dataFile TODO: 準備中
@@ -775,8 +779,9 @@ public class CobolFileSort {
     dataFile.close(CobolFile.COB_CLOSE_NORMAL, null);
   }
 
+  // libcob/fileio.cのcob_file_sort_givingの実装
   /**
-   * libcob/fileio.cのcob_file_sort_givingの実装
+   * TODO: 準備中
    *
    * @param sortFile TODO: 準備中
    * @param varcnt TODO: 準備中
@@ -853,8 +858,9 @@ public class CobolFileSort {
     }
   }
 
+  // libcob/fileio.cのcob_file_sort_closeの実装
   /**
-   * libcob/fileio.cのcob_file_sort_closeの実装
+   * TODO: 準備中
    *
    * @param f TODO: 準備中
    */
@@ -876,8 +882,9 @@ public class CobolFileSort {
     f.saveStatus(CobolFile.COB_STATUS_00_SUCCESS, fnstatus);
   }
 
+  // libcob/fileio.cのcob_file_releaseの実装
   /**
-   * libcob/fileio.cのcob_file_releaseの実装
+   * TODO: 準備中
    *
    * @param f TODO: 準備中
    */
@@ -902,8 +909,9 @@ public class CobolFileSort {
     }
   }
 
+  // libcob/fileio.cのcob_file_returnの実装
   /**
-   * libcob/fileio.cのcob_file_returnの実装
+   * TODO: 準備中
    *
    * @param f TODO: 準備中
    */
