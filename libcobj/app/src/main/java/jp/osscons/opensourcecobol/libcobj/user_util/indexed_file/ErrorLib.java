@@ -1,14 +1,14 @@
 package jp.osscons.opensourcecobol.libcobj.user_util.indexed_file;
 
 /** Manage error info */
-public class ErrorLib {
+class ErrorLib {
   /**
    * Error when indexed file does not exist
    *
    * @param indexedFilePath TODO: 準備中
    * @return 1
    */
-  public static int errorFileDoesNotExist(String indexedFilePath) {
+  static int errorFileDoesNotExist(String indexedFilePath) {
     System.err.println("error: '" + indexedFilePath + "' does not exist.");
     return 1;
   }
@@ -18,7 +18,7 @@ public class ErrorLib {
    * @param indexedFilePath TODO: 準備中
    * @return 1
    */
-  public static int errorInvalidIndexedFile(String indexedFilePath) {
+  static int errorInvalidIndexedFile(String indexedFilePath) {
     System.err.println("error: '" + indexedFilePath + "' is not a valid indexed file.");
     return 1;
   }
@@ -28,7 +28,7 @@ public class ErrorLib {
    *
    * @return 1
    */
-  public static int errorIO() {
+  static int errorIO() {
     System.err.println("error: IO error.");
     return 1;
   }
@@ -38,7 +38,7 @@ public class ErrorLib {
    *
    * @return 1
    */
-  public static int errorDuplicateKeys() {
+  static int errorDuplicateKeys() {
     System.err.println("error: loading fails because of duplicate keys.");
     return 1;
   }
@@ -49,7 +49,7 @@ public class ErrorLib {
    * @param correctSize TODO: 準備中
    * @return TODO: 準備中
    */
-  public static int errorDataSizeMismatch(int correctSize) {
+  static int errorDataSizeMismatch(int correctSize) {
     System.err.println("error: all record must have the length of " + correctSize + " bytes.");
     return 1;
   }

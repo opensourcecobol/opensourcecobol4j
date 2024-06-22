@@ -7,18 +7,18 @@ import org.apache.commons.cli.Options;
 import org.apache.commons.cli.ParseException;
 
 /** TODO: 準備中 */
-public class ApiFilesOptions {
+class ApiFilesOptions {
   /** TODO: 準備中 */
-  public static String packageName;
+  static String packageName;
   /** TODO: 準備中 */
-  public static String outputDir;
+  static String outputDir;
 
   /**
    * TODO: 準備中
    *
    * @param args TODO: 準備中
    */
-  public static void getOptions(String[] args) {
+  static void getOptions(String[] args) {
     Options options = new Options();
     options.addOption("h", "help", false, "Prints the help message");
     options.addOption(
@@ -79,7 +79,7 @@ public class ApiFilesOptions {
    *
    * @param packageName TODO: 準備中
    */
-  public static void setJavaPackage(String packageName) {
+  static void setJavaPackage(String packageName) {
     ApiFilesOptions.packageName = packageName;
   }
 
@@ -88,7 +88,7 @@ public class ApiFilesOptions {
    *
    * @param outputDir TODO: 準備中
    */
-  public static void setOutputDir(String outputDir) {
+  static void setOutputDir(String outputDir) {
     ApiFilesOptions.outputDir = outputDir;
   }
 }

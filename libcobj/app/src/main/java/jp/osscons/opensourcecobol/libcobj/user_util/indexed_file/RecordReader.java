@@ -4,7 +4,7 @@ import java.util.Optional;
 import jp.osscons.opensourcecobol.libcobj.data.CobolDataStorage;
 
 /** TODO: 準備中 */
-public interface RecordReader {
+interface RecordReader {
   /** TODO: 準備中 */
   void open();
 

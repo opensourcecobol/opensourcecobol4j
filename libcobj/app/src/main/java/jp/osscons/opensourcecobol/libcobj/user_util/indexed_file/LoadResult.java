@@ -1,7 +1,7 @@
 package jp.osscons.opensourcecobol.libcobj.user_util.indexed_file;
 
 /** Enum to specify the result of the load operation. */
-public enum LoadResult {
+enum LoadResult {
   /** The load operation succeeded. */
   LoadResultSuccess,
   /** The load operation failed because there exists a record whose size is invalid. */
