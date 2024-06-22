@@ -21,7 +21,7 @@ package jp.osscons.opensourcecobol.libcobj.file;
 import jp.osscons.opensourcecobol.libcobj.data.CobolDataStorage;
 
 /** TODO: 調査中 */
-public class CobolItem {
+class CobolItem {
   private CobolItem next;
   private int endOfBlock;
   private int recordSize;
@@ -30,7 +30,7 @@ public class CobolItem {
   private CobolDataStorage item;
 
   /** TODO: 調査中 */
-  public CobolItem() {
+  CobolItem() {
     this.next = null;
     this.endOfBlock = 0;
   }
@@ -40,7 +40,7 @@ public class CobolItem {
    *
    * @return TODO: 調査中
    */
-  public CobolItem getNext() {
+  CobolItem getNext() {
     return next;
   }
 
@@ -49,7 +49,7 @@ public class CobolItem {
    *
    * @param next TODO: 調査中
    */
-  public void setNext(CobolItem next) {
+  void setNext(CobolItem next) {
     this.next = next;
   }
 
@@ -58,7 +58,7 @@ public class CobolItem {
    *
    * @return TODO: 調査中
    */
-  public int getEndOfBlock() {
+  int getEndOfBlock() {
     return endOfBlock;
   }
 
@@ -67,7 +67,7 @@ public class CobolItem {
    *
    * @param endOfBlock TODO: 調査中
    */
-  public void setEndOfBlock(int endOfBlock) {
+  void setEndOfBlock(int endOfBlock) {
     this.endOfBlock = endOfBlock;
   }
 
@@ -76,7 +76,7 @@ public class CobolItem {
    *
    * @return TODO: 調査中
    */
-  public int getRecordSize() {
+  int getRecordSize() {
     return recordSize;
   }
 
@@ -85,7 +85,7 @@ public class CobolItem {
    *
    * @param recordSize TODO: 調査中
    */
-  public void setRecordSize(int recordSize) {
+  void setRecordSize(int recordSize) {
     this.recordSize = recordSize;
   }
 
@@ -94,7 +94,7 @@ public class CobolItem {
    *
    * @return TODO: 調査中
    */
-  public byte getBlockByte() {
+  byte getBlockByte() {
     return blockByte;
   }
 
@@ -103,7 +103,7 @@ public class CobolItem {
    *
    * @param blockByte TODO: 調査中
    */
-  public void setBlockByte(byte blockByte) {
+  void setBlockByte(byte blockByte) {
     this.blockByte = blockByte;
   }
 
@@ -112,7 +112,7 @@ public class CobolItem {
    *
    * @return TODO: 調査中
    */
-  public CobolDataStorage getUnique() {
+  CobolDataStorage getUnique() {
     return unique;
   }
 
@@ -121,7 +121,7 @@ public class CobolItem {
    *
    * @param unique TODO: 調査中
    */
-  public void setUnique(CobolDataStorage unique) {
+  void setUnique(CobolDataStorage unique) {
     this.unique = unique;
   }
 
@@ -130,7 +130,7 @@ public class CobolItem {
    *
    * @return TODO: 調査中
    */
-  public CobolDataStorage getItem() {
+  CobolDataStorage getItem() {
     return item;
   }
 
@@ -139,7 +139,7 @@ public class CobolItem {
    *
    * @param item TODO: 調査中
    */
-  public void setItem(CobolDataStorage item) {
+  void setItem(CobolDataStorage item) {
     this.item = item;
   }
 }
