@@ -30,7 +30,7 @@ import java.nio.channels.NonWritableChannelException;
 import jp.osscons.opensourcecobol.libcobj.data.CobolDataStorage;
 
 /** TODO: 準備中 */
-public class FileIO {
+class FileIO {
 
   private FileChannel fc;
   private FileLock fl = null;
@@ -49,7 +49,7 @@ public class FileIO {
   private byte[] writeBuffer;
 
   /** TODO: 準備中 */
-  public FileIO() {
+  FileIO() {
     this.useStdOut = true;
     this.useStdIn = true;
 
@@ -63,7 +63,7 @@ public class FileIO {
    *
    * @return TODO: 準備中
    */
-  public boolean isAtEnd() {
+  boolean isAtEnd() {
     return this.atEnd;
   }
 
@@ -73,7 +73,7 @@ public class FileIO {
    * @param fc TODO: 準備中
    * @param fl TODO: 準備中
    */
-  public void setChannel(FileChannel fc, FileLock fl) {
+  void setChannel(FileChannel fc, FileLock fl) {
     this.fc = fc;
     this.fl = fl;
     this.useStdOut = false;
@@ -86,7 +86,7 @@ public class FileIO {
    * @param ra TODO: 準備中
    * @param fl TODO: 準備中
    */
-  public void setRandomAccessFile(RandomAccessFile ra, FileLock fl) {
+  void setRandomAccessFile(RandomAccessFile ra, FileLock fl) {
     this.useStdOut = false;
     this.useStdIn = false;
     this.fc = ra.getChannel();
@@ -97,7 +97,7 @@ public class FileIO {
    *
    * @param out TODO: 準備中
    */
-  public void setOut(PrintStream out) {
+  void setOut(PrintStream out) {
     this.useStdOut = true;
   }
 
@@ -106,7 +106,7 @@ public class FileIO {
    *
    * @param in TODO: 準備中
    */
-  public void setIn(InputStream in) {
+  void setIn(InputStream in) {
     this.useStdIn = true;
   }
 
@@ -115,7 +115,7 @@ public class FileIO {
    *
    * @param bufferSize TODO: 準備中
    */
-  public void prepareWriteBuffer(int bufferSize) {
+  void prepareWriteBuffer(int bufferSize) {
     if (bufferSize > 0) {
       this.writeBufferSize = bufferSize;
       this.writeBufferEndIndex = 0;
@@ -137,7 +137,7 @@ public class FileIO {
    * @param size TODO: 準備中
    * @return TODO: 準備中
    */
-  public int read(byte[] bytes, int size) {
+  int read(byte[] bytes, int size) {
     if (useStdIn) {
       // 標準入力を使う
       System.err.println("read stdin not implmented");
@@ -167,7 +167,7 @@ public class FileIO {
    * @return TODO: 準備中
    * @throws IOException TODO: 準備中
    */
-  public int read(CobolDataStorage storage, int size) throws IOException {
+  int read(CobolDataStorage storage, int size) throws IOException {
     if (useStdIn) {
       return 0;
     } else {
@@ -196,7 +196,7 @@ public class FileIO {
    *
    * @param c TODO: 準備中
    */
-  public void write(char c) {
+  void write(char c) {
     this.write(String.valueOf(c).getBytes());
   }
 
@@ -206,7 +206,7 @@ public class FileIO {
    * @param bytes TODO: 準備中
    * @return TODO: 準備中
    */
-  public int write(byte[] bytes) {
+  int write(byte[] bytes) {
     return 0;
   }
 
@@ -237,7 +237,7 @@ public class FileIO {
    * @param size TODO: 準備中
    * @return TODO: 準備中
    */
-  public boolean write(byte[] bytes, int size) {
+  boolean write(byte[] bytes, int size) {
     if (this.fc == null) {
       return false;
     }
@@ -265,7 +265,7 @@ public class FileIO {
    * @param size TODO: 準備中
    * @return TODO: 準備中
    */
-  public boolean write(CobolDataStorage storage, int size) {
+  boolean write(CobolDataStorage storage, int size) {
     if (this.fc == null) {
       return false;
     }
@@ -296,7 +296,7 @@ public class FileIO {
    * @param val TODO: 準備中
    * @return TODO: 準備中
    */
-  public byte putc(byte val) {
+  byte putc(byte val) {
     if (this.fc == null) {
       return 0;
     }
@@ -324,7 +324,7 @@ public class FileIO {
    *
    * @return TODO: 準備中
    */
-  public int getc() {
+  int getc() {
     if (this.fc == null) {
       return 0;
     }
@@ -366,7 +366,7 @@ public class FileIO {
   }
 
   /** TODO: 準備中 */
-  public void close() {
+  void close() {
     if (!useStdOut && !useStdIn && this.fc != null) {
       try {
         outputWriteBuffer();
@@ -379,7 +379,7 @@ public class FileIO {
   }
 
   /** TODO: 準備中 */
-  public void flush() {
+  void flush() {
     if (!useStdOut) {
       try {
         outputWriteBuffer();
@@ -391,9 +391,9 @@ public class FileIO {
   }
 
   /** TODO: 準備中 */
-  public static final int SEEK_SET = 0;
+  static final int SEEK_SET = 0;
   /** TODO: 準備中 */
-  public static final int SEEK_CUR = 1;
+  static final int SEEK_CUR = 1;
 
   /**
    * TODO: 準備中
@@ -402,7 +402,7 @@ public class FileIO {
    * @param origin TODO: 準備中
    * @return TODO: 準備中
    */
-  public boolean seek(long offset, int origin) {
+  boolean seek(long offset, int origin) {
     if (!useStdOut && !useStdIn) {
       try {
         switch (origin) {
@@ -423,10 +423,10 @@ public class FileIO {
   }
 
   /** TODO: 準備中 */
-  public void seekInit() {}
+  void seekInit() {}
 
   /** TODO: 準備中 */
-  public void rewind() {
+  void rewind() {
     if (!useStdOut && !useStdIn) {
       try {
         this.fc.position(0L);
@@ -437,7 +437,7 @@ public class FileIO {
   }
 
   /** TODO: 準備中 */
-  public void releaseLock() {
+  void releaseLock() {
     if ((!useStdOut || !useStdIn) && this.fl != null) {
       try {
         this.fl.release();
