@@ -27,7 +27,7 @@ import jp.osscons.opensourcecobol.libcobj.common.CobolUtil;
 import jp.osscons.opensourcecobol.libcobj.exceptions.CobolRuntimeException;
 import jp.osscons.opensourcecobol.libcobj.exceptions.CobolStopRunException;
 
-/** COBOLで使用する変数を表現するクラス。 PIC文字列の種類に応じて,このクラスを継承したクラスを作成する */
+/** COBOLで使用する変数を表現するクラス。 */
 public abstract class AbstractCobolField {
   /** データを格納に使用するバイト配列の長さ */
   protected int size;
@@ -115,7 +115,7 @@ public abstract class AbstractCobolField {
   }
 
   /**
-   * opensource COBOLのCOB_FIELD_SIZEマクロに相当するメソッド
+   * 符号部分を除いた数値部分の長さを返す
    *
    * @return 符号付で符号が分離している場合はthis.size-1,そうでなければthis.size
    */
@@ -137,10 +137,9 @@ public abstract class AbstractCobolField {
   }
 
   /**
-   * opensource COBOLのCOB_FIELD_DATAに相当するメソッド バイト配列の中で(符号データではなく)数値データの格納されている最小の添え字を返す opensource
-   * COBOLではポインタを返しているが,このメソッドは添え字を返す
+   * バイト配列の中で(符号データではなく)数値データの格納されている最小の添え字を返す
    *
-   * @return SIGN_LEADINGかつSIGN_SEPARATEなら1,それ以外は0
+   * @return SIGN LEADINGかつSIGN SEPARATEな変数なら1,それ以外は0
    */
   public int getFirstDataIndex() {
     return (this.attribute.isFlagSignSeparate() && this.attribute.isFlagSignLeading()) ? 1 : 0;
@@ -166,7 +165,7 @@ public abstract class AbstractCobolField {
   }
 
   /**
-   * thisの文字列表現をかえす.(toStringだけで十分か?)
+   * thisの文字列表現をかえす.
    *
    * @return thisの文字列表現
    */
@@ -262,7 +261,7 @@ public abstract class AbstractCobolField {
   }
 
   /**
-   * TODO 確認 未使用?
+   * TODO: 準備中
    *
    * @param decimal TODO: 準備中
    */
@@ -295,10 +294,10 @@ public abstract class AbstractCobolField {
   }
 
   /**
-   * libcob/numeric.cのcob_addの実装 thisの保持する数値データに,引数で与えられたフィールドの保持する数値データを加算する
+   * thisの保持する数値データに,引数で与えられたフィールドの保持する数値データを加算する
    *
    * @param field 加算する数値を保持するフィールド
-   * @param opt 加算に関するオプション.詳しくはopensourceCOBOLを参照
+   * @param opt 加算に関するオプション.詳しくはTODO: 準備中
    * @return 加算後のthisの保持する数値データ
    * @throws CobolStopRunException TODO: 準備中
    */
@@ -310,10 +309,10 @@ public abstract class AbstractCobolField {
   }
 
   /**
-   * libcob/numeric.cのcob_subの実装 thisの保持する数値データに,引数で与えられたフィールドの保持する数値データを減算する
+   * thisの保持する数値データに,引数で与えられたフィールドの保持する数値データを減算する
    *
    * @param field 減算する数値を保持するフィールド
-   * @param opt 減算に関するオプション.詳しくはopensourceCOBOLを参照
+   * @param opt 減算に関するオプション.詳しくはTODO: 準備中
    * @return 減算後のthisの保持する数値データ
    * @throws CobolStopRunException TODO: 準備中
    */
@@ -325,10 +324,10 @@ public abstract class AbstractCobolField {
   }
 
   /**
-   * libcob/numeric.cのcob_add_intの実装? 保持する数値データに指定された値を加算する
+   * 保持する数値データに指定された値を加算する
    *
    * @param n thisの保持する数値データから加算する数値
-   * @return 基本的に0が返される.詳しくはopensource COBOLを参照
+   * @return 基本的に0が返される.詳しくは詳しくはTODO: 準備中
    * @throws CobolStopRunException TODO: 準備中
    */
   public int addInt(int n) throws CobolStopRunException {
@@ -348,7 +347,7 @@ public abstract class AbstractCobolField {
   }
 
   /**
-   * libcob/numeric.cのcob_add_packed
+   * TODO: 準備中
    *
    * @param n TODO: 準備中
    * @return TODO: 準備中
@@ -359,7 +358,7 @@ public abstract class AbstractCobolField {
    * thisの保持する数値データに指定された値を減算する
    *
    * @param n thisの保持する数値データから減算する数値
-   * @return 基本的に0が返される.詳しくはopensource COBOLを参照
+   * @return 基本的に0が返される.詳しくはTODO: 準備中
    * @throws CobolStopRunException TODO: 準備中
    */
   public int subInt(int n) throws CobolStopRunException {
@@ -367,7 +366,7 @@ public abstract class AbstractCobolField {
   }
 
   /**
-   * libcob/numeric.cのcob_div_quotientの実装
+   * TODO: 準備中
    *
    * @param divisor TODO: 準備中
    * @param quotient TODO: 準備中
@@ -401,7 +400,7 @@ public abstract class AbstractCobolField {
   }
 
   /**
-   * libcob/numeric.cのcob_div_remainderの実装
+   * TODO: 準備中
    *
    * @param opt TODO: 準備中
    * @return TODO: 準備中
@@ -412,7 +411,7 @@ public abstract class AbstractCobolField {
   }
 
   /**
-   * libcob/numeric.cのcob_cmp_intの実装
+   * TODO: 準備中
    *
    * @param n TODO: 準備中
    * @return TODO: 準備中
@@ -425,7 +424,7 @@ public abstract class AbstractCobolField {
   }
 
   /**
-   * libcob/numeric.cのcob_cmp_intの実装
+   * TODO: 準備中
    *
    * @param n TODO: 準備中
    * @return TODO: 準備中
@@ -435,7 +434,7 @@ public abstract class AbstractCobolField {
   }
 
   /**
-   * libcob/numeric.cのcob_cmp_uintの実装
+   * TODO: 準備中
    *
    * @param n TODO: 準備中
    * @return TODO: 準備中
@@ -445,7 +444,7 @@ public abstract class AbstractCobolField {
   }
 
   /**
-   * libcob/numeric.cのcob_cmp_uintの実装
+   * TODO: 準備中
    *
    * @param n TODO: 準備中
    * @return TODO: 準備中
@@ -455,7 +454,7 @@ public abstract class AbstractCobolField {
   }
 
   /**
-   * libcob/numeric.cのcob_numeric_cmpの実装
+   * TODO: 準備中
    *
    * @param field TODO: 準備中
    * @return TODO: 準備中
@@ -602,28 +601,28 @@ public abstract class AbstractCobolField {
   /**
    * 引数で与えらえられたデータからthisへの代入を行う
    *
-   * @param field 代入元のデータ(AbstractCobolField型)
+   * @param field 代入元のデータ
    */
   public abstract void moveFrom(AbstractCobolField field);
 
   /**
    * 引数で与えらえられたデータからthisへの代入を行う
    *
-   * @param dataStorage 代入元のデータ(CobolDataStorage型)
+   * @param dataStorage 代入元のデータ
    */
   public abstract void moveFrom(CobolDataStorage dataStorage);
 
   /**
    * 引数で与えらえられたデータからthisへの代入を行う
    *
-   * @param bytes 代入元のデータ(byte[]型)
+   * @param bytes 代入元のデータ
    */
   public abstract void moveFrom(byte[] bytes);
 
   /**
    * 引数で与えらえられたデータからthisへの代入を行う
    *
-   * @param s 代入元のデータ(String型)
+   * @param s 代入元のデータ
    */
   public void moveFrom(String s) {
     // The maximum number of digits of int type in decimal is 10
@@ -648,7 +647,7 @@ public abstract class AbstractCobolField {
   /**
    * 引数で与えらえられたデータからthisへの代入を行う
    *
-   * @param number 代入元のデータ(int型)
+   * @param number 代入元のデータ
    */
   public void moveFrom(int number) {
     // The maximum number of digits of int type in decimal is 10
@@ -676,7 +675,7 @@ public abstract class AbstractCobolField {
   /**
    * 引数で与えらえられたデータからthisへの代入を行う
    *
-   * @param number 代入元のデータ(double型)
+   * @param number 代入元のデータ
    */
   public void moveFrom(double number) {
     String s = Double.toString(Math.abs(number));
@@ -712,12 +711,12 @@ public abstract class AbstractCobolField {
   /**
    * 引数で与えらえられたデータからthisへの代入を行う
    *
-   * @param number 代入元のデータ(BigDecimal型)
+   * @param number 代入元のデータ
    */
   public abstract void moveFrom(BigDecimal number);
 
   /**
-   * opensourceCOBOLのcob_check_numericの実装
+   * TODO: 準備中
    *
    * @param s TODO: 準備中
    * @throws CobolStopRunException TODO: 準備中
@@ -853,7 +852,7 @@ public abstract class AbstractCobolField {
   }
 
   /**
-   * libcob/common.cのcommon_cmpcの実装
+   * TODO: 準備中
    *
    * @param s1 TODO: 準備中
    * @param s1StartIndex s1のバイトデータにアクセスるするときの最小の添え字の相対位置
@@ -874,7 +873,7 @@ public abstract class AbstractCobolField {
   }
 
   /**
-   * libcob/common.cのcob_cmp_allの実装
+   * TODO: 準備中
    *
    * @param field thisと比較するフィールド
    * @return TODO: 準備中
@@ -906,7 +905,7 @@ public abstract class AbstractCobolField {
   }
 
   /**
-   * libcob/common.cのalnum_cmpsの実装
+   * TODO: 準備中
    *
    * @param s1 TODO: 準備中
    * @param s1Start s1のバイトデータにアクセスるするときの最初の添え字の相対位置
@@ -948,7 +947,7 @@ public abstract class AbstractCobolField {
   }
 
   /**
-   * thisをCobolNumericFieldに変換する. indirect moveをするときに使用されることを想定している.
+   * TODO: 準備中
    *
    * @return thisからCobolNumericField型へ変換した値
    */
@@ -957,7 +956,7 @@ public abstract class AbstractCobolField {
   }
 
   /**
-   * libcob/common.cのcob_check_mvstrnumの実装
+   * TODO: 準備中
    *
    * @param field TODO: 準備中
    * @throws CobolStopRunException TODO: 準備中
@@ -995,7 +994,7 @@ public abstract class AbstractCobolField {
   }
 
   /**
-   * libcob/move.c own_byte_memcpyの実装
+   * TODO: 準備中
    *
    * @param s1 TODO: 準備中
    * @param s1StartIndex s1のバイトデータにアクセスるするときの最初の添え字の相対位置
@@ -1018,7 +1017,7 @@ public abstract class AbstractCobolField {
   }
 
   /**
-   * libcob/common.cのcob_field_to_stringの実装 TODO CobolNationalFieldでオーバーライドしなくても済むように修正する.
+   * TODO: 準備中
    *
    * @return this.dataの保持するデータを文字列にして返す.
    */
@@ -1034,7 +1033,7 @@ public abstract class AbstractCobolField {
   }
 
   /**
-   * libcob/move.cのcob_set_intの実装
+   * TODO: 準備中
    *
    * @param n TODO: 準備中
    */
@@ -1052,7 +1051,7 @@ public abstract class AbstractCobolField {
   }
 
   /**
-   * libcob/move.cのcob_set_intの実装
+   * TODO: 準備中
    *
    * @param data TODO: 準備中
    */
@@ -1079,7 +1078,7 @@ public abstract class AbstractCobolField {
   }
 
   /**
-   * libcob/common.cのcob_memcpyの実装
+   * TODO: 準備中
    *
    * @param src TODO: 準備中
    * @param size TODO: 準備中
@@ -1093,7 +1092,7 @@ public abstract class AbstractCobolField {
   }
 
   /**
-   * libcob/common.cのcob_memcpyの実装
+   * TODO: 準備中
    *
    * @param src TODO: 準備中
    */
@@ -1102,7 +1101,7 @@ public abstract class AbstractCobolField {
   }
 
   /**
-   * libcob/common.cのcob_memcpyの実装
+   * TODO: 準備中
    *
    * @param src TODO: 準備中
    * @param size TODO: 準備中
@@ -1113,7 +1112,7 @@ public abstract class AbstractCobolField {
   }
 
   /**
-   * libcob/common.cのcob_memcpyの実装
+   * TODO: 準備中
    *
    * @param src TODO: 準備中
    */
@@ -1122,7 +1121,7 @@ public abstract class AbstractCobolField {
   }
 
   /**
-   * libcob/common.cのcob_is_omittedの実装
+   * TODO: 準備中
    *
    * @return TODO: 準備中
    */
@@ -1131,7 +1130,7 @@ public abstract class AbstractCobolField {
   }
 
   /**
-   * libcob/common.cのcob_is_numericの実装
+   * TODO: 準備中
    *
    * @return TODO: 準備中
    */
@@ -1196,7 +1195,7 @@ public abstract class AbstractCobolField {
   }
 
   /**
-   * libcob/common.cのcob_is_alphaの実装
+   * TODO: 準備中
    *
    * @return TODO: 準備中
    */
@@ -1211,7 +1210,7 @@ public abstract class AbstractCobolField {
   }
 
   /**
-   * libcob/common.cのcob_is_upperの実装
+   * TODO: 準備中
    *
    * @return TODO: 準備中
    */
@@ -1226,7 +1225,7 @@ public abstract class AbstractCobolField {
   }
 
   /**
-   * libcob/common.cのcob_is_lowerの実装
+   * TODO: 準備中
    *
    * @return TODO: 準備中
    */
@@ -1241,7 +1240,7 @@ public abstract class AbstractCobolField {
   }
 
   /**
-   * libcob/common.cのcob_cmp_charの実装
+   * TODO: 準備中
    *
    * @param c TODO: 準備中
    * @return TODO: 準備中
@@ -1280,7 +1279,7 @@ public abstract class AbstractCobolField {
   }
 
   /**
-   * libcob/common.cのcob_cmp_allの実装
+   * TODO: 準備中
    *
    * @param other TODO: 準備中
    * @return TODO: 準備中
@@ -1339,7 +1338,7 @@ public abstract class AbstractCobolField {
   }
 
   /**
-   * libcob/common.cのcob_cmp_simple_strの実装
+   * TODO: 準備中
    *
    * @param other TODO: 準備中
    * @return TODO: 準備中
@@ -1379,7 +1378,7 @@ public abstract class AbstractCobolField {
   }
 
   /**
-   * libcob/common.cのcob_alnum_cmpsの実装
+   * TODO: 準備中
    *
    * @param other TODO: 準備中
    * @return TODO: 準備中
@@ -1407,7 +1406,7 @@ public abstract class AbstractCobolField {
   }
 
   /**
-   * libcob/common.cのcob_real_get_signの実装
+   * TODO: 準備中
    *
    * @return TODO: 準備中
    */
@@ -1456,7 +1455,7 @@ public abstract class AbstractCobolField {
   }
 
   /**
-   * libcob/common.cのcob_real_put_signの実装
+   * TODO: 準備中
    *
    * @param sign TODO: 準備中
    */
@@ -1499,7 +1498,7 @@ public abstract class AbstractCobolField {
   }
 
   /**
-   * libcob/move.cのcob_get_long_longの実装
+   * TODO: 準備中
    *
    * @return TODO: 準備中
    */
@@ -1528,7 +1527,7 @@ public abstract class AbstractCobolField {
   }
 
   /**
-   * libcob/move.cのcob_hankaku_moveの実装
+   * TODO: 準備中
    *
    * @param src TODO: 準備中
    */

@@ -21,12 +21,12 @@ package jp.osscons.opensourcecobol.libcobj.data;
 import java.io.UnsupportedEncodingException;
 import jp.osscons.opensourcecobol.libcobj.exceptions.CobolRuntimeException;
 
-/**
- * CobolFieldAttributeに設定された値に基づいて適切なAbstractCobolFieldの サブクラスのコンストラクタを呼び出すmakeCobolFieldを実装するクラス
- */
+/** AbstractCobolFieldのサブクラスを生成するためのメソッドを定義するクラス */
 public class CobolFieldFactory {
+
   /**
-   * attrに設定された値に応じて適切なAbstractCobolFieldクラスのサブクラスの コンストラクタを呼びだす。
+   * 引数に応じて適切なAbstractCobolFieldクラスのサブクラスを生成する。
+   * 特にattrに設定された値に応じて適切なAbstractCobolFieldのサブクラスのインスタンスを生成する。
    *
    * @param size データを保存するバイト領域の大きさ
    * @param str データを保存する領域に書き込まれる初期データ
@@ -51,7 +51,8 @@ public class CobolFieldFactory {
   }
 
   /**
-   * attrに設定された値に応じて適切なAbstractCobolFieldクラスのサブクラスの コンストラクタを呼びだす。
+   * 引数に応じて適切なAbstractCobolFieldクラスのサブクラスを生成する。
+   * 特にattrに設定された値に応じて適切なAbstractCobolFieldのサブクラスのインスタンスを生成する。
    *
    * @param size データを保存するバイト領域の大きさ
    * @param data データを保存する領域
@@ -104,7 +105,7 @@ public class CobolFieldFactory {
   }
 
   /**
-   * 文字列型のデータ(CobolAlphanumericField)
+   * AbstractCobolFieldのインスタンスを生成する
    *
    * @param str 文字列データ
    * @return strの値を保持するCobolAlphanumericFieldのインスタンス
@@ -122,7 +123,7 @@ public class CobolFieldFactory {
   }
 
   /**
-   * 整数値型のデータ(CobolNumericField)
+   * CobolNumericFieldのインスタンスを生成する
    *
    * @param n int型整数値
    * @return nの値を保持するCobolNumericFieldのインスタンス
