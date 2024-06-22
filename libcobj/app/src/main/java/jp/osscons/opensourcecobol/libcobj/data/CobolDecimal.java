@@ -27,7 +27,10 @@ import jp.osscons.opensourcecobol.libcobj.exceptions.CobolExceptionInfo;
 import jp.osscons.opensourcecobol.libcobj.exceptions.CobolRuntimeException;
 import jp.osscons.opensourcecobol.libcobj.exceptions.CobolStopRunException;
 
-/** BigDecimalを扱うクラス COMPUTE等で計算をするときに使用する */
+/**
+ * BigDecimalを扱うクラス<br>
+ * COMPUTE等で計算をするときに使用する
+ */
 public class CobolDecimal {
   /** TODO: 準備中 */
   public static final int DECIMAL_NAN = -128;
@@ -43,19 +46,19 @@ public class CobolDecimal {
 
   private static BigDecimal cobMexp = BigDecimal.ZERO;
   /** TODO: 準備中 */
-  public static CobolDecimal cobD1 = new CobolDecimal();
+  static CobolDecimal cobD1 = new CobolDecimal();
   /** TODO: 準備中 */
-  public static CobolDecimal cobD2 = new CobolDecimal();
+  static CobolDecimal cobD2 = new CobolDecimal();
   /** TODO: 準備中 */
-  public static CobolDecimal cobD3 = new CobolDecimal();
+  static CobolDecimal cobD3 = new CobolDecimal();
   /** TODO: 準備中 */
-  public static CobolDecimal cobD4 = new CobolDecimal();
+  static CobolDecimal cobD4 = new CobolDecimal();
   /** TODO: 準備中 */
-  public static BigDecimal[] cobMpze10 = new BigDecimal[COB_MAX_BINARY];
+  private static BigDecimal[] cobMpze10 = new BigDecimal[COB_MAX_BINARY];
   /** TODO: 準備中 */
-  public static byte[] packedValue = new byte[20];
+  static byte[] packedValue = new byte[20];
   /** TODO: 準備中 */
-  public static int packedValueInt = 0;
+  static int packedValueInt = 0;
 
   /** TODO: 準備中 */
   public static void cobInitNumeric() {
@@ -87,21 +90,21 @@ public class CobolDecimal {
   }
 
   /** 保持する数値データ */
-  public BigDecimal value;
+  BigDecimal value;
 
   /** TODO: 準備中 */
-  public int scale;
+  int scale;
 
-  /** コンストラクタ this.valueは0に設定する */
+  /** 値とスケールは0に設定する */
   public CobolDecimal() {
     this.value = BigDecimal.ZERO;
     this.setScale(0);
   }
 
   /**
-   * コンストラクタ this.valueを引数で指定された値に設定する.
+   * 値はvalueを指定し,スケールは0に設定する
    *
-   * @param value TODO: 準備中
+   * @param value 設定する値
    */
   public CobolDecimal(BigDecimal value) {
     this.setValue(value);
@@ -109,10 +112,10 @@ public class CobolDecimal {
   }
 
   /**
-   * コンストラクタ this.valueを指定された値に設定し,scaleも指定された値に設定する.
+   * 値とスケールを指定する
    *
-   * @param value TODO: 準備中
-   * @param scale TODO: 準備中
+   * @param value 設定する値
+   * @param scale 設定するスケール
    */
   public CobolDecimal(BigDecimal value, int scale) {
     this(value);
@@ -120,7 +123,7 @@ public class CobolDecimal {
   }
 
   /**
-   * コンストラクタ. this.valueを指定されたint型の値に対応する値に設定する
+   * 値を指定し,スケールは0に設定する
    *
    * @param n TODO: 準備中
    */
@@ -138,7 +141,7 @@ public class CobolDecimal {
   }
 
   /**
-   * コンストラクタ. this.valueを指定されたint型の値に対応する値に設定する
+   * 値を設定し,スケールは0に設定する
    *
    * @param n TODO: 準備中
    */
@@ -166,23 +169,23 @@ public class CobolDecimal {
   }
 
   /**
-   * this.valueのgetter
+   * このオブジェクトの値を取得する
    *
-   * @return this.value
+   * @return このオブジェクトの値
    */
   public BigDecimal getValue() {
     return value;
   }
 
-  /** libcob/numeric.cのcob_decimal_initの実装 */
+  /** TODO: 準備中 */
   public void decimalInit() {
     this.value = BigDecimal.ZERO;
   }
 
   /**
-   * this.valueのsetter
+   * このオブジェクトの値を設定する
    *
-   * @param value this.valueに設定する値
+   * @param value このオブジェクトに設定する値
    */
   public void setValue(BigDecimal value) {
     this.value = value;
@@ -194,27 +197,27 @@ public class CobolDecimal {
   }
 
   /**
-   * this.valueのスケールを設定する
+   * このオブジェクトのスケールを設定する
    *
-   * @param scale スケール値
+   * @param scale このオブジェクトに設定するスケール
    */
   public void setScale(int scale) {
     this.scale = scale;
   }
 
   /**
-   * this.valueのスケールを取得する
+   * このオブジェクトのスケールを取得する
    *
-   * @return this.valueのスケール
+   * @return このオブジェクトのスケール
    */
   public int getScale() {
     return this.scale;
   }
 
   /**
-   * this.valueを引数で指定されたint型変数の値に対応する値に設定する
+   * このオブジェクトの値を設定し、スケールは0に設定する
    *
-   * @param n this.valueに設定する値
+   * @param n このオブジェクトに設定する値
    */
   public void set(int n) {
     this.value = new BigDecimal(n);
@@ -222,9 +225,9 @@ public class CobolDecimal {
   }
 
   /**
-   * this.valueを引数で指定されたint型変数の値に対応する値に設定する
+   * このオブジェクトの値を設定し、スケールは0に設定する
    *
-   * @param n this.valueに設定する値
+   * @param n このオブジェクトに設定する値
    */
   public void set(long n) {
     this.value = new BigDecimal(n);
@@ -232,7 +235,7 @@ public class CobolDecimal {
   }
 
   /**
-   * libcob/numeric.cのcob_decimal_setの実装
+   * TODO: 準備中
    *
    * @param decimal TODO: 準備中
    */
@@ -243,7 +246,7 @@ public class CobolDecimal {
   }
 
   /**
-   * libcob/numeric.cのcob_decimal_set_fieldの実装
+   * TODO: 準備中
    *
    * @param f TODO: 準備中
    */
@@ -254,7 +257,7 @@ public class CobolDecimal {
   }
 
   /**
-   * libcob/numeric.cのDECIMAL_CHECKマクロの代替
+   * TODO: 準備中
    *
    * @param d1 TODO: 準備中
    * @param d2 TODO: 準備中
@@ -268,18 +271,18 @@ public class CobolDecimal {
   }
 
   /**
-   * this.valueの値をthis.valueとnを加算した値にする
+   * このオブジェクトの示す数値に対して加算を行う
    *
-   * @param n other this.valueに加算される値
+   * @param n このオブジェクトに加算する値
    */
   public void add(int n) {
     this.value = this.value.add(new BigDecimal(n));
   }
 
   /**
-   * this.valueの値をthis.valueとotherを加算した値にする
+   * このオブジェクトの示す数値に対して加算を行う
    *
-   * @param decimal this.valueに加算される値
+   * @param decimal このオブジェクトに加算する値
    */
   public void add(CobolDecimal decimal) {
     if (DECIMAL_CHECK(this, decimal)) {
@@ -290,9 +293,9 @@ public class CobolDecimal {
   }
 
   /**
-   * this.valueの値をthis.valueからotherを減算した値にする
+   * このオブジェクトの示す数値に対して減算を行う
    *
-   * @param decimal this.valueから減算される値
+   * @param decimal このオブジェクトの示す数値から減算する値
    */
   public void sub(CobolDecimal decimal) {
     if (DECIMAL_CHECK(this, decimal)) {
@@ -303,18 +306,18 @@ public class CobolDecimal {
   }
 
   /**
-   * this.valueの値をthis.valueからnを減算した値にする
+   * このオブジェクトの示す数値に対して減算を行う
    *
-   * @param n this.valueから減算される値
+   * @param decimal このオブジェクトの示す数値から減算する値
    */
   public void sub(int n) {
     this.value = this.value.subtract(new BigDecimal(n));
   }
 
   /**
-   * this.valueの値をthis.valueとotherを乗算した値にする
+   * このオブジェクトの示す数値に対して乗算を行う
    *
-   * @param decimal this.valueに乗算される値
+   * @param decimal このオブジェクトの示す数値に乗算する値
    */
   public void mul(CobolDecimal decimal) {
     if (DECIMAL_CHECK(this, decimal)) {
@@ -325,18 +328,18 @@ public class CobolDecimal {
   }
 
   /**
-   * this.valueの値をthis.valueとnを乗算した値にする
+   * このオブジェクトの示す数値に対して乗算を行う
    *
-   * @param n this.valueに乗算される値
+   * @param n このオブジェクトの示す数値に乗算する値
    */
   public void mul(int n) {
     this.value = this.value.multiply(new BigDecimal(n));
   }
 
   /**
-   * this.valueの値をthis.valueでotherを割った値にする
+   * このオブジェクトの示す数値に対してmod演算を行う
    *
-   * @param decimal this.valueを割る数
+   * @param decimal このオブジェクトの示す数値にmod演算する値
    * @throws CobolStopRunException TODO: 準備中
    */
   public void div(CobolDecimal decimal) throws CobolStopRunException {
@@ -363,18 +366,18 @@ public class CobolDecimal {
   }
 
   /**
-   * this.valueの値をthis.valueでnを割った値にする
+   * このオブジェクトの示す数値に対して除算を行う
    *
-   * @param n this.valueを割る数
+   * @param n このオブジェクトの示す数値を除算する値
    */
   public void div(int n) {
     this.value = this.value.divide(new BigDecimal(n), RoundingMode.DOWN);
   }
 
   /**
-   * this.valueの値をthis.valueをdecimal乗した値にする
+   * このオブジェクトの示す数値に対して累乗を行う
    *
-   * @param decimal this.valueを割る数
+   * @param decimal このオブジェクトの示す数値を累乗する値
    */
   // TODO 残りの実装
   public void pow(CobolDecimal decimal) {
@@ -392,7 +395,7 @@ public class CobolDecimal {
   }
 
   /**
-   * libcob/numeric.cのcob_decimal_set_doubleの実装
+   * TODO: 準備中
    *
    * @param v TODO: 準備中
    */
@@ -414,13 +417,7 @@ public class CobolDecimal {
   }
 
   /**
-   * this.valueの値をthis.valueをn乗した値にする
-   *
-   * @param other this.valueを割る数
-   */
-
-  /**
-   * libcob/numeric.c cob_decimal_get_fieldの実装 AbstractCobolFieldの保持する値をthisに設定する
+   * TODO: 準備中
    *
    * @param f TODO: 準備中
    * @param opt TODO: 準備中
@@ -508,7 +505,7 @@ public class CobolDecimal {
   }
 
   /**
-   * libcob/numeric.c shift_decimalの実装 this.valueを値10^n,スケールをn増加させる
+   * TODO: 準備中
    *
    * @param n TODO: 準備中
    */
@@ -526,8 +523,9 @@ public class CobolDecimal {
     this.setScale(this.getScale() + n);
   }
 
+  // libcob/numeric.cのalign_decimalの実装
   /**
-   * libcob/numeric.cのalign_decimalの実装
+   * TODO: 準備中
    *
    * @param d1 TODO: 準備中
    * @param d2 TODO: 準備中
@@ -540,11 +538,12 @@ public class CobolDecimal {
     }
   }
 
+  // libcob/numeric.cのcob_decimal_cmpの実装 引数で与えられたCobolDecimal型のインスタンスとの比較をする.
   /**
-   * libcob/numeric.cのcob_decimal_cmpの実装 引数で与えられたCobolDecimal型のインスタンスとの比較をする.
+   * TODO: 準備中
    *
-   * @param decimal thisと比較する対象
-   * @return thisのほうが大きいときは正の値,thisのほうが小さいときあ負の値,それ以外は0
+   * @param decimal TODO: 準備中
+   * @return TODO: 準備中
    */
   public int compareTo(CobolDecimal decimal) {
     alignDecimal(this, decimal);
@@ -553,8 +552,9 @@ public class CobolDecimal {
     return v1.compareTo(v2);
   }
 
+  // libcob/numeric.cのcob_decimal_get_displayの実装
   /**
-   * libcob/numeric.cのcob_decimal_get_displayの実装
+   * TODO: 準備中
    *
    * @param f TODO: 準備中
    * @param opt TODO: 準備中
@@ -600,8 +600,9 @@ public class CobolDecimal {
     return 0;
   }
 
+  // libcob/numeric.cのcob_decimal_get_packedの実装
   /**
-   * libcob/numeric.cのcob_decimal_get_packedの実装
+   * TODO: 準備中
    *
    * @param f TODO: 準備中
    * @param opt TODO: 準備中
@@ -664,8 +665,9 @@ public class CobolDecimal {
     return 0;
   }
 
+  // libcob/numeric.cのcob_decimal_get_binaryの実装
   /**
-   * libcob/numeric.cのcob_decimal_get_binaryの実装
+   * TODO: 準備中
    *
    * @param f TODO: 準備中
    * @param opt TODO: 準備中
@@ -724,13 +726,14 @@ public class CobolDecimal {
     return CobolExceptionInfo.code;
   }
 
+  // libcob/numeric.cのnum_byte_memcpyの実装
   /**
-   * libcob/numeric.cのnum_byte_memcpyの実装
+   * TODO: 準備中
    *
    * @param s1 TODO: 準備中
-   * @param s1StartIndex s1のコピー開始位置
+   * @param s1StartIndex TODO: 準備中
    * @param s2 TODO: 準備中
-   * @param s2StartIndex s1のコピー開始位置
+   * @param s2StartIndex TODO: 準備中
    * @param size TODO: 準備中
    */
   public static void numByteMemcpy(
