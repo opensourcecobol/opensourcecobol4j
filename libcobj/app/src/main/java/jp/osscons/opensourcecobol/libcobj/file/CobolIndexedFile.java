@@ -184,7 +184,6 @@ public class CobolIndexedFile extends CobolFile {
     return field.getDataStorage().getByteArray(0, field.getSize());
   }
 
-  /** Equivalent to indexed_open in libcob/fileio.c */
   @Override
   public int open_(String filename, int mode, int sharing) {
     IndexedFile p = new IndexedFile();
@@ -319,7 +318,6 @@ public class CobolIndexedFile extends CobolFile {
     keyPreparedStmt.close();
   }
 
-  /** Equivalent to indexed_close in libcob/fileio.c */
   @Override
   public int close_(int opt) {
     IndexedFile p = this.filei;
@@ -334,8 +332,9 @@ public class CobolIndexedFile extends CobolFile {
     return COB_STATUS_00_SUCCESS;
   }
 
+  // Equivalent to indexed_start_internal in libcob/fileio.c
   /**
-   * Equivalent to indexed_start_internal in libcob/fileio.c
+   * TODO: 準備中
    *
    * @param cond TODO: 準備中
    * @param key TODO: 準備中
@@ -375,7 +374,6 @@ public class CobolIndexedFile extends CobolFile {
   }
 
   @Override
-  /** Equivalent to libcob/fileio.c in indexed_start */
   public int start_(int cond, AbstractCobolField key) {
     int ret = indexed_start_internal(cond, key, 0, false);
     if (ret == COB_STATUS_00_SUCCESS) {
@@ -385,7 +383,6 @@ public class CobolIndexedFile extends CobolFile {
   }
 
   @Override
-  /** Equivalent to indexed_read in libcob/fileio.c */
   public int read_(AbstractCobolField key, int readOpts) {
     IndexedFile p = this.filei;
     boolean testLock = false;
@@ -401,7 +398,6 @@ public class CobolIndexedFile extends CobolFile {
     return COB_STATUS_00_SUCCESS;
   }
 
-  /** Equivalent to indexed_read_next in libcob/fileio.c */
   @Override
   public int readNext(int readOpts) {
     IndexedFile p = this.filei;
@@ -607,7 +603,6 @@ public class CobolIndexedFile extends CobolFile {
     return returnWith(p, closeCursor, 0, COB_STATUS_00_SUCCESS);
   }
 
-  /** Equivalent to indexed_write in libcob/fileio.c */
   @Override
   public int write_(int opt) {
     IndexedFile p = this.filei;
@@ -744,7 +739,6 @@ public class CobolIndexedFile extends CobolFile {
   }
 
   @Override
-  /** Equivalent to libcob/fileio.c in indexed_delete */
   public int delete_() {
     return this.indexed_delete_internal(false);
   }
