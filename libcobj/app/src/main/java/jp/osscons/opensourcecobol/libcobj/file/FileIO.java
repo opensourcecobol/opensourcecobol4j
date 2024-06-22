@@ -191,25 +191,6 @@ class FileIO {
     }
   }
 
-  /**
-   * TODO: 準備中
-   *
-   * @param c TODO: 準備中
-   */
-  void write(char c) {
-    this.write(String.valueOf(c).getBytes());
-  }
-
-  /**
-   * TODO: 準備中
-   *
-   * @param bytes TODO: 準備中
-   * @return TODO: 準備中
-   */
-  int write(byte[] bytes) {
-    return 0;
-  }
-
   private boolean writeByteBuffer(ByteBuffer bb) {
     try {
       this.fc.write(bb);
