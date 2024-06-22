@@ -121,7 +121,6 @@ public class CobolSequentialFile extends CobolFile {
     return 0;
   }
 
-  /** libcob/fileio.cのsequential_readの実装 */
   @Override
   public int readNext(int readOpts) {
     byte[] sbuff = new byte[4];
