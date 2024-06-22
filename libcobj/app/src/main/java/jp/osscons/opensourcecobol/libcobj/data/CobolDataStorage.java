@@ -23,7 +23,10 @@ import java.nio.ByteBuffer;
 import java.nio.ByteOrder;
 import jp.osscons.opensourcecobol.libcobj.common.CobolModule;
 
-/** COBOLのデータを保存するバイト配列を扱うクラス */
+/**
+ * COBOL変数のデータを保存するバイト配列を扱うクラス<br>
+ * byte[]型のデータと、その配列中での相対位置を保持し、データの読み書きを行う
+ */
 public class CobolDataStorage {
 
   /** データを保存するバイト配列 */
@@ -33,7 +36,7 @@ public class CobolDataStorage {
   private int index;
 
   /**
-   * コンストラクタ.引数で指定された長さ分のバイト配列を確保する.
+   * 引数で指定された長さ分のバイト配列を確保する.相対位置は0にする.
    *
    * @param size バイト配列の長さ
    */
@@ -43,10 +46,10 @@ public class CobolDataStorage {
   }
 
   /**
-   * コンストラクタ.データを保存するバイト配列と保存する領域の相対位置を引数で指定する.
+   * バイト配列と相対位置を指定する
    *
    * @param data データを保存するバイト配列
-   * @param index このクラスの扱うデータが保存する領域のバイト配列中での相対位置
+   * @param index バイト配列中の相対位置
    */
   public CobolDataStorage(byte[] data, int index) {
     this.data = data;
@@ -54,7 +57,7 @@ public class CobolDataStorage {
   }
 
   /**
-   * コンストラクタ.データを保存するバイト配列を引数で指定する.
+   * データを保存するバイト配列を引数で指定する.相対位置は0にする.
    *
    * @param data データを保存するバイト配列
    */
@@ -171,7 +174,7 @@ public class CobolDataStorage {
   }
 
   /**
-   * コンストラクタ.文字列からバイト配列を構成する.
+   * TODO: 準備中
    *
    * @param str TODO: 準備中
    */
@@ -197,9 +200,9 @@ public class CobolDataStorage {
   }
 
   /**
-   * バイト配列の引数で指定した相対位置から末尾までをコピーした配列を返す。
+   * 引数で指定した開始位置から末尾までをコピーした配列を返す。
    *
-   * @param index コピーの開始位置(this.indexバイト目を基準とする)
+   * @param index このオブジェクトの保持する相対位置を基準とした、コピーの開始位置
    * @return 開始位置から末尾までのデータをコピーしたバイト配列
    */
   public byte[] getData(int index) {
@@ -211,9 +214,9 @@ public class CobolDataStorage {
   }
 
   /**
-   * バイト配列の引数で指定した相対位置から指定した長さをコピーした配列を返す。
+   * 引数で指定した相対位置から指定した長さをコピーした配列を返す。
    *
-   * @param index コピーの開始位置(this.indexバイト目を基準とする)
+   * @param index このオブジェクトの保持する相対位置を基準とした、コピーの開始位置
    * @param length コピーする長さ(バイト数)
    * @return 開始位置からlengthバイト分の配列
    */
@@ -236,7 +239,7 @@ public class CobolDataStorage {
   }
 
   /**
-   * C言語のmemcpy
+   * C言語のmemcpyに相当するメソッド
    *
    * @param buf TODO: 準備中
    * @param size TODO: 準備中
@@ -248,7 +251,7 @@ public class CobolDataStorage {
   }
 
   /**
-   * C言語のmemcpy
+   * C言語のmemcpyに相当するメソッド
    *
    * @param buf TODO: 準備中
    * @param size TODO: 準備中
@@ -260,7 +263,7 @@ public class CobolDataStorage {
   }
 
   /**
-   * C言語のmemcpy
+   * C言語のmemcpyに相当するメソッド
    *
    * @param str TODO: 準備中
    * @param size TODO: 準備中
@@ -274,7 +277,7 @@ public class CobolDataStorage {
   }
 
   /**
-   * C言語のmemcpy (offset指定あり)
+   * TODO: 準備中
    *
    * @param offset TODO: 準備中
    * @param buf TODO: 準備中
@@ -320,7 +323,7 @@ public class CobolDataStorage {
   }
 
   /**
-   * C言語のmemset
+   * C言語のmemsetに相当するメソッド
    *
    * @param ch TODO: 準備中
    * @param size TODO: 準備中
@@ -332,7 +335,7 @@ public class CobolDataStorage {
   }
 
   /**
-   * C言語のmemset
+   * C言語のmemsetに相当するメソッド
    *
    * @param ch TODO: 準備中
    * @param size TODO: 準備中
@@ -342,7 +345,7 @@ public class CobolDataStorage {
   }
 
   /**
-   * C言語のmemset
+   * C言語のmemsetに相当するメソッド
    *
    * @param offset TODO: 準備中
    * @param ch TODO: 準備中
@@ -355,7 +358,7 @@ public class CobolDataStorage {
   }
 
   /**
-   * C言語のmemset
+   * C言語のmemsetに相当するメソッド
    *
    * @param offset TODO: 準備中
    * @param ch TODO: 準備中
@@ -366,7 +369,7 @@ public class CobolDataStorage {
   }
 
   /**
-   * C言語のmemcmp
+   * C言語のmemcmpに相当するメソッド
    *
    * @param buf TODO: 準備中
    * @param size TODO: 準備中
@@ -384,7 +387,7 @@ public class CobolDataStorage {
   }
 
   /**
-   * C言語のmemcmp
+   * C言語のmemcmpに相当するメソッド
    *
    * @param buf TODO: 準備中
    * @param size TODO: 準備中
@@ -395,7 +398,7 @@ public class CobolDataStorage {
   }
 
   /**
-   * C言語のmemcmp
+   * C言語のmemcmpに相当するメソッド
    *
    * @param buf TODO: 準備中
    * @param size TODO: 準備中
@@ -432,7 +435,7 @@ public class CobolDataStorage {
   }
 
   /**
-   * 引数で与えられたバイト配列をthis.dataの先頭からコピーする
+   * 引数で与えられたバイト配列に保持したデータをこのオブジェクトに書き込む
    *
    * @param data TODO: 準備中
    */
@@ -441,10 +444,10 @@ public class CobolDataStorage {
   }
 
   /**
-   * 引数で指定されたバイト配列をthis.dataの引数で指定された位置からコピーする
+   * 引数で与えられたバイト配列に保持したデータをこのオブジェクトに書き込む
    *
    * @param data コピー元のバイト配列
-   * @param index this.byteのコピー開始位置(this.indexバイト目を基準とする)
+   * @param index コピー先のバイト配列中での開始位置
    */
   public void setData(byte[] data, int index) {
     int length =
@@ -456,9 +459,9 @@ public class CobolDataStorage {
   }
 
   /**
-   * 引数で指定された分だけindexを変位させたCobolDataStorageクラスのインスタンスを作成する
+   * 引数で指定された分だけ相対位置を変位させたCobolDataStorageクラスのインスタンスを作成する
    *
-   * @param index 新たに作成するCobolDataStorageクラスのインスタンスのメンバ変数indexのthis.indexからの相対位置
+   * @param index 変位させるバイト数
    * @return 新たに作成したCobolDataStorageクラスのインスタンス
    */
   public CobolDataStorage getDataStorage(int index) {
@@ -468,7 +471,7 @@ public class CobolDataStorage {
   /**
    * 指定のバイト配列中での位置に指定の値を代入する
    *
-   * @param index 代入先のバイト配列中の位置.this.indexを基準とする.
+   * @param index 代入先のバイト配列中の位置
    * @param value 代入する値
    */
   public void setByte(int index, byte value) {
@@ -478,7 +481,7 @@ public class CobolDataStorage {
   /**
    * 指定のバイト配列中での位置に指定の値を代入する
    *
-   * @param index 代入先のバイト配列中の位置.this.indexを基準とする.
+   * @param index 代入先のバイト配列中の位置
    * @param value 代入する値
    */
   public void setByte(int index, int value) {
@@ -488,7 +491,7 @@ public class CobolDataStorage {
   /**
    * 指定のバイト配列中での位置に指定の値を代入する
    *
-   * @param index 代入先のバイト配列中の位置.this.indexを基準とする.
+   * @param index 代入先のバイト配列中の位置.
    * @param value 代入する値
    */
   public void setByte(int index, char value) {
@@ -525,7 +528,7 @@ public class CobolDataStorage {
   /**
    * 指定のバイト配列中での位置に格納された値を返す
    *
-   * @param index バイト配列中での位置.this.indexを基準とする.
+   * @param index バイト配列中での位置.
    * @return 指定のバイト配列中での位置に格納された値
    */
   public byte getByte(int index) {
@@ -565,7 +568,7 @@ public class CobolDataStorage {
   /**
    * バイト配列の0バイト目からsizeバイトの範囲にvalueを代入する
    *
-   * @param index コピーの開始位置(this.indexが基準)
+   * @param index コピーの開始位置
    * @param value 代入する値
    * @param size 代入先のバイト数
    */
@@ -578,7 +581,7 @@ public class CobolDataStorage {
   /**
    * バイト配列の0バイト目からsizeバイトの範囲にvalueを代入する
    *
-   * @param index コピーの開始位置(this.indexが基準)
+   * @param index コピーの開始位置
    * @param value 代入する値
    * @param size 代入先のバイト数
    */
@@ -589,7 +592,7 @@ public class CobolDataStorage {
   /**
    * バイト配列の0バイト目からsizeバイトの範囲にvalueを代入する
    *
-   * @param index コピーの開始位置(this.indexが基準)
+   * @param index コピーの開始位置
    * @param value 代入する値
    * @param size 代入先のバイト数
    */
@@ -598,7 +601,7 @@ public class CobolDataStorage {
   }
 
   /**
-   * 指定のバイト配列に格納された値をthis.dataのthis.indexバイト目以降へコピーする.
+   * TODO: 準備中
    *
    * @param bytes コピー元のバイト配列
    */
@@ -609,7 +612,7 @@ public class CobolDataStorage {
   }
 
   /**
-   * 指定のバイト配列に格納された値を this.dataのthis.indexバイト目以降へlengthバイトだけコピーする.
+   * TODO: 準備中
    *
    * @param bytes コピー元の配列
    * @param length コピーするバイト数
@@ -621,7 +624,7 @@ public class CobolDataStorage {
   }
 
   /**
-   * 指定のバイト配列に格納された値を this.dataのthis.index+indexバイト目以降へlengthバイトだけコピーする.
+   * 指定のバイト配列に格納された値を this.dataのthis.indexバイト目以降へlengthバイトだけコピーする.
    *
    * @param index コピー先のthis.indexからの相対位置
    * @param bytes コピー元の配列
@@ -662,7 +665,7 @@ public class CobolDataStorage {
    *
    * @param data コピー元のCobolDataStorage
    * @param length コピーするバイト数
-   * @param dstIndex コピー先(this.data)のthis.indexからの相対位置
+   * @param dstIndex コピー先のthis.indexからの相対位置
    */
   public void setBytes(CobolDataStorage data, int length, int dstIndex) {
     this.setBytes(data, length, dstIndex, 0);
@@ -673,7 +676,7 @@ public class CobolDataStorage {
    *
    * @param data コピー元のCobolDataStorage
    * @param length コピーするバイト数
-   * @param dstIndex コピー先(this.data)のthis.indexからの相対位置
+   * @param dstIndex TODO: 準備中
    * @param srcIndex コピー元バイト配列中の相対位置
    */
   public void setBytes(CobolDataStorage data, int length, int dstIndex, int srcIndex) {
@@ -706,7 +709,7 @@ public class CobolDataStorage {
   }
 
   /**
-   * this.dataにバイト配列を書き込む
+   * TODO: 準備中
    *
    * @param bytes 書き込むバイト配列
    */
@@ -726,36 +729,36 @@ public class CobolDataStorage {
   }
 
   /**
-   * this.dataにshort型のvalueを2バイトで書き込む
+   * 2バイト整数値をこのオブジェクト時書き込む
    *
-   * @param value this.dataに書き込むshort型の値
+   * @param value 書き込む値
    */
   public void set(short value) {
     ByteBuffer.wrap(this.data, this.index, 2).putShort(value);
   }
 
   /**
-   * this.dataにint型のvalueを4バイトで書き込む
+   * 4バイト整数値をこのオブジェクト時書き込む
    *
-   * @param value this.dataに書き込むint型の値
+   * @param value 書き込む値
    */
   public void set(int value) {
     ByteBuffer.wrap(this.data, this.index, 4).putInt(value);
   }
 
   /**
-   * this.dataにlong型のvalueを8バイトで書き込む
+   * 8バイト整数値をこのオブジェクト時書き込む
    *
-   * @param value this.dataに書き込むlong型の値
+   * @param value 書き込む値
    */
   public void set(long value) {
     ByteBuffer.wrap(this.data, this.index, 8).putLong(value);
   }
 
   /**
-   * this.dataにdouble型のvalueを4バイトで書き込む
+   * double型の値をこのオブジェクト時書き込む
    *
-   * @param value this.dataに書き込むlong型の値
+   * @param value 書き込む値
    */
   public void set(double value) {
     ByteBuffer.wrap(this.data, this.index, 8).putDouble(value);
@@ -771,7 +774,7 @@ public class CobolDataStorage {
   }
 
   /**
-   * this.dataにindexバイト目から4バイトでvalueを書き込む
+   * コピーの開始位置を指定して、4バイト整数値を書き込む
    *
    * @param value TODO: 準備中
    * @param index TODO: 準備中
@@ -792,27 +795,27 @@ public class CobolDataStorage {
   }
 
   /**
-   * this.dataから2バイトを読み込んでshort型として返す
+   * このオブジェクトの保持するバイト配列の先頭2バイトを読み込んでshort型として返す
    *
-   * @return this.dataから読み込んだ2バイトデータをshortに変換したデータ
+   * @return 読み込んだ2バイト整数値
    */
   public short shortValue() {
     return ByteBuffer.wrap(this.data, this.index, Short.BYTES).getShort();
   }
 
   /**
-   * this.dataから4バイトを読み込んでint型として返す
+   * このオブジェクトの保持するバイト配列の先頭4バイトを読み込んでint型として返す
    *
-   * @return this.dataから読み込んだ2バイトデータをintに変換したデータ
+   * @return 読み込んだ4バイト整数値
    */
   public int intValue() {
     return ByteBuffer.wrap(this.data, this.index, Integer.BYTES).getInt();
   }
 
   /**
-   * this.dataから2バイトを読み込んでlong型として返す
+   * このオブジェクトの保持するバイト配列の先頭4バイトを読み込んでlong型として返す
    *
-   * @return this.dataから読み込んだ4バイトデータをlongに変換したデータ
+   * @return 読み込んだ8バイト整数値
    */
   public long longValue() {
     return ByteBuffer.wrap(this.data, this.index, Long.BYTES).getLong();
@@ -828,11 +831,10 @@ public class CobolDataStorage {
   }
 
   /**
-   * メンバ変数indexの値がthis.index+indexであるようなCobolDataStorageのインスタンスを返す
-   * メンバ変数indexの値をthis.indexから引数indexだけ変位させたCobolDataStorageのインスタンスを返す
+   * 相対位置を加算したCobolDataStorageのインスタンスを返す
    *
-   * @param index this.indexからの相対位置
-   * @return メンバ変数indexの値がthis.index+indexであるようなCobolDataStorageのインスタンス
+   * @param index 相対位置に加算する値
+   * @return 相対位置を加算したCobolDataStorageのインスタンス
    */
   public CobolDataStorage getSubDataStorage(int index) {
     return new CobolDataStorage(this.data, this.index + index);
@@ -2325,8 +2327,9 @@ public class CobolDataStorage {
     this.fromLong(8, true, n);
   }
 
+  // libcob/numeric.cのcob_cmp_numdispの実装
   /**
-   * libcob/numeric.cのcob_cmp_numdispの実装
+   * TODO: 準備中
    *
    * @param size TODO: 準備中
    * @param n TODO: 準備中
@@ -2341,8 +2344,9 @@ public class CobolDataStorage {
     return (val < n) ? -1 : (val > n) ? 1 : 0;
   }
 
+  // libcob/numeric.cのcob_cmp_long_numdispの実装
   /**
-   * libcob/numeric.cのcob_cmp_long_numdispの実装
+   * TODO: 準備中
    *
    * @param size TODO: 準備中
    * @param n TODO: 準備中
