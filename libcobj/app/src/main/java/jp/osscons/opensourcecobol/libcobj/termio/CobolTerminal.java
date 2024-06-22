@@ -32,15 +32,15 @@ import jp.osscons.opensourcecobol.libcobj.data.CobolFieldFactory;
 import jp.osscons.opensourcecobol.libcobj.exceptions.CobolExceptionId;
 import jp.osscons.opensourcecobol.libcobj.exceptions.CobolExceptionInfo;
 
-/** 標準出力,標準エラー出力に関するメソッドを実装するクラス */
+/** DISPLAY文やACCEPT文に関するメソッドを実装するクラス */
 public class CobolTerminal {
 
   /**
-   * cob_displayの実装 TODO 暫定実装
+   * 標準出力または標準エラー出力にデータを出力する
    *
-   * @param dispStdout TODO: 準備中
+   * @param dispStdout trueなら標準出力に,それ以外は標準エラー出力に出力する
    * @param newline trueなら出力後に改行しない,それ以外の場合は改行する
-   * @param fields 出力する変数(可変長)
+   * @param fields 出力するCOBOL変数(可変長)
    */
   public static void display(boolean dispStdout, boolean newline, AbstractCobolField... fields) {
     PrintStream stream = dispStdout ? System.out : System.err;
@@ -65,12 +65,12 @@ public class CobolTerminal {
   }
 
   /**
-   * cob_displayの実装 TODO 暫定実装
+   * 標準出力または標準エラー出力にデータを出力する
    *
    * @param outorerr 0なら標準出力に,それ以外は標準エラー出力に出力する.
    * @param newline 0なら出力後に改行しない,それ以外の場合は改行する
-   * @param varcnt 出力する変数の数
-   * @param fields 出力する変数(可変長)
+   * @param varcnt 出力するCOBOL変数の数
+   * @param fields 出力するCOBOL変数(可変長)
    */
   public static void display(int outorerr, int newline, int varcnt, AbstractCobolField... fields) {
     PrintStream stream = outorerr == 0 ? System.out : System.err;
@@ -92,7 +92,7 @@ public class CobolTerminal {
   private static Scanner scan = null;
 
   /**
-   * cob_acceptの実装(暫定)
+   * 標準入力からデータを受け取る
    *
    * @param f TODO: 準備中
    */
@@ -133,7 +133,7 @@ public class CobolTerminal {
   }
 
   /**
-   * libcob/common.c cob_accept_date
+   * TODO: 準備中
    *
    * @param f TODO: 準備中
    */
@@ -144,7 +144,7 @@ public class CobolTerminal {
   }
 
   /**
-   * libcob/common.c cob_accept_date_yyyymmdd
+   * TODO: 準備中
    *
    * @param f TODO: 準備中
    */
@@ -155,7 +155,7 @@ public class CobolTerminal {
   }
 
   /**
-   * libcob/common.c cob_accept_day
+   * TODO: 準備中
    *
    * @param f TODO: 準備中
    */
@@ -166,7 +166,7 @@ public class CobolTerminal {
   }
 
   /**
-   * libcob/common.c cob_accept_date_yyyyddd
+   * TODO: 準備中
    *
    * @param f TODO: 準備中
    */
@@ -177,7 +177,7 @@ public class CobolTerminal {
   }
 
   /**
-   * libcob/common.c cob_accept_day_of_week
+   * TODO: 準備中
    *
    * @param f TODO: 準備中
    */
@@ -187,7 +187,7 @@ public class CobolTerminal {
   }
 
   /**
-   * libcob/common.c cob_accept_time
+   * TODO: 準備中
    *
    * @param f TODO: 準備中
    */
@@ -200,7 +200,7 @@ public class CobolTerminal {
   // Environment
 
   /**
-   * libcob/common.c cob_display_environment
+   * TODO: 準備中
    *
    * @param f TODO: 準備中
    */
@@ -209,7 +209,7 @@ public class CobolTerminal {
   }
 
   /**
-   * libcob/common.c cob_display_env_value
+   * TODO: 準備中
    *
    * @param f TODO: 準備中
    */
@@ -222,7 +222,7 @@ public class CobolTerminal {
   }
 
   /**
-   * libcob/common.c cob_accept_environment
+   * TODO: 準備中
    *
    * @param f TODO: 準備中
    */
@@ -244,7 +244,7 @@ public class CobolTerminal {
   }
 
   /**
-   * libcob/common.c cob_display_command_line
+   * TODO: 準備中
    *
    * @param f TODO: 準備中
    */
@@ -257,7 +257,7 @@ public class CobolTerminal {
   }
 
   /**
-   * libcob/common.c cob_accept_command_line
+   * TODO: 準備中
    *
    * @param f TODO: 準備中
    */
@@ -271,7 +271,7 @@ public class CobolTerminal {
   }
 
   /**
-   * libcob/common.c cob_display_arg_number
+   * TODO: 準備中
    *
    * @param f TODO: 準備中
    */
@@ -291,7 +291,7 @@ public class CobolTerminal {
   }
 
   /**
-   * libcob/common.c cob_accept_arg_number
+   * TODO: 準備中
    *
    * @param f TODO: 準備中
    */
@@ -306,7 +306,7 @@ public class CobolTerminal {
   }
 
   /**
-   * libcob/common.c cob_accept_arg_value
+   * TODO: 準備中
    *
    * @param f TODO: 準備中
    */
