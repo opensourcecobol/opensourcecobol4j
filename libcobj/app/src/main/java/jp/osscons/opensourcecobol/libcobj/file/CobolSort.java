@@ -22,7 +22,7 @@ import jp.osscons.opensourcecobol.libcobj.data.AbstractCobolField;
 import jp.osscons.opensourcecobol.libcobj.data.CobolDataStorage;
 
 /** TODO: 準備中 */
-public class CobolSort {
+class CobolSort {
   private CobolFile pointer;
   private CobolItem empty;
   private CobolDataStorage sortReturn;
@@ -52,7 +52,7 @@ public class CobolSort {
    *
    * @return TODO: 準備中
    */
-  public CobolFile getPointer() {
+  CobolFile getPointer() {
     return pointer;
   }
 
@@ -61,7 +61,7 @@ public class CobolSort {
    *
    * @param pointer TODO: 準備中
    */
-  public void setPointer(CobolFile pointer) {
+  void setPointer(CobolFile pointer) {
     this.pointer = pointer;
   }
 
@@ -70,7 +70,7 @@ public class CobolSort {
    *
    * @return TODO: 準備中
    */
-  public CobolItem getEmpty() {
+  CobolItem getEmpty() {
     return empty;
   }
 
@@ -79,7 +79,7 @@ public class CobolSort {
    *
    * @param empty TODO: 準備中
    */
-  public void setEmpty(CobolItem empty) {
+  void setEmpty(CobolItem empty) {
     this.empty = empty;
   }
 
@@ -88,7 +88,7 @@ public class CobolSort {
    *
    * @return TODO: 準備中
    */
-  public CobolDataStorage getSortReturn() {
+  CobolDataStorage getSortReturn() {
     return sortReturn;
   }
 
@@ -97,7 +97,7 @@ public class CobolSort {
    *
    * @param sortReturn TODO: 準備中
    */
-  public void setSortReturn(CobolDataStorage sortReturn) {
+  void setSortReturn(CobolDataStorage sortReturn) {
     this.sortReturn = sortReturn;
   }
 
@@ -106,7 +106,7 @@ public class CobolSort {
    *
    * @return TODO: 準備中
    */
-  public AbstractCobolField getFnstatus() {
+  AbstractCobolField getFnstatus() {
     return fnstatus;
   }
 
@@ -115,7 +115,7 @@ public class CobolSort {
    *
    * @param fnstatus TODO: 準備中
    */
-  public void setFnstatus(AbstractCobolField fnstatus) {
+  void setFnstatus(AbstractCobolField fnstatus) {
     this.fnstatus = fnstatus;
   }
 
@@ -124,7 +124,7 @@ public class CobolSort {
    *
    * @return TODO: 準備中
    */
-  public int getUnique() {
+  int getUnique() {
     return unique;
   }
 
@@ -133,7 +133,7 @@ public class CobolSort {
    *
    * @param unique TODO: 準備中
    */
-  public void setUnique(int unique) {
+  void setUnique(int unique) {
     this.unique = unique;
   }
 
@@ -142,7 +142,7 @@ public class CobolSort {
    *
    * @return TODO: 準備中
    */
-  public int getRetrieving() {
+  int getRetrieving() {
     return retrieving;
   }
 
@@ -151,7 +151,7 @@ public class CobolSort {
    *
    * @param retrieving TODO: 準備中
    */
-  public void setRetrieving(int retrieving) {
+  void setRetrieving(int retrieving) {
     this.retrieving = retrieving;
   }
 
@@ -160,7 +160,7 @@ public class CobolSort {
    *
    * @return TODO: 準備中
    */
-  public int getFilesUsed() {
+  int getFilesUsed() {
     return filesUsed;
   }
 
@@ -169,7 +169,7 @@ public class CobolSort {
    *
    * @param filesUsed TODO: 準備中
    */
-  public void setFilesUsed(int filesUsed) {
+  void setFilesUsed(int filesUsed) {
     this.filesUsed = filesUsed;
   }
 
@@ -178,7 +178,7 @@ public class CobolSort {
    *
    * @return TODO: 準備中
    */
-  public int getSize() {
+  int getSize() {
     return size;
   }
 
@@ -187,7 +187,7 @@ public class CobolSort {
    *
    * @param size TODO: 準備中
    */
-  public void setSize(int size) {
+  void setSize(int size) {
     this.size = size;
   }
 
@@ -196,7 +196,7 @@ public class CobolSort {
    *
    * @return TODO: 準備中
    */
-  public int getrSize() {
+  int getrSize() {
     return rSize;
   }
 
@@ -205,7 +205,7 @@ public class CobolSort {
    *
    * @param rSize TODO: 準備中
    */
-  public void setrSize(int rSize) {
+  void setrSize(int rSize) {
     this.rSize = rSize;
   }
 
@@ -214,7 +214,7 @@ public class CobolSort {
    *
    * @return TODO: 準備中
    */
-  public int getwSize() {
+  int getwSize() {
     return wSize;
   }
 
@@ -223,7 +223,7 @@ public class CobolSort {
    *
    * @param wSize TODO: 準備中
    */
-  public void setwSize(int wSize) {
+  void setwSize(int wSize) {
     this.wSize = wSize;
   }
 
@@ -232,7 +232,7 @@ public class CobolSort {
    *
    * @return TODO: 準備中
    */
-  public int getMemory() {
+  int getMemory() {
     return memory;
   }
 
@@ -241,7 +241,7 @@ public class CobolSort {
    *
    * @param memory TODO: 準備中
    */
-  public void setMemory(int memory) {
+  void setMemory(int memory) {
     this.memory = memory;
   }
 
@@ -250,7 +250,7 @@ public class CobolSort {
    *
    * @return TODO: 準備中
    */
-  public int getDestinationFile() {
+  int getDestinationFile() {
     return destinationFile;
   }
 
@@ -259,7 +259,7 @@ public class CobolSort {
    *
    * @param destinationFile TODO: 準備中
    */
-  public void setDestinationFile(int destinationFile) {
+  void setDestinationFile(int destinationFile) {
     this.destinationFile = destinationFile;
   }
 
@@ -268,7 +268,7 @@ public class CobolSort {
    *
    * @return TODO: 準備中
    */
-  public int getRetrievalQueue() {
+  int getRetrievalQueue() {
     return retrievalQueue;
   }
 
@@ -277,7 +277,7 @@ public class CobolSort {
    *
    * @param retrievalQueue TODO: 準備中
    */
-  public void setRetrievalQueue(int retrievalQueue) {
+  void setRetrievalQueue(int retrievalQueue) {
     this.retrievalQueue = retrievalQueue;
   }
 
@@ -286,7 +286,7 @@ public class CobolSort {
    *
    * @return TODO: 準備中
    */
-  public MemoryStruct[] getQueue() {
+  MemoryStruct[] getQueue() {
     return queue;
   }
 
@@ -295,7 +295,7 @@ public class CobolSort {
    *
    * @param queue TODO: 準備中
    */
-  public void setQueue(MemoryStruct[] queue) {
+  void setQueue(MemoryStruct[] queue) {
     this.queue = queue;
   }
 
@@ -304,7 +304,7 @@ public class CobolSort {
    *
    * @return TODO: 準備中
    */
-  public FileStruct[] getFile() {
+  FileStruct[] getFile() {
     return file;
   }
 
@@ -313,7 +313,7 @@ public class CobolSort {
    *
    * @param file TODO: 準備中
    */
-  public void setFile(FileStruct[] file) {
+  void setFile(FileStruct[] file) {
     this.file = file;
   }
 }

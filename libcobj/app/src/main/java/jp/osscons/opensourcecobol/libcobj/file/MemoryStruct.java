@@ -19,13 +19,13 @@
 package jp.osscons.opensourcecobol.libcobj.file;
 
 /** TODO: 準備中 */
-public class MemoryStruct {
+class MemoryStruct {
   private CobolItem first;
   private CobolItem last;
   private int count;
 
   /** TODO: 準備中 */
-  public MemoryStruct() {
+  MemoryStruct() {
     this.first = null;
     this.last = null;
   }
@@ -35,7 +35,7 @@ public class MemoryStruct {
    *
    * @return TODO: 準備中
    */
-  public CobolItem getFirst() {
+  CobolItem getFirst() {
     return first;
   }
 
@@ -44,7 +44,7 @@ public class MemoryStruct {
    *
    * @param first TODO: 準備中
    */
-  public void setFirst(CobolItem first) {
+  void setFirst(CobolItem first) {
     this.first = first;
   }
 
@@ -53,7 +53,7 @@ public class MemoryStruct {
    *
    * @return TODO: 準備中
    */
-  public CobolItem getLast() {
+  CobolItem getLast() {
     return last;
   }
 
@@ -62,7 +62,7 @@ public class MemoryStruct {
    *
    * @param last TODO: 準備中
    */
-  public void setLast(CobolItem last) {
+  void setLast(CobolItem last) {
     this.last = last;
   }
 
@@ -71,7 +71,7 @@ public class MemoryStruct {
    *
    * @return TODO: 準備中
    */
-  public int getCount() {
+  int getCount() {
     return count;
   }
 
@@ -80,7 +80,7 @@ public class MemoryStruct {
    *
    * @param count TODO: 準備中
    */
-  public void setCount(int count) {
+  void setCount(int count) {
     this.count = count;
   }
 }

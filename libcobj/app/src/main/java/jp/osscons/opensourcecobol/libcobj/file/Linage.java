@@ -37,7 +37,7 @@ public class Linage {
    *
    * @return TODO: 準備中
    */
-  public AbstractCobolField getLinage() {
+  AbstractCobolField getLinage() {
     return linage;
   }
 
@@ -55,7 +55,7 @@ public class Linage {
    *
    * @return TODO: 準備中
    */
-  public AbstractCobolField getLinageCtr() {
+  AbstractCobolField getLinageCtr() {
     return linageCtr;
   }
 
@@ -73,7 +73,7 @@ public class Linage {
    *
    * @return TODO: 準備中
    */
-  public AbstractCobolField getLatfoot() {
+  AbstractCobolField getLatfoot() {
     return latfoot;
   }
 
@@ -91,7 +91,7 @@ public class Linage {
    *
    * @return TODO: 準備中
    */
-  public AbstractCobolField getLattop() {
+  AbstractCobolField getLattop() {
     return lattop;
   }
 
@@ -109,7 +109,7 @@ public class Linage {
    *
    * @return TODO: 準備中
    */
-  public AbstractCobolField getLatbot() {
+  AbstractCobolField getLatbot() {
     return latbot;
   }
 
@@ -127,7 +127,7 @@ public class Linage {
    *
    * @return TODO: 準備中
    */
-  public int getLinLines() {
+  int getLinLines() {
     return linLines;
   }
 
@@ -145,7 +145,7 @@ public class Linage {
    *
    * @return TODO: 準備中
    */
-  public int getLinFoot() {
+  int getLinFoot() {
     return linFoot;
   }
 
@@ -163,7 +163,7 @@ public class Linage {
    *
    * @return TODO: 準備中
    */
-  public int getLinTop() {
+  int getLinTop() {
     return linTop;
   }
 
@@ -181,7 +181,7 @@ public class Linage {
    *
    * @return TODO: 準備中
    */
-  public int getLinBot() {
+  int getLinBot() {
     return linBot;
   }
 

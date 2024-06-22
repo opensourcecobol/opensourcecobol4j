@@ -30,11 +30,11 @@ import java.util.Optional;
 /** Represents a result of fetching a data from SQLite tables. */
 class FetchResult {
   /** TODO: 準備中 */
-  public byte[] key;
+  byte[] key;
   /** TODO: 準備中 */
-  public byte[] value;
+  byte[] value;
   /** TODO: 準備中 */
-  public int dupNo;
+  int dupNo;
 
   /**
    * TODO: 準備中
@@ -43,7 +43,7 @@ class FetchResult {
    * @param value TODO: 準備中
    * @param dupNo TODO: 準備中
    */
-  public FetchResult(byte[] key, byte[] value, int dupNo) {
+  FetchResult(byte[] key, byte[] value, int dupNo) {
     this.key = key;
     this.value = value;
     this.dupNo = dupNo;
@@ -55,7 +55,7 @@ class FetchResult {
    * @param key TODO: 準備中
    * @param value TODO: 準備中
    */
-  public FetchResult(byte[] key, byte[] value) {
+  FetchResult(byte[] key, byte[] value) {
     this.key = key;
     this.value = value;
     this.dupNo = 0;
@@ -70,7 +70,7 @@ enum CursorReadOption {
 }
 
 /** Emulates a cursor in SQLite */
-public final class IndexedCursor {
+final class IndexedCursor {
   /** a cursor to the top direction */
   private Optional<ResultSet> backwardCursor;
 
@@ -112,7 +112,7 @@ public final class IndexedCursor {
    *
    * @param comparator TODO: 準備中
    */
-  public void setComparator(int comparator) {
+  void setComparator(int comparator) {
     this.comparator = comparator;
   }
 
@@ -121,7 +121,7 @@ public final class IndexedCursor {
    *
    * @return TODO: 準備中
    */
-  public int getComparator() {
+  int getComparator() {
     return this.comparator;
   }
 
@@ -142,18 +142,16 @@ public final class IndexedCursor {
   }
 
   /**
-   * create a crusor
+   * TODO: 準備中
    *
-   * @param conn a connection to the SQLite database
-   * @param key a key data
-   * @param tableIndex the index of the table in the SQLite database
-   * @param isDuplicate allows that the key data in the table is duplicate
-   * @param comparator specifys the comparing type (one of COB_EQ, COB_LT, COB_LE, COB_GT, COB_GE in
-   *     CobolIndexedFile.java)
-   * @return return the cursor wrapped by Optional if the cursor is successfully created. Otherwise,
-   *     Optional.empty().
+   * @param conn TODO: 準備中
+   * @param key TODO: 準備中
+   * @param tableIndex TODO: 準備中
+   * @param isDuplicate TODO: 準備中
+   * @param comparator TODO: 準備中
+   * @return TODO: 準備中
    */
-  public static Optional<IndexedCursor> createCursor(
+  static Optional<IndexedCursor> createCursor(
       Connection conn, byte[] key, int tableIndex, boolean isDuplicate, int comparator) {
     IndexedCursor cursor = new IndexedCursor(conn, key, tableIndex, isDuplicate, comparator);
     cursor.forwardCursor = getCursor(conn, key, tableIndex, isDuplicate, comparator, true);
@@ -165,12 +163,7 @@ public final class IndexedCursor {
     }
   }
 
-  /**
-   * reload a cursor
-   *
-   * @return TODO: 準備中
-   */
-  public Optional<IndexedCursor> reloadCursor() {
+  Optional<IndexedCursor> reloadCursor() {
     if (this.firstFetch) {
       return createCursor(this.conn, this.key, this.tableIndex, this.isDuplicate, this.comparator);
     }
@@ -368,14 +361,7 @@ public final class IndexedCursor {
     }
   }
 
-  /**
-   * TODO: 準備中
-   *
-   * @param originalKey TODO: 準備中
-   * @param fetchKey TODO: 準備中
-   * @return TODO: 準備中
-   */
-  public static boolean matchKeyHead(byte[] originalKey, byte[] fetchKey) {
+  static boolean matchKeyHead(byte[] originalKey, byte[] fetchKey) {
     if (originalKey.length > fetchKey.length) {
       return false;
     }
@@ -443,13 +429,7 @@ public final class IndexedCursor {
     }
   }
 
-  /**
-   * read a next data
-   *
-   * @return return the read data wrapped by Optional when reading data successfully. Otherwise,
-   *     return Optional.empty()
-   */
-  public Optional<FetchResult> next() {
+  Optional<FetchResult> next() {
     if (!this.forwardCursor.isPresent()) {
       return Optional.empty();
     }
@@ -492,13 +472,7 @@ public final class IndexedCursor {
     }
   }
 
-  /**
-   * read a previous data
-   *
-   * @return return the read data wrapped by Optional when reading data successfully. Otherwise,
-   *     return Optional.empty()
-   */
-  public Optional<FetchResult> prev() {
+  Optional<FetchResult> prev() {
     if (!this.backwardCursor.isPresent()) {
       return Optional.empty();
     }
@@ -532,8 +506,7 @@ public final class IndexedCursor {
     }
   }
 
-  /** close a cursor */
-  public void close() {
+  void close() {
     try {
       if (backwardCursor.isPresent()) {
         backwardCursor.get().close();
@@ -546,13 +519,7 @@ public final class IndexedCursor {
     }
   }
 
-  /**
-   * TODO: 準備中
-   *
-   * @param opt TODO: 準備中
-   * @return TODO: 準備中
-   */
-  public Optional<FetchResult> read(CursorReadOption opt) {
+  Optional<FetchResult> read(CursorReadOption opt) {
     if (opt == CursorReadOption.NEXT) {
       return this.next();
     } else if (opt == CursorReadOption.PREV) {
@@ -666,7 +633,7 @@ public final class IndexedCursor {
    *
    * @return TODO: 準備中
    */
-  public boolean moveToFirst() {
+  boolean moveToFirst() {
     Optional<ResultSet> cursor =
         getCursorForFirstLast(this.tableIndex, this.isDuplicate, CursorReadOption.FIRST);
     if (!cursor.isPresent()) {
@@ -684,7 +651,7 @@ public final class IndexedCursor {
    *
    * @return TODO: 準備中
    */
-  public boolean moveToLast() {
+  boolean moveToLast() {
     Optional<ResultSet> cursor =
         getCursorForFirstLast(this.tableIndex, this.isDuplicate, CursorReadOption.LAST);
     if (!cursor.isPresent()) {
