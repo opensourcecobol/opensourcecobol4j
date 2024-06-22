@@ -308,7 +308,7 @@ public class CobolDecimal {
   /**
    * このオブジェクトの示す数値に対して減算を行う
    *
-   * @param decimal このオブジェクトの示す数値から減算する値
+   * @param n このオブジェクトの示す数値から減算する値
    */
   public void sub(int n) {
     this.value = this.value.subtract(new BigDecimal(n));
