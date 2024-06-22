@@ -41,7 +41,7 @@ class ApiFiles {
    *
    * @param filePath TODO: 準備中
    */
-  private static void javaCreate(String filePath) {
+  static void javaCreate(String filePath) {
     try {
       String json = new String(Files.readAllBytes(Paths.get(filePath)));
       JSONObject obj = new JSONObject(json);
