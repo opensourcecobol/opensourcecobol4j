@@ -6,11 +6,11 @@ import java.io.IOException;
 import jp.osscons.opensourcecobol.libcobj.data.CobolDataStorage;
 
 /** TODO: 準備中 */
-public class FileLineSeqRecordReader implements RecordReader {
+class FileLineSeqRecordReader implements RecordReader {
   /** TODO: 準備中 */
-  protected int recordSize;
+  int recordSize;
   /** TODO: 準備中 */
-  protected BufferedReader reader;
+  BufferedReader reader;
 
   private String filePath;
 
@@ -20,7 +20,7 @@ public class FileLineSeqRecordReader implements RecordReader {
    * @param recordSize TODO: 準備中
    * @param filePath TODO: 準備中
    */
-  public FileLineSeqRecordReader(int recordSize, String filePath) {
+  FileLineSeqRecordReader(int recordSize, String filePath) {
     this.recordSize = recordSize;
     this.filePath = filePath;
   }

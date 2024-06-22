@@ -4,7 +4,7 @@ import java.util.Scanner;
 import jp.osscons.opensourcecobol.libcobj.data.CobolDataStorage;
 
 /** TODO: 準備中 */
-public class StdinRecordReader implements RecordReader {
+class StdinRecordReader implements RecordReader {
   /** TODO: 準備中 */
   protected int recordSize;
   /** TODO: 準備中 */
@@ -40,7 +40,7 @@ public class StdinRecordReader implements RecordReader {
      *
      * @param recordSize TODO: 準備中
      */
-    public StdinLineSeqReader(int recordSize) {
+    StdinLineSeqReader(int recordSize) {
       super(recordSize);
     }
 
@@ -112,7 +112,7 @@ public class StdinRecordReader implements RecordReader {
    * @param recordSize TODO: 準備中
    * @return TODO: 準備中
    */
-  public static RecordReader getInstance(UserDataFormat userDataFormat, int recordSize) {
+  static RecordReader getInstance(UserDataFormat userDataFormat, int recordSize) {
     switch (userDataFormat) {
       case LINE_SEQUENTIAL:
         {

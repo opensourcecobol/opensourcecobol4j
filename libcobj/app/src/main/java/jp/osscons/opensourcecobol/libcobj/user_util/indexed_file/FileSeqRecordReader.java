@@ -16,7 +16,7 @@ public class FileSeqRecordReader implements RecordReader {
    * @param recordSize TODO: 準備中
    * @param filePath TODO: 準備中
    */
-  public FileSeqRecordReader(int recordSize, String filePath) {
+  FileSeqRecordReader(int recordSize, String filePath) {
     this.filePath = filePath;
     this.readData = new byte[recordSize];
   }

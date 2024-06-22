@@ -12,7 +12,7 @@ import org.json.JSONArray;
 import org.json.JSONObject;
 
 /** TODO: 準備中 */
-public class ApiFiles {
+class ApiFiles {
   /**
    * TODO: 準備中
    *
@@ -41,7 +41,7 @@ public class ApiFiles {
    *
    * @param filePath TODO: 準備中
    */
-  public static void javaCreate(String filePath) {
+  static void javaCreate(String filePath) {
     try {
       String json = new String(Files.readAllBytes(Paths.get(filePath)));
       JSONObject obj = new JSONObject(json);
@@ -78,7 +78,7 @@ public class ApiFiles {
    * @param programId TODO: 準備中
    * @param params TODO: 準備中
    */
-  public static void writeController(FileWriter ctlFile, String programId, JSONArray params) {
+  private static void writeController(FileWriter ctlFile, String programId, JSONArray params) {
     PrintWriter ctlWriter = new PrintWriter(ctlFile);
     JSONObject param;
     String name;
@@ -210,7 +210,7 @@ public class ApiFiles {
    * @param programId TODO: 準備中
    * @param params TODO: 準備中
    */
-  public static void writeRecord(FileWriter rcdFile, String programId, JSONArray params) {
+  private static void writeRecord(FileWriter rcdFile, String programId, JSONArray params) {
     PrintWriter rcdWriter = new PrintWriter(rcdFile);
     JSONObject param;
     String name;

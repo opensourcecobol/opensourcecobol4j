@@ -36,7 +36,7 @@ import org.sqlite.SQLiteConfig;
  * tool is used to show information of the indexed file, load data to the indexed file, and unload
  * data from the indexed file.
  */
-public class IndexedFileUtilMain {
+class IndexedFileUtilMain {
   private static final String version = jp.osscons.opensourcecobol.libcobj.Const.version;
 
   /**

@@ -1,7 +1,7 @@
 package jp.osscons.opensourcecobol.libcobj.user_util.indexed_file;
 
 /** TODO: 準備中 */
-public interface RecordWriter {
+interface RecordWriter {
   /** TODO: 準備中 */
   void open();
 
