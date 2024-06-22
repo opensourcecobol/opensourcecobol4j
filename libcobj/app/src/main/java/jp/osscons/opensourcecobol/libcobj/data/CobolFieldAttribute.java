@@ -18,7 +18,7 @@
  */
 package jp.osscons.opensourcecobol.libcobj.data;
 
-/** opensource COBOLのCOB_DATA_ATTRに対応するクラス */
+/** TODO: 準備中 */
 public class CobolFieldAttribute {
 
   /* field types */
@@ -78,8 +78,7 @@ public class CobolFieldAttribute {
   /** TODO: 準備中 */
   public static final int COB_FLAG_IS_POINTER = 0x80;
 
-  /** 変数の種類 */
-  /** TODO: 準備中 */
+  /** 変数種別 */
   private int type;
 
   /** 数値の時,桁数を示す */
@@ -125,90 +124,90 @@ public class CobolFieldAttribute {
   }
 
   /**
-   * this.typeのgetter
+   * 変数種別を取得する
    *
-   * @return this.type
+   * @return このオブジェクトの変数種別
    */
   public int getType() {
     return type;
   }
 
   /**
-   * this.typeのsetter
+   * 変数種別を取得する
    *
-   * @param type this.typeに設定する値
+   * @param type このオブジェクトに設定する変数種別
    */
   public void setType(int type) {
     this.type = type;
   }
 
   /**
-   * this.digitsのgetter
+   * 桁数を取得する
    *
-   * @return this.digits
+   * @return このオブジェクトの桁数
    */
   public int getDigits() {
     return digits;
   }
 
   /**
-   * this.digitsのsetter
+   * 桁数を設定する
    *
-   * @param digits this.digitsに設定する値
+   * @param digits このオブジェクトに設定する桁数
    */
   public void setDigits(int digits) {
     this.digits = digits;
   }
 
   /**
-   * this.scaleの getter
+   * このオブジェクトのスケールを取得する
    *
-   * @return this.scale
+   * @return このオブジェクトのスケール
    */
   public int getScale() {
     return scale;
   }
 
   /**
-   * this.scaleのsetter
+   * このオブジェクトのスケールを設定する
    *
-   * @param scale this.scaleに設定する値
+   * @param scale このオブジェクトに設定するスケール
    */
   public void setScale(int scale) {
     this.scale = scale;
   }
 
   /**
-   * this.flagのgetter
+   * このオブジェクトのフラグを設定する
    *
-   * @return this.flag
+   * @return このオブジェクトのフラグ
    */
   public int getFlags() {
     return this.flags;
   }
 
   /**
-   * this.flagのsetter
+   * このオブジェクトのフラグを設定する
    *
-   * @param flags this.flagに設定する値
+   * @param flags このオブジェクトに設定するフラグ
    */
   public void setFlags(int flags) {
     this.flags = flags;
   }
 
   /**
-   * this.picのgetter
+   * このオブジェクトのPICTURE文字列を取得する
    *
-   * @return this.pic
+   * @return このオブジェクトのPICTURE文字列
    */
   public String getPic() {
     return pic;
   }
 
   /**
-   * this.picのsetter
+   * このオブジェクトのPICTURE文字列を設定する
    *
-   * @param pic this.picに設定する値
+   * @param pic このオブジェクトに設定するPICTURE文字列
    */
   public void setPic(String pic) {
     this.pic = pic;
@@ -242,9 +241,9 @@ public class CobolFieldAttribute {
   }
 
   /**
-   * 数値型のデータかを判定する
+   * TODO: 準備中
    *
-   * @return DISPLAY,COMP-3等の時true,それ以外はfalse
+   * @return TODO: 準備中
    */
   public boolean isTypeNumeric() {
     return (type & COB_TYPE_NUMERIC) > 0;
