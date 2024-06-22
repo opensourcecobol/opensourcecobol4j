@@ -40,7 +40,7 @@ import jp.osscons.opensourcecobol.libcobj.exceptions.CobolExceptionId;
 import jp.osscons.opensourcecobol.libcobj.exceptions.CobolRuntimeException;
 import jp.osscons.opensourcecobol.libcobj.exceptions.CobolStopRunException;
 
-/** TODO: 準備中 */
+/** INDEXED, RELATIVE, SEQUENTIAL, LINE SEQUENTIAL等のCOBOLの ファイルを実装するための基底クラス */
 public class CobolFile {
   /** TODO: 準備中 */
   protected static final int COB_ORG_SEQUENTIAL = 0;
@@ -476,8 +476,9 @@ public class CobolFile {
     this.file_version = fileVersion;
   }
 
+  // libcob/fileio.cのsave_statusの実装 RETURN_STATUSマクロは実装できないため,本メソッドの呼び出し後の次の文はreturn;を書くこと.
   /**
-   * libcob/fileio.cのsave_statusの実装 RETURN_STATUSマクロは実装できないため,本メソッドの呼び出し後の次の文はreturn;を書くこと.
+   * TODO: 準備中
    *
    * @param status TODO: 準備中
    * @param fnstatus TODO: 準備中
@@ -506,8 +507,9 @@ public class CobolFile {
     }
   }
 
+  // libcob/fileio.のcob_invoke_funの実装
   /**
-   * libcob/fileio.のcob_invoke_funの実装
+   * TODO: 準備中
    *
    * @param operate TODO: 準備中
    * @param f TODO: 準備中
@@ -531,8 +533,9 @@ public class CobolFile {
     return 0;
   }
 
+  // libcob/cob_cache_fileのj実装
   /**
-   * libcob/cob_cache_fileのj実装
+   * TODO: 準備中
    *
    * @param f TODO: 準備中
    */
@@ -543,8 +546,9 @@ public class CobolFile {
     file_cache.add(f);
   }
 
+  // libcob/fileio.cのcob_file_linage_checkの実装 TODO 実装
   /**
-   * libcob/fileio.cのcob_file_linage_checkの実装 TODO 実装
+   * TODO: 準備中
    *
    * @return TODO: 準備中
    */
@@ -588,8 +592,9 @@ public class CobolFile {
     return true;
   }
 
+  // libcob/fileio.cのcob_linage_write_optの実装 TODO 実装
   /**
-   * libcob/fileio.cのcob_linage_write_optの実装 TODO 実装
+   * TODO: 準備中
    *
    * @param opt TODO: 準備中
    * @return TODO: 準備中
@@ -1456,8 +1461,9 @@ public class CobolFile {
     return 0;
   }
 
+  // libcob/fileio.cのcob_file_write_optの実装
   /**
-   * libcob/fileio.cのcob_file_write_optの実装
+   * TODO: 準備中
    *
    * @param opt TODO: 準備中
    * @return TODO: 準備中
@@ -1636,7 +1642,8 @@ public class CobolFile {
     }
   }
 
-  /** libcob/fileio.cのcob_exit_fileioの実装 TODO 一部だけ実装したため残りを実装する */
+  /// libcob/fileio.cのcob_exit_fileioの実装 TODO 一部だけ実装したため残りを実装する
+  /** TODO: 準備中 */
   public static void exitFileIO() {
     for (CobolFile f : file_cache) {
       if (f.open_mode != COB_OPEN_CLOSED && f.open_mode != COB_OPEN_LOCKED) {
@@ -1648,8 +1655,9 @@ public class CobolFile {
     }
   }
 
+  // libcob/fileio.cのcob_syncの実装
   /**
-   * libcob/fileio.cのcob_syncの実装
+   * TODO: 準備中
    *
    * @param f TODO: 準備中
    * @param mode TODO: 準備中
@@ -1667,7 +1675,8 @@ public class CobolFile {
     }
   }
 
-  /** libcob/fileio.cのcob_init_fileioの実装 */
+  // libcob/fileio.cのcob_init_fileioの実装
+  /** TODO: 準備中 */
   public static void cob_init_fileio() {
     String s = CobolUtil.getEnv("COB_SYNC");
     if (s != null) {
