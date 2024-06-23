@@ -76,17 +76,17 @@ public class CobolUtil {
   private static boolean lineTrace = false;
 
   /** TDOD: 準備中 */
-  public static String sourceFile;
+  private static String sourceFile;
   /** TDOD: 準備中 */
-  public static int sourceLine;
+  private static int sourceLine;
   /** TDOD: 準備中 */
-  public static String currProgramId;
+  private static String currProgramId;
   /** TDOD: 準備中 */
-  public static String currSection;
+  private static String currSection;
   /** TDOD: 準備中 */
-  public static String currParagraph;
+  private static String currParagraph;
   /** TDOD: 準備中 */
-  public static String sourceStatement;
+  private static String sourceStatement;
 
   abstract static class HandlerList {
     public HandlerList next = null;
@@ -105,8 +105,9 @@ public class CobolUtil {
 
   private static Properties envVarTable = new Properties();
 
+  // libcob/common.cのcob_check_envの実装
   /**
-   * libcob/common.cのcob_check_envの実装
+   * TODO: 準備中
    *
    * @param name TODO: 準備中
    * @param value TODO: 準備中
@@ -268,7 +269,7 @@ public class CobolUtil {
   }
 
   /**
-   * libcob/common.cのcob_initの実装
+   * TODO: 準備中
    *
    * @param argv TODO: 準備中
    * @param cobInitialized TODO: 準備中
@@ -346,8 +347,9 @@ public class CobolUtil {
     }
   }
 
+  // libcob/common.cとcob_localtime
   /**
-   * libcob/common.cとcob_localtime
+   * TODO: 準備中
    *
    * @return TODO: 準備中
    */
@@ -364,9 +366,9 @@ public class CobolUtil {
     return rt;
   }
 
+  // libcob/cob_verbose_outputの実装
   /**
-   * libcob/cob_verbose_outputの実装 opensourceCOBOLではprintfのように可変長引数を取るが,
-   * こちらは呼び出し側で事前にString.format等を使用することを期待している.
+   * TODO: 準備中
    *
    * @param s TODO cob_verboseの初期化
    */
@@ -376,9 +378,9 @@ public class CobolUtil {
     }
   }
 
+  // libcob/fileio.cのcob_rintime_errorの実装
   /**
-   * libcob/fileio.cのcob_rintime_errorの実装 opensourceCOBOLではprintfのように可変長引数を取るが,
-   * こちらは呼び出し側で事前にString.format等を使用することを期待している.
+   * TODO: 準備中
    *
    * @param s TODO: 準備中
    */
@@ -410,8 +412,9 @@ public class CobolUtil {
     System.err.flush();
   }
 
+  // libcob/common.c cob_get_environment
   /**
-   * libcob/common.c cob_get_environment
+   * TODO: 準備中
    *
    * @param envname TODO: 準備中
    * @param envval TODO: 準備中
@@ -425,16 +428,18 @@ public class CobolUtil {
     envval.memcpy(p);
   }
 
+  // libcob/common.cのCOB_CHK_PARMSの実装
   /**
-   * libcob/common.cのCOB_CHK_PARMSの実装
+   * TODO: 準備中
    *
    * @param funcName TODO: 準備中
    * @param numParams TODO: 準備中
    */
   public static void COB_CHK_PARMS(String funcName, int numParams) {}
 
+  // libcob/common.cのcob_get_switchの実装
   /**
-   * libcob/common.cのcob_get_switchの実装
+   * TODO: 準備中
    *
    * @param n TODO: 準備中
    * @return TODO: 準備中
@@ -443,8 +448,9 @@ public class CobolUtil {
     return CobolUtil.cobSwitch[n];
   }
 
+  // libcob/common.cのcob_set_switchの実装
   /**
-   * libcob/common.cのcob_set_switchの実装
+   * TODO: 準備中
    *
    * @param n TODO: 準備中
    * @param flag TODO: 準備中
@@ -457,8 +463,9 @@ public class CobolUtil {
     }
   }
 
+  // libcob/common.cのcob_get_sign_asciiの実装
   /**
-   * libcob/common.cのcob_get_sign_asciiの実装
+   * TODO: 準備中
    *
    * @param p TODO: 準備中
    */
@@ -499,8 +506,9 @@ public class CobolUtil {
     }
   }
 
+  // libcob/common.cのcob_get_sign_ebcdicの実装
   /**
-   * libcob/common.cのcob_get_sign_ebcdicの実装
+   * TODO: 準備中
    *
    * @param p TODO: 準備中
    * @return TODO: 準備中
@@ -574,8 +582,9 @@ public class CobolUtil {
     }
   }
 
+  // libcob/common.cのcob_put_sign_asciiの実装
   /**
-   * libcob/common.cのcob_put_sign_asciiの実装
+   * TODO: 準備中
    *
    * @param p TODO: 準備中
    */
@@ -616,8 +625,9 @@ public class CobolUtil {
     }
   }
 
+  // libcob/common.cのcob_put_sign_ebcdicの実装
   /**
-   * libcob/common.cのcob_put_sign_ebcdicの実装
+   * TODO: 準備中
    *
    * @param p TODO: 準備中
    * @param sign TODO: 準備中
@@ -699,8 +709,9 @@ public class CobolUtil {
     }
   }
 
+  // libcob/common.cのcommon_compcの実装
   /**
-   * libcob/common.cのcommon_compcの実装
+   * TODO: 準備中
    *
    * @param s1 TODO: 準備中
    * @param c TODO: 準備中
@@ -729,8 +740,9 @@ public class CobolUtil {
     return 0;
   }
 
+  // libcob/common.cのis_national_paddingの実装
   /**
-   * libcob/common.cのis_national_paddingの実装
+   * TODO: 準備中
    *
    * @param offset TODO: 準備中
    * @param s TODO: 準備中
@@ -757,8 +769,9 @@ public class CobolUtil {
     return ret;
   }
 
+  // libcob/common.cのalnum_cmpsの実装
   /**
-   * libcob/common.cのalnum_cmpsの実装
+   * TODO: 準備中
    *
    * @param s1 TODO: 準備中
    * @param s2 TODO: 準備中
@@ -788,8 +801,9 @@ public class CobolUtil {
     return 0;
   }
 
+  // libcob/common.cのnational_cmpsの実装
   /**
-   * libcob/common.cのnational_cmpsの実装
+   * TODO: 準備中
    *
    * @param s1 TODO: 準備中
    * @param s2 TODO: 準備中
