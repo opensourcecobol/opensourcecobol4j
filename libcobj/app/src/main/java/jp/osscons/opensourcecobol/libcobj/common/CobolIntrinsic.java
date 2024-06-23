@@ -99,7 +99,8 @@ public class CobolIntrinsic {
     return ((year % 4 == 0 && year % 100 != 0) || (year % 400 == 0));
   }
 
-  /** libcob/intrinsicのcob_init_intrinsicの実装 */
+  // libcob/intrinsicのcob_init_intrinsicの実装
+  /** TODO: 準備中 */
   public static void init() {
     CobolFieldAttribute attr =
         new CobolFieldAttribute(CobolFieldAttribute.COB_TYPE_ALPHANUMERIC, 0, 0, 0, null);
@@ -108,7 +109,13 @@ public class CobolIntrinsic {
     }
   }
 
-  /** libcob/intrinsicのcob_intr_get_doubleの実装 */
+  // libcob/intrinsicのcob_intr_get_doubleの実装
+  /**
+   * TODO: 準備中
+   *
+   * @param d
+   * @return
+   */
   private static double intrGetDouble(CobolDecimal d) {
     double v = d.getValue().doubleValue();
     int n = d.getScale();
@@ -123,7 +130,7 @@ public class CobolIntrinsic {
   }
 
   /**
-   * libcob/intrinsicのcalc_ref_modの実装
+   * TODO: 準備中
    *
    * @param f TODO: 準備中
    * @param offset TODO: 準備中
@@ -146,7 +153,7 @@ public class CobolIntrinsic {
   }
 
   /**
-   * libcob/intrinsicのcob_intr_get_binopの実装
+   * TODO: 準備中
    *
    * @param f1 TODO: 準備中
    * @param op TODO: 準備中
@@ -203,7 +210,7 @@ public class CobolIntrinsic {
   }
 
   /**
-   * libcob/intrinsicのcob_intr_lengthの実装
+   * TODO: 準備中
    *
    * @param srcfield TODO: 準備中
    * @return TODO: 準備中
@@ -218,7 +225,7 @@ public class CobolIntrinsic {
   }
 
   /**
-   * libcob/intrinsicのcob_intr_integerの実装
+   * TODO: 準備中
    *
    * @param srcfield TODO: 準備中
    * @return TODO: 準備中
@@ -270,7 +277,7 @@ public class CobolIntrinsic {
   }
 
   /**
-   * libcob/intrinsicのcob_intr_integer_partの実装
+   * TODO: 準備中
    *
    * @param srcfield TODO: 準備中
    * @return TODO: 準備中
@@ -291,7 +298,7 @@ public class CobolIntrinsic {
   }
 
   /**
-   * libcob/intrinsicのcob_intr_upper_caseの実装
+   * TODO: 準備中
    *
    * @param offset TODO: 準備中
    * @param length TODO: 準備中
@@ -314,7 +321,7 @@ public class CobolIntrinsic {
   }
 
   /**
-   * libcob/intrinsicのcob_intr_lower_caseの実装
+   * TODO: 準備中
    *
    * @param offset TODO: 準備中
    * @param length TODO: 準備中
@@ -337,7 +344,7 @@ public class CobolIntrinsic {
   }
 
   /**
-   * libcob/intrinsicのcob_intr_reverseの実装
+   * TODO: 準備中
    *
    * @param offset TODO: 準備中
    * @param length TODO: 準備中
@@ -360,7 +367,7 @@ public class CobolIntrinsic {
   }
 
   /**
-   * libcob/intrinsicのcob_intr_when_compiledの実装
+   * TODO: 準備中
    *
    * @param offset TODO: 準備中
    * @param length TODO: 準備中
@@ -377,7 +384,7 @@ public class CobolIntrinsic {
   }
 
   /**
-   * libcob/intrinsicのcob_intr_current_dateの実装
+   * TODO: 準備中
    *
    * @param offset TODO: 準備中
    * @param length TODO: 準備中
@@ -409,7 +416,7 @@ public class CobolIntrinsic {
   }
 
   /**
-   * libcob/intrinsicのcob_intr_charの実装
+   * TODO: 準備中
    *
    * @param srcfield TODO: 準備中
    * @return TODO: 準備中
@@ -429,8 +436,9 @@ public class CobolIntrinsic {
     return currField;
   }
 
+  // libcob/intrinsicのcob_intr_ordの実装
   /**
-   * libcob/intrinsicのcob_intr_ordの実装
+   * TODO: 準備中
    *
    * @param srcfield TODO: 準備中
    * @return TODO: 準備中
@@ -445,8 +453,9 @@ public class CobolIntrinsic {
     return currField;
   }
 
+  // libcob/intrinsicのcob_intr_date_of_integerの実装
   /**
-   * libcob/intrinsicのcob_intr_date_of_integerの実装
+   * TODO: 準備中
    *
    * @param srcdays TODO: 準備中
    * @return TODO: 準備中
@@ -496,8 +505,9 @@ public class CobolIntrinsic {
     return currField;
   }
 
+  // libcob/intrinsicのcob_intr_day_of_integerの実装
   /**
-   * libcob/intrinsicのcob_intr_day_of_integerの実装
+   * TODO: 準備中
    *
    * @param srcdays TODO: 準備中
    * @return TODO: 準備中
@@ -533,8 +543,9 @@ public class CobolIntrinsic {
     return currField;
   }
 
+  // libcob/intrinsicのcob_intr_integer_of_dateの実装
   /**
-   * libcob/intrinsicのcob_intr_integer_of_dateの実装
+   * TODO: 準備中
    *
    * @param srcfield TODO: 準備中
    * @return TODO: 準備中
@@ -602,8 +613,9 @@ public class CobolIntrinsic {
     return currField;
   }
 
+  // libcob/intrinsicのcob_intr_integer_of_dayの実装
   /**
-   * libcob/intrinsicのcob_intr_integer_of_dayの実装
+   * TODO: 準備中
    *
    * @param srcfield TODO: 準備中
    * @return TODO: 準備中
@@ -643,8 +655,9 @@ public class CobolIntrinsic {
     return currField;
   }
 
+  // libcob/intrinsicのcob_intr_integer_of_dayの実装
   /**
-   * libcob/intrinsicのcob_intr_factorialの実装
+   * TODO: 準備中
    *
    * @param srcfield TODO: 準備中
    * @return TODO: 準備中
@@ -727,8 +740,9 @@ public class CobolIntrinsic {
     return currField;
   }
 
+  // libcob/intrinsicのcob_intr_expの実装
   /**
-   * libcob/intrinsicのcob_intr_expの実装
+   * TODO: 準備中
    *
    * @param srcfield TODO: 準備中
    * @return TODO: 準備中
@@ -739,8 +753,9 @@ public class CobolIntrinsic {
     return mathFunctionAfter2(mathd2);
   }
 
+  // libcob/intrinsicのcob_intr_exp10の実装
   /**
-   * libcob/intrinsicのcob_intr_exp10の実装
+   * TODO: 準備中
    *
    * @param srcfield TODO: 準備中
    * @return TODO: 準備中
@@ -751,8 +766,9 @@ public class CobolIntrinsic {
     return mathFunctionAfter2(mathd2);
   }
 
+  // libcob/intrinsicのcob_intr_absの実装
   /**
-   * libcob/intrinsicのcob_intr_absの実装
+   * TODO: 準備中
    *
    * @param srcfield TODO: 準備中
    * @return TODO: 準備中
@@ -769,8 +785,9 @@ public class CobolIntrinsic {
     return currField;
   }
 
+  // libcob/intrinsicのcob_intr_acosの実装
   /**
-   * libcob/intrinsicのcob_intr_acosの実装
+   * TODO: 準備中
    *
    * @param srcfield TODO: 準備中
    * @return TODO: 準備中
@@ -781,8 +798,9 @@ public class CobolIntrinsic {
     return mathFunctionAfter1(mathd2);
   }
 
+  // libcob/intrinsicのcob_intr_asinの実装
   /**
-   * libcob/intrinsicのcob_intr_asinの実装
+   * TODO: 準備中
    *
    * @param srcfield TODO: 準備中
    * @return TODO: 準備中
@@ -793,8 +811,9 @@ public class CobolIntrinsic {
     return mathFunctionAfter1(mathd2);
   }
 
+  // libcob/intrinsicのcob_intr_atanの実装
   /**
-   * libcob/intrinsicのcob_intr_atanの実装
+   * TODO: 準備中
    *
    * @param srcfield TODO: 準備中
    * @return TODO: 準備中
@@ -805,8 +824,9 @@ public class CobolIntrinsic {
     return mathFunctionAfter1(mathd2);
   }
 
+  // libcob/intrinsicのcob_intr_cosの実装
   /**
-   * libcob/intrinsicのcob_intr_cosの実装
+   * TODO: 準備中
    *
    * @param srcfield TODO: 準備中
    * @return TODO: 準備中
@@ -817,8 +837,9 @@ public class CobolIntrinsic {
     return mathFunctionAfter1(mathd2);
   }
 
+  // libcob/intrinsicのcob_intr_logの実装
   /**
-   * libcob/intrinsicのcob_intr_logの実装
+   * TODO: 準備中
    *
    * @param srcfield TODO: 準備中
    * @return TODO: 準備中
@@ -829,8 +850,9 @@ public class CobolIntrinsic {
     return mathFunctionAfter2(mathd2);
   }
 
+  // libcob/intrinsicのcob_intr_log10の実装
   /**
-   * libcob/intrinsicのcob_intr_log10の実装
+   * TODO: 準備中
    *
    * @param srcfield TODO: 準備中
    * @return TODO: 準備中
@@ -841,8 +863,9 @@ public class CobolIntrinsic {
     return mathFunctionAfter2(mathd2);
   }
 
+  // libcob/intrinsicのcob_intr_sinの実装
   /**
-   * libcob/intrinsicのcob_intr_sinの実装
+   * TODO: 準備中
    *
    * @param srcfield TODO: 準備中
    * @return TODO: 準備中
@@ -853,8 +876,9 @@ public class CobolIntrinsic {
     return mathFunctionAfter1(mathd2);
   }
 
+  // libcob/intrinsicのcob_intr_sqrtの実装
   /**
-   * libcob/intrinsicのcob_intr_sqrtの実装
+   * TODO: 準備中
    *
    * @param srcfield TODO: 準備中
    * @return TODO: 準備中
@@ -865,8 +889,9 @@ public class CobolIntrinsic {
     return mathFunctionAfter2(mathd2);
   }
 
+  // libcob/intrinsicのcob_intr_tanの実装
   /**
-   * libcob/intrinsicのcob_intr_tanの実装
+   * TODO: 準備中
    *
    * @param srcfield TODO: 準備中
    * @return TODO: 準備中
@@ -877,8 +902,9 @@ public class CobolIntrinsic {
     return mathFunctionAfter2(mathd2);
   }
 
+  // libcob/intrinsicのcob_intr_numvalの実装
   /**
-   * libcob/intrinsicのcob_intr_numvalの実装
+   * TODO: 準備中
    *
    * @param srcfield TODO: 準備中
    * @return TODO: 準備中
@@ -961,8 +987,9 @@ public class CobolIntrinsic {
     return currField;
   }
 
+  // libcob/intrinsicのcob_intr_numval_cの実装
   /**
-   * libcob/intrinsicのcob_intr_numval_cの実装
+   * TODO: 準備中
    *
    * @param srcfield TODO: 準備中
    * @param currency TODO: 準備中
@@ -1100,8 +1127,9 @@ public class CobolIntrinsic {
     return null;
   }
 
+  // libcob/intrinsicのcob_intr_annuityの実装
   /**
-   * libcob/intrinsicのcob_intr_annuityの実装
+   * TODO: 準備中
    *
    * @param srcfield1 TODO: 準備中
    * @param srcfield2 TODO: 準備中
@@ -1136,8 +1164,9 @@ public class CobolIntrinsic {
     return end - begin - 1;
   }
 
+  // libcob/intrinsicのcob_intr_sumの実装
   /**
-   * libcob/intrinsicのcob_intr_sumの実装
+   * TODO: 準備中
    *
    * @param params TODO: 準備中
    * @param fields TODO: 準備中
@@ -1193,8 +1222,9 @@ public class CobolIntrinsic {
     return currField;
   }
 
+  // libcob/intrinsicのcob_intr_ord_minの実装
   /**
-   * libcob/intrinsicのcob_intr_ord_minの実装
+   * TODO: 準備中
    *
    * @param params TODO: 準備中
    * @param fields TODO: 準備中
@@ -1225,8 +1255,9 @@ public class CobolIntrinsic {
     return currField;
   }
 
+  // libcob/intrinsicのcob_intr_ord_maxの実装
   /**
-   * libcob/intrinsicのcob_intr_ord_maxの実装
+   * TODO: 準備中
    *
    * @param params TODO: 準備中
    * @param fields TODO: 準備中
@@ -1257,8 +1288,9 @@ public class CobolIntrinsic {
     return currField;
   }
 
+  // libcob/intrinsicのcob_intr_minの実装
   /**
-   * libcob/intrinsicのcob_intr_minの実装
+   * TODO: 準備中
    *
    * @param params TODO: 準備中
    * @param fields TODO: 準備中
@@ -1276,8 +1308,9 @@ public class CobolIntrinsic {
     return beasef;
   }
 
+  // libcob/intrinsicのcob_intr_maxの実装
   /**
-   * libcob/intrinsicのcob_intr_maxの実装
+   * TODO: 準備中
    *
    * @param params TODO: 準備中
    * @param fields TODO: 準備中
@@ -1295,8 +1328,9 @@ public class CobolIntrinsic {
     return beasef;
   }
 
+  // libcob/intrinsicのcob_intr_midrangeの実装
   /**
-   * libcob/intrinsicのcob_intr_midrangeの実装
+   * TODO: 準備中
    *
    * @param params TODO: 準備中
    * @param fields TODO: 準備中
@@ -1331,8 +1365,9 @@ public class CobolIntrinsic {
     return currField;
   }
 
+  // libcob/intrinsicのcob_intr_medianの実装
   /**
-   * libcob/intrinsicのcob_intr_medianの実装
+   * TODO: 準備中
    *
    * @param params TODO: 準備中
    * @param fields TODO: 準備中
@@ -1371,8 +1406,9 @@ public class CobolIntrinsic {
     }
   }
 
+  // libcob/intrinsicのcob_intr_medianの実装
   /**
-   * libcob/intrinsicのcob_intr_medianの実装
+   * TODO: 準備中
    *
    * @param pramas TODO: 準備中
    * @param fields TODO: 準備中
@@ -1428,8 +1464,9 @@ public class CobolIntrinsic {
     return currField;
   }
 
+  // libcob/intrinsicのcob_intr_modの実装
   /**
-   * libcob/intrinsicのcob_intr_modの実装
+   * TODO: 準備中
    *
    * @param srcfield1 TODO: 準備中
    * @param srcfield2 TODO: 準備中
@@ -1464,8 +1501,9 @@ public class CobolIntrinsic {
     return currField;
   }
 
+  // libcob/intrinsicのcob_intr_rangeの実装
   /**
-   * libcob/intrinsicのcob_intr_rangeの実装
+   * TODO: 準備中
    *
    * @param params TODO: 準備中
    * @param fields TODO: 準備中
@@ -1509,8 +1547,9 @@ public class CobolIntrinsic {
     return currField;
   }
 
+  // libcob/intrinsicのcob_intr_remの実装
   /**
-   * libcob/intrinsicのcob_intr_remの実装
+   * TODO: 準備中
    *
    * @param srcfield1 TODO: 準備中
    * @param srcfield2 TODO: 準備中
@@ -1546,8 +1585,9 @@ public class CobolIntrinsic {
     return currField;
   }
 
+  // libcob/intrinsicのcob_intr_randomの実装
   /**
-   * libcob/intrinsicのcob_intr_randomの実装
+   * TODO: 準備中
    *
    * @param prams TODO: 準備中
    * @param fields TODO: 準備中
@@ -1591,8 +1631,9 @@ public class CobolIntrinsic {
     return currField;
   }
 
+  // libcob/intrinsicのcob_intr_varianceの実装
   /**
-   * libcob/intrinsicのcob_intr_varianceの実装
+   * TODO: 準備中
    *
    * @param prams TODO: 準備中
    * @param fields TODO: 準備中
@@ -1664,8 +1705,9 @@ public class CobolIntrinsic {
     return currField;
   }
 
+  // libcob/intrinsicのcob_intr_standard_deviationの実装
   /**
-   * libcob/intrinsicのcob_intr_standard_deviationの実装
+   * TODO: 準備中
    *
    * @param prams TODO: 準備中
    * @param fields TODO: 準備中
@@ -1726,8 +1768,9 @@ public class CobolIntrinsic {
     return funcSqrt(currField);
   }
 
+  // libcob/intrinsicのcob_intr_present_valueの実装
   /**
-   * libcob/intrinsicのcob_intr_present_valueの実装
+   * TODO: 準備中
    *
    * @param prams TODO: 準備中
    * @param fields TODO: 準備中
@@ -1766,8 +1809,9 @@ public class CobolIntrinsic {
     return currField;
   }
 
+  // libcob/intrinsicのcob_intr_nationalの実装
   /**
-   * libcob/intrinsicのcob_intr_nationalの実装
+   * TODO: 準備中
    *
    * @param srcfield TODO: 準備中
    * @return TODO: 準備中
@@ -1786,8 +1830,9 @@ public class CobolIntrinsic {
     return currField;
   }
 
+  // cob_intr_combined_datetimeの実装
   /**
-   * cob_intr_combined_datetimeの実装
+   * TODO: 準備中
    *
    * @param srcdays TODO: 準備中
    * @param srctime TODO: 準備中
@@ -1827,8 +1872,9 @@ public class CobolIntrinsic {
     return currField;
   }
 
+  // cob_intr_concatenateの実装
   /**
-   * cob_intr_concatenateの実装
+   * TODO: 準備中
    *
    * @param offset TODO: 準備中
    * @param length TODO: 準備中
@@ -1866,8 +1912,9 @@ public class CobolIntrinsic {
     return currField;
   }
 
+  // cob_intr_date_to_yyyymmddの実装
   /**
-   * cob_intr_date_to_yyyymmddの実装
+   * TODO: 準備中
    *
    * @param params TODO: 準備中
    * @param fields TODO: 準備中
@@ -1926,8 +1973,9 @@ public class CobolIntrinsic {
     return currField;
   }
 
+  // cob_intr_day_to_yyyydddの実装
   /**
-   * cob_intr_day_to_yyyydddの実装
+   * TODO: 準備中
    *
    * @param params TODO: 準備中
    * @param fields TODO: 準備中
@@ -1987,8 +2035,9 @@ public class CobolIntrinsic {
     return currField;
   }
 
+  // cob_intr_exception_fileの実装
   /**
-   * cob_intr_exception_fileの実装
+   * TODO: 準備中
    *
    * @return TODO: 準備中
    */
@@ -2016,8 +2065,9 @@ public class CobolIntrinsic {
     return currField;
   }
 
+  // cob_intr_exception_locationの実装
   /**
-   * cob_intr_exception_locationの実装
+   * TODO: 準備中
    *
    * @return TODO: 準備中
    */
@@ -2070,8 +2120,9 @@ public class CobolIntrinsic {
     return currField;
   }
 
+  // cob_intr_exception_statementの実装
   /**
-   * cob_intr_exception_statementの実装
+   * TODO: 準備中
    *
    * @return TODO: 準備中
    */
@@ -2093,8 +2144,9 @@ public class CobolIntrinsic {
 
   private static final byte[] CONST_STRING_EXCEPTION_OBJECT = "EXCEPTION-OBJECT".getBytes();
 
+  // cob_intr_exception_statusの実装
   /**
-   * cob_intr_exception_statusの実装
+   * TODO: 準備中
    *
    * @return TODO: 準備中
    */
@@ -2120,8 +2172,9 @@ public class CobolIntrinsic {
     return currField;
   }
 
+  // cob_intr_fraction_partの実装
   /**
-   * cob_intr_fraction_partの実装
+   * TODO: 準備中
    *
    * @param srcfield TODO: 準備中
    * @return TODO: 準備中
@@ -2141,8 +2194,9 @@ public class CobolIntrinsic {
     return currField;
   }
 
+  // cob_intr_seconds_from_formatted_timeの実装
   /**
-   * cob_intr_seconds_from_formatted_timeの実装
+   * TODO: 準備中
    *
    * @param format TODO: 準備中
    * @param value TODO: 準備中
@@ -2207,8 +2261,9 @@ public class CobolIntrinsic {
     return currField;
   }
 
+  // cob_intr_seconds_past_midnightの実装
   /**
-   * cob_intr_seconds_past_midnightの実装
+   * TODO: 準備中
    *
    * @return TODO: 準備中
    */
@@ -2224,8 +2279,9 @@ public class CobolIntrinsic {
     return currField;
   }
 
+  // cob_intr_signの実装
   /**
-   * cob_intr_signの実装
+   * TODO: 準備中
    *
    * @param srcfield TODO: 準備中
    * @return TODO: 準備中
@@ -2251,8 +2307,9 @@ public class CobolIntrinsic {
     return currField;
   }
 
+  // cob_intr_stored_char_lengthの実装
   /**
-   * cob_intr_stored_char_lengthの実装
+   * TODO: 準備中
    *
    * @param srcfield TODO: 準備中
    * @return TODO: 準備中
@@ -2404,8 +2461,9 @@ public class CobolIntrinsic {
     return currField;
   }
 
+  // Equivalent to cob_intr_trim
   /**
-   * Equivalent to cob_intr_trim
+   * TODO: 準備中
    *
    * @param offset TODO: 準備中
    * @param length TODO: 準備中
