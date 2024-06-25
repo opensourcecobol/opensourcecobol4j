@@ -9,6 +9,11 @@
     <Bug code="MS,EI,EI2,UrF,UuF,Dm,OBL,PA,ST" />
   </Match>
   <Match>
+    <Class name="jp.osscons.opensourcecobol.libcobj.file.IndexedCursor" />
+    <Method name="getCursorForFirstLast" />
+    <Bug code="ODR" />
+  </Match>
+  <Match>
     <Class name="jp.osscons.opensourcecobol.libcobj.common.CobolInspect" />
     <Bug code="DLS" />
   </Match>

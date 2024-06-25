@@ -700,9 +700,8 @@ public class CobolIndexedFile extends CobolFile {
     }
 
     // delete data from the primary table
-    try {
-      String query = String.format("delete from %s where key = ?", getTableName(0));
-      PreparedStatement statement = p.connection.prepareStatement(query);
+    String query = String.format("delete from %s where key = ?", getTableName(0));
+    try (PreparedStatement statement = p.connection.prepareStatement(query)) {
       statement.setBytes(1, p.key);
       statement.execute();
     } catch (SQLException e) {
