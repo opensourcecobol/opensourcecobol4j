@@ -6,7 +6,7 @@
   <!-- In order to check details of bugs, see the list of bug code -->
   <!-- https://spotbugs.readthedocs.io/en/stable/bugDescriptions.html -->
   <Match>
-    <Bug code="MS,EI,EI2,UrF,UuF,Dm,OBL,PA,ODR,ST" />
+    <Bug code="MS,EI,EI2,UrF,UuF,Dm,OBL,PA,ST" />
   </Match>
   <Match>
     <Class name="jp.osscons.opensourcecobol.libcobj.common.CobolInspect" />

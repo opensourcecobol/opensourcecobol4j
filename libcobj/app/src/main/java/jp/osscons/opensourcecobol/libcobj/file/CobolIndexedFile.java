@@ -294,6 +294,7 @@ public class CobolIndexedFile extends CobolFile {
         "create table metadata_string_int (key text not null primary key, value integer not null)");
     statement.execute(
         "create table metadata_key (idx integer not null primary key, offset integer not null, size integer not null, duplicate boolean)");
+    statement.close();
 
     // Store the size of a record
     PreparedStatement recordSizePreparedStmt =
