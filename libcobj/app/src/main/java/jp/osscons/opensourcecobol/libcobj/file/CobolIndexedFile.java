@@ -491,10 +491,8 @@ public class CobolIndexedFile extends CobolFile {
   }
 
   private boolean keyExistsInTable(IndexedFile p, int index, byte[] key) {
-    try {
-      String query = String.format("select * from %s where key = ?", getTableName(index));
-
-      PreparedStatement selectStatement = p.connection.prepareStatement(query);
+    String query = String.format("select * from %s where key = ?", getTableName(index));
+    try (PreparedStatement selectStatement = p.connection.prepareStatement(query)) {
       selectStatement.setBytes(1, key);
       selectStatement.setFetchSize(0);
       ResultSet rs = selectStatement.executeQuery();
@@ -549,10 +547,9 @@ public class CobolIndexedFile extends CobolFile {
 
     // insert into the primary table
     p.data = DBT_SET(this.record);
-    try {
-      PreparedStatement insertStatement =
-          p.connection.prepareStatement(
-              String.format("insert into %s values (?, ?)", getTableName(0)));
+    try (PreparedStatement insertStatement =
+        p.connection.prepareStatement(
+            String.format("insert into %s values (?, ?)", getTableName(0)))) {
       insertStatement.setBytes(1, p.key);
       insertStatement.setBytes(2, p.data);
       insertStatement.execute();
