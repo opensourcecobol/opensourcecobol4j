@@ -710,10 +710,9 @@ public class CobolIndexedFile extends CobolFile {
 
     // delete data from sub tables
     for (int i = 1; i < this.nkeys; ++i) {
-      try {
-        PreparedStatement statement =
-            p.connection.prepareStatement(
-                String.format("delete from %s where value = ?", getTableName(i)));
+      try (PreparedStatement statement =
+          p.connection.prepareStatement(
+              String.format("delete from %s where value = ?", getTableName(i)))) {
         statement.setBytes(1, p.key);
         statement.execute();
       } catch (SQLException e) {
