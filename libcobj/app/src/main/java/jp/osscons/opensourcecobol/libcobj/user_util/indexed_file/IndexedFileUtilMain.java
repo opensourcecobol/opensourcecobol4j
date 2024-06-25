@@ -446,12 +446,10 @@ class IndexedFileUtilMain {
   private static Optional<CobolFile> createCobolFileFromIndexedFilePath(String indexedFilePath) {
     SQLiteConfig config = new SQLiteConfig();
     config.setReadOnly(true);
-    Connection conn = null;
 
-    try {
-      // Open the database file.
-      conn = DriverManager.getConnection("jdbc:sqlite:" + indexedFilePath, config.toProperties());
-      Statement stmt = conn.createStatement();
+    try (Connection conn =
+            DriverManager.getConnection("jdbc:sqlite:" + indexedFilePath, config.toProperties());
+        Statement stmt = conn.createStatement(); ) {
 
       // Retrieve the record size
       ResultSet rs =
@@ -529,13 +527,6 @@ class IndexedFileUtilMain {
       conn.close();
       return Optional.of(cobolFile);
     } catch (SQLException e) {
-      if (conn != null) {
-        try {
-          conn.close();
-        } catch (SQLException ee) {
-          return Optional.empty();
-        }
-      }
       return Optional.empty();
     }
   }
