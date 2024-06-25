@@ -588,6 +588,7 @@ public class CobolIndexedFile extends CobolFile {
           insertStatement.setBytes(2, p.data);
         }
         insertStatement.execute();
+        insertStatement.close();
         if (this.commitOnModification) {
           p.connection.commit();
         }
@@ -645,11 +646,9 @@ public class CobolIndexedFile extends CobolFile {
   }
 
   private static boolean checkTable(IndexedFile p, int index, byte[] key, byte[] primaryKey) {
-    try {
-      String query =
-          String.format("select key from %s " + "where key = ? and value = ?", getTableName(index));
-
-      PreparedStatement selectStatement = p.connection.prepareStatement(query);
+    String query =
+        String.format("select key from %s " + "where key = ? and value = ?", getTableName(index));
+    try (PreparedStatement selectStatement = p.connection.prepareStatement(query)) {
       selectStatement.setBytes(1, key);
       selectStatement.setBytes(2, primaryKey);
       selectStatement.setFetchSize(0);
