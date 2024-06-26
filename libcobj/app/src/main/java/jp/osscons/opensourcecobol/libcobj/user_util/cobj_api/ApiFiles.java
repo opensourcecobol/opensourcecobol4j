@@ -13,6 +13,10 @@ import org.json.JSONObject;
 
 /** TODO: 準備中 */
 class ApiFiles {
+  private static JSONObject param;
+  private static String name;
+  private static String type;
+
   /**
    * TODO: 準備中
    *
@@ -80,7 +84,6 @@ class ApiFiles {
    */
   private static void writeController(FileWriter ctlFile, String programId, JSONArray params) {
     PrintWriter ctlWriter = new PrintWriter(ctlFile);
-    JSONObject param;
     String name;
     String type;
     String defaultValue;
@@ -97,19 +100,23 @@ class ApiFiles {
 
     ctlWriter.println(
         "import java.util.concurrent.atomic.AtomicLong;\n"
+            + "import org.springframework.web.bind.annotation.RequestMapping;\n"
             + "import org.springframework.web.bind.annotation.GetMapping;\n"
+            + "import org.springframework.web.bind.annotation.PostMapping;\n"
             + "import org.springframework.web.bind.annotation.RequestParam;\n"
+            + "import org.springframework.web.bind.annotation.RequestBody;\n"
             + "import org.springframework.web.bind.annotation.RestController;\n"
             + "import jp.osscons.opensourcecobol.libcobj.ui.*;\n");
 
     ctlWriter.println(
         "@RestController\n"
-            + "public class "
-            + nameController
-            + " {\n"
-            + "    @GetMapping(\"/"
+            + "@RequestMapping(\"/"
             + programId
             + "\")\n"
+            + "public class "
+            + nameController
+            + " {\n\n"
+            + "    @GetMapping\n"
             + "    public "
             + nameRecord
             + " "
@@ -144,8 +151,38 @@ class ApiFiles {
       }
     }
 
+    ctlWriter.print("    ) {\n" + "        return " + programId + "Execute(");
+
+    argPrint(ctlWriter, params, false, false);
+
+    ctlWriter.println(");\n" + "    }\n");
+
     ctlWriter.print(
-        "    ) {\n"
+        "    @PostMapping\n"
+            + "    public "
+            + nameRecord
+            + " "
+            + nameController
+            + "Execute(@RequestBody "
+            + nameRecord
+            + " "
+            + programId
+            + "Record) {\n"
+            + "        return "
+            + programId
+            + "Execute(");
+
+    argPrint(ctlWriter, params, false, true);
+
+    ctlWriter.println(");\n" + "    }\n");
+
+    ctlWriter.print("    private " + nameRecord + " " + programId + "Execute(");
+
+    type = param.getString("java_type");
+    argPrint(ctlWriter, params, true, false);
+
+    ctlWriter.print(
+        ") {\n"
             + "        int statuscode = 200;\n"
             + "        "
             + programId
@@ -158,15 +195,7 @@ class ApiFiles {
             + programId
             + "Cobol.execute(");
 
-    for (i = 0; i < params.length(); ++i) {
-      param = params.getJSONObject(i);
-      name = param.getString("variable_name").replace('-', '_');
-      ctlWriter.print(name);
-
-      if (i < params.length() - 1) {
-        ctlWriter.print(", ");
-      }
-    }
+    argPrint(ctlWriter, params, false, false);
     ctlWriter.println(");\n" + "        try {");
 
     for (i = 0; i < params.length(); ++i) {
@@ -191,14 +220,8 @@ class ApiFiles {
             + programId
             + "Record(statuscode, ");
 
-    for (i = 0; i < params.length(); ++i) {
-      param = params.getJSONObject(i);
-      name = param.getString("variable_name").replace('-', '_');
-      ctlWriter.print(name);
-      if (i < params.length() - 1) {
-        ctlWriter.print(", ");
-      }
-    }
+    argPrint(ctlWriter, params, false, false);
+
     ctlWriter.println(");\n" + "    }\n" + "}");
     ctlWriter.close();
   }
@@ -212,10 +235,6 @@ class ApiFiles {
    */
   private static void writeRecord(FileWriter rcdFile, String programId, JSONArray params) {
     PrintWriter rcdWriter = new PrintWriter(rcdFile);
-    JSONObject param;
-    String name;
-    String type;
-    int i;
 
     rcdWriter.print(
         "package com.example.restservice;\n"
@@ -223,16 +242,29 @@ class ApiFiles {
             + programId
             + "Record(int statuscode, ");
 
+    argPrint(rcdWriter, params, true, false);
+
+    rcdWriter.println(") {}");
+    rcdWriter.close();
+  }
+
+  private static void argPrint(
+      PrintWriter writer, JSONArray params, boolean isType, boolean isRecord) {
+    int i;
+
     for (i = 0; i < params.length(); ++i) {
       param = params.getJSONObject(i);
       name = param.getString("variable_name").replace('-', '_');
-      type = param.getString("java_type");
-      rcdWriter.print(type + " " + name);
+      if (isType) {
+        type = param.getString("java_type");
+        name = type + " " + name;
+      } else if (isRecord) {
+        name = "LOANSUBRecord." + name + "()";
+      }
+      writer.print(name);
       if (i < params.length() - 1) {
-        rcdWriter.print(", ");
+        writer.print(", ");
       }
     }
-    rcdWriter.println(") {}");
-    rcdWriter.close();
   }
 }
