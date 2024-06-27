@@ -52,9 +52,9 @@ dnf install -y java-21-amazon-corretto-devel gcc make bison flex automake autoco
 
 ### Install opensource COBOL 4J
 ```
-curl -L -o opensourcecobol4j-v1.1.0.tar.gz https://github.com/opensourcecobol/opensourcecobol4j/archive/refs/tags/v1.1.0.tar.gz
-tar zxvf opensourcecobol4j-v1.1.0.tar.gz
-cd opensourcecobol4j-1.1.0
+curl -L -o opensourcecobol4j-v1.1.1.tar.gz https://github.com/opensourcecobol/opensourcecobol4j/archive/refs/tags/v1.1.1.tar.gz
+tar zxvf opensourcecobol4j-v1.1.1.tar.gz
+cd opensourcecobol4j-1.1.1
 ./configure --prefix=/usr/
 make
 sudo make install
@@ -112,7 +112,7 @@ Then, libcobj.jar will be created in `libcobj/app/build/libs/`.
 The docker container for opensource COBOL 4J is available.
 
 ```bash
-docker pull opensourcecobol/opensourcecobol4j:1.1.0
+docker pull opensourcecobol/opensourcecobol4j:1.1.1
 ```
 
 Execute the following commands in order to run the "Hello World" COBOL program.
