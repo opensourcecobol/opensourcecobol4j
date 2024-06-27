@@ -8,11 +8,11 @@ on:
 jobs:
   create-release:
     runs-on: windows-latest
+    env:
+      GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
     steps:
     - uses: actions/checkout@v4
 
     - name: Create a Release
-      uses: softprops/action-gh-release@v2
-      with:
-        body_path: ReleaseNote.md
+      run: gh release create ${{ github.ref }} -F ReleaseNote.md
