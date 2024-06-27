@@ -5,7 +5,7 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 ## [1.1.1] - 2024-06-28
 ### Added
-* Release [documentations](https://opensourcecobol.github.io/opensourcecobol4j/javadoc/libcobj/index.html) of the runtime library `libcobj.jar` (#445)
+* Release [API reference](https://opensourcecobol.github.io/opensourcecobol4j/javadoc/libcobj/index.html) of the runtime library `libcobj.jar` (#445)
 * opensource COBOL 4J on Windows passed COBOL85 test suites (#397)
 ### Miscellaneous
 * Upgrade dependencies of `libcobj.jar` to the latest versions (#398)
