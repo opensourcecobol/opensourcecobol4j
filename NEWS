@@ -2,6 +2,16 @@ NEWS - user visible changes				-*- outline -*-
 
 -----------------------------------------------------------------------
 
+* opensource COBOL 4J 1.1.1
+
+** New Features
+  (1) Release [documentations](https://opensourcecobol.github.io/opensourcecobol4j/javadoc/libcobj/index.html) of the runtime library `libcobj.jar`
+  (2) opensource COBOL 4J on Windows passed COBOL85 test suites
+** Miscellaneous
+  (1) Upgrade dependencies of `libcobj.jar` to the latest versions
+
+-----------------------------------------------------------------------
+
 * opensource COBOL 4J 1.1.0
 
 ** New Features
