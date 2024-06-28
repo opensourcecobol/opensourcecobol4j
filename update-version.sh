@@ -23,6 +23,7 @@ update_versions_in_file libcobj/app/build.gradle.kts
 update_versions_in_file libcobj/app/src/main/java/jp/osscons/opensourcecobol/libcobj/Const.java
 update_versions_in_file tests/command-line-options.src/info-java-dir.at
 update_versions_in_file libcobj/app/src/main/java/jp/osscons/opensourcecobol/libcobj/user_util/cobj_api/ApiFilesOptions.java
+update_versions_in_file win/config.h
 
 # Rebuild
 autoreconf

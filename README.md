@@ -93,14 +93,15 @@ Then, libcobj.jar will be created in `libcobj/app/build/libs/`.
 2. Open PowerShell
 3. Move to "win" directory and execute make-install.ps1.  
 ![alt text](image/readme4.png)
-* The files will be placed in the following locations respectively. 
-*  If you want to change the placement location of the files, modify make-install.ps1.
+* Each file is placed in the following location. 
 
-| Files name | Location |
+| File name | Location |
 |---|---|
 | cobj.exe | C:\opensourcecobol4j\bin |
 | libcobj.jar | C:\opensourcecobol4j\lib |
 | config files | C:\opensourcecobol4j\config |
+
+*  If you want to change the location of the files, modify make-install.ps1.
 
 ### Set the environment variables
 1. Add C:\opensourcecobol4j\bin to the PATH environment variable.
@@ -145,8 +146,7 @@ java [PROGRAM-ID]
 
 The API reference of the runtime library `libcobj.jar` is available [here](https://opensourcecobol.github.io/opensourcecobol4j/javadoc/libcobj/index.html)
 
-## The progress of the development
-
+## Development Progress
 
 Implemented.
 
@@ -160,11 +160,11 @@ Implemented.
 * Sort statements
 * Embedded functions (ACOS, LENGTH, MAX, ...)
 
-## The status of NIST85 test
+## Status of NIST85 test
 
-opensource COBOL 4J is tested using [NIST COBOL85 test suite](https://www.itl.nist.gov/div897/ctg/cobol_form.htm)
+opensource COBOL 4J is tested using [NIST COBOL85 test suite](https://www.itl.nist.gov/div897/ctg/cobol_form.htm).
 
-The result of NIST COBOL85 main test suites
+The result of NIST COBOL85 main test suites:
 
 ```
 ------ Directory Information -------   --- Total Tests Information ---
@@ -184,7 +184,7 @@ RL           32       32     0     0   1827    0       5       0  1832   Relativ
 Total       361      361     0     0   8804    0      21      93  8918
 ```
 
-The result of nist cobol85 extra test suites
+The result of nist cobol85 extra test suites:
 
 ```
 ------ directory information -------   --- total tests information ---
