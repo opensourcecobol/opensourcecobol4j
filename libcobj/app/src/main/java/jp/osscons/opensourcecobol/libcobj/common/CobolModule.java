@@ -87,13 +87,13 @@ public class CobolModule {
   }
 
   /** TODO: 準備中 */
-  public CobolModule next;
+  // private CobolModule next;
   /** TODO: 準備中 */
   public CobolDataStorage collating_sequence;
   /** TODO: 準備中 */
-  public AbstractCobolField cut_status;
+  // private AbstractCobolField cut_status;
   /** TODO: 準備中 */
-  public AbstractCobolField cursor_pos;
+  // private AbstractCobolField cursor_pos;
   /** TODO: 準備中 */
   public int display_sign;
   /** TODO: 準備中 */
@@ -101,7 +101,7 @@ public class CobolModule {
   /** TODO: 準備中 */
   public char currency_symbol;
   /** TODO: 準備中 */
-  public char numeric_separator;
+  // private char numeric_separator;
   /** TODO: 準備中 */
   public int flag_filename_mapping;
   /** TODO: 準備中 */
@@ -109,11 +109,11 @@ public class CobolModule {
   /** TODO: 準備中 */
   public int flag_pretty_display;
   /** TODO: 準備中 */
-  public int spare8;
+  // private int spare8;
   /** TODO: 準備中 */
-  public String program_id;
+  private String program_id;
   /** TODO: 準備中 */
-  public String packageName;
+  // private String packageName;
 
   /** TODO: 準備中 */
   public List<AbstractCobolField> cob_procedure_parameters;
@@ -149,53 +149,21 @@ public class CobolModule {
       int flagPrettyDisplay,
       int spare8,
       String programId) {
-    this.next = next;
+    // this.next = next;
     this.collating_sequence = collatingSequence;
-    this.cut_status = cutStatus;
-    this.cursor_pos = cursorPos;
+    // this.cut_status = cutStatus;
+    // this.cursor_pos = cursorPos;
     this.display_sign = displaySign;
     this.decimal_point = decimalPoint;
     this.currency_symbol = currencySymbol;
-    this.numeric_separator = numericSeparator;
+    // this.numeric_separator = numericSeparator;
     this.flag_filename_mapping = flagFilenameMapping;
     this.flag_binary_truncate = flagBinaryTruncate;
     this.flag_pretty_display = flagPrettyDisplay;
-    this.spare8 = spare8;
+    // this.spare8 = spare8;
     this.program_id = programId;
 
     this.cob_procedure_parameters = new ArrayList<AbstractCobolField>();
-  }
-
-  /**
-   * TODO 実装
-   *
-   * @param m TODO: 準備中
-   */
-  public void setNext(CobolModule m) {}
-
-  /**
-   * TODO 実装
-   *
-   * @return TODO: 準備中
-   */
-  public boolean hasNext() {
-    return false;
-  }
-
-  /**
-   * TODO 実装
-   *
-   * @param string TODO: 準備中
-   */
-  public void setProgramID(String string) {}
-
-  /**
-   * TODO 実装
-   *
-   * @return TODO: 準備中
-   */
-  public CobolModule getNext() {
-    return null;
   }
 
   /**
@@ -210,20 +178,6 @@ public class CobolModule {
     this.program_id = programName;
   }
 
-  /** パラメータリストのすべての要素を削除する */
-  public void clearParameter() {
-    cob_procedure_parameters.clear();
-  }
-
-  /**
-   * パラメータリストに要素を追加する
-   *
-   * @param field 追加する要素
-   */
-  public void addParameter(AbstractCobolField field) {
-    cob_procedure_parameters.add(field);
-  }
-
   /**
    * TODO: 準備中
    *
@@ -234,43 +188,6 @@ public class CobolModule {
     for (AbstractCobolField f : field) {
       cob_procedure_parameters.add(f);
     }
-  }
-
-  /**
-   * パラメータリストの長さを返す
-   *
-   * @return パラメータリストの長さ
-   */
-  public int lengthParameter() {
-    return cob_procedure_parameters.size();
-  }
-
-  /**
-   * TODO: 準備中
-   *
-   * @param packageName TODO: 準備中
-   */
-  public void setPackageName(String packageName) {
-    this.packageName = packageName;
-  }
-
-  /**
-   * TODO: 準備中
-   *
-   * @return TODO: 準備中
-   */
-  public String getPackageName() {
-    return packageName;
-  }
-
-  /**
-   * パラメータリストの指定の要素を取得する
-   *
-   * @param index TODO: 準備中
-   * @return TODO: 準備中
-   */
-  public AbstractCobolField getParameter(int index) {
-    return cob_procedure_parameters.get(index);
   }
 
   /**

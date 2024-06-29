@@ -119,37 +119,37 @@ public class CobolConstant {
   };
 
   /** TODO: 準備中 */
-  public static final int COB_MINI_BUFF = 2056;
+  static final int COB_MINI_BUFF = 256;
   /** TODO: 準備中 */
-  public static final int COB_SMALL_BUFF = 1024;
+  static final int COB_SMALL_BUFF = 1024;
   /** TODO: 準備中 */
-  public static final int COB_NORMAL_BUFF = 2048;
+  static final int COB_NORMAL_BUFF = 2048;
   /** TODO: 準備中 */
-  public static final int COB_MEDIUM_BUFF = 8192;
+  static final int COB_MEDIUM_BUFF = 8192;
   /** TODO: 準備中 */
-  public static final int COB_LARGE_BUFF = 16384;
+  static final int COB_LARGE_BUFF = 16384;
 
   /** TODO: 準備中 */
-  public static final int COB_MINI_MAX = COB_MINI_BUFF - 1;
+  static final int COB_MINI_MAX = COB_MINI_BUFF - 1;
   /** TODO: 準備中 */
-  public static final int COB_SMALL_MAX = COB_SMALL_BUFF - 1;
+  static final int COB_SMALL_MAX = COB_SMALL_BUFF - 1;
   /** TODO: 準備中 */
-  public static final int COB_NORMAL_MAX = COB_NORMAL_BUFF - 1;
+  static final int COB_NORMAL_MAX = COB_NORMAL_BUFF - 1;
   /** TODO: 準備中 */
-  public static final int COB_MEDIUM_MAX = COB_MEDIUM_BUFF - 1;
+  static final int COB_MEDIUM_MAX = COB_MEDIUM_BUFF - 1;
   /** TODO: 準備中 */
-  public static final int COB_LARGE_MAX = COB_LARGE_BUFF - 1;
+  static final int COB_LARGE_MAX = COB_LARGE_BUFF - 1;
 
   /** TODO: 準備中 */
-  public static final int COB_MAX_FIELD_PARAMS = 64;
+  static final int COB_MAX_FIELD_PARAMS = 64;
   /** TODO: 準備中 */
-  public static final int COB_FERROR_INITIALIZED = 0;
+  static final int COB_FERROR_INITIALIZED = 0;
   /** TODO: 準備中 */
-  public static final String COB_SOURCE_FILE = null;
+  static final String COB_SOURCE_FILE = null;
   /** TODO: 準備中 */
-  public static final int COB_PACKAGE_VERSION = 0;
+  static final int COB_PACKAGE_VERSION = 0;
   /** TODO: 準備中 */
-  public static final int COB_PATCH_LEVEL = 0;
+  static final int COB_PATCH_LEVEL = 0;
   // TODO 標準パスの設定
   /** TODO: 準備中 */
   public static final String COB_LIBRARY_PATH = "";
