@@ -6215,7 +6215,6 @@ void codegen(struct cb_program *prog, const int nested, char **program_id_list,
   joutput("\n");
 
   joutput_line("private boolean initialized = false;");
-  joutput_line("private CobolModule cobolCurrentModule;");
   joutput_line("private CobolModule module;");
   joutput_line("private int entry;");
   joutput("\n");
