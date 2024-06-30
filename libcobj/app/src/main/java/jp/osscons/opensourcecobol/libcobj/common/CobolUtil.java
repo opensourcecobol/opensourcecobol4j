@@ -54,11 +54,6 @@ public class CobolUtil {
   public static boolean nibbleCForUnsigned = false;
 
   /** TDOD: 準備中 */
-  public static int commlncnt = 0;
-  /** TDOD: 準備中 */
-  public static byte[] commlnptr = null;
-
-  /** TDOD: 準備中 */
   public static boolean[] cobSwitch = new boolean[8];
   /** TDOD: 準備中 */
   public static int cobSaveCallParams = 0;
