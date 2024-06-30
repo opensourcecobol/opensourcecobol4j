@@ -463,66 +463,6 @@ public class CobolUtil {
     }
   }
 
-  // libcob/common.cのcommon_compcの実装
-  /**
-   * TODO: 準備中
-   *
-   * @param s1 TODO: 準備中
-   * @param c TODO: 準備中
-   * @param size TODO: 準備中
-   * @return TODO: 準備中
-   */
-  public static int commonCmpc(CobolDataStorage s1, byte c, int size) {
-    CobolDataStorage s = CobolModule.getCurrentModule().collating_sequence;
-    int uc = c & 0xFF;
-    if (s != null) {
-      for (int i = 0; i < size; ++i) {
-        // int ret = s.getByte((s1.getByte(i) & 0xFF) - (s.getByte(uc) & 0xFF));
-        int ret = (s.getByte(s1.getByte(i) & 0xFF) & 0xFF) - (s.getByte(uc) & 0xFF);
-        if (ret != 0) {
-          return ret;
-        }
-      }
-    } else {
-      for (int i = 0; i < size; ++i) {
-        int ret = (s1.getByte(i) & 0xFF) - uc;
-        if (ret != 0) {
-          return ret;
-        }
-      }
-    }
-    return 0;
-  }
-
-  // libcob/common.cのis_national_paddingの実装
-  /**
-   * TODO: 準備中
-   *
-   * @param offset TODO: 準備中
-   * @param s TODO: 準備中
-   * @param size TODO: 準備中
-   * @return TODO: 準備中
-   */
-  public static int isNationalPadding(int offset, CobolDataStorage s, int size) {
-    int ret = 1;
-    int i = 0;
-    while (i < size && ret != 0) {
-      if (s.getByte(offset + i) == ' ') {
-        i++;
-      } else if (size - i >= CobolConstant.ZENCSIZ) {
-        for (int j = 0; j < CobolConstant.ZENCSIZ; ++j) {
-          if (s.getByte(offset + i + j) != CobolConstant.ZENSPC[j]) {
-            return 0;
-          }
-        }
-        i += CobolConstant.ZENCSIZ;
-      } else {
-        ret = 0;
-      }
-    }
-    return ret;
-  }
-
   // libcob/common.cのalnum_cmpsの実装
   /**
    * TODO: 準備中
