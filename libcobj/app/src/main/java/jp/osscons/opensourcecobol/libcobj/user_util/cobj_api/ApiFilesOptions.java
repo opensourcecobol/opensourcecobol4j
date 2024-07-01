@@ -6,17 +6,17 @@ import org.apache.commons.cli.DefaultParser;
 import org.apache.commons.cli.Options;
 import org.apache.commons.cli.ParseException;
 
-/** TODO: 準備中 */
+/** cobj-apiコマンドのオプションを定義するクラス */
 class ApiFilesOptions {
-  /** TODO: 準備中 */
+  /** cobj-apiコマンドによって生成されるJavaファイルに記述されるパッケージ名 */
   static String packageName;
-  /** TODO: 準備中 */
+  /** cobj-apiコマンドによって生成されるJavaファイルが配置されるディレクトリ名 */
   static String outputDir;
 
   /**
-   * TODO: 準備中
+   * 入力されたオプションを取得する
    *
-   * @param args TODO: 準備中
+   * @param args コマンドラインから入力された文字列
    */
   static void getOptions(String[] args) {
     Options options = new Options();
@@ -59,6 +59,7 @@ class ApiFilesOptions {
     }
   }
 
+  /** cobj-apiコマンドのヘルプメッセージを出力する */
   private static void printHelpMessage() {
     System.out.println("Usage: cobj-api [options] <json-file>");
     System.out.println();
@@ -75,18 +76,18 @@ class ApiFilesOptions {
   }
 
   /**
-   * TODO: 準備中
+   * 生成されるJavaファイルに記述されるパッケージ名を設定する
    *
-   * @param packageName TODO: 準備中
+   * @param packageName 生成されるJavaファイルに記述されるパッケージ名
    */
   static void setJavaPackage(String packageName) {
     ApiFilesOptions.packageName = packageName;
   }
 
   /**
-   * TODO: 準備中
+   * 生成されるJavaファイルが配置されるディレクトリ名を設定する
    *
-   * @param outputDir TODO: 準備中
+   * @param outputDir 生成されるJavaファイルが配置されるディレクトリ名
    */
   static void setOutputDir(String outputDir) {
     ApiFilesOptions.outputDir = outputDir;
