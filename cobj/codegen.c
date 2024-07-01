@@ -2830,9 +2830,8 @@ static void joutput_call(struct cb_call *p) {
     switch (CB_PURPOSE_INT(l)) {
     case CB_CALL_BY_REFERENCE:
       if (CB_NUMERIC_LITERAL_P(x) || CB_BINARY_OP_P(x)) {
-        joutput_line(
-            "CobolCallDataContent content_%d = new CobolCallDataContent(8);",
-            (int)n);
+        joutput_line("CobolDataStorage content_%d = new CobolDataStorage(8);",
+                     (int)n);
       } else if (CB_CAST_P(x)) {
         joutput_line("void *ptr_%d;", (int)n);
       }
@@ -2843,8 +2842,7 @@ static void joutput_call(struct cb_call *p) {
       } else if (CB_TREE_TAG(x) != CB_TAG_INTRINSIC && x != cb_null &&
                  !(CB_CAST_P(x))) {
         joutput_prefix();
-        joutput("CobolCallDataContent content_%d = new CobolCallDataContent (",
-                (int)n);
+        joutput("CobolDataStorage content_%d = new CobolDataStorage (", (int)n);
         if (CB_NUMERIC_LITERAL_P(x) || CB_BINARY_OP_P(x) || CB_CAST_P(x)) {
           joutput("8");
         } else {
@@ -2854,7 +2852,8 @@ static void joutput_call(struct cb_call *p) {
             joutput_size(x);
           }
         }
-        joutput_line(");");
+        joutput(");");
+        joutput_newline();
       }
       break;
     }
@@ -2865,19 +2864,14 @@ static void joutput_call(struct cb_call *p) {
     case CB_CALL_BY_REFERENCE:
       if (CB_NUMERIC_LITERAL_P(x)) {
         joutput_prefix();
-        if (cb_fits_int(x)) {
-          joutput("content_%d.dataint = ", (int)n);
-          joutput("%d", cb_get_int(x));
-        } else {
-          joutput("content_%d.datall = ", (int)n);
-          joutput("%lldLL", cb_get_long_long(x));
-        }
+        joutput("content_%d.set(", (int)n);
+        joutput("%lldL)", cb_get_long_long(x));
         joutput(";\n");
       } else if (CB_BINARY_OP_P(x)) {
         joutput_prefix();
-        joutput("content_%d.dataint = ", (int)n);
+        joutput("content_%d.set(", (int)n);
         joutput_integer(x);
-        joutput(";\n");
+        joutput("L);\n");
       } else if (CB_CAST_P(x)) {
         joutput_prefix();
         joutput("ptr_%d = ", (int)n);
@@ -2894,24 +2888,19 @@ static void joutput_call(struct cb_call *p) {
       } else if (CB_TREE_TAG(x) != CB_TAG_INTRINSIC) {
         if (CB_NUMERIC_LITERAL_P(x)) {
           joutput_prefix();
-          if (cb_fits_int(x)) {
-            joutput("content_%d.dataint = ", (int)n);
-            joutput("%d", cb_get_int(x));
-          } else {
-            joutput("content_%d.datall = ", (int)n);
-            joutput("%lldLL", cb_get_long_long(x));
-          }
+          joutput("content_%d.set(", (int)n);
+          joutput("%lldL)", cb_get_long_long(x));
           joutput(";\n");
         } else if (CB_REF_OR_FIELD_P(x) &&
                    CB_TREE_CATEGORY(x) == CB_CATEGORY_NUMERIC &&
                    cb_field(x)->usage == CB_USAGE_LENGTH) {
           joutput_prefix();
-          joutput("content_%d.dataint = ", (int)n);
+          joutput("content_%d.set(", (int)n);
           joutput_integer(x);
-          joutput(";\n");
+          joutput("L);\n");
         } else if (x != cb_null && !(CB_CAST_P(x))) {
           joutput_prefix();
-          joutput("content_%d.data.memcpy(", (int)n);
+          joutput("content_%d.memcpy(", (int)n);
           joutput_data(x);
           joutput(", ");
           joutput_size(x);
@@ -3050,7 +3039,7 @@ static void joutput_call(struct cb_call *p) {
     switch (CB_PURPOSE_INT(l)) {
     case CB_CALL_BY_REFERENCE:
       if (CB_NUMERIC_LITERAL_P(x) || CB_BINARY_OP_P(x)) {
-        joutput("content_%d.data", (int)n);
+        joutput("content_%d", (int)n);
       } else if (CB_REFERENCE_P(x) && CB_FILE_P(cb_ref(x))) {
         joutput_param(cb_ref(x), -1);
       } else if (CB_CAST_P(x)) {
@@ -3067,7 +3056,7 @@ static void joutput_call(struct cb_call *p) {
         if (CB_CAST_P(x)) {
           joutput("&ptr_%d", (int)n);
         } else {
-          joutput("content_%d.data", (int)n);
+          joutput("content_%d", (int)n);
         }
       } else {
         int tmp_param_wrap_string_flag = param_wrap_string_flag;
