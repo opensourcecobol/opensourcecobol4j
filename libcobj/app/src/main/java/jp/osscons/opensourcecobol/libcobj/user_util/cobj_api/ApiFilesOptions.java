@@ -59,6 +59,7 @@ class ApiFilesOptions {
     }
   }
 
+  /** cobj-apiコマンドのヘルプメッセージを出力する */
   private static void printHelpMessage() {
     System.out.println("Usage: cobj-api [options] <json-file>");
     System.out.println();
