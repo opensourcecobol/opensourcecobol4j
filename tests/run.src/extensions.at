@@ -22,26 +22,41 @@
 
 
 AT_SETUP([COMP-5])
-AT_CHECK([${SKIP_TEST}])
 
-AT_DATA([dump.c], [
-#include <stdio.h>
-int dump (unsigned char *data, int *p);
-int dump (unsigned char *data, int *p)
-{
-  int i;
-  if ( *p == 1 ) {
-     for (i = 0; i < 4; i++)
-       printf ("%02x", data[[i]]);
-  } else {
-       printf ("%8.8d", *((int *)data));
+AT_DATA([dump.java], [
+import jp.osscons.opensourcecobol.libcobj.data.*;
+import jp.osscons.opensourcecobol.libcobj.call.*;
+
+public class dump implements CobolRunnable {
+
+  @Override
+  public int run(CobolDataStorage... argStorages) {
+      CobolDataStorage storage = argStorages[[0]];
+      long p = argStorages[[1]].longValue();
+
+      if(p == 1) {
+          for(int i=0; i < 4; ++i) {
+              System.out.printf("%02x", storage.getByte(i));
+          }
+      } else {
+          System.out.printf("%08d", storage.intValue());
+      }
+      System.out.println("");
+      return 0;
   }
-  puts ("");
-  return 0;
+
+  @Override
+  public void cancel() {
+  }
+
+  @Override
+  public boolean isActive() {
+    return false;
+  }
 }
 ])
 
-AT_CHECK([${CC} ${SHROPT} -o dump.${SHREXT} dump.c])
+AT_CHECK([javac dump.java])
 
 AT_DATA([prog.cob], [
        IDENTIFICATION   DIVISION.
