@@ -6,7 +6,6 @@ SRC_FILES = \
 	settings.gradle.kts \
 	./app/build.gradle.kts \
 	./app/src/main/java/jp/osscons/opensourcecobol/libcobj/Const.java \
-	./app/src/main/java/jp/osscons/opensourcecobol/libcobj/call/CobolCallDataContent.java \
 	./app/src/main/java/jp/osscons/opensourcecobol/libcobj/call/CobolResolve.java \
 	./app/src/main/java/jp/osscons/opensourcecobol/libcobj/call/CobolRunnable.java \
 	./app/src/main/java/jp/osscons/opensourcecobol/libcobj/call/CobolSystemRoutine.java \
