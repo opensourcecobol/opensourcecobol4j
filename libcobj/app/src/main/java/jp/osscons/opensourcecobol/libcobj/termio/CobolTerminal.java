@@ -35,6 +35,12 @@ import jp.osscons.opensourcecobol.libcobj.exceptions.CobolExceptionInfo;
 /** DISPLAY文やACCEPT文に関するメソッドを実装するクラス */
 public class CobolTerminal {
 
+  /** TDOD: 準備中 */
+  private static int commlncnt = 0;
+
+  /** TDOD: 準備中 */
+  private static byte[] commlnptr = null;
+
   /**
    * 標準出力または標準エラー出力にデータを出力する
    *
@@ -249,10 +255,10 @@ public class CobolTerminal {
    * @param f TODO: 準備中
    */
   public static void displayCommandLine(AbstractCobolField f) {
-    CobolUtil.commlnptr = new byte[f.getSize()];
-    CobolUtil.commlncnt = f.getSize();
-    for (int i = 0; i < CobolUtil.commlncnt; ++i) {
-      CobolUtil.commlnptr[i] = f.getDataStorage().getByte(i);
+    CobolTerminal.commlnptr = new byte[f.getSize()];
+    CobolTerminal.commlncnt = f.getSize();
+    for (int i = 0; i < CobolTerminal.commlncnt; ++i) {
+      CobolTerminal.commlnptr[i] = f.getDataStorage().getByte(i);
     }
   }
 
@@ -262,8 +268,8 @@ public class CobolTerminal {
    * @param f TODO: 準備中
    */
   public static void acceptCommandLine(AbstractCobolField f) {
-    if (CobolUtil.commlncnt != 0) {
-      f.memcpy(CobolUtil.commlnptr, CobolUtil.commlncnt);
+    if (CobolTerminal.commlncnt != 0) {
+      f.memcpy(CobolTerminal.commlnptr, CobolTerminal.commlncnt);
       return;
     }
 

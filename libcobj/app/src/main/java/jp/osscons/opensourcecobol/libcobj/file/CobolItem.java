@@ -20,7 +20,7 @@ package jp.osscons.opensourcecobol.libcobj.file;
 
 import jp.osscons.opensourcecobol.libcobj.data.CobolDataStorage;
 
-/** TODO: 調査中 */
+/** TODO: 準備中 */
 class CobolItem {
   private CobolItem next;
   private int endOfBlock;
@@ -29,115 +29,115 @@ class CobolItem {
   private CobolDataStorage unique = new CobolDataStorage(new byte[8]);
   private CobolDataStorage item;
 
-  /** TODO: 調査中 */
+  /** TODO: 準備中 */
   CobolItem() {
     this.next = null;
     this.endOfBlock = 0;
   }
 
   /**
-   * TODO: 調査中
+   * TODO: 準備中
    *
-   * @return TODO: 調査中
+   * @return TODO: 準備中
    */
   CobolItem getNext() {
     return next;
   }
 
   /**
-   * TODO: 調査中
+   * TODO: 準備中
    *
-   * @param next TODO: 調査中
+   * @param next TODO: 準備中
    */
   void setNext(CobolItem next) {
     this.next = next;
   }
 
   /**
-   * TODO: 調査中
+   * TODO: 準備中
    *
-   * @return TODO: 調査中
+   * @return TODO: 準備中
    */
   int getEndOfBlock() {
     return endOfBlock;
   }
 
   /**
-   * TODO: 調査中
+   * TODO: 準備中
    *
-   * @param endOfBlock TODO: 調査中
+   * @param endOfBlock TODO: 準備中
    */
   void setEndOfBlock(int endOfBlock) {
     this.endOfBlock = endOfBlock;
   }
 
   /**
-   * TODO: 調査中
+   * TODO: 準備中
    *
-   * @return TODO: 調査中
+   * @return TODO: 準備中
    */
   int getRecordSize() {
     return recordSize;
   }
 
   /**
-   * TODO: 調査中
+   * TODO: 準備中
    *
-   * @param recordSize TODO: 調査中
+   * @param recordSize TODO: 準備中
    */
   void setRecordSize(int recordSize) {
     this.recordSize = recordSize;
   }
 
   /**
-   * TODO: 調査中
+   * TODO: 準備中
    *
-   * @return TODO: 調査中
+   * @return TODO: 準備中
    */
   byte getBlockByte() {
     return blockByte;
   }
 
   /**
-   * TODO: 調査中
+   * TODO: 準備中
    *
-   * @param blockByte TODO: 調査中
+   * @param blockByte TODO: 準備中
    */
   void setBlockByte(byte blockByte) {
     this.blockByte = blockByte;
   }
 
   /**
-   * TODO: 調査中
+   * TODO: 準備中
    *
-   * @return TODO: 調査中
+   * @return TODO: 準備中
    */
   CobolDataStorage getUnique() {
     return unique;
   }
 
   /**
-   * TODO: 調査中
+   * TODO: 準備中
    *
-   * @param unique TODO: 調査中
+   * @param unique TODO: 準備中
    */
   void setUnique(CobolDataStorage unique) {
     this.unique = unique;
   }
 
   /**
-   * TODO: 調査中
+   * TODO: 準備中
    *
-   * @return TODO: 調査中
+   * @return TODO: 準備中
    */
   CobolDataStorage getItem() {
     return item;
   }
 
   /**
-   * TODO: 調査中
+   * TODO: 準備中
    *
-   * @param item TODO: 調査中
+   * @param item TODO: 準備中
    */
   void setItem(CobolDataStorage item) {
     this.item = item;

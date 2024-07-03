@@ -28,11 +28,6 @@ public final class CobolExternal {
 
   private CobolFile extAllocFile;
   private CobolDataStorage extAllocStorage;
-  private int status;
-  private int size;
-
-  /** TODO: 準備中 */
-  public static boolean initialExternal = false;
 
   private static AbstractMap<String, CobolExternal> externalMap =
       new HashMap<String, CobolExternal>();
@@ -43,12 +38,6 @@ public final class CobolExternal {
 
   private CobolExternal(CobolDataStorage storage, int size) {
     this.extAllocStorage = storage;
-    this.size = size;
-  }
-
-  private CobolExternal(int status, int size) {
-    this.status = status;
-    this.size = size;
   }
 
   /**
@@ -84,16 +73,5 @@ public final class CobolExternal {
       externalMap.put(name, ext);
       return ret;
     }
-  }
-
-  // TODO remove this function
-  // This function is added in order to supress VSCode warnings
-  /**
-   * TODO: 準備中
-   *
-   * @return TODO: 準備中
-   */
-  public int dummyFunc() {
-    return this.size + this.status;
   }
 }

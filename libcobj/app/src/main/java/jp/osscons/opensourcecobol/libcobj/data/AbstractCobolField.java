@@ -854,27 +854,6 @@ public abstract class AbstractCobolField {
   /**
    * TODO: 準備中
    *
-   * @param s1 TODO: 準備中
-   * @param s1StartIndex s1のバイトデータにアクセスるするときの最小の添え字の相対位置
-   * @param c TODO: 準備中
-   * @param size TODO: 準備中
-   * @return TODO: 準備中
-   */
-  protected int commonCmpc(CobolDataStorage s1, int s1StartIndex, int c, int size) {
-    // TODO moduleを参照するコードを書く
-    int ret;
-    for (int i = 0; i < size; ++i) {
-      ret = s1.getByte(s1StartIndex + i) - c;
-      if (ret != 0) {
-        return ret;
-      }
-    }
-    return 0;
-  }
-
-  /**
-   * TODO: 準備中
-   *
    * @param field thisと比較するフィールド
    * @return TODO: 準備中
    */
@@ -1247,7 +1226,7 @@ public abstract class AbstractCobolField {
    */
   public int cmpChar(byte c) {
     int sign = this.getSign();
-    int ret = CobolUtil.commonCmpc(this.getDataStorage(), c, this.getSize());
+    int ret = AbstractCobolField.commonCmpc(this.getDataStorage(), c, this.getSize());
     if (this.getAttribute().getType() != CobolFieldAttribute.COB_TYPE_NUMERIC_PACKED) {
       this.putSign(sign);
     }
@@ -1359,12 +1338,12 @@ public abstract class AbstractCobolField {
       if (lf.getSize() > sf.getSize()) {
         if ((lf.getAttribute().getType() & CobolFieldAttribute.COB_TYPE_NATIONAL) != 0) {
           int cmpResult =
-              CobolUtil.isNationalPadding(
+              AbstractCobolField.isNationalPadding(
                   sf.getSize(), lf.getDataStorage(), lf.getSize() - sf.getSize());
           return cmpResult == 0 ? 1 : 0;
         } else {
           ret =
-              CobolUtil.commonCmpc(
+              AbstractCobolField.commonCmpc(
                   lf.getDataStorage().getSubDataStorage(sf.getSize()),
                   (byte) ' ',
                   lf.getSize() - sf.getSize());
@@ -1435,7 +1414,7 @@ public abstract class AbstractCobolField {
             return 1;
           }
           if (CobolModule.getCurrentModule().display_sign != 0) {
-            return CobolUtil.getSignEbcdic(p);
+            return AbstractCobolField.getSignEbcdic(p);
           } else {
             // TODO マクロの分岐に関して調査
             // #ifdef COB_EBCDIC_MACHINE
@@ -1479,7 +1458,7 @@ public abstract class AbstractCobolField {
             p.setByte(0, (byte) c);
           }
         } else if (CobolModule.getCurrentModule().display_sign != 0) {
-          CobolUtil.putSignEbcdic(p, sign);
+          AbstractCobolField.putSignEbcdic(p, sign);
         } else if (sign < 0) {
           p.setByte(0, (byte) (b + 0x40));
         }
@@ -1534,5 +1513,225 @@ public abstract class AbstractCobolField {
   public void hankakuMoveFrom(AbstractCobolField src) {
     // TODO 暫定実装
     this.moveFrom(src);
+  }
+
+  // libcob/common.cのcob_get_sign_ebcdicの実装
+  /**
+   * TODO: 準備中
+   *
+   * @param p TODO: 準備中
+   * @return TODO: 準備中
+   */
+  private static int getSignEbcdic(CobolDataStorage p) {
+    switch (p.getByte(0)) {
+      case '{':
+        p.setByte(0, (byte) '0');
+        return 1;
+      case 'A':
+        p.setByte(0, (byte) '1');
+        return 1;
+      case 'B':
+        p.setByte(0, (byte) '2');
+        return 1;
+      case 'C':
+        p.setByte(0, (byte) '3');
+        return 1;
+      case 'D':
+        p.setByte(0, (byte) '4');
+        return 1;
+      case 'E':
+        p.setByte(0, (byte) '5');
+        return 1;
+      case 'F':
+        p.setByte(0, (byte) '6');
+        return 1;
+      case 'G':
+        p.setByte(0, (byte) '7');
+        return 1;
+      case 'H':
+        p.setByte(0, (byte) '8');
+        return 1;
+      case 'I':
+        p.setByte(0, (byte) '9');
+        return 1;
+      case '}':
+        p.setByte(0, (byte) '0');
+        return -1;
+      case 'J':
+        p.setByte(0, (byte) '1');
+        return -1;
+      case 'K':
+        p.setByte(0, (byte) '2');
+        return -1;
+      case 'L':
+        p.setByte(0, (byte) '3');
+        return -1;
+      case 'M':
+        p.setByte(0, (byte) '4');
+        return -1;
+      case 'N':
+        p.setByte(0, (byte) '5');
+        return -1;
+      case 'O':
+        p.setByte(0, (byte) '6');
+        return -1;
+      case 'P':
+        p.setByte(0, (byte) '7');
+        return -1;
+      case 'Q':
+        p.setByte(0, (byte) '8');
+        return -1;
+      case 'R':
+        p.setByte(0, (byte) '9');
+        return -1;
+      default:
+        /* What to do here */
+        p.setByte(0, (byte) '0');
+        return 1;
+    }
+  }
+
+  // libcob/common.cのcob_put_sign_ebcdicの実装
+  /**
+   * TODO: 準備中
+   *
+   * @param p TODO: 準備中
+   * @param sign TODO: 準備中
+   */
+  private static void putSignEbcdic(CobolDataStorage p, int sign) {
+    if (sign < 0) {
+      switch (p.getByte(0)) {
+        case '0':
+          p.setByte(0, (byte) '}');
+          return;
+        case '1':
+          p.setByte(0, (byte) 'J');
+          return;
+        case '2':
+          p.setByte(0, (byte) 'K');
+          return;
+        case '3':
+          p.setByte(0, (byte) 'L');
+          return;
+        case '4':
+          p.setByte(0, (byte) 'M');
+          return;
+        case '5':
+          p.setByte(0, (byte) 'N');
+          return;
+        case '6':
+          p.setByte(0, (byte) 'O');
+          return;
+        case '7':
+          p.setByte(0, (byte) 'P');
+          return;
+        case '8':
+          p.setByte(0, (byte) 'Q');
+          return;
+        case '9':
+          p.setByte(0, (byte) 'R');
+          return;
+        default:
+          /* What to do here */
+          p.setByte(0, (byte) '}');
+          return;
+      }
+    }
+    switch (p.getByte(0)) {
+      case '0':
+        p.setByte(0, (byte) '{');
+        return;
+      case '1':
+        p.setByte(0, (byte) 'A');
+        return;
+      case '2':
+        p.setByte(0, (byte) 'B');
+        return;
+      case '3':
+        p.setByte(0, (byte) 'C');
+        return;
+      case '4':
+        p.setByte(0, (byte) 'D');
+        return;
+      case '5':
+        p.setByte(0, (byte) 'E');
+        return;
+      case '6':
+        p.setByte(0, (byte) 'F');
+        return;
+      case '7':
+        p.setByte(0, (byte) 'G');
+        return;
+      case '8':
+        p.setByte(0, (byte) 'H');
+        return;
+      case '9':
+        p.setByte(0, (byte) 'I');
+        return;
+      default:
+        /* What to do here */
+        p.setByte(0, (byte) '{');
+        return;
+    }
+  }
+
+  // libcob/common.cのcommon_compcの実装
+  /**
+   * TODO: 準備中
+   *
+   * @param s1 TODO: 準備中
+   * @param c TODO: 準備中
+   * @param size TODO: 準備中
+   * @return TODO: 準備中
+   */
+  private static int commonCmpc(CobolDataStorage s1, byte c, int size) {
+    CobolDataStorage s = CobolModule.getCurrentModule().collating_sequence;
+    int uc = c & 0xFF;
+    if (s != null) {
+      for (int i = 0; i < size; ++i) {
+        // int ret = s.getByte((s1.getByte(i) & 0xFF) - (s.getByte(uc) & 0xFF));
+        int ret = (s.getByte(s1.getByte(i) & 0xFF) & 0xFF) - (s.getByte(uc) & 0xFF);
+        if (ret != 0) {
+          return ret;
+        }
+      }
+    } else {
+      for (int i = 0; i < size; ++i) {
+        int ret = (s1.getByte(i) & 0xFF) - uc;
+        if (ret != 0) {
+          return ret;
+        }
+      }
+    }
+    return 0;
+  }
+
+  // libcob/common.cのis_national_paddingの実装
+  /**
+   * TODO: 準備中
+   *
+   * @param offset TODO: 準備中
+   * @param s TODO: 準備中
+   * @param size TODO: 準備中
+   * @return TODO: 準備中
+   */
+  private static int isNationalPadding(int offset, CobolDataStorage s, int size) {
+    int ret = 1;
+    int i = 0;
+    while (i < size && ret != 0) {
+      if (s.getByte(offset + i) == ' ') {
+        i++;
+      } else if (size - i >= CobolConstant.ZENCSIZ) {
+        for (int j = 0; j < CobolConstant.ZENCSIZ; ++j) {
+          if (s.getByte(offset + i + j) != CobolConstant.ZENSPC[j]) {
+            return 0;
+          }
+        }
+        i += CobolConstant.ZENCSIZ;
+      } else {
+        ret = 0;
+      }
+    }
+    return ret;
   }
 }

@@ -34,7 +34,7 @@ dependencies {
     implementation("com.google.guava:guava:33.2.1-jre")
     implementation("org.xerial:sqlite-jdbc:3.46.0.0")
     implementation("commons-cli:commons-cli:1.8.0")
-    testImplementation("org.junit.jupiter:junit-jupiter:5.10.2")
+    testImplementation("org.junit.jupiter:junit-jupiter:5.10.3")
     testRuntimeOnly("org.junit.platform:junit-platform-launcher")
     implementation("org.json:json:20240303")
     spotbugs("com.github.spotbugs:spotbugs:4.8.6")
@@ -74,7 +74,7 @@ publishing {
         register<MavenPublication>("gpr") {
             groupId = "jp.osscons.opensourcecobol"
             artifactId = "libcobj"
-            version = "1.1.0"
+            version = "1.1.1"
             from(components["java"])
         }
     }
