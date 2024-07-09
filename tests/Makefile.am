@@ -147,6 +147,7 @@ command_line_options_DEPENDENCIES = \
 	command-line-options.src/E.at \
 	command-line-options.src/C.at \
 	command-line-options.src/t.at \
+	command-line-options.src/m.at \
 	command-line-options.src/B.at \
 	command-line-options.src/list-reserved.at \
 	command-line-options.src/ext.at \

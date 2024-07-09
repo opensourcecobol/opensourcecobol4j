@@ -1,0 +1,22 @@
+AT_SETUP([-m])
+
+AT_DATA([prog.cbl], [
+       IDENTIFICATION              DIVISION.
+       PROGRAM-ID.                 prog.
+       DATA                        DIVISION.
+       WORKING-STORAGE             SECTION.
+       PROCEDURE                   DIVISION.
+           DISPLAY "HELLO".
+])
+
+AT_CHECK([touch hello.txt])
+
+AT_CHECK([${COBJ} -m prog.cbl])
+AT_CHECK([CLASSPATH=$CLASSPATH:./prog.jar java prog], [0],
+[HELLO
+])
+
+AT_CHECK([mkdir tmp && mv prog.jar tmp && cd tmp && unzip prog.jar > /dev/null])
+AT_CHECK([test -e tmp/hello.txt], [1])
+
+AT_CLEANUP
