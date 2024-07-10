@@ -1843,12 +1843,14 @@ static int process_build_module(struct filename *fn) {
   }
 
   for (p = current_program; p; p = p->next_program) {
-    sprintf(buff, "jar cf %s.jar ./", p->program_id);
+    sprintf(buff, "jar cf %s.jar ./%s.class ./%s$*.class", p->program_id,
+            p->program_id, p->program_id);
     ret = process(buff);
     if (ret) {
       return ret;
     }
-    sprintf(buff, "%s %s*.class", remove_cmd, p->program_id);
+    sprintf(buff, "%s %s.class %s$*.class", remove_cmd, p->program_id,
+            p->program_id);
     ret = process(buff);
     if (ret) {
       return ret;
