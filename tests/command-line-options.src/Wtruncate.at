@@ -1,0 +1,98 @@
+AT_SETUP([-Wtruncate])
+
+AT_DATA([prog.cbl],
+[       identification              division.
+       program-id.                 prog.
+       environment                 division.  
+       input-output                section.
+       file-control.
+       data                        division.
+       file                        section.
+       working-storage section.
+       01 a01 pic 9(1).
+       01 a04 pic 9(4).
+       01 x01 pic x(1).
+       01 x04 pic x(4).
+       01 n01 pic n(1).
+       01 n04 pic n(4).
+       01 g01.
+         03 filler pic x(1).
+       01 g04.
+         03 filler pic x(4).
+       procedure division.
+           move a04 to a01.
+           move a04 to x01.
+           move a04 to n01.
+           move a04 to g01.
+
+           move x04 to a01.
+           move x04 to x01.
+           move x04 to n01.
+           move x04 to g01.
+
+      * invalid move
+      *    move n04 to a01.
+           move n04 to x01.
+           move n04 to n01.
+           move n04 to g01.
+
+           move g04 to a01.
+           move g04 to x01.
+           move g04 to n01.
+           move g04 to g01.
+])
+
+AT_CHECK([${COBJ} -Wtruncate prog.cbl], [0], [],
+[prog.cbl:20: Warning: Some digits may be truncated
+prog.cbl:10: Warning: 'a04' defined here as PIC 9(4)
+prog.cbl:9: Warning: 'a01' defined here as PIC 9(1)
+prog.cbl:21: Warning: Some digits may be truncated
+prog.cbl:10: Warning: 'a04' defined here as PIC 9(4)
+prog.cbl:11: Warning: 'x01' defined here as PIC X(1)
+prog.cbl:22: Warning: Some digits may be truncated
+prog.cbl:10: Warning: 'a04' defined here as PIC 9(4)
+prog.cbl:13: Warning: 'n01' defined here as PIC N(1)
+prog.cbl:23: Warning: Sending field larger than receiving field
+prog.cbl:10: Warning: 'a04' defined here as PIC 9(4)
+prog.cbl:15: Warning: 'g01' defined here as a group of length 1
+prog.cbl:25: Warning: Some digits may be truncated
+prog.cbl:12: Warning: 'x04' defined here as PIC X(4)
+prog.cbl:9: Warning: 'a01' defined here as PIC 9(1)
+prog.cbl:26: Warning: Sending field larger than receiving field
+prog.cbl:12: Warning: 'x04' defined here as PIC X(4)
+prog.cbl:11: Warning: 'x01' defined here as PIC X(1)
+prog.cbl:27: Warning: Sending field larger than receiving field
+prog.cbl:12: Warning: 'x04' defined here as PIC X(4)
+prog.cbl:13: Warning: 'n01' defined here as PIC N(1)
+prog.cbl:28: Warning: Sending field larger than receiving field
+prog.cbl:12: Warning: 'x04' defined here as PIC X(4)
+prog.cbl:15: Warning: 'g01' defined here as a group of length 1
+prog.cbl:32: Warning: Sending field larger than receiving field
+prog.cbl:14: Warning: 'n04' defined here as PIC N(4)
+prog.cbl:11: Warning: 'x01' defined here as PIC X(1)
+prog.cbl:33: Warning: Sending field larger than receiving field
+prog.cbl:14: Warning: 'n04' defined here as PIC N(4)
+prog.cbl:13: Warning: 'n01' defined here as PIC N(1)
+prog.cbl:34: Warning: Sending field larger than receiving field
+prog.cbl:14: Warning: 'n04' defined here as PIC N(4)
+prog.cbl:15: Warning: 'g01' defined here as a group of length 1
+prog.cbl:36: Warning: Sending field larger than receiving field
+prog.cbl:17: Warning: 'g04' defined here as a group of length 4
+prog.cbl:9: Warning: 'a01' defined here as PIC 9(1)
+prog.cbl:37: Warning: Sending field larger than receiving field
+prog.cbl:17: Warning: 'g04' defined here as a group of length 4
+prog.cbl:11: Warning: 'x01' defined here as PIC X(1)
+prog.cbl:38: Warning: Sending field larger than receiving field
+prog.cbl:17: Warning: 'g04' defined here as a group of length 4
+prog.cbl:13: Warning: 'n01' defined here as PIC N(1)
+prog.cbl:39: Warning: Sending field larger than receiving field
+prog.cbl:17: Warning: 'g04' defined here as a group of length 4
+prog.cbl:15: Warning: 'g01' defined here as a group of length 1
+])
+
+
+AT_CHECK([${COBJ} prog.cbl])
+
+AT_CHECK([${COBJ} --help | grep '\-Wtruncate' > /dev/null], [0])
+
+AT_CLEANUP
