@@ -160,6 +160,7 @@ command_line_options_DEPENDENCIES = \
 	command-line-options.src/Wcall-params.at \
 	command-line-options.src/Wcolumn-overflow.at \
 	command-line-options.src/Wterminator.at \
+	command-line-options.src/Wtruncate.at \
 	command-line-options.src/Wunreachable.at \
 	command-line-options.src/ftrace-ftraceall.at \
 	command-line-options.src/fsyntax-only.at \
