@@ -57,5 +57,8 @@ CB_WARNDEF (cb_warn_column_overflow, "column-overflow", 0,
 CB_WARNDEF (cb_warn_terminator, "terminator", 0,
 	    N_("Warn lack of scope terminator END-XXX"))
 
+CB_WARNDEF (cb_warn_truncate, "truncate", 0,
+	    N_("Warn possible field truncation"))
+
 CB_WARNDEF (cb_warn_unreachable, "unreachable", 0,
 	    N_("Warn unreachable statements"))
