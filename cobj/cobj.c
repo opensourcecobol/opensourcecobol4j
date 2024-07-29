@@ -839,7 +839,7 @@ static void cobc_print_usage(void) {
          "JSON files that hold information of COBOL programs"));
   puts(_("  -java-package(=<package name>)    Specify the package name of the "
          "generated source code"));
-  puts(_("  -jar                              Create <PROGRAM-ID>.jar and "
+  puts(_("  -m, -jar                          Create <PROGRAM-ID>.jar and "
          "remove class files"));
   puts(_("  -single-jar=<JAR file name>       Create <JAR file name>.jar and "
          "remove class files"));
@@ -958,15 +958,6 @@ static int process_command_line(const int argc, char *argv[]) {
       cb_flag_library = 1;
       break;
 
-    case 'm':
-      /* -m : Generate loadable module (default) */
-      if (cb_flag_main || cb_flag_library) {
-        fprintf(stderr, "Only one of options 'm', 'x', 'b' may be specified\n");
-        exit(1);
-      }
-      cb_flag_module = 1;
-      break;
-
     case 'x':
       /* -x : Generate executable */
       if (cb_flag_module || cb_flag_library) {
@@ -1052,6 +1043,7 @@ static int process_command_line(const int argc, char *argv[]) {
       break;
 
     case OPTION_ID_JAR:
+    case 'm':
       cb_flag_jar = 1;
       break;
 
