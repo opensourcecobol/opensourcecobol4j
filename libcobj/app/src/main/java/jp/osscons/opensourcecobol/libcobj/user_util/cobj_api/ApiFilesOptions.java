@@ -45,7 +45,7 @@ class ApiFilesOptions {
       System.exit(0);
       return;
     } else if (cmd.hasOption("v")) {
-      System.out.println("1.1.1");
+      System.out.println("1.1.2");
       System.exit(0);
       return;
     } else if (cmd.getOptionValue("java-package") != null) {
