@@ -792,8 +792,6 @@ static void cobc_print_usage(void) {
   puts(_("Options:"));
   puts(_("  --help                            Display this message"));
   puts(_("  --version, -V                     Display compiler version"));
-  puts(_("  -m                                Create jar files instead of "
-         "class files (an experimental feature)"));
   puts(_("  -std=<dialect>                    Warnings/features for a specific "
          "dialect :"));
   puts(_("                                      cobol85     Cobol 85"));
