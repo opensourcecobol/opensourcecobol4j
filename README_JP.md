@@ -68,6 +68,11 @@ sudo make install
 ### $CLASSPATHの設定
 
 /usr/lib/opensourcecobol4j/libcobj.jar を 環境変数$CLASSPATH に追加する.
+たとえば下記のコードを実行する。
+
+```bash
+export CLASSPATH="$CLASSPATH:/usr/lib/opensourcecobol4j/libcobj.jar"
+```
 
 古いバージョンのインストール方法は、[doc/installation_jp](./doc/installation_jp)をご覧ください.
 
