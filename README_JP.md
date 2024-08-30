@@ -23,7 +23,7 @@ opensource COBOL 4J は下記の環境でテストされています.
 
 ## インストール
 
-opensource COBOL 4J v1.1.1はUbuntuとAlmaLinuxで動作を確認しています.  
+opensource COBOL 4J v1.1.2はUbuntuとAlmaLinuxで動作を確認しています.  
 
 ## 手動インストール
 
@@ -57,9 +57,9 @@ dnf install -y java-21-amazon-corretto-devel gcc make bison flex automake autoco
 下記のコマンドを実行する
 
 ```
-curl -L -o opensourcecobol4j-v1.1.1.tar.gz https://github.com/opensourcecobol/opensourcecobol4j/archive/refs/tags/v1.1.1.tar.gz
-tar zxvf opensourcecobol4j-v1.1.1.tar.gz
-cd opensourcecobol4j-1.1.1
+curl -L -o opensourcecobol4j-v1.1.2.tar.gz https://github.com/opensourcecobol/opensourcecobol4j/archive/refs/tags/v1.1.2.tar.gz
+tar zxvf opensourcecobol4j-v1.1.2.tar.gz
+cd opensourcecobol4j-1.1.2
 ./configure --prefix=/usr/
 make
 sudo make install
@@ -68,6 +68,11 @@ sudo make install
 ### $CLASSPATHの設定
 
 /usr/lib/opensourcecobol4j/libcobj.jar を 環境変数$CLASSPATH に追加する.
+たとえば下記のコードを実行する。
+
+```bash
+export CLASSPATH="$CLASSPATH:/usr/lib/opensourcecobol4j/libcobj.jar"
+```
 
 古いバージョンのインストール方法は、[doc/installation_jp](./doc/installation_jp)をご覧ください.
 
@@ -119,10 +124,10 @@ https://www.oracle.com/java/technologies/downloads/?er=221886#java8-windows
 
 ## Dockerによるインストール
 
-opensource COBOL 4J v1.1.1をインストールしたDockerイメージを利用できます.
+opensource COBOL 4J v1.1.2をインストールしたDockerイメージを利用できます.
 
 ```bash
-docker pull opensourcecobol/opensourcecobol4j:1.1.1
+docker pull opensourcecobol/opensourcecobol4j:1.1.2
 ```
 
 コンテナ内で下記のコマンドを実行すると、Hello Worldプログラムをコンパイル&実行できる.

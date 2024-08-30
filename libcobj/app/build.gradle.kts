@@ -7,7 +7,7 @@ plugins {
     id("com.github.sherter.google-java-format") version "0.9"
     id("maven-publish")
     pmd
-    id("com.github.spotbugs") version "6.0.19"
+    id("com.github.spotbugs") version "6.0.20"
 }
 
 repositories {
@@ -31,16 +31,16 @@ tasks {
 }
 
 dependencies {
-    implementation("com.google.guava:guava:33.2.1-jre")
-    implementation("org.xerial:sqlite-jdbc:3.46.0.0")
-    implementation("commons-cli:commons-cli:1.8.0")
-    testImplementation("org.junit.jupiter:junit-jupiter:5.10.3")
+    implementation("com.google.guava:guava:33.3.0-jre")
+    implementation("org.xerial:sqlite-jdbc:3.46.1.0")
+    implementation("commons-cli:commons-cli:1.9.0")
+    testImplementation("org.junit.jupiter:junit-jupiter:5.11.0")
     testRuntimeOnly("org.junit.platform:junit-platform-launcher")
     implementation("org.json:json:20240303")
     spotbugs("com.github.spotbugs:spotbugs:4.8.6")
 
-    implementation("org.slf4j:slf4j-api:2.0.13")
-    implementation("org.slf4j:slf4j-simple:2.0.13")
+    implementation("org.slf4j:slf4j-api:2.0.16")
+    implementation("org.slf4j:slf4j-simple:2.0.16")
 }
 
 java {
@@ -74,7 +74,7 @@ publishing {
         register<MavenPublication>("gpr") {
             groupId = "jp.osscons.opensourcecobol"
             artifactId = "libcobj"
-            version = "1.1.1"
+            version = "1.1.2"
             from(components["java"])
         }
     }

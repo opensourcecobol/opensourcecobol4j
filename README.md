@@ -52,9 +52,9 @@ dnf install -y java-21-amazon-corretto-devel gcc make bison flex automake autoco
 
 ### Install opensource COBOL 4J
 ```
-curl -L -o opensourcecobol4j-v1.1.1.tar.gz https://github.com/opensourcecobol/opensourcecobol4j/archive/refs/tags/v1.1.1.tar.gz
-tar zxvf opensourcecobol4j-v1.1.1.tar.gz
-cd opensourcecobol4j-1.1.1
+curl -L -o opensourcecobol4j-v1.1.2.tar.gz https://github.com/opensourcecobol/opensourcecobol4j/archive/refs/tags/v1.1.2.tar.gz
+tar zxvf opensourcecobol4j-v1.1.2.tar.gz
+cd opensourcecobol4j-1.1.2
 ./configure --prefix=/usr/
 make
 sudo make install
@@ -62,6 +62,11 @@ sudo make install
 
 ### Set $CLASSPATH
 Add /usr/lib/opensourcecobol4j/libcobj.jar to the environment variable $CLASSPATH.
+For instance, run the following code in Unix-like systems.
+
+```bash
+export CLASSPATH="$CLASSPATH:/usr/lib/opensourcecobol4j/libcobj.jar"
+```
 
 If you want to check installations of older versions, see [doc/installation/](./doc/installation) directory respectively.
 
@@ -120,7 +125,7 @@ https://www.oracle.com/java/technologies/downloads/?er=221886#java8-windows
 The docker container for opensource COBOL 4J is available.
 
 ```bash
-docker pull opensourcecobol/opensourcecobol4j:1.1.1
+docker pull opensourcecobol/opensourcecobol4j:1.1.2
 ```
 
 Execute the following commands in order to run the "Hello World" COBOL program.
