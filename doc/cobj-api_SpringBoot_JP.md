@@ -168,7 +168,7 @@
     }
     ```
     * "spring-boot-starter-web"は、これまでの手順によりデフォルトで追加されている依存関係である。
-    * "spring-boot-starter-web"に含まれているプロバイダーが、libocbj.jarに含まれているプロバイダーと競合するため、`exclude`で除外する必要がある。
+    * "spring-boot-starter-web"に含まれているプロバイダーが、libocbj.jarに含まれているプロバイダーと競合するため、`exclude group`で除外する必要がある。
 * Mavenの場合  
 pom.xmlに以下の依存関係を追加する。
     ```
@@ -191,9 +191,9 @@ pom.xmlに以下の依存関係を追加する。
    mvn spring-boot:run
    ```
 
-8. ブラウザで、"http://localhost:8080/<PROGRAM-ID>?<データ名1>=<データ値1>&<データ名2>=<データ値2>&..."にアクセスすることで、APIを呼び出すことができる。
+8. ブラウザで、`http://localhost:8080/<PROGRAM-ID>?<データ名1>=<データ値1>&<データ名2>=<データ値2>&...`にアクセスすることで、APIを呼び出すことができる。
 
-   今回使用したサンプルプログラムの場合、"http://localhost:8080/sample?DATA1=1&DATA2=2&DATA3=3"にアクセスすると、下記のようなJSONが返される。
+   今回使用したサンプルプログラムの場合、`http://localhost:8080/sample?DATA1=1&DATA2=2&DATA3=3`にアクセスすると、下記のようなJSONが返される。
    ```
    {"statuscode":200,"DATA1":1,"DATA2":2,"DATA3":3,"SUM_DATA":6}
    ```

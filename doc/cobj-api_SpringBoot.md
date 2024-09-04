@@ -20,9 +20,11 @@
 1. Select the packaging type from jar or war.
 1. Select the Java version.
 
-1. Select the dependent libraries. In this step, only Spring Web is selected, but other libraries can be selected as needed. ![alt text](../image/doc8.png)
+1. Select the dependent libraries. In this step, only Spring Web is selected, but other libraries can be selected as needed.  
+![alt text](../image/doc8.png)
 
-1. Select the directory to create the project in and press enter. The project will be created according to the above steps. ![alt text](../image/doc9.png)
+1. Select the directory to create the project in and press enter.  
+The project will be created according to the above steps. ![alt text](../image/doc9.png)
 
 # Create an API using Spring Boot/cobj-api
 1. Prepare a COBOL program with a `LINKAGE SECTION`. In this procedure, the following sample program will be used.
@@ -157,14 +159,14 @@ In this procedure, they will be placed in "src/main/java/com/example/cobj_api_te
     }
     ```
     * "spring-boot-starter-web" is a dependency that has been added by default in the previous steps.
-    * The provider included in "spring-boot-starter-web" conflicts with the provider included in libocbj.jar, so it needs to be excluded with `exclude`.
+    * The provider included in "spring-boot-starter-web" conflicts with the provider included in libocbj.jar, so it needs to be excluded with `exclude group`.
 * For Maven   
   Add the following dependency to pom.xml.
     ```
     <dependency>
         	<groupId>libcobj</groupId>
 			<artifactId>libcobj</artifactId>
-			<version>1.1.0(cobjのバージョン)</version>
+			<version>1.1.0(version of cobj)</version>
         	<scope>system</scope>
         	<systemPath>${basedir}/lib/libcobj.jar</systemPath>
     	</dependency>
@@ -180,9 +182,9 @@ In this procedure, they will be placed in "src/main/java/com/example/cobj_api_te
    mvn spring-boot:run
    ```
 
-8. You can call the API by accessing "http://localhost:8080/<PROGRAM-ID>?<data name 1>=<data value 1>&<data name 2>=<data value 2>&..." in your browser.
+8. You can call the API by accessing `http://localhost:8080/<PROGRAM-ID>?<data name 1>=<data value 1>&<data name 2>=<data value 2>&...` in your browser.
 
-   In the case of the sample program used this time, if you access "http://localhost:8080/sample?DATA1=1&DATA2=2&DATA3=3", you will get the following JSON:
+   In the case of the sample program used this time, if you access `http://localhost:8080/sample?DATA1=1&DATA2=2&DATA3=3`, you will get the following JSON:
    ```
    {"statuscode":200,"DATA1":1,"DATA2":2,"DATA3":3,"SUM_DATA":6}
    ```
