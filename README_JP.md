@@ -277,7 +277,7 @@ Options:
   -o=<dir>, --output-dir=<dir>          Set the output destination of the java file to an arbitrary destination
   -v, --version                         Prints the version of the cobj-api
 ```
-cobj-apiを用いたSpring Bootアプリケーションの作成方法については、[こちら](./doc/cobj-api_SpringBoot.md)を参照してください。
+cobj-apiを用いたSpring Bootアプリケーションの作成方法については、[こちら](./doc/cobj-api_SpringBoot_JP.md)を参照してください。
 
 ## コントリビューㇳ
 

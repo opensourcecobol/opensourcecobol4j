@@ -1,43 +1,31 @@
-# Visual Studio Code を用いた Spring Bootプロジェクトの構築方法
-1. Visual Studio Codeの拡張機能である、"Spring Boot Extension Pack"をインストールする.
-![alt text](../image/doc1.png)
+# Build a Spring Boot project using Visual Studio Code
+1. Install the "Spring Boot Extension Pack", a Visual Studio Code extension. ![alt text](../image/doc1.png)
 
-1. Visual Studio Codeの拡張機能である、"Java Extension Pack"をインストールする.
-![alt text](../image/doc2.png)
+1. Install the "Java Extension Pack", a Visual Studio Code extension. ![alt text](../image/doc2.png)
 
-1. 左側のサイドバーにある、"Explorer"を選択し、"Create Java Project"をクリックする。
-![alt text](../image/doc3.png)
+1. Select "Explorer" in the left sidebar and click "Create Java Project". ![alt text](../image/doc3.png)
 
-1. プロジェクトタイプはSpring Bootを選択する。
-![alt text](../image/doc4.png)
+1. Select Spring Boot as the project type. ![alt text](../image/doc4.png)
 
-1. その後、使用するビルドツール、Spring Bootのバージョンを選択する。
+1. Select the build tool from Maven or Gradle.
 
-1. 使用言語はJavaを選択する。
-![alt text](../image/doc5.png)
+1. Select Spring Boot version.
 
-1. 任意の Group ID を入力する。この手順では、"com.example"を入力する。
-![alt text](../image/doc6.png)
+1. Select Java as the language. ![alt text](../image/doc5.png)
 
-1. 任意の Artifact ID を入力する。この手順では、"cobj_api_test"を入力する。
-![alt text](../image/doc7.png)
+1. Enter any Group ID. In this step, enter "com.example". ![alt text](../image/doc6.png)
 
-1. パッケージングタイプを選択する。
-![alt text](../image/doc8.png)
+1. Enter any Artifact ID. In this step, enter "cobj_api_test". ![alt text](../image/doc7.png)
 
-1. Javaのバージョンを選択する。
-![alt text](../image/doc9.png)
+1. Select the packaging type from jar or war.
+1. Select the Java version.
 
-1. 依存するライブラリを選択する。この手順ではSpring Webのみを選択するが、必要に応じて他のライブラリを選択することもできる。
-![alt text](../image/doc10.png)
+1. Select the dependent libraries. In this step, only Spring Web is selected, but other libraries can be selected as needed. ![alt text](../image/doc8.png)
 
-1. プロジェクトを作成するディレクトリを選択し、enterを押す。  
-上記の手順により、プロジェクトが作成される。
-![alt text](../image/doc11.png)
+1. Select the directory to create the project in and press enter. The project will be created according to the above steps. ![alt text](../image/doc9.png)
 
-# Spring Boot/cobj-api を用いたAPIの作成方法
-1. `LINKAGE SECTION`が記述されたCOBOLプログラムを用意する。  
-　本手順では下記のサンプルプログラムを使用する。
+# Create an API using Spring Boot/cobj-api
+1. Prepare a COBOL program with a `LINKAGE SECTION`. In this procedure, the following sample program will be used.
 
     sample.cbl
     ``` cobol
@@ -63,16 +51,16 @@
 
     ```
 
-2. `cobj`コマンドでCOBOLプログラムからJSONファイルを生成する。
+2. Generate a JSON file from the COBOL program using `cobj` command.
      ```
      cobj -info-json-dir=./ -java-package=com.example.cobj_api_test sample.cbl
      ```
-   * `-info-json-dir`：COBOLプログラムからJSONファイルを生成するオプション。"="の後ろに生成先のディレクトリを指定する。
-   * `-java-package`：生成されるJavaファイルのパッケージ名を指定するオプション。"="の後ろにパッケージ名を指定する。
+   * `-info-json-dir`：Option to generate a JSON file from the COBOL program. Specify the destination directory after "=".
+   * `-java-package`：Option to specify the package name of the generated Java file. Specify the package name after "=".
     
-    これにより、sample.java、info_sample.jsonが生成される。
+    This will generate sample.java and info_sample.json.
 
-    info_sample.jsonには、"LINKAGE SECTION"で定義された変数と、その型名が記述される。
+    info_sample.json describes the variables defined in the "LINKAGE SECTION" and their type names.
     ```
     {
       "opensourcecobol4j_version": "1.1.1",
@@ -97,17 +85,17 @@
       ]
     }    
     ```
-3. `cobj-api`コマンドで、JSONファイルからSpring Boot向けのJavaファイルを生成する。
+3. Generate Spring Boot Java files from the JSON file using `cobj-api` command.
    ```
     cobj-api -java-package=com.example.cobj_api_test info_sample.json
     ```
    * `-java-package`：生成されるJavaファイルのパッケージ名を指定するオプション。
 
-    これにより、sampleController.java、sampleRecord.javaが生成される。
-4. sample.java、sampleController.java、sampleRecord.javaを、作成したSpring Bootプロジェクトに配置する。
-本手順では、"src/main/java/com/example/cobj_api_test"に配置する。
+    This will generate sampleController.java and sampleRecord.java.
+4. Place sample.java, sampleController.java, and sampleRecord.java in the created Spring Boot project.   
+In this procedure, they will be placed in "src/main/java/com/example/cobj_api_test".
 
-    ファイル構成：
+    File structure
     ```
     .
     ├── HELP.md
@@ -129,10 +117,10 @@
     └── target
     ```
 
-<!-- ![alt text](../image/doc1.png) -->
 
-5. プロジェクトの任意の場所に、libcobj.jarを配置する。  
-        ファイル構成：
+5. Place libcobj.jar anywhere in the project.   
+
+    File structure
     ```
     .
     ├── HELP.md
@@ -155,11 +143,11 @@
     │   └── test
     └── target
     ```
-    * libcobj.jarは、opensource COBOL 4Jをインストールすると、`opensourcecobol4j/libcobj/app/build/lib/`配下に生成されるjarファイルである。
+    * libcobj.jar is a jar file that is generated under "opensourcecobol4j/libcobj/app/build/lib/" when opensource COBOL 4J is installed.
 
 6. 依存関係の追加
-* Gradleの場合  
-  build.gradleを以下のように修正する。
+* For Gradle   
+  Modify build.gradle as follows.
    ```
     dependencies {
         implementation files('lib/libcobj.jar')
@@ -168,10 +156,10 @@
         }
     }
     ```
-    * "spring-boot-starter-web"は、これまでの手順によりデフォルトで追加されている依存関係である。
-    * "spring-boot-starter-web"に含まれているプロバイダーが、libocbj.jarに含まれているプロバイダーと競合するため、`exclude`で除外する必要がある。
-* Mavenの場合  
-pom.xmlに以下の依存関係を追加する。
+    * "spring-boot-starter-web" is a dependency that has been added by default in the previous steps.
+    * The provider included in "spring-boot-starter-web" conflicts with the provider included in libocbj.jar, so it needs to be excluded with `exclude`.
+* For Maven   
+  Add the following dependency to pom.xml.
     ```
     <dependency>
         	<groupId>libcobj</groupId>
@@ -181,22 +169,21 @@ pom.xmlに以下の依存関係を追加する。
         	<systemPath>${basedir}/lib/libcobj.jar</systemPath>
     	</dependency>
     ```
-7. Spring Bootプロジェクトをビルド及び起動する。
-   プロジェクトのルートディレクトリで、以下のコマンドを実行する。
-* Gradleの場合
+7. Build and launch the Spring Boot project.   
+   Run the following command in the root directory of the project.
+* For Gradle
     ```
     ./gradlew bootRun
     ``` 
-* Mavenの場合
+* For Maven
    ```
    mvn spring-boot:run
    ```
 
-8. ブラウザで、`http://localhost:8080/<PROGRAM-ID>?<データ名1>=<データ値1>&<データ名2>=<データ値2>&...`にアクセスすることで、APIを呼び出すことができる。
+8. You can call the API by accessing "http://localhost:8080/<PROGRAM-ID>?<data name 1>=<data value 1>&<data name 2>=<data value 2>&..." in your browser.
 
-   今回使用したサンプルプログラムの場合、`http://localhost:8080/sample?DATA1=1&DATA2=2&DATA3=3`にアクセスすると、
+   In the case of the sample program used this time, if you access "http://localhost:8080/sample?DATA1=1&DATA2=2&DATA3=3", you will get the following JSON:
    ```
    {"statuscode":200,"DATA1":1,"DATA2":2,"DATA3":3,"SUM_DATA":6}
    ```
-   のようなJSONが返される。
 
