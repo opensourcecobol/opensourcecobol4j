@@ -274,7 +274,7 @@ Options:
   -v, --version                         Prints the version of the cobj-api
 ```
 
-For information on how to create a Spring Boot application using cobj-api, see [here](. /doc/cobj-api_SpringBoot.md).
+For information on how to create a Spring Boot application using cobj-api, see [here](./doc/cobj-api_SpringBoot.md).
 
 ## Contributing
 
