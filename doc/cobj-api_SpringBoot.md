@@ -169,7 +169,7 @@ In this procedure, they will be placed in "src/main/java/com/example/cobj_api_te
 			<version>1.1.0(version of cobj)</version>
         	<scope>system</scope>
         	<systemPath>${basedir}/lib/libcobj.jar</systemPath>
-    	</dependency>
+    </dependency>
     ```
 7. Build and launch the Spring Boot project.   
    Run the following command in the root directory of the project.
