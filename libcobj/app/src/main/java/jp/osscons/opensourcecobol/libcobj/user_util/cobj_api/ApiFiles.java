@@ -24,21 +24,15 @@ class ApiFiles {
    * @param args コマンドラインから入力された文字列
    */
   public static void main(String[] args) {
+    
     ApiFilesOptions.getOptions(args);
 
-    if (args.length == 0) {
-      System.out.println("No json file is specified.");
-      System.exit(1);
-    }
+    // if (args.length == 0) {
+    //   System.out.println("No json file is specified.");
+    //   System.exit(1);
+    // }
 
-    String filePath;
-    try {
-      filePath = args[1];
-    } catch (ArrayIndexOutOfBoundsException e) {
-      filePath = args[0];
-    }
-
-    javaCreate(filePath);
+    javaCreate();
   }
 
   /**
@@ -46,8 +40,9 @@ class ApiFiles {
    *
    * @param filePath 生成されたJavaファイルを配置するディレクトリのパス
    */
-  static void javaCreate(String filePath) {
+  static void javaCreate() {
     try {
+      String filePath = ApiFilesOptions.filePath;
       String json = new String(Files.readAllBytes(Paths.get(filePath)));
       JSONObject obj = new JSONObject(json);
       JSONArray params = obj.getJSONArray("procedure_division_using_parameters");
