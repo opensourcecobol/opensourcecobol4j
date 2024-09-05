@@ -1,27 +1,27 @@
 # Visual Studio Code を用いた Spring Bootプロジェクトの構築方法
-1. Visual Studio Codeの拡張機能である、"Spring Boot Extension Pack"をインストールする.
+1. Visual Studio Codeの拡張機能である、"Spring Boot Extension Pack"をインストールする.  
 ![alt text](../image/doc1.png)
 
-1. Visual Studio Codeの拡張機能である、"Java Extension Pack"をインストールする.
+1. Visual Studio Codeの拡張機能である、"Java Extension Pack"をインストールする.  
 ![alt text](../image/doc2.png)
 
-1. 左側のサイドバーにある、"Explorer"を選択し、"Create Java Project"をクリックする。
+1. 左側のサイドバーにある、"Explorer"を選択し、"Create Java Project"をクリックする。 
 ![alt text](../image/doc3.png)
 
-1. プロジェクトタイプはSpring Bootを選択する。
+1. プロジェクトタイプはSpring Bootを選択する。 
 ![alt text](../image/doc4.png)
 
 1. ビルドツールをMavenかGradleから選択する。
 
 1. Spring Bootのバージョンを選択する。
 
-1. 使用言語はJavaを選択する。
+1. 使用言語はJavaを選択する。  
 ![alt text](../image/doc5.png)
 
-1. 任意の Group ID を入力する。この手順では、"com.example"を入力する。
+1. 任意の Group ID を入力する。この手順では、"com.example"を入力する。  
 ![alt text](../image/doc6.png)
 
-1. 任意の Artifact ID を入力する。この手順では、"cobj_api_test"を入力する。
+1. 任意の Artifact ID を入力する。この手順では、"cobj_api_test"を入力する。  
 ![alt text](../image/doc7.png)
 
 1. パッケージングタイプをJarかWarから選択する。
@@ -32,7 +32,7 @@
 ![alt text](../image/doc8.png)
 
 1. プロジェクトを作成するディレクトリを選択し、enterを押す。  
-上記の手順により、プロジェクトが作成される。
+上記の手順により、プロジェクトが作成される。  
 ![alt text](../image/doc9.png)
 
 # Spring Boot/cobj-api を用いたAPIの作成方法
