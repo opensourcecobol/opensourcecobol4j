@@ -69,6 +69,8 @@ class ApiFilesOptions {
               setOutputDir(outputDir);
               optionCount++;
               break;
+            default:
+              break;
           }
           optionCount++;
         }

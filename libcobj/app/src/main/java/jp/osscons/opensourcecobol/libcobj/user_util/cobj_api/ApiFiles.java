@@ -29,16 +29,15 @@ class ApiFiles {
       System.err.println("cobj-api: no input files");
       System.exit(1);
     }
-
     ApiFilesOptions.getOptions(args);
 
-    javaCreate();
+    String filePath = ApiFilesOptions.filePath;
+    javaCreate(filePath);
   }
 
   /** API連携用のJavaファイルを生成する */
-  static void javaCreate() {
+  static void javaCreate(String filePath) {
     try {
-      String filePath = ApiFilesOptions.filePath;
       String json = new String(Files.readAllBytes(Paths.get(filePath)));
       JSONObject obj = new JSONObject(json);
       JSONArray params = obj.getJSONArray("procedure_division_using_parameters");
