@@ -24,13 +24,8 @@ class ApiFiles {
    * @param args コマンドラインから入力された文字列
    */
   public static void main(String[] args) {
-    
-    ApiFilesOptions.getOptions(args);
 
-    // if (args.length == 0) {
-    //   System.out.println("No json file is specified.");
-    //   System.exit(1);
-    // }
+    ApiFilesOptions.getOptions(args);
 
     javaCreate();
   }

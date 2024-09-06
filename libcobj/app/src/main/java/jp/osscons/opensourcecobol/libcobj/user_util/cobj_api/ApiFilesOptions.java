@@ -3,11 +3,9 @@ package jp.osscons.opensourcecobol.libcobj.user_util.cobj_api;
 import org.apache.commons.cli.CommandLine;
 import org.apache.commons.cli.CommandLineParser;
 import org.apache.commons.cli.DefaultParser;
-import org.apache.commons.cli.Options;
 import org.apache.commons.cli.Option;
+import org.apache.commons.cli.Options;
 import org.apache.commons.cli.ParseException;
-import org.apache.commons.cli.PosixParser;
-import org.apache.commons.cli.HelpFormatter;
 
 /** cobj-apiコマンドのオプションを定義するクラス */
 class ApiFilesOptions {
@@ -26,77 +24,73 @@ class ApiFilesOptions {
   static void getOptions(String[] args) {
     Options options = new Options();
 
-        // ヘルプオプション
-        options.addOption(Option.builder("h")
-                .longOpt("help")
-                .build());
+    options.addOption(Option.builder("h").longOpt("help").build());
 
-        // Javaパッケージ名オプション
-        options.addOption(Option.builder("java-package")
-                .longOpt("java-package")
-                .hasArgs()
-                .build());
+    options.addOption(Option.builder("java-package").longOpt("java-package").hasArgs().build());
 
-        // 出力先ディレクトリオプション
-        options.addOption(Option.builder("o")
-                .hasArgs()
-                .build());
+    options.addOption(Option.builder("o").hasArgs().build());
 
-        options.addOption(Option.builder("output-dir")
-                .longOpt("output-dir")
-                .hasArgs()
-                .build());
+    options.addOption(Option.builder("output-dir").longOpt("output-dir").hasArgs().build());
 
-        // バージョンオプション
-        options.addOption(Option.builder("v")
-                .longOpt("version")
-                .build());
+    options.addOption(Option.builder("v").longOpt("version").build());
 
-        CommandLineParser parser = new DefaultParser();
+    CommandLineParser parser = new DefaultParser();
 
-        try {
-            CommandLine cmd = parser.parse(options, args);
-            
-            if(cmd.hasOption("h")) {
-              printHelpMessage();
-              System.exit(0);
-            }else if(cmd.hasOption("v")) {
-              System.out.println("1.1.2");
-              System.exit(0);
-            }else if(cmd.getOptionValue("java-package") != null) {
-              String packageName = cmd.getOptionValue("java-package");
-              setJavaPackage(packageName);
-              filePath = args[1];
-              return;
-            }else if(cmd.getOptionValue("o") != null) {
-              String outputDir = cmd.getOptionValue("o");
-              setOutputDir(outputDir);
-              filePath = args[2];
-              return;
-            }else if(cmd.getOptionValue("output-dir") != null) {
-              String outputDir = cmd.getOptionValue("output-dir");
-              setOutputDir(outputDir);
-              filePath = args[args.length - 1];
-              return;
-            }
+    try {
+      CommandLine cmd = parser.parse(options, args);
 
-            if (cmd.getArgs().length != 1) {
-                System.err.println("error: No input files");
-                System.exit(1);
-            }
-
-            filePath = args[0];
-
-        } catch (ParseException e) {
-            System.err.println("error: " + e.getMessage() + "\n");
-            printHelpMessage();
-            System.exit(1);
-        } catch (ArrayIndexOutOfBoundsException e) {
-            System.err.println("error: Please check the usage of options.\n");
-            printHelpMessage();
-            System.exit(1);
+      if (cmd.hasOption("h")) {
+        printHelpMessage();
+        System.exit(0);
+      }
+      if (cmd.hasOption("v")) {
+        System.out.println("1.1.2");
+        System.exit(0);
+      }
+      if (cmd.getOptionValue("java-package") != null) {
+        if (!args[0].contains("=")) {
+          System.err.println("error: Please check the usage of options.\n");
+          printHelpMessage();
+          System.exit(1);
         }
+        String packageName = cmd.getOptionValue("java-package");
+        setJavaPackage(packageName);
+        filePath = args[1];
+        return;
+      }
+      if (cmd.getOptionValue("output-dir") != null) {
+        if (!args[0].contains("=")) {
+          System.err.println("error: Please check the usage of options.\n");
+          printHelpMessage();
+          System.exit(1);
+        }
+        String outputDir = cmd.getOptionValue("output-dir");
+        setOutputDir(outputDir);
+        filePath = args[1];
+        return;
+      }
+      if (cmd.getOptionValue("o") != null) {
+        String outputDir = cmd.getOptionValue("o");
+        setOutputDir(outputDir);
+        filePath = args[2];
+        return;
+      }
+      if (cmd.getArgs().length != 1) {
+        System.err.println("error: No input files");
+        System.exit(1);
+      }
 
+      filePath = args[0];
+
+    } catch (ParseException e) {
+      System.err.println("error: " + e.getMessage() + "\n");
+      printHelpMessage();
+      System.exit(1);
+    } catch (ArrayIndexOutOfBoundsException e) {
+      System.err.println("error: Please check the usage of options.\n");
+      printHelpMessage();
+      System.exit(1);
+    }
   }
 
   /** cobj-apiコマンドのヘルプメッセージを出力する */
