@@ -25,16 +25,17 @@ class ApiFiles {
    */
   public static void main(String[] args) {
 
+    if (args.length == 0) {
+      System.err.println("cobj-api: no input files");
+      System.exit(1);
+    }
+
     ApiFilesOptions.getOptions(args);
 
     javaCreate();
   }
 
-  /**
-   * API連携用のJavaファイルを生成する
-   *
-   * @param filePath 生成されたJavaファイルを配置するディレクトリのパス
-   */
+  /** API連携用のJavaファイルを生成する */
   static void javaCreate() {
     try {
       String filePath = ApiFilesOptions.filePath;
@@ -44,7 +45,6 @@ class ApiFiles {
       String outputDir;
       FileWriter ctlFile;
       FileWriter rcdFile;
-
       programId = obj.getString("program_id");
 
       if (ApiFilesOptions.outputDir != null) {
@@ -223,11 +223,13 @@ class ApiFiles {
   private static void writeRecord(FileWriter rcdFile, JSONArray params) {
     PrintWriter rcdWriter = new PrintWriter(rcdFile);
 
-    rcdWriter.print(
-        "package com.example.restservice;\n"
-            + "public record "
-            + programId
-            + "Record(int statuscode, ");
+    if (ApiFilesOptions.packageName != null) {
+      rcdWriter.println("package " + ApiFilesOptions.packageName + ";");
+    } else {
+      rcdWriter.println("package com.example.restservice;");
+    }
+
+    rcdWriter.print("public record " + programId + "Record(int statuscode, ");
 
     argPrint(rcdWriter, params, true, false);
 

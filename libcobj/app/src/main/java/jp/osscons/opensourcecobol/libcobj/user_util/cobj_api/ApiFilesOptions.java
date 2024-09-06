@@ -25,63 +25,57 @@ class ApiFilesOptions {
     Options options = new Options();
 
     options.addOption(Option.builder("h").longOpt("help").build());
-
     options.addOption(Option.builder("java-package").longOpt("java-package").hasArgs().build());
-
     options.addOption(Option.builder("o").hasArgs().build());
-
     options.addOption(Option.builder("output-dir").longOpt("output-dir").hasArgs().build());
-
     options.addOption(Option.builder("v").longOpt("version").build());
 
     CommandLineParser parser = new DefaultParser();
 
     try {
       CommandLine cmd = parser.parse(options, args);
+      int optionCount = 0;
+      String outputDir;
 
-      if (cmd.hasOption("h")) {
-        printHelpMessage();
-        System.exit(0);
-      }
-      if (cmd.hasOption("v")) {
-        System.out.println("1.1.2");
-        System.exit(0);
-      }
-      if (cmd.getOptionValue("java-package") != null) {
-        if (!args[0].contains("=")) {
-          System.err.println("error: Please check the usage of options.\n");
-          printHelpMessage();
-          System.exit(1);
+      if (cmd.getOptions().length != 0) {
+        for (Option option : cmd.getOptions()) {
+          switch (option.getOpt()) {
+            case "h":
+              printHelpMessage();
+              System.exit(0);
+            case "v":
+              System.out.println("1.1.2");
+              System.exit(0);
+            case "java-package":
+              if (!args[optionCount].contains("=")) {
+                System.err.println("error: Please check the usage of options.\n");
+                printHelpMessage();
+                System.exit(1);
+              }
+              String packageName = option.getValue();
+              setJavaPackage(packageName);
+              break;
+            case "output-dir":
+              if (!args[optionCount].contains("=")) {
+                System.err.println("error: Please check the usage of options.\n");
+                printHelpMessage();
+                System.exit(1);
+              }
+              outputDir = option.getValue();
+              setOutputDir(outputDir);
+              break;
+            case "o":
+              outputDir = option.getValue();
+              setOutputDir(outputDir);
+              optionCount++;
+              break;
+          }
+          optionCount++;
         }
-        String packageName = cmd.getOptionValue("java-package");
-        setJavaPackage(packageName);
-        filePath = args[1];
-        return;
+        filePath = args[optionCount];
+      } else {
+        filePath = args[0];
       }
-      if (cmd.getOptionValue("output-dir") != null) {
-        if (!args[0].contains("=")) {
-          System.err.println("error: Please check the usage of options.\n");
-          printHelpMessage();
-          System.exit(1);
-        }
-        String outputDir = cmd.getOptionValue("output-dir");
-        setOutputDir(outputDir);
-        filePath = args[1];
-        return;
-      }
-      if (cmd.getOptionValue("o") != null) {
-        String outputDir = cmd.getOptionValue("o");
-        setOutputDir(outputDir);
-        filePath = args[2];
-        return;
-      }
-      if (cmd.getArgs().length != 1) {
-        System.err.println("error: No input files");
-        System.exit(1);
-      }
-
-      filePath = args[0];
-
     } catch (ParseException e) {
       System.err.println("error: " + e.getMessage() + "\n");
       printHelpMessage();
