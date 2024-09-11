@@ -236,7 +236,7 @@ class ApiFiles {
     argPrint(rcdWriter, params, true, false);
 
     rcdWriter.print(") {\n" + "    public LOANSUBRecord(){\n" + "        this(200, ");
-    for (i = 1; i < params.length(); ++i) {
+    for (i = 0; i < params.length(); ++i) {
       param = params.getJSONObject(i);
       type = param.getString("java_type");
 

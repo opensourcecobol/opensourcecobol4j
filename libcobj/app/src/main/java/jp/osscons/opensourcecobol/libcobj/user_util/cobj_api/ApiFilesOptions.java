@@ -43,9 +43,11 @@ class ApiFilesOptions {
             case "h":
               printHelpMessage();
               System.exit(0);
+              break;
             case "v":
               System.out.println("1.1.2");
               System.exit(0);
+              break;
             case "java-package":
               if (!args[optionCount].contains("=")) {
                 System.err.println("error: Please check the usage of options.\n");
