@@ -244,7 +244,10 @@ enum cb_assign_clause {
   CB_ASSIGN_JPH1       /* JP compatibility */
 };
 
-enum cb_binary_byteorder { CB_BYTEORDER_LITTLE_ENDIAN, CB_BYTEORDER_BIG_ENDIAN };
+enum cb_binary_byteorder {
+  CB_BYTEORDER_LITTLE_ENDIAN,
+  CB_BYTEORDER_BIG_ENDIAN
+};
 
 enum cb_binary_size {
   CB_BINARY_SIZE_2_4_8,   /* 2,4,8 bytes */
