@@ -215,9 +215,9 @@ AT_CHECK([java prog], [0],
 AT_CLEANUP
 
 
-# 2-4-8 native
+# 2-4-8 little-endian
 
-AT_SETUP([BINARY: 2-4-8 native])
+AT_SETUP([BINARY: 2-4-8 little-endian])
 AT_CHECK([${SKIP_TEST}])
 
 if test "x$COB_BIGENDIAN" = "xyes"; then
@@ -227,7 +227,7 @@ else
 AT_DATA([test.conf], [
 include "cobol2002.conf"
 binary-size: 2-4-8
-binary-byteorder: native
+binary-byteorder: little-endian
 ])
 
 AT_DATA([dump.java], [
@@ -616,9 +616,9 @@ AT_CHECK([java prog], [0],
 AT_CLEANUP
 
 
-# 1-2-4-8 native
+# 1-2-4-8 little-endian
 
-AT_SETUP([BINARY: 1-2-4-8 native])
+AT_SETUP([BINARY: 1-2-4-8 little-endian])
 AT_CHECK([${SKIP_TEST}])
 
 if test "x$COB_BIGENDIAN" = "xyes"; then
@@ -628,7 +628,7 @@ else
 AT_DATA([test.conf], [
 include "cobol2002.conf"
 binary-size: 1-2-4-8
-binary-byteorder: native
+binary-byteorder: little-endian
 ])
 
 AT_DATA([dump.java], [
@@ -1019,9 +1019,9 @@ AT_CHECK([java prog], [0],
 AT_CLEANUP
 
 
-# 1--8 native
+# 1--8 little-endian
 
-AT_SETUP([BINARY: 1--8 native])
+AT_SETUP([BINARY: 1--8 little-endian])
 AT_CHECK([${SKIP_TEST}])
 
 if test "x$COB_BIGENDIAN" = "xyes"; then
@@ -1031,7 +1031,7 @@ else
 AT_DATA([test.conf], [
 include "cobol2002.conf"
 binary-size: 1--8
-binary-byteorder: native
+binary-byteorder: little-endian
 ])
 
 AT_DATA([dump.java], [

@@ -709,7 +709,7 @@ static void setup_parameters(struct cb_field *f) {
     switch (f->usage) {
     case CB_USAGE_BINARY:
 #ifndef WORDS_BIGENDIAN
-      if (cb_binary_byteorder == CB_BYTEORDER_BIG_ENDIAN) {
+      if (cb_binary_byteorder == CB_BYTEORDER_LITTLE_ENDIAN) {
         f->flag_binary_swap = 1;
       }
 #endif
@@ -746,7 +746,7 @@ static void setup_parameters(struct cb_field *f) {
       }
 #ifndef WORDS_BIGENDIAN
       if (f->usage == CB_USAGE_COMP_X) {
-        if (cb_binary_byteorder == CB_BYTEORDER_BIG_ENDIAN) {
+        if (cb_binary_byteorder == CB_BYTEORDER_LITTLE_ENDIAN) {
           f->flag_binary_swap = 1;
         }
       }
