@@ -229,8 +229,8 @@ int cb_load_conf(const char *fname, const int check_nodef,
           ret = -1;
         }
       } else if (strcmp(name, "binary-byteorder") == 0) {
-        if (strcmp(val, "native") == 0) {
-          cb_binary_byteorder = CB_BYTEORDER_NATIVE;
+        if (strcmp(val, "little-endian") == 0) {
+          cb_binary_byteorder = CB_BYTEORDER_LITTLE_ENDIAN;
         } else if (strcmp(val, "big-endian") == 0) {
           cb_binary_byteorder = CB_BYTEORDER_BIG_ENDIAN;
         } else {
