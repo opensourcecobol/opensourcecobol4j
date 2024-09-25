@@ -1,21 +1,28 @@
 # Build a Spring Boot project using Visual Studio Code
-1. Install the "Spring Boot Extension Pack", a Visual Studio Code extension. ![alt text](../image/doc1.png)
+1. Install the "Spring Boot Extension Pack", a Visual Studio Code extension. 
+ ![alt text](../image/doc1.png)
 
-1. Install the "Java Extension Pack", a Visual Studio Code extension. ![alt text](../image/doc2.png)
+1. Install the "Java Extension Pack", a Visual Studio Code extension.  
+![alt text](../image/doc2.png)
 
-1. Select "Explorer" in the left sidebar and click "Create Java Project". ![alt text](../image/doc3.png)
+1. Select "Explorer" in the left sidebar and click "Create Java Project".  
+![alt text](../image/doc3.png)
 
-1. Select Spring Boot as the project type. ![alt text](../image/doc4.png)
+1. Select Spring Boot as the project type.  
+![alt text](../image/doc4.png)
 
 1. Select the build tool from Maven or Gradle.
 
 1. Select Spring Boot version.
 
-1. Select Java as the language. ![alt text](../image/doc5.png)
+1. Select Java as the language.  
+![alt text](../image/doc5.png)
 
-1. Enter any Group ID. In this step, enter "com.example". ![alt text](../image/doc6.png)
+1. Enter any Group ID. In this step, enter "com.example".  
+![alt text](../image/doc6.png)
 
-1. Enter any Artifact ID. In this step, enter "cobj_api_test". ![alt text](../image/doc7.png)
+1. Enter any Artifact ID. In this step, enter "cobj_api_test".  
+![alt text](../image/doc7.png)
 
 1. Select the packaging type from jar or war.
 1. Select the Java version.
@@ -24,7 +31,8 @@
 ![alt text](../image/doc8.png)
 
 1. Select the directory to create the project in and press enter.  
-The project will be created according to the above steps. ![alt text](../image/doc9.png)
+The project will be created according to the above steps.  
+![alt text](../image/doc9.png)
 
 # Create an API using Spring Boot/cobj-api
 1. Prepare a COBOL program with a `LINKAGE SECTION`. In this procedure, the following sample program will be used.
