@@ -3,6 +3,7 @@ package jp.osscons.opensourcecobol.libcobj.user_util.cobj_api;
 import org.apache.commons.cli.CommandLine;
 import org.apache.commons.cli.CommandLineParser;
 import org.apache.commons.cli.DefaultParser;
+import org.apache.commons.cli.Option;
 import org.apache.commons.cli.Options;
 import org.apache.commons.cli.ParseException;
 
@@ -13,6 +14,8 @@ class ApiFilesOptions {
   /** cobj-apiコマンドによって生成されるJavaファイルが配置されるディレクトリ名 */
   static String outputDir;
 
+  static String filePath;
+
   /**
    * 入力されたオプションを取得する
    *
@@ -20,42 +23,71 @@ class ApiFilesOptions {
    */
   static void getOptions(String[] args) {
     Options options = new Options();
-    options.addOption("h", "help", false, "Prints the help message");
-    options.addOption(
-        "jp", "java-package", true, "Specify the package name of the generated source code");
-    options.addOption(
-        "o",
-        "output-dir",
-        true,
-        "Set the output destination of the java file to an arbitrary destination");
-    options.addOption("v", "version", false, "Prints the version of the cobj-api");
+
+    options.addOption(Option.builder("h").longOpt("help").build());
+    options.addOption(Option.builder("java-package").longOpt("java-package").hasArgs().build());
+    options.addOption(Option.builder("o").hasArgs().build());
+    options.addOption(Option.builder("output-dir").longOpt("output-dir").hasArgs().build());
+    options.addOption(Option.builder("v").longOpt("version").build());
+
     CommandLineParser parser = new DefaultParser();
-    CommandLine cmd;
 
     try {
-      cmd = parser.parse(options, args);
+      CommandLine cmd = parser.parse(options, args);
+      int optionCount = 0;
+      String outputDir;
+
+      if (cmd.getOptions().length != 0) {
+        for (Option option : cmd.getOptions()) {
+          switch (option.getOpt()) {
+            case "h":
+              printHelpMessage();
+              System.exit(0);
+              break;
+            case "v":
+              System.out.println("1.1.2");
+              System.exit(0);
+              break;
+            case "java-package":
+              if (!args[optionCount].contains("=")) {
+                System.err.println("error: Please check the usage of options.\n");
+                printHelpMessage();
+                System.exit(1);
+              }
+              String packageName = option.getValue();
+              setJavaPackage(packageName);
+              break;
+            case "output-dir":
+              if (!args[optionCount].contains("=")) {
+                System.err.println("error: Please check the usage of options.\n");
+                printHelpMessage();
+                System.exit(1);
+              }
+              outputDir = option.getValue();
+              setOutputDir(outputDir);
+              break;
+            case "o":
+              outputDir = option.getValue();
+              setOutputDir(outputDir);
+              optionCount++;
+              break;
+            default:
+              break;
+          }
+          optionCount++;
+        }
+        filePath = args[optionCount];
+      } else {
+        filePath = args[0];
+      }
     } catch (ParseException e) {
+      System.err.println("error: " + e.getMessage() + "\n");
       printHelpMessage();
       System.exit(1);
-      return;
-    }
-
-    if (cmd.hasOption("h")) {
+    } catch (ArrayIndexOutOfBoundsException e) {
+      System.err.println("error: Please check the usage of options.\n");
       printHelpMessage();
-      System.exit(0);
-      return;
-    } else if (cmd.hasOption("v")) {
-      System.out.println("1.1.2");
-      System.exit(0);
-      return;
-    } else if (cmd.getOptionValue("java-package") != null) {
-      String packageName = cmd.getOptionValue("java-package");
-      setJavaPackage(packageName);
-      return;
-    } else if (cmd.getOptionValue("output-dir") != null) {
-      String outputDir = cmd.getOptionValue("output-dir");
-      setOutputDir(outputDir);
-      return;
+      System.exit(1);
     }
   }
 
@@ -71,7 +103,7 @@ class ApiFilesOptions {
     System.out.println(
         "  -java-package=<package name>\t\tSpecify the package name of the generated source code");
     System.out.println(
-        "  -o=<dir>, --output-dir=<dir>\t\tSet the output destination of the java file to an arbitrary destination");
+        "  -o <dir>, --output-dir=<dir>\t\tSet the output destination of the java file to an arbitrary destination");
     System.out.println("  -v, --version\t\t\t\tPrints the version of the cobj-api");
   }
 

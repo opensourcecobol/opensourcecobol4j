@@ -13,9 +13,6 @@ import org.json.JSONObject;
 
 /** API連携用のJavaファイルを出力するクラス */
 class ApiFiles {
-  private static JSONObject param;
-  private static String name;
-  private static String type;
   private static String programId;
 
   /**
@@ -24,28 +21,18 @@ class ApiFiles {
    * @param args コマンドラインから入力された文字列
    */
   public static void main(String[] args) {
-    ApiFilesOptions.getOptions(args);
 
     if (args.length == 0) {
-      System.out.println("No json file is specified.");
+      System.err.println("cobj-api: no input files");
       System.exit(1);
     }
+    ApiFilesOptions.getOptions(args);
 
-    String filePath;
-    try {
-      filePath = args[1];
-    } catch (ArrayIndexOutOfBoundsException e) {
-      filePath = args[0];
-    }
-
+    String filePath = ApiFilesOptions.filePath;
     javaCreate(filePath);
   }
 
-  /**
-   * API連携用のJavaファイルを生成する
-   *
-   * @param filePath 生成されたJavaファイルを配置するディレクトリのパス
-   */
+  /** API連携用のJavaファイルを生成する */
   static void javaCreate(String filePath) {
     try {
       String json = new String(Files.readAllBytes(Paths.get(filePath)));
@@ -54,7 +41,6 @@ class ApiFiles {
       String outputDir;
       FileWriter ctlFile;
       FileWriter rcdFile;
-
       programId = obj.getString("program_id");
 
       if (ApiFilesOptions.outputDir != null) {
@@ -84,11 +70,14 @@ class ApiFiles {
    * @param params PROCEDURE DIVISION USING句に記述されている引数の配列
    */
   private static void writeController(FileWriter ctlFile, JSONArray params) {
+    JSONObject param;
     PrintWriter ctlWriter = new PrintWriter(ctlFile);
     String defaultValue;
     String methodName;
     String nameController = programId + "Controller";
     String nameRecord = programId + "Record";
+    String name;
+    String type;
     int i;
 
     if (ApiFilesOptions.packageName != null) {
@@ -227,21 +216,43 @@ class ApiFiles {
    * <PROGRAM-ID>Record.javaのコードを記述する
    *
    * @param rcdFile <PROGRAM-ID>Record.javaのファイル情報を保持する
-   * @param programId PROGRAM-IDに記述されているプログラム名
    * @param params PROCEDURE DIVISION USING句に記述されている引数の配列
    */
   private static void writeRecord(FileWriter rcdFile, JSONArray params) {
+    JSONObject param;
     PrintWriter rcdWriter = new PrintWriter(rcdFile);
+    String defaultValue;
+    String type;
+    int i;
 
-    rcdWriter.print(
-        "package com.example.restservice;\n"
-            + "public record "
-            + programId
-            + "Record(int statuscode, ");
+    if (ApiFilesOptions.packageName != null) {
+      rcdWriter.println("package " + ApiFilesOptions.packageName + ";");
+    } else {
+      rcdWriter.println("package com.example.restservice;");
+    }
+
+    rcdWriter.print("public record " + programId + "Record(int statuscode, ");
 
     argPrint(rcdWriter, params, true, false);
 
-    rcdWriter.println(") {}");
+    rcdWriter.print(") {\n" + "    public LOANSUBRecord(){\n" + "        this(200, ");
+    for (i = 0; i < params.length(); ++i) {
+      param = params.getJSONObject(i);
+      type = param.getString("java_type");
+
+      if ("String".equals(type)) {
+        defaultValue = "\"\"";
+      } else {
+        defaultValue = "0";
+      }
+
+      rcdWriter.print(defaultValue);
+      if (i < params.length() - 1) {
+        rcdWriter.print(", ");
+      }
+    }
+
+    rcdWriter.println(");\n" + "    }\n" + "}");
     rcdWriter.close();
   }
 
@@ -255,6 +266,9 @@ class ApiFiles {
    */
   private static void argPrint(
       PrintWriter writer, JSONArray params, boolean isType, boolean isRecord) {
+    JSONObject param;
+    String name;
+    String type;
     int i;
 
     for (i = 0; i < params.length(); ++i) {

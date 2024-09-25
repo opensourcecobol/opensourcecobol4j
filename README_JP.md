@@ -85,9 +85,12 @@ Windows版のopensource COBOL 4JはVisual Studioに含まれるCLコンパイラ
 1. JDKをインストールする.
 https://www.oracle.com/java/technologies/downloads/?er=221886#java8-windows
 2. PowerShellを開く.
-3. libcobjディレクトリに移動し、`./gradlew shadowJar`を実行する.
-![alt text](image/readme3.png)  
-これにより、"libcobj.jar"が`libcobj/app/build/libs/`に作成される.
+3. libcobjディレクトリに移動し、`.\gradlew shadowJar`を実行する.
+    ```
+    cd libcobj
+    .\gradlew shadowJar
+    ```  
+    これにより、"libcobj.jar"が`libcobj\app\build\libs\`に作成される.
 
 ### ソリューションファイルのビルド
 1. opensource COBOL 4Jのファイル一式をダウンロードする.
@@ -102,15 +105,18 @@ https://www.oracle.com/java/technologies/downloads/?er=221886#java8-windows
 1. Debugモードでビルドした場合、win/make-install.ps1の5行目を`\x64\Release\cobj.exe`から`\x64\Debug\cobj.exe`に変更する.
 2. PowerShellを開く.
 3. ”win”ディレクトリに移動し、make-install.ps1を実行する.
-![alt text](image/readme4.png)
+    ```
+    cd win
+    .\make-install.ps1
+    ```
 * ファイルは下記の場所にそれぞれ配置される.
 * ファイルの配置場所を変更したい場合は、make-install.ps1に記載してあるパスを編集する.
 
-| ファイル名 | 配置場所 |
-|---|---|
-| cobj.exe | C:\opensourcecobol4j\bin |
-| libcobj.jar | C:\opensourcecobol4j\lib |
-| configファイル | C:\opensourcecobol4j\config |
+    | ファイル名 | 配置場所 |
+    |---|---|
+    | cobj.exe | C:\opensourcecobol4j\bin |
+    | libcobj.jar | C:\opensourcecobol4j\lib |
+    | configファイル | C:\opensourcecobol4j\config |
 
 ### 環境変数の設定
 1. 環境変数PATHに`C:\opensourcecobol4j\bin`を追加する.
@@ -271,6 +277,7 @@ Options:
   -o=<dir>, --output-dir=<dir>          Set the output destination of the java file to an arbitrary destination
   -v, --version                         Prints the version of the cobj-api
 ```
+cobj-apiを用いたSpring Bootアプリケーションの作成方法については、[こちら](./doc/cobj-api_SpringBoot_JP.md)を参照してください。
 
 ## コントリビューㇳ
 

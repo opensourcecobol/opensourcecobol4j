@@ -89,22 +89,29 @@ After the build is completed, "cobj.exe" will be created in `win/x64/Debug` or `
 1. Install JDK.  
 https://www.oracle.com/java/technologies/downloads/?er=221886#java8-windows
 2. Open PowerShell.
-3. Move to "libcobj" directory and execute `./gradlew shadowJar`
-![alt text](image/readme3.png)  
-Then, libcobj.jar will be created in `libcobj/app/build/libs/`.
+3. Move to "libcobj" directory and execute `.\gradlew shadowJar`
+    ```
+    cd libcobj
+    .\gradlew shadowJar
+    ``` 
+
+    Then, libcobj.jar will be created in `libcobj\app\build\libs\`.
 
 ### Place files in the appropriate location
 1. If you build in Debug mode, change the 5th line of win/make-install.ps1 from `\x64\Release\cobj.exe` to `\x64\Debug\cobj.exe`.
 2. Open PowerShell
 3. Move to "win" directory and execute make-install.ps1.  
-![alt text](image/readme4.png)
+    ```
+    cd win
+    .\make-install.ps1
+    ```
 * Each file is placed in the following location. 
 
-| File name | Location |
-|---|---|
-| cobj.exe | C:\opensourcecobol4j\bin |
-| libcobj.jar | C:\opensourcecobol4j\lib |
-| config files | C:\opensourcecobol4j\config |
+    | File name | Location |
+    |---|---|
+    | cobj.exe | C:\opensourcecobol4j\bin |
+    | libcobj.jar | C:\opensourcecobol4j\lib |
+    | config files | C:\opensourcecobol4j\config |
 
 *  If you want to change the location of the files, modify make-install.ps1.
 
@@ -266,6 +273,8 @@ Options:
   -o=<dir>, --output-dir=<dir>          Set the output destination of the java file to an arbitrary destination
   -v, --version                         Prints the version of the cobj-api
 ```
+
+For information on how to create a Spring Boot application using cobj-api, see [here](./doc/cobj-api_SpringBoot.md).
 
 ## Contributing
 
