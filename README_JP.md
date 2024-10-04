@@ -4,6 +4,7 @@
 
 opensource COBOL 4JはCOBOLソースコードをJavaソースコードに変換するCOBOLコンパイラです.
 opensource COBOL 4JはCOBOLからCに変換するCOBOLコンパイラ["opensource COBOL"](https://github.com/opensourcecobol/opensource-cobol)をもとに開発されています.
+（実際、このリポジトリには多くの[opensource COBOL](https://github.com/opensourcecobol/opensource-cobol)のソースファイルが含まれています.）
 
 変更履歴は[CHANGELOG.md](./CHANGELOG.md)を参照してください.
 
@@ -21,11 +22,7 @@ opensource COBOL 4J は下記の環境でテストされています.
 古いバージョンの動作環境については、[doc/requirements-all.md](./doc/requirements-all.md)をご覧ください.
 
 
-## インストール
-
-opensource COBOL 4J v1.1.2はUbuntuとAlmaLinuxで動作を確認しています.  
-
-## 手動インストール
+## インストール(Linux)
 
 ### 依存ライブラリのインストール
 
@@ -52,9 +49,7 @@ dnf -y update
 dnf install -y java-21-amazon-corretto-devel gcc make bison flex automake autoconf diffutils gettext tar gzip
 ```
 
-### opensource COBOL 4Jのインストール (Linux)
-
-下記のコマンドを実行する
+### opensource COBOL 4Jのインストール
 
 ```
 curl -L -o opensourcecobol4j-v1.1.2.tar.gz https://github.com/opensourcecobol/opensourcecobol4j/archive/refs/tags/v1.1.2.tar.gz
@@ -68,7 +63,7 @@ sudo make install
 ### $CLASSPATHの設定
 
 /usr/lib/opensourcecobol4j/libcobj.jar を 環境変数$CLASSPATH に追加する.
-たとえば下記のコードを実行する。
+例えばUnix系システムで下記のコードを実行する。
 
 ```bash
 export CLASSPATH="$CLASSPATH:/usr/lib/opensourcecobol4j/libcobj.jar"
@@ -76,93 +71,93 @@ export CLASSPATH="$CLASSPATH:/usr/lib/opensourcecobol4j/libcobj.jar"
 
 古いバージョンのインストール方法は、[doc/installation_jp](./doc/installation_jp)をご覧ください.
 
-## opensource COBOL 4Jのインストール (Windows)
+## インストール (Windows)
 ### Visual Studioのインストール
 Windows版のopensource COBOL 4JはVisual Studioに含まれるCLコンパイラを使用します.   
 そのため、まずは[Visual Studio](https://visualstudio.microsoft.com/)をインストールしてください.
-
-### Javaファイルのビルド
-1. JDKをインストールする.
-https://www.oracle.com/java/technologies/downloads/?er=221886#java8-windows
-2. PowerShellを開く.
-3. libcobjディレクトリに移動し、`.\gradlew shadowJar`を実行する.
-    ```
-    cd libcobj
-    .\gradlew shadowJar
-    ```  
-    これにより、"libcobj.jar"が`libcobj\app\build\libs\`に作成される.
 
 ### ソリューションファイルのビルド
 1. opensource COBOL 4Jのファイル一式をダウンロードする.
 2. win/opensourcecobol4j.slnをVisual Studioで開く.
 3. ”Debug”または”Release”モードを選択する.
-![alt text](image/readme1.png)
+    ![alt text](image/readme1.png)
 4. ”ビルド” -> ”ソリューションのビルド” を選択する.
-![alt text](image/readme2.png)
-ビルドが完了したら、`win/x64/Debug`または`win/x64/Release`に"cobj.exe"が生成される.
+    ![alt text](image/readme2.png)
+    ビルドが完了すると、`win/x64/Debug`または`win/x64/Release`に"cobj.exe"が作成される.
 
-### ファイルの配置
-1. Debugモードでビルドした場合、win/make-install.ps1の5行目を`\x64\Release\cobj.exe`から`\x64\Debug\cobj.exe`に変更する.
+### Javaファイルのビルド
+1. JDKをインストールする.
+    https://www.oracle.com/java/technologies/downloads/?er=221886#java8-windows
 2. PowerShellを開く.
-3. ”win”ディレクトリに移動し、make-install.ps1を実行する.
+3. "libcobj"ディレクトリに移動し、`.\gradlew shadowJar`を実行する.
+    ```
+    cd libcobj
+    .\gradlew shadowJar
+    ```  
+    これにより、`libcobj\app\build\libs\`に"libcobj.jar"が作成される.
+
+### ファイルを適切な位置に配置
+1. Debugモードでビルドした場合、`win/make-install.ps1`の5行目を`\x64\Release\cobj.exe`から`\x64\Debug\cobj.exe`に変更する.
+2. PowerShellを開く.
+3. ”win”ディレクトリに移動し、`make-install.ps1`を実行する.
     ```
     cd win
     .\make-install.ps1
     ```
 * ファイルは下記の場所にそれぞれ配置される.
-* ファイルの配置場所を変更したい場合は、make-install.ps1に記載してあるパスを編集する.
-
     | ファイル名 | 配置場所 |
     |---|---|
     | cobj.exe | C:\opensourcecobol4j\bin |
     | libcobj.jar | C:\opensourcecobol4j\lib |
     | configファイル | C:\opensourcecobol4j\config |
+  
+* ファイルの配置場所を変更したい場合は、make-install.ps1に記載してあるパスを編集する.
 
 ### 環境変数の設定
-1. 環境変数PATHに`C:\opensourcecobol4j\bin`を追加する.
-2. 環境変数CLASSPATHに`C:\opensourcecobol4j\lib\libcobj.jar`を追加する.
+1. `C:\opensourcecobol4j\bin`を環境変数PATHに追加する.
+2. `C:\opensourcecobol4j\lib\libcobj.jar`を環境変数CLASSPATHに追加する.
 
-## Dockerによるインストール
+## Dockerを使ったインストール
 
-opensource COBOL 4J v1.1.2をインストールしたDockerイメージを利用できます.
+opensource COBOL 4JのDockerコンテナが利用可能です.
 
 ```bash
 docker pull opensourcecobol/opensourcecobol4j:1.1.2
 ```
 
-コンテナ内で下記のコマンドを実行すると、Hello Worldプログラムをコンパイル&実行できる.
+以下のコマンドを実行して、"Hello World"のCOBOLプログラムを実行.
 
 ``` bash
-# Move to the sample directory
+# サンプルディレクトリに移動
 $ cd /root/cobol_sample
 
-# Translate COBOL to Java and compile the Java source file.
+# COBOLをJavaに変換し、Javaソースファイルをコンパイル
 $ cobj HELLO.cbl
 
-# Run "Hello World"
+# "Hello World"を実行
 $ java HELLO
 HELLO WORLD!
 ```
 
 ## 使い方
 
-コンパイル.
+コンパイルする.
 ```bash
 cobj [COBOL source file]
 ```
 (cobjコマンドにより,カレントディレクトリに[PROGRAM-ID].javaと[PROGRAM-ID].classが生成されます.)
 
-実行.
+実行する.
 ```bash
 java [PROGRAM-ID]
 ```
 ## ランタイムライブラリのAPIリファレンス
 
-ランタイムライブラリである`libcobj.jar`のAPIリファレンスは[こちら](https://opensourcecobol.github.io/opensourcecobol4j/javadoc/libcobj/index.html)から確認できます。
+ランタイムライブラリ`libcobj.jar`のAPIリファレンスは[こちら](https://opensourcecobol.github.io/opensourcecobol4j/javadoc/libcobj/index.html)から確認できます。
 
 ## 実装状況
 
-実装済み
+実装済み機能：
 
 * 基本的なデータ操作 (MOVE, COMPUTE, ... )
 * 制御文 (IF, PERFORM, GO TO, ...)
@@ -174,14 +169,12 @@ java [PROGRAM-ID]
 * SORT文
 * 組み込み関数 (ACOS, LENGTH, MAX, ...)
 
-## テストのステータス
-
-### NIST COBOL85 test suite
+## NIST COBOL85 test suite
 
 opensource COBOL 4Jは[NIST COBOL85 test suite](https://www.itl.nist.gov/div897/ctg/cobol_fo
 rm.htm)によりテストされています.
 
-主要テスト結果
+主要テスト結果：
 
 ```
 ------ Directory Information -------   --- Total Tests Information ---
@@ -201,7 +194,7 @@ RL           32       32     0     0   1827    0       5       0  1832   Relativ
 Total       361      361     0     0   8804    0      21      93  8918
 ```
 
-その他のテストの結果
+追加テストの結果：
 
 ```
 ------ directory information -------   --- total tests information ---
@@ -281,5 +274,5 @@ cobj-apiを用いたSpring Bootアプリケーションの作成方法につい�
 
 ## コントリビューㇳ
 
-コントリビュータの一覧は https://github.com/opensourcecobol/opensourcecobol4j/graphs/contributors に掲載されています.
 コントリビュータ向けのガイドラインは[CONTRIBUTING_JP.md](./CONTRIBUTING_JP.md)を参照してください.
+コントリビュータの一覧は https://github.com/opensourcecobol/opensourcecobol4j/graphs/contributors に掲載されています.
