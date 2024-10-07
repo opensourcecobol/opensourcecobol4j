@@ -1,4 +1,4 @@
-# opensource COBOL 4J コード変換仕様解説
+# opensource COBOL 4J: Java変換解説
 
 ## はじめに
 
