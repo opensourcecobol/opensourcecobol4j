@@ -159,8 +159,7 @@ java [PROGRAM-ID]
 * 組み込み関数 (ACOS, LENGTH, MAXなど)
 
 ## NIST85テストの状況
-opensource COBOL 4Jは[NIST COBOL85 test suite](https://www.itl.nist.gov/div897/ctg/cobol_fo
-rm.htm)によりテストされています。
+opensource COBOL 4Jは[NIST COBOL85 test suite](https://www.itl.nist.gov/div897/ctg/cobol_form.htm)によりテストされています。
 
 主要テスト結果：
 
