@@ -3323,7 +3323,7 @@ static void joutput_perform_until(struct cb_perform *p, cb_tree l) {
   } else {
     joutput_line("for (;;)");
   }
-  joutput_indent("  {");
+  joutput_indent("{");
 
   if (next && CB_PERFORM_VARYING(CB_VALUE(next))->name) {
     joutput_move(CB_PERFORM_VARYING(CB_VALUE(next))->from,
@@ -3348,7 +3348,7 @@ static void joutput_perform_until(struct cb_perform *p, cb_tree l) {
     joutput_perform_until(p, next);
   }
 
-  joutput_indent("  }");
+  joutput_indent("}");
 }
 
 static void joutput_perform(struct cb_perform *p) {
@@ -3383,9 +3383,9 @@ static void joutput_perform(struct cb_perform *p) {
   case CB_PERFORM_FOREVER:
     joutput_prefix();
     joutput("for (;;)\n");
-    joutput_indent("  {");
+    joutput_indent("{");
     joutput_perform_once(p);
-    joutput_indent("  }");
+    joutput_indent("}");
     break;
   }
   if (p->exit_label) {
