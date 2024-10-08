@@ -2216,13 +2216,13 @@ static void joutput_initialize_literal(cb_tree x, struct cb_field *f,
   i_counters[0] = 1;
 
   joutput_line("for (int i0 = 0; i0 < %u; i0++)", (unsigned int)i);
-  joutput_indent("  {");
+  joutput_indent("{");
   joutput_prefix();
   joutput_data(x);
   joutput(".memcpy(i0 * %u, ", (unsigned int)l->size);
   joutput_string(l->data, l->size);
   joutput(", %u);\n", (unsigned int)l->size);
-  joutput_indent("  }");
+  joutput_indent("}");
 
   n = f->size % l->size;
   if (n) {
@@ -2560,7 +2560,7 @@ static void joutput_initialize_compound(struct cb_initialize *p, cb_tree x) {
         i_counters[i] = 1;
         joutput_line("for (int i%d = 1; i%d <= %d; i%d++)", i, i, f->occurs_max,
                      i);
-        joutput_indent("  {");
+        joutput_indent("{");
         CB_REFERENCE(c)->subs = cb_cons(cb_i[i], CB_REFERENCE(c)->subs);
       }
 
@@ -2574,7 +2574,7 @@ static void joutput_initialize_compound(struct cb_initialize *p, cb_tree x) {
       if (f->flag_occurs) {
         /* Close loop */
         CB_REFERENCE(c)->subs = CB_CHAIN(CB_REFERENCE(c)->subs);
-        joutput_indent("  }");
+        joutput_indent("}");
       }
     }
     if (f == ff)
@@ -2647,7 +2647,7 @@ static void joutput_search_whens(cb_tree table, cb_tree var, cb_tree stmt,
 
   /* Start loop */
   joutput_line("for (;;)");
-  joutput_indent("  {");
+  joutput_indent("{");
 
   /* End test */
   joutput_prefix();
@@ -2663,17 +2663,17 @@ static void joutput_search_whens(cb_tree table, cb_tree var, cb_tree stmt,
   joutput(" > ");
   joutput_occurs(p);
   joutput(")\n");
-  joutput_indent("  {");
+  joutput_indent("{");
   if (stmt) {
     joutput_stmt(stmt, JOUTPUT_STMT_DEFAULT);
   }
   joutput_line("break;");
-  joutput_indent("  }");
+  joutput_indent("}");
 
   /* WHEN test */
   joutput_stmt(whens, JOUTPUT_STMT_DEFAULT);
   joutput_line("else");
-  joutput_indent("  {");
+  joutput_indent("{");
   joutput_prefix();
 
   int tmp_flag = integer_reference_flag;
@@ -2689,9 +2689,9 @@ static void joutput_search_whens(cb_tree table, cb_tree var, cb_tree stmt,
     joutput_move(idx, var);
   }
   joutput_line("continue;");
-  joutput_indent("  }");
+  joutput_indent("}");
   joutput_line("break;");
-  joutput_indent("  }");
+  joutput_indent("}");
 }
 
 static void joutput_search_all(cb_tree table, cb_tree stmt, cb_tree cond,
@@ -2717,16 +2717,16 @@ static void joutput_search_all(cb_tree table, cb_tree stmt, cb_tree cond,
 
   /* Start loop */
   joutput_line("for (;;)");
-  joutput_indent("  {");
+  joutput_indent("{");
 
   /* End test */
   joutput_line("if (head >= tail - 1)");
-  joutput_indent("  {");
+  joutput_indent("{");
   if (stmt) {
     joutput_stmt(stmt, JOUTPUT_STMT_DEFAULT);
   }
   joutput_line("break;");
-  joutput_indent("  }");
+  joutput_indent("}");
 
   /* Next index */
   joutput_prefix();
@@ -2745,7 +2745,7 @@ static void joutput_search_all(cb_tree table, cb_tree stmt, cb_tree cond,
   joutput_stmt(when, JOUTPUT_STMT_DEFAULT);
   joutput_indent_level -= 2;
   joutput_line("else");
-  joutput_indent("  {");
+  joutput_indent("{");
   joutput_line("if (ret < 0)");
   joutput_prefix();
   joutput("  head = ");
@@ -2757,9 +2757,9 @@ static void joutput_search_all(cb_tree table, cb_tree stmt, cb_tree cond,
   joutput_integer(idx);
   joutput(";\n");
   joutput_line("continue;");
-  joutput_indent("  }");
+  joutput_indent("}");
   joutput_line("break;");
-  joutput_indent("  }");
+  joutput_indent("}");
   joutput_indent("}");
 }
 
@@ -3240,7 +3240,7 @@ static void joutput_goto(struct cb_goto *p) {
     joutput("switch ((int)");
     joutput_param(cb_build_cast_integer(p->depending), 0);
     joutput(")\n");
-    joutput_indent("  {");
+    joutput_indent("{");
     cb_tree l;
     for (l = p->target; l; l = CB_CHAIN(l)) {
       joutput_indent_level -= 2;
@@ -3248,7 +3248,7 @@ static void joutput_goto(struct cb_goto *p) {
       joutput_indent_level += 2;
       joutput_goto_1(CB_VALUE(l));
     }
-    joutput_indent("  }");
+    joutput_indent("}");
   } else if (p->target == NULL) {
     needs_exit_prog = 1;
     if (cb_flag_implicit_init) {
@@ -3323,7 +3323,7 @@ static void joutput_perform_until(struct cb_perform *p, cb_tree l) {
   } else {
     joutput_line("for (;;)");
   }
-  joutput_indent("  {");
+  joutput_indent("{");
 
   if (next && CB_PERFORM_VARYING(CB_VALUE(next))->name) {
     joutput_move(CB_PERFORM_VARYING(CB_VALUE(next))->from,
@@ -3348,7 +3348,7 @@ static void joutput_perform_until(struct cb_perform *p, cb_tree l) {
     joutput_perform_until(p, next);
   }
 
-  joutput_indent("  }");
+  joutput_indent("}");
 }
 
 static void joutput_perform(struct cb_perform *p) {
@@ -3369,9 +3369,9 @@ static void joutput_perform(struct cb_perform *p) {
     joutput_param(cb_build_cast_integer(p->data), 0);
     joutput("; n%d > 0; n%d--)\n", loop_counter, loop_counter);
     loop_counter++;
-    joutput_indent("  {");
+    joutput_indent("{");
     joutput_perform_once(p);
-    joutput_indent("  }");
+    joutput_indent("}");
     break;
   case CB_PERFORM_UNTIL:
     v = CB_PERFORM_VARYING(CB_VALUE(p->varying));
@@ -3383,9 +3383,9 @@ static void joutput_perform(struct cb_perform *p) {
   case CB_PERFORM_FOREVER:
     joutput_prefix();
     joutput("for (;;)\n");
-    joutput_indent("  {");
+    joutput_indent("{");
     joutput_perform_once(p);
-    joutput_indent("  }");
+    joutput_indent("}");
     break;
   }
   if (p->exit_label) {
@@ -3509,7 +3509,7 @@ static void joutput_file_error(struct cb_file *pfile) {
 
 static void joutput_ferror_stmt(struct cb_statement *p, int code) {
   joutput_line("if (CobolRuntimeException.code != 0)");
-  joutput_indent("  {");
+  joutput_indent("{");
   if (p->handler1) {
     if ((code & 0x00ff) == 0) {
       joutput_line("if ((CobolRuntimeException.code & 0xff00) == 0x%04x)",
@@ -3517,27 +3517,27 @@ static void joutput_ferror_stmt(struct cb_statement *p, int code) {
     } else {
       joutput_line("if (CobolRuntimeException.code == 0x%04x)", code);
     }
-    joutput_indent("  {");
+    joutput_indent("{");
     joutput_stmt(p->handler1, JOUTPUT_STMT_DEFAULT);
-    joutput_indent("  }");
+    joutput_indent("}");
     joutput_line("else");
-    joutput_indent("  {");
+    joutput_indent("{");
   }
   joutput_file_error(CB_FILE(p->file));
-  joutput_indent("  }");
+  joutput_indent("}");
   if (p->handler1) {
-    joutput_indent("  }");
+    joutput_indent("}");
   }
   if (p->handler2 || p->handler3) {
     joutput_line("else");
-    joutput_indent("  {");
+    joutput_indent("{");
     if (p->handler3) {
       joutput_stmt(p->handler3, JOUTPUT_STMT_DEFAULT);
     }
     if (p->handler2) {
       joutput_stmt(p->handler2, JOUTPUT_STMT_DEFAULT);
     }
-    joutput_indent("  }");
+    joutput_indent("}");
   }
 }
 
@@ -3670,9 +3670,9 @@ static void joutput_stmt(cb_tree x, enum joutput_stmt_type output_type) {
           } else {
             joutput_line("if (CobolRuntimeException.code == 0x%04x)", code);
           }
-          joutput_indent("  {");
+          joutput_indent("{");
           joutput_stmt(p->handler1, output_type);
-          joutput_indent("  }");
+          joutput_indent("}");
           if (p->handler2) {
             joutput_line("else");
           }
@@ -3681,9 +3681,9 @@ static void joutput_stmt(cb_tree x, enum joutput_stmt_type output_type) {
           if (p->handler1 == NULL) {
             joutput_line("if (CobolRuntimeException.code == 0)");
           }
-          joutput_indent("  {");
+          joutput_indent("{");
           joutput_stmt(p->handler2, output_type);
-          joutput_indent("  }");
+          joutput_indent("}");
         }
       }
     }
@@ -4898,7 +4898,7 @@ static void joutput_internal_function(struct cb_program *prog,
     joutput_line("//multiple entry dispatch is not implemented");
     joutput_newline();
     joutput_line("switch (entry)");
-    joutput_line("  {");
+    joutput_line("{");
     for (i = 0, l = prog->entry_list; l; l = CB_CHAIN(l)) {
       joutput_line("  case %d:", i++);
       joutput_prefix();
@@ -4906,7 +4906,7 @@ static void joutput_internal_function(struct cb_program *prog,
       joutput_label_variable(CB_LABEL(CB_PURPOSE(l)));
       joutput(");\n");
     }
-    joutput_line("  }");
+    joutput_line("}");
     joutput_line("/* This should never be reached */");
     joutput_line("CobolUtil.fatalError (CobolUtil.FERROR_CHAINING);");
     joutput_newline();

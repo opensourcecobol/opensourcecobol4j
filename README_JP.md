@@ -143,8 +143,10 @@ cobj [COBOL source file]
 java [PROGRAM-ID]
 ```
 
-## ランタイムライブラリのAPIリファレンス
-ランタイムライブラリ`libcobj.jar`のAPIリファレンスは[こちら](https://opensourcecobol.github.io/opensourcecobol4j/javadoc/libcobj/index.html)から確認できます。
+## ドキュメント
+
+* [ランタイムライブラリ`libcobj.jar`のAPIリファレンス](https://opensourcecobol.github.io/opensourcecobol4j/javadoc/libcobj/index.html)
+* [opensource COBOL 4J: Java変換解説](./doc/converted_Java_file_JP.md)
 
 ## 実装状況
 実装済み機能：
