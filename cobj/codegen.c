@@ -234,7 +234,7 @@ static void get_java_identifier_helper(struct cb_field *f, char *buf) {
 }
 
 static void strcpy_identifier_cobol_to_java(char *buf, const char *identifier) {
-  if(cb_flag_var_name_hex) {
+  if (cb_flag_var_name_hex) {
     int all_ascii = 1;
     unsigned char *p = (unsigned char *)identifier;
     for (; *p; ++p) {
@@ -263,16 +263,21 @@ static void strcpy_identifier_cobol_to_java(char *buf, const char *identifier) {
   } else {
     unsigned char *src = (unsigned char *)identifier;
     unsigned char *dst = (unsigned char *)buf;
-    while(*src) {
+    while (*src) {
       // ASCII characters
-      if(*src < 0x80) {
+      if (*src < 0x80) {
         *dst = (*src == '-') ? '_' : *src;
         ++dst;
         ++src;
-      // Shift_JIS characters
+        // Shift_JIS characters
       } else {
-        dst[0] = src[0];
-        dst[1] = src[1];
+        if (src[0] == 0x81 && src[1] == 0x7C) {
+          dst[0] = 0x81;
+          dst[1] = 0x51;
+        } else {
+          dst[0] = src[0];
+          dst[1] = src[1];
+        }
         dst += 2;
         src += 2;
       }
