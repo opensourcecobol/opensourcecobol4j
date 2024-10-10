@@ -163,7 +163,6 @@ command_line_options_DEPENDENCIES = \
 	command-line-options.src/Wtruncate.at \
 	command-line-options.src/Wunreachable.at \
 	command-line-options.src/ftrace-ftraceall.at \
-	command-line-options.src/fvar-name-hex.at \
 	command-line-options.src/fsyntax-only.at \
 	command-line-options.src/fserial-variable.at \
 	command-line-options.src/fshort-variable.at \
@@ -217,7 +216,8 @@ misc_DEPENDENCIES = \
 	misc.src/validate-indexed-file-keys.at \
 	misc.src/record-key-duplicates-error.at \
 	misc.src/copy-comments.at \
-	misc.src/read_prev_after_start.at
+	misc.src/read_prev_after_start.at \
+	misc.src/japanese-char-section-var.at
 
 EXTRA_DIST = $(srcdir)/package.m4 \
 	$(TESTS) \
