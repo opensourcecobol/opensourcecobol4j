@@ -234,56 +234,29 @@ static void get_java_identifier_helper(struct cb_field *f, char *buf) {
 }
 
 static void strcpy_identifier_cobol_to_java(char *buf, const char *identifier) {
-  if (cb_flag_var_name_hex) {
-    int all_ascii = 1;
-    unsigned char *p = (unsigned char *)identifier;
-    for (; *p; ++p) {
-      unsigned char c = *p;
-      if (c < 0x0A || 0x80 <= c) {
-        all_ascii = 0;
-        break;
-      }
-    }
-
-    if (all_ascii) {
-      for (; *identifier; ++identifier, ++buf) {
-        if (*identifier == '-') {
-          *buf = '_';
-        } else {
-          *buf = *identifier;
-        }
-      }
+  unsigned char *src = (unsigned char *)identifier;
+  unsigned char *dst = (unsigned char *)buf;
+  while (*src) {
+    // ASCII characters
+    if (*src < 0x80) {
+      *dst = (*src == '-') ? '_' : *src;
+      ++dst;
+      ++src;
+      // Shift_JIS characters
     } else {
-      for (; *identifier; ++identifier) {
-        sprintf(buf, "%02x", (unsigned char)*identifier);
-        buf += 2;
-      }
-    }
-    *buf = '\0';
-  } else {
-    unsigned char *src = (unsigned char *)identifier;
-    unsigned char *dst = (unsigned char *)buf;
-    while (*src) {
-      // ASCII characters
-      if (*src < 0x80) {
-        *dst = (*src == '-') ? '_' : *src;
-        ++dst;
-        ++src;
-        // Shift_JIS characters
+      // convert zenkaku hyphen to zenkaku underscore
+      if (src[0] == 0x81 && src[1] == 0x7C) {
+        dst[0] = 0x81;
+        dst[1] = 0x51;
       } else {
-        if (src[0] == 0x81 && src[1] == 0x7C) {
-          dst[0] = 0x81;
-          dst[1] = 0x51;
-        } else {
-          dst[0] = src[0];
-          dst[1] = src[1];
-        }
-        dst += 2;
-        src += 2;
+        dst[0] = src[0];
+        dst[1] = src[1];
       }
+      dst += 2;
+      src += 2;
     }
-    *dst = '\0';
   }
+  *dst = '\0';
 }
 
 struct cb_label_id_map {
