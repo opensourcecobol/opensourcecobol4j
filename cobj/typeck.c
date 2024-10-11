@@ -3707,7 +3707,7 @@ int cb_literal_to_int_for_switch_label(struct cb_literal *lit, int *result) {
 
 // Determine a given label exists in the list of existing labels
 // If a given label exists in the list, return 1. Otherwise return 0;
-static int is_switch_label_duplicate(int label, int *existing_label_list,
+static int is_switch_label_duplicate(int label, const int *existing_label_list,
                                      int list_len) {
   int i = 0;
   for (; i < list_len; ++i) {
