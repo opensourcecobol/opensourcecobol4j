@@ -178,7 +178,7 @@ fi
 AC_FUNC_ALLOCA
 AC_FUNC_VPRINTF
 AC_CHECK_FUNCS([memmove memset setlocale fcntl strerror \
-		strcasecmp strchr strrchr strdup strstr strtol gettimeofday])
+		strcasecmp strchr strrchr strdup strstr strtol])
 
 # Check for timezone
 AC_COMPILE_IFELSE([AC_LANG_PROGRAM([[#include <time.h>]], [[timezone = 3600;]])],
