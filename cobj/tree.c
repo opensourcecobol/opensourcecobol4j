@@ -2512,6 +2512,19 @@ cb_tree cb_build_continue(void) {
 }
 
 /*
+ * SWITCH
+ */
+
+cb_tree cb_build_switch(cb_tree test, cb_tree case_list) {
+  struct cb_switch *p;
+
+  p = make_tree(CB_TAG_SWITCH, CB_CATEGORY_UNKNOWN, sizeof(struct cb_switch));
+  p->test = test;
+  p->case_list = case_list;
+  return CB_TREE(p);
+}
+
+/*
  * FUNCTION
  */
 

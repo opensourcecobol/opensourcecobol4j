@@ -56,5 +56,8 @@ CB_FLAG (cb_flag_functions_all, "functions-all",
 CB_FLAG (cb_flag_mfcomment, "mfcomment",
 	 N_("'*' or '/' in column 1 treated as comment (FIXED only)"))
 
+CB_FLAG (cb_flag_no_evaluate_switch, "no-evaluate-switch",
+	 N_("Do not convert EVALUATE statements into switch statements in all cases"))
+
 //CB_FLAG (cb_flag_no_cobol_comment, "no-cobol-comment",
 //	 N_("Do not generate COBOL comments into Java programs"))
