@@ -3814,16 +3814,12 @@ static cb_tree convert_evaluate_stmt_to_switch_stmt(cb_tree subject_list,
 }
 
 void cb_emit_evaluate(cb_tree subject_list, cb_tree case_list) {
-  if (cb_flag_no_evaluate_switch) {
-    cb_emit(build_evaluate(subject_list, case_list));
+  cb_tree switch_stmt =
+      convert_evaluate_stmt_to_switch_stmt(subject_list, case_list);
+  if (switch_stmt) {
+    cb_emit(switch_stmt);
   } else {
-    cb_tree switch_stmt =
-        convert_evaluate_stmt_to_switch_stmt(subject_list, case_list);
-    if (switch_stmt) {
-      cb_emit(switch_stmt);
-    } else {
-      cb_emit(build_evaluate(subject_list, case_list));
-    }
+    cb_emit(build_evaluate(subject_list, case_list));
   }
 }
 
