@@ -50,6 +50,7 @@
 #define CB_FORMAT_FIXED 0
 #define CB_FORMAT_FREE 1
 #define CB_FORMAT_FREE_1COL_ASTER 2
+#define CB_FORMAT_FREE_COM_AREA_CODE 3
 
 extern int cb_source_format;
 extern int cb_source_format1;
