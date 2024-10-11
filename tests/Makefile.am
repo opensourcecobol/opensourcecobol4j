@@ -217,7 +217,8 @@ misc_DEPENDENCIES = \
 	misc.src/record-key-duplicates-error.at \
 	misc.src/copy-comments.at \
 	misc.src/read_prev_after_start.at \
-	misc.src/japanese-char-section-var.at
+	misc.src/japanese-char-section-var.at \
+	misc.src/evaluate-switch.at
 
 EXTRA_DIST = $(srcdir)/package.m4 \
 	$(TESTS) \

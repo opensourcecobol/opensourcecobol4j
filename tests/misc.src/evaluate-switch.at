@@ -1,0 +1,1034 @@
+AT_SETUP([Convert EVALUATE to switch])
+
+AT_DATA([prog.cbl], [
+       IDENTIFICATION           DIVISION.
+       PROGRAM-ID.              prog.
+      
+       DATA                     DIVISION.
+       WORKING-STORAGE          SECTION.
+       78  STATUS-1 VALUE 1.
+       78  STATUS--1 VALUE -1.
+       78  STATUS-2 VALUE 2.
+      
+       01  TEST-9-1 PIC 9(3) VALUE 1.
+       01  TEST-9-2 PIC 9(3) VALUE 2.
+       01  TEST-S9-1 PIC S9(3) VALUE 1.
+       01  TEST-S9-2 PIC S9(3) VALUE 2.
+       01  TEST-9-1-COMP3 PIC 9(3) COMP-3 VALUE 1.
+       01  TEST-9-2-COMP3 PIC 9(3) COMP-3 VALUE 2.
+       01  TEST-S9-1-COMP3 PIC S9(3) COMP-3 VALUE 1.
+       01  TEST-S9-2-COMP3 PIC S9(3) COMP-3 VALUE 2.
+       01  TEST-9-1-COMP5 PIC 9(3) COMP-5 VALUE 1.
+       01  TEST-9-2-COMP5 PIC 9(3) COMP-5 VALUE 2.
+       01  TEST-S9-1-COMP5 PIC 9(3) COMP-5 VALUE 1.
+       01  TEST-S9-2-COMP5 PIC 9(3) COMP-5 VALUE 2.
+       PROCEDURE                DIVISION.
+       MAIN-PROC                SECTION.
+
+           EVALUATE 1
+             WHEN 1
+               DISPLAY "OK".
+
+           EVALUATE 1
+             WHEN STATUS-1
+               DISPLAY "OK".
+
+           EVALUATE 1
+             WHEN 1
+               DISPLAY "OK"
+             WHEN OTHER
+               DISPLAY "NG".
+
+           EVALUATE 1
+             WHEN STATUS-1
+               DISPLAY "OK"
+             WHEN OTHER
+               DISPLAY "NG".
+
+           EVALUATE 1
+             WHEN -1
+               DISPLAY "NG"
+             WHEN OTHER
+              DISPLAY "OK".
+
+           EVALUATE 1
+             WHEN STATUS--1
+               DISPLAY "NG"
+             WHEN OTHER
+               DISPLAY "OK".
+
+           EVALUATE 2
+             WHEN 1
+               DISPLAY "NG"
+             WHEN OTHER
+              DISPLAY "OK".
+
+           EVALUATE 2
+             WHEN STATUS-1
+               DISPLAY "NG"
+             WHEN OTHER
+               DISPLAY "OK".
+
+           EVALUATE 1
+             WHEN 1
+               DISPLAY "OK"
+             WHEN 2
+               DISPLAY "NG".
+
+           EVALUATE 1
+             WHEN STATUS-1
+               DISPLAY "OK"
+             WHEN 2
+              DISPLAY "NG".
+
+           EVALUATE 1
+             WHEN STATUS-1
+               DISPLAY "OK"
+             WHEN STATUS-2
+               DISPLAY "NG".
+
+           EVALUATE 1
+             WHEN 1
+               DISPLAY "OK"
+             WHEN -1
+              DISPLAY "NG".
+
+           EVALUATE 1
+             WHEN STATUS-1
+               DISPLAY "OK"
+             WHEN -1
+               DISPLAY "NG".
+
+           EVALUATE 1
+             WHEN STATUS-1
+               DISPLAY "OK"
+             WHEN STATUS--1
+               DISPLAY "NG".
+
+           EVALUATE 1
+             WHEN 1
+               DISPLAY "OK"
+             WHEN 2
+               DISPLAY "NG"
+             WHEN OTHER
+               DISPLAY "NG".
+
+           EVALUATE 1
+             WHEN STATUS-1
+               DISPLAY "OK"
+             WHEN 2
+               DISPLAY "NG"
+             WHEN OTHER
+               DISPLAY "NG".
+
+           EVALUATE 1
+             WHEN STATUS-1
+               DISPLAY "OK"
+             WHEN STATUS-2
+               DISPLAY "NG"
+             WHEN OTHER
+               DISPLAY "NG".
+      ***************************
+
+           EVALUATE TEST-9-1
+             WHEN 1
+               DISPLAY "OK".
+
+           EVALUATE TEST-9-1
+             WHEN STATUS-1
+               DISPLAY "OK".
+
+           EVALUATE TEST-9-1
+             WHEN 1
+               DISPLAY "OK"
+             WHEN OTHER
+               DISPLAY "NG".
+
+           EVALUATE TEST-9-1
+             WHEN STATUS-1
+               DISPLAY "OK"
+             WHEN OTHER
+               DISPLAY "NG".
+
+           EVALUATE TEST-9-1
+             WHEN -1
+               DISPLAY "NG"
+             WHEN OTHER
+              DISPLAY "OK".
+
+           EVALUATE TEST-9-1
+             WHEN STATUS--1
+               DISPLAY "NG"
+             WHEN OTHER
+               DISPLAY "OK".
+
+           EVALUATE TEST-9-2
+             WHEN 1
+               DISPLAY "NG"
+             WHEN OTHER
+              DISPLAY "OK".
+
+           EVALUATE TEST-9-2
+             WHEN STATUS-1
+               DISPLAY "NG"
+             WHEN OTHER
+               DISPLAY "OK".
+
+           EVALUATE TEST-9-1
+             WHEN 1
+               DISPLAY "OK"
+             WHEN 2
+               DISPLAY "NG".
+
+           EVALUATE TEST-9-1
+             WHEN STATUS-1
+               DISPLAY "OK"
+             WHEN 2
+              DISPLAY "NG".
+
+           EVALUATE TEST-9-1
+             WHEN STATUS-1
+               DISPLAY "OK"
+             WHEN STATUS-2
+               DISPLAY "NG".
+
+           EVALUATE TEST-9-1
+             WHEN 1
+               DISPLAY "OK"
+             WHEN -1
+              DISPLAY "NG".
+
+           EVALUATE TEST-9-1
+             WHEN STATUS-1
+               DISPLAY "OK"
+             WHEN -1
+               DISPLAY "NG".
+
+           EVALUATE TEST-9-1
+             WHEN STATUS-1
+               DISPLAY "OK"
+             WHEN STATUS--1
+               DISPLAY "NG".
+
+           EVALUATE TEST-9-1
+             WHEN 1
+               DISPLAY "OK"
+             WHEN 2
+               DISPLAY "NG"
+             WHEN OTHER
+               DISPLAY "NG".
+
+           EVALUATE TEST-9-1
+             WHEN STATUS-1
+               DISPLAY "OK"
+             WHEN 2
+               DISPLAY "NG"
+             WHEN OTHER
+               DISPLAY "NG".
+
+           EVALUATE TEST-9-1
+             WHEN STATUS-1
+               DISPLAY "OK"
+             WHEN STATUS-2
+               DISPLAY "NG"
+             WHEN OTHER
+               DISPLAY "NG".
+      ***************************
+
+           EVALUATE TEST-S9-1
+             WHEN 1
+               DISPLAY "OK".
+
+           EVALUATE TEST-S9-1
+             WHEN STATUS-1
+               DISPLAY "OK".
+
+           EVALUATE TEST-S9-1
+             WHEN 1
+               DISPLAY "OK"
+             WHEN OTHER
+               DISPLAY "NG".
+
+           EVALUATE TEST-S9-1
+             WHEN STATUS-1
+               DISPLAY "OK"
+             WHEN OTHER
+               DISPLAY "NG".
+
+           EVALUATE TEST-S9-1
+             WHEN -1
+               DISPLAY "NG"
+             WHEN OTHER
+              DISPLAY "OK".
+
+           EVALUATE TEST-S9-1
+             WHEN STATUS--1
+               DISPLAY "NG"
+             WHEN OTHER
+               DISPLAY "OK".
+
+           EVALUATE TEST-S9-2
+             WHEN 1
+               DISPLAY "NG"
+             WHEN OTHER
+              DISPLAY "OK".
+
+           EVALUATE TEST-S9-2
+             WHEN STATUS-1
+               DISPLAY "NG"
+             WHEN OTHER
+               DISPLAY "OK".
+
+           EVALUATE TEST-S9-1
+             WHEN 1
+               DISPLAY "OK"
+             WHEN 2
+               DISPLAY "NG".
+
+           EVALUATE TEST-S9-1
+             WHEN STATUS-1
+               DISPLAY "OK"
+             WHEN 2
+              DISPLAY "NG".
+
+           EVALUATE TEST-S9-1
+             WHEN STATUS-1
+               DISPLAY "OK"
+             WHEN STATUS-2
+               DISPLAY "NG".
+
+           EVALUATE TEST-S9-1
+             WHEN 1
+               DISPLAY "OK"
+             WHEN -1
+              DISPLAY "NG".
+
+           EVALUATE TEST-S9-1
+             WHEN STATUS-1
+               DISPLAY "OK"
+             WHEN -1
+               DISPLAY "NG".
+
+           EVALUATE TEST-S9-1
+             WHEN STATUS-1
+               DISPLAY "OK"
+             WHEN STATUS--1
+               DISPLAY "NG".
+
+           EVALUATE TEST-S9-1
+             WHEN 1
+               DISPLAY "OK"
+             WHEN 2
+               DISPLAY "NG"
+             WHEN OTHER
+               DISPLAY "NG".
+
+           EVALUATE TEST-S9-1
+             WHEN STATUS-1
+               DISPLAY "OK"
+             WHEN 2
+               DISPLAY "NG"
+             WHEN OTHER
+               DISPLAY "NG".
+
+           EVALUATE TEST-S9-1
+             WHEN STATUS-1
+               DISPLAY "OK"
+             WHEN STATUS-2
+               DISPLAY "NG"
+             WHEN OTHER
+               DISPLAY "NG".
+      ***************************
+
+           EVALUATE TEST-9-1-COMP3
+             WHEN 1
+               DISPLAY "OK".
+
+           EVALUATE TEST-9-1-COMP3
+             WHEN STATUS-1
+               DISPLAY "OK".
+
+           EVALUATE TEST-9-1-COMP3
+             WHEN 1
+               DISPLAY "OK"
+             WHEN OTHER
+               DISPLAY "NG".
+
+           EVALUATE TEST-9-1-COMP3
+             WHEN STATUS-1
+               DISPLAY "OK"
+             WHEN OTHER
+               DISPLAY "NG".
+
+           EVALUATE TEST-9-1-COMP3
+             WHEN -1
+               DISPLAY "NG"
+             WHEN OTHER
+              DISPLAY "OK".
+
+           EVALUATE TEST-9-1-COMP3
+             WHEN STATUS--1
+               DISPLAY "NG"
+             WHEN OTHER
+               DISPLAY "OK".
+
+           EVALUATE TEST-9-2-COMP3
+             WHEN 1
+               DISPLAY "NG"
+             WHEN OTHER
+              DISPLAY "OK".
+
+           EVALUATE TEST-9-2-COMP3
+             WHEN STATUS-1
+               DISPLAY "NG"
+             WHEN OTHER
+               DISPLAY "OK".
+
+           EVALUATE TEST-9-1-COMP3
+             WHEN 1
+               DISPLAY "OK"
+             WHEN 2
+               DISPLAY "NG".
+
+           EVALUATE TEST-9-1-COMP3
+             WHEN STATUS-1
+               DISPLAY "OK"
+             WHEN 2
+              DISPLAY "NG".
+
+           EVALUATE TEST-9-1-COMP3
+             WHEN STATUS-1
+               DISPLAY "OK"
+             WHEN STATUS-2
+               DISPLAY "NG".
+
+           EVALUATE TEST-9-1-COMP3
+             WHEN 1
+               DISPLAY "OK"
+             WHEN -1
+              DISPLAY "NG".
+
+           EVALUATE TEST-9-1-COMP3
+             WHEN STATUS-1
+               DISPLAY "OK"
+             WHEN -1
+               DISPLAY "NG".
+
+           EVALUATE TEST-9-1-COMP3
+             WHEN STATUS-1
+               DISPLAY "OK"
+             WHEN STATUS--1
+               DISPLAY "NG".
+
+           EVALUATE TEST-9-1-COMP3
+             WHEN 1
+               DISPLAY "OK"
+             WHEN 2
+               DISPLAY "NG"
+             WHEN OTHER
+               DISPLAY "NG".
+
+           EVALUATE TEST-9-1-COMP3
+             WHEN STATUS-1
+               DISPLAY "OK"
+             WHEN 2
+               DISPLAY "NG"
+             WHEN OTHER
+               DISPLAY "NG".
+
+           EVALUATE TEST-9-1-COMP3
+             WHEN STATUS-1
+               DISPLAY "OK"
+             WHEN STATUS-2
+               DISPLAY "NG"
+             WHEN OTHER
+               DISPLAY "NG".
+      ***************************
+
+           EVALUATE TEST-S9-1-COMP3
+             WHEN 1
+               DISPLAY "OK".
+
+           EVALUATE TEST-S9-1-COMP3
+             WHEN STATUS-1
+               DISPLAY "OK".
+
+           EVALUATE TEST-S9-1-COMP3
+             WHEN 1
+               DISPLAY "OK"
+             WHEN OTHER
+               DISPLAY "NG".
+
+           EVALUATE TEST-S9-1-COMP3
+             WHEN STATUS-1
+               DISPLAY "OK"
+             WHEN OTHER
+               DISPLAY "NG".
+
+           EVALUATE TEST-S9-1-COMP3
+             WHEN -1
+               DISPLAY "NG"
+             WHEN OTHER
+              DISPLAY "OK".
+
+           EVALUATE TEST-S9-1-COMP3
+             WHEN STATUS--1
+               DISPLAY "NG"
+             WHEN OTHER
+               DISPLAY "OK".
+
+           EVALUATE TEST-S9-2-COMP3
+             WHEN 1
+               DISPLAY "NG"
+             WHEN OTHER
+              DISPLAY "OK".
+
+           EVALUATE TEST-S9-2-COMP3
+             WHEN STATUS-1
+               DISPLAY "NG"
+             WHEN OTHER
+               DISPLAY "OK".
+
+           EVALUATE TEST-S9-1-COMP3
+             WHEN 1
+               DISPLAY "OK"
+             WHEN 2
+               DISPLAY "NG".
+
+           EVALUATE TEST-S9-1-COMP3
+             WHEN STATUS-1
+               DISPLAY "OK"
+             WHEN 2
+              DISPLAY "NG".
+
+           EVALUATE TEST-S9-1-COMP3
+             WHEN STATUS-1
+               DISPLAY "OK"
+             WHEN STATUS-2
+               DISPLAY "NG".
+
+           EVALUATE TEST-S9-1-COMP3
+             WHEN 1
+               DISPLAY "OK"
+             WHEN -1
+              DISPLAY "NG".
+
+           EVALUATE TEST-S9-1-COMP3
+             WHEN STATUS-1
+               DISPLAY "OK"
+             WHEN -1
+               DISPLAY "NG".
+
+           EVALUATE TEST-S9-1-COMP3
+             WHEN STATUS-1
+               DISPLAY "OK"
+             WHEN STATUS--1
+               DISPLAY "NG".
+
+           EVALUATE TEST-S9-1-COMP3
+             WHEN 1
+               DISPLAY "OK"
+             WHEN 2
+               DISPLAY "NG"
+             WHEN OTHER
+               DISPLAY "NG".
+
+           EVALUATE TEST-S9-1-COMP3
+             WHEN STATUS-1
+               DISPLAY "OK"
+             WHEN 2
+               DISPLAY "NG"
+             WHEN OTHER
+               DISPLAY "NG".
+
+           EVALUATE TEST-S9-1-COMP3
+             WHEN STATUS-1
+               DISPLAY "OK"
+             WHEN STATUS-2
+               DISPLAY "NG"
+             WHEN OTHER
+               DISPLAY "NG".
+      ***************************
+
+           EVALUATE TEST-9-1-COMP5
+             WHEN 1
+               DISPLAY "OK".
+
+           EVALUATE TEST-9-1-COMP5
+             WHEN STATUS-1
+               DISPLAY "OK".
+
+           EVALUATE TEST-9-1-COMP5
+             WHEN 1
+               DISPLAY "OK"
+             WHEN OTHER
+               DISPLAY "NG".
+
+           EVALUATE TEST-9-1-COMP5
+             WHEN STATUS-1
+               DISPLAY "OK"
+             WHEN OTHER
+               DISPLAY "NG".
+
+           EVALUATE TEST-9-1-COMP5
+             WHEN -1
+               DISPLAY "NG"
+             WHEN OTHER
+              DISPLAY "OK".
+
+           EVALUATE TEST-9-1-COMP5
+             WHEN STATUS--1
+               DISPLAY "NG"
+             WHEN OTHER
+               DISPLAY "OK".
+
+           EVALUATE TEST-9-2-COMP5
+             WHEN 1
+               DISPLAY "NG"
+             WHEN OTHER
+              DISPLAY "OK22222".
+
+           EVALUATE TEST-9-2-COMP5
+             WHEN STATUS-1
+               DISPLAY "NG11111111"
+             WHEN OTHER
+               DISPLAY "OK".
+
+           EVALUATE TEST-9-1-COMP5
+             WHEN 1
+               DISPLAY "OK"
+             WHEN 2
+               DISPLAY "N".
+
+           EVALUATE TEST-9-1-COMP5
+             WHEN STATUS-1
+               DISPLAY "OK"
+             WHEN 2
+              DISPLAY "NG".
+
+           EVALUATE TEST-9-1-COMP5
+             WHEN STATUS-1
+               DISPLAY "OK"
+             WHEN STATUS-2
+               DISPLAY "NG".
+
+           EVALUATE TEST-9-1-COMP5
+             WHEN 1
+               DISPLAY "OK"
+             WHEN -1
+              DISPLAY "NG".
+
+           EVALUATE TEST-9-1-COMP5
+             WHEN STATUS-1
+               DISPLAY "OK"
+             WHEN -1
+               DISPLAY "NG".
+
+           EVALUATE TEST-9-1-COMP5
+             WHEN STATUS-1
+               DISPLAY "OK"
+             WHEN STATUS--1
+               DISPLAY "NG".
+
+           EVALUATE TEST-9-1-COMP5
+             WHEN 1
+               DISPLAY "OK"
+             WHEN 2
+               DISPLAY "NG"
+             WHEN OTHER
+               DISPLAY "NG".
+
+           EVALUATE TEST-9-1-COMP5
+             WHEN STATUS-1
+               DISPLAY "OK"
+             WHEN 2
+               DISPLAY "NG"
+             WHEN OTHER
+               DISPLAY "NG".
+
+           EVALUATE TEST-9-1-COMP5
+             WHEN STATUS-1
+               DISPLAY "OK"
+             WHEN STATUS-2
+               DISPLAY "NG"
+             WHEN OTHER
+               DISPLAY "NG".
+      ***************************
+
+           EVALUATE TEST-S9-1-COMP5
+             WHEN 1
+               DISPLAY "OK".
+
+           EVALUATE TEST-S9-1-COMP5
+             WHEN STATUS-1
+               DISPLAY "OK".
+
+           EVALUATE TEST-S9-1-COMP5
+             WHEN 1
+               DISPLAY "OK"
+             WHEN OTHER
+               DISPLAY "NG".
+
+           EVALUATE TEST-S9-1-COMP5
+             WHEN STATUS-1
+               DISPLAY "OK"
+             WHEN OTHER
+               DISPLAY "NG".
+
+           EVALUATE TEST-S9-1-COMP5
+             WHEN -1
+               DISPLAY "NG"
+             WHEN OTHER
+              DISPLAY "OK".
+
+           EVALUATE TEST-S9-1-COMP5
+             WHEN STATUS--1
+               DISPLAY "NG"
+             WHEN OTHER
+               DISPLAY "OK".
+
+           EVALUATE TEST-S9-2-COMP5
+             WHEN 1
+               DISPLAY "NG"
+             WHEN OTHER
+              DISPLAY "OK".
+
+           EVALUATE TEST-S9-2-COMP5
+             WHEN STATUS-1
+               DISPLAY "NG"
+             WHEN OTHER
+               DISPLAY "OK".
+
+           EVALUATE TEST-S9-1-COMP5
+             WHEN 1
+               DISPLAY "OK"
+             WHEN 2
+               DISPLAY "NG".
+
+           EVALUATE TEST-S9-1-COMP5
+             WHEN STATUS-1
+               DISPLAY "OK"
+             WHEN 2
+              DISPLAY "NG".
+
+           EVALUATE TEST-S9-1-COMP5
+             WHEN STATUS-1
+               DISPLAY "OK"
+             WHEN STATUS-2
+               DISPLAY "NG".
+
+           EVALUATE TEST-S9-1-COMP5
+             WHEN 1
+               DISPLAY "OK"
+             WHEN -1
+              DISPLAY "NG".
+
+           EVALUATE TEST-S9-1-COMP5
+             WHEN STATUS-1
+               DISPLAY "OK"
+             WHEN -1
+               DISPLAY "NG".
+
+           EVALUATE TEST-S9-1-COMP5
+             WHEN STATUS-1
+               DISPLAY "OK"
+             WHEN STATUS--1
+               DISPLAY "NG".
+
+           EVALUATE TEST-S9-1-COMP5
+             WHEN 1
+               DISPLAY "OK"
+             WHEN 2
+               DISPLAY "NG"
+             WHEN OTHER
+               DISPLAY "NG".
+
+           EVALUATE TEST-S9-1-COMP5
+             WHEN STATUS-1
+               DISPLAY "OK"
+             WHEN 2
+               DISPLAY "NG"
+             WHEN OTHER
+               DISPLAY "NG".
+
+           EVALUATE TEST-S9-1-COMP5
+             WHEN STATUS-1
+               DISPLAY "OK"
+             WHEN STATUS-2
+               DISPLAY "NG"
+             WHEN OTHER
+               DISPLAY "NG".
+      ***************************
+])
+
+AT_DATA([test.sh],
+[#!/bin/bash
+# Compile a COBOL source file
+cobj prog.cbl
+# The number of OK in the program output
+OK_COUNT=$(java prog | tee result.txt | grep OK | wc -l)
+# The number of EVALUATE statements in a COBOL source file
+EVALUATE_COUNT=$(grep EVALUATE prog.cbl | wc -l)
+# The number of switch statements corresponding to EVALUATE statements
+SWITCH_COUNT=$(grep -A 2 '/\* prog.cbl:@<:@0-9@:>@*: EVALUATE \*/' prog.java | grep 'switch' | wc -l)
+# Check the numbers
+test "$OK_COUNT" = "$EVALUATE_COUNT" && test "$OK_COUNT" = "$SWITCH_COUNT"
+])
+
+AT_CHECK([chmod +x test.sh])
+AT_CHECK([./test.sh])
+
+AT_DATA([prog2.cbl], [
+       IDENTIFICATION           DIVISION.
+       PROGRAM-ID.              prog2.
+      
+       DATA                     DIVISION.
+       WORKING-STORAGE          SECTION.
+       PROCEDURE                DIVISION.
+       MAIN-PROC                SECTION.
+
+           EVALUATE 1
+             WHEN NOT 1
+                    DISPLAY "NG"
+             WHEN OTHER
+                    DISPLAY "OK".
+
+
+           EVALUATE 1
+             WHEN 3
+                    DISPLAY "NG"
+             WHEN NOT 2
+                    DISPLAY "OK"
+             WHEN OTHER
+                    DISPLAY "NG".
+])
+
+AT_DATA([test2.sh],
+[#!/bin/bash
+# Compile a COBOL source file
+cobj prog2.cbl
+# The number of OK in the program output
+OK_COUNT=$(java prog2 | tee result.txt | grep OK | wc -l)
+# The number of EVALUATE statements in a COBOL source file
+EVALUATE_COUNT=$(grep EVALUATE prog2.cbl | wc -l)
+# The number of switch statements corresponding to EVALUATE statements
+SWITCH_COUNT=$(grep -A 2 '/\* prog2.cbl:@<:@0-9@:>@*: EVALUATE \*/' prog2.java | grep 'switch' | wc -l)
+# Check the numbers
+test "$OK_COUNT" = "$EVALUATE_COUNT" && test "$SWITCH_COUNT" = 0
+])
+
+AT_CHECK([chmod +x test2.sh])
+AT_CHECK([./test2.sh])
+
+AT_DATA([pp.cbl], [
+       IDENTIFICATION   DIVISION.
+       PROGRAM-ID.      pp.
+       DATA             DIVISION.
+       WORKING-STORAGE  SECTION.
+       01 A PIC 9 VALUE 0.
+       PROCEDURE        DIVISION.
+           EVALUATE A
+             WHEN 1
+             WHEN 2
+               DISPLAY "NG"
+             WHEN 3
+               DISPLAY "NG"
+             WHEN OTHER
+               DISPLAY "OK"
+           END-EVALUATE.
+           EVALUATE A
+             WHEN 1
+             WHEN 2
+             WHEN 3
+               DISPLAY "NG"
+             WHEN OTHER
+               DISPLAY "OK"
+           END-EVALUATE.
+           EVALUATE A
+             WHEN 1
+               DISPLAY "NG"
+             WHEN 2
+             WHEN 3
+               DISPLAY "NG"
+             WHEN OTHER
+               DISPLAY "OK"
+           END-EVALUATE.
+           GOBACK.
+
+])
+AT_CHECK([cobj pp.cbl])
+AT_CHECK([java pp], [0],
+[OK
+OK
+OK
+])
+
+AT_DATA([qq.cbl], [
+       IDENTIFICATION   DIVISION.
+       PROGRAM-ID.      qq.
+       DATA             DIVISION.
+       WORKING-STORAGE  SECTION.
+       01 A PIC 9 VALUE 0.
+       PROCEDURE        DIVISION.
+           EVALUATE A
+             WHEN 1
+             WHEN 2
+               DISPLAY "NG"
+             WHEN 3
+               DISPLAY "NG"
+             WHEN OTHER
+               DISPLAY "OK"
+           END-EVALUATE.
+           EVALUATE A
+             WHEN 1
+             WHEN 2
+             WHEN 3
+               DISPLAY "NG"
+             WHEN OTHER
+               DISPLAY "OK"
+           END-EVALUATE.
+           EVALUATE A
+             WHEN 1
+               DISPLAY "NG"
+             WHEN 2
+             WHEN 3
+               DISPLAY "NG"
+             WHEN OTHER
+               DISPLAY "OK"
+           END-EVALUATE.
+
+           EVALUATE A
+             WHEN 1
+             WHEN 2
+             WHEN 3
+             WHEN OTHER
+               DISPLAY "OK"
+           END-EVALUATE.
+
+           EVALUATE A
+             WHEN 1
+             WHEN 2
+               DISPLAY "NG"
+             WHEN 3
+             WHEN OTHER
+               DISPLAY "OK"
+           END-EVALUATE.
+
+           EVALUATE A
+             WHEN 1
+               DISPLAY "NG"
+             WHEN 2
+             WHEN 3
+             WHEN OTHER
+               DISPLAY "OK"
+           END-EVALUATE.
+
+           EVALUATE A
+             WHEN 1
+               DISPLAY "NG"
+             WHEN 2
+               DISPLAY "NG"
+             WHEN 3
+             WHEN OTHER
+               DISPLAY "OK"
+           END-EVALUATE.
+           GOBACK.
+
+])
+AT_CHECK([cobj ${CONF_JP_COMPAT} qq.cbl])
+AT_CHECK([java qq], [0],
+[OK
+OK
+OK
+OK
+OK
+OK
+OK
+])
+
+AT_DATA([rr.cbl],
+[       IDENTIFICATION   DIVISION.
+       PROGRAM-ID.      rr.
+       ENVIRONMENT DIVISION.
+       INPUT-OUTPUT SECTION.
+       FILE-CONTROL.
+       SELECT F ASSIGN TO 'sample-file'
+         ORGANIZATION IS SEQUENTIAL.
+       DATA             DIVISION.
+       FILE SECTION.
+       FD F.
+       01 REC PIC X.
+       WORKING-STORAGE  SECTION.
+       01 A PIC 9 VALUE 0.
+       01 C PIC 9 VALUE 0.
+       PROCEDURE        DIVISION.
+           EVALUATE A
+             WHEN 0
+              DISPLAY "OK1"
+               IF 1 = 1 THEN
+                  DISPLAY "OK2"
+               END-IF
+               PERFORM VARYING C FROM 3 BY 1 UNTIL C >= 4
+                 DISPLAY "OK" C
+               END-PERFORM
+               OPEN OUTPUT F
+               MOVE 'A' TO REC
+               WRITE REC
+               MOVE 'B' TO REC
+               WRITE REC
+               CLOSE F
+               OPEN INPUT F
+               PERFORM FOREVER
+                 READ F
+                   AT END
+                     DISPLAY "READ END"
+                     EXIT PERFORM
+                   NOT AT END
+                     DISPLAY "READ DATA:" REC
+                 END-READ
+               END-PERFORM
+               CLOSE F
+           END-EVALUATE.
+           EVALUATE A
+             WHEN 1
+               DISPLAY "NG"
+             WHEN OTHER
+              DISPLAY "OK1"
+               IF 1 = 1 THEN
+                  DISPLAY "OK2"
+               END-IF
+               PERFORM VARYING C FROM 3 BY 1 UNTIL C >= 4
+                 DISPLAY "OK" C
+               END-PERFORM
+               OPEN INPUT F
+               PERFORM FOREVER
+                 READ F
+                   AT END
+                     DISPLAY "READ END"
+                     EXIT PERFORM
+                   NOT AT END
+                     DISPLAY "READ DATA:" REC
+                 END-READ
+               END-PERFORM
+               CLOSE F
+           END-EVALUATE.
+           GOBACK.
+])
+
+AT_CHECK([cobj rr.cbl])
+AT_CHECK([java rr], [0],
+[OK1
+OK2
+OK3
+READ DATA:A
+READ DATA:B
+READ END
+OK1
+OK2
+OK3
+READ DATA:A
+READ DATA:B
+READ END
+])
+
+AT_CLEANUP

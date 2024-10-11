@@ -3549,6 +3549,47 @@ static void joutput_ferror_stmt(struct cb_statement *p, int code) {
 //   joutput_line("// %s:%d: %s", p->file, p->line, p->comment);
 // }
 
+static void joutput_switch(struct cb_switch *sw,
+                           enum joutput_stmt_type output_type) {
+  joutput_prefix();
+  joutput("switch(");
+  joutput_param(sw->test, -1);
+  joutput(".getInt()) {");
+  joutput_newline();
+  joutput_indent_level += 2;
+  cb_tree case_tree;
+  for (case_tree = sw->case_list; case_tree; case_tree = CB_CHAIN(case_tree)) {
+    cb_tree whens = CB_VALUE(case_tree);
+    cb_tree stmt = CB_VALUE(whens);
+    int flag_other_exists = 1;
+    for (; whens; whens = CB_CHAIN(whens)) {
+      cb_tree objs = CB_VALUE(whens);
+      for (; objs; objs = CB_CHAIN(objs)) {
+        cb_tree obj = CB_VALUE(objs);
+        if (obj && CB_LIST_P(obj)) {
+          flag_other_exists = 0;
+        }
+        if (obj && CB_PAIR_P(obj)) {
+          cb_tree when_target = CB_PAIR_Y(obj);
+          struct cb_literal *primary_target =
+              CB_LITERAL(CB_PAIR_X(when_target));
+          int dummy;
+          int label =
+              cb_literal_to_int_for_switch_label(primary_target, &dummy);
+          joutput_line("case %d:", label);
+        }
+      }
+    }
+    if (flag_other_exists) {
+      joutput_line("default:");
+    }
+    joutput_stmt(stmt, output_type);
+    joutput_line("break;");
+  }
+  joutput_indent_level -= 2;
+  joutput_line("}");
+}
+
 static void joutput_stmt(cb_tree x, enum joutput_stmt_type output_type) {
   struct cb_statement *p;
   struct cb_label *lp;
@@ -3947,6 +3988,9 @@ static void joutput_stmt(cb_tree x, enum joutput_stmt_type output_type) {
   case CB_TAG_CONTINUE:
     joutput_prefix();
     joutput(";\n");
+    break;
+  case CB_TAG_SWITCH:
+    joutput_switch(CB_SWITCH(x), output_type);
     break;
   case CB_TAG_LIST:
     if (x && CB_TREE_TAG(CB_VALUE(x)) == CB_TAG_PERFORM) {
