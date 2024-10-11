@@ -71,7 +71,6 @@ AH_TEMPLATE([COB_HAS_INLINE], [Can use inline keyword])
 AH_TEMPLATE([COB_NO_SELFOPEN], [Can not dlopen self])
 AH_TEMPLATE([COB_STRFTIME], [Can use strftime for timezone])
 AH_TEMPLATE([COB_LI_IS_LL], [long int is long long])
-AH_TEMPLATE([HAVE_COLOR_SET], [curses has color_set function])
 
 AC_DEFINE(__USE_STRING_INLINES)
 
