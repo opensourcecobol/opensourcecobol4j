@@ -71,7 +71,6 @@ AH_TEMPLATE([COB_HAS_INLINE], [Can use inline keyword])
 AH_TEMPLATE([COB_NO_SELFOPEN], [Can not dlopen self])
 AH_TEMPLATE([COB_STRFTIME], [Can use strftime for timezone])
 AH_TEMPLATE([COB_LI_IS_LL], [long int is long long])
-AH_TEMPLATE([HAVE_COLOR_SET], [curses has color_set function])
 
 AC_DEFINE(__USE_STRING_INLINES)
 
@@ -179,7 +178,7 @@ fi
 AC_FUNC_ALLOCA
 AC_FUNC_VPRINTF
 AC_CHECK_FUNCS([memmove memset setlocale fcntl strerror \
-		strcasecmp strchr strrchr strdup strstr strtol gettimeofday])
+		strcasecmp strchr strrchr strdup strstr strtol])
 
 # Check for timezone
 AC_COMPILE_IFELSE([AC_LANG_PROGRAM([[#include <time.h>]], [[timezone = 3600;]])],
