@@ -86,7 +86,7 @@ Windows版のopensource COBOL 4JはVisual Studioに含まれるCLコンパイラ
     ```
     cd libcobj
     .\gradlew shadowJar
-    ```  
+    ```
     これにより、`libcobj\app\build\libs\`に"libcobj.jar"が作成される。
 
 ### ファイルを適切な位置に配置
@@ -103,7 +103,7 @@ Windows版のopensource COBOL 4JはVisual Studioに含まれるCLコンパイラ
     | cobj.exe | C:\opensourcecobol4j\bin |
     | libcobj.jar | C:\opensourcecobol4j\lib |
     | configファイル | C:\opensourcecobol4j\config |
-  
+
 * ファイルの配置場所を変更したい場合は、`make-install.ps1`に記載してあるパスを編集してください。
 
 ### 環境変数の設定
@@ -211,11 +211,11 @@ cobj-idx info <indexed-file>
 
 cobj-idx load <indexed file>
     Load the data from stdin into the indexed file.
-    The default format of the input data is SQUENTIAL of COBOL.
+    The default format of the input data is SEQUENTIAL of COBOL.
 
 cobj-idx load <indexed file> <input file>
-    Load data from the input fiile into the indexed file.
-    The default format of the input data is SQUENTIAL of COBOL.
+    Load data from the input file into the indexed file.
+    The default format of the input data is SEQUENTIAL of COBOL.
 
 cobj-idx unload <indexed file>
     Write the records stored in the indexed file into stdout.
