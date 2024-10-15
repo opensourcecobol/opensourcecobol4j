@@ -53,4 +53,17 @@ AT_CHECK([${RUN_MODULE} prog], [0],
 [HELLO HELLO HELLO HELLO HELLO HELLO HELLO HELLO HELLO HELLO HELLO HELLO HELLO HELLO HELLO HELLO HELLO HELLO HELLO HELLO
 ])
 
+AT_DATA([prog2.cbl], [
+1      IDENTIFICATION              DIVISION.
+2      PROGRAM-ID.                 prog2.
+3      DATA                        DIVISION.
+4      WORKING-STORAGE             SECTION.
+5     PROCEDURE                   DIVISION.
+6          STOP RUN.
+])
+
+AT_CHECK([${COBJ} -free_com_area_code prog2.cbl], [1], [],
+[prog2.cbl:5: Error: Invalid indicator 'P' at column 7
+])
+
 AT_CLEANUP
