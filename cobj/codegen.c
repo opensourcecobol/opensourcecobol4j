@@ -1288,25 +1288,13 @@ static void joutput_integer(cb_tree x) {
       return;
 
     case CB_USAGE_POINTER:
-#ifdef COB_NON_ALIGNED
-      joutput("(cob_get_pointer (");
-      joutput_data(x);
-      joutput("))");
-#else
       joutput("(*(unsigned char **) (");
       joutput_data(x);
       joutput("))");
-#endif
       return;
 
     case CB_USAGE_PROGRAM_POINTER:
-#ifdef COB_NON_ALIGNED
-      joutput("(cob_get_prog_pointer (");
       joutput_data(x);
-      joutput("))");
-#else
-      joutput_data(x);
-#endif
       return;
 
     case CB_USAGE_DISPLAY:
@@ -1337,19 +1325,7 @@ static void joutput_integer(cb_tree x) {
         }
         return;
       }
-#ifdef COB_NON_ALIGNED
-      if (f->storage != CB_STORAGE_LINKAGE && f->indexes == 0 &&
-          (
-#ifdef COB_SHORT_BORK
-              (f->size == 2 && (f->offset % 4 == 0)) ||
-#else
-              (f->size == 2 && (f->offset % 2 == 0)) ||
-#endif
-              (f->size == 4 && (f->offset % 4 == 0)) ||
-              (f->size == 8 && (f->offset % 8 == 0)))) {
-#else
       if (f->size == 2 || f->size == 4 || f->size == 8) {
-#endif
         if (f->flag_binary_swap) {
           joutput_data(x);
           if (!integer_reference_flag) {
@@ -1998,13 +1974,6 @@ static void joutput_cond(cb_tree x, int save_flag) {
     if (save_flag) {
       joutput("(ret = ");
     }
-    //#ifdef __GNUC__
-    //		joutput_indent ("({");
-    //#else
-    //		inside_stack[inside_check] = 0;
-    //		++inside_check;
-    //		joutput ("(\n");
-    //#endif
     joutput_indent("(new GetInt() {");
     joutput_indent_level += 2;
     joutput_indent("public int run(){");
@@ -2016,12 +1985,6 @@ static void joutput_cond(cb_tree x, int save_flag) {
       }
       joutput_stmt(CB_VALUE(x), JOUTPUT_STMT_DEFAULT);
     }
-    //#ifdef __GNUC__
-    //		joutput_indent ("})");
-    //#else
-    //		--inside_check;
-    //		joutput (")");
-    //#endif
     joutput_indent_level -= 2;
     joutput_indent("}");
     joutput_indent_level -= 2;
@@ -2777,11 +2740,8 @@ static void joutput_search(struct cb_search *p) {
 static void joutput_call(struct cb_call *p) {
   cb_tree x;
   cb_tree l;
-  struct cb_literal *lp;
-  char *callp;
   struct cb_field *f;
   char *system_call = NULL;
-  struct system_table *psyst;
   size_t n;
   size_t retptr;
   int dynamic_link = 1;
@@ -2793,8 +2753,9 @@ static void joutput_call(struct cb_call *p) {
   }
   /* System routine entry points */
   if (p->is_system) {
-    lp = CB_LITERAL(p->name);
-    psyst = (struct system_table *)&system_tab[0];
+    struct cb_literal *lp = CB_LITERAL(p->name);
+
+    struct system_table *psyst = (struct system_table *)&system_tab[0];
     for (; psyst->syst_name; psyst++) {
       if (!strcmp((const char *)lp->data, (const char *)psyst->syst_name)) {
         system_call = (char *)psyst->syst_call;
@@ -2809,12 +2770,6 @@ static void joutput_call(struct cb_call *p) {
   }
 
   /* Local variables */
-#ifdef COB_NON_ALIGNED
-  if (dynamic_link && retptr) {
-    // output_line ("void *temptr;");
-  }
-#endif
-
   if (CB_REFERENCE_P(p->name) && CB_FIELD_P(CB_REFERENCE(p->name)->value) &&
       CB_FIELD(CB_REFERENCE(p->name)->value)->usage ==
           CB_USAGE_PROGRAM_POINTER) {
@@ -2984,6 +2939,7 @@ static void joutput_call(struct cb_call *p) {
       }
     }
   } else {
+    char *callp;
     /* Dynamic link */
     if (CB_LITERAL_P(p->name)) {
       callp = cb_encode_program_id((char *)(CB_LITERAL(p->name)->data));
@@ -3205,13 +3161,6 @@ static void joutput_call(struct cb_call *p) {
       joutput_stmt(cb_build_move(current_prog->cb_return_code, p->returning),
                    JOUTPUT_STMT_DEFAULT);
       suppress_warn = 0;
-#ifdef COB_NON_ALIGNED
-    } else {
-      // output_prefix ();
-      // output ("memcpy (");
-      // output_data (p->returning);
-      // output (", &temptr, %d);\n", sizeof (void *));
-#endif
     }
   }
   if (p->stmt2) {
@@ -3595,9 +3544,6 @@ static void joutput_stmt(cb_tree x, enum joutput_stmt_type output_type) {
   struct cb_label *lp;
   struct cb_assign *ap;
   struct cb_if *ip;
-#ifdef COB_NON_ALIGNED
-  struct cb_cast *cp;
-#endif
   int code;
   int putParen = 0;
 
@@ -3818,80 +3764,7 @@ static void joutput_stmt(cb_tree x, enum joutput_stmt_type output_type) {
     break;
   case CB_TAG_ASSIGN:
     ap = CB_ASSIGN(x);
-#ifdef COB_NON_ALIGNED
-    /* Nonaligned */
-    if (CB_TREE_CLASS(ap->var) == CB_CLASS_POINTER ||
-        CB_TREE_CLASS(ap->val) == CB_CLASS_POINTER) {
-      /* Pointer assignment */
-      joutput_indent("{");
-      joutput_line("void *temp_ptr;");
 
-      /* temp_ptr = source address; */
-      joutput_prefix();
-      if (ap->val == cb_null || ap->val == cb_zero) {
-        /* MOVE NULL ... */
-        joutput("temp_ptr = 0;\n");
-      } else if (CB_TREE_TAG(ap->val) == CB_TAG_CAST) {
-        /* MOVE ADDRESS OF val ... */
-        cp = CB_CAST(ap->val);
-        joutput("temp_ptr = ");
-        switch (cp->type) {
-        case CB_CAST_ADDRESS:
-          joutput_data(cp->val);
-          break;
-        case CB_CAST_PROGRAM_POINTER:
-          joutput_func_1("CobolResolve.resolveToPointer", ap->val);
-          break;
-        default:
-          fprintf(stderr, "Unexpected cast type %d\n", cp->type);
-          ABORT();
-        }
-        joutput(";\n");
-      } else {
-        /* MOVE val ... */
-        joutput("LIBCOB.memcpy(&temp_ptr, ");
-        joutput_data(ap->val);
-        joutput(", sizeof(temp_ptr));\n");
-      }
-
-      /* destination address = temp_ptr; */
-      joutput_prefix();
-      if (CB_TREE_TAG(ap->var) == CB_TAG_CAST) {
-        /* SET ADDRESS OF var ... */
-        cp = CB_CAST(ap->var);
-        if (cp->type != CB_CAST_ADDRESS) {
-          fprintf(stderr, "Unexpected tree type %d\n", cp->type);
-          ABORT();
-        }
-        joutput_data(cp->val);
-        joutput(" = temp_ptr;\n");
-      } else {
-        /* MOVE ... TO var */
-        joutput("LIBCOB.memcpy(");
-        joutput_data(ap->var);
-        joutput(", &temp_ptr, sizeof(temp_ptr));\n");
-      }
-
-      joutput_indent("}");
-    } else {
-      /* Numeric assignment */
-      joutput_prefix();
-
-      int tmp_flag = integer_reference_flag;
-      integer_reference_flag = 1;
-      joutput_integer(ap->var);
-      integer_reference_flag = tmp_flag;
-      joutput(".set(");
-      ++index_read_flag;
-      joutput_integer(ap->val);
-      --index_read_flag;
-      if (output_type == JOUTPUT_STMT_TRIM) {
-        joutput(")\n");
-      } else {
-        joutput(");\n");
-      }
-    }
-#else  /* Nonaligned */
     joutput_prefix();
 
     int tmp_flag = integer_reference_flag;
@@ -3923,7 +3796,6 @@ static void joutput_stmt(cb_tree x, enum joutput_stmt_type output_type) {
     } else {
       joutput(");\n");
     }
-#endif /* Nonaligned */
     break;
   case CB_TAG_INITIALIZE:
     joutput_initialize(CB_INITIALIZE(x));
