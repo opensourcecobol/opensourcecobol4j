@@ -2000,13 +2000,7 @@ static void joutput_cond(cb_tree x, int save_flag) {
     if (save_flag) {
       joutput("(ret = ");
     }
-    //#ifdef __GNUC__
-    //		joutput_indent ("({");
-    //#else
-    //		inside_stack[inside_check] = 0;
-    //		++inside_check;
-    //		joutput ("(\n");
-    //#endif
+
     joutput_indent("(new GetInt() {");
     joutput_indent_level += 2;
     joutput_indent("public int run(){");
