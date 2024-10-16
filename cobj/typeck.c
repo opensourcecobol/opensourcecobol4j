@@ -2239,13 +2239,9 @@ static cb_tree build_cond_88(cb_tree x) {
 }
 
 static cb_tree cb_build_optim_cond(struct cb_binary_op *p) {
-  struct cb_field *f;
-  struct cb_field *fy;
-  const char *s;
-  size_t n;
 
   if (CB_REF_OR_FIELD_P(p->y)) {
-    fy = cb_field(p->y);
+    struct cb_field *fy = cb_field(p->y);
     if (!fy->pic->have_sign &&
         (fy->usage == CB_USAGE_BINARY || fy->usage == CB_USAGE_COMP_5 ||
          fy->usage == CB_USAGE_COMP_X)) {
@@ -2254,7 +2250,7 @@ static cb_tree cb_build_optim_cond(struct cb_binary_op *p) {
     }
   }
   if (CB_REF_OR_FIELD_P(p->x)) {
-    f = cb_field(p->x);
+    struct cb_field *f = cb_field(p->x);
     if (!f->pic->scale && f->usage == CB_USAGE_PACKED) {
       if (f->pic->digits < 10) {
         return cb_build_method_call_2("cmpInt", p->x,
@@ -2291,9 +2287,9 @@ static cb_tree cb_build_optim_cond(struct cb_binary_op *p) {
     if (!f->pic->scale &&
         (f->usage == CB_USAGE_BINARY || f->usage == CB_USAGE_COMP_5 ||
          f->usage == CB_USAGE_INDEX || f->usage == CB_USAGE_COMP_X)) {
-      n = (f->size - 1) + (8 * (f->pic->have_sign ? 1 : 0)) +
-          (16 * (f->flag_binary_swap ? 1 : 0));
-      s = bin_compare_funcs[n];
+      size_t n = (f->size - 1) + (8 * (f->pic->have_sign ? 1 : 0)) +
+                 (16 * (f->flag_binary_swap ? 1 : 0));
+      const char *s = bin_compare_funcs[n];
       if (s) {
         return cb_build_method_call_2(s, cb_build_cast_address(p->x),
                                       cb_build_cast_integer(p->y));
@@ -2540,17 +2536,13 @@ cb_tree cb_build_cond(cb_tree x) {
  */
 
 static cb_tree cb_build_optim_add(cb_tree v, cb_tree n) {
-  size_t z;
-  const char *s;
-  struct cb_field *f;
-
   if (CB_REF_OR_FIELD_P(v)) {
-    f = cb_field(v);
+    struct cb_field *f = cb_field(v);
     if (!f->pic->scale &&
         (f->usage == CB_USAGE_BINARY || f->usage == CB_USAGE_COMP_5 ||
          f->usage == CB_USAGE_COMP_X)) {
-      z = (f->size - 1) + (8 * (f->pic->have_sign ? 1 : 0)) +
-          (16 * (f->flag_binary_swap ? 1 : 0));
+      size_t z = (f->size - 1) + (8 * (f->pic->have_sign ? 1 : 0)) +
+                 (16 * (f->flag_binary_swap ? 1 : 0));
       if (f->usage == CB_USAGE_COMP_5) {
         switch (f->size) {
         case 1:
@@ -2560,7 +2552,7 @@ static cb_tree cb_build_optim_add(cb_tree v, cb_tree n) {
           return cb_build_assign(v, cb_build_binary_op(v, '+', n));
         }
       }
-      s = bin_add_funcs[z];
+      const char *s = bin_add_funcs[z];
       if (s) {
         return cb_build_method_call_2(s, cb_build_cast_address(v),
                                       cb_build_cast_integer(n));
@@ -2575,17 +2567,14 @@ static cb_tree cb_build_optim_add(cb_tree v, cb_tree n) {
 }
 
 static cb_tree cb_build_optim_sub(cb_tree v, cb_tree n) {
-  size_t z;
-  const char *s;
-  struct cb_field *f;
 
   if (CB_REF_OR_FIELD_P(v)) {
-    f = cb_field(v);
+    struct cb_field *f = cb_field(v);
     if (!f->pic->scale &&
         (f->usage == CB_USAGE_BINARY || f->usage == CB_USAGE_COMP_5 ||
          f->usage == CB_USAGE_COMP_X)) {
-      z = (f->size - 1) + (8 * (f->pic->have_sign ? 1 : 0)) +
-          (16 * (f->flag_binary_swap ? 1 : 0));
+      size_t z = (f->size - 1) + (8 * (f->pic->have_sign ? 1 : 0)) +
+                 (16 * (f->flag_binary_swap ? 1 : 0));
       if (f->usage == CB_USAGE_COMP_5) {
         switch (f->size) {
         case 1:
@@ -2595,7 +2584,7 @@ static cb_tree cb_build_optim_sub(cb_tree v, cb_tree n) {
           return cb_build_assign(v, cb_build_binary_op(v, '-', n));
         }
       }
-      s = bin_sub_funcs[z];
+      const char *s = bin_sub_funcs[z];
       if (s) {
         return cb_build_method_call_2(s, cb_build_cast_address(v),
                                       cb_build_cast_integer(n));

@@ -2753,11 +2753,8 @@ static void joutput_search(struct cb_search *p) {
 static void joutput_call(struct cb_call *p) {
   cb_tree x;
   cb_tree l;
-  struct cb_literal *lp;
-  char *callp;
   struct cb_field *f;
   char *system_call = NULL;
-  struct system_table *psyst;
   size_t n;
   size_t retptr;
   int dynamic_link = 1;
@@ -2769,8 +2766,9 @@ static void joutput_call(struct cb_call *p) {
   }
   /* System routine entry points */
   if (p->is_system) {
-    lp = CB_LITERAL(p->name);
-    psyst = (struct system_table *)&system_tab[0];
+    struct cb_literal *lp = CB_LITERAL(p->name);
+
+    struct system_table *psyst = (struct system_table *)&system_tab[0];
     for (; psyst->syst_name; psyst++) {
       if (!strcmp((const char *)lp->data, (const char *)psyst->syst_name)) {
         system_call = (char *)psyst->syst_call;
@@ -2954,6 +2952,7 @@ static void joutput_call(struct cb_call *p) {
       }
     }
   } else {
+    char *callp;
     /* Dynamic link */
     if (CB_LITERAL_P(p->name)) {
       callp = cb_encode_program_id((char *)(CB_LITERAL(p->name)->data));
