@@ -9,6 +9,8 @@ permissions:
 jobs:
   static_analysis:
     runs-on: ubuntu-latest
+    container:
+      image: "ubuntu:22.04"
     steps:
       # Checkout opensource COBOL
       - name: Checkout opensource COBOL 4J
@@ -21,15 +23,15 @@ jobs:
 
       - name: Install static analysis tools
         run: |
-          sudo apt-get update -y
-          sudo apt-get install -y clang-format cppcheck
+          apt-get update -y
+          apt-get install -y clang-format cppcheck
 
       - name: Install opensource COBOL 4J
         run: |
-          sudo apt-get install -y build-essential bison flex gettext texinfo autoconf
+          apt-get install -y build-essential bison flex gettext texinfo autoconf
           ./configure --prefix=/usr/
           make
-          sudo make install
+          make install
 
       - name: Check format with google-java-format and clang-format
         run: |
