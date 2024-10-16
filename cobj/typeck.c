@@ -2293,29 +2293,7 @@ static cb_tree cb_build_optim_cond(struct cb_binary_op *p) {
          f->usage == CB_USAGE_INDEX || f->usage == CB_USAGE_COMP_X)) {
       n = (f->size - 1) + (8 * (f->pic->have_sign ? 1 : 0)) +
           (16 * (f->flag_binary_swap ? 1 : 0));
-#if defined(COB_NON_ALIGNED) && !defined(_MSC_VER)
-      switch (f->size) {
-      case 2:
-#ifdef COB_SHORT_BORK
-        s = bin_compare_funcs[n];
-        break;
-#endif
-      case 4:
-      case 8:
-        if (f->storage != CB_STORAGE_LINKAGE && f->indexes == 0 &&
-            (f->offset % f->size) == 0) {
-          s = align_bin_compare_funcs[n];
-        } else {
-          s = bin_compare_funcs[n];
-        }
-        break;
-      default:
-        s = bin_compare_funcs[n];
-        break;
-      }
-#else
       s = bin_compare_funcs[n];
-#endif
       if (s) {
         return cb_build_method_call_2(s, cb_build_cast_address(p->x),
                                       cb_build_cast_integer(p->y));
@@ -2573,27 +2551,6 @@ static cb_tree cb_build_optim_add(cb_tree v, cb_tree n) {
          f->usage == CB_USAGE_COMP_X)) {
       z = (f->size - 1) + (8 * (f->pic->have_sign ? 1 : 0)) +
           (16 * (f->flag_binary_swap ? 1 : 0));
-#if defined(COB_NON_ALIGNED) && !defined(_MSC_VER)
-      switch (f->size) {
-      case 2:
-#ifdef COB_SHORT_BORK
-        s = bin_add_funcs[z];
-        break;
-#endif
-      case 4:
-      case 8:
-        if (f->storage != CB_STORAGE_LINKAGE && f->indexes == 0 &&
-            (f->offset % f->size) == 0) {
-          s = align_bin_add_funcs[z];
-        } else {
-          s = bin_add_funcs[z];
-        }
-        break;
-      default:
-        s = bin_add_funcs[z];
-        break;
-      }
-#else
       if (f->usage == CB_USAGE_COMP_5) {
         switch (f->size) {
         case 1:
@@ -2604,7 +2561,6 @@ static cb_tree cb_build_optim_add(cb_tree v, cb_tree n) {
         }
       }
       s = bin_add_funcs[z];
-#endif
       if (s) {
         return cb_build_method_call_2(s, cb_build_cast_address(v),
                                       cb_build_cast_integer(n));
@@ -2630,27 +2586,6 @@ static cb_tree cb_build_optim_sub(cb_tree v, cb_tree n) {
          f->usage == CB_USAGE_COMP_X)) {
       z = (f->size - 1) + (8 * (f->pic->have_sign ? 1 : 0)) +
           (16 * (f->flag_binary_swap ? 1 : 0));
-#if defined(COB_NON_ALIGNED) && !defined(_MSC_VER)
-      switch (f->size) {
-      case 2:
-#ifdef COB_SHORT_BORK
-        s = bin_sub_funcs[z];
-        break;
-#endif
-      case 4:
-      case 8:
-        if (f->storage != CB_STORAGE_LINKAGE && f->indexes == 0 &&
-            (f->offset % f->size) == 0) {
-          s = align_bin_sub_funcs[z];
-        } else {
-          s = bin_sub_funcs[z];
-        }
-        break;
-      default:
-        s = bin_sub_funcs[z];
-        break;
-      }
-#else
       if (f->usage == CB_USAGE_COMP_5) {
         switch (f->size) {
         case 1:
@@ -2661,7 +2596,6 @@ static cb_tree cb_build_optim_sub(cb_tree v, cb_tree n) {
         }
       }
       s = bin_sub_funcs[z];
-#endif
       if (s) {
         return cb_build_method_call_2(s, cb_build_cast_address(v),
                                       cb_build_cast_integer(n));
@@ -2675,19 +2609,9 @@ cb_tree cb_build_add(cb_tree v, cb_tree n, cb_tree round_opt) {
   cb_tree opt;
   struct cb_field *f;
 
-#ifdef COB_NON_ALIGNED
-  if (CB_INDEX_P(v)) {
-    return cb_build_move(cb_build_binary_op(v, '+', n), v);
-  }
-  if (CB_TREE_CLASS(v) == CB_CLASS_POINTER) {
-    current_program->gen_ptrmanip = 1;
-    return cb_build_funcall_3("cob_pointer_manip", v, n, cb_int0);
-  }
-#else
   if (CB_INDEX_P(v) || CB_TREE_CLASS(v) == CB_CLASS_POINTER) {
     return cb_build_move(cb_build_binary_op(v, '+', n), v);
   }
-#endif
 
   if (CB_REF_OR_FIELD_P(v)) {
     f = cb_field(v);
@@ -2715,19 +2639,9 @@ cb_tree cb_build_sub(cb_tree v, cb_tree n, cb_tree round_opt) {
   cb_tree opt;
   struct cb_field *f;
 
-#ifdef COB_NON_ALIGNED
-  if (CB_INDEX_P(v)) {
-    return cb_build_move(cb_build_binary_op(v, '-', n), v);
-  }
-  if (CB_TREE_CLASS(v) == CB_CLASS_POINTER) {
-    current_program->gen_ptrmanip = 1;
-    return cb_build_funcall_3("cob_pointer_manip", v, n, cb_int1);
-  }
-#else
   if (CB_INDEX_P(v) || CB_TREE_CLASS(v) == CB_CLASS_POINTER) {
     return cb_build_move(cb_build_binary_op(v, '-', n), v);
   }
-#endif
 
   if (CB_REF_OR_FIELD_P(v)) {
     f = cb_field(v);
@@ -5123,31 +5037,11 @@ static cb_tree cb_build_move_num_zero(cb_tree x) {
       return cb_build_memset(x, 0);
     }
     switch (f->size) {
-#ifdef COB_NON_ALIGNED
-    case 1:
-      return cb_build_assign(x, cb_int0);
-    case 2:
-#ifdef COB_SHORT_BORK
-      if (f->storage != CB_STORAGE_LINKAGE && f->indexes == 0 &&
-          (f->offset % 4 == 0)) {
-        return cb_build_assign(x, cb_int0);
-      }
-      break;
-#endif
-    case 4:
-    case 8:
-      if (f->storage != CB_STORAGE_LINKAGE && f->indexes == 0 &&
-          (f->offset % f->size == 0)) {
-        return cb_build_assign(x, cb_int0);
-      }
-      break;
-#else
     case 1:
     case 2:
     case 4:
     case 8:
       return cb_build_assign(x, cb_int0);
-#endif
     }
     return cb_build_memset(x, 0);
   case CB_USAGE_DISPLAY:
@@ -5520,15 +5414,7 @@ static cb_tree cb_build_move_literal(cb_tree src, cb_tree dst) {
 #endif
     case 4:
     case 8:
-#ifdef COB_NON_ALIGNED
-      if (f->storage != CB_STORAGE_LINKAGE && f->indexes == 0 &&
-          (f->offset % f->size == 0)) {
-        return cb_build_assign(dst, cb_int(val));
-      }
-      break;
-#else
       return cb_build_assign(dst, cb_int(val));
-#endif
     }
     return cb_build_move_call(src, dst);
   } else if (cb_fits_int(src) && f->usage == CB_USAGE_PACKED) {
