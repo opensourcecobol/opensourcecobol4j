@@ -85,6 +85,8 @@ enum cb_tag {
 
   CB_TAG_JAVA_CONTINUE,
   CB_TAG_JAVA_BREAK,
+
+  CB_TAG_SWITCH,
 };
 
 enum cb_alphabet_name_type {
@@ -1117,6 +1119,24 @@ struct cb_perform {
 extern cb_tree cb_build_perform(int type);
 extern cb_tree cb_build_perform_varying(cb_tree name, cb_tree from,
                                         cb_tree step, cb_tree until);
+
+/*
+ * switch (evaluate)
+ */
+
+struct cb_switch {
+  struct cb_tree_common common;
+  cb_tree test;
+  cb_tree case_list;
+};
+
+#define CB_SWITCH(x) (CB_TREE_CAST(CB_TAG_SWITCH, struct cb_switch, x))
+#define CB_SWITCH_P(x) (CB_TREE_TAG(x) == CB_TAG_SWITCH)
+
+extern cb_tree cb_build_switch(cb_tree test, cb_tree case_tree);
+
+extern int cb_literal_to_int_for_switch_label(struct cb_literal *lit,
+                                              int *result);
 
 /*
  * SORT

@@ -8,7 +8,7 @@ permissions:
 
 jobs:
   static_analysis:
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-22.04
     steps:
       # Checkout opensource COBOL
       - name: Checkout opensource COBOL 4J
