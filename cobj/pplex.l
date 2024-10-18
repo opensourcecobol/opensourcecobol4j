@@ -722,7 +722,7 @@ check_directive (char *buff, int *line_size)
 			cb_source_format1 = 1;
 			return;
 		}
-		if (!strcasecmp (sbuff[2], "FIXED_COM_AREA_CODE")){
+		if (!strcasecmp (sbuff[2], "VARIABLE")){
 			cb_source_format = CB_FORMAT_VARIABLE;
 		} 
 		break;
@@ -746,7 +746,7 @@ check_directive (char *buff, int *line_size)
 			cb_source_format1 = 1;
 			return;
 		}
-		if (!strcasecmp (sbuff[3], "FIXED_COM_AREA_CODE")){
+		if (!strcasecmp (sbuff[3], "VARIABLE")){
 			cb_source_format = CB_FORMAT_VARIABLE;
 		} 
 		break;
@@ -914,7 +914,7 @@ check_dollar_directive (char *buff, int *line_size)
 			cb_source_format = CB_FORMAT_FREE_1COL_ASTER;
 			cb_source_format1 = 1;
 			return;
-		} else if (strcasecmp (sbuff[1], "SOURCEFORMAT(FIXED_COM_AREA_CODE)") == 0){
+		} else if (strcasecmp (sbuff[1], "SOURCEFORMAT(VARIABLE)") == 0){
 			cb_source_format = CB_FORMAT_VARIABLE;
 		} else {
 			cb_compile_status = CB_COMPILE_STATUS_ERROR;
