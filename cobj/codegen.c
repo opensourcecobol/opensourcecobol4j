@@ -234,31 +234,29 @@ static void get_java_identifier_helper(struct cb_field *f, char *buf) {
 }
 
 static void strcpy_identifier_cobol_to_java(char *buf, const char *identifier) {
-  int all_ascii = 1;
-  unsigned char *p = (unsigned char *)identifier;
-  for (; *p; ++p) {
-    unsigned char c = *p;
-    if (c < 0x0A || 0x80 <= c) {
-      all_ascii = 0;
-      break;
-    }
-  }
-
-  if (all_ascii) {
-    for (; *identifier; ++identifier, ++buf) {
-      if (*identifier == '-') {
-        *buf = '_';
+  unsigned char *src = (unsigned char *)identifier;
+  unsigned char *dst = (unsigned char *)buf;
+  while (*src) {
+    // ASCII characters
+    if (*src < 0x80) {
+      *dst = (*src == '-') ? '_' : *src;
+      ++dst;
+      ++src;
+      // Shift_JIS characters
+    } else {
+      // convert zenkaku hyphen to zenkaku underscore
+      if (src[0] == 0x81 && src[1] == 0x7C) {
+        dst[0] = 0x81;
+        dst[1] = 0x51;
       } else {
-        *buf = *identifier;
+        dst[0] = src[0];
+        dst[1] = src[1];
       }
-    }
-  } else {
-    for (; *identifier; ++identifier) {
-      sprintf(buf, "%02x", (unsigned char)*identifier);
-      buf += 2;
+      dst += 2;
+      src += 2;
     }
   }
-  *buf = '\0';
+  *dst = '\0';
 }
 
 struct cb_label_id_map {
@@ -1290,25 +1288,13 @@ static void joutput_integer(cb_tree x) {
       return;
 
     case CB_USAGE_POINTER:
-#ifdef COB_NON_ALIGNED
-      joutput("(cob_get_pointer (");
-      joutput_data(x);
-      joutput("))");
-#else
       joutput("(*(unsigned char **) (");
       joutput_data(x);
       joutput("))");
-#endif
       return;
 
     case CB_USAGE_PROGRAM_POINTER:
-#ifdef COB_NON_ALIGNED
-      joutput("(cob_get_prog_pointer (");
       joutput_data(x);
-      joutput("))");
-#else
-      joutput_data(x);
-#endif
       return;
 
     case CB_USAGE_DISPLAY:
@@ -1339,19 +1325,7 @@ static void joutput_integer(cb_tree x) {
         }
         return;
       }
-#ifdef COB_NON_ALIGNED
-      if (f->storage != CB_STORAGE_LINKAGE && f->indexes == 0 &&
-          (
-#ifdef COB_SHORT_BORK
-              (f->size == 2 && (f->offset % 4 == 0)) ||
-#else
-              (f->size == 2 && (f->offset % 2 == 0)) ||
-#endif
-              (f->size == 4 && (f->offset % 4 == 0)) ||
-              (f->size == 8 && (f->offset % 8 == 0)))) {
-#else
       if (f->size == 2 || f->size == 4 || f->size == 8) {
-#endif
         if (f->flag_binary_swap) {
           joutput_data(x);
           if (!integer_reference_flag) {
@@ -2000,7 +1974,6 @@ static void joutput_cond(cb_tree x, int save_flag) {
     if (save_flag) {
       joutput("(ret = ");
     }
-
     joutput_indent("(new GetInt() {");
     joutput_indent_level += 2;
     joutput_indent("public int run(){");
@@ -2012,12 +1985,6 @@ static void joutput_cond(cb_tree x, int save_flag) {
       }
       joutput_stmt(CB_VALUE(x), JOUTPUT_STMT_DEFAULT);
     }
-    //#ifdef __GNUC__
-    //		joutput_indent ("})");
-    //#else
-    //		--inside_check;
-    //		joutput (")");
-    //#endif
     joutput_indent_level -= 2;
     joutput_indent("}");
     joutput_indent_level -= 2;
@@ -2773,11 +2740,8 @@ static void joutput_search(struct cb_search *p) {
 static void joutput_call(struct cb_call *p) {
   cb_tree x;
   cb_tree l;
-  struct cb_literal *lp;
-  char *callp;
   struct cb_field *f;
   char *system_call = NULL;
-  struct system_table *psyst;
   size_t n;
   size_t retptr;
   int dynamic_link = 1;
@@ -2789,8 +2753,9 @@ static void joutput_call(struct cb_call *p) {
   }
   /* System routine entry points */
   if (p->is_system) {
-    lp = CB_LITERAL(p->name);
-    psyst = (struct system_table *)&system_tab[0];
+    struct cb_literal *lp = CB_LITERAL(p->name);
+
+    struct system_table *psyst = (struct system_table *)&system_tab[0];
     for (; psyst->syst_name; psyst++) {
       if (!strcmp((const char *)lp->data, (const char *)psyst->syst_name)) {
         system_call = (char *)psyst->syst_call;
@@ -2805,12 +2770,6 @@ static void joutput_call(struct cb_call *p) {
   }
 
   /* Local variables */
-#ifdef COB_NON_ALIGNED
-  if (dynamic_link && retptr) {
-    // output_line ("void *temptr;");
-  }
-#endif
-
   if (CB_REFERENCE_P(p->name) && CB_FIELD_P(CB_REFERENCE(p->name)->value) &&
       CB_FIELD(CB_REFERENCE(p->name)->value)->usage ==
           CB_USAGE_PROGRAM_POINTER) {
@@ -2980,6 +2939,7 @@ static void joutput_call(struct cb_call *p) {
       }
     }
   } else {
+    char *callp;
     /* Dynamic link */
     if (CB_LITERAL_P(p->name)) {
       callp = cb_encode_program_id((char *)(CB_LITERAL(p->name)->data));
@@ -3201,13 +3161,6 @@ static void joutput_call(struct cb_call *p) {
       joutput_stmt(cb_build_move(current_prog->cb_return_code, p->returning),
                    JOUTPUT_STMT_DEFAULT);
       suppress_warn = 0;
-#ifdef COB_NON_ALIGNED
-    } else {
-      // output_prefix ();
-      // output ("memcpy (");
-      // output_data (p->returning);
-      // output (", &temptr, %d);\n", sizeof (void *));
-#endif
     }
   }
   if (p->stmt2) {
@@ -3545,14 +3498,52 @@ static void joutput_ferror_stmt(struct cb_statement *p, int code) {
 //   joutput_line("// %s:%d: %s", p->file, p->line, p->comment);
 // }
 
+static void joutput_switch(struct cb_switch *sw,
+                           enum joutput_stmt_type output_type) {
+  joutput_prefix();
+  joutput("switch(");
+  joutput_param(sw->test, -1);
+  joutput(".getInt()) {");
+  joutput_newline();
+  joutput_indent_level += 2;
+  cb_tree case_tree;
+  for (case_tree = sw->case_list; case_tree; case_tree = CB_CHAIN(case_tree)) {
+    cb_tree whens = CB_VALUE(case_tree);
+    cb_tree stmt = CB_VALUE(whens);
+    int flag_other_exists = 1;
+    for (; whens; whens = CB_CHAIN(whens)) {
+      cb_tree objs = CB_VALUE(whens);
+      for (; objs; objs = CB_CHAIN(objs)) {
+        cb_tree obj = CB_VALUE(objs);
+        if (obj && CB_LIST_P(obj)) {
+          flag_other_exists = 0;
+        }
+        if (obj && CB_PAIR_P(obj)) {
+          cb_tree when_target = CB_PAIR_Y(obj);
+          struct cb_literal *primary_target =
+              CB_LITERAL(CB_PAIR_X(when_target));
+          int dummy;
+          int label =
+              cb_literal_to_int_for_switch_label(primary_target, &dummy);
+          joutput_line("case %d:", label);
+        }
+      }
+    }
+    if (flag_other_exists) {
+      joutput_line("default:");
+    }
+    joutput_stmt(stmt, output_type);
+    joutput_line("break;");
+  }
+  joutput_indent_level -= 2;
+  joutput_line("}");
+}
+
 static void joutput_stmt(cb_tree x, enum joutput_stmt_type output_type) {
   struct cb_statement *p;
   struct cb_label *lp;
   struct cb_assign *ap;
   struct cb_if *ip;
-#ifdef COB_NON_ALIGNED
-  struct cb_cast *cp;
-#endif
   int code;
   int putParen = 0;
 
@@ -3773,80 +3764,7 @@ static void joutput_stmt(cb_tree x, enum joutput_stmt_type output_type) {
     break;
   case CB_TAG_ASSIGN:
     ap = CB_ASSIGN(x);
-#ifdef COB_NON_ALIGNED
-    /* Nonaligned */
-    if (CB_TREE_CLASS(ap->var) == CB_CLASS_POINTER ||
-        CB_TREE_CLASS(ap->val) == CB_CLASS_POINTER) {
-      /* Pointer assignment */
-      joutput_indent("{");
-      joutput_line("void *temp_ptr;");
 
-      /* temp_ptr = source address; */
-      joutput_prefix();
-      if (ap->val == cb_null || ap->val == cb_zero) {
-        /* MOVE NULL ... */
-        joutput("temp_ptr = 0;\n");
-      } else if (CB_TREE_TAG(ap->val) == CB_TAG_CAST) {
-        /* MOVE ADDRESS OF val ... */
-        cp = CB_CAST(ap->val);
-        joutput("temp_ptr = ");
-        switch (cp->type) {
-        case CB_CAST_ADDRESS:
-          joutput_data(cp->val);
-          break;
-        case CB_CAST_PROGRAM_POINTER:
-          joutput_func_1("CobolResolve.resolveToPointer", ap->val);
-          break;
-        default:
-          fprintf(stderr, "Unexpected cast type %d\n", cp->type);
-          ABORT();
-        }
-        joutput(";\n");
-      } else {
-        /* MOVE val ... */
-        joutput("LIBCOB.memcpy(&temp_ptr, ");
-        joutput_data(ap->val);
-        joutput(", sizeof(temp_ptr));\n");
-      }
-
-      /* destination address = temp_ptr; */
-      joutput_prefix();
-      if (CB_TREE_TAG(ap->var) == CB_TAG_CAST) {
-        /* SET ADDRESS OF var ... */
-        cp = CB_CAST(ap->var);
-        if (cp->type != CB_CAST_ADDRESS) {
-          fprintf(stderr, "Unexpected tree type %d\n", cp->type);
-          ABORT();
-        }
-        joutput_data(cp->val);
-        joutput(" = temp_ptr;\n");
-      } else {
-        /* MOVE ... TO var */
-        joutput("LIBCOB.memcpy(");
-        joutput_data(ap->var);
-        joutput(", &temp_ptr, sizeof(temp_ptr));\n");
-      }
-
-      joutput_indent("}");
-    } else {
-      /* Numeric assignment */
-      joutput_prefix();
-
-      int tmp_flag = integer_reference_flag;
-      integer_reference_flag = 1;
-      joutput_integer(ap->var);
-      integer_reference_flag = tmp_flag;
-      joutput(".set(");
-      ++index_read_flag;
-      joutput_integer(ap->val);
-      --index_read_flag;
-      if (output_type == JOUTPUT_STMT_TRIM) {
-        joutput(")\n");
-      } else {
-        joutput(");\n");
-      }
-    }
-#else  /* Nonaligned */
     joutput_prefix();
 
     int tmp_flag = integer_reference_flag;
@@ -3878,7 +3796,6 @@ static void joutput_stmt(cb_tree x, enum joutput_stmt_type output_type) {
     } else {
       joutput(");\n");
     }
-#endif /* Nonaligned */
     break;
   case CB_TAG_INITIALIZE:
     joutput_initialize(CB_INITIALIZE(x));
@@ -3943,6 +3860,9 @@ static void joutput_stmt(cb_tree x, enum joutput_stmt_type output_type) {
   case CB_TAG_CONTINUE:
     joutput_prefix();
     joutput(";\n");
+    break;
+  case CB_TAG_SWITCH:
+    joutput_switch(CB_SWITCH(x), output_type);
     break;
   case CB_TAG_LIST:
     if (x && CB_TREE_TAG(CB_VALUE(x)) == CB_TAG_PERFORM) {

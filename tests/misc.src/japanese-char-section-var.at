@@ -1,0 +1,47 @@
+AT_SETUP([japanese word section variable])
+
+AT_DATA([prog.cbl], [       IDENTIFICATION              DIVISION.
+       PROGRAM-ID.                 prog.
+
+       DATA                        DIVISION.
+       WORKING-STORAGE             SECTION.
+       01 Vh PIC x(5) VALUE "00000".
+       01 ‰¡•l|‚P PIC x(5) VALUE "11111".
+       01 b•{|2 PIC x(5) VALUE "22222".
+       01 ‰F“s‹{‚P PIC x(5) VALUE "33333".
+       01 å‘ä2 PIC x(5) VALUE "44444".
+       PROCEDURE                   DIVISION.
+       “Œ‹žƒ‰ƒxƒ‹.
+         DISPLAY Vh.
+       _“Þì|‚Pƒ‰ƒxƒ‹.
+         DISPLAY ‰¡•l|‚P.
+       ŽR—œ|2ƒ‰ƒxƒ‹.
+         DISPLAY b•{|2.
+       “È–Ø‚Pƒ‰ƒxƒ‹.
+         DISPLAY ‰F“s‹{‚P.
+       ‹{é2ƒ‰ƒxƒ‹.
+         DISPLAY å‘ä2.
+])
+
+
+AT_CHECK([${COMPILE} prog.cbl])
+AT_CHECK([${RUN_MODULE} prog], [0],
+[00000
+11111
+22222
+33333
+44444
+])
+AT_CHECK([cat prog.java | grep "Vh" > /dev/null])
+AT_CHECK([cat prog.java | grep "‰¡•l|‚P" > /dev/null])
+AT_CHECK([cat prog.java | grep "b•{|2" > /dev/null])
+AT_CHECK([cat prog.java | grep "‰F“s‹{‚P" > /dev/null])
+AT_CHECK([cat prog.java | grep "å‘ä2" > /dev/null])
+
+AT_CHECK([cat prog.java | grep "“Œ‹žƒ‰ƒxƒ‹" > /dev/null])
+AT_CHECK([cat prog.java | grep "_“Þì|‚Pƒ‰ƒxƒ‹" > /dev/null])
+AT_CHECK([cat prog.java | grep "ŽR—œ|2ƒ‰ƒxƒ‹" > /dev/null])
+AT_CHECK([cat prog.java | grep "“È–Ø‚Pƒ‰ƒxƒ‹" > /dev/null])
+AT_CHECK([cat prog.java | grep "‹{é2ƒ‰ƒxƒ‹" > /dev/null])
+
+AT_CLEANUP

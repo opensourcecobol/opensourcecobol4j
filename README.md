@@ -86,26 +86,26 @@ The Windows version of opensource COBOL 4J uses the CL compiler included in Visu
 After the build is completed, "cobj.exe" will be created in `win/x64/Debug` or `win/x64/Release`.
 
 ### Build Java Files
-1. Install JDK.  
+1. Install JDK.
 https://www.oracle.com/java/technologies/downloads/?er=221886#java8-windows
 2. Open PowerShell.
 3. Move to "libcobj" directory and execute `.\gradlew shadowJar`
     ```
     cd libcobj
     .\gradlew shadowJar
-    ``` 
+    ```
 
     Then, libcobj.jar will be created in `libcobj\app\build\libs\`.
 
 ### Place files in the appropriate location
 1. If you build in Debug mode, change the 5th line of win/make-install.ps1 from `\x64\Release\cobj.exe` to `\x64\Debug\cobj.exe`.
 2. Open PowerShell
-3. Move to "win" directory and execute make-install.ps1.  
+3. Move to "win" directory and execute make-install.ps1.
     ```
     cd win
     .\make-install.ps1
     ```
-* Each file is placed in the following location. 
+* Each file is placed in the following location.
 
     | File name | Location |
     |---|---|
@@ -154,7 +154,7 @@ Run.
 java [PROGRAM-ID]
 ```
 
-## Documentation 
+## Documentation
 
 * [The API reference of the runtime library `libcobj.jar`](https://opensourcecobol.github.io/opensourcecobol4j/javadoc/libcobj/index.html)
 * [opensource COBOL 4J: Java変換解説](./doc/converted_Java_file_JP.md)
@@ -226,11 +226,11 @@ cobj-idx info <indexed-file>
 
 cobj-idx load <indexed file>
     Load the data from stdin into the indexed file.
-    The default format of the input data is SQUENTIAL of COBOL.
+    The default format of the input data is SEQUENTIAL of COBOL.
 
 cobj-idx load <indexed file> <input file>
-    Load data from the input fiile into the indexed file.
-    The default format of the input data is SQUENTIAL of COBOL.
+    Load data from the input file into the indexed file.
+    The default format of the input data is SEQUENTIAL of COBOL.
 
 cobj-idx unload <indexed file>
     Write the records stored in the indexed file into stdout.

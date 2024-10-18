@@ -179,11 +179,11 @@ class IndexedFileUtilMain {
     System.out.println();
     System.out.println("cobj-idx load <indexed file>");
     System.out.println("    Load the data from stdin into the indexed file.");
-    System.out.println("    The default format of the input data is SQUENTIAL of COBOL.");
+    System.out.println("    The default format of the input data is SEQUENTIAL of COBOL.");
     System.out.println();
     System.out.println("cobj-idx load <indexed file> <input file>");
-    System.out.println("    Load data from the input fiile into the indexed file.");
-    System.out.println("    The default format of the input data is SQUENTIAL of COBOL.");
+    System.out.println("    Load data from the input file into the indexed file.");
+    System.out.println("    The default format of the input data is SEQUENTIAL of COBOL.");
     System.out.println();
     System.out.println("cobj-idx unload <indexed file>");
     System.out.println("    Write the records stored in the indexed file into stdout.");

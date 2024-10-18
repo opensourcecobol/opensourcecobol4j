@@ -2239,13 +2239,9 @@ static cb_tree build_cond_88(cb_tree x) {
 }
 
 static cb_tree cb_build_optim_cond(struct cb_binary_op *p) {
-  struct cb_field *f;
-  struct cb_field *fy;
-  const char *s;
-  size_t n;
 
   if (CB_REF_OR_FIELD_P(p->y)) {
-    fy = cb_field(p->y);
+    struct cb_field *fy = cb_field(p->y);
     if (!fy->pic->have_sign &&
         (fy->usage == CB_USAGE_BINARY || fy->usage == CB_USAGE_COMP_5 ||
          fy->usage == CB_USAGE_COMP_X)) {
@@ -2254,7 +2250,7 @@ static cb_tree cb_build_optim_cond(struct cb_binary_op *p) {
     }
   }
   if (CB_REF_OR_FIELD_P(p->x)) {
-    f = cb_field(p->x);
+    struct cb_field *f = cb_field(p->x);
     if (!f->pic->scale && f->usage == CB_USAGE_PACKED) {
       if (f->pic->digits < 10) {
         return cb_build_method_call_2("cmpInt", p->x,
@@ -2291,31 +2287,9 @@ static cb_tree cb_build_optim_cond(struct cb_binary_op *p) {
     if (!f->pic->scale &&
         (f->usage == CB_USAGE_BINARY || f->usage == CB_USAGE_COMP_5 ||
          f->usage == CB_USAGE_INDEX || f->usage == CB_USAGE_COMP_X)) {
-      n = (f->size - 1) + (8 * (f->pic->have_sign ? 1 : 0)) +
-          (16 * (f->flag_binary_swap ? 1 : 0));
-#if defined(COB_NON_ALIGNED) && !defined(_MSC_VER)
-      switch (f->size) {
-      case 2:
-#ifdef COB_SHORT_BORK
-        s = bin_compare_funcs[n];
-        break;
-#endif
-      case 4:
-      case 8:
-        if (f->storage != CB_STORAGE_LINKAGE && f->indexes == 0 &&
-            (f->offset % f->size) == 0) {
-          s = align_bin_compare_funcs[n];
-        } else {
-          s = bin_compare_funcs[n];
-        }
-        break;
-      default:
-        s = bin_compare_funcs[n];
-        break;
-      }
-#else
-      s = bin_compare_funcs[n];
-#endif
+      size_t n = (f->size - 1) + (8 * (f->pic->have_sign ? 1 : 0)) +
+                 (16 * (f->flag_binary_swap ? 1 : 0));
+      const char *s = bin_compare_funcs[n];
       if (s) {
         return cb_build_method_call_2(s, cb_build_cast_address(p->x),
                                       cb_build_cast_integer(p->y));
@@ -2562,38 +2536,13 @@ cb_tree cb_build_cond(cb_tree x) {
  */
 
 static cb_tree cb_build_optim_add(cb_tree v, cb_tree n) {
-  size_t z;
-  const char *s;
-  struct cb_field *f;
-
   if (CB_REF_OR_FIELD_P(v)) {
-    f = cb_field(v);
+    struct cb_field *f = cb_field(v);
     if (!f->pic->scale &&
         (f->usage == CB_USAGE_BINARY || f->usage == CB_USAGE_COMP_5 ||
          f->usage == CB_USAGE_COMP_X)) {
-      z = (f->size - 1) + (8 * (f->pic->have_sign ? 1 : 0)) +
-          (16 * (f->flag_binary_swap ? 1 : 0));
-#if defined(COB_NON_ALIGNED) && !defined(_MSC_VER)
-      switch (f->size) {
-      case 2:
-#ifdef COB_SHORT_BORK
-        s = bin_add_funcs[z];
-        break;
-#endif
-      case 4:
-      case 8:
-        if (f->storage != CB_STORAGE_LINKAGE && f->indexes == 0 &&
-            (f->offset % f->size) == 0) {
-          s = align_bin_add_funcs[z];
-        } else {
-          s = bin_add_funcs[z];
-        }
-        break;
-      default:
-        s = bin_add_funcs[z];
-        break;
-      }
-#else
+      size_t z = (f->size - 1) + (8 * (f->pic->have_sign ? 1 : 0)) +
+                 (16 * (f->flag_binary_swap ? 1 : 0));
       if (f->usage == CB_USAGE_COMP_5) {
         switch (f->size) {
         case 1:
@@ -2603,8 +2552,7 @@ static cb_tree cb_build_optim_add(cb_tree v, cb_tree n) {
           return cb_build_assign(v, cb_build_binary_op(v, '+', n));
         }
       }
-      s = bin_add_funcs[z];
-#endif
+      const char *s = bin_add_funcs[z];
       if (s) {
         return cb_build_method_call_2(s, cb_build_cast_address(v),
                                       cb_build_cast_integer(n));
@@ -2619,38 +2567,14 @@ static cb_tree cb_build_optim_add(cb_tree v, cb_tree n) {
 }
 
 static cb_tree cb_build_optim_sub(cb_tree v, cb_tree n) {
-  size_t z;
-  const char *s;
-  struct cb_field *f;
 
   if (CB_REF_OR_FIELD_P(v)) {
-    f = cb_field(v);
+    struct cb_field *f = cb_field(v);
     if (!f->pic->scale &&
         (f->usage == CB_USAGE_BINARY || f->usage == CB_USAGE_COMP_5 ||
          f->usage == CB_USAGE_COMP_X)) {
-      z = (f->size - 1) + (8 * (f->pic->have_sign ? 1 : 0)) +
-          (16 * (f->flag_binary_swap ? 1 : 0));
-#if defined(COB_NON_ALIGNED) && !defined(_MSC_VER)
-      switch (f->size) {
-      case 2:
-#ifdef COB_SHORT_BORK
-        s = bin_sub_funcs[z];
-        break;
-#endif
-      case 4:
-      case 8:
-        if (f->storage != CB_STORAGE_LINKAGE && f->indexes == 0 &&
-            (f->offset % f->size) == 0) {
-          s = align_bin_sub_funcs[z];
-        } else {
-          s = bin_sub_funcs[z];
-        }
-        break;
-      default:
-        s = bin_sub_funcs[z];
-        break;
-      }
-#else
+      size_t z = (f->size - 1) + (8 * (f->pic->have_sign ? 1 : 0)) +
+                 (16 * (f->flag_binary_swap ? 1 : 0));
       if (f->usage == CB_USAGE_COMP_5) {
         switch (f->size) {
         case 1:
@@ -2660,8 +2584,7 @@ static cb_tree cb_build_optim_sub(cb_tree v, cb_tree n) {
           return cb_build_assign(v, cb_build_binary_op(v, '-', n));
         }
       }
-      s = bin_sub_funcs[z];
-#endif
+      const char *s = bin_sub_funcs[z];
       if (s) {
         return cb_build_method_call_2(s, cb_build_cast_address(v),
                                       cb_build_cast_integer(n));
@@ -2675,19 +2598,9 @@ cb_tree cb_build_add(cb_tree v, cb_tree n, cb_tree round_opt) {
   cb_tree opt;
   struct cb_field *f;
 
-#ifdef COB_NON_ALIGNED
-  if (CB_INDEX_P(v)) {
-    return cb_build_move(cb_build_binary_op(v, '+', n), v);
-  }
-  if (CB_TREE_CLASS(v) == CB_CLASS_POINTER) {
-    current_program->gen_ptrmanip = 1;
-    return cb_build_funcall_3("cob_pointer_manip", v, n, cb_int0);
-  }
-#else
   if (CB_INDEX_P(v) || CB_TREE_CLASS(v) == CB_CLASS_POINTER) {
     return cb_build_move(cb_build_binary_op(v, '+', n), v);
   }
-#endif
 
   if (CB_REF_OR_FIELD_P(v)) {
     f = cb_field(v);
@@ -2715,19 +2628,9 @@ cb_tree cb_build_sub(cb_tree v, cb_tree n, cb_tree round_opt) {
   cb_tree opt;
   struct cb_field *f;
 
-#ifdef COB_NON_ALIGNED
-  if (CB_INDEX_P(v)) {
-    return cb_build_move(cb_build_binary_op(v, '-', n), v);
-  }
-  if (CB_TREE_CLASS(v) == CB_CLASS_POINTER) {
-    current_program->gen_ptrmanip = 1;
-    return cb_build_funcall_3("cob_pointer_manip", v, n, cb_int1);
-  }
-#else
   if (CB_INDEX_P(v) || CB_TREE_CLASS(v) == CB_CLASS_POINTER) {
     return cb_build_move(cb_build_binary_op(v, '-', n), v);
   }
-#endif
 
   if (CB_REF_OR_FIELD_P(v)) {
     f = cb_field(v);
@@ -3673,8 +3576,154 @@ static cb_tree build_evaluate(cb_tree subject_list, cb_tree case_list) {
   }
 }
 
+int cb_literal_to_int_for_switch_label(struct cb_literal *lit, int *result) {
+  const char *min_num_abs =
+      "2147483648";                   // -1 * (the minimum value of int of Java)
+  const char *max_num = "2147483647"; // the maximum value of int of Java
+  const int len_boundary =
+      10; // string length of min_num_abs (== string length of max_num)
+  if (lit->size > len_boundary) {
+    // the value of the literal is out of range
+    *result = 0;
+    return 0;
+  }
+
+  size_t i;
+  const char *boundary = lit->sign < 0 ? min_num_abs : max_num;
+  if (lit->size == len_boundary) {
+    for (i = 0; i < len_boundary; ++i) {
+      if (boundary[i] < lit->data[i]) {
+        // the value of the literal is out of range
+        *result = 0;
+        return 0;
+      }
+    }
+  }
+
+  int ret = 0;
+  for (i = 0; i < lit->size; ++i) {
+    ret = ret * 10 + lit->data[i] - '0';
+  }
+  *result = 1;
+  return lit->sign < 0 ? -ret : ret;
+}
+
+// Determine a given label exists in the list of existing labels
+// If a given label exists in the list, return 1. Otherwise return 0;
+static int is_switch_label_duplicate(int label, const int *existing_label_list,
+                                     int list_len) {
+  int i = 0;
+  for (; i < list_len; ++i) {
+    if (existing_label_list[i] == label) {
+      return 1;
+    }
+  }
+  return 0;
+}
+
+static cb_tree convert_evaluate_stmt_to_switch_stmt(cb_tree subject_list,
+                                                    cb_tree case_list) {
+  cb_tree subjs;
+  cb_tree whens;
+  cb_tree objs;
+
+  cb_tree case_tree = case_list;
+  int when_count = 0;
+  int other_exists = 0;
+
+  // The length of subject_list must be 1
+  if (subject_list == NULL || CB_CHAIN(subject_list)) {
+    return NULL;
+  }
+
+  // Determine if a given evaluate statement can be converted to a switch
+  // statement
+  int case_count = 0;
+  for (; case_tree; case_tree = CB_CHAIN(case_tree), ++case_count) {
+    whens = CB_VALUE(case_tree);
+    /* for each WHEN sequence */
+    int flag_other_exists = 1;
+    for (; whens; whens = CB_CHAIN(whens)) {
+      for (subjs = subject_list, objs = CB_VALUE(whens); subjs && objs;
+           subjs = CB_CHAIN(subjs), objs = CB_CHAIN(objs)) {
+        cb_tree subj = CB_VALUE(subjs);
+        cb_tree obj = CB_VALUE(objs);
+        if (!subj || CB_TREE_CATEGORY(subj) != CB_CATEGORY_NUMERIC) {
+          return NULL;
+        }
+        if (obj) {
+          if (CB_LIST_P(obj)) {
+            flag_other_exists = 0;
+          }
+          if (CB_STATEMENT_P(obj)) {
+            continue;
+          }
+          if (CB_PAIR_P(obj)) {
+            // WHEN NOT
+            if (CB_PURPOSE_INT(obj)) {
+              return NULL;
+            }
+            cb_tree when_target = CB_PAIR_Y(obj);
+            if (CB_PAIR_P(when_target)) {
+              cb_tree primary_target = CB_PAIR_X(when_target);
+              cb_tree thru_target = CB_PAIR_Y(when_target);
+              if (!CB_LITERAL_P(primary_target) || thru_target) {
+                return NULL;
+              }
+              struct cb_literal *lit = CB_LITERAL(primary_target);
+              if (lit->data == NULL || lit->scale != 0) {
+                return NULL;
+              }
+              ++when_count;
+            }
+          }
+        }
+      }
+    }
+    other_exists |= flag_other_exists;
+  }
+  // Build Switch statement
+  int *cases = malloc(when_count * sizeof(int));
+  int case_index = 0;
+  for (case_tree = case_list; case_tree; case_tree = CB_CHAIN(case_tree)) {
+    whens = CB_VALUE(case_tree);
+    /* for each WHEN sequence */
+    for (; whens; whens = CB_CHAIN(whens)) {
+      for (objs = CB_VALUE(whens); objs; objs = CB_CHAIN(objs)) {
+        cb_tree obj = CB_VALUE(objs);
+        if (obj && CB_PAIR_P(obj)) {
+          cb_tree when_target = CB_PAIR_Y(obj);
+          struct cb_literal *primary_target =
+              CB_LITERAL(CB_PAIR_X(when_target));
+          int result;
+          int label =
+              cb_literal_to_int_for_switch_label(primary_target, &result);
+          // If calculating a switch label fails, the evaluate statement cannot
+          // be converted to switch statement
+          if (!result) {
+            return NULL;
+          }
+          // If a duplicate label is found, the evaluate statement cannot be
+          // converted to switch statement
+          if (is_switch_label_duplicate(label, cases, case_index)) {
+            return NULL;
+          }
+          cases[case_index++] = label;
+        }
+      }
+    }
+  }
+  return cb_build_switch(CB_VALUE(subject_list), case_list);
+}
+
 void cb_emit_evaluate(cb_tree subject_list, cb_tree case_list) {
-  cb_emit(build_evaluate(subject_list, case_list));
+  cb_tree switch_stmt =
+      convert_evaluate_stmt_to_switch_stmt(subject_list, case_list);
+  if (switch_stmt) {
+    cb_emit(switch_stmt);
+  } else {
+    cb_emit(build_evaluate(subject_list, case_list));
+  }
 }
 
 /*
@@ -4977,31 +5026,11 @@ static cb_tree cb_build_move_num_zero(cb_tree x) {
       return cb_build_memset(x, 0);
     }
     switch (f->size) {
-#ifdef COB_NON_ALIGNED
-    case 1:
-      return cb_build_assign(x, cb_int0);
-    case 2:
-#ifdef COB_SHORT_BORK
-      if (f->storage != CB_STORAGE_LINKAGE && f->indexes == 0 &&
-          (f->offset % 4 == 0)) {
-        return cb_build_assign(x, cb_int0);
-      }
-      break;
-#endif
-    case 4:
-    case 8:
-      if (f->storage != CB_STORAGE_LINKAGE && f->indexes == 0 &&
-          (f->offset % f->size == 0)) {
-        return cb_build_assign(x, cb_int0);
-      }
-      break;
-#else
     case 1:
     case 2:
     case 4:
     case 8:
       return cb_build_assign(x, cb_int0);
-#endif
     }
     return cb_build_memset(x, 0);
   case CB_USAGE_DISPLAY:
@@ -5374,15 +5403,7 @@ static cb_tree cb_build_move_literal(cb_tree src, cb_tree dst) {
 #endif
     case 4:
     case 8:
-#ifdef COB_NON_ALIGNED
-      if (f->storage != CB_STORAGE_LINKAGE && f->indexes == 0 &&
-          (f->offset % f->size == 0)) {
-        return cb_build_assign(dst, cb_int(val));
-      }
-      break;
-#else
       return cb_build_assign(dst, cb_int(val));
-#endif
     }
     return cb_build_move_call(src, dst);
   } else if (cb_fits_int(src) && f->usage == CB_USAGE_PACKED) {
