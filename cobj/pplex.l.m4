@@ -737,6 +737,9 @@ check_directive (char *buff, int *line_size)
 			cb_source_format1 = 1;
 			return;
 		}
+		if (!strcasecmp (sbuff[2], "VARIABLE")){
+			cb_source_format = CB_FORMAT_VARIABLE;
+		} 
 		break;
 	default:
 		if (strcasecmp (sbuff[1], "FORMAT")) {
@@ -758,6 +761,9 @@ check_directive (char *buff, int *line_size)
 			cb_source_format1 = 1;
 			return;
 		}
+		if (!strcasecmp (sbuff[3], "VARIABLE")){
+			cb_source_format = CB_FORMAT_VARIABLE;
+		} 
 		break;
 	}
 	cb_warning (_("Invalid directive - ignored"));
@@ -923,6 +929,8 @@ check_dollar_directive (char *buff, int *line_size)
 			cb_source_format = CB_FORMAT_FREE_1COL_ASTER;
 			cb_source_format1 = 1;
 			return;
+		} else if (strcasecmp (sbuff[1], "SOURCEFORMAT(VARIABLE)") == 0){
+			cb_source_format = CB_FORMAT_VARIABLE;
 		} else {
 			cb_compile_status = CB_COMPILE_STATUS_ERROR;
 			cb_error (_("Invalid $SET"));
@@ -987,7 +995,8 @@ start:
 			newline_count = 0;
 			return strlen (buff);
 		}
-		if (n == 0 && cb_source_format != CB_FORMAT_FIXED && cb_source_format1 != 1) {
+		if (n == 0 && cb_source_format != CB_FORMAT_FIXED && cb_source_format1 != 1 
+			&& cb_source_format != CB_FORMAT_VARIABLE) {
 			if (ipchar != ' ' && ipchar != '\n') {
 				buff[n++] = ' ';
 			}
@@ -1048,7 +1057,7 @@ start:
 	}
 
 	/* nothing more to do with free format */
-	if (cb_source_format != CB_FORMAT_FIXED) {
+	if (cb_source_format != CB_FORMAT_FIXED && cb_source_format != CB_FORMAT_VARIABLE) {
 		return n;
 	}
 
@@ -1136,7 +1145,7 @@ start:
 	}
 
 	/* check the text that is longer than cb_text_column */
-	if (n > cb_text_column + 1) {
+	if (n > cb_text_column + 1 && cb_source_format != CB_FORMAT_VARIABLE) {
 
 		/* show warning if it is not whitespaces */
 		if (cb_warn_column_overflow && last_line_2 < cb_source_line - 1) {
