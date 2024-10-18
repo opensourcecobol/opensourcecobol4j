@@ -303,8 +303,7 @@ static const struct option long_options[] = {
     {"free", no_argument, &cb_source_format, CB_FORMAT_FREE},
     {"free_1col_aster", no_argument, &cb_source_format,
      CB_FORMAT_FREE_1COL_ASTER},
-    {"free_com_area_code", no_argument, &cb_source_format,
-     CB_FORMAT_FREE_COM_AREA_CODE},
+    {"variable", no_argument, &cb_source_format, CB_FORMAT_VARIABLE},
     {"fixed", no_argument, &cb_source_format, CB_FORMAT_FIXED},
     {"static", no_argument, &cb_flag_static_call, 1},
     {"dynamic", no_argument, &cb_flag_static_call, 0},
@@ -804,7 +803,7 @@ static void cobc_print_usage(void) {
   puts(_("  -free                             Use free source format"));
   puts(_("  -free_1col_aster                  Use free(1col_aster) source "
          "format"));
-  puts(_("  -free_com_area_code               Allow codes after 72 digits not "
+  puts(_("  -variable                         Allow codes after 72 digits not "
          "to be ignored"));
   puts(_("  -g                                Enable Java compiler debug"));
   puts(_("  -debug                            Enable all run-time error "
