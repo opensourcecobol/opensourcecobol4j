@@ -65,11 +65,8 @@ tests/cobol85/*/report.txt
 tests/cobol85/*/XXXXX*
 tests/cobol85/summary.log
 texi/Makefile
-bin/.deps/
-bin/cob-config
-bin/cobcrun
-bin/cobcrun-cobcrun.o
 configure~
+configure.ac~
 *.gcov
 *.gcda
 *.gcno
