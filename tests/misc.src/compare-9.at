@@ -57,3 +57,34 @@ AT_CHECK([${COBJ} prog.cbl])
 AT_CHECK([java prog])
 
 AT_CLEANUP
+
+AT_SETUP([compare 9(n), S9(n) SEPARATE])
+
+AT_DATA([prog.cbl], [
+	   IDENTIFICATION   DIVISION.
+       PROGRAM-ID.      prog.
+       DATA             DIVISION.
+       WORKING-STORAGE SECTION.
+       01  N10 PIC 9(10).
+       01  S9-L PIC S9(9) SIGN LEADING SEPARATE.
+       01  S9-T PIC S9(9) SIGN TRAILING SEPARATE.
+       PROCEDURE        DIVISION.
+       MAIN-PROC.
+      *************************************************************
+          MOVE 800 TO N10.
+          MOVE 900 TO S9-L.
+          MOVE 900 TO S9-T.
+
+          IF N10 >= S9-L
+              DISPLAY "NG (N10 >= S9-L)"
+          END-IF.
+
+          IF N10 >= S9-T
+              DISPLAY "NG (N10 >= S9-T)"
+          END-IF.
+])
+
+AT_CHECK([${COBJ} prog.cbl])
+AT_CHECK([java prog])
+
+AT_CLEANUP
