@@ -38,7 +38,6 @@ dist-hook:
 	echo "static char octardate[] = \"`date +'%b %d %Y %T %Z'`\";" > $(distdir)/tarstamp.h
 	find $(distdir) -type d -print | xargs chmod 777
 	chmod 644 $(distdir)/cpucheck.c
-	# chmod 644 $(distdir)/bin/cob-config.in
 	chmod 644 $(distdir)/ABOUT-NLS
 	chmod 644 $(distdir)/AUTHORS
 	chmod 644 $(distdir)/COPYING
