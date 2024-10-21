@@ -17,7 +17,7 @@
 # the Free Software Foundation, 51 Franklin Street, Fifth Floor
 # Boston, MA 02110-1301 USA
 
-AC_PREREQ(2.59)
+AC_PREREQ([2.71])
 
 AC_INIT([opensource COBOL 4J],[1.1.2],[ws-opensource-cobol-contact@osscons.jp],[opensource-cobol-4j-1.1.2])
 AC_CONFIG_SRCDIR([libcobj.h])
@@ -155,9 +155,18 @@ AC_LIBTOOL_DLOPEN
 AC_LIBTOOL_WIN32_DLL
 AC_PROG_LIBTOOL
 AC_PROG_MAKE_SET
+AC_PROG_RANLIB
 
 # Checks for header files.
-AC_HEADER_STDC
+m4_warn([obsolete],
+[The preprocessor macro `STDC_HEADERS' is obsolete.
+  Except in unusual embedded environments, you can safely include all
+  ISO C90 headers unconditionally.])dnl
+# Autoupdate added the next two lines to ensure that your configure
+# script's behavior did not change.  They are probably safe to remove.
+AC_CHECK_INCLUDES_DEFAULT
+AC_PROG_EGREP
+
 AC_CHECK_HEADERS([stdint.h sys/types.h signal.h fcntl.h malloc.h locale.h \
 	stddef.h wchar.h dlfcn.h sys/time.h])
 
@@ -451,8 +460,8 @@ AC_SUBST(COB_HAS_ISAM)
 AC_SUBST(COB_SPLITKEY_FLAGS)
 AC_SUBST(COB_M4_FLAGS)
 
-AC_CONFIG_FILES([bin/cob-config Makefile lib/Makefile
-		cobj/Makefile bin/Makefile config/Makefile libcobj/Makefile
+AC_CONFIG_FILES([Makefile lib/Makefile
+		cobj/Makefile config/Makefile libcobj/Makefile
 		copy/Makefile tests/atlocal tests/Makefile tests/cobol85/Makefile])
 
 AC_CONFIG_COMMANDS([chmod1], [chmod +x bin/cob-config])
