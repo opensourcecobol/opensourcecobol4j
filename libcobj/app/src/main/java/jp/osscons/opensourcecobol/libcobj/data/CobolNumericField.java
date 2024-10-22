@@ -911,7 +911,7 @@ public class CobolNumericField extends AbstractCobolField {
         final int i1 = firstIndex1 + i + pointIndex1;
         final int i2 = firstIndex2 + i + pointIndex2;
         byte b1;
-        if (i1 < 0 || i1 > lastIndex1) {
+        if (i1 < firstIndex1 || i1 > lastIndex1) {
           b1 = (byte) '0';
         } else {
           b1 = d1.getByte(i1);
@@ -920,7 +920,7 @@ public class CobolNumericField extends AbstractCobolField {
           }
         }
         byte b2;
-        if (i2 < 0 || i2 > lastIndex2) {
+        if (i2 < firstIndex2 || i2 > lastIndex2) {
           b2 = (byte) '0';
         } else {
           b2 = d2.getByte(i2);
