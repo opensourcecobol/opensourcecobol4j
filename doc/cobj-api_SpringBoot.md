@@ -99,7 +99,7 @@ The project will be created according to the above steps.
    ```
     cobj-api -java-package=com.example.cobj_api_test info_sample.json
     ```
-   * `-java-package`：生成されるJavaファイルのパッケージ名を指定するオプション。
+   * `-java-package`: An option to specify the package name of the generated Java file.
 
     This will generate sampleController.java and sampleRecord.java.
 4. Place sample.java, sampleController.java, and sampleRecord.java in the created Spring Boot project.   
