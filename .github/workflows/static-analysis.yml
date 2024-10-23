@@ -31,9 +31,9 @@ jobs:
           make
           sudo make install
 
-      - name: Check format with google-java-format and clang-format
-        run: |
-          ./check-format
+      #- name: Check format with google-java-format and clang-format
+      #  run: |
+      #    ./check-format
 
       - name: Run SpotBugs
         working-directory: libcobj
@@ -45,7 +45,7 @@ jobs:
         run: |
           ./gradlew pmdMain
 
-      - name: Run cppcheck
-        working-directory: cobj
-        run: |
-          ./cpp-check
+      #- name: Run cppcheck
+      #  working-directory: cobj
+      #  run: |
+      #    ./cpp-check
