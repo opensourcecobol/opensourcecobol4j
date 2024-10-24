@@ -26,12 +26,12 @@ jobs:
 
   # Single deploy job since we're just deploying
   deploy:
+    if: github.repository == 'opensourcecobol/opensourcecobol4j'
     needs: check-workflows
     environment:
       name: github-pages
       url: ${{ steps.deployment.outputs.page_url }}
     runs-on: ubuntu-latest
-    if: github.repository == 'opensourcecobol/opensourcecobol4j'
     steps:
       - name: Checkout
         uses: actions/checkout@v4
