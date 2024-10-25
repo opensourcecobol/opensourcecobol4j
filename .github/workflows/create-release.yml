@@ -43,4 +43,5 @@ jobs:
       run: | 
         gh release upload ${{ github.ref_name }} cobj.exe --clobber
         gh release upload ${{ github.ref_name }} libcobj.jar --clobber
+        gh release upload ${{ github.ref_name }} config/default.conf --clobber
         
