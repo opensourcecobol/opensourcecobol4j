@@ -16,7 +16,10 @@ jobs:
       upload-artifacts: true
 
   create-release:
-    runs-on: windows-latest
+    needs: build-artifacts
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
     env:
       GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
