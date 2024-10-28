@@ -101,6 +101,8 @@ jobs:
     strategy:
        fail-fast: false
     uses: ./.github/workflows/windows-build.yml
+    with: 
+      upload-artifacts: true
 
   windows-test:
     needs: windows-build

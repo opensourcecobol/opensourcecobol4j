@@ -26,6 +26,7 @@ jobs:
 
   # Single deploy job since we're just deploying
   deploy:
+    if: github.repository == 'opensourcecobol/opensourcecobol4j'
     needs: check-workflows
     environment:
       name: github-pages
@@ -39,7 +40,7 @@ jobs:
         with:
           distribution: 'temurin'
           java-version: '21'
-   
+
       - name: Build Javadoc
         working-directory: libcobj
         run: |

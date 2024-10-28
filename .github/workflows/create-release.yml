@@ -6,8 +6,20 @@ on:
       - v*.*.*
 
 jobs:
+  check-workflows:
+    uses: ./.github/workflows/check-workflows.yml
+
+  build-artifacts:
+    needs: check-workflows
+    uses: ./.github/workflows/windows-build.yml
+    with: 
+      upload-artifacts: true
+
   create-release:
-    runs-on: windows-latest
+    needs: build-artifacts
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
     env:
       GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
@@ -16,3 +28,20 @@ jobs:
 
     - name: Create a Release
       run: gh release create ${{ github.ref }} -F ReleaseNote.md
+
+    - name: Download cobj.exe
+      uses: actions/download-artifact@v4
+      with:
+        name: cobj.exe
+
+    - name: Download libcobj.jar
+      uses: actions/download-artifact@v4
+      with:
+        name: libcobj.jar
+
+    - name: Publish artifacts
+      run: | 
+        gh release upload ${{ github.ref_name }} cobj.exe --clobber
+        gh release upload ${{ github.ref_name }} libcobj.jar --clobber
+        gh release upload ${{ github.ref_name }} config/default.conf --clobber
+        
