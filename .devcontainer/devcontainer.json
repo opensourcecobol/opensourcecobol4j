@@ -1,0 +1,7 @@
+{
+    "name": "opensource COBOL 4J development",
+    "build": {
+        "dockerfile": "Dockerfile"
+    },
+    "postCreateCommand": ".devcontainer/boot.sh && source ~/.bashrc"
+}

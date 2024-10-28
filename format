@@ -1,3 +1,3 @@
 #!/bin/bash
-cd libcobj && ./gradlew goJF
+cd libcobj && ./gradlew spotlessApply
 cd ../cobj && ./format

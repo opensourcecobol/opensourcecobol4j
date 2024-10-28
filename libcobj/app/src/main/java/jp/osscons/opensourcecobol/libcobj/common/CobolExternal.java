@@ -26,52 +26,52 @@ import jp.osscons.opensourcecobol.libcobj.file.CobolFile;
 /** TODO: 準備中 */
 public final class CobolExternal {
 
-  private CobolFile extAllocFile;
-  private CobolDataStorage extAllocStorage;
+    private CobolFile extAllocFile;
+    private CobolDataStorage extAllocStorage;
 
-  private static AbstractMap<String, CobolExternal> externalMap =
-      new HashMap<String, CobolExternal>();
+    private static AbstractMap<String, CobolExternal> externalMap =
+            new HashMap<String, CobolExternal>();
 
-  private CobolExternal(CobolFile file) {
-    this.extAllocFile = file;
-  }
-
-  private CobolExternal(CobolDataStorage storage, int size) {
-    this.extAllocStorage = storage;
-  }
-
-  /**
-   * TODO: 準備中
-   *
-   * @param name TODO: 準備中
-   * @return TODO: 準備中
-   */
-  public static CobolFile getFileAddress(String name) {
-    if (externalMap.containsKey(name)) {
-      return externalMap.get(name).extAllocFile;
-    } else {
-      CobolFile ret = new CobolFile();
-      CobolExternal ext = new CobolExternal(ret);
-      externalMap.put(name, ext);
-      return ret;
+    private CobolExternal(CobolFile file) {
+        this.extAllocFile = file;
     }
-  }
 
-  /**
-   * TODO: 準備中
-   *
-   * @param name TODO: 準備中
-   * @param size TODO: 準備中
-   * @return TODO: 準備中
-   */
-  public static CobolDataStorage getStorageAddress(String name, int size) {
-    if (externalMap.containsKey(name)) {
-      return externalMap.get(name).extAllocStorage;
-    } else {
-      CobolDataStorage ret = new CobolDataStorage(size);
-      CobolExternal ext = new CobolExternal(ret, size);
-      externalMap.put(name, ext);
-      return ret;
+    private CobolExternal(CobolDataStorage storage, int size) {
+        this.extAllocStorage = storage;
     }
-  }
+
+    /**
+     * TODO: 準備中
+     *
+     * @param name TODO: 準備中
+     * @return TODO: 準備中
+     */
+    public static CobolFile getFileAddress(String name) {
+        if (externalMap.containsKey(name)) {
+            return externalMap.get(name).extAllocFile;
+        } else {
+            CobolFile ret = new CobolFile();
+            CobolExternal ext = new CobolExternal(ret);
+            externalMap.put(name, ext);
+            return ret;
+        }
+    }
+
+    /**
+     * TODO: 準備中
+     *
+     * @param name TODO: 準備中
+     * @param size TODO: 準備中
+     * @return TODO: 準備中
+     */
+    public static CobolDataStorage getStorageAddress(String name, int size) {
+        if (externalMap.containsKey(name)) {
+            return externalMap.get(name).extAllocStorage;
+        } else {
+            CobolDataStorage ret = new CobolDataStorage(size);
+            CobolExternal ext = new CobolExternal(ret, size);
+            externalMap.put(name, ext);
+            return ret;
+        }
+    }
 }

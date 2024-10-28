@@ -23,35 +23,48 @@ import jp.osscons.opensourcecobol.libcobj.data.CobolDataStorage;
 
 /** TODO: 準備中 */
 class IndexedFile {
-  /** TODO: 準備中 */
-  int key_index;
-  /** TODO: 準備中 */
-  CobolDataStorage last_key;
-  /** TODO: 準備中 */
-  CobolDataStorage temp_key;
-  /** TODO: 準備中 */
-  Connection connection;
-  /** TODO: 準備中 */
-  byte[] key;
-  /** TODO: 準備中 */
-  byte[] data;
-  /** TODO: 準備中 */
-  byte[][] last_readkey;
-  /** TODO: 準備中 */
-  int[] last_dupno;
-  /** TODO: 準備中 */
-  int[] rewrite_sec_key;
+    /** TODO: 準備中 */
+    int key_index;
 
-  /** TODO: 準備中 */
-  String filename;
-  /** TODO: 準備中 */
-  Object record_lock;
-  /** TODO: 準備中 */
-  boolean write_cursor_open;
-  /** TODO: 準備中 */
-  int lock_id;
-  /** TODO: 準備中 */
-  boolean record_locked;
-  /** TODO: 準備中 */
-  int filenamelen;
+    /** TODO: 準備中 */
+    CobolDataStorage last_key;
+
+    /** TODO: 準備中 */
+    CobolDataStorage temp_key;
+
+    /** TODO: 準備中 */
+    Connection connection;
+
+    /** TODO: 準備中 */
+    byte[] key;
+
+    /** TODO: 準備中 */
+    byte[] data;
+
+    /** TODO: 準備中 */
+    byte[][] last_readkey;
+
+    /** TODO: 準備中 */
+    int[] last_dupno;
+
+    /** TODO: 準備中 */
+    int[] rewrite_sec_key;
+
+    /** TODO: 準備中 */
+    String filename;
+
+    /** TODO: 準備中 */
+    Object record_lock;
+
+    /** TODO: 準備中 */
+    boolean write_cursor_open;
+
+    /** TODO: 準備中 */
+    int lock_id;
+
+    /** TODO: 準備中 */
+    boolean record_locked;
+
+    /** TODO: 準備中 */
+    int filenamelen;
 }

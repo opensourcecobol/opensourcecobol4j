@@ -13,29 +13,29 @@ import org.junit.jupiter.api.Test;
 
 class ApiFilesTest {
 
-  boolean compOutputFiles(String fileName) {
-    ApiFiles.javaCreate(fileName);
-    try {
-      return Arrays.equals(
-              Files.readAllBytes(
-                  Paths.get(
-                      "src/test/java/jp/osscons/opensourcecobol/libcobj/user_util/cobj_api/testController.txt")),
-              Files.readAllBytes(Paths.get("testController.java")))
-          && Arrays.equals(
-              Files.readAllBytes(
-                  Paths.get(
-                      "src/test/java/jp/osscons/opensourcecobol/libcobj/user_util/cobj_api/testRecord.txt")),
-              Files.readAllBytes(Paths.get("testRecord.java")));
-    } catch (IOException e) {
-      e.printStackTrace();
-      return false;
+    boolean compOutputFiles(String fileName) {
+        ApiFiles.javaCreate(fileName);
+        try {
+            return Arrays.equals(
+                            Files.readAllBytes(
+                                    Paths.get(
+                                            "src/test/java/jp/osscons/opensourcecobol/libcobj/user_util/cobj_api/testController.txt")),
+                            Files.readAllBytes(Paths.get("testController.java")))
+                    && Arrays.equals(
+                            Files.readAllBytes(
+                                    Paths.get(
+                                            "src/test/java/jp/osscons/opensourcecobol/libcobj/user_util/cobj_api/testRecord.txt")),
+                            Files.readAllBytes(Paths.get("testRecord.java")));
+        } catch (IOException e) {
+            e.printStackTrace();
+            return false;
+        }
     }
-  }
 
-  @Test
-  void checkOutputFiles() {
-    String fileName =
-        "src/test/java/jp/osscons/opensourcecobol/libcobj/user_util/cobj_api/test.json";
-    assertTrue(compOutputFiles(fileName));
-  }
+    @Test
+    void checkOutputFiles() {
+        String fileName =
+                "src/test/java/jp/osscons/opensourcecobol/libcobj/user_util/cobj_api/test.json";
+        assertTrue(compOutputFiles(fileName));
+    }
 }

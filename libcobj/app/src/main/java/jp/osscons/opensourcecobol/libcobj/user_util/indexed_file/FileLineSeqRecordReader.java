@@ -7,60 +7,61 @@ import jp.osscons.opensourcecobol.libcobj.data.CobolDataStorage;
 
 /** TODO: 準備中 */
 class FileLineSeqRecordReader implements RecordReader {
-  /** TODO: 準備中 */
-  int recordSize;
-  /** TODO: 準備中 */
-  BufferedReader reader;
+    /** TODO: 準備中 */
+    int recordSize;
 
-  private String filePath;
+    /** TODO: 準備中 */
+    BufferedReader reader;
 
-  /**
-   * TODO: 準備中
-   *
-   * @param recordSize TODO: 準備中
-   * @param filePath TODO: 準備中
-   */
-  FileLineSeqRecordReader(int recordSize, String filePath) {
-    this.recordSize = recordSize;
-    this.filePath = filePath;
-  }
+    private String filePath;
 
-  @Override
-  public void open() {
-    try {
-      this.reader = new BufferedReader(new FileReader(this.filePath));
-    } catch (IOException e) {
-      this.reader = null;
+    /**
+     * TODO: 準備中
+     *
+     * @param recordSize TODO: 準備中
+     * @param filePath TODO: 準備中
+     */
+    FileLineSeqRecordReader(int recordSize, String filePath) {
+        this.recordSize = recordSize;
+        this.filePath = filePath;
     }
-  }
 
-  @Override
-  public LoadResult read(CobolDataStorage record) {
-    if (this.reader == null) {
-      return LoadResult.LoadResultOther;
+    @Override
+    public void open() {
+        try {
+            this.reader = new BufferedReader(new FileReader(this.filePath));
+        } catch (IOException e) {
+            this.reader = null;
+        }
     }
-    try {
-      String line = this.reader.readLine();
-      if (line == null) {
-        return LoadResult.AtEnd;
-      }
-      byte[] readData = line.getBytes();
-      if (readData.length != this.recordSize) {
-        return LoadResult.LoadResultDataSizeMismatch;
-      }
-      record.memcpy(readData, this.recordSize);
-      return LoadResult.LoadResultSuccess;
-    } catch (IOException e) {
-      return LoadResult.LoadResultOther;
-    }
-  }
 
-  @Override
-  public void close() {
-    try {
-      this.reader.close();
-    } catch (IOException e) {
-      return;
+    @Override
+    public LoadResult read(CobolDataStorage record) {
+        if (this.reader == null) {
+            return LoadResult.LoadResultOther;
+        }
+        try {
+            String line = this.reader.readLine();
+            if (line == null) {
+                return LoadResult.AtEnd;
+            }
+            byte[] readData = line.getBytes();
+            if (readData.length != this.recordSize) {
+                return LoadResult.LoadResultDataSizeMismatch;
+            }
+            record.memcpy(readData, this.recordSize);
+            return LoadResult.LoadResultSuccess;
+        } catch (IOException e) {
+            return LoadResult.LoadResultOther;
+        }
     }
-  }
+
+    @Override
+    public void close() {
+        try {
+            this.reader.close();
+        } catch (IOException e) {
+            return;
+        }
+    }
 }

@@ -3,8 +3,8 @@ import com.github.jengelman.gradle.plugins.shadow.tasks.ShadowJar
 plugins {
     application
     id("com.github.johnrengelman.shadow") version "8.1.1"
+    id("com.diffplug.spotless") version "7.0.0.BETA4"
     id("java")
-    id("com.github.sherter.google-java-format") version "0.9"
     id("maven-publish")
     pmd
     id("com.github.spotbugs") version "6.0.25"
@@ -57,6 +57,12 @@ pmd {
 
 spotbugs {
     excludeFilter.set(project.file("${rootDir}/config/spotbugsFilter.xml"))
+}
+
+spotless {
+  java {
+    googleJavaFormat("1.17.0").aosp().reflowLongStrings().skipJavadocFormatting()
+  }
 }
 
 publishing {

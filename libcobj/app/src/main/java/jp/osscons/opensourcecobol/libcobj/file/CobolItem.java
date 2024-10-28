@@ -22,124 +22,124 @@ import jp.osscons.opensourcecobol.libcobj.data.CobolDataStorage;
 
 /** TODO: 準備中 */
 class CobolItem {
-  private CobolItem next;
-  private int endOfBlock;
-  private int recordSize;
-  private byte blockByte = 0;
-  private CobolDataStorage unique = new CobolDataStorage(new byte[8]);
-  private CobolDataStorage item;
+    private CobolItem next;
+    private int endOfBlock;
+    private int recordSize;
+    private byte blockByte = 0;
+    private CobolDataStorage unique = new CobolDataStorage(new byte[8]);
+    private CobolDataStorage item;
 
-  /** TODO: 準備中 */
-  CobolItem() {
-    this.next = null;
-    this.endOfBlock = 0;
-  }
+    /** TODO: 準備中 */
+    CobolItem() {
+        this.next = null;
+        this.endOfBlock = 0;
+    }
 
-  /**
-   * TODO: 準備中
-   *
-   * @return TODO: 準備中
-   */
-  CobolItem getNext() {
-    return next;
-  }
+    /**
+     * TODO: 準備中
+     *
+     * @return TODO: 準備中
+     */
+    CobolItem getNext() {
+        return next;
+    }
 
-  /**
-   * TODO: 準備中
-   *
-   * @param next TODO: 準備中
-   */
-  void setNext(CobolItem next) {
-    this.next = next;
-  }
+    /**
+     * TODO: 準備中
+     *
+     * @param next TODO: 準備中
+     */
+    void setNext(CobolItem next) {
+        this.next = next;
+    }
 
-  /**
-   * TODO: 準備中
-   *
-   * @return TODO: 準備中
-   */
-  int getEndOfBlock() {
-    return endOfBlock;
-  }
+    /**
+     * TODO: 準備中
+     *
+     * @return TODO: 準備中
+     */
+    int getEndOfBlock() {
+        return endOfBlock;
+    }
 
-  /**
-   * TODO: 準備中
-   *
-   * @param endOfBlock TODO: 準備中
-   */
-  void setEndOfBlock(int endOfBlock) {
-    this.endOfBlock = endOfBlock;
-  }
+    /**
+     * TODO: 準備中
+     *
+     * @param endOfBlock TODO: 準備中
+     */
+    void setEndOfBlock(int endOfBlock) {
+        this.endOfBlock = endOfBlock;
+    }
 
-  /**
-   * TODO: 準備中
-   *
-   * @return TODO: 準備中
-   */
-  int getRecordSize() {
-    return recordSize;
-  }
+    /**
+     * TODO: 準備中
+     *
+     * @return TODO: 準備中
+     */
+    int getRecordSize() {
+        return recordSize;
+    }
 
-  /**
-   * TODO: 準備中
-   *
-   * @param recordSize TODO: 準備中
-   */
-  void setRecordSize(int recordSize) {
-    this.recordSize = recordSize;
-  }
+    /**
+     * TODO: 準備中
+     *
+     * @param recordSize TODO: 準備中
+     */
+    void setRecordSize(int recordSize) {
+        this.recordSize = recordSize;
+    }
 
-  /**
-   * TODO: 準備中
-   *
-   * @return TODO: 準備中
-   */
-  byte getBlockByte() {
-    return blockByte;
-  }
+    /**
+     * TODO: 準備中
+     *
+     * @return TODO: 準備中
+     */
+    byte getBlockByte() {
+        return blockByte;
+    }
 
-  /**
-   * TODO: 準備中
-   *
-   * @param blockByte TODO: 準備中
-   */
-  void setBlockByte(byte blockByte) {
-    this.blockByte = blockByte;
-  }
+    /**
+     * TODO: 準備中
+     *
+     * @param blockByte TODO: 準備中
+     */
+    void setBlockByte(byte blockByte) {
+        this.blockByte = blockByte;
+    }
 
-  /**
-   * TODO: 準備中
-   *
-   * @return TODO: 準備中
-   */
-  CobolDataStorage getUnique() {
-    return unique;
-  }
+    /**
+     * TODO: 準備中
+     *
+     * @return TODO: 準備中
+     */
+    CobolDataStorage getUnique() {
+        return unique;
+    }
 
-  /**
-   * TODO: 準備中
-   *
-   * @param unique TODO: 準備中
-   */
-  void setUnique(CobolDataStorage unique) {
-    this.unique = unique;
-  }
+    /**
+     * TODO: 準備中
+     *
+     * @param unique TODO: 準備中
+     */
+    void setUnique(CobolDataStorage unique) {
+        this.unique = unique;
+    }
 
-  /**
-   * TODO: 準備中
-   *
-   * @return TODO: 準備中
-   */
-  CobolDataStorage getItem() {
-    return item;
-  }
+    /**
+     * TODO: 準備中
+     *
+     * @return TODO: 準備中
+     */
+    CobolDataStorage getItem() {
+        return item;
+    }
 
-  /**
-   * TODO: 準備中
-   *
-   * @param item TODO: 準備中
-   */
-  void setItem(CobolDataStorage item) {
-    this.item = item;
-  }
+    /**
+     * TODO: 準備中
+     *
+     * @param item TODO: 準備中
+     */
+    void setItem(CobolDataStorage item) {
+        this.item = item;
+    }
 }

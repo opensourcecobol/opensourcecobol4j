@@ -20,67 +20,67 @@ package jp.osscons.opensourcecobol.libcobj.file;
 
 /** TODO: 準備中 */
 class MemoryStruct {
-  private CobolItem first;
-  private CobolItem last;
-  private int count;
+    private CobolItem first;
+    private CobolItem last;
+    private int count;
 
-  /** TODO: 準備中 */
-  MemoryStruct() {
-    this.first = null;
-    this.last = null;
-  }
+    /** TODO: 準備中 */
+    MemoryStruct() {
+        this.first = null;
+        this.last = null;
+    }
 
-  /**
-   * TODO: 準備中
-   *
-   * @return TODO: 準備中
-   */
-  CobolItem getFirst() {
-    return first;
-  }
+    /**
+     * TODO: 準備中
+     *
+     * @return TODO: 準備中
+     */
+    CobolItem getFirst() {
+        return first;
+    }
 
-  /**
-   * TODO: 準備中
-   *
-   * @param first TODO: 準備中
-   */
-  void setFirst(CobolItem first) {
-    this.first = first;
-  }
+    /**
+     * TODO: 準備中
+     *
+     * @param first TODO: 準備中
+     */
+    void setFirst(CobolItem first) {
+        this.first = first;
+    }
 
-  /**
-   * TODO: 準備中
-   *
-   * @return TODO: 準備中
-   */
-  CobolItem getLast() {
-    return last;
-  }
+    /**
+     * TODO: 準備中
+     *
+     * @return TODO: 準備中
+     */
+    CobolItem getLast() {
+        return last;
+    }
 
-  /**
-   * TODO: 準備中
-   *
-   * @param last TODO: 準備中
-   */
-  void setLast(CobolItem last) {
-    this.last = last;
-  }
+    /**
+     * TODO: 準備中
+     *
+     * @param last TODO: 準備中
+     */
+    void setLast(CobolItem last) {
+        this.last = last;
+    }
 
-  /**
-   * TODO: 準備中
-   *
-   * @return TODO: 準備中
-   */
-  int getCount() {
-    return count;
-  }
+    /**
+     * TODO: 準備中
+     *
+     * @return TODO: 準備中
+     */
+    int getCount() {
+        return count;
+    }
 
-  /**
-   * TODO: 準備中
-   *
-   * @param count TODO: 準備中
-   */
-  void setCount(int count) {
-    this.count = count;
-  }
+    /**
+     * TODO: 準備中
+     *
+     * @param count TODO: 準備中
+     */
+    void setCount(int count) {
+        this.count = count;
+    }
 }

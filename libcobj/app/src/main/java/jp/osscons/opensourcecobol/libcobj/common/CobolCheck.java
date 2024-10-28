@@ -26,85 +26,86 @@ import jp.osscons.opensourcecobol.libcobj.exceptions.CobolStopRunException;
 
 /** TODO: 準備中 */
 public class CobolCheck {
-  /**
-   * TODO: 準備中
-   *
-   * @param i TODO: 準備中
-   * @param min TODO: 準備中
-   * @param max TODO: 準備中
-   * @param name TODO: 準備中
-   * @param len TODO: 準備中
-   * @throws CobolStopRunException TODO: 準備中
-   */
-  public static void checkSubscript(int i, int min, int max, byte[] name, int len)
-      throws CobolStopRunException {
-    if (i < min || max < i) {
-      CobolRuntimeException.setException(CobolExceptionId.COB_EC_BOUND_SUBSCRIPT);
-      CobolUtil.runtimeError(
-          String.format(
-              "Subscript of '%s' out of bounds: %d",
-              new String(name, AbstractCobolField.charSetSJIS), i));
-      CobolStopRunException.stopRunAndThrow(1);
+    /**
+     * TODO: 準備中
+     *
+     * @param i TODO: 準備中
+     * @param min TODO: 準備中
+     * @param max TODO: 準備中
+     * @param name TODO: 準備中
+     * @param len TODO: 準備中
+     * @throws CobolStopRunException TODO: 準備中
+     */
+    public static void checkSubscript(int i, int min, int max, byte[] name, int len)
+            throws CobolStopRunException {
+        if (i < min || max < i) {
+            CobolRuntimeException.setException(CobolExceptionId.COB_EC_BOUND_SUBSCRIPT);
+            CobolUtil.runtimeError(
+                    String.format(
+                            "Subscript of '%s' out of bounds: %d",
+                            new String(name, AbstractCobolField.charSetSJIS), i));
+            CobolStopRunException.stopRunAndThrow(1);
+        }
     }
-  }
 
-  /**
-   * TODO: 準備中
-   *
-   * @param i TODO: 準備中
-   * @param min TODO: 準備中
-   * @param max TODO: 準備中
-   * @param name TODO: 準備中
-   * @param len TODO: 準備中
-   * @throws CobolStopRunException TODO: 準備中
-   */
-  public static void checkSubscript(long i, int min, int max, byte[] name, int len)
-      throws CobolStopRunException {
-    CobolCheck.checkSubscript((int) i, min, max, name, len);
-  }
-
-  /**
-   * TODO: 準備中
-   *
-   * @param i TODO: 準備中
-   * @param min TODO: 準備中
-   * @param max TODO: 準備中
-   * @param name TODO: 準備中
-   * @param len TODO: 準備中
-   * @throws CobolStopRunException TODO: 準備中
-   */
-  public static void checkSubscript(long i, int min, int max, CobolDataStorage name, int len)
-      throws CobolStopRunException {
-    CobolCheck.checkSubscript((int) i, min, max, name.getByteArrayRef(0, len), len);
-  }
-
-  /**
-   * TODO: 準備中
-   *
-   * @param i TODO: 準備中
-   * @param min TODO: 準備中
-   * @param max TODO: 準備中
-   * @param name TODO: 準備中
-   * @throws CobolStopRunException TODO: 準備中
-   */
-  public static void checkOdo(int i, int min, int max, String name) throws CobolStopRunException {
-    if (i < min || max < i) {
-      CobolRuntimeException.setException(CobolExceptionId.COB_EC_BOUND_SUBSCRIPT);
-      CobolUtil.runtimeError(String.format("OCCURS DEPENDING ON '%s' out of bounds: %d", name, i));
-      CobolStopRunException.stopRunAndThrow(1);
+    /**
+     * TODO: 準備中
+     *
+     * @param i TODO: 準備中
+     * @param min TODO: 準備中
+     * @param max TODO: 準備中
+     * @param name TODO: 準備中
+     * @param len TODO: 準備中
+     * @throws CobolStopRunException TODO: 準備中
+     */
+    public static void checkSubscript(long i, int min, int max, byte[] name, int len)
+            throws CobolStopRunException {
+        CobolCheck.checkSubscript((int) i, min, max, name, len);
     }
-  }
 
-  /**
-   * TODO: 準備中
-   *
-   * @param i TODO: 準備中
-   * @param min TODO: 準備中
-   * @param max TODO: 準備中
-   * @param name TODO: 準備中
-   * @throws CobolStopRunException TODO: 準備中
-   */
-  public static void checkOdo(int i, int min, int max, byte[] name) throws CobolStopRunException {
-    CobolCheck.checkOdo(i, min, max, new String(name, AbstractCobolField.charSetSJIS));
-  }
+    /**
+     * TODO: 準備中
+     *
+     * @param i TODO: 準備中
+     * @param min TODO: 準備中
+     * @param max TODO: 準備中
+     * @param name TODO: 準備中
+     * @param len TODO: 準備中
+     * @throws CobolStopRunException TODO: 準備中
+     */
+    public static void checkSubscript(long i, int min, int max, CobolDataStorage name, int len)
+            throws CobolStopRunException {
+        CobolCheck.checkSubscript((int) i, min, max, name.getByteArrayRef(0, len), len);
+    }
+
+    /**
+     * TODO: 準備中
+     *
+     * @param i TODO: 準備中
+     * @param min TODO: 準備中
+     * @param max TODO: 準備中
+     * @param name TODO: 準備中
+     * @throws CobolStopRunException TODO: 準備中
+     */
+    public static void checkOdo(int i, int min, int max, String name) throws CobolStopRunException {
+        if (i < min || max < i) {
+            CobolRuntimeException.setException(CobolExceptionId.COB_EC_BOUND_SUBSCRIPT);
+            CobolUtil.runtimeError(
+                    String.format("OCCURS DEPENDING ON '%s' out of bounds: %d", name, i));
+            CobolStopRunException.stopRunAndThrow(1);
+        }
+    }
+
+    /**
+     * TODO: 準備中
+     *
+     * @param i TODO: 準備中
+     * @param min TODO: 準備中
+     * @param max TODO: 準備中
+     * @param name TODO: 準備中
+     * @throws CobolStopRunException TODO: 準備中
+     */
+    public static void checkOdo(int i, int min, int max, byte[] name) throws CobolStopRunException {
+        CobolCheck.checkOdo(i, min, max, new String(name, AbstractCobolField.charSetSJIS));
+    }
 }

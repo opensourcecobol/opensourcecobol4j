@@ -22,6 +22,6 @@ package jp.osscons.opensourcecobol.libcobj;
 /** TODO: 準備中 */
 public class Const {
 
-  /** TODO: 準備中 */
-  public static final String version = "1.1.2";
+    /** TODO: 準備中 */
+    public static final String version = "1.1.2";
 }

@@ -23,11 +23,11 @@ import jp.osscons.opensourcecobol.libcobj.exceptions.CobolStopRunException;
 
 /** TODO: 準備中 */
 public interface GetAbstractCobolField {
-  /**
-   * TODO: 準備中
-   *
-   * @return TODO: 準備中
-   * @throws CobolStopRunException TODO: 準備中
-   */
-  AbstractCobolField run() throws CobolStopRunException;
+    /**
+     * TODO: 準備中
+     *
+     * @return TODO: 準備中
+     * @throws CobolStopRunException TODO: 準備中
+     */
+    AbstractCobolField run() throws CobolStopRunException;
 }

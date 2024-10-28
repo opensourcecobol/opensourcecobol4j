@@ -13,277 +13,278 @@ import org.json.JSONObject;
 
 /** API連携用のJavaファイルを出力するクラス */
 class ApiFiles {
-  private static String programId;
+    private static String programId;
 
-  /**
-   * 入力された値を受け取り、javaCreateメソッドを呼び出す
-   *
-   * @param args コマンドラインから入力された文字列
-   */
-  public static void main(String[] args) {
+    /**
+     * 入力された値を受け取り、javaCreateメソッドを呼び出す
+     *
+     * @param args コマンドラインから入力された文字列
+     */
+    public static void main(String[] args) {
 
-    if (args.length == 0) {
-      System.err.println("cobj-api: no input files");
-      System.exit(1);
-    }
-    ApiFilesOptions.getOptions(args);
+        if (args.length == 0) {
+            System.err.println("cobj-api: no input files");
+            System.exit(1);
+        }
+        ApiFilesOptions.getOptions(args);
 
-    String filePath = ApiFilesOptions.filePath;
-    javaCreate(filePath);
-  }
-
-  /** API連携用のJavaファイルを生成する */
-  static void javaCreate(String filePath) {
-    try {
-      String json = new String(Files.readAllBytes(Paths.get(filePath)));
-      JSONObject obj = new JSONObject(json);
-      JSONArray params = obj.getJSONArray("procedure_division_using_parameters");
-      String outputDir;
-      FileWriter ctlFile;
-      FileWriter rcdFile;
-      programId = obj.getString("program_id");
-
-      if (ApiFilesOptions.outputDir != null) {
-        outputDir = ApiFilesOptions.outputDir + "/";
-        ctlFile = new FileWriter(outputDir + programId + "Controller.java");
-        rcdFile = new FileWriter(outputDir + programId + "Record.java");
-      } else {
-        ctlFile = new FileWriter(programId + "Controller.java");
-        rcdFile = new FileWriter(programId + "Record.java");
-      }
-
-      writeController(ctlFile, params);
-      writeRecord(rcdFile, params);
-
-    } catch (IOException e) {
-      e.printStackTrace();
-      System.err.println("Error reading file: " + e.getMessage());
-      System.exit(1);
-    }
-  }
-
-  /**
-   * <PROGRAM-ID>Controller.javaのコードを記述する
-   *
-   * @param ctlFile <PROGRAM-ID>Controller.javaのファイルの情報を保持する
-   * @param programId PROGRAM-IDに記述されているプログラム名
-   * @param params PROCEDURE DIVISION USING句に記述されている引数の配列
-   */
-  private static void writeController(FileWriter ctlFile, JSONArray params) {
-    JSONObject param;
-    PrintWriter ctlWriter = new PrintWriter(ctlFile);
-    String defaultValue;
-    String methodName;
-    String nameController = programId + "Controller";
-    String nameRecord = programId + "Record";
-    String name;
-    String type;
-    int i;
-
-    if (ApiFilesOptions.packageName != null) {
-      ctlWriter.println("package " + ApiFilesOptions.packageName + ";");
-    } else {
-      ctlWriter.println("package com.example.restservice;");
+        String filePath = ApiFilesOptions.filePath;
+        javaCreate(filePath);
     }
 
-    ctlWriter.println(
-        "import java.util.concurrent.atomic.AtomicLong;\n"
-            + "import org.springframework.web.bind.annotation.RequestMapping;\n"
-            + "import org.springframework.web.bind.annotation.GetMapping;\n"
-            + "import org.springframework.web.bind.annotation.PostMapping;\n"
-            + "import org.springframework.web.bind.annotation.RequestParam;\n"
-            + "import org.springframework.web.bind.annotation.RequestBody;\n"
-            + "import org.springframework.web.bind.annotation.RestController;\n"
-            + "import jp.osscons.opensourcecobol.libcobj.ui.*;\n");
+    /** API連携用のJavaファイルを生成する */
+    static void javaCreate(String filePath) {
+        try {
+            String json = new String(Files.readAllBytes(Paths.get(filePath)));
+            JSONObject obj = new JSONObject(json);
+            JSONArray params = obj.getJSONArray("procedure_division_using_parameters");
+            String outputDir;
+            FileWriter ctlFile;
+            FileWriter rcdFile;
+            programId = obj.getString("program_id");
 
-    ctlWriter.println(
-        "@RestController\n"
-            + "@RequestMapping(\"/"
-            + programId
-            + "\")\n"
-            + "public class "
-            + nameController
-            + " {\n\n"
-            + "    @GetMapping\n"
-            + "    public "
-            + nameRecord
-            + " "
-            + nameController
-            + "(");
+            if (ApiFilesOptions.outputDir != null) {
+                outputDir = ApiFilesOptions.outputDir + "/";
+                ctlFile = new FileWriter(outputDir + programId + "Controller.java");
+                rcdFile = new FileWriter(outputDir + programId + "Record.java");
+            } else {
+                ctlFile = new FileWriter(programId + "Controller.java");
+                rcdFile = new FileWriter(programId + "Record.java");
+            }
 
-    for (i = 0; i < params.length(); ++i) {
-      param = params.getJSONObject(i);
-      name = param.getString("variable_name").replace('-', '_');
-      type = param.getString("java_type");
-      if ("String".equals(type)) {
-        defaultValue = "\"\"";
-      } else {
-        defaultValue = "\"0\"";
-      }
+            writeController(ctlFile, params);
+            writeRecord(rcdFile, params);
 
-      ctlWriter.print(
-          "        @RequestParam(value = "
-              + "\""
-              + name
-              + "\", defaultValue = "
-              + defaultValue
-              + ") "
-              + type
-              + " "
-              + name);
-
-      if (i < params.length() - 1) {
-        ctlWriter.println(",");
-      } else {
-        ctlWriter.println();
-      }
+        } catch (IOException e) {
+            e.printStackTrace();
+            System.err.println("Error reading file: " + e.getMessage());
+            System.exit(1);
+        }
     }
 
-    ctlWriter.print("    ) {\n" + "        return " + programId + "Execute(");
+    /**
+     * <PROGRAM-ID>Controller.javaのコードを記述する
+     *
+     * @param ctlFile <PROGRAM-ID>Controller.javaのファイルの情報を保持する
+     * @param programId PROGRAM-IDに記述されているプログラム名
+     * @param params PROCEDURE DIVISION USING句に記述されている引数の配列
+     */
+    private static void writeController(FileWriter ctlFile, JSONArray params) {
+        JSONObject param;
+        PrintWriter ctlWriter = new PrintWriter(ctlFile);
+        String defaultValue;
+        String methodName;
+        String nameController = programId + "Controller";
+        String nameRecord = programId + "Record";
+        String name;
+        String type;
+        int i;
 
-    argPrint(ctlWriter, params, false, false);
+        if (ApiFilesOptions.packageName != null) {
+            ctlWriter.println("package " + ApiFilesOptions.packageName + ";");
+        } else {
+            ctlWriter.println("package com.example.restservice;");
+        }
 
-    ctlWriter.println(");\n" + "    }\n");
+        ctlWriter.println(
+                "import java.util.concurrent.atomic.AtomicLong;\n"
+                        + "import org.springframework.web.bind.annotation.RequestMapping;\n"
+                        + "import org.springframework.web.bind.annotation.GetMapping;\n"
+                        + "import org.springframework.web.bind.annotation.PostMapping;\n"
+                        + "import org.springframework.web.bind.annotation.RequestParam;\n"
+                        + "import org.springframework.web.bind.annotation.RequestBody;\n"
+                        + "import org.springframework.web.bind.annotation.RestController;\n"
+                        + "import jp.osscons.opensourcecobol.libcobj.ui.*;\n");
 
-    ctlWriter.print(
-        "    @PostMapping\n"
-            + "    public "
-            + nameRecord
-            + " "
-            + nameController
-            + "Execute(@RequestBody "
-            + nameRecord
-            + " "
-            + programId
-            + "Record) {\n"
-            + "        return "
-            + programId
-            + "Execute(");
+        ctlWriter.println(
+                "@RestController\n"
+                        + "@RequestMapping(\"/"
+                        + programId
+                        + "\")\n"
+                        + "public class "
+                        + nameController
+                        + " {\n\n"
+                        + "    @GetMapping\n"
+                        + "    public "
+                        + nameRecord
+                        + " "
+                        + nameController
+                        + "(");
 
-    argPrint(ctlWriter, params, false, true);
+        for (i = 0; i < params.length(); ++i) {
+            param = params.getJSONObject(i);
+            name = param.getString("variable_name").replace('-', '_');
+            type = param.getString("java_type");
+            if ("String".equals(type)) {
+                defaultValue = "\"\"";
+            } else {
+                defaultValue = "\"0\"";
+            }
 
-    ctlWriter.println(");\n" + "    }\n");
-    ctlWriter.print("    private " + nameRecord + " " + programId + "Execute(");
+            ctlWriter.print(
+                    "        @RequestParam(value = "
+                            + "\""
+                            + name
+                            + "\", defaultValue = "
+                            + defaultValue
+                            + ") "
+                            + type
+                            + " "
+                            + name);
 
-    argPrint(ctlWriter, params, true, false);
+            if (i < params.length() - 1) {
+                ctlWriter.println(",");
+            } else {
+                ctlWriter.println();
+            }
+        }
 
-    ctlWriter.print(
-        ") {\n"
-            + "        int statuscode = 200;\n"
-            + "        "
-            + programId
-            + " "
-            + programId
-            + "Cobol = new "
-            + programId
-            + "();\n"
-            + "        CobolResultSet result = "
-            + programId
-            + "Cobol.execute(");
+        ctlWriter.print("    ) {\n" + "        return " + programId + "Execute(");
 
-    argPrint(ctlWriter, params, false, false);
-    ctlWriter.println(");\n" + "        try {");
+        argPrint(ctlWriter, params, false, false);
 
-    for (i = 0; i < params.length(); ++i) {
-      param = params.getJSONObject(i);
-      name = param.getString("variable_name").replace('-', '_');
-      type = param.getString("java_type");
-      if ("String".equals(type)) {
-        methodName = "getString";
-      } else if ("int".equals(type)) {
-        methodName = "getInt";
-      } else {
-        methodName = "getDouble";
-      }
-      ctlWriter.println("            " + name + " = result." + methodName + "(" + (i + 1) + ");");
+        ctlWriter.println(");\n" + "    }\n");
+
+        ctlWriter.print(
+                "    @PostMapping\n"
+                        + "    public "
+                        + nameRecord
+                        + " "
+                        + nameController
+                        + "Execute(@RequestBody "
+                        + nameRecord
+                        + " "
+                        + programId
+                        + "Record) {\n"
+                        + "        return "
+                        + programId
+                        + "Execute(");
+
+        argPrint(ctlWriter, params, false, true);
+
+        ctlWriter.println(");\n" + "    }\n");
+        ctlWriter.print("    private " + nameRecord + " " + programId + "Execute(");
+
+        argPrint(ctlWriter, params, true, false);
+
+        ctlWriter.print(
+                ") {\n"
+                        + "        int statuscode = 200;\n"
+                        + "        "
+                        + programId
+                        + " "
+                        + programId
+                        + "Cobol = new "
+                        + programId
+                        + "();\n"
+                        + "        CobolResultSet result = "
+                        + programId
+                        + "Cobol.execute(");
+
+        argPrint(ctlWriter, params, false, false);
+        ctlWriter.println(");\n" + "        try {");
+
+        for (i = 0; i < params.length(); ++i) {
+            param = params.getJSONObject(i);
+            name = param.getString("variable_name").replace('-', '_');
+            type = param.getString("java_type");
+            if ("String".equals(type)) {
+                methodName = "getString";
+            } else if ("int".equals(type)) {
+                methodName = "getInt";
+            } else {
+                methodName = "getDouble";
+            }
+            ctlWriter.println(
+                    "            " + name + " = result." + methodName + "(" + (i + 1) + ");");
+        }
+
+        ctlWriter.print(
+                "        } catch (Exception e) {\n"
+                        + "            statuscode = 500;\n"
+                        + "        }\n"
+                        + "        return new "
+                        + programId
+                        + "Record(statuscode, ");
+
+        argPrint(ctlWriter, params, false, false);
+
+        ctlWriter.println(");\n" + "    }\n" + "}");
+        ctlWriter.close();
     }
 
-    ctlWriter.print(
-        "        } catch (Exception e) {\n"
-            + "            statuscode = 500;\n"
-            + "        }\n"
-            + "        return new "
-            + programId
-            + "Record(statuscode, ");
+    /**
+     * <PROGRAM-ID>Record.javaのコードを記述する
+     *
+     * @param rcdFile <PROGRAM-ID>Record.javaのファイル情報を保持する
+     * @param params PROCEDURE DIVISION USING句に記述されている引数の配列
+     */
+    private static void writeRecord(FileWriter rcdFile, JSONArray params) {
+        JSONObject param;
+        PrintWriter rcdWriter = new PrintWriter(rcdFile);
+        String defaultValue;
+        String type;
+        int i;
 
-    argPrint(ctlWriter, params, false, false);
+        if (ApiFilesOptions.packageName != null) {
+            rcdWriter.println("package " + ApiFilesOptions.packageName + ";");
+        } else {
+            rcdWriter.println("package com.example.restservice;");
+        }
 
-    ctlWriter.println(");\n" + "    }\n" + "}");
-    ctlWriter.close();
-  }
+        rcdWriter.print("public record " + programId + "Record(int statuscode, ");
 
-  /**
-   * <PROGRAM-ID>Record.javaのコードを記述する
-   *
-   * @param rcdFile <PROGRAM-ID>Record.javaのファイル情報を保持する
-   * @param params PROCEDURE DIVISION USING句に記述されている引数の配列
-   */
-  private static void writeRecord(FileWriter rcdFile, JSONArray params) {
-    JSONObject param;
-    PrintWriter rcdWriter = new PrintWriter(rcdFile);
-    String defaultValue;
-    String type;
-    int i;
+        argPrint(rcdWriter, params, true, false);
 
-    if (ApiFilesOptions.packageName != null) {
-      rcdWriter.println("package " + ApiFilesOptions.packageName + ";");
-    } else {
-      rcdWriter.println("package com.example.restservice;");
+        rcdWriter.print(") {\n" + "    public " + programId + "Record(){\n" + "        this(200, ");
+        for (i = 0; i < params.length(); ++i) {
+            param = params.getJSONObject(i);
+            type = param.getString("java_type");
+
+            if ("String".equals(type)) {
+                defaultValue = "\"\"";
+            } else {
+                defaultValue = "0";
+            }
+
+            rcdWriter.print(defaultValue);
+            if (i < params.length() - 1) {
+                rcdWriter.print(", ");
+            }
+        }
+
+        rcdWriter.println(");\n" + "    }\n" + "}");
+        rcdWriter.close();
     }
 
-    rcdWriter.print("public record " + programId + "Record(int statuscode, ");
+    /**
+     * 生成されるJavaファイルに記述されるメソッドの引数などを記述する
+     *
+     * @param writer 生成されるJavaファイルの情報を保持する
+     * @param params PROCEDURE DIVISION USING句に記述されている引数の配列
+     * @param isType 引数の型を記述するかどうか
+     * @param isRecord 引数がレコード型かどうか
+     */
+    private static void argPrint(
+            PrintWriter writer, JSONArray params, boolean isType, boolean isRecord) {
+        JSONObject param;
+        String name;
+        String type;
+        int i;
 
-    argPrint(rcdWriter, params, true, false);
-
-    rcdWriter.print(") {\n" + "    public " + programId + "Record(){\n" + "        this(200, ");
-    for (i = 0; i < params.length(); ++i) {
-      param = params.getJSONObject(i);
-      type = param.getString("java_type");
-
-      if ("String".equals(type)) {
-        defaultValue = "\"\"";
-      } else {
-        defaultValue = "0";
-      }
-
-      rcdWriter.print(defaultValue);
-      if (i < params.length() - 1) {
-        rcdWriter.print(", ");
-      }
+        for (i = 0; i < params.length(); ++i) {
+            param = params.getJSONObject(i);
+            name = param.getString("variable_name").replace('-', '_');
+            if (isType) {
+                type = param.getString("java_type");
+                name = type + " " + name;
+            } else if (isRecord) {
+                name = programId + "Record." + name + "()";
+            }
+            writer.print(name);
+            if (i < params.length() - 1) {
+                writer.print(", ");
+            }
+        }
     }
-
-    rcdWriter.println(");\n" + "    }\n" + "}");
-    rcdWriter.close();
-  }
-
-  /**
-   * 生成されるJavaファイルに記述されるメソッドの引数などを記述する
-   *
-   * @param writer 生成されるJavaファイルの情報を保持する
-   * @param params PROCEDURE DIVISION USING句に記述されている引数の配列
-   * @param isType 引数の型を記述するかどうか
-   * @param isRecord 引数がレコード型かどうか
-   */
-  private static void argPrint(
-      PrintWriter writer, JSONArray params, boolean isType, boolean isRecord) {
-    JSONObject param;
-    String name;
-    String type;
-    int i;
-
-    for (i = 0; i < params.length(); ++i) {
-      param = params.getJSONObject(i);
-      name = param.getString("variable_name").replace('-', '_');
-      if (isType) {
-        type = param.getString("java_type");
-        name = type + " " + name;
-      } else if (isRecord) {
-        name = programId + "Record." + name + "()";
-      }
-      writer.print(name);
-      if (i < params.length() - 1) {
-        writer.print(", ");
-      }
-    }
-  }
 }

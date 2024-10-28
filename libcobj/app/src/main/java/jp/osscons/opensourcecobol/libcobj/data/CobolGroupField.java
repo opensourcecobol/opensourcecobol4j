@@ -25,90 +25,90 @@ import jp.osscons.opensourcecobol.libcobj.exceptions.CobolRuntimeException;
 /** 集団項目を扱う */
 public class CobolGroupField extends AbstractCobolField {
 
-  /**
-   * コンストラクタ
-   *
-   * @param size データを格納するバイト配列の長さ
-   * @param dataStorage データを格納するバイト配列を扱うオブジェクト
-   * @param attribute 変数に関する様々な情報を保持するオブジェクト
-   */
-  public CobolGroupField(int size, CobolDataStorage dataStorage, CobolFieldAttribute attribute) {
-    super(size, dataStorage, attribute);
-  }
-
-  @Override
-  public byte[] getBytes() {
-    return dataStorage.getData(size);
-  }
-
-  @Override
-  public String getString() {
-    try {
-      return new String(dataStorage.getData(), "SJIS");
-    } catch (UnsupportedEncodingException e) {
-      return "";
-    }
-  }
-
-  @Override
-  public int getInt() {
-    return 0;
-  }
-
-  @Override
-  public CobolDecimal getDecimal() {
-    return null;
-  }
-
-  @Override
-  public void setDecimal(BigDecimal decimal) {}
-
-  @Override
-  public void moveFrom(AbstractCobolField src) {
-    AbstractCobolField src1 = this.preprocessOfMoving(src);
-    if (src1 == null) {
-      return;
+    /**
+     * コンストラクタ
+     *
+     * @param size データを格納するバイト配列の長さ
+     * @param dataStorage データを格納するバイト配列を扱うオブジェクト
+     * @param attribute 変数に関する様々な情報を保持するオブジェクト
+     */
+    public CobolGroupField(int size, CobolDataStorage dataStorage, CobolFieldAttribute attribute) {
+        super(size, dataStorage, attribute);
     }
 
-    CobolAlphanumericField.moveAlphanumToAlphanum(this, src1);
-  }
-
-  @Override
-  public void moveFrom(CobolDataStorage dataStorage) {}
-
-  @Override
-  public void moveFrom(byte[] bytes) {
-    if (bytes.length >= this.size) {
-      this.dataStorage.setBytes(bytes, this.size);
-    } else {
-      this.dataStorage.setBytes(bytes, bytes.length);
-      this.dataStorage.fillBytes(bytes.length, (byte) 0x20, this.size);
-    }
-  }
-
-  @Override
-  public void moveFrom(String string) {
-    byte[] bytes;
-    try {
-      bytes = string.getBytes("SJIS");
-    } catch (UnsupportedEncodingException e) {
-      return;
+    @Override
+    public byte[] getBytes() {
+        return dataStorage.getData(size);
     }
 
-    this.moveFrom(bytes);
-  }
+    @Override
+    public String getString() {
+        try {
+            return new String(dataStorage.getData(), "SJIS");
+        } catch (UnsupportedEncodingException e) {
+            return "";
+        }
+    }
 
-  @Override
-  public void moveFrom(int number) {}
+    @Override
+    public int getInt() {
+        return 0;
+    }
 
-  @Override
-  public void moveFrom(double number) {}
+    @Override
+    public CobolDecimal getDecimal() {
+        return null;
+    }
 
-  @Override
-  public void moveFrom(BigDecimal number) {}
+    @Override
+    public void setDecimal(BigDecimal decimal) {}
 
-  @Override
-  public int addPackedInt(int n) {
-    throw new CobolRuntimeException(0, "実装しないコード");
-  }
+    @Override
+    public void moveFrom(AbstractCobolField src) {
+        AbstractCobolField src1 = this.preprocessOfMoving(src);
+        if (src1 == null) {
+            return;
+        }
+
+        CobolAlphanumericField.moveAlphanumToAlphanum(this, src1);
+    }
+
+    @Override
+    public void moveFrom(CobolDataStorage dataStorage) {}
+
+    @Override
+    public void moveFrom(byte[] bytes) {
+        if (bytes.length >= this.size) {
+            this.dataStorage.setBytes(bytes, this.size);
+        } else {
+            this.dataStorage.setBytes(bytes, bytes.length);
+            this.dataStorage.fillBytes(bytes.length, (byte) 0x20, this.size);
+        }
+    }
+
+    @Override
+    public void moveFrom(String string) {
+        byte[] bytes;
+        try {
+            bytes = string.getBytes("SJIS");
+        } catch (UnsupportedEncodingException e) {
+            return;
+        }
+
+        this.moveFrom(bytes);
+    }
+
+    @Override
+    public void moveFrom(int number) {}
+
+    @Override
+    public void moveFrom(double number) {}
+
+    @Override
+    public void moveFrom(BigDecimal number) {}
+
+    @Override
+    public int addPackedInt(int n) {
+        throw new CobolRuntimeException(0, "実装しないコード");
+    }
 }
