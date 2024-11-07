@@ -2667,6 +2667,7 @@ static void joutput_search_all(cb_tree table, cb_tree stmt, cb_tree cond,
   joutput_prefix();
   joutput("int tail = ");
   if (p->occurs_depending) {
+    joutput("(int)");
     joutput_integer(p->occurs_depending);
     joutput(" + 1;\n");
   } else {
