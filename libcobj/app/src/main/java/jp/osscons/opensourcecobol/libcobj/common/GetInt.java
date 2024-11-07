@@ -26,6 +26,7 @@ public interface GetInt {
      * TODO: 準備中
      *
      * @return TODO: 準備中
+     * @throws CobolStopRunException TODO: 準備中
      */
     int run() throws CobolStopRunException;
 }
