@@ -18,6 +18,8 @@
  */
 package jp.osscons.opensourcecobol.libcobj.common;
 
+import jp.osscons.opensourcecobol.libcobj.exceptions.CobolStopRunException;
+
 /** TODO: 準備中 */
 public interface GetInt {
     /**
@@ -25,5 +27,5 @@ public interface GetInt {
      *
      * @return TODO: 準備中
      */
-    int run();
+    int run() throws CobolStopRunException;
 }
