@@ -1,0 +1,25 @@
+AT_SETUP([PERFORM UNTIL whose condition contains division])
+
+AT_DATA([prog.cbl], [
+        IDENTIFICATION DIVISION.
+        PROGRAM-ID. prog.
+        DATA DIVISION.
+        WORKING-STORAGE SECTION.
+        01 CNT  PIC 9(4) VALUE 1000.
+        01 I    PIC 9(4) VALUE 1.
+        PROCEDURE DIVISION.
+        MAIN.
+            PERFORM
+              VARYING I
+              FROM 1 BY 1
+              UNTIL I > (CNT + 743) / 744
+              PERFORM SUB
+            END-PERFORM
+            STOP RUN.
+        SUB.
+            DISPLAY "HELLO".
+])
+
+AT_CHECK([${COBJ} prog.cbl])
+
+AT_CLEANUP
