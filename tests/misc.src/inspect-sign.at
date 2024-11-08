@@ -1,0 +1,31 @@
+AT_SETUP([DISPLAY values after INSPECT execution])
+
+AT_DATA([prog.cbl], [
+       IDENTIFICATION              DIVISION.
+       PROGRAM-ID.                 prog.
+       DATA                        DIVISION.
+       WORKING-STORAGE             SECTION.
+       01 DATA1
+        02 DATA-SIGN              PIC S9(5).
+       01 DATA2
+        02 DATA-SIGN-LEADING      PIC S9(5) SIGN IS LEADING.
+       PROCEDURE                   DIVISION.
+       MAIN-RTN.
+           MOVE -12345 TO DATA-SIGN.
+           INSPECT DATA-SIGN REPLACING ALL ' ' BY '0'.
+           DISPLAY DATA1.
+
+           MOVE -12345 TO DATA-SIGN-LEADING.
+           INSPECT DATA-SIGN-LEADING REPLACING ALL ' ' BY '0'.
+           DISPLAY DATA2.
+           STOP RUN.
+])
+
+
+AT_CHECK([${COMPILE} prog.cbl])
+AT_CHECK([${RUN_MODULE} prog], [0],
+[1234u
+q2345
+])
+
+AT_CLEANUP
