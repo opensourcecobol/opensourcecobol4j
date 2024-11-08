@@ -525,7 +525,7 @@ public class CobolNumericField extends AbstractCobolField {
         // }
 
         else {
-            // value = (byte) (value >= 0x70 ? value - 0x40 : value);
+            value = (byte) (value >= 0x70 ? value - 0x40 : value);
             this.getDataStorage().setByte(p, (byte) (sign < 0 ? value + 0x40 : value));
         }
     }
