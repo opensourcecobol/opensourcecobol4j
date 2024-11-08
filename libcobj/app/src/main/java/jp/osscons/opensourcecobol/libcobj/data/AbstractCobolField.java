@@ -1615,7 +1615,7 @@ public abstract class AbstractCobolField {
      * @param p TODO: 準備中
      * @param sign TODO: 準備中
      */
-    private static void putSignEbcdic(CobolDataStorage p, int sign) {
+    public static void putSignEbcdic(CobolDataStorage p, int sign) {
         if (sign < 0) {
             switch (p.getByte(0)) {
                 case '0':
