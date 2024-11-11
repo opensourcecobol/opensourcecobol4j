@@ -479,7 +479,8 @@ public class CobolNumericField extends AbstractCobolField {
                 return 1;
             }
             if (value == 0x20) {
-                this.getDataStorage().setByte(p, (byte) 0x30);
+                // System.out.println("dbg: getSign() setByte");
+                // this.getDataStorage().setByte(p, (byte) 0x30);
                 return 1;
             }
 
