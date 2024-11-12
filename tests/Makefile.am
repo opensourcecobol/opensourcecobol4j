@@ -221,6 +221,9 @@ misc_DEPENDENCIES = \
 	misc.src/evaluate-switch.at \
 	misc.src/fserial-variable.at \
 	misc.src/file-handler-japanese.at \
+	misc.src/perform-until-div.at \
+	misc.src/search-occurs-depending.at \
+	misc.src/fix-subtract.at \
 	misc.src/display-inspect-sign.at
 
 EXTRA_DIST = $(srcdir)/package.m4 \

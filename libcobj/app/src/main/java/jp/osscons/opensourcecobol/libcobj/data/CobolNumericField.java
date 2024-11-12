@@ -691,8 +691,47 @@ public class CobolNumericField extends AbstractCobolField {
             }
         }
 
+        if (this.isPositiveZeroOrNegativeZero()) {
+            sign = 1;
+        }
+
         this.putSign(sign);
         return 0;
+    }
+
+    /**
+     * このフィールドが正のゼロまたは負のゼロであるかどうかを判定する
+     */
+    private boolean isPositiveZeroOrNegativeZero() {
+        int signIndex;
+        CobolFieldAttribute attr = this.getAttribute();
+        if (attr.isFlagHaveSign() && !attr.isFlagSignSeparate()) {
+            if (attr.isFlagSignLeading()) {
+                signIndex = 0;
+            } else {
+                signIndex = this.getSize() - 1;
+            }
+        } else {
+            signIndex = -1000;
+        }
+
+        CobolDataStorage data = this.getDataStorage();
+        int size = this.getFieldSize();
+        int firstDataIndex = this.getFirstDataIndex();
+        for (int i = 0; i < size; ++i) {
+            int index = firstDataIndex + i;
+            byte value = data.getByte(index);
+            if (index == signIndex) {
+                if (value != 0x30 && value != 0x70) {
+                    return false;
+                }
+            } else {
+                if (value != 0x30) {
+                    return false;
+                }
+            }
+        }
+        return true;
     }
 
     /**
@@ -767,6 +806,9 @@ public class CobolNumericField extends AbstractCobolField {
 
             /* perform subtraction */
             byte val = data.getByte(sp);
+            if (val >= 0x70) {
+                val -= 0x40;
+            }
             data.setByte(sp, (byte) (val - (i + carry)));
             if (val - (i + carry) < '0') {
                 carry = 1;

@@ -1973,7 +1973,7 @@ static void joutput_cond(cb_tree x, int save_flag) {
     }
     joutput_indent("(new GetInt() {");
     joutput_indent_level += 2;
-    joutput_indent("public int run(){");
+    joutput_indent("public int run() throws CobolStopRunException {");
     joutput_indent_level += 2;
     for (; x; x = CB_CHAIN(x)) {
       // 最後の文ならreturn文を書く
@@ -2667,6 +2667,7 @@ static void joutput_search_all(cb_tree table, cb_tree stmt, cb_tree cond,
   joutput_prefix();
   joutput("int tail = ");
   if (p->occurs_depending) {
+    joutput("(int)");
     joutput_integer(p->occurs_depending);
     joutput(" + 1;\n");
   } else {

@@ -1,0 +1,32 @@
+AT_SETUP([SEARCH OCCURS DEPENDING])
+
+AT_DATA([prog.cbl], [
+        IDENTIFICATION DIVISION. 
+        PROGRAM-ID. prog.
+        DATA DIVISION.
+        WORKING-STORAGE SECTION. 
+        01 AAA.
+          02 AAA1         PIC X(04) VALUE "HOGE".
+          02 FILLER       PIC X(18) VALUE SPACE.
+          02 AAA2   PIC S9(4) COMP.
+        01 BBB.
+          02 AAA-1 OCCURS 1 TO 11 DEPENDING ON AAA2
+              ASCENDING KEY KEY-A INDEXED BY K1.
+              03 KEY-A  PIC X(05).
+              03 BBB1  PIC X(05).
+              03 FILLER   PIC X(02).
+        01 CCC      PIC X(05).
+        PROCEDURE DIVISION.
+            SEARCH ALL AAA-1
+              AT END
+                MOVE "ERROR" TO CCC
+              WHEN KEY-A (K1) = "00001"
+                MOVE BBB1 (K1) TO CCC
+            END-SEARCH.
+            DISPLAY CCC.
+            STOP RUN.
+])
+
+AT_CHECK([${COBJ} prog.cbl], [0])
+
+AT_CLEANUP

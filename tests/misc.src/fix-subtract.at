@@ -1,0 +1,219 @@
+AT_SETUP([fix subtract])
+
+AT_DATA([prog.cbl], [
+        IDENTIFICATION DIVISION. 
+        PROGRAM-ID. prog.
+        DATA DIVISION.
+        WORKING-STORAGE SECTION. 
+       01  NUM-REC.
+           03  NUM-VAL PIC S9(2).
+
+        PROCEDURE DIVISION.
+           MOVE -2 TO NUM-VAL.
+           ADD  1  TO  NUM-VAL.
+           DISPLAY NUM-VAL.
+
+           MOVE -2 TO NUM-VAL.
+           ADD  3  TO  NUM-VAL.
+           DISPLAY NUM-VAL.
+
+           MOVE -2 TO NUM-VAL.
+           SUBTRACT  -1  FROM  NUM-VAL.
+           DISPLAY NUM-VAL.
+
+           MOVE -2 TO NUM-VAL.
+           SUBTRACT  -3  FROM  NUM-VAL.
+           DISPLAY NUM-VAL.
+
+           MOVE -5 TO NUM-VAL.
+           ADD 4 TO  NUM-VAL.
+           DISPLAY NUM-VAL.
+
+           MOVE -5 TO NUM-VAL.
+           ADD 5 TO  NUM-VAL.
+           DISPLAY NUM-VAL.
+
+           MOVE -5 TO NUM-VAL.
+           ADD 6 TO  NUM-VAL.
+           DISPLAY NUM-VAL.
+
+           MOVE -5 TO NUM-VAL.
+           ADD -4 TO  NUM-VAL.
+           DISPLAY NUM-VAL.
+
+           MOVE -5 TO NUM-VAL.
+           ADD -5 TO  NUM-VAL.
+           DISPLAY NUM-VAL.
+
+           MOVE -5 TO NUM-VAL.
+           ADD -6 TO  NUM-VAL.
+           DISPLAY NUM-VAL.
+      ******************************************************************
+           MOVE -5 TO NUM-VAL.
+           SUBTRACT 4 FROM  NUM-VAL.
+           DISPLAY NUM-VAL.
+
+           MOVE -5 TO NUM-VAL.
+           SUBTRACT 5 FROM  NUM-VAL.
+           DISPLAY NUM-VAL.
+
+           MOVE -5 TO NUM-VAL.
+           SUBTRACT 6 FROM  NUM-VAL.
+           DISPLAY NUM-VAL.
+
+           MOVE -5 TO NUM-VAL.
+           SUBTRACT -4 FROM  NUM-VAL.
+           DISPLAY NUM-VAL.
+
+           MOVE -5 TO NUM-VAL.
+           SUBTRACT -5 FROM  NUM-VAL.
+           DISPLAY NUM-VAL.
+
+           MOVE -5 TO NUM-VAL.
+           SUBTRACT -6 FROM  NUM-VAL.
+           DISPLAY NUM-VAL.
+      ******************************************************************
+           MOVE 0 TO NUM-VAL.
+           ADD 4 TO  NUM-VAL.
+           DISPLAY NUM-VAL.
+
+           MOVE 0 TO NUM-VAL.
+           ADD 5 TO  NUM-VAL.
+           DISPLAY NUM-VAL.
+
+           MOVE 0 TO NUM-VAL.
+           ADD 6 TO  NUM-VAL.
+           DISPLAY NUM-VAL.
+
+           MOVE 0 TO NUM-VAL.
+           ADD -4 TO  NUM-VAL.
+           DISPLAY NUM-VAL.
+
+           MOVE 0 TO NUM-VAL.
+           ADD -5 TO  NUM-VAL.
+           DISPLAY NUM-VAL.
+
+           MOVE 0 TO NUM-VAL.
+           ADD -6 TO  NUM-VAL.
+           DISPLAY NUM-VAL.
+      ******************************************************************
+           MOVE 0 TO NUM-VAL.
+           SUBTRACT 4 FROM  NUM-VAL.
+           DISPLAY NUM-VAL.
+
+           MOVE 0 TO NUM-VAL.
+           SUBTRACT 5 FROM  NUM-VAL.
+           DISPLAY NUM-VAL.
+
+           MOVE 0 TO NUM-VAL.
+           SUBTRACT 6 FROM  NUM-VAL.
+           DISPLAY NUM-VAL.
+
+           MOVE 0 TO NUM-VAL.
+           SUBTRACT -4 FROM  NUM-VAL.
+           DISPLAY NUM-VAL.
+
+           MOVE 0 TO NUM-VAL.
+           SUBTRACT -5 FROM  NUM-VAL.
+           DISPLAY NUM-VAL.
+
+           MOVE 0 TO NUM-VAL.
+           SUBTRACT -6 FROM  NUM-VAL.
+           DISPLAY NUM-VAL.
+      ******************************************************************
+           MOVE 5 TO NUM-VAL.
+           ADD 4 TO  NUM-VAL.
+           DISPLAY NUM-VAL.
+
+           MOVE 5 TO NUM-VAL.
+           ADD 5 TO  NUM-VAL.
+           DISPLAY NUM-VAL.
+
+           MOVE 5 TO NUM-VAL.
+           ADD 6 TO  NUM-VAL.
+           DISPLAY NUM-VAL.
+
+           MOVE 5 TO NUM-VAL.
+           ADD -4 TO  NUM-VAL.
+           DISPLAY NUM-VAL.
+
+           MOVE 5 TO NUM-VAL.
+           ADD -5 TO  NUM-VAL.
+           DISPLAY NUM-VAL.
+
+           MOVE 5 TO NUM-VAL.
+           ADD -6 TO  NUM-VAL.
+           DISPLAY NUM-VAL.
+      ******************************************************************
+           MOVE 5 TO NUM-VAL.
+           SUBTRACT 4 FROM  NUM-VAL.
+           DISPLAY NUM-VAL.
+
+           MOVE 5 TO NUM-VAL.
+           SUBTRACT 5 FROM  NUM-VAL.
+           DISPLAY NUM-VAL.
+
+           MOVE 5 TO NUM-VAL.
+           SUBTRACT 6 FROM  NUM-VAL.
+           DISPLAY NUM-VAL.
+
+           MOVE 5 TO NUM-VAL.
+           SUBTRACT -4 FROM  NUM-VAL.
+           DISPLAY NUM-VAL.
+
+           MOVE 5 TO NUM-VAL.
+           SUBTRACT -5 FROM  NUM-VAL.
+           DISPLAY NUM-VAL.
+
+           MOVE 5 TO NUM-VAL.
+           SUBTRACT -6 FROM  NUM-VAL.
+           DISPLAY NUM-VAL.
+      ******************************************************************
+])
+
+AT_CHECK([${COBJ} prog.cbl])
+AT_CHECK([java prog], [0],
+[-01
++01
+-01
++01
+-01
++00
++01
+-09
+-10
+-11
+-09
+-10
+-11
+-01
++00
++01
++04
++05
++06
+-04
+-05
+-06
+-04
+-05
+-06
++04
++05
++06
++09
++10
++11
++01
++00
+-01
++01
++00
+-01
++09
++10
++11
+])
+
+AT_CLEANUP
+
