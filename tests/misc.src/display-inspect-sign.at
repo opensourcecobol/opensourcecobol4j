@@ -1,4 +1,4 @@
-AT_SETUP([DISPLAY values after INSPECT execution])
+AT_SETUP([DISPLAY values after INSPECT])
 
 AT_DATA([prog.cbl], [
        IDENTIFICATION              DIVISION.
