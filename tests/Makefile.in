@@ -762,7 +762,8 @@ misc_DEPENDENCIES = \
 	misc.src/file-handler-japanese.at \
 	misc.src/perform-until-div.at \
 	misc.src/search-occurs-depending.at \
-	misc.src/fix-subtract.at
+	misc.src/fix-subtract.at \
+	misc.src/display-numeric-NUMERIC-class.at
 
 EXTRA_DIST = $(srcdir)/package.m4 \
 	$(TESTS) \

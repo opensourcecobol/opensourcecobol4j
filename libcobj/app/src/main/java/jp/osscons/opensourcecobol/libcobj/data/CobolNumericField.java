@@ -475,12 +475,7 @@ public class CobolNumericField extends AbstractCobolField {
         if (attr.isFlagSignSeparate()) {
             return value == 0x2b ? 1 : -1;
         } else {
-            if (0x30 <= value && value <= 0x39) {
-                return 1;
-            }
-            if (value == 0x20) {
-                // System.out.println("dbg: getSign() setByte");
-                // this.getDataStorage().setByte(p, (byte) 0x30);
+            if (value == 0x20 || (0x30 <= value && value <= 0x39)) {
                 return 1;
             }
 

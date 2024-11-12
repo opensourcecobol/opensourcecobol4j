@@ -1,0 +1,32 @@
+AT_SETUP([DISPLAY numeric after NUMERIC class testing])
+
+AT_DATA([prog.cbl], [
+       IDENTIFICATION   DIVISION.
+       PROGRAM-ID.      prog.
+       DATA             DIVISION.
+       WORKING-STORAGE SECTION.
+       01  N-REC.
+           03  N-VAL PIC 9.
+       PROCEDURE DIVISION.
+       MAIN-PROC.
+      *************************************************************
+           MOVE SPACE TO N-REC.
+           DISPLAY "N-VAL: '" N-VAL "'".
+           
+           IF N-VAL NUMERIC
+               DISPLAY "N-VAL is numeric"
+           ELSE
+               DISPLAY "N-VAL is not numeric"
+           END-IF.
+
+           DISPLAY "N-VAL: '" N-VAL "'".
+])
+
+AT_CHECK([${COBJ} prog.cbl])
+AT_CHECK([java prog], [0], 
+[N-VAL: ' ' 
+N-VAL is not numeric
+N-VAL: ' ' 
+])
+
+AT_CLEANUP
