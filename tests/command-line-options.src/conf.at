@@ -17,3 +17,171 @@ AT_CHECK([${COBJ} -conf=hello.conf prog.cbl], [1], [],
 ])
 
 AT_CLEANUP
+
+
+AT_SETUP([allow search key in rhs])
+
+AT_CHECK([cp ../../../config/allow-key-in-rhs.conf a.conf])
+
+# without SEARCH ALL
+AT_DATA([prog.cbl], [        
+        IDENTIFICATION DIVISION.
+        PROGRAM-ID. prog.
+        DATA DIVISION.
+        WORKING-STORAGE SECTION.
+        PROCEDURE DIVISION.
+        MAIN-RTN.
+            DISPLAY "HELLO, WORLD!!".
+            STOP RUN.
+])
+AT_CHECK([${COBJ} prog.cbl], [0])
+AT_CHECK([${COBJ} -conf=a.conf prog.cbl], [0])
+
+
+# key item of OCCURS is LEFT hand side on WHEN condition
+AT_DATA([prog.cbl], [
+        IDENTIFICATION DIVISION.
+        PROGRAM-ID. prog.
+        DATA DIVISION.
+        WORKING-STORAGE SECTION.
+        01 ELEMENT_COUNT           PIC 9(03) VALUE 3.
+        01 RECORD_ARRAY.
+          02 FILLER OCCURS 3.
+            03 METRIC_COUNT        PIC 9(03).
+        01 RECORD_ID               PIC X(02).
+        01 RECORD_KEY.
+          02 RECORD_STRUCT.
+            03 RECORD_CODE         PIC X(04).
+            03 RECORD_TYPE         PIC X(02).
+          02 SERIAL_NO             PIC 9(02).
+        01 DATA_TABLE.
+          02 ELEMENT OCCURS 1 TO 150 
+                      DEPENDING ON ELEMENT_COUNT
+                      ASCENDING KEY TABLE_KEY INDEXED BY INDEX_K.
+            03 TABLE_KEY.
+              04 KEY_CODE.
+                05 RECORD_CODE_KEY PIC X(04).
+                05 RECORD_TYPE_KEY PIC X(02).
+              04 SERIAL_NO_KEY     PIC 9(02).
+            03 FILLER              PIC X(02).
+            03 METRIC_DATA.
+              04 METRIC_ELEMENT OCCURS 10 INDEXED BY INDEX_J.
+                05 METER_NO        PIC X(08).
+                05 ADDITION_FLAG   PIC X(01).
+            03 FILLER              PIC X(02).
+      *  
+        PROCEDURE DIVISION.
+        MAIN_ROUTINE.
+            SEARCH ALL ELEMENT
+              AT END
+                MOVE ZERO TO METRIC_COUNT(1)
+                GO TO EXIT_ROUTINE
+              WHEN TABLE_KEY(INDEX_K) = RECORD_KEY
+                MOVE KEY_CODE(INDEX_K) TO RECORD_ID
+                SET METRIC_COUNT(1) TO INDEX_K.
+        EXIT_ROUTINE.
+        MAIN_EXIT.
+            STOP RUN.
+])
+AT_CHECK([${COBJ} prog.cbl], [0])
+AT_CHECK([${COBJ} -conf=a.conf prog.cbl], [0])
+
+
+# key item of OCCURS is RIGHT hand side on WHEN condition
+AT_DATA([prog.cbl], [
+        IDENTIFICATION DIVISION.
+        PROGRAM-ID. prog.
+        DATA DIVISION.
+        WORKING-STORAGE SECTION.
+        01 ELEMENT_COUNT           PIC 9(03) VALUE 3.
+        01 RECORD_ARRAY.
+          02 FILLER OCCURS 3.
+            03 METRIC_COUNT        PIC 9(03).
+        01 RECORD_ID               PIC X(02).
+        01 RECORD_KEY.
+          02 RECORD_STRUCT.
+            03 RECORD_CODE         PIC X(04).
+            03 RECORD_TYPE         PIC X(02).
+          02 SERIAL_NO             PIC 9(02).
+        01 DATA_TABLE.
+          02 ELEMENT OCCURS 1 TO 150 
+                      DEPENDING ON ELEMENT_COUNT
+                      ASCENDING KEY TABLE_KEY INDEXED BY INDEX_K.
+            03 TABLE_KEY.
+              04 KEY_CODE.
+                05 RECORD_CODE_KEY PIC X(04).
+                05 RECORD_TYPE_KEY PIC X(02).
+              04 SERIAL_NO_KEY     PIC 9(02).
+            03 FILLER              PIC X(02).
+            03 METRIC_DATA.
+              04 METRIC_ELEMENT OCCURS 10 INDEXED BY INDEX_J.
+                05 METER_NO        PIC X(08).
+                05 ADDITION_FLAG   PIC X(01).
+            03 FILLER              PIC X(02).
+      *  
+        PROCEDURE DIVISION.
+        MAIN_ROUTINE.
+            SEARCH ALL ELEMENT
+              AT END
+                MOVE ZERO TO METRIC_COUNT(1)
+                GO TO EXIT_ROUTINE
+              WHEN RECORD_KEY = TABLE_KEY(INDEX_K)
+                MOVE KEY_CODE(INDEX_K) TO RECORD_ID
+                SET METRIC_COUNT(1) TO INDEX_K.
+        EXIT_ROUTINE.
+        MAIN_EXIT.
+            STOP RUN.
+])
+AT_CHECK([(${COBJ} prog.cbl | grep "Undeclared key") > a.txt 2>&1], [1])
+AT_CHECK([${COBJ} -conf=a.conf prog.cbl], [0])
+
+
+# only key item on WHEN condition
+AT_DATA([prog.cbl], [
+        IDENTIFICATION DIVISION.
+        PROGRAM-ID. prog.
+        DATA DIVISION.
+        WORKING-STORAGE SECTION.
+        01 ELEMENT_COUNT           PIC 9(03) VALUE 3.
+        01 RECORD_ARRAY.
+          02 FILLER OCCURS 3.
+            03 METRIC_COUNT        PIC 9(03).
+        01 RECORD_ID               PIC X(02).
+        01 RECORD_KEY.
+          02 RECORD_STRUCT.
+            03 RECORD_CODE         PIC X(04).
+            03 RECORD_TYPE         PIC X(02).
+          02 SERIAL_NO             PIC 9(02).
+        01 DATA_TABLE.
+          02 ELEMENT OCCURS 1 TO 150 
+                      DEPENDING ON ELEMENT_COUNT
+                      ASCENDING KEY TABLE_KEY INDEXED BY INDEX_K.
+            03 TABLE_KEY.
+              04 KEY_CODE.
+                05 RECORD_CODE_KEY PIC X(04).
+                05 RECORD_TYPE_KEY PIC X(02).
+              04 SERIAL_NO_KEY     PIC 9(02).
+            03 FILLER              PIC X(02).
+            03 METRIC_DATA.
+              04 METRIC_ELEMENT OCCURS 10 INDEXED BY INDEX_J.
+                05 METER_NO        PIC X(08).
+                05 ADDITION_FLAG   PIC X(01).
+            03 FILLER              PIC X(02).
+      *  
+        PROCEDURE DIVISION.
+        MAIN_ROUTINE.
+            SEARCH ALL ELEMENT
+              AT END
+                MOVE ZERO TO METRIC_COUNT(1)
+                GO TO EXIT_ROUTINE
+              WHEN TABLE_KEY(INDEX_K)
+                MOVE KEY_CODE(INDEX_K) TO RECORD_ID
+                SET METRIC_COUNT(1) TO INDEX_K.
+        EXIT_ROUTINE.
+        MAIN_EXIT.
+            STOP RUN.
+])
+AT_CHECK([(${COBJ} prog.cbl | grep "Invalid type cast") > a.txt 2>&1], [1])
+AT_CHECK([(${COBJ} -conf=a.conf a.cbl | grep "Invalid type cast") > a.txt 2>&1], [1])
+
+AT_CLEANUP
