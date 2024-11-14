@@ -21,8 +21,6 @@ AT_CLEANUP
 
 AT_SETUP([allow search key in rhs])
 
-AT_CHECK([cp ../../../config/allow-key-in-rhs.conf a.conf])
-
 # without SEARCH ALL
 AT_DATA([prog.cbl], [        
         IDENTIFICATION DIVISION.
@@ -35,7 +33,7 @@ AT_DATA([prog.cbl], [
             STOP RUN.
 ])
 AT_CHECK([${COBJ} prog.cbl], [0])
-AT_CHECK([${COBJ} -conf=a.conf prog.cbl], [0])
+AT_CHECK([${COBJ} -conf=../../command-line-options.src/allow-key-in-rhs.conf prog.cbl], [0])
 
 
 # key item of OCCURS is LEFT hand side on WHEN condition
@@ -84,7 +82,7 @@ AT_DATA([prog.cbl], [
             STOP RUN.
 ])
 AT_CHECK([${COBJ} prog.cbl], [0])
-AT_CHECK([${COBJ} -conf=a.conf prog.cbl], [0])
+AT_CHECK([${COBJ} -conf=../../command-line-options.src/allow-key-in-rhs.conf prog.cbl], [0])
 
 
 # key item of OCCURS is RIGHT hand side on WHEN condition
@@ -133,7 +131,7 @@ AT_DATA([prog.cbl], [
             STOP RUN.
 ])
 AT_CHECK([(${COBJ} prog.cbl | grep "Undeclared key") > a.txt 2>&1], [1])
-AT_CHECK([${COBJ} -conf=a.conf prog.cbl], [0])
+AT_CHECK([${COBJ} -conf=../../command-line-options.src/allow-key-in-rhs.conf prog.cbl], [0])
 
 
 # only key item on WHEN condition
@@ -182,6 +180,6 @@ AT_DATA([prog.cbl], [
             STOP RUN.
 ])
 AT_CHECK([(${COBJ} prog.cbl | grep "Invalid type cast") > a.txt 2>&1], [1])
-AT_CHECK([(${COBJ} -conf=a.conf a.cbl | grep "Invalid type cast") > a.txt 2>&1], [1])
+AT_CHECK([(${COBJ} -conf=../../command-line-options.src/allow-key-in-rhs.conf prog.cbl | grep "Invalid type cast") > a.txt 2>&1], [1])
 
 AT_CLEANUP
