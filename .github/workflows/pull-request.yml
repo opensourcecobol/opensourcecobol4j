@@ -17,9 +17,6 @@ concurrency:
 permissions:
   contents: read
 
-env:
-  CLASSPATH: ":/usr/lib/opensourcecobol4j/libcobj.jar"
-
 jobs:
   check-workflows:
     uses: ./.github/workflows/check-workflows.yml
