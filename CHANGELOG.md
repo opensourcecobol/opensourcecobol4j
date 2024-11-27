@@ -4,6 +4,18 @@ All notable changes to this project will be documented in this file.
 
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 
+
+## [1.1.4] - 2024-11-29
+
+### Fix
+* Process Japanese identifiers in COBOL correctly (#540)
+* Fix `PERFORM UNTIL` (#544)
+* Fix `SEARCH` with `DEPENDING` in `OCCURS` (#545)
+* Fix add statements and subtract statements (#546)
+* Fix the process of checking signs of PIC 9(n) (#549)
+* Fix `INSPECT` statements (#550)
+* Fix `WHEN` condtins of `SEARCH` statements (#551)
+
 ## [1.1.3] - 2024-10-31
 ### Add
 * Add a new option `-variable` (#513)
