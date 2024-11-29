@@ -5,13 +5,18 @@ NEWS - user visible changes				-*- outline -*-
 * opensource COBOL 4J 1.1.4
 
 *** Bug Fixes
-  (1) Process Japanese identifiers in COBOL correctly
-  (2) Fix `PERFORM UNTIL`
-  (3) Fix `SEARCH` with `DEPENDING` in `OCCURS`
-  (4) Fix add statements and subtract statements
-  (5) Fix the process of checking signs of PIC 9(n)
-  (6) Fix `INSPECT` statements
-  (7) Fix `WHEN` condtins of `SEARCH` statements
+  (1) Process Japanese identifiers in COBOL correctly (#540)
+    * The older versions convert some Japanese characters in COBOL identifiers to another characters in Java.
+  (2) Fix the conditions `PERFORM UNTIL` (#544)
+    * If COBOL source code contains divisions in conditions of `PERFORM UNTIL`, the older versions emit compile errors.
+  (3) Fix `SEARCH` statements with data specified `OCCURS` and `DEPENDING`(#545)
+    * The older versions emit compile errors when `SEARCH` statements with data specified `OCCURS` and `DEPENDING`
+  (4) Fix `ADD` statements and `SUBTRACT` statements (#546)
+    * In some case, the result of `SUBTRACT` was previously incorrect when the operands contais PIC S9(n) negative values.
+    * In some case, the result of `ADD` was -0 instead of +0 previously.
+  (5) Fix the process of checking signs of PIC 9(n) containing spaces (#549)
+  (6) Fix `INSPECT` statements (#550)
+    * The older versions change signs of some values accidentally because of the bug of `INSPECT` statements.
 
 -----------------------------------------------------------------------
 

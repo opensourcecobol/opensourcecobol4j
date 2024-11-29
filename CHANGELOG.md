@@ -9,12 +9,17 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 
 ### Fix
 * Process Japanese identifiers in COBOL correctly (#540)
-* Fix `PERFORM UNTIL` (#544)
-* Fix `SEARCH` with `DEPENDING` in `OCCURS` (#545)
-* Fix add statements and subtract statements (#546)
-* Fix the process of checking signs of PIC 9(n) (#549)
+  * The older versions convert some Japanese characters in COBOL identifiers to another characters in Java.
+* Fix the conditions `PERFORM UNTIL` (#544)
+  * If COBOL source code contains divisions in conditions of `PERFORM UNTIL`, the older versions emit compile errors.
+* Fix `SEARCH` statements with data specified `OCCURS` and `DEPENDING`(#545)
+  * The older versions emit compile errors when `SEARCH` statements with data specified `OCCURS` and `DEPENDING`
+* Fix `ADD` statements and `SUBTRACT` statements (#546)
+  * In some case, the result of `SUBTRACT` was previously incorrect when the operands contais PIC S9(n) negative values.
+  * In some case, the result of `ADD` was -0 instead of +0 previously.
+* Fix the process of checking signs of PIC 9(n) containing spaces (#549)
 * Fix `INSPECT` statements (#550)
-* Fix `WHEN` condtins of `SEARCH` statements (#551)
+  * The older versions change signs of some values accidentally because of the bug of `INSPECT` statements.
 
 ## [1.1.3] - 2024-10-31
 ### Add
