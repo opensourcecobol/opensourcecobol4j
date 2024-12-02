@@ -7,7 +7,6 @@ codegen.c \
 config.c \
 error.c \
 field.c \
-pplex.c \
 ppparse.c \
 ppparse.h \
 reserved.c \

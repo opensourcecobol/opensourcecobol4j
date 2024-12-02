@@ -10,6 +10,8 @@ Although any topics related to opensource COBOL 4J can be posted in [Issues](htt
 We will check pull requests that passed all CI checks running both tests and static code analysis.
 The static analysis checks whether C and Java source files are formatted using [clang-format](https://clang.llvm.org/docs/ClangFormat.html) and [google-java-format](https://github.com/google/google-java-format) respectively, and whether [PMD](https://pmd.github.io/) finds no error and warning in Java source files.
 
+Before you submit pull requests, you should run `./format` in order to format files in this repository.
+
 The below sections describe how to setup and run static code analysis.
 
 ## Setup Development Environment
@@ -26,13 +28,10 @@ We strongly recommend using [Visual Studio Code with Dev Containers](https://cod
 1. (Optional) Press `Ctrl+Shift+@` to open a new terminal of Visual Studio code.
 1. (Optional) [Setup credentials for git](https://code.visualstudio.com/remote/advancedcontainers/sharing-git-credentials).
 
-> [!CAUTION]
-> In the dev container, [Git Hooks](https://git-scm.com/book/ms/v2/Customizing-Git-Git-Hooks) executes code formatters when starting `git commit` command. It may take a minutes when you run `git commit` for the first time.
-
 ## Run static analysis
 
 > [!CAUTION]
-> CI executes formatters and static analysis tools in Almalinux 9. The behavior of these tools may differ from the one in other operatins systems.
+> Since the behavior of these tools may differ from the one in other operatins systems, we recommend that you run `./format` in Visual Studio Code with Dev Containers described in the previous section.
 
 ### check with clang-format and google-java-format
 

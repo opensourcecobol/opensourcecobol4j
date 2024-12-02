@@ -10,6 +10,8 @@ CIはテストとコードの静的解析を実行します。
 CIの静的解析はCとJavaのソースコードがそれぞれ[clang-format](https://clang.llvm.org/docs/ClangFormat.html) and [google-java-format](https://github.com/google/google-java-format)で整形されているか、
 [PMD](https://pmd.github.io/)によるJavaソースコードの静的解析でエラーや警告が表示されないかをチェックします。
 
+Pull Request提出時には、./formatを実行してリポジトリ内のコードをフォーマットしてください。
+
 下記にそれぞれのツールのセットアップと使用方法を説明します。
 
 ## 開発環境のセットアップ
@@ -26,14 +28,11 @@ CIの静的解析はCとJavaのソースコードがそれぞれ[clang-format](h
 1. （オプション）`Ctrl+Shift+@`を押して、Visual Studio Codeの新しいターミナルを開きます。
 1. （オプション）[gitの認証情報を設定](https://code.visualstudio.com/remote/advancedcontainers/sharing-git-credentials)します。
 
-> [!CAUTION]
-> Dev container内では、[Git Hooks](https://git-scm.com/book/ms/v2/Customizing-Git-Git-Hooks)が`git commit`コマンドを開始する際にコードフォーマッタを実行します。初めて`git commit`を実行する際には数分かかることがあります。
-
 
 ## 静的解析の実行
 
 > [!CAUTION]
-> CIはAlmalinux 9でフォーマッタと静的解析ツールを実行します。これらのツールの動作は他のオペレーティングシステムとは異なる場合があります。
+> これらのツールの動作は他のオペレーティングシステムとは異なる場合があります。上記のVisual Studio Code with Dev Containersの環境でフォーマッタを実行することを推奨します。
 
 ### clang-formatとgoogle-java-format
 
