@@ -32,7 +32,7 @@ tasks {
 
 dependencies {
     implementation("com.google.guava:guava:33.4.0-jre")
-    implementation("org.xerial:sqlite-jdbc:3.47.2.0")
+    implementation("org.xerial:sqlite-jdbc:3.48.0.0")
     implementation("commons-cli:commons-cli:1.9.0")
     testImplementation("org.junit.jupiter:junit-jupiter:5.11.4")
     testRuntimeOnly("org.junit.platform:junit-platform-launcher")
