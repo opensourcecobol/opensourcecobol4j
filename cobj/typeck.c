@@ -4176,7 +4176,7 @@ cb_tree cb_build_replacing_all(cb_tree x, cb_tree y, cb_tree l, cb_tree var) {
 
   if (CB_LITERAL_P(x)) {
     const unsigned char *p = CB_LITERAL(x)->data;
-    if (COB_U8BYTE_1(*p) > 1 && y == cb_zero) {
+    if (COB_U8BYTE_1(*p) == 3 && y == cb_zero) {
       y = cb_zero_utf8;
     }
   }
