@@ -1044,7 +1044,7 @@ public abstract class AbstractCobolField {
                 break;
             }
         }
-        return new String(data.getByteArray(0, i + 1), AbstractCobolField.charSetSJIS);
+        return new String(data.getByteArray(0, i + 1));
     }
 
     /**
