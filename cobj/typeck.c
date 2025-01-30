@@ -376,15 +376,20 @@ char *cb_encode_program_id(const char *name) {
   }
   /* encode invalid letters */
 #ifdef I18N_UTF8
+  int n, i;
+
   for (; *s; s++) {
     if (isalnum(*s) || *s == '_') {
       *p++ = *s;
     } else if (*s == '-') {
       *p++ = '_';
       *p++ = '_';
-    } else if (COB_U8BYTE_1(*p)) {
-      p += sprintf((char *)p, "_%02X%02X%02X", s[0], s[1], s[2]);
-      s += 2;
+    } else if ((n = COB_U8BYTE_1(*s))) {
+      p += sprintf((char *)p, "_");
+      for (i = 0; i < n; i++) {
+        p += sprintf((char *)p, "%02X", s[i]);
+      }
+      s += n - 1;
     } else {
       p += sprintf((char *)p, "_%02X", *s);
     }
