@@ -92,7 +92,7 @@ cb_tree cb_true;
 cb_tree cb_false;
 cb_tree cb_null;
 cb_tree cb_zero;
-cb_tree cb_zero_utf8;
+cb_tree cb_zen_zero;
 cb_tree cb_one;
 cb_tree cb_space;
 cb_tree cb_blank;
@@ -765,7 +765,7 @@ void cb_init_constants(void) {
   cb_false = make_constant(CB_CATEGORY_BOOLEAN, "0");
   cb_null = make_constant(CB_CATEGORY_DATA_POINTER, "0");
   cb_zero = make_constant(CB_CATEGORY_NUMERIC, "CobolConstant.zero");
-  cb_zero_utf8 = make_constant(CB_CATEGORY_NUMERIC, "CobolConstant.zeroUTF8");
+  cb_zen_zero = make_constant(CB_CATEGORY_NUMERIC, "CobolConstant.zenZero");
   cb_one = make_constant(CB_CATEGORY_NUMERIC, "CobolConstant.One");
   cb_space = make_constant(CB_CATEGORY_ALPHANUMERIC, "CobolConstant.space");
   cb_blank = make_constant(CB_CATEGORY_ALPHANUMERIC, "CobolConstant.blank");
