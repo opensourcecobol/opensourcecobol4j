@@ -913,6 +913,7 @@ static void joutput_base(struct cb_field *f) {
   }
 
   if (cb_field_variable_address(f)) {
+    int firstLoop = 1;
     for (p = f->parent; p; f = f->parent, p = f->parent) {
       for (p = p->children; p != f; p = p->sister) {
         struct cb_field *v = cb_field_variable_size(p);
@@ -923,9 +924,16 @@ static void joutput_base(struct cb_field *f) {
           }
           joutput_integer(v->occurs_depending);
         } else {
-          joutput(" + %d", p->size * p->occurs_max);
+          if (firstLoop) {
+            joutput(".getSubDataStorage(");
+            joutput("%d", p->size * p->occurs_max);
+            firstLoop = 0;
+          } else {
+            joutput(" + %d", p->size * p->occurs_max);
+          }
         }
       }
+      joutput(")");
     }
   }
 }
