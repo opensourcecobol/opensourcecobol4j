@@ -981,6 +981,7 @@ ppinput (char *buff, int max_size)
 	int	i;
 	int	n;
 	int	coln;
+	int buff_len = 0;
 	char	*str1 = NULL;
 	char	*str2 = NULL;
 	int comment_counter = 0;
@@ -1152,8 +1153,19 @@ start:
 		within_comment = 0;
 	}
 
+#ifdef I18N_UTF8
+	unsigned char *p = (unsigned char *)buff;
+	if(utf8_ext_pick(p)){
+		buff_len = (int) utf8_calc_sjis_size(p, strlen(buff));
+	}else{
+		buff_len = n;
+	}
+#else /*!I18N_UTF8*/
+	buff_len = n;
+#endif /*I18N_UTF8*/
+
 	/* check the text that is longer than cb_text_column */
-	if (n > cb_text_column + 1 && cb_source_format != CB_FORMAT_VARIABLE) {
+	if (buff_len > cb_text_column + 1 && cb_source_format != CB_FORMAT_VARIABLE) {
 
 		/* show warning if it is not whitespaces */
 		if (cb_warn_column_overflow && last_line_2 < cb_source_line - 1) {

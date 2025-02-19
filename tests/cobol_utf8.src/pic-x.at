@@ -524,6 +524,43 @@ AT_CHECK([diff out1.txt out2.txt])
 
 AT_CLEANUP
 
+AT_SETUP([WRITE FROM Japanese literal])
+export LC_ALL=''
+
+AT_DATA([prog.cob], [
+       IDENTIFICATION   DIVISION.
+       PROGRAM-ID.      prog.
+       ENVIRONMENT      DIVISION.
+       INPUT-OUTPUT     SECTION.
+       FILE-CONTROL.
+           SELECT TEST-FILE ASSIGN TO "TESTFILE"
+                  ORGANIZATION IS SEQUENTIAL.
+       DATA DIVISION.
+       FILE SECTION.
+       FD  TEST-FILE.
+       01  TEST-DATA     PIC X(36).
+       WORKING-STORAGE SECTION.
+       PROCEDURE DIVISION.
+           OPEN  OUTPUT TEST-FILE.
+           WRITE TEST-DATA FROM  "縄文弥生古墳飛鳥奈良平安鎌倉室町江戸".
+           CLOSE TEST-FILE.
+
+           OPEN INPUT TEST-FILE.
+           READ TEST-FILE
+               NOT AT END
+                   DISPLAY TEST-DATA
+           END-READ.
+           CLOSE TEST-FILE.
+])
+
+AT_CHECK([cobj prog.cob])
+AT_CHECK([java prog > out1.txt])
+AT_CHECK([echo -n '縄文弥生古墳飛鳥奈良平安鎌倉室町江戸
+' | nkf --ic=UTF-8 --oc=Shift_JIS > out2.txt])
+AT_CHECK([diff out1.txt out2.txt])
+
+AT_CLEANUP
+
 #AT_SETUP([Readable string literals])
 #export LC_ALL=''
 ## Older compilers converts string literals "日本語" in COBOL source code

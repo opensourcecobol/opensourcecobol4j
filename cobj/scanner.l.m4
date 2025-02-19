@@ -815,6 +815,12 @@ read_literal (int mark, enum cb_category category)
 	}
 
 	while ((c = input ()) != EOF) {
+#if EOF != 0
+		if (unlikely (c == 0)){ 
+			cb_error(_("The literal is not properly closed by %c."), mark);
+			break;
+		}
+#endif
 		plexbuff[i++] = c;
 		if (c == mark && (c = input ()) != mark) {
 			i--;
