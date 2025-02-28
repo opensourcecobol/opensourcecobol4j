@@ -18,11 +18,16 @@
  */
 package jp.osscons.opensourcecobol.libcobj.termio;
 
+import java.io.InputStreamReader;
 import java.io.PrintStream;
 import java.nio.ByteBuffer;
+import java.nio.charset.Charset;
+import java.nio.charset.StandardCharsets;
+import java.nio.charset.UnsupportedCharsetException;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.Scanner;
+import jp.osscons.opensourcecobol.libcobj.common.CobolEncoding;
 import jp.osscons.opensourcecobol.libcobj.common.CobolModule;
 import jp.osscons.opensourcecobol.libcobj.common.CobolUtil;
 import jp.osscons.opensourcecobol.libcobj.data.AbstractCobolField;
@@ -68,7 +73,16 @@ public class CobolTerminal {
 
     private static void displayAlnum(AbstractCobolField f, PrintStream stream) {
         CobolDataStorage storage = f.getDataStorage();
-        stream.write(storage.getRefOfData(), storage.getIndex(), f.getSize());
+        if (CobolUtil.terminalEncoding == CobolEncoding.UTF8) {
+            byte[] utf8Bytes =
+                    new String(
+                                    storage.getByteArrayRef(0, f.getSize()),
+                                    AbstractCobolField.charSetSJIS)
+                            .getBytes(StandardCharsets.UTF_8);
+            stream.write(utf8Bytes, 0, utf8Bytes.length);
+        } else {
+            stream.write(storage.getRefOfData(), storage.getIndex(), f.getSize());
+        }
     }
 
     /**
@@ -108,7 +122,18 @@ public class CobolTerminal {
     public static void accept(AbstractCobolField f) {
         try {
             if (scan == null) {
-                scan = new Scanner(System.in);
+                if (CobolUtil.terminalEncoding == CobolEncoding.UTF8) {
+                    scan = new Scanner(new InputStreamReader(System.in, StandardCharsets.UTF_8));
+                } else {
+                    try {
+                        scan =
+                                new Scanner(
+                                        new InputStreamReader(
+                                                System.in, Charset.forName("Shift_JIS")));
+                    } catch (UnsupportedCharsetException e) {
+                        scan = new Scanner(System.in);
+                    }
+                }
             }
 
             String input = scan.nextLine();

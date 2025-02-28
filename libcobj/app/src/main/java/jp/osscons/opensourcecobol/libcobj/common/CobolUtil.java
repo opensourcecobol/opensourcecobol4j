@@ -72,6 +72,9 @@ public class CobolUtil {
     /** TDOD: 準備中 */
     public static int fileSeqWriteBufferSize = 10;
 
+    /** DISPLAY/ACCEPT文によるデータ出力時のエンコーディング */
+    public static CobolEncoding terminalEncoding = CobolEncoding.SHIFT_JIS;
+
     private static boolean lineTrace = false;
 
     /** TDOD: 準備中 */
@@ -347,6 +350,16 @@ public class CobolUtil {
             int size = Integer.parseInt(s);
             if (size >= 0) {
                 CobolUtil.fileSeqWriteBufferSize = size;
+            }
+        }
+
+        s = System.getenv("COB_TERMINAL_ENCODING");
+        CobolUtil.terminalEncoding = CobolEncoding.SHIFT_JIS;
+        if (s != null) {
+            Pattern p = Pattern.compile("[uU][tT][fF][_-]?8");
+            Matcher m = p.matcher(s);
+            if (m.matches()) {
+                CobolUtil.terminalEncoding = CobolEncoding.UTF8;
             }
         }
     }

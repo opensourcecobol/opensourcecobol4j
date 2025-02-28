@@ -542,3 +542,43 @@ AT_CHECK([grep 'Í§2' < prog3.java > /dev/null])
 AT_CHECK([grep 'Í§3' < prog3.java > /dev/null])
 
 AT_CLEANUP
+
+AT_SETUP([DISPLAY/ACCEPT encodings])
+
+AT_DATA([prog.cbl], [
+       IDENTIFICATION DIVISION.
+       PROGRAM-ID. prog.
+       ENVIRONMENT DIVISION.
+       DATA DIVISION.
+       WORKING-STORAGE SECTION.
+       01 X1 PIC X(6) VALUE "éRóúåß".
+       01 N1 PIC N(3) VALUE "è„íÜâ∫".
+       01 G1.
+         03 X2 PIC X(6) VALUE "è¨äwçZ".
+         01 N2 PIC N(3) VALUE "âÑëÿóø".
+       PROCEDURE DIVISION.
+           DISPLAY "ì˙ñ{åÍ".
+           DISPLAY X1.
+           DISPLAY N1.
+           DISPLAY G1.
+
+           ACCEPT X1.
+           DISPLAY X1.
+           ACCEPT N1.
+           DISPLAY N1.
+           ACCEPT G1.
+           DISPLAY G1.
+           STOP RUN.
+])
+
+AT_CHECK([cobj prog.cbl])
+
+AT_CHECK([java prog                                 < ../../i18n_sjis.src/data/in-sjis.txt > out-none.txt])
+AT_CHECK([COB_TERMINAL_ENCODING=SHIFT_JIS java prog < ../../i18n_sjis.src/data/in-sjis.txt > out-sjis.txt])
+AT_CHECK([COB_TERMINAL_ENCODING=UTF-8     java prog < ../../i18n_sjis.src/data/in-utf8.txt > out-utf8.txt])
+
+AT_CHECK([diff out-none.txt ../../i18n_sjis.src/data/out-sjis.txt])
+AT_CHECK([diff out-sjis.txt ../../i18n_sjis.src/data/out-sjis.txt])
+AT_CHECK([diff out-utf8.txt ../../i18n_sjis.src/data/out-utf8.txt])
+
+AT_CLEANUP
