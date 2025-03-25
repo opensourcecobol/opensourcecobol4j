@@ -780,7 +780,8 @@ misc_DEPENDENCIES = \
 	misc.src/search-occurs-depending.at \
 	misc.src/fix-subtract.at \
 	misc.src/display-numeric-NUMERIC-class.at \
-	misc.src/display-inspect-sign.at
+	misc.src/display-inspect-sign.at \
+	misc.src/comp1-comp2.at
 
 EXTRA_DIST = $(srcdir)/package.m4 \
 	$(TESTS) \

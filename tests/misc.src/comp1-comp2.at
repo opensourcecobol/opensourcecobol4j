@@ -1,0 +1,21 @@
+AT_SETUP([COMP-1 COMP-2 error])
+
+AT_DATA([prog.cbl], [
+       identification              division.
+      ******************************************************************
+       program-id.                 prog.
+      ******************************************************************
+       data                        division.
+       WORKING-STORAGE SECTION.
+       01 H COMP-1.
+       01 I COMP-2.
+       PROCEDURE DIVISION.
+       STOP RUN.
+])
+
+AT_CHECK([${COBJ} prog.cbl], [1], [],
+[prog.cbl:8: Error: COMP-1 not implemented
+prog.cbl:9: Error: COMP-2 not implemented
+])
+
+AT_CLEANUP

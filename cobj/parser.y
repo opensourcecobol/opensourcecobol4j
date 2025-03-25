@@ -2889,8 +2889,16 @@ usage_clause:
 usage:
   BINARY			{ current_field->usage = CB_USAGE_BINARY; }
 | COMP				{ current_field->usage = CB_USAGE_BINARY; }
-| COMP_1			{ current_field->usage = CB_USAGE_FLOAT; }
-| COMP_2			{ current_field->usage = CB_USAGE_DOUBLE; }
+| COMP_1			
+{
+	current_field->usage = CB_USAGE_FLOAT; 
+	cb_error (_("COMP-1 not implemented"));
+}
+| COMP_2			
+{ 
+	current_field->usage = CB_USAGE_DOUBLE; 
+	cb_error (_("COMP-2 not implemented"));
+}
 | COMP_3			{ current_field->usage = CB_USAGE_PACKED; }
 | COMP_4			{ current_field->usage = CB_USAGE_BINARY; }
 | COMP_5			{ current_field->usage = CB_USAGE_COMP_5; }
