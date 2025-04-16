@@ -614,6 +614,25 @@ AT_CHECK([COB_TERMINAL_ENCODING=UTF-8 java prog], [0],
 
 AT_CLEANUP
 
+AT_SETUP([Exceed column 72 with Japanese literal])
+export LC_ALL=''
+
+AT_DATA([prog.cob], [       
+       IDENTIFICATION   DIVISION.
+       PROGRAM-ID.      prog.
+       DATA DIVISION.
+       WORKING-STORAGE SECTION.
+       01 str PIC X(5) VALUE                                     'ｱｲｳｴｵ'.
+       PROCEDURE DIVISION.
+       DISPLAY str.
+])
+
+AT_CHECK([cobj prog.cob])
+AT_CHECK([java prog > out1.txt])
+AT_CHECK([echo -n 'アイウエオ' | nkf --ic=UTF-8 --oc=Shift_JIS > out2.txt])
+
+AT_CLEANUP
+
 #AT_SETUP([Readable string literals])
 #export LC_ALL=''
 ## Older compilers converts string literals "日本語" in COBOL source code

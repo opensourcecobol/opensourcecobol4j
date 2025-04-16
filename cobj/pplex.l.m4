@@ -1179,7 +1179,12 @@ start:
 		}
 
 		/* remove it */
+#ifdef I18N_UTF8
+        p = (unsigned char *) buff;
+		strcpy (buff + utf8_calc_sjis_column(p, cb_text_column), "\n");
+#else /*!I18N_UTF8*/
 		strcpy (buff + cb_text_column, "\n");
+#endif /*I18N_UTF8*/
 		last_line_2 = cb_source_line;
 		n = cb_text_column + 1;
 	}
