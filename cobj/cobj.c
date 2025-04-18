@@ -707,7 +707,7 @@ int utf8_hankaku_kana(const unsigned char *p) {
 }
 
 int utf8_calc_sjis_column(const unsigned char *p, int column) {
-  const unsigned char* start = p;
+  const unsigned char *start = p;
   int char_size = 0;
   int i = 0;
 
