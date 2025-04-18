@@ -711,7 +711,7 @@ int utf8_calc_sjis_column(const unsigned char *p, int column) {
   int char_size = 0;
   int i = 0;
 
-  while (i < column && p != '\0') {
+  while (i < column && *p != '\0') {
     char_size = COB_U8BYTE_1(*p);
     if (char_size == 1) {
       i++;
