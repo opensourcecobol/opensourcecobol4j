@@ -707,12 +707,11 @@ int utf8_hankaku_kana(const unsigned char *p) {
 }
 
 int utf8_calc_sjis_column(const unsigned char *p, int column) {
-  int p_size = strlen((const char *)p);
-  const unsigned char *ub = p + p_size;
+  const unsigned char* start = p;
   int char_size = 0;
   int i = 0;
 
-  while (i < column && p < ub) {
+  while (i < column && p != '\0') {
     char_size = COB_U8BYTE_1(*p);
     if (char_size == 1) {
       i++;
@@ -725,7 +724,7 @@ int utf8_calc_sjis_column(const unsigned char *p, int column) {
       p += char_size;
     }
   }
-  return p_size - strlen((const char *)p);
+  return p - start;
 }
 #endif /*I18N_UTF8*/
 
