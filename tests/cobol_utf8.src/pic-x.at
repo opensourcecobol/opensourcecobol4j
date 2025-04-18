@@ -629,7 +629,9 @@ AT_DATA([prog.cob], [
 
 AT_CHECK([cobj prog.cob])
 AT_CHECK([java prog > out1.txt])
-AT_CHECK([echo -n 'アイウエオ' | nkf --ic=UTF-8 --oc=Shift_JIS > out2.txt])
+AT_CHECK([echo -n 'ｱｲｳｴｵ
+' | nkf -x --ic=UTF-8 --oc=Shift_JIS > out2.txt])
+AT_CHECK([diff out1.txt out2.txt])
 
 AT_CLEANUP
 
