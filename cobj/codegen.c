@@ -807,7 +807,6 @@ static int is_call_parameter(const struct cb_field *f) {
 }
 
 static int joutput_field_storage(struct cb_field *f, struct cb_field *top) {
-  const char *p;
   int flag_call_parameter = is_call_parameter(top);
   if (flag_call_parameter ||
       (f->offset == 0 && strcmp(f->name, top->name) == 0)) {
@@ -815,37 +814,10 @@ static int joutput_field_storage(struct cb_field *f, struct cb_field *top) {
     joutput(base_name);
     free(base_name);
     return flag_call_parameter;
-  } else if (cb_flag_short_variable) {
-    joutput(CB_PREFIX_BASE);
-    for (p = f->name; *p != '\0'; ++p) {
-      if (*p == '-') {
-        joutput("_");
-      } else {
-        joutput("%c", *p);
-      }
-    }
-  } else if (cb_flag_serial_variable) {
+  } else {
+    //printf("dbg: base = %s\n", get_java_identifier_base(f));
     char *base_name = get_java_identifier_base(f);
     joutput(base_name);
-  } else {
-    joutput(CB_PREFIX_BASE);
-    struct cb_field *field = f;
-    int flag_first_iteration = 1;
-    while (field) {
-      if (flag_first_iteration) {
-        flag_first_iteration = 0;
-      } else {
-        joutput("__");
-      }
-      for (p = field->name; *p != '\0'; ++p) {
-        if (*p == '-') {
-          joutput("_");
-        } else {
-          joutput("%c", *p);
-        }
-      }
-      field = field->parent;
-    }
   }
   return 0;
 }
