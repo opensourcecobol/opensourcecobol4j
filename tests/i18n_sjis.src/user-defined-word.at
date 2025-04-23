@@ -177,6 +177,77 @@ AT_CHECK([java prog], [0], [OK])
 
 AT_CLEANUP
 
+
+AT_SETUP([Nihongo field name with SJIS hyphens])
+
+AT_DATA([prog.cob], [
+       IDENTIFICATION   DIVISION.
+       PROGRAM-ID.      prog.
+       DATA             DIVISION.
+       WORKING-STORAGE  SECTION.
+       01  ‚s‚d‚r‚s|‚c‚`‚s‚`‚P     PIC X(10) VALUE "test-data1".
+       01  ‚s‚d‚r‚s|‚q‚d‚b‚n‚q‚c‚P.
+         03  ‚s‚d‚r‚s|‚c‚`‚s‚`‚Q   PIC X(10) VALUE "test-data2".
+         03  ‚s‚d‚r‚s|‚q‚d‚b‚n‚q‚c‚Q.
+           05  ‚s‚d‚r‚s|‚c‚`‚s‚`‚R PIC X(10) VALUE "test-data3".
+       PROCEDURE        DIVISION.
+           DISPLAY ‚s‚d‚r‚s|‚c‚`‚s‚`‚P.
+           DISPLAY ‚s‚d‚r‚s|‚c‚`‚s‚`‚Q.
+           DISPLAY ‚s‚d‚r‚s|‚c‚`‚s‚`‚R.
+])
+
+AT_CHECK([cobj prog.cob])
+AT_CHECK([java prog], [0], 
+[test-data1
+test-data2
+test-data3
+])
+AT_CHECK([cat prog.java | grep 'f_‚s‚d‚r‚sQ‚c‚`‚s‚`‚P' > /dev/null], [0])
+AT_CHECK([cat prog.java | grep 'f_‚s‚d‚r‚sQ‚c‚`‚s‚`‚Q__‚s‚d‚r‚sQ‚q‚d‚b‚n‚q‚c‚P' > /dev/null], [0])
+AT_CHECK([cat prog.java | grep 'f_‚s‚d‚r‚sQ‚c‚`‚s‚`‚R__‚s‚d‚r‚sQ‚q‚d‚b‚n‚q‚c‚Q__‚s‚d‚r‚sQ‚q‚d‚b‚n‚q‚c‚P' > /dev/null], [0])
+
+AT_CHECK([cat prog.java | grep 'f_‚s‚d‚r‚s|‚c‚`‚s‚`‚P' > /dev/null], [1])
+AT_CHECK([cat prog.java | grep 'f_‚s‚d‚r‚s|‚c‚`‚s‚`‚Q__‚s‚d‚r‚s|‚q‚d‚b‚n‚q‚c‚P' > /dev/null], [1])
+AT_CHECK([cat prog.java | grep 'f_‚s‚d‚r‚s|‚c‚`‚s‚`‚R__‚s‚d‚r‚s|‚q‚d‚b‚n‚q‚c‚Q__‚s‚d‚r‚s|‚q‚d‚b‚n‚q‚c‚P' > /dev/null], [1])
+
+AT_CLEANUP
+
+
+AT_SETUP([Nihongo field name with SJIS hyphens using -fshort-variable ])
+
+AT_DATA([prog.cob], [
+       IDENTIFICATION   DIVISION.
+       PROGRAM-ID.      prog.
+       DATA             DIVISION.
+       WORKING-STORAGE  SECTION.
+       01  ‚s‚d‚r‚s|‚c‚`‚s‚`‚P     PIC X(10) VALUE "test-data1".
+       01  ‚s‚d‚r‚s|‚q‚d‚b‚n‚q‚c‚P.
+         03  ‚s‚d‚r‚s|‚c‚`‚s‚`‚Q   PIC X(10) VALUE "test-data2".
+         03  ‚s‚d‚r‚s|‚q‚d‚b‚n‚q‚c‚Q.
+           05  ‚s‚d‚r‚s|‚c‚`‚s‚`‚R PIC X(10) VALUE "test-data3".
+       PROCEDURE        DIVISION.
+           DISPLAY ‚s‚d‚r‚s|‚c‚`‚s‚`‚P.
+           DISPLAY ‚s‚d‚r‚s|‚c‚`‚s‚`‚Q.
+           DISPLAY ‚s‚d‚r‚s|‚c‚`‚s‚`‚R.
+])
+
+AT_CHECK([cobj -fshort-variable prog.cob])
+AT_CHECK([java prog], [0], 
+[test-data1
+test-data2
+test-data3
+])
+AT_CHECK([cat prog.java | grep 'f_‚s‚d‚r‚sQ‚c‚`‚s‚`‚P' > /dev/null], [0])
+AT_CHECK([cat prog.java | grep 'f_‚s‚d‚r‚sQ‚c‚`‚s‚`‚Q' > /dev/null], [0])
+AT_CHECK([cat prog.java | grep 'f_‚s‚d‚r‚sQ‚c‚`‚s‚`‚R' > /dev/null], [0])
+
+AT_CHECK([cat prog.java | grep 'f_‚s‚d‚r‚s|‚c‚`‚s‚`‚P' > /dev/null], [1])
+AT_CHECK([cat prog.java | grep 'f_‚s‚d‚r‚s|‚c‚`‚s‚`‚Q' > /dev/null], [1])
+AT_CHECK([cat prog.java | grep 'f_‚s‚d‚r‚s|‚c‚`‚s‚`‚R' > /dev/null], [1])
+
+AT_CLEANUP
+
+
 AT_SETUP([Nihongo field name in numeric test msg.])
 
 AT_DATA([prog.cob], [

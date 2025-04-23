@@ -815,7 +815,6 @@ static int joutput_field_storage(struct cb_field *f, struct cb_field *top) {
     free(base_name);
     return flag_call_parameter;
   } else {
-    // printf("dbg: base = %s\n", get_java_identifier_base(f));
     char *base_name = get_java_identifier_base(f);
     joutput(base_name);
   }
