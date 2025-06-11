@@ -7,7 +7,7 @@ plugins {
     id("java")
     id("maven-publish")
     pmd
-    id("com.github.spotbugs") version "6.1.13"
+    id("com.github.spotbugs") version "6.2.0"
 }
 
 repositories {
@@ -32,9 +32,9 @@ tasks {
 
 dependencies {
     implementation("com.google.guava:guava:33.4.8-jre")
-    implementation("org.xerial:sqlite-jdbc:3.49.1.0")
+    implementation("org.xerial:sqlite-jdbc:3.50.1.0")
     implementation("commons-cli:commons-cli:1.9.0")
-    testImplementation("org.junit.jupiter:junit-jupiter:5.13.0")
+    testImplementation("org.junit.jupiter:junit-jupiter:5.13.1")
     testRuntimeOnly("org.junit.platform:junit-platform-launcher")
     implementation("org.json:json:20250517")
     spotbugs("com.github.spotbugs:spotbugs:4.8.6")
