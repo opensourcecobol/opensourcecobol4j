@@ -2,7 +2,7 @@ name: test on pull request
 
 on:
   pull_request:
-    types: [opened, reopened, review_requested, synchronize]
+    types: [opened, reopened, synchronize]
     paths-ignore:
       - '*.md'
       - 'ChangeLog'
