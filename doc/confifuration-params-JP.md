@@ -47,7 +47,7 @@ opensource COBOL 4J をインストールすると、デフォルトの設定フ
 | 28 | synchronized-clause | `ok`, `archaic`, `obsolete`, `skip`, `ignore`, `unconformable`, `error` | `ok` | データ定義において`SYNCHRONIZED`を有効にするか決める |  |
 | 29 | goto-statement-without-name | `ok`, `archaic`, `obsolete`, `skip`, `ignore`, `unconformable`, `error` | `obsolete` | `GO TO`のあとに何も指定しない書き方を有効にするか決める |  |
 | 30 | stop-literal-statement | `ok`, `archaic`, `obsolete`, `skip`, `ignore`, `unconformable`, `error` | `obsolete` | `STOP LITERAL`を有効にするかを設定する | 未実装 |
-| 31 | debugging-line | `ok`, `archaic`, `obsolete`, `skip`, `ignore`, `unconformable`, `error` | `obsolete` | `CONFIGURRATION SECTION`の`SOURCE-COMPUTER`の指定で、`WITH DEBUGGING MODE`の記述を有効にするか決める |  |
+| 31 | debugging-line | `ok`, `archaic`, `obsolete`, `skip`, `ignore`, `unconformable`, `error` | `obsolete` | `CONFIGURATION SECTION`の`SOURCE-COMPUTER`の指定で、`WITH DEBUGGING MODE`の記述を有効にするか決める |  |
 | 32 | padding-character-clause | `ok`, `archaic`, `obsolete`, `skip`, `ignore`, `unconformable`, `error` | `obsolete` | `SELECT`文で`PADDING CHARACTER`の記述を有効にするか決める |  |
 | 33 | next-sentence-phrase | `ok`, `archaic`, `obsolete`, `skip`, `ignore`, `unconformable`, `error` | `archaic` | `NEXT SENTENCE`を使えるかを決める |  |
 | 34 | eject-statement | `ok`, `archaic`, `obsolete`, `skip`, `ignore`, `unconformable`, `error` | `skip` | `EJECT`を使えるか決める | 未実装 |
