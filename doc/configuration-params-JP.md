@@ -1,4 +1,4 @@
-# configuration-params-JP.md
+# configuration-params-JP
 opensource COBOL 4J のコンフィグファイルに記載されているパラメータについて説明する。
 
 opensource COBOL 4J をインストールすると、デフォルトの設定ファイルが `/usr/local/share/opensource-cobol-4j-1.0.7/config/default.conf` に配置され、コンパイル時に参照されるようになっている。また、コンパイル時に `-conf` を使用することで参照するコンフィグファイルを変更することもできる。設定ファイルはリポジトリの `config` ディレクトリに格納されていて、デフォルトで参照される `default.conf` のほかに以下のものがある。
