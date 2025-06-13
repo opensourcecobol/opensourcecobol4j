@@ -158,6 +158,7 @@ java [PROGRAM-ID]
 ## ドキュメント
 
 * [ランタイムライブラリ`libcobj.jar`のAPIリファレンス](https://opensourcecobol.github.io/opensourcecobol4j/javadoc/libcobj/index.html)
+* [opensource COBOL 4J: Java変換解説](./doc/converted_Java_file_JP.md)
 * [configuration-params-JP](./doc/confifuration-params-JP.md)
 
 ## 実装状況
