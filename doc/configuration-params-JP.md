@@ -1,7 +1,8 @@
 # configuration-params-JP
+## 概要
 opensource COBOL 4J のコンフィグファイルに記載されているパラメータについて説明する。
 
-opensource COBOL 4J をインストールすると、デフォルトの設定ファイルが `/usr/local/share/opensource-cobol-4j-1.0.7/config/default.conf` に配置され、コンパイル時に参照されるようになっている。また、コンパイル時に `-conf` を使用することで参照するコンフィグファイルを変更することもできる。設定ファイルはリポジトリの `config` ディレクトリに格納されていて、デフォルトで参照される `default.conf` のほかに以下のものがある。
+opensource COBOL 4J をインストールすると、デフォルトの設定ファイルが `/usr/local/share/opensource-cobol-4j-1.0.7/config/default.conf` に配置され、コンパイル時に参照されるようになっている。また、コンパイル時に `-conf` を使用することで参照するコンフィグファイルを変更することもできる。設定ファイルはリポジトリの `config` ディレクトリに格納されていて、デフォルトで参照される `default.conf` のほかに以下のものがある。これらは、それぞれファイル名に対応する方言を許容する設定ファイルである。
 * `boundary-limit.conf`
 * `bs2000.conf`
 * `cobol85.conf`
@@ -13,7 +14,22 @@ opensource COBOL 4J をインストールすると、デフォルトの設定フ
 * `mf.conf`
 * `mvs.conf`
 
-これらの設定ファイルにあるほとんどのパラメータは `default.conf` のものと同じで値が異なる（`mvs.conf` に `not-reserved` というパラメータがあり、それは `default.conf` にはない）。以下の表にあるデフォルト値は `default.conf` のものである。
+これらの設定ファイルにあるほとんどのパラメータは `default.conf` のものと同じで値が異なる（`mvs.conf` に `not-reserved` というパラメータがあり、それは `default.conf` にはない）。パラメータ一覧の表にあるデフォルト値は `default.conf` のものである。
+
+## 構文のサポートレベルについて
+いくつかのパラメータは、値として `ok`, `archaic`, `obsolete`, `skip`, `ignore`, `unconformable`, `error` が選択できる。これにより、いくつかの構文をコンパイラがサポートするか、警告するか、拒否するかを選択することができる。
+
+| レベル | 期待される表示（xxxは該当構文、〇〇〇はパラメータ一覧No.1のnameで設定した値が入る） |
+| --- | --- |
+| ok | 何も表示されない |
+| archaic | 警告として xxx is archaic in 〇〇〇 が表示される|
+| obsolete | 警告として xxx is obsolete in 〇〇〇 が表示される |
+| skip | 何も表示されない |
+| ignore | 警告として xxx ignored が表示される |
+| unconformtable | エラーとして xxx does not conform to 〇〇〇 が表示される |
+| error | 構文エラーが表示される |
+
+## パラメータ一覧
 
 | No | パラメータ名 | 設定できる値 | デフォルト値 | パラメータの説明 | 備考 |
 |----|--------------|--------------|--------------|------------------|------|
@@ -36,7 +52,7 @@ opensource COBOL 4J をインストールすると、デフォルトの設定フ
 | 17 | perform-osvs | `yes`, `no` | `no` | IBM OS/VS COBOLの方言を使えるようにする（PERFORMの扱い方が違う） | 未実装 |
 | 18 | sticky-linkage | `yes`, `no` | `no` | `LINKAGE SECTION`にあるデータが`CALL`の呼び出しごとに初期化されずに保持されるようになる | 未実装 |
 | 19 | assign_external | `yes`, `no` | `no` | 対象のCOBOLプログラムの`SELECT`文のすべての`ASSIGN`句に`EXTERNAL`が指定されているものとして扱うことができる | コンパイルオプションの`-assign_external`と同じ |
-| 20 | relax-level-hierarchy | `yes`, `no` | `no` | データ項目の階層の数字の大小が逆になっていてもコンパイルが通るようにする | |
+| 20 | relax-level-hierarchy | `yes`, `no` | `no` | データ項目の階層の数字の大小が不揃いでもコンパイルが通るようにする | |
 | 21 | author-paragraph | `ok`, `archaic`, `obsolete`, `skip`, `ignore`, `unconformable`, `error` | `obsolete` | `AUTHOR`パラグラフを有効にするか決める |  |
 | 22 | memory-size-clause | `ok`, `archaic`, `obsolete`, `skip`, `ignore`, `unconformable`, `error` | `obsolete` | `OBJECT-COMPUTER`節の`MEMORY SIZE`指定を有効にするか決める |  |
 | 23 | multiple-file-tape-clause | `ok`, `archaic`, `obsolete`, `skip`, `ignore`, `unconformable`, `error` | `obsolete` | `I-O CONTROL`の`MULTIPLE FILE TAPE`指定を有効にするか決める |  |
