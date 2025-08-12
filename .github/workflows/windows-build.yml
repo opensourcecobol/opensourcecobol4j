@@ -24,7 +24,7 @@ jobs:
         uses: microsoft/setup-msbuild@v2.0.0
 
       - name: Checkout opensource COBOL 4J
-        uses: actions/checkout@v4
+        uses: actions/checkout@v5
 
       - name: Restore NuGet packages
         run: nuget restore ./win/
