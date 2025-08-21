@@ -58,7 +58,7 @@ jobs:
           cd ../
           mv opensourcecobol4j/* .
           mv libcobj/* opensourcecobol4j
-      - uses: actions/setup-java@v4
+      - uses: actions/setup-java@v5
         with:
           java-version: '11'
           distribution: 'temurin'

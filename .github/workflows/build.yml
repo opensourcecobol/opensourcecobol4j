@@ -20,13 +20,13 @@ jobs:
     container:
       image: ${{ inputs.os }}
     steps: 
-      - uses: actions/setup-java@v4
+      - uses: actions/setup-java@v5
         if: inputs.os == 'ubuntu:24.04'
         with:
           distribution: 'temurin'
           java-version: '21'
 
-      - uses: actions/setup-java@v4
+      - uses: actions/setup-java@v5
         if: inputs.os == 'almalinux:9'
         with:
           distribution: 'temurin'
