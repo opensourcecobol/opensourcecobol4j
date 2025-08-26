@@ -22,31 +22,75 @@ jobs:
 
       - name: Install static analysis tools
         run: |
-          dnf update -y
-          dnf install -y epel-release
-          dnf install -y gcc make bison flex automake autoconf diffutils gettext java-21-openjdk-devel git-clang-format cppcheck
+          # Add retry logic for package installation to handle transient network issues
+          for i in {1..3}; do
+            if dnf update -y && dnf install -y epel-release && dnf install -y gcc make bison flex automake autoconf diffutils gettext java-21-openjdk-devel git-clang-format cppcheck; then
+              break
+            elif [ $i -eq 3 ]; then
+              echo "Package installation failed after 3 attempts"
+              exit 1
+            else
+              echo "Package installation attempt $i failed, retrying..."
+              sleep 30
+              dnf clean all
+            fi
+          done
 
       - name: Install opensource COBOL 4J
         run: |
-          ./configure --prefix=/usr/
-          make
-          make install
+          # Add retries for build and install to handle transient failures
+          for i in {1..2}; do
+            if ./configure --prefix=/usr/ && make && make install; then
+              break
+            elif [ $i -eq 2 ]; then
+              echo "Build and install failed after 2 attempts"
+              exit 1
+            else
+              echo "Build and install attempt $i failed, retrying..."
+              make clean || true
+              sleep 10
+            fi
+          done
 
       - name: Check format with google-java-format and clang-format
         run: |
-          ./check-format
+          # Add timeout and make format checking more robust
+          timeout 300 ./check-format
 
       - name: Run SpotBugs
         working-directory: libcobj
         run: |
-          ./gradlew spotbugsMain
+          # Use --no-daemon to avoid daemon conflicts in CI and add retries for reliability
+          for i in {1..3}; do
+            if ./gradlew spotbugsMain --no-daemon --console=plain; then
+              break
+            elif [ $i -eq 3 ]; then
+              echo "SpotBugs failed after 3 attempts"
+              exit 1
+            else
+              echo "SpotBugs attempt $i failed, retrying..."
+              sleep 10
+            fi
+          done
 
       - name: Run PMD
         working-directory: libcobj
         run: |
-          ./gradlew pmdMain
+          # Use --no-daemon to avoid daemon conflicts in CI and add retries for reliability
+          for i in {1..3}; do
+            if ./gradlew pmdMain --no-daemon --console=plain; then
+              break
+            elif [ $i -eq 3 ]; then
+              echo "PMD failed after 3 attempts"
+              exit 1
+            else
+              echo "PMD attempt $i failed, retrying..."
+              sleep 10
+            fi
+          done
 
       - name: Run cppcheck
         working-directory: cobj
         run: |
-          ./cpp-check
+          # Add timeout to prevent hanging
+          timeout 300 ./cpp-check
