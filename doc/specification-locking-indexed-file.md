@@ -1,45 +1,44 @@
-# The specification of locking for INDEXED files in opensource COBOL 4J
+# INDEXED File Locking Specification
 
 ## SELECT Statement LOCK MODE
 
-- The SELECT statement LOCK MODE now accepts only `AUTOMATIC` or `MANUAL` specifications
-- When LOCK MODE is omitted, the default value is `MANUAL`
-- The default value for omitted LOCK MODE can be changed via compile options
+- The SELECT statement LOCK MODE can only specify AUTOMATIC or MANUAL.
+- When omitted, the default value for LOCK MODE is MANUAL
+  - When `-lock-mode-automatic` is specified at compile time, the default value for omitted LOCK MODE becomes AUTOMATIC.
 
 ## Record Locking Behavior
 
-When a file is opened with `OPEN I-O` and a READ statement is executed:
-
-- **Without WITH LOCK or WITH NO LOCK specification:**
-  - If SELECT statement LOCK MODE is `MANUAL`: The record is not locked
-  - If SELECT statement LOCK MODE is `AUTOMATIC`: The record is locked
-
-- **With WITH LOCK specification:**
-  - The record is locked regardless of LOCK MODE setting
-
-- **With WITH NO LOCK specification:**
-  - The record is not locked regardless of LOCK MODE setting
+- When a file is opened with OPEN I-O and a READ statement without WITH NO LOCK or WITH LOCK is executed:
+  - If the SELECT statement LOCK MODE is MANUAL, the record is not locked
+  - If the SELECT statement LOCK MODE is AUTOMATIC, the record is locked
+- When a file is opened with OPEN I-O and a READ statement with WITH LOCK is executed, the record is locked
+- When a file is opened with OPEN I-O and a READ statement with WITH NO LOCK is executed, the record is not locked
+- When processing fails due to record locking, the file status becomes 51
 
 ## File Locking Behavior
 
-- When a file is opened with `OPEN OUTPUT`, a file lock is automatically applied to the file
+- When opened with OPEN OUTPUT, a file lock is applied to the file
+- When processing fails due to file locking, the file status becomes 61
 
-## Migration and Compatibility
+## Migrating Legacy INDEXED Files to the New Version
 
-### INDEXED File Migration
-
-Legacy INDEXED files are not directly compatible with the new version of opensource COBOL 4J. To convert INDEXED files created with previous versions for use with the new version, please use the following command:
+Legacy INDEXED files cannot be used directly with the new version of opensource COBOL 4J.
+To convert INDEXED files created with legacy versions to be compatible with the new version, please consider using the following command:
 
 ```sh
 cobj-idx migrate <<INDEXED_FILE>>
 ```
 
-This command converts the specified INDEXED file to be compatible with the new version.
+This converts the specified INDEXED file to be compatible with the new version.
 
-### INDEXED File Lock Release
+## Unlocking INDEXED Files
 
-You can release file locks and all record locks on INDEXED files using the following command:
+The following command can release file locks and all record locks applied to INDEXED files:
 
 ```sh
 cobj-idx unlock <<INDEXED_FILE>>
 ```
+
+## Behavior When Opening Legacy INDEXED Files
+
+When attempting to open legacy INDEXED files, the file status becomes 92.
