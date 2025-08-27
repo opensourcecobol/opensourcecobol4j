@@ -23,7 +23,7 @@
 ## Migrating Legacy INDEXED Files to the New Version
 
 Legacy INDEXED files cannot be used directly with the new version of opensource COBOL 4J.
-To convert INDEXED files created with legacy versions to be compatible with the new version, please consider using the following command:
+To convert INDEXED files created with legacy versions to be compatible with the new version, please use the following command:
 
 ```sh
 cobj-idx migrate <<INDEXED_FILE>>
