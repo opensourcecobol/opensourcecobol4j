@@ -1,6 +1,6 @@
-# LOCK MODE in the SELECT Statement
+# INDEXED File Locking Specification
 
-## SELECT Statement LOCK MODE
+## LOCK MODE in the SELECT Statement
 
 - The SELECT statement's LOCK MODE can only specify AUTOMATIC or MANUAL.
 - When omitted, the default value for LOCK MODE is MANUAL
