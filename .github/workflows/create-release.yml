@@ -64,9 +64,11 @@ jobs:
           distribution: 'temurin'
       - name: Validate Gradle wrapper
         uses: gradle/wrapper-validation-action@v3
-      - name: Publish package
+      - name: Setup Gradle
         uses: gradle/gradle-build-action@v3
         with:
-          arguments: publish
+          gradle-version: wrapper
+      - name: Publish package
+        run: ./gradlew publish
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
