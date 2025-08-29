@@ -919,11 +919,10 @@ static void joutput_data(cb_tree x) {
     }
     break;
   case CB_TAG_CAST:
-    joutput("&");
     joutput_param(x, 0);
     break;
   case CB_TAG_INTRINSIC:
-    joutput("module.cob_procedure_parameters[%d]->data", field_iteration);
+    joutput("module.cob_procedure_parameters[%d].data", field_iteration);
     break;
   case CB_TAG_CONST:
     if (x == cb_null) {
@@ -1560,7 +1559,7 @@ static void joutput_param(cb_tree x, int id) {
         break;
       case CB_ALPHABET_CUSTOM:
         gen_custom = 1;
-        joutput("&%s%s", CB_PREFIX_FIELD, rbp->cname);
+        joutput("%s%s", CB_PREFIX_FIELD, rbp->cname);
         break;
       }
       if (r->check) {
@@ -2790,7 +2789,7 @@ static void joutput_call(struct cb_call *p) {
     case CB_CALL_BY_CONTENT:
       if (CB_CAST_P(x)) {
         joutput_line("CobolDataStorage ptr_%d;", (int)n);
-      }else if (CB_TREE_TAG(x) != CB_TAG_INTRINSIC && x != cb_null &&
+      } else if (CB_TREE_TAG(x) != CB_TAG_INTRINSIC && x != cb_null &&
                  !(CB_CAST_P(x))) {
         joutput_prefix();
         joutput("CobolDataStorage content_%d = new CobolDataStorage (", (int)n);
@@ -2995,7 +2994,7 @@ static void joutput_call(struct cb_call *p) {
       } else if (CB_REFERENCE_P(x) && CB_FILE_P(cb_ref(x))) {
         joutput_param(cb_ref(x), -1);
       } else if (CB_CAST_P(x)) {
-        joutput("&ptr_%d", (int)n);
+        joutput("ptr_%d", (int)n);
       } else {
         int tmp_param_wrap_string_flag = param_wrap_string_flag;
         param_wrap_string_flag = 1;
@@ -3006,7 +3005,7 @@ static void joutput_call(struct cb_call *p) {
     case CB_CALL_BY_CONTENT:
       if (CB_TREE_TAG(x) != CB_TAG_INTRINSIC && x != cb_null) {
         if (CB_CAST_P(x)) {
-          joutput("&ptr_%d", (int)n);
+          joutput("ptr_%d", (int)n);
         } else {
           joutput("content_%d", (int)n);
         }
