@@ -29,6 +29,11 @@ jobs:
       - name: Restore NuGet packages
         run: nuget restore ./win/
       
+      - name: Setup Gradle
+        uses: gradle/gradle-build-action@v3
+        with:
+          gradle-version: wrapper
+      
       - name: Install opensource COBOL 4J
         working-directory: libcobj
         run: ./gradlew shadowJar
