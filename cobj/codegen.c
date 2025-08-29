@@ -823,15 +823,14 @@ static void joutput_base(struct cb_field *f) {
         bl->next = base_cache;
         base_cache = bl;
       } else {
+        // Note: Local storage data declarations are handled in the main 
+        // field declaration section for Java code generation, not here
         if (current_prog->flag_global_use) {
-          joutput_local("unsigned char\t\t*%s%s = NULL;", CB_PREFIX_BASE, name);
-          joutput_local("unsigned char\t\t*%s%s = NULL;", CB_PREFIX_BASE, name);
-          joutput_local("\t/* %s */\n", top->name);
-          joutput_local("static unsigned char\t*save_%s%s;\n", CB_PREFIX_BASE,
-                        name);
+          // C-style declarations removed - Java field declarations 
+          // are handled elsewhere in the code generation process
         } else {
-          joutput_local("unsigned char\t*%s%s = NULL;", CB_PREFIX_BASE, name);
-          joutput_local("\t/* %s */\n", top->name);
+          // C-style declarations removed - Java field declarations 
+          // are handled elsewhere in the code generation process  
         }
       }
     }
@@ -1284,9 +1283,9 @@ static void joutput_integer(cb_tree x) {
       return;
 
     case CB_USAGE_POINTER:
-      joutput("(*(unsigned char **) (");
+      joutput("(");
       joutput_data(x);
-      joutput("))");
+      joutput(".getPointer())");
       return;
 
     case CB_USAGE_PROGRAM_POINTER:
@@ -2208,7 +2207,7 @@ static void joutput_initialize_fp(cb_tree x, struct cb_field *f) {
   }
   joutput(" LIBCOB.memcpy (");
   joutput_data(x);
-  joutput(", (char *)&temp, sizeof(temp));}\n");
+  joutput(", temp);}\n");
 }
 
 static void joutput_initialize_external(cb_tree x, struct cb_field *f) {
@@ -2785,13 +2784,13 @@ static void joutput_call(struct cb_call *p) {
         joutput_line("CobolDataStorage content_%d = new CobolDataStorage(8);",
                      (int)n);
       } else if (CB_CAST_P(x)) {
-        joutput_line("void *ptr_%d;", (int)n);
+        joutput_line("CobolDataStorage ptr_%d;", (int)n);
       }
       break;
     case CB_CALL_BY_CONTENT:
       if (CB_CAST_P(x)) {
-        joutput_line("void *ptr_%d;", (int)n);
-      } else if (CB_TREE_TAG(x) != CB_TAG_INTRINSIC && x != cb_null &&
+        joutput_line("CobolDataStorage ptr_%d;", (int)n);
+      }else if (CB_TREE_TAG(x) != CB_TAG_INTRINSIC && x != cb_null &&
                  !(CB_CAST_P(x))) {
         joutput_prefix();
         joutput("CobolDataStorage content_%d = new CobolDataStorage (", (int)n);
