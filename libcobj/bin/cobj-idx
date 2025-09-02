@@ -1,3 +1,6 @@
 #!/bin/bash
 
-java jp.osscons.opensourcecobol.libcobj.user_util.indexed_file.IndexedFileUtilMain $@
+SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+LIBCOBJ_JAR="$SCRIPT_DIR/../app/build/libs/libcobj.jar"
+
+java -cp "$LIBCOBJ_JAR" jp.osscons.opensourcecobol.libcobj.user_util.indexed_file.IndexedFileUtilMain $@
