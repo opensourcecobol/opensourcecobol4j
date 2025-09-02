@@ -2175,3 +2175,137 @@ AT_CHECK([java prog], [0],
 [30
 ])
 AT_CLEANUP
+
+
+AT_SETUP([File locking - SEQUENTIAL files])
+
+AT_DATA([prog.cbl], [
+       IDENTIFICATION DIVISION.
+       PROGRAM-ID.    prog.
+       ENVIRONMENT DIVISION.
+       INPUT-OUTPUT SECTION.
+       FILE-CONTROL.
+           SELECT TEST-FILE ASSIGN TO "./TEST-FILE"
+                            ORGANIZATION IS SEQUENTIAL
+                            FILE STATUS IS FILE-STATUS.
+       DATA DIVISION.
+       FILE SECTION.
+       FD TEST-FILE.
+       01 TEST-RECORD PIC X(10).
+       WORKING-STORAGE SECTION.
+       01 FILE-STATUS PIC XX.
+       PROCEDURE DIVISION.
+       MAIN-PROCEDURE.
+       *> Test basic file operations work
+           OPEN OUTPUT TEST-FILE.
+           IF FILE-STATUS NOT = "00"
+               DISPLAY "Error opening file: " FILE-STATUS
+           END-IF.
+           MOVE "TEST DATA " TO TEST-RECORD.
+           WRITE TEST-RECORD.
+           CLOSE TEST-FILE.
+           
+       *> Test file can be reopened
+           OPEN INPUT TEST-FILE.
+           IF FILE-STATUS NOT = "00"
+               DISPLAY "Error reopening file: " FILE-STATUS
+           END-IF.
+           READ TEST-FILE.
+           DISPLAY TEST-RECORD NO ADVANCING.
+           CLOSE TEST-FILE.
+           STOP RUN.
+])
+
+AT_CHECK([${COMPILE} prog.cbl])
+AT_CHECK([java prog], [0], [TEST DATA ])
+
+AT_CLEANUP
+
+AT_SETUP([File locking - LINE SEQUENTIAL files])
+
+AT_DATA([prog.cbl], [
+       IDENTIFICATION DIVISION.
+       PROGRAM-ID.    prog.
+       ENVIRONMENT DIVISION.
+       INPUT-OUTPUT SECTION.
+       FILE-CONTROL.
+           SELECT TEST-FILE ASSIGN TO "./TEST-FILE"
+                            ORGANIZATION IS LINE SEQUENTIAL
+                            FILE STATUS IS FILE-STATUS.
+       DATA DIVISION.
+       FILE SECTION.
+       FD TEST-FILE.
+       01 TEST-RECORD PIC X(10).
+       WORKING-STORAGE SECTION.
+       01 FILE-STATUS PIC XX.
+       PROCEDURE DIVISION.
+       MAIN-PROCEDURE.
+       *> Test basic file operations work
+           OPEN OUTPUT TEST-FILE.
+           IF FILE-STATUS NOT = "00"
+               DISPLAY "Error opening file: " FILE-STATUS
+           END-IF.
+           MOVE "TEST DATA " TO TEST-RECORD.
+           WRITE TEST-RECORD.
+           CLOSE TEST-FILE.
+           
+       *> Test file can be reopened
+           OPEN INPUT TEST-FILE.
+           IF FILE-STATUS NOT = "00"
+               DISPLAY "Error reopening file: " FILE-STATUS
+           END-IF.
+           READ TEST-FILE.
+           DISPLAY TEST-RECORD NO ADVANCING.
+           CLOSE TEST-FILE.
+           STOP RUN.
+])
+
+AT_CHECK([${COMPILE} prog.cbl])
+AT_CHECK([java prog], [0], [TEST DATA ])
+
+AT_CLEANUP
+
+AT_SETUP([File locking - RELATIVE files])
+
+AT_DATA([prog.cbl], [
+       IDENTIFICATION DIVISION.
+       PROGRAM-ID.    prog.
+       ENVIRONMENT DIVISION.
+       INPUT-OUTPUT SECTION.
+       FILE-CONTROL.
+           SELECT TEST-FILE ASSIGN TO "./TEST-FILE"
+                            ORGANIZATION IS RELATIVE
+                            ACCESS MODE IS SEQUENTIAL
+                            FILE STATUS IS FILE-STATUS.
+       DATA DIVISION.
+       FILE SECTION.
+       FD TEST-FILE.
+       01 TEST-RECORD PIC X(10).
+       WORKING-STORAGE SECTION.
+       01 FILE-STATUS PIC XX.
+       PROCEDURE DIVISION.
+       MAIN-PROCEDURE.
+       *> Test basic file operations work
+           OPEN OUTPUT TEST-FILE.
+           IF FILE-STATUS NOT = "00"
+               DISPLAY "Error opening file: " FILE-STATUS
+           END-IF.
+           MOVE "TEST DATA " TO TEST-RECORD.
+           WRITE TEST-RECORD.
+           CLOSE TEST-FILE.
+           
+       *> Test file can be reopened
+           OPEN INPUT TEST-FILE.
+           IF FILE-STATUS NOT = "00"
+               DISPLAY "Error reopening file: " FILE-STATUS
+           END-IF.
+           READ TEST-FILE.
+           DISPLAY TEST-RECORD NO ADVANCING.
+           CLOSE TEST-FILE.
+           STOP RUN.
+])
+
+AT_CHECK([${COMPILE} prog.cbl])
+AT_CHECK([java prog], [0], [TEST DATA ])
+
+AT_CLEANUP
