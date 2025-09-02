@@ -2856,4 +2856,577 @@ public class CobolIntrinsic {
         }
         return currField;
     }
+
+    /**
+     * TEST-NUMVAL intrinsic function implementation.
+     * Tests whether the argument is a valid numeric string.
+     * Returns 0 if valid, 1 if not.
+     */
+    public static AbstractCobolField funcTestNumval(AbstractCobolField srcfield) {
+        CobolFieldAttribute attr =
+                new CobolFieldAttribute(
+                        CobolFieldAttribute.COB_TYPE_NUMERIC_BINARY,
+                        8,
+                        0,
+                        0,
+                        null);
+        AbstractCobolField field =
+                CobolFieldFactory.makeCobolField(4, (CobolDataStorage) null, attr);
+        makeFieldEntry(field);
+
+        // Check if the field contains a valid numeric value
+        try {
+            // Try to parse as numeric
+            String dataString = srcfield.getString().trim();
+            if (dataString.isEmpty()) {
+                currField.setInt(1);
+                return currField;
+            }
+            
+            // Check for valid numeric characters and format
+            boolean hasDecimal = false;
+            boolean hasSign = false;
+            boolean validNumeric = true;
+            
+            for (int i = 0; i < dataString.length() && validNumeric; i++) {
+                char c = dataString.charAt(i);
+                if (c >= '0' && c <= '9') {
+                    continue; // Valid digit
+                } else if (c == '.' || c == ',') {
+                    if (hasDecimal) {
+                        validNumeric = false; // Multiple decimal points
+                    } else {
+                        hasDecimal = true;
+                    }
+                } else if ((c == '+' || c == '-') && i == 0) {
+                    hasSign = true; // Sign only valid at start
+                } else if (c == ' ') {
+                    continue; // Spaces are allowed
+                } else {
+                    validNumeric = false; // Invalid character
+                }
+            }
+            
+            if (validNumeric) {
+                currField.setInt(0); // Valid numeric
+            } else {
+                currField.setInt(1); // Invalid numeric
+            }
+        } catch (Exception e) {
+            currField.setInt(1); // Error parsing means invalid
+        }
+
+        return currField;
+    }
+
+    /**
+     * NUMVAL-F intrinsic function implementation.
+     * Converts a numeric string with floating point format to a numeric value.
+     */
+    public static AbstractCobolField funcNumvalF(AbstractCobolField srcfield) {
+        CobolFieldAttribute attr =
+                new CobolFieldAttribute(
+                        CobolFieldAttribute.COB_TYPE_NUMERIC_BINARY,
+                        18,
+                        9,
+                        CobolFieldAttribute.COB_FLAG_HAVE_SIGN,
+                        null);
+        AbstractCobolField field =
+                CobolFieldFactory.makeCobolField(8, (CobolDataStorage) null, attr);
+        makeFieldEntry(field);
+
+        try {
+            String dataString = srcfield.getString().trim();
+            
+            // Handle scientific notation and floating point formats
+            double val = Double.parseDouble(dataString);
+            currField.getDataStorage().set(val);
+        } catch (NumberFormatException e) {
+            // Return 0 on invalid format
+            currField.setInt(0);
+        }
+
+        return currField;
+    }
+
+    /**
+     * TEST-NUMVAL-F intrinsic function implementation.
+     * Tests whether the argument is a valid floating-point numeric string.
+     * Returns 0 if valid, 1 if not.
+     */
+    public static AbstractCobolField funcTestNumvalF(AbstractCobolField srcfield) {
+        CobolFieldAttribute attr =
+                new CobolFieldAttribute(
+                        CobolFieldAttribute.COB_TYPE_NUMERIC_BINARY,
+                        8,
+                        0,
+                        0,
+                        null);
+        AbstractCobolField field =
+                CobolFieldFactory.makeCobolField(4, (CobolDataStorage) null, attr);
+        makeFieldEntry(field);
+
+        try {
+            String dataString = srcfield.getString().trim();
+            Double.parseDouble(dataString); // Try to parse as floating point
+            currField.setInt(0); // Valid
+        } catch (NumberFormatException e) {
+            currField.setInt(1); // Invalid
+        }
+
+        return currField;
+    }
+
+    /**
+     * TEST-NUMVAL-C intrinsic function implementation.
+     * Tests whether the argument is a valid numeric string with currency symbols.
+     * Returns 0 if valid, 1 if not.
+     */
+    public static AbstractCobolField funcTestNumvalC(
+            AbstractCobolField srcfield, AbstractCobolField currency) {
+        CobolFieldAttribute attr =
+                new CobolFieldAttribute(
+                        CobolFieldAttribute.COB_TYPE_NUMERIC_BINARY,
+                        8,
+                        0,
+                        0,
+                        null);
+        AbstractCobolField field =
+                CobolFieldFactory.makeCobolField(4, (CobolDataStorage) null, attr);
+        makeFieldEntry(field);
+
+        try {
+            // Remove currency symbols and test if remaining is numeric
+            String dataString = srcfield.getString();
+            String currencySymbol = currency != null ? currency.getString() : "";
+            
+            // Remove currency symbols
+            if (!currencySymbol.isEmpty()) {
+                dataString = dataString.replace(currencySymbol, "");
+            }
+            
+            // Remove common currency symbols
+            dataString = dataString.replace("$", "").replace("¥", "").replace("€", "");
+            dataString = dataString.trim();
+            
+            // Check if remaining string is valid numeric
+            AbstractCobolField testField = CobolFieldFactory.makeCobolField(
+                dataString.length(), 
+                new CobolDataStorage(dataString.getBytes()), 
+                srcfield.getAttribute());
+            
+            return funcTestNumval(testField);
+        } catch (Exception e) {
+            currField.setInt(1); // Error means invalid
+        }
+
+        return currField;
+    }
+
+    /**
+     * TEST-DATE-YYYYMMDD intrinsic function implementation.
+     * Tests whether the argument is a valid date in YYYYMMDD format.
+     */
+    public static AbstractCobolField funcTestDateYyyymmdd(AbstractCobolField srcfield) {
+        CobolFieldAttribute attr =
+                new CobolFieldAttribute(
+                        CobolFieldAttribute.COB_TYPE_NUMERIC_BINARY,
+                        8,
+                        0,
+                        0,
+                        null);
+        AbstractCobolField field =
+                CobolFieldFactory.makeCobolField(4, (CobolDataStorage) null, attr);
+        makeFieldEntry(field);
+
+        int indate = srcfield.getInt();
+        int year = indate / 10000;
+        if (year < 1601 || year > 9999) {
+            currField.setInt(1);
+            return currField;
+        }
+        indate %= 10000;
+        int month = indate / 100;
+        if (month < 1 || month > 12) {
+            currField.setInt(2);
+            return currField;
+        }
+        int days = indate % 100;
+        if (days < 1 || days > 31) {
+            currField.setInt(3);
+            return currField;
+        }
+        if (isLeapYear(year)) {
+            if (days > leapMonthDays[month]) {
+                currField.setInt(3);
+                return currField;
+            }
+        } else {
+            if (days > normalMonthDays[month]) {
+                currField.setInt(3);
+                return currField;
+            }
+        }
+        currField.setInt(0);
+        return currField;
+    }
+
+    /**
+     * TEST-DAY-YYYYDDD intrinsic function implementation.
+     * Tests whether the argument is a valid day in YYYYDDD format.
+     */
+    public static AbstractCobolField funcTestDayYyyyddd(AbstractCobolField srcfield) {
+        CobolFieldAttribute attr =
+                new CobolFieldAttribute(
+                        CobolFieldAttribute.COB_TYPE_NUMERIC_BINARY,
+                        8,
+                        0,
+                        0,
+                        null);
+        AbstractCobolField field =
+                CobolFieldFactory.makeCobolField(4, (CobolDataStorage) null, attr);
+        makeFieldEntry(field);
+
+        int indate = srcfield.getInt();
+        int year = indate / 1000;
+        if (year < 1601 || year > 9999) {
+            currField.setInt(1);
+            return currField;
+        }
+        int days = indate % 1000;
+        if (days < 1 || days > 365 + (isLeapYear(year) ? 1 : 0)) {
+            currField.setInt(2);
+            return currField;
+        }
+        currField.setInt(0);
+        return currField;
+    }
+
+    /**
+     * HIGHEST-ALGEBRAIC intrinsic function implementation.
+     * Returns the highest value that can be represented in the specified field.
+     */
+    public static AbstractCobolField funcHighestAlgebraic(AbstractCobolField srcfield) {
+        makeFieldEntry(srcfield);
+        
+        // Fill with highest possible values based on field type
+        if (srcfield.getAttribute().isTypeNumeric()) {
+            // For numeric fields, set to maximum value (all 9s)
+            byte[] data = new byte[srcfield.getSize()];
+            for (int i = 0; i < data.length; i++) {
+                data[i] = (byte) '9';
+            }
+            currField.getDataStorage().memcpy(data);
+        } else {
+            // For non-numeric fields, set to highest character value
+            currField.getDataStorage().memset((byte) 0xFF, currField.getSize());
+        }
+        
+        return currField;
+    }
+
+    /**
+     * LOWEST-ALGEBRAIC intrinsic function implementation.
+     * Returns the lowest value that can be represented in the specified field.
+     */
+    public static AbstractCobolField funcLowestAlgebraic(AbstractCobolField srcfield) {
+        makeFieldEntry(srcfield);
+        
+        // Fill with lowest possible values based on field type
+        if (srcfield.getAttribute().isTypeNumeric()) {
+            if (srcfield.getAttribute().isFlagHaveSign()) {
+                // For signed numeric fields, set to minimum negative value
+                byte[] data = new byte[srcfield.getSize()];
+                data[0] = (byte) '-';
+                for (int i = 1; i < data.length; i++) {
+                    data[i] = (byte) '9';
+                }
+                currField.getDataStorage().memcpy(data);
+            } else {
+                // For unsigned numeric fields, set to zero
+                currField.getDataStorage().memset((byte) '0', currField.getSize());
+            }
+        } else {
+            // For non-numeric fields, set to lowest character value
+            currField.getDataStorage().memset((byte) 0x00, currField.getSize());
+        }
+        
+        return currField;
+    }
+
+    /**
+     * BOOLEAN-OF-INTEGER intrinsic function implementation.
+     * Converts an integer to a boolean representation.
+     */
+    public static AbstractCobolField funcBooleanOfInteger(AbstractCobolField srcfield1, AbstractCobolField srcfield2) {
+        CobolFieldAttribute attr =
+                new CobolFieldAttribute(
+                        CobolFieldAttribute.COB_TYPE_BOOLEAN,
+                        1,
+                        0,
+                        0,
+                        null);
+        AbstractCobolField field =
+                CobolFieldFactory.makeCobolField(1, (CobolDataStorage) null, attr);
+        makeFieldEntry(field);
+
+        int value = srcfield1.getInt();
+        int length = srcfield2.getInt();
+        
+        // Convert integer to boolean representation
+        // This is a simplified implementation - actual behavior may vary
+        if (value != 0) {
+            currField.getDataStorage().setByte(0, (byte) 1);
+        } else {
+            currField.getDataStorage().setByte(0, (byte) 0);
+        }
+
+        return currField;
+    }
+
+    /**
+     * INTEGER-OF-BOOLEAN intrinsic function implementation.
+     * Converts a boolean to an integer representation.
+     */
+    public static AbstractCobolField funcIntegerOfBoolean(AbstractCobolField srcfield) {
+        CobolFieldAttribute attr =
+                new CobolFieldAttribute(
+                        CobolFieldAttribute.COB_TYPE_NUMERIC_BINARY,
+                        8,
+                        0,
+                        0,
+                        null);
+        AbstractCobolField field =
+                CobolFieldFactory.makeCobolField(4, (CobolDataStorage) null, attr);
+        makeFieldEntry(field);
+
+        // Convert boolean field to integer
+        // Non-zero bytes are considered true (1), zero bytes are false (0)
+        boolean isTrue = false;
+        for (int i = 0; i < srcfield.getSize(); i++) {
+            if (srcfield.getDataStorage().getByte(i) != 0) {
+                isTrue = true;
+                break;
+            }
+        }
+        
+        currField.setInt(isTrue ? 1 : 0);
+        return currField;
+    }
+
+    /**
+     * CHAR-NATIONAL intrinsic function implementation.
+     * Returns the national character corresponding to the ordinal position.
+     */
+    public static AbstractCobolField funcCharNational(AbstractCobolField srcfield) {
+        CobolFieldAttribute attr =
+                new CobolFieldAttribute(
+                        CobolFieldAttribute.COB_TYPE_NATIONAL,
+                        2,
+                        0,
+                        0,
+                        null);
+        AbstractCobolField field =
+                CobolFieldFactory.makeCobolField(2, (CobolDataStorage) null, attr);
+        makeFieldEntry(field);
+
+        int ordinal = srcfield.getInt();
+        if (ordinal < 1 || ordinal > 65536) {
+            // Invalid ordinal, return space
+            currField.getDataStorage().setByte(0, (byte) 0);
+            currField.getDataStorage().setByte(1, (byte) ' ');
+        } else {
+            // Convert to national character (UTF-16 encoding)
+            char ch = (char) (ordinal - 1);
+            byte[] bytes = String.valueOf(ch).getBytes(java.nio.charset.StandardCharsets.UTF_16BE);
+            if (bytes.length >= 2) {
+                currField.getDataStorage().setByte(0, bytes[0]);
+                currField.getDataStorage().setByte(1, bytes[1]);
+            } else {
+                currField.getDataStorage().setByte(0, (byte) 0);
+                currField.getDataStorage().setByte(1, (byte) ch);
+            }
+        }
+
+        return currField;
+    }
+
+    /**
+     * DISPLAY-OF intrinsic function implementation.
+     * Converts national/Unicode data to display format.
+     */
+    public static AbstractCobolField funcDisplayOf(int offset, int length, int params, AbstractCobolField... fields) {
+        if (params < 1) {
+            // Return empty field if no parameters
+            CobolFieldAttribute attr =
+                    new CobolFieldAttribute(
+                            CobolFieldAttribute.COB_TYPE_ALPHANUMERIC,
+                            0,
+                            0,
+                            0,
+                            null);
+            AbstractCobolField field =
+                    CobolFieldFactory.makeCobolField(0, (CobolDataStorage) null, attr);
+            makeFieldEntry(field);
+            return currField;
+        }
+
+        AbstractCobolField srcField = fields[0];
+        makeFieldEntry(srcField);
+
+        // For display conversion, we'll do a simple byte-by-byte copy
+        // Real implementation would handle national character conversion
+        currField.getDataStorage().memcpy(srcField.getDataStorage(), srcField.getSize());
+
+        if (offset > 0) {
+            calcRefMod(currField, offset, length);
+        }
+        return currField;
+    }
+
+    /**
+     * NATIONAL-OF intrinsic function implementation.
+     * Converts display data to national format.
+     */
+    public static AbstractCobolField funcNationalOf(int offset, int length, int params, AbstractCobolField... fields) {
+        if (params < 1) {
+            // Return empty field if no parameters
+            CobolFieldAttribute attr =
+                    new CobolFieldAttribute(
+                            CobolFieldAttribute.COB_TYPE_NATIONAL,
+                            0,
+                            0,
+                            0,
+                            null);
+            AbstractCobolField field =
+                    CobolFieldFactory.makeCobolField(0, (CobolDataStorage) null, attr);
+            makeFieldEntry(field);
+            return currField;
+        }
+
+        AbstractCobolField srcField = fields[0];
+        CobolFieldAttribute attr =
+                new CobolFieldAttribute(
+                        CobolFieldAttribute.COB_TYPE_NATIONAL,
+                        srcField.getSize() * 2, // National chars are typically double-byte
+                        0,
+                        0,
+                        null);
+        AbstractCobolField field =
+                CobolFieldFactory.makeCobolField(srcField.getSize() * 2, (CobolDataStorage) null, attr);
+        makeFieldEntry(field);
+
+        // Convert to national format (simplified - just double each byte)
+        for (int i = 0; i < srcField.getSize(); i++) {
+            byte b = srcField.getDataStorage().getByte(i);
+            currField.getDataStorage().setByte(i * 2, (byte) 0);
+            currField.getDataStorage().setByte(i * 2 + 1, b);
+        }
+
+        if (offset > 0) {
+            calcRefMod(currField, offset, length);
+        }
+        return currField;
+    }
+
+    /**
+     * EXCEPTION-FILE-N intrinsic function implementation.
+     * Returns national format of exception file information.
+     */
+    public static AbstractCobolField funcExceptionFileN() {
+        // Get the regular exception file info and convert to national
+        AbstractCobolField displayField = funcExceptionFile();
+        return funcNationalOf(0, 0, 1, displayField);
+    }
+
+    /**
+     * EXCEPTION-LOCATION-N intrinsic function implementation.
+     * Returns national format of exception location information.
+     */
+    public static AbstractCobolField funcExceptionLocationN() {
+        // Get the regular exception location info and convert to national
+        AbstractCobolField displayField = funcExceptionLocation();
+        return funcNationalOf(0, 0, 1, displayField);
+    }
+
+    /**
+     * LOCALE-COMPARE intrinsic function implementation.
+     * Compares strings using locale-specific rules.
+     */
+    public static AbstractCobolField funcLocaleCompare(int params, AbstractCobolField... fields) {
+        CobolFieldAttribute attr =
+                new CobolFieldAttribute(
+                        CobolFieldAttribute.COB_TYPE_NUMERIC_BINARY,
+                        8,
+                        0,
+                        CobolFieldAttribute.COB_FLAG_HAVE_SIGN,
+                        null);
+        AbstractCobolField field =
+                CobolFieldFactory.makeCobolField(4, (CobolDataStorage) null, attr);
+        makeFieldEntry(field);
+
+        if (params < 2) {
+            currField.setInt(0);
+            return currField;
+        }
+
+        // Get the two strings to compare
+        String str1 = fields[0].getString();
+        String str2 = fields[1].getString();
+
+        // Locale-specific comparison - for now, use standard string comparison
+        // Real implementation would use locale-specific collation
+        int result = str1.compareTo(str2);
+        
+        // Normalize result to -1, 0, 1
+        if (result < 0) {
+            currField.setInt(-1);
+        } else if (result > 0) {
+            currField.setInt(1);
+        } else {
+            currField.setInt(0);
+        }
+
+        return currField;
+    }
+
+    /**
+     * STANDARD-COMPARE intrinsic function implementation.
+     * Compares strings using standard (ASCII) ordering rules.
+     */
+    public static AbstractCobolField funcStandardCompare(int params, AbstractCobolField... fields) {
+        CobolFieldAttribute attr =
+                new CobolFieldAttribute(
+                        CobolFieldAttribute.COB_TYPE_NUMERIC_BINARY,
+                        8,
+                        0,
+                        CobolFieldAttribute.COB_FLAG_HAVE_SIGN,
+                        null);
+        AbstractCobolField field =
+                CobolFieldFactory.makeCobolField(4, (CobolDataStorage) null, attr);
+        makeFieldEntry(field);
+
+        if (params < 2) {
+            currField.setInt(0);
+            return currField;
+        }
+
+        // Get the two strings to compare
+        String str1 = fields[0].getString();
+        String str2 = fields[1].getString();
+
+        // Standard ASCII comparison
+        int result = str1.compareTo(str2);
+        
+        // Normalize result to -1, 0, 1
+        if (result < 0) {
+            currField.setInt(-1);
+        } else if (result > 0) {
+            currField.setInt(1);
+        } else {
+            currField.setInt(0);
+        }
+
+        return currField;
+    }
 }
