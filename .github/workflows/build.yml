@@ -53,6 +53,11 @@ jobs:
       - name: Checkout opensource COBOL 4J
         uses: actions/checkout@v5
       
+      - name: Setup Gradle
+        uses: gradle/actions/setup-gradle@v3
+        with:
+          gradle-version: wrapper
+      
       - name: Install opensource COBOL 4J
         if: inputs.configure-args == ''
         run: |
