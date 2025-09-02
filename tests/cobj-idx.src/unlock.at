@@ -170,4 +170,17 @@ AT_CHECK([java check_record_lock], [0],
 [00
 ])
 
+# Test unlock with multiple files
+AT_CHECK([rm -f indexed_file.dat indexed_file2.dat])
+# Create multiple locked files
+AT_CHECK([java create_and_exit])
+AT_CHECK([cp indexed_file.dat indexed_file2.dat])
+AT_CHECK([java create_and_exit])  # This will leave indexed_file.dat locked
+# Unlock multiple files
+AT_CHECK([${COBJ_IDX} unlock indexed_file.dat indexed_file2.dat])
+# Check both files are unlocked
+AT_CHECK([java check_file_lock], [0],
+[00
+])
+
 AT_CLEANUP

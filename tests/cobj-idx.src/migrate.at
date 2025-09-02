@@ -73,4 +73,10 @@ AAAA2BBBB1CCCC1
 AAAA1BBBB1CCCC1
 AAAA3BBBB3CCCC3
 ])
+
+# Test migrate with multiple files
+AT_CHECK([cp ../../cobj-idx.src/test-data/indexed_file.dat indexed_file2.dat])
+AT_CHECK([cp ../../cobj-idx.src/test-data/indexed_file.dat indexed_file3.dat])
+AT_CHECK([${COBJ_IDX} migrate indexed_file2.dat indexed_file3.dat])
+
 AT_CLEANUP

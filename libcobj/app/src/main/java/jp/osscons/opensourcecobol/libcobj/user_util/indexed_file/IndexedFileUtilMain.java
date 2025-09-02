@@ -138,39 +138,37 @@ class IndexedFileUtilMain {
                 System.exit(1);
             }
         } else if ("migrate".equals(subCommand)) {
-            if (unrecognizedArgs.length != 2) {
-                if (unrecognizedArgs.length < 2) {
-                    System.err.println("error: no indexed file is specified.");
-                } else {
-                    System.err.println("error: too many indexed files are specified.");
+            if (unrecognizedArgs.length < 2) {
+                System.err.println("error: no indexed file is specified.");
+                System.exit(1);
+            }
+            boolean hasError = false;
+            for (int i = 1; i < unrecognizedArgs.length; i++) {
+                String indexedFilePath = unrecognizedArgs[i];
+                try {
+                    migrateIndexedFile(indexedFilePath);
+                } catch (Exception e) {
+                    System.err.println("error: " + e.getMessage());
+                    hasError = true;
                 }
-                System.exit(1);
             }
-            String indexedFilePath = unrecognizedArgs[1];
-            try {
-                migrateIndexedFile(indexedFilePath);
-            } catch (Exception e) {
-                System.err.println("error: " + e.getMessage());
-                System.exit(1);
-            }
-            System.exit(0);
+            System.exit(hasError ? 1 : 0);
         } else if ("unlock".equals(subCommand)) {
-            if (unrecognizedArgs.length != 2) {
-                if (unrecognizedArgs.length < 2) {
-                    System.err.println("error: no indexed file is specified.");
-                } else {
-                    System.err.println("error: too many indexed files are specified.");
+            if (unrecognizedArgs.length < 2) {
+                System.err.println("error: no indexed file is specified.");
+                System.exit(1);
+            }
+            boolean hasError = false;
+            for (int i = 1; i < unrecognizedArgs.length; i++) {
+                String indexedFilePath = unrecognizedArgs[i];
+                try {
+                    unlockIndexedFile(indexedFilePath);
+                } catch (Exception e) {
+                    System.err.println("error: " + e.getMessage());
+                    hasError = true;
                 }
-                System.exit(1);
             }
-            String indexedFilePath = unrecognizedArgs[1];
-            try {
-                unlockIndexedFile(indexedFilePath);
-            } catch (Exception e) {
-                System.err.println("error: " + e.getMessage());
-                System.exit(1);
-            }
-            System.exit(0);
+            System.exit(hasError ? 1 : 0);
         } else if ("load".equals(subCommand)) {
             if (unrecognizedArgs.length < 2 || unrecognizedArgs.length > 3) {
                 if (unrecognizedArgs.length < 2) {
@@ -260,12 +258,12 @@ class IndexedFileUtilMain {
                 "    Write the records stored in the indexed file into the output file.");
         System.out.println("    The default format of the output data is SEQUENTIAL of COBOL.");
         System.out.println();
-        System.out.println("cobj-idx migrate <indexed file>");
+        System.out.println("cobj-idx migrate <indexed file> [<indexed file>...]");
         System.out.println(
                 "    Migrate the indexed file whose version is older than 1.1.12 to the latest"
                         + " version.");
         System.out.println();
-        System.out.println("cobj-idx unlock <indexed file>");
+        System.out.println("cobj-idx unlock <indexed file> [<indexed file>...]");
         System.out.println("    Unlock all locks of the indexed file.");
         System.out.println();
         System.out.println("Options:");
