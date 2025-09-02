@@ -18,11 +18,6 @@ jobs:
       - name: Checkout opensource COBOL 4J
         uses: actions/checkout@v5
       
-      - name: Setup Gradle
-        uses: gradle/actions/setup-gradle@v3
-        with:
-          gradle-version: wrapper
-      
       - name: Run javadoc
         working-directory: libcobj
         run: |
