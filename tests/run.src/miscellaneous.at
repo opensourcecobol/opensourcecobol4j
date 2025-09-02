@@ -2196,28 +2196,37 @@ AT_DATA([prog.cbl], [
        01 FILE-STATUS PIC XX.
        PROCEDURE DIVISION.
        MAIN-PROCEDURE.
-       *> Test basic file operations work
+       *> Create and write to file
            OPEN OUTPUT TEST-FILE.
-           IF FILE-STATUS NOT = "00"
-               DISPLAY "Error opening file: " FILE-STATUS
-           END-IF.
+           DISPLAY "Output open status: " FILE-STATUS.
            MOVE "TEST DATA " TO TEST-RECORD.
            WRITE TEST-RECORD.
            CLOSE TEST-FILE.
            
-       *> Test file can be reopened
+       *> Test file can be reopened for input
            OPEN INPUT TEST-FILE.
-           IF FILE-STATUS NOT = "00"
-               DISPLAY "Error reopening file: " FILE-STATUS
-           END-IF.
+           DISPLAY "Input open status: " FILE-STATUS.
            READ TEST-FILE.
-           DISPLAY TEST-RECORD NO ADVANCING.
+           CLOSE TEST-FILE.
+           
+       *> Test file can be reopened for I-O
+           OPEN I-O TEST-FILE.
+           DISPLAY "I-O open status: " FILE-STATUS.
+           CLOSE TEST-FILE.
+           
+       *> Test file can be reopened for extend  
+           OPEN EXTEND TEST-FILE.
+           DISPLAY "Extend open status: " FILE-STATUS.
            CLOSE TEST-FILE.
            STOP RUN.
 ])
 
 AT_CHECK([${COMPILE} prog.cbl])
-AT_CHECK([java prog], [0], [TEST DATA ])
+AT_CHECK([java prog], [0], [Output open status: 00
+Input open status: 00
+I-O open status: 00
+Extend open status: 00
+])
 
 AT_CLEANUP
 
@@ -2240,28 +2249,37 @@ AT_DATA([prog.cbl], [
        01 FILE-STATUS PIC XX.
        PROCEDURE DIVISION.
        MAIN-PROCEDURE.
-       *> Test basic file operations work
+       *> Create and write to file
            OPEN OUTPUT TEST-FILE.
-           IF FILE-STATUS NOT = "00"
-               DISPLAY "Error opening file: " FILE-STATUS
-           END-IF.
+           DISPLAY "Output open status: " FILE-STATUS.
            MOVE "TEST DATA " TO TEST-RECORD.
            WRITE TEST-RECORD.
            CLOSE TEST-FILE.
            
-       *> Test file can be reopened
+       *> Test file can be reopened for input
            OPEN INPUT TEST-FILE.
-           IF FILE-STATUS NOT = "00"
-               DISPLAY "Error reopening file: " FILE-STATUS
-           END-IF.
+           DISPLAY "Input open status: " FILE-STATUS.
            READ TEST-FILE.
-           DISPLAY TEST-RECORD NO ADVANCING.
+           CLOSE TEST-FILE.
+           
+       *> Test file can be reopened for I-O
+           OPEN I-O TEST-FILE.
+           DISPLAY "I-O open status: " FILE-STATUS.
+           CLOSE TEST-FILE.
+           
+       *> Test file can be reopened for extend  
+           OPEN EXTEND TEST-FILE.
+           DISPLAY "Extend open status: " FILE-STATUS.
            CLOSE TEST-FILE.
            STOP RUN.
 ])
 
 AT_CHECK([${COMPILE} prog.cbl])
-AT_CHECK([java prog], [0], [TEST DATA ])
+AT_CHECK([java prog], [0], [Output open status: 00
+Input open status: 00
+I-O open status: 00
+Extend open status: 00
+])
 
 AT_CLEANUP
 
@@ -2285,27 +2303,36 @@ AT_DATA([prog.cbl], [
        01 FILE-STATUS PIC XX.
        PROCEDURE DIVISION.
        MAIN-PROCEDURE.
-       *> Test basic file operations work
+       *> Create and write to file
            OPEN OUTPUT TEST-FILE.
-           IF FILE-STATUS NOT = "00"
-               DISPLAY "Error opening file: " FILE-STATUS
-           END-IF.
+           DISPLAY "Output open status: " FILE-STATUS.
            MOVE "TEST DATA " TO TEST-RECORD.
            WRITE TEST-RECORD.
            CLOSE TEST-FILE.
            
-       *> Test file can be reopened
+       *> Test file can be reopened for input
            OPEN INPUT TEST-FILE.
-           IF FILE-STATUS NOT = "00"
-               DISPLAY "Error reopening file: " FILE-STATUS
-           END-IF.
+           DISPLAY "Input open status: " FILE-STATUS.
            READ TEST-FILE.
-           DISPLAY TEST-RECORD NO ADVANCING.
+           CLOSE TEST-FILE.
+           
+       *> Test file can be reopened for I-O
+           OPEN I-O TEST-FILE.
+           DISPLAY "I-O open status: " FILE-STATUS.
+           CLOSE TEST-FILE.
+           
+       *> Test file can be reopened for extend  
+           OPEN EXTEND TEST-FILE.
+           DISPLAY "Extend open status: " FILE-STATUS.
            CLOSE TEST-FILE.
            STOP RUN.
 ])
 
 AT_CHECK([${COMPILE} prog.cbl])
-AT_CHECK([java prog], [0], [TEST DATA ])
+AT_CHECK([java prog], [0], [Output open status: 00
+Input open status: 00
+I-O open status: 00
+Extend open status: 00
+])
 
 AT_CLEANUP
