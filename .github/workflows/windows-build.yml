@@ -30,7 +30,7 @@ jobs:
         run: nuget restore ./win/
       
       - name: Setup Gradle
-        uses: gradle/actions/setup-gradle@v3
+        uses: gradle/actions/setup-gradle@v4
         with:
           gradle-version: wrapper
       
