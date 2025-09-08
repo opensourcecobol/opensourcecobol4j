@@ -7,7 +7,7 @@ plugins {
     id("java")
     id("maven-publish")
     pmd
-    id("com.github.spotbugs") version "6.2.7"
+    id("com.github.spotbugs") version "6.3.0"
 }
 
 repositories {
