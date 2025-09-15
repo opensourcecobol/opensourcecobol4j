@@ -37,7 +37,7 @@ dependencies {
     testImplementation("org.junit.jupiter:junit-jupiter:5.13.4")
     testRuntimeOnly("org.junit.platform:junit-platform-launcher")
     implementation("org.json:json:20250517")
-    spotbugs("com.github.spotbugs:spotbugs:4.8.6")
+    spotbugs("com.github.spotbugs:spotbugs:4.9.5")
 
     implementation("org.slf4j:slf4j-api:2.0.17")
     implementation("org.slf4j:slf4j-simple:2.0.17")
