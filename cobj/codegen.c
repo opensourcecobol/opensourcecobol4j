@@ -589,6 +589,7 @@ static void joutput_string_write(const unsigned char *s, int size,
       } else {
         joutput("%c", c);
       }
+
       // insert line breaks between segments concatenated with '&'
       if (tmp_sgmt_sizes && i < size - 1) {
         size_t segment_end_position =
