@@ -569,9 +569,7 @@ static void joutput_string_write(const unsigned char *s, int size,
       if (c == '\"' || c == '\\') {
         joutput("\\%c", c);
       } else if (c == '\n') {
-        joutput_line("\" + ");
-        joutput_prefix();
-        joutput("\"");
+        joutput("\\n");
       } else {
         joutput("%c", c);
       }
@@ -5033,7 +5031,7 @@ static void *list_cache_sort(void *inlist,
 }
 
 /**
- * メンバ変数の初期化を行うメソ�?ドinitを�?�力す�?
+ * メンバ変数の初期化を行うメソッドinitを出力する
  */
 static void joutput_init_method(struct cb_program *prog) {
   struct literal_list *m;
@@ -5058,7 +5056,7 @@ static void joutput_init_method(struct cb_program *prog) {
     joutput("\n");
   }
 
-  /* CobolDataStorage型変数の初期�?(定数) */
+  /* CobolDataStorage型変数の初期化(定数) */
   if (base_cache) {
     joutput_line("/* Data storage */\n");
     joutput_line("cob_unifunc = null;\n");
@@ -6244,7 +6242,7 @@ void codegen(struct cb_program *prog, const int nested, char **program_id_list,
 
   /* Program local stuff */
 
-  // コンストラクタの実�?コードを出�?
+  // コンストラクタの実装コードを出力
   // メンバ変数の初期化を行う
   joutput_line("public %s()", prog->program_id);
   joutput_line("{");
@@ -6252,12 +6250,12 @@ void codegen(struct cb_program *prog, const int nested, char **program_id_list,
   joutput_line("}");
   joutput_newline();
 
-  // メンバ変数の初期化メソ�?ドを出�?
+  // メンバ変数の初期化メソッドを出力
   create_sorted_data_storage_cache();
   joutput_init_method(prog);
   joutput_newline();
 
-  // メンバ変数の出�?
+  // メンバ変数の出力
   joutput_declare_member_variables(prog, prog->parameter_list);
   joutput("\n");
 
