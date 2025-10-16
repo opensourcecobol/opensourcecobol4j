@@ -455,6 +455,32 @@ struct cb_literal *build_literal(enum cb_category category,
   return p;
 }
 
+struct cb_literal *build_concat_literal(enum cb_category category,
+                                        const unsigned char *data, size_t size1,
+                                        size_t size2, size_t *sgmt_sizes,
+                                        size_t sgmt_count) {
+  struct cb_literal *p;
+  size_t size = size1 + size2;
+  p = make_tree(CB_TAG_LITERAL, category, sizeof(struct cb_literal));
+  p->data = cobc_malloc((size_t)(size + 1));
+  p->size = size;
+  memcpy(p->data, data, (size_t)size);
+
+  // Set segment sizes
+  if (!sgmt_sizes) {
+    p->segment_sizes = cobc_malloc(sizeof(size_t) * 2);
+    p->segment_sizes[0] = size1;
+    sgmt_count = 1;
+  } else {
+    p->segment_sizes = cobc_malloc(sizeof(size_t) * (sgmt_count + 1));
+    memcpy(p->segment_sizes, sgmt_sizes, sizeof(size_t) * sgmt_count);
+  }
+  memcpy(p->segment_sizes + sgmt_count, &size2, sizeof(size_t));
+  p->segment_count = sgmt_count + 1;
+
+  return p;
+}
+
 char *cb_name(cb_tree x) {
   if (!treenamebuff) {
     treenamebuff = cobc_malloc(COB_NORMAL_BUFF);
@@ -1030,6 +1056,22 @@ cb_tree cb_build_national_literal(const unsigned char *data, size_t size) {
   return CB_TREE(build_literal(CB_CATEGORY_NATIONAL, data, size));
 }
 
+cb_tree cb_build_concat_alphanumeric_literal(const unsigned char *data,
+                                             size_t size1, size_t size2,
+                                             size_t *sgmt_sizes,
+                                             size_t sgmt_count) {
+  return CB_TREE(build_concat_literal(CB_CATEGORY_ALPHANUMERIC, data, size1,
+                                      size2, sgmt_sizes, sgmt_count));
+}
+
+cb_tree cb_build_concat_national_literal(const unsigned char *data,
+                                         size_t size1, size_t size2,
+                                         size_t *sgmt_sizes,
+                                         size_t sgmt_count) {
+  return CB_TREE(build_concat_literal(CB_CATEGORY_NATIONAL, data, size1, size2,
+                                      sgmt_sizes, sgmt_count));
+}
+
 cb_tree cb_concat_literals(cb_tree x1, cb_tree x2) {
   unsigned char *buff;
   cb_tree x;
@@ -1037,14 +1079,17 @@ cb_tree cb_concat_literals(cb_tree x1, cb_tree x2) {
   unsigned char *data2;
   size_t size1;
   size_t size2;
+  struct cb_literal *l;
 
   if (x1 == cb_error_node || x2 == cb_error_node) {
     return cb_error_node;
   }
   if (CB_LITERAL_P(x1)) {
+    l = CB_LITERAL(x1);
     data1 = CB_LITERAL(x1)->data;
     size1 = CB_LITERAL(x1)->size;
   } else if (CB_CONST_P(x1)) {
+    l = CB_LITERAL(x1);
     size1 = 1;
     if (x1 == cb_space) {
       data1 = (unsigned char *)" ";
@@ -1090,8 +1135,15 @@ cb_tree cb_concat_literals(cb_tree x1, cb_tree x2) {
   buff = cobc_malloc(size1 + size2 + 3);
   memcpy(buff, data1, size1);
   memcpy(buff + size1, data2, size2);
-  x = cb_build_alphanumeric_literal(buff, size1 + size2);
+  if (x1->category == CB_CATEGORY_NATIONAL) {
+    x = cb_build_concat_national_literal(buff, size1, size2, l->segment_sizes,
+                                         l->segment_count);
+  } else {
+    x = cb_build_concat_alphanumeric_literal(
+        buff, size1, size2, l->segment_sizes, l->segment_count);
+  }
   free(buff);
+
   return x;
 }
 

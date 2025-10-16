@@ -467,9 +467,17 @@ extern cb_tree cb_build_system_name(enum cb_system_name_category category,
  * Literal
  */
 
+struct cb_literal_segment {
+  size_t size;
+  unsigned char *data;
+  struct cb_literal_segment *next;
+};
+
 struct cb_literal {
   struct cb_tree_common common;
   size_t size;
+  size_t *segment_sizes; /* segment sizes for strings concatenated with '&' */
+  size_t segment_count;
   unsigned char *data;
   signed char all;
   signed char sign; /* unsigned: 0 negative: -1 positive: 1 */
@@ -489,6 +497,14 @@ extern cb_tree cb_build_alphanumeric_literal(const unsigned char *data,
 extern cb_tree cb_build_national_literal(const unsigned char *data,
                                          size_t size);
 extern cb_tree cb_concat_literals(cb_tree x1, cb_tree x2);
+extern cb_tree cb_build_concat_alphanumeric_literal(const unsigned char *data,
+                                                    size_t size1, size_t size2,
+                                                    size_t *sgmt_sizes,
+                                                    size_t sgmt_count);
+extern cb_tree cb_build_concat_national_literal(const unsigned char *data,
+                                                size_t size1, size_t size2,
+                                                size_t *sgmt_sizes,
+                                                size_t sgmt_count);
 
 /*
  * Decimal
@@ -566,7 +582,7 @@ struct cb_field {
     cb_tree key; /* KEY */
     cb_tree ref; /* reference used in SEARCH ALL */
     cb_tree val; /* value to be compared in SEARCH ALL */
-  } *keys;
+  } * keys;
   int nkeys;              /* the number of keys */
   int param_num;          /* CHAINING param number */
   struct cb_picture *pic; /* PICTURE */
@@ -606,6 +622,7 @@ struct cb_field {
   unsigned int flag_is_pdiv_parm : 1;  /* is PROC DIV USING */
   unsigned int flag_local_alloced : 1; /* LOCAL storage is allocated */
   unsigned int flag_no_init : 1;       /* no initialize unless used */
+  // unsigned int flag_sql_str : 1;       /* is SQL string */
   unsigned int flag_spare : 5;
 };
 
@@ -1438,6 +1455,10 @@ extern void level_except_error(cb_tree x, const char *clause);
 
 struct cb_literal *build_literal(enum cb_category category,
                                  const unsigned char *data, size_t size);
+struct cb_literal *build_concat_literal(enum cb_category category,
+                                        const unsigned char *data, size_t size1,
+                                        size_t size2, size_t *sgmt_sizes,
+                                        size_t sgmt_count);
 
 /* field.c */
 extern size_t cb_needs_01;

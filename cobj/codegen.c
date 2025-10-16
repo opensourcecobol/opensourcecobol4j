@@ -79,6 +79,8 @@ static const char *excp_current_program_id = NULL;
 static const char *excp_current_section = NULL;
 static const char *excp_current_paragraph = NULL;
 static struct cb_program *current_prog;
+static size_t *sgmt_sizes = NULL;
+static size_t sgmt_count = 0;
 
 extern int cb_default_byte_specified;
 extern unsigned char cb_default_byte;
@@ -463,6 +465,7 @@ struct string_literal_cache {
   enum cb_string_category category;
   char *var_name;
   struct string_literal_cache *next;
+  size_t *segment_sizes; /* segment sizes for strings concatenated with '&' */
 };
 
 int string_literal_id = 0;
@@ -531,7 +534,8 @@ static enum cb_string_category get_string_category(const unsigned char *s,
 }
 
 static void joutput_string_write(const unsigned char *s, int size,
-                                 enum cb_string_category category) {
+                                 enum cb_string_category category,
+                                 size_t *tmp_sgmt_sizes) {
   int i;
 
 #ifdef I18N_UTF8
@@ -552,7 +556,11 @@ static void joutput_string_write(const unsigned char *s, int size,
     } else {
       joutput("CobolUtil.stringToBytes(");
     }
-
+    if (tmp_sgmt_sizes) {
+      joutput_indent_level += 2;
+      joutput_newline();
+      joutput_prefix();
+    }
     joutput("\"");
 
 #ifdef I18N_UTF8
@@ -561,13 +569,17 @@ static void joutput_string_write(const unsigned char *s, int size,
       if (c == '\"' || c == '\\') {
         joutput("\\%c", c);
       } else if (c == '\n') {
-        joutput("\\n");
+        joutput_line("\" + ");
+        joutput_prefix();
+        joutput("\"");
       } else {
         joutput("%c", c);
       }
     }
 #else
     int output_multibyte = 0;
+    int sum_sgmt_size = 0;
+    int sgmt_index = 0;
     for (i = 0; i < size; i++) {
       int c = s[i];
       if (!output_multibyte && (c == '\"' || c == '\\')) {
@@ -577,10 +589,26 @@ static void joutput_string_write(const unsigned char *s, int size,
       } else {
         joutput("%c", c);
       }
+      // insert line breaks between segments concatenated with '&'
+      if (tmp_sgmt_sizes && i < size - 1) {
+        size_t segment_end_position =
+            sum_sgmt_size + tmp_sgmt_sizes[sgmt_index] - 1;
+        if (i == segment_end_position) {
+          joutput("\" + ");
+          joutput_newline();
+          joutput_prefix();
+          joutput("\"");
+          sum_sgmt_size += tmp_sgmt_sizes[sgmt_index];
+          sgmt_index++;
+        }
+      }
       output_multibyte = !output_multibyte &&
                          ((0x81 <= c && c <= 0x9f) || (0xe0 <= c && c <= 0xef));
     }
 #endif
+    if (tmp_sgmt_sizes) {
+      joutput_indent_level -= 2;
+    }
     joutput("\")");
   } else {
     if (param_wrap_string_flag) {
@@ -631,6 +659,14 @@ static void joutput_string(const unsigned char *s, int size) {
     new_literal_cache->var_name[var_name_length + 1 + i] = '\0';
   }
 
+  // set segment sizes to new cache
+  if (sgmt_sizes) {
+    new_literal_cache->segment_sizes = malloc(sizeof(size_t) * sgmt_count);
+    memcpy(new_literal_cache->segment_sizes, sgmt_sizes,
+           sizeof(size_t) * sgmt_count);
+    sgmt_sizes = NULL;
+  }
+
   // add the new cache to string_literal_list
   new_literal_cache->next = string_literal_list;
   string_literal_list = new_literal_cache;
@@ -658,7 +694,8 @@ static void joutput_all_string_literals() {
     joutput_prefix();
     joutput("public static final %s %s = ", data_type, l->var_name);
     param_wrap_string_flag = l->param_wrap_string_flag;
-    joutput_string_write(l->string_value, l->size, l->category);
+    joutput_string_write(l->string_value, l->size, l->category,
+                         l->segment_sizes);
     joutput(";\n");
     l = l->next;
   }
@@ -2280,6 +2317,13 @@ static void joutput_initialize_one(struct cb_initialize *p, cb_tree x) {
   /* Initialize by value */
   if (p->val && f->values) {
     cb_tree value = CB_VALUE(f->values);
+    struct cb_literal *l = CB_LITERAL_P(value) ? CB_LITERAL(value) : NULL;
+    // save the size information of '&' concatenated segments
+    if (l && l->segment_count > 0) {
+      sgmt_sizes = cobc_malloc(sizeof(size_t) * l->segment_count);
+      memcpy(sgmt_sizes, l->segment_sizes, sizeof(size_t) * l->segment_count);
+      sgmt_count = l->segment_count;
+    }
 
     /* NATIONAL also needs no editing but mbchar conversion. */
     if (CB_TREE_CATEGORY(x) == CB_CATEGORY_NATIONAL) {
@@ -2340,7 +2384,6 @@ static void joutput_initialize_one(struct cb_initialize *p, cb_tree x) {
       /* We do not use joutput_move here because
          we do not want to have the value be edited. */
 
-      struct cb_literal *l = CB_LITERAL(value);
       static char *buff = NULL;
       static int lastsize = 0;
       if (!buff) {
@@ -4989,7 +5032,7 @@ static void *list_cache_sort(void *inlist,
 }
 
 /**
- * メンバ変数の初期化を行うメソッドinitを出力する
+ * メンバ変数の初期化を行うメソ�?ドinitを�?�力す�?
  */
 static void joutput_init_method(struct cb_program *prog) {
   struct literal_list *m;
@@ -5014,7 +5057,7 @@ static void joutput_init_method(struct cb_program *prog) {
     joutput("\n");
   }
 
-  /* CobolDataStorage型変数の初期化(定数) */
+  /* CobolDataStorage型変数の初期�?(定数) */
   if (base_cache) {
     joutput_line("/* Data storage */\n");
     joutput_line("cob_unifunc = null;\n");
@@ -6200,7 +6243,7 @@ void codegen(struct cb_program *prog, const int nested, char **program_id_list,
 
   /* Program local stuff */
 
-  // コンストラクタの実装コードを出力
+  // コンストラクタの実�?コードを出�?
   // メンバ変数の初期化を行う
   joutput_line("public %s()", prog->program_id);
   joutput_line("{");
@@ -6208,12 +6251,12 @@ void codegen(struct cb_program *prog, const int nested, char **program_id_list,
   joutput_line("}");
   joutput_newline();
 
-  // メンバ変数の初期化メソッドを出力
+  // メンバ変数の初期化メソ�?ドを出�?
   create_sorted_data_storage_cache();
   joutput_init_method(prog);
   joutput_newline();
 
-  // メンバ変数の出力
+  // メンバ変数の出�?
   joutput_declare_member_variables(prog, prog->parameter_list);
   joutput("\n");
 
