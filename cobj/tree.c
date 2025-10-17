@@ -466,7 +466,7 @@ struct cb_literal *build_concat_literal(enum cb_category category,
   p->size = size;
   memcpy(p->data, data, (size_t)size);
 
-  // Set segment sizes
+  // set segment sizes
   if (!sgmt_sizes) {
     p->segment_sizes = cobc_malloc(sizeof(size_t) * 2);
     p->segment_sizes[0] = size1;

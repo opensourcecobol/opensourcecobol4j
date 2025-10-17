@@ -664,6 +664,8 @@ static void joutput_string(const unsigned char *s, int size) {
     memcpy(new_literal_cache->segment_sizes, sgmt_sizes,
            sizeof(size_t) * sgmt_count);
     sgmt_sizes = NULL;
+  } else {
+    new_literal_cache->segment_sizes = NULL;
   }
 
   // add the new cache to string_literal_list
