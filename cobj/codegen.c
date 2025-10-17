@@ -535,7 +535,7 @@ static enum cb_string_category get_string_category(const unsigned char *s,
 
 static void joutput_string_write(const unsigned char *s, int size,
                                  enum cb_string_category category,
-                                 size_t *tmp_sgmt_sizes) {
+                                 const size_t *tmp_sgmt_sizes) {
   int i;
 
 #ifdef I18N_UTF8
