@@ -582,7 +582,7 @@ struct cb_field {
     cb_tree key; /* KEY */
     cb_tree ref; /* reference used in SEARCH ALL */
     cb_tree val; /* value to be compared in SEARCH ALL */
-  } * keys;
+  } *keys;
   int nkeys;              /* the number of keys */
   int param_num;          /* CHAINING param number */
   struct cb_picture *pic; /* PICTURE */
@@ -622,7 +622,6 @@ struct cb_field {
   unsigned int flag_is_pdiv_parm : 1;  /* is PROC DIV USING */
   unsigned int flag_local_alloced : 1; /* LOCAL storage is allocated */
   unsigned int flag_no_init : 1;       /* no initialize unless used */
-  // unsigned int flag_sql_str : 1;       /* is SQL string */
   unsigned int flag_spare : 5;
 };
 
