@@ -2555,7 +2555,7 @@ static void joutput_initialize_compound(struct cb_initialize *p, cb_tree x) {
         } else {
           size = ff->offset + ff->size - last_field->offset;
         }
-        
+
         joutput_initialize_uniform(c, last_char, (int)size);
         break;
       }
