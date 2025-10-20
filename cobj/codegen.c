@@ -606,9 +606,14 @@ static void joutput_string_write(const unsigned char *s, int size,
     }
 #endif
     if (tmp_sgmt_sizes) {
+      joutput("\"");
+      joutput_newline();
       joutput_indent_level -= 2;
+      joutput_prefix();
+      joutput(")");
+    } else {
+      joutput("\")");
     }
-    joutput("\")");
   } else {
     if (param_wrap_string_flag) {
       joutput("CobolDataStorage.makeCobolDataStorage(");
@@ -2550,7 +2555,7 @@ static void joutput_initialize_compound(struct cb_initialize *p, cb_tree x) {
         } else {
           size = ff->offset + ff->size - last_field->offset;
         }
-
+        
         joutput_initialize_uniform(c, last_char, (int)size);
         break;
       }
