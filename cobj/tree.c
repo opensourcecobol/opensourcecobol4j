@@ -470,7 +470,6 @@ struct cb_literal *build_concat_literal(enum cb_category category,
   if (!sgmt_sizes) {
     p->segment_sizes = cobc_malloc(sizeof(size_t) * 2);
     p->segment_sizes[0] = size1;
-    sgmt_count = 1;
   } else {
     p->segment_sizes = cobc_malloc(sizeof(size_t) * (sgmt_count + 1));
     memcpy(p->segment_sizes, sgmt_sizes, sizeof(size_t) * sgmt_count);
@@ -1135,6 +1134,9 @@ cb_tree cb_concat_literals(cb_tree x1, cb_tree x2) {
   buff = cobc_malloc(size1 + size2 + 3);
   memcpy(buff, data1, size1);
   memcpy(buff + size1, data2, size2);
+  if (!l->segment_count) {
+    l->segment_count = 1;
+  }
   if (x1->category == CB_CATEGORY_NATIONAL) {
     x = cb_build_concat_national_literal(buff, size1, size2, l->segment_sizes,
                                          l->segment_count);

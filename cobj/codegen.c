@@ -665,7 +665,7 @@ static void joutput_string(const unsigned char *s, int size) {
 
   // set segment sizes to new cache
   if (sgmt_sizes) {
-    new_literal_cache->segment_sizes = malloc(sizeof(size_t) * sgmt_count);
+    new_literal_cache->segment_sizes = cobc_malloc(sizeof(size_t) * sgmt_count);
     memcpy(new_literal_cache->segment_sizes, sgmt_sizes,
            sizeof(size_t) * sgmt_count);
     sgmt_sizes = NULL;
