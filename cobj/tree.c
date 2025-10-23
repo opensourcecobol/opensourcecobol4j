@@ -474,7 +474,7 @@ struct cb_literal *build_concat_literal(enum cb_category category,
     p->segment_sizes = cobc_malloc(sizeof(size_t) * (sgmt_count + 1));
     memcpy(p->segment_sizes, sgmt_sizes, sizeof(size_t) * sgmt_count);
   }
-  memcpy(p->segment_sizes + sgmt_count, &size2, sizeof(size_t));
+  p->segment_sizes[sgmt_count] = size2;
   p->segment_count = sgmt_count + 1;
 
   return p;
