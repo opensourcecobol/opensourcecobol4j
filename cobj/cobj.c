@@ -1817,6 +1817,7 @@ static void package_name_to_path(char *buff, char *package_name) {
       *b_p = *p_p;
     }
   }
+  *b_p = '\0';
 }
 
 static int process_compile(struct filename *fn) {
