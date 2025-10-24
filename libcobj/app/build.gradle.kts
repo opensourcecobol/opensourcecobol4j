@@ -34,7 +34,7 @@ dependencies {
     implementation("com.google.guava:guava:33.5.0-jre")
     implementation("org.xerial:sqlite-jdbc:3.50.3.0")
     implementation("commons-cli:commons-cli:1.10.0")
-    testImplementation("org.junit.jupiter:junit-jupiter:5.13.4")
+    testImplementation("org.junit.jupiter:junit-jupiter:6.0.0")
     testRuntimeOnly("org.junit.platform:junit-platform-launcher")
     implementation("org.json:json:20250517")
     spotbugs("com.github.spotbugs:spotbugs:4.8.6")
