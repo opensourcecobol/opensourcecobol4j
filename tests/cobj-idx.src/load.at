@@ -13,7 +13,8 @@ AT_DATA([load.cbl],
            alternate record key is alt-key-1
            alternate record key is alt-key-2
            alternate record key is alt-key-dup-1 with duplicates
-           alternate record key is alt-key-dup-2 with duplicates.
+           alternate record key is alt-key-dup-2 with duplicates
+           file status is file-status.
        data division.
        file section.
        fd f.
@@ -25,9 +26,13 @@ AT_DATA([load.cbl],
          03 alt-key-dup-2 pic x(5).
          03 rec-value pic x(5).
        working-storage section.
+       01 file-status pic xx.
        procedure division.
        main-proc.
            open input f.
+           if file-status not = '00'
+             stop run
+           end-if.
            perform forever
              read f next
                at end

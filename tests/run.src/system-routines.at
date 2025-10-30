@@ -1,0 +1,53 @@
+AT_SETUP([C$SLEEP])
+
+AT_DATA([prog1.cbl], [
+       IDENTIFICATION   DIVISION.
+       PROGRAM-ID.      prog1.
+       PROCEDURE        DIVISION.
+           DISPLAY "Start".
+           CALL "C$SLEEP" USING 4.
+           DISPLAY "End".
+           STOP RUN.
+])
+
+AT_CHECK([${COMPILE} prog1.cbl])
+
+# Test that the prog1ram takes at least 2 seconds to execute
+AT_CHECK([
+start_time=$(date +%s);
+java prog1;
+end_time=$(date +%s);
+duration=$((end_time - start_time));
+test $duration -ge 2], [0],
+[Start
+End
+])
+
+
+AT_DATA([prog2.cbl], [
+       IDENTIFICATION   DIVISION.
+       PROGRAM-ID.      prog2.
+       DATA             DIVISION.
+       WORKING-STORAGE  SECTION.
+       01 WS-TIMEOUT     PIC 9(4) COMP-3 VALUE 4.
+       PROCEDURE        DIVISION.
+           DISPLAY "Start".
+           CALL "C$SLEEP" USING WS-TIMEOUT.
+           DISPLAY "End".
+           STOP RUN.
+])
+
+AT_CHECK([${COMPILE} prog2.cbl])
+
+# Test that the prog2ram takes at least 2 seconds to execute
+AT_CHECK([
+start_time=$(date +%s);
+java prog2;
+end_time=$(date +%s);
+duration=$((end_time - start_time));
+test $duration -ge 2], [0],
+[Start
+End
+])
+
+AT_CLEANUP

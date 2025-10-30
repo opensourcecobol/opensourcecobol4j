@@ -1535,3 +1535,27 @@ AT_CHECK([${COMPILE} prog.cbl])
 AT_CHECK([java prog])
 
 AT_CLEANUP
+
+AT_SETUP([COMP: WRITE AFTER LINE])
+AT_DATA([prog.cbl], [
+       IDENTIFICATION  DIVISION.                                                
+       PROGRAM-ID.     prog.                                                  
+       ENVIRONMENT      DIVISION.
+       INPUT-OUTPUT      SECTION.                                               
+       FILE-CONTROL.                                                           
+           SELECT F ASSIGN  TO  "FILE".
+       DATA DIVISION.                                              
+       FILE SECTION.
+       FD  F.
+       01  F-REC PIC X(10).
+       WORKING-STORAGE SECTION.                                               
+       01  A PIC S9(6) COMP VALUE 0.
+       01  REC PIC X(10).
+       PROCEDURE DIVISION.
+           WRITE F-REC FROM REC AFTER A LINE.
+           STOP RUN.
+])
+
+AT_CHECK([${COMPILE} prog.cbl])
+
+AT_CLEANUP

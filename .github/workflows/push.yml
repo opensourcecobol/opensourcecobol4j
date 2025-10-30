@@ -40,6 +40,11 @@ jobs:
       os: ${{ matrix.os }}
       configure-args: --enable-utf8
 
+  coverage:
+    needs: check-workflows
+    if: github.ref == 'refs/heads/develop'
+    uses: ./.github/workflows/coverage.yml
+
   run-test-other:
     needs: build
     strategy:
@@ -53,6 +58,7 @@ jobs:
           - "run"
           - "syntax"
           - "cobj-idx"
+          - "file-lock"
           - "misc"
         os: ["ubuntu:24.04"]
     uses: ./.github/workflows/test-other.yml
@@ -74,6 +80,7 @@ jobs:
           - "run"
           - "syntax"
           - "cobj-idx"
+          - "file-lock"
           #- "misc"
         os: ["ubuntu:24.04"]
     uses: ./.github/workflows/test-other.yml

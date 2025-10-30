@@ -524,6 +524,117 @@ AT_CHECK([diff out1.txt out2.txt])
 
 AT_CLEANUP
 
+AT_SETUP([WRITE FROM Japanese literal])
+export LC_ALL=''
+
+AT_DATA([prog.cob], [
+       IDENTIFICATION   DIVISION.
+       PROGRAM-ID.      prog.
+       ENVIRONMENT      DIVISION.
+       INPUT-OUTPUT     SECTION.
+       FILE-CONTROL.
+           SELECT TEST-FILE ASSIGN TO "TESTFILE"
+                  ORGANIZATION IS SEQUENTIAL.
+       DATA DIVISION.
+       FILE SECTION.
+       FD  TEST-FILE.
+       01  TEST-DATA     PIC X(36).
+       WORKING-STORAGE SECTION.
+       PROCEDURE DIVISION.
+           OPEN  OUTPUT TEST-FILE.
+           WRITE TEST-DATA FROM  "縄文弥生古墳飛鳥奈良平安鎌倉室町江戸".
+           CLOSE TEST-FILE.
+
+           OPEN INPUT TEST-FILE.
+           READ TEST-FILE
+               NOT AT END
+                   DISPLAY TEST-DATA
+           END-READ.
+           CLOSE TEST-FILE.
+])
+
+AT_CHECK([cobj prog.cob])
+AT_CHECK([java prog > out1.txt])
+AT_CHECK([echo -n '縄文弥生古墳飛鳥奈良平安鎌倉室町江戸
+' | nkf --ic=UTF-8 --oc=Shift_JIS > out2.txt])
+AT_CHECK([diff out1.txt out2.txt])
+
+AT_CLEANUP
+
+AT_SETUP([Group item COB_TERMINAL_ENCODING])
+
+AT_DATA([prog.cbl], [
+       IDENTIFICATION DIVISION.
+       PROGRAM-ID. prog.
+       DATA DIVISION.
+       WORKING-STORAGE SECTION.
+       01  WK-AREA.
+         03  WK-CD        PIC X(04).
+         03  WK-NAME      PIC X(20).
+         03  WK-DPT-CD    PIC X(02).
+         03  WK-ENT-DATE  PIC 9(08).
+         03  WK-RETURN    PIC 9(01).
+       PROCEDURE DIVISION.
+       MAIN.
+           MOVE "0012千葉  二郎          02199904010" TO WK-AREA.
+           DISPLAY "従業員番号: " WK-CD.
+           DISPLAY "名前　　　: " WK-NAME.
+           DISPLAY "部署コード: " WK-DPT-CD.
+           DISPLAY "入社日　　: " WK-ENT-DATE.
+           STOP RUN.
+])
+
+AT_CHECK([cobj prog.cbl])
+AT_CHECK([COB_TERMINAL_ENCODING=UTF-8 java prog], [0], 
+[従業員番号: 0012
+名前　　　: 千葉  二郎          @&t@
+部署コード: 02
+入社日　　: 19990401
+])
+
+AT_CLEANUP
+
+AT_SETUP([Initializing Group items])
+
+AT_DATA([prog.cbl], [
+       IDENTIFICATION   DIVISION.
+       PROGRAM-ID.      prog.
+       DATA             DIVISION.
+       WORKING-STORAGE  SECTION.
+       01 F0 PIC X(17) VALUE "千葉  二郎".
+       PROCEDURE        DIVISION.
+       DISPLAY F0.
+       STOP RUN.
+])
+
+AT_CHECK([cobj prog.cbl])
+AT_CHECK([COB_TERMINAL_ENCODING=UTF-8 java prog], [0], 
+[千葉  二郎       @&t@
+])
+
+AT_CLEANUP
+
+AT_SETUP([Exceed column 72 with Japanese literal])
+export LC_ALL=''
+
+AT_DATA([prog.cob], [       
+       IDENTIFICATION   DIVISION.
+       PROGRAM-ID.      prog.
+       DATA DIVISION.
+       WORKING-STORAGE SECTION.
+       01 str PIC X(5) VALUE                                     'ｱｲｳｴｵ'.
+       PROCEDURE DIVISION.
+       DISPLAY str.
+])
+
+AT_CHECK([cobj prog.cob])
+AT_CHECK([java prog > out1.txt])
+AT_CHECK([echo -n 'ｱｲｳｴｵ
+' | nkf -x --ic=UTF-8 --oc=Shift_JIS > out2.txt])
+AT_CHECK([diff out1.txt out2.txt])
+
+AT_CLEANUP
+
 #AT_SETUP([Readable string literals])
 #export LC_ALL=''
 ## Older compilers converts string literals "日本語" in COBOL source code

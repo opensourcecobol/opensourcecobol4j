@@ -52,9 +52,9 @@ dnf install -y java-21-amazon-corretto-devel gcc make bison flex automake autoco
 
 ### Install opensource COBOL 4J
 ```
-curl -L -o opensourcecobol4j-v1.1.6.tar.gz https://github.com/opensourcecobol/opensourcecobol4j/archive/refs/tags/v1.1.6.tar.gz
-tar zxvf opensourcecobol4j-v1.1.6.tar.gz
-cd opensourcecobol4j-1.1.6
+curl -L -o opensourcecobol4j-v1.1.13.tar.gz https://github.com/opensourcecobol/opensourcecobol4j/archive/refs/tags/v1.1.13.tar.gz
+tar zxvf opensourcecobol4j-v1.1.13.tar.gz
+cd opensourcecobol4j-1.1.13
 ./configure --prefix=/usr/
 make
 sudo make install
@@ -63,9 +63,9 @@ sudo make install
 In order to install a compiler for UTF-8 encoded COBOL source code, run the following commands.
 
 ```
-curl -L -o opensourcecobol4j-v1.1.6.tar.gz https://github.com/opensourcecobol/opensourcecobol4j/archive/refs/tags/v1.1.6.tar.gz
-tar zxvf opensourcecobol4j-v1.1.6.tar.gz
-cd opensourcecobol4j-1.1.6
+curl -L -o opensourcecobol4j-v1.1.13.tar.gz https://github.com/opensourcecobol/opensourcecobol4j/archive/refs/tags/v1.1.13.tar.gz
+tar zxvf opensourcecobol4j-v1.1.13.tar.gz
+cd opensourcecobol4j-1.1.13
 ./configure --prefix=/usr/ --enable-utf8
 touch cobj/*.m4
 make
@@ -137,7 +137,7 @@ https://www.oracle.com/java/technologies/downloads/?er=221886#java8-windows
 The docker container for opensource COBOL 4J is available.
 
 ```bash
-docker pull opensourcecobol/opensourcecobol4j:1.1.6
+docker pull opensourcecobol/opensourcecobol4j:20250929
 ```
 
 Execute the following commands in order to run the "Hello World" COBOL program.
@@ -170,6 +170,8 @@ java [PROGRAM-ID]
 
 * [The API reference of the runtime library `libcobj.jar`](https://opensourcecobol.github.io/opensourcecobol4j/javadoc/libcobj/index.html)
 * [opensource COBOL 4J: Java変換解説](./doc/converted_Java_file_JP.md)
+* [configuration-params-JP](./doc/configuration-params-JP.md)
+* [The specification of locking for INDEXED files in opensource COBOL 4J](./doc/specification-locking-indexed-file.md)
 
 ## Development Progress
 
@@ -231,10 +233,21 @@ cobj-idx - A utility tool to handle an indexed file of opensource COBOL 4J
 Usage:
 cobj-idx <sub command> [options] <indexed file>
 
-Sub commands:
 
 cobj-idx info <indexed-file>
     Show information of the indexed file.
+
+cobj-idx create <indexed file> --size=<record size> --key=<key information>
+    Create a new indexed file.
+    The record size and key information are specified by the options.
+    By default, this command does not overwrite the indexed file.
+    To overwrite the indexed file, use the --new option.
+    Example) cobj-idx create test.idx --size=100 --key=2,2:5,4:d15,5
+             File name: test.idx
+             Record size: 100
+             Primary key: 2-3
+             Alternate key (No Duplicates):5-8
+             Alternate key (Duplicates): 15-19
 
 cobj-idx load <indexed file>
     Load the data from stdin into the indexed file.
@@ -269,6 +282,7 @@ Options:
 
 -v, --version
     Print the version of cobj-idx.
+
 ```
 
 ## cobj-api

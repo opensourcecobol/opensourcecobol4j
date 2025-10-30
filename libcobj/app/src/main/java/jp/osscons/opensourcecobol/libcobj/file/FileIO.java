@@ -90,6 +90,7 @@ class FileIO {
         this.useStdOut = false;
         this.useStdIn = false;
         this.fc = ra.getChannel();
+        this.fl = fl;
     }
 
     /**

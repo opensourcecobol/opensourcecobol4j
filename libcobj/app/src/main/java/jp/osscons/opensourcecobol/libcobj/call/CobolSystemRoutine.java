@@ -135,6 +135,29 @@ public class CobolSystemRoutine {
         return SYSTEM(cmd.getString());
     }
 
+    /**
+     * 組み込み関数すうC$SLEEPの実装
+     * opensource COBOLのlibcob/common.cのcob_acuw_sleep関数に相当する
+     *
+     * @param data C$SLEEPの引数として指定されたCOBOL変数のバイト列。
+     */
+    @SuppressWarnings("PMD.AvoidDollarSigns")
+    public static int C$SLEEP(CobolDataStorage data) {
+        CobolUtil.COB_CHK_PARMS("C$SLEEP", 3);
+        List<AbstractCobolField> params = CobolModule.getCurrentModule().cob_procedure_parameters;
+        if (!params.isEmpty() && params.get(0) != null) {
+            int n = params.get(0).getInt();
+            if (n > 0 && n < 3600 * 24 * 7) {
+                try {
+                    Thread.sleep(n * 1000L);
+                } catch (InterruptedException e) {
+                    return 0;
+                }
+            }
+        }
+        return 0;
+    }
+
     private interface Calculater {
         byte calc(byte b1, byte b2);
     }

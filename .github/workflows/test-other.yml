@@ -29,11 +29,11 @@ jobs:
       - name: Get the artifact name
         run: echo "ARTIFACT_NAME=${{ inputs.os }}" | sed 's/:/-/g' >> "$GITHUB_ENV"
 
-      - uses: actions/download-artifact@v4
+      - uses: actions/download-artifact@v6
         with:
           name: opensourcecobol4j-${{ env.ARTIFACT_NAME }}-opt_${{ inputs.configure-args }}
 
-      - uses: actions/setup-java@v4
+      - uses: actions/setup-java@v5
         if: inputs.os != 'amazonlinux:2023'
         with:
           distribution: 'temurin'
@@ -50,9 +50,9 @@ jobs:
         run: |
           dnf -y update
           dnf install -y gcc make diffutils glibc-gconv-extra unzip wget
-          wget "http://sourceforge.jp/frs/redir.php?m=jaist&f=%2Fnkf%2F59912%2Fnkf-2.1.3.tar.gz" -O nkf-2.1.3.tar.gz --no-check-certificate
+          wget "https://github.com/nurse/nkf/archive/refs/tags/v2_1_3.tar.gz" -O nkf-2.1.3.tar.gz
           tar zxf nkf-2.1.3.tar.gz
-          cd nkf-2.1.3
+          cd nkf-2_1_3
           make
           make install
 
@@ -60,12 +60,7 @@ jobs:
         if: inputs.os == 'amazonlinux:2023'
         run: |
           dnf -y update
-          dnf install -y gcc make diffutils tar gzip unzip wget
-          wget "http://sourceforge.jp/frs/redir.php?m=jaist&f=%2Fnkf%2F59912%2Fnkf-2.1.3.tar.gz" -O nkf-2.1.3.tar.gz --no-check-certificate
-          tar zxf nkf-2.1.3.tar.gz
-          cd nkf-2.1.3
-          make
-          make install
+          dnf install -y gcc make diffutils tar gzip unzip wget nkf
 
       - name: Install Java
         if: inputs.os == 'amazonlinux:2023'
@@ -85,7 +80,7 @@ jobs:
       
       - name: Upload log files if tests fail
         if: failure()
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v5
         with:
           name: ${{ inputs.test-name }}-${{ env.ARTIFACT_NAME }}-log
           path: tests/${{ inputs.test-name }}.dir/

@@ -1,4 +1,8 @@
-### Add
+### Fixed
 
-* Compile UTF-8 Source Code
-  * The latest version of cobj is now able to accept UTF-8 encoded COBOL and generate UTF-8 encoded Java.
+* Fix file locking of SEQUENTIAL, LINE SEQUENTIAL and RELATIVE file types. (#714)
+* Fix reading process for variable length SEQUENTIAL files. (#722)
+
+## Miscellaneous
+
+* `cobj-idx unlock` and `cobj-idx migrate` can handle multiple files at once. (#708)

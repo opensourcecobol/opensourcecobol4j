@@ -285,6 +285,36 @@ public class CobolFile {
     /** TODO: 準備中 */
     protected static final int COB_STATUS_91_NOT_AVAILABLE = 91;
 
+    /**
+     * File status 92: Version incompatibility.
+     * Indicates that the file operation failed due to a version mismatch between the file and the program.
+     */
+    protected static final int COB_STATUS_92_VERSION_INCOMPATIBLE = 92;
+
+    // ==============================================
+    // The following constants must not be equal
+    // to any of the above constants `COB_STATUS_*`
+
+    /** TODO: 準備中 */
+    protected static final int ENOENT = 1002;
+
+    /** TODO: 準備中 */
+    protected static final int EBADF = 1009;
+
+    /** TODO: 準備中 */
+    protected static final int EACCESS = 1013;
+
+    /** TODO: 準備中 */
+    protected static final int EISDIR = 1021;
+
+    /** TODO: 準備中 */
+    protected static final int EROFS = 1030;
+
+    /** TODO: 準備中 */
+    protected static final int EAGAIN = 1011;
+
+    // ==============================================
+
     /** TODO: 準備中 */
     protected static final int COB_LINAGE_INVALID = 16384;
 
@@ -307,24 +337,6 @@ public class CobolFile {
     protected static final int FNSTATUSSIZE = 3;
 
     /** TODO: 準備中 */
-    protected static final int ENOENT = 2;
-
-    /** TODO: 準備中 */
-    protected static final int EBADF = 9;
-
-    /** TODO: 準備中 */
-    protected static final int EACCESS = 13;
-
-    /** TODO: 準備中 */
-    protected static final int EISDIR = 21;
-
-    /** TODO: 準備中 */
-    protected static final int EROFS = 30;
-
-    /** TODO: 準備中 */
-    protected static final int EAGAIN = 11;
-
-    /** TODO: 準備中 */
     public static CobolFile errorFile;
 
     /** TODO: 準備中 */
@@ -340,10 +352,10 @@ public class CobolFile {
     protected static final int COB_LOCK_MANUAL = 2;
 
     /** TODO: 準備中 */
-    protected static final int COB_LOCK_AUTOMATIC = 3;
+    protected static final int COB_LOCK_AUTOMATIC = 4;
 
     /** TODO: 準備中 */
-    protected static final int COB_LOCK_MULTIPLE = 1;
+    protected static final int COB_LOCK_MULTIPLE = 8;
 
     /** TODO: 準備中 */
     protected static final int COB_LOCK_MASK = 0x7;
@@ -896,6 +908,24 @@ public class CobolFile {
     }
 
     /**
+     * This method is mainly for unlocking the indexed files.
+     *
+     * @return true if post-processing is successful, false otherwise.
+     */
+    protected boolean postProcess() {
+        return true;
+    }
+
+    private void runPostProcess(AbstractCobolField fnstatus) {
+        postProcess();
+        // TODO: Implement error handling
+        // boolean postProcessSucceeded = postProcess();
+        // if(!postProcessSucceeded) {
+        //    this.saveStatus(COB_STATUS_30_PERMANENT_ERROR, fnstatus);
+        // }
+    }
+
+    /**
      * TODO: 準備中
      *
      * @param mode TODO: 準備中
@@ -1097,6 +1127,9 @@ public class CobolFile {
                 case COB_STATUS_91_NOT_AVAILABLE:
                     saveStatus(COB_STATUS_91_NOT_AVAILABLE, fnstatus);
                     return;
+                case COB_STATUS_92_VERSION_INCOMPATIBLE:
+                    saveStatus(COB_STATUS_92_VERSION_INCOMPATIBLE, fnstatus);
+                    return;
                 case COB_LINAGE_INVALID:
                     saveStatus(COB_STATUS_57_I_O_LINAGE, fnstatus);
                     return;
@@ -1177,13 +1210,13 @@ public class CobolFile {
         FileLock fl = null;
         if (!filename.startsWith("/dev/")) {
             try {
-                boolean lockFlag;
+                boolean isSharedLock;
                 if (sharing != 0 || mode == COB_OPEN_OUTPUT) {
-                    lockFlag = false;
+                    isSharedLock = false;
                 } else {
-                    lockFlag = true;
+                    isSharedLock = true;
                 }
-                fl = fp.tryLock(0L, Long.MAX_VALUE, lockFlag);
+                fl = fp.tryLock(0L, Long.MAX_VALUE, isSharedLock);
             } catch (NonWritableChannelException e) {
                 fp.close();
                 return EBADF;
@@ -1393,10 +1426,12 @@ public class CobolFile {
         if (this.flag_nonexistent) {
             if (this.flag_first_read == 0) {
                 saveStatus(COB_STATUS_23_KEY_NOT_EXISTS, fnstatus);
+                runPostProcess(fnstatus);
                 return;
             }
             this.flag_first_read = 0;
             saveStatus(COB_STATUS_10_END_OF_FILE, fnstatus);
+            runPostProcess(fnstatus);
             return;
         }
 
@@ -1404,10 +1439,12 @@ public class CobolFile {
         if (key == null) {
             if (this.flag_end_of_file && (readOpts & COB_READ_PREVIOUS) == 0) {
                 saveStatus(COB_STATUS_46_READ_ERROR, fnstatus);
+                runPostProcess(fnstatus);
                 return;
             }
             if (this.flag_begin_of_file && (readOpts & COB_READ_PREVIOUS) != 0) {
                 saveStatus(COB_STATUS_46_READ_ERROR, fnstatus);
+                runPostProcess(fnstatus);
                 return;
             }
         }
@@ -1416,21 +1453,11 @@ public class CobolFile {
                 || this.open_mode == COB_OPEN_OUTPUT
                 || this.open_mode == COB_OPEN_EXTEND) {
             saveStatus(COB_STATUS_47_INPUT_DENIED, fnstatus);
+            runPostProcess(fnstatus);
             return;
         }
 
         if (this.organization == COB_ORG_INDEXED) {
-            if (this.open_mode != COB_OPEN_I_O || (this.lock_mode & COB_LOCK_EXCLUSIVE) != 0) {
-                readOpts &= ~COB_READ_LOCK;
-            } else if ((this.lock_mode & COB_LOCK_AUTOMATIC) != 0
-                    && (readOpts & COB_READ_NO_LOCK) == 0) {
-                readOpts |= COB_READ_LOCK;
-            }
-        } else {
-            readOpts &= ~COB_READ_LOCK;
-        }
-
-        if (this.organization == COB_ORG_INDEXED /* && bdb_env != null */) {
             if (this.open_mode != COB_OPEN_I_O || (this.lock_mode & COB_LOCK_EXCLUSIVE) != 0) {
                 readOpts &= ~COB_READ_LOCK;
             } else if ((this.lock_mode & COB_LOCK_AUTOMATIC) != 0
@@ -1554,6 +1581,7 @@ public class CobolFile {
                     || this.open_mode == COB_OPEN_INPUT
                     || this.open_mode == COB_OPEN_I_O) {
                 saveStatus(COB_STATUS_48_OUTPUT_DENIED, fnstatus);
+                runPostProcess(fnstatus);
                 return;
             }
         } else {
@@ -1561,6 +1589,7 @@ public class CobolFile {
                     || this.open_mode == COB_OPEN_INPUT
                     || this.open_mode == COB_OPEN_EXTEND) {
                 saveStatus(COB_STATUS_48_OUTPUT_DENIED, fnstatus);
+                runPostProcess(fnstatus);
                 return;
             }
         }
@@ -1574,6 +1603,7 @@ public class CobolFile {
 
         if (this.record.getSize() < this.record_min || this.record_max < this.record.getSize()) {
             saveStatus(COB_STATUS_44_RECORD_OVERFLOW, fnstatus);
+            runPostProcess(fnstatus);
             return;
         }
 
@@ -1653,20 +1683,24 @@ public class CobolFile {
 
         if (this.open_mode == COB_OPEN_CLOSED || this.open_mode != COB_OPEN_I_O) {
             saveStatus(COB_STATUS_49_I_O_DENIED, fnstatus);
+            runPostProcess(fnstatus);
             return;
         }
         if (this.access_mode == COB_ACCESS_SEQUENTIAL && !readDone) {
             saveStatus(COB_STATUS_43_READ_NOT_DONE, fnstatus);
+            runPostProcess(fnstatus);
             return;
         }
         if (this.organization == COB_ORG_SEQUENTIAL) {
             if (this.record.getSize() != rec.getSize()) {
                 saveStatus(COB_STATUS_44_RECORD_OVERFLOW, fnstatus);
+                runPostProcess(fnstatus);
                 return;
             }
             if (this.record_size != null) {
                 if (this.record.getSize() != this.record_size.getInt()) {
                     saveStatus(COB_STATUS_44_RECORD_OVERFLOW, fnstatus);
+                    runPostProcess(fnstatus);
                     return;
                 }
             }
@@ -1717,11 +1751,13 @@ public class CobolFile {
 
         if (this.open_mode == COB_OPEN_CLOSED || this.open_mode != COB_OPEN_I_O) {
             saveStatus(COB_STATUS_49_I_O_DENIED, fnstatus);
+            runPostProcess(fnstatus);
             return;
         }
 
         if (this.access_mode == COB_ACCESS_SEQUENTIAL && !readDone) {
             saveStatus(COB_STATUS_43_READ_NOT_DONE, fnstatus);
+            runPostProcess(fnstatus);
             return;
         }
 
@@ -2070,6 +2106,9 @@ public class CobolFile {
                         return;
                     case COB_STATUS_91_NOT_AVAILABLE:
                         saveStatus(COB_STATUS_91_NOT_AVAILABLE, fnstatus);
+                        return;
+                    case COB_STATUS_92_VERSION_INCOMPATIBLE:
+                        saveStatus(COB_STATUS_92_VERSION_INCOMPATIBLE, fnstatus);
                         return;
                     case COB_LINAGE_INVALID:
                         saveStatus(COB_STATUS_57_I_O_LINAGE, fnstatus);

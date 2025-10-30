@@ -1,0 +1,100 @@
+AT_SETUP([migrate])
+
+AT_DATA([check_file.cbl], [
+       IDENTIFICATION DIVISION.
+       PROGRAM-ID. check_file.
+
+       ENVIRONMENT DIVISION.
+       INPUT-OUTPUT SECTION.
+       FILE-CONTROL.
+           SELECT F ASSIGN TO INDEX_FILE_PATH
+               ORGANIZATION IS INDEXED
+               ACCESS MODE IS DYNAMIC
+               RECORD KEY IS REC-KEY
+               ALTERNATE RECORD KEY IS REC-KEY2 WITH DUPLICATES
+               FILE STATUS IS FILE-STATUS.
+
+       DATA DIVISION.
+       FILE SECTION.
+       FD  f.
+       01  REC.
+           05 REC-KEY      PIC X(5).
+           05 REC-KEY2     PIC X(5).
+           05 REC-DATA     PIC X(5).
+
+       WORKING-STORAGE SECTION.
+       01 FILE-STATUS      PIC XX.
+       01 DUMMY PIC X(10) VALUE "DUMMY DATA".
+       PROCEDURE DIVISION.
+       MAIN-PROCEDURE.
+
+           OPEN I-O f.
+
+           MOVE "AAAA1" TO REC-KEY.
+           READ F WITH LOCK.
+           DISPLAY REC.
+
+           MOVE "AAAA2" TO REC-KEY.
+           REWRITE REC.
+
+           MOVE "AAAA2" TO REC-KEY.
+           READ F WITH LOCK.
+           DISPLAY REC.
+
+           MOVE "AAAA2" TO REC-KEY.
+           DELETE F.
+           DISPLAY FILE-STATUS.
+
+           MOVE "AAAA1" TO REC-KEY.
+           START F KEY IS = REC-KEY.
+           PERFORM FOREVER
+               READ F NEXT RECORD
+                    AT END
+                        EXIT PERFORM
+                    NOT AT END
+                        DISPLAY REC
+               END-READ
+           END-PERFORM.
+           CLOSE f.
+])
+
+# copy the indexed file created with the older compiler to the current directory
+AT_CHECK([cp ../../cobj-idx.src/test-data/indexed_file.dat .])
+
+# convert the indexed file to the current format
+AT_CHECK([${COBJ_IDX} migrate indexed_file.dat])
+
+# check the converted file
+AT_CHECK([${COMPILE} --assign_external check_file.cbl])
+AT_CHECK([INDEX_FILE_PATH=indexed_file.dat java check_file], [0],
+[AAAA1BBBB1CCCC1
+AAAA2BBBB1CCCC1
+00
+AAAA1BBBB1CCCC1
+AAAA3BBBB3CCCC3
+])
+
+# Test migrate with multiple files
+AT_CHECK([cp ../../cobj-idx.src/test-data/indexed_file.dat indexed_file2.dat])
+AT_CHECK([cp ../../cobj-idx.src/test-data/indexed_file.dat indexed_file3.dat])
+AT_CHECK([${COBJ_IDX} migrate indexed_file2.dat indexed_file3.dat])
+
+# check that indexed_file2.dat works properly after migration
+AT_CHECK([INDEX_FILE_PATH=indexed_file2.dat java check_file], [0],
+[AAAA1BBBB1CCCC1
+AAAA2BBBB1CCCC1
+00
+AAAA1BBBB1CCCC1
+AAAA3BBBB3CCCC3
+])
+
+# check that indexed_file3.dat works properly after migration
+AT_CHECK([INDEX_FILE_PATH=indexed_file3.dat java check_file], [0],
+[AAAA1BBBB1CCCC1
+AAAA2BBBB1CCCC1
+00
+AAAA1BBBB1CCCC1
+AAAA3BBBB3CCCC3
+])
+
+AT_CLEANUP

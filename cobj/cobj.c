@@ -145,10 +145,14 @@ int cb_flag_main = 0;
 
 int cb_default_byte_specified = 0;
 unsigned char cb_default_byte = 0;
+
+int cb_default_select_lock_mode = COB_LOCK_MANUAL;
+
 #define OPTION_ID_DEFAULT_BYTE (1024)
 #define OPTION_ID_SINGLE_JAR (1025)
 #define OPTION_ID_JAR (1026)
 #define OPTION_ID_INFO_JSON (1027)
+#define OPTION_ID_LOCK_MODE_AUTOMATIC (1028)
 
 int external_flg = 0;
 int errorcount = 0;
@@ -193,9 +197,6 @@ char *cb_single_jar_name = NULL;
 
 int cb_flag_info_json = 0;
 char *cb_info_json_dir = NULL;
-
-char edit_code_command[512];
-char edit_code_command_is_set = 0;
 
 #define PROGRAM_ID_LIST_MAX_LEN 1024
 char *program_id_list[PROGRAM_ID_LIST_MAX_LEN];
@@ -314,7 +315,7 @@ static const struct option long_options[] = {
     {"reference_check", no_argument, NULL, 'K'},
     {"constant", optional_argument, NULL, '3'},
     {"fdefaultbyte", required_argument, NULL, OPTION_ID_DEFAULT_BYTE},
-    {"edit-code-command", optional_argument, NULL, '['},
+    {"lock-mode-automatic", no_argument, NULL, OPTION_ID_LOCK_MODE_AUTOMATIC},
 #undef CB_FLAG
 #define CB_FLAG(var, name, doc)                                                \
   {"f" name, no_argument, &var, 1}, {"fno-" name, no_argument, &var, 0},
@@ -705,6 +706,27 @@ int utf8_hankaku_kana(const unsigned char *p) {
   }
   return 0;
 }
+
+int utf8_calc_sjis_column(const unsigned char *p, int column) {
+  const unsigned char *start = p;
+  int char_size = 0;
+  int i = 0;
+
+  while (i < column && *p != '\0') {
+    char_size = COB_U8BYTE_1(*p);
+    if (char_size == 1) {
+      i++;
+      p++;
+    } else if (char_size == 3 && utf8_hankaku_kana(p)) {
+      i++;
+      p += char_size;
+    } else {
+      i += 2;
+      p += char_size;
+    }
+  }
+  return p - start;
+}
 #endif /*I18N_UTF8*/
 
 /*
@@ -827,8 +849,13 @@ static void cobc_print_version(void) {
 #endif /*I18N_UTF8*/
   puts("----");
   printf("cobj (%s) %s\n", PACKAGE_NAME, PACKAGE_VERSION);
-  puts("Copyright (C) 2021-2023 TOKYO SYSTEM HOUSE CO.,LTD.");
+  puts("Copyright (C) 2021-2025 TOKYO SYSTEM HOUSE CO.,LTD.");
   printf("Built    %s\n", cb_oc_build_stamp);
+  puts("----");
+  puts("cobc (opensource COBOL) 1.5.2.0");
+  puts("----");
+  puts("cobc (OpenCOBOL) 1.1");
+  puts("Copyright (C) 2001-2009 Keisuke Nishida / Roger While");
 }
 
 static void cobc_print_usage(void) {
@@ -879,6 +906,8 @@ static void cobc_print_usage(void) {
          "representing a character"));
   puts(_("                                    * octodecimal 00..0377 "
          "representing a character"));
+  puts(_("  -lock-mode-automatic              Set the default lock mode of "
+         "select clauses to AUTOMATIC"));
   puts(_("  -info-json-dir=<dir>              Specify the directory path of "
          "JSON files that hold information of COBOL programs"));
   puts(_("  -java-package(=<package name>)    Specify the package name of the "
@@ -1134,6 +1163,10 @@ static int process_command_line(const int argc, char *argv[]) {
       fflush(stderr);
       break;
 
+    case OPTION_ID_LOCK_MODE_AUTOMATIC:
+      cb_default_select_lock_mode = COB_LOCK_AUTOMATIC;
+      break;
+
     case '3': /* --constant */
       if (optarg) {
         cb_constant_list_add(optarg);
@@ -1179,10 +1212,6 @@ static int process_command_line(const int argc, char *argv[]) {
       if (!cb_depend_file) {
         perror(optarg);
       }
-      break;
-    case '[':
-      strcpy(edit_code_command, optarg);
-      edit_code_command_is_set = 1;
       break;
 
     case 'I':

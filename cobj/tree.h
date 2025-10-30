@@ -222,6 +222,56 @@ enum cb_usage {
 
 enum cb_operand_type { CB_SENDING_OPERAND, CB_RECEIVING_OPERAND };
 
+enum cb_system_routine {
+  SYSTEM,
+  CBL_AND,
+  CBL_CHANGE_DIR,
+  CBL_CHECK_FILE_EXIST,
+  CBL_CLOSE_FILE,
+  CBL_COPY_FILE,
+  CBL_CREATE_DIR,
+  CBL_CREATE_FILE,
+  CBL_DELETE_DIR,
+  CBL_DELETE_FILE,
+  CBL_EQ,
+  CBL_ERROR_PROC,
+  CBL_EXIT_PROC,
+  CBL_FLUSH_FILE,
+  CBL_GET_CURRENT_DIR,
+  CBL_IMP,
+  CBL_NIMP,
+  CBL_NOR,
+  CBL_NOT,
+  CBL_OC_NANOSLEEP,
+  CBL_OPEN_FILE,
+  CBL_OR,
+  CBL_READ_FILE,
+  CBL_RENAME_FILE,
+  CBL_TOLOWER,
+  CBL_TOUPPER,
+  CBL_WRITE_FILE,
+  CBL_XOR,
+  CBL_OC_KEISEN,
+  CBL_OC_ATTRIBUTE,
+  C$CHDIR,
+  C$COPY,
+  C$DELETE,
+  C$FILEINFO,
+  C$LIST_DIRECTORY,
+  C$GETPID,
+  C$JUSTIFY,
+  C$CALLEDBY,
+  C$MAKEDIR,
+  C$NARG,
+  C$SLEEP,
+  C$PARAMSIZE,
+  C$TOUPPER,
+  C$TOLOWER,
+  CBL_X91,
+  CBL_XF4,
+  CBL_XF5
+};
+
 /*
  * Tree
  */
@@ -417,9 +467,17 @@ extern cb_tree cb_build_system_name(enum cb_system_name_category category,
  * Literal
  */
 
+struct cb_literal_segment {
+  size_t size;
+  unsigned char *data;
+  struct cb_literal_segment *next;
+};
+
 struct cb_literal {
   struct cb_tree_common common;
   size_t size;
+  size_t *segment_sizes; /* segment sizes for strings concatenated with '&' */
+  size_t segment_count;
   unsigned char *data;
   signed char all;
   signed char sign; /* unsigned: 0 negative: -1 positive: 1 */
@@ -439,6 +497,14 @@ extern cb_tree cb_build_alphanumeric_literal(const unsigned char *data,
 extern cb_tree cb_build_national_literal(const unsigned char *data,
                                          size_t size);
 extern cb_tree cb_concat_literals(cb_tree x1, cb_tree x2);
+extern cb_tree cb_build_concat_alphanumeric_literal(const unsigned char *data,
+                                                    size_t size1, size_t size2,
+                                                    size_t *sgmt_sizes,
+                                                    size_t sgmt_count);
+extern cb_tree cb_build_concat_national_literal(const unsigned char *data,
+                                                size_t size1, size_t size2,
+                                                size_t *sgmt_sizes,
+                                                size_t sgmt_count);
 
 /*
  * Decimal
@@ -1388,6 +1454,10 @@ extern void level_except_error(cb_tree x, const char *clause);
 
 struct cb_literal *build_literal(enum cb_category category,
                                  const unsigned char *data, size_t size);
+struct cb_literal *build_concat_literal(enum cb_category category,
+                                        const unsigned char *data, size_t size1,
+                                        size_t size2, size_t *sgmt_sizes,
+                                        size_t sgmt_count);
 
 /* field.c */
 extern size_t cb_needs_01;

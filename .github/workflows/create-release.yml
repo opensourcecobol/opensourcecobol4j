@@ -24,18 +24,18 @@ jobs:
       GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
     steps:
-    - uses: actions/checkout@v4
+    - uses: actions/checkout@v5
 
     - name: Create a Release
       run: gh release create ${{ github.ref }} -F ReleaseNote.md
 
     - name: Download cobj.exe
-      uses: actions/download-artifact@v4
+      uses: actions/download-artifact@v6
       with:
         name: cobj.exe
 
     - name: Download libcobj.jar
-      uses: actions/download-artifact@v4
+      uses: actions/download-artifact@v6
       with:
         name: libcobj.jar
 
@@ -53,12 +53,12 @@ jobs:
       contents: read
       packages: write
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v5
       - run: |
           cd ../
           mv opensourcecobol4j/* .
           mv libcobj/* opensourcecobol4j
-      - uses: actions/setup-java@v4
+      - uses: actions/setup-java@v5
         with:
           java-version: '11'
           distribution: 'temurin'

@@ -10,7 +10,8 @@ AT_DATA([callee.cbl], [
        LINKAGE          SECTION.
        01 P1            PIC X ANY LENGTH.
        01 P2            PIC 99.
-       PROCEDURE        DIVISION USING P1 P2.
+       01 P3            PIC 9V9.
+       PROCEDURE        DIVISION USING P1 P2 P3.
            GOBACK.
 ])
 
@@ -28,7 +29,7 @@ AT_DATA([prog.cbl], [
 AT_CHECK([${COBJ} -info-json-dir=./ callee.cbl prog.cbl])
 AT_CHECK([cat info_callee.json], [0],
 [{
-  "opensourcecobol4j_version": "1.1.6",
+  "opensourcecobol4j_version": "1.1.13",
   "program_id": "callee",
   "procedure_division_using_parameters": @<:@
     {
@@ -38,6 +39,10 @@ AT_CHECK([cat info_callee.json], [0],
     {
       "variable_name": "P2",
       "java_type": "int"
+    },
+    {
+      "variable_name": "P3",
+      "java_type": "double"
     }
   @:>@
 }
@@ -45,7 +50,7 @@ AT_CHECK([cat info_callee.json], [0],
 
 AT_CHECK([cat info_prog.json], [0],
 [{
-  "opensourcecobol4j_version": "1.1.6",
+  "opensourcecobol4j_version": "1.1.13",
   "program_id": "prog",
   "procedure_division_using_parameters": @<:@
   @:>@
@@ -64,7 +69,7 @@ AT_CHECK([${COBJ} -info-json-dir=bbb callee.cbl prog.cbl])
 
 AT_CHECK([cat bbb/info_callee.json], [0],
 [{
-  "opensourcecobol4j_version": "1.1.6",
+  "opensourcecobol4j_version": "1.1.13",
   "program_id": "callee",
   "procedure_division_using_parameters": @<:@
     {
@@ -74,6 +79,10 @@ AT_CHECK([cat bbb/info_callee.json], [0],
     {
       "variable_name": "P2",
       "java_type": "int"
+    },
+    {
+      "variable_name": "P3",
+      "java_type": "double"
     }
   @:>@
 }
@@ -81,7 +90,7 @@ AT_CHECK([cat bbb/info_callee.json], [0],
 
 AT_CHECK([cat bbb/info_prog.json], [0],
 [{
-  "opensourcecobol4j_version": "1.1.6",
+  "opensourcecobol4j_version": "1.1.13",
   "program_id": "prog",
   "procedure_division_using_parameters": @<:@
   @:>@

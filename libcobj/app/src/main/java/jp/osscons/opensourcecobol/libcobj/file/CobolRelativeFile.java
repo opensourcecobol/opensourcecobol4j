@@ -22,7 +22,6 @@ import java.io.*;
 import java.nio.ByteBuffer;
 import java.nio.channels.*;
 import java.nio.file.Files;
-import java.nio.file.Path;
 import java.nio.file.Paths;
 import jp.osscons.opensourcecobol.libcobj.data.AbstractCobolField;
 
@@ -140,12 +139,7 @@ public class CobolRelativeFile extends CobolFile {
                     this.fp.seek(0);
                     break;
                 case COB_OPEN_OUTPUT:
-                    Path path = Paths.get(filename);
-                    if (Files.exists(path)) {
-                        Files.delete(path);
-                    }
                     this.fp = new RandomAccessFile(this.assign.fieldToString(), "rw");
-                    this.fp.seek(0);
                     break;
                 case COB_OPEN_I_O:
                     this.fp = new RandomAccessFile(this.assign.fieldToString(), "rw");
@@ -175,13 +169,13 @@ public class CobolRelativeFile extends CobolFile {
         FileLock fl = null;
         if (!filename.startsWith("/dev/")) {
             try {
-                boolean lockFlag;
+                boolean isSharedLock;
                 if (sharing != 0 || mode == COB_OPEN_OUTPUT) {
-                    lockFlag = false;
+                    isSharedLock = false;
                 } else {
-                    lockFlag = true;
+                    isSharedLock = true;
                 }
-                fl = ch.tryLock(0L, Long.MAX_VALUE, lockFlag);
+                fl = ch.tryLock(0L, Long.MAX_VALUE, isSharedLock);
             } catch (NonWritableChannelException e) {
                 this.fp.close();
                 return EBADF;
@@ -196,6 +190,11 @@ public class CobolRelativeFile extends CobolFile {
                 this.fp.close();
                 return COB_STATUS_61_FILE_SHARING;
             }
+        }
+
+        if (mode == COB_OPEN_OUTPUT) {
+            this.fp.setLength(0);
+            this.fp.seek(0);
         }
 
         this.file.setRandomAccessFile(this.fp, fl);

@@ -1,0 +1,51 @@
+AT_SETUP([READING VARIABLE LENGTH FILE])
+
+AT_DATA([prog.cbl], [
+        IDENTIFICATION  DIVISION.
+        PROGRAM-ID.     prog.
+        ENVIRONMENT     DIVISION.
+        INPUT-OUTPUT    SECTION.
+        FILE-CONTROL.
+            SELECT TEST-FILE 
+            ASSIGN TO "../../misc.src/TEST_VAR_LENGTH.txt".
+        DATA            DIVISION.
+        FILE            SECTION.
+        FD  TEST-FILE.
+        01  REC-1       PIC X(18).
+        01  REC-2       PIC X(54).
+        PROCEDURE       DIVISION.
+        MAIN-PARA.
+            MOVE SPACES TO REC-1 REC-2.
+            PERFORM OPEN-FILE.
+            PERFORM READ-REC.
+            PERFORM CLOSE-FILE.
+            STOP RUN.
+
+        OPEN-FILE.
+            OPEN INPUT TEST-FILE.
+
+        READ-REC.
+            DISPLAY "REC-1: " REC-1.
+            DISPLAY "REC-2: " REC-2.
+            READ TEST-FILE.
+            DISPLAY "REC-1: " REC-1.
+            DISPLAY "REC-2: " REC-2.
+
+        CLOSE-FILE.
+            CLOSE TEST-FILE.
+])
+
+// Checking the number of bytes
+AT_CHECK([od -N 4 -t x1 -An ../../misc.src/TEST_VAR_LENGTH.txt], [0], 
+[ 00 00 03 0e
+])
+
+AT_CHECK([${COMPILE} prog.cbl], [0])
+AT_CHECK([${RUN_MODULE} prog], [0], 
+[REC-1:                   @&t@
+REC-2:                                                       @&t@
+REC-1: LLL5555555555555 5
+REC-2: LLL5555555555555 555555555555L555555555555555555555555
+])
+
+AT_CLEANUP

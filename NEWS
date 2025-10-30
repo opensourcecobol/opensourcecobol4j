@@ -2,12 +2,123 @@ NEWS - user visible changes				-*- outline -*-
 
 -----------------------------------------------------------------------
 
+* opensource COBOL 4J 1.1.13
+
+** Bug Fixes
+
+(1) Fix file locking of SEQUENTIAL, LINE SEQUENTIAL and RELATIVE file types.
+(2) Fix reading process for variable length SEQUENTIAL files.
+
+** Miscellaneous
+
+(1) `cobj-idx unlock` and `cobj-idx migrate` can handle multiple files at once.
+
+-----------------------------------------------------------------------
+
+* opensource COBOL 4J 1.1.12
+
+** New Features
+
+(1) Implemented new file locking and record locking for INDEXED files.
+(2) Add a new sub command `migrate` for `cobj-idx`.
+  * With this command, you can convert an old version of an INDEXED file to a new version compatible with the latest opensource COBOL 4J.
+(3) Add a new sub command `unlock` for `cobj-idx`.
+  * With this command, you can unlock all record locks and file locks on an INDEXED file.
+(4) Add documentation of locking for INDEXED files.
+
+
+-----------------------------------------------------------------------
+
+* opensource COBOL 4J 1.1.11
+
+** Bug Fixes
+
+(1) Fix OPEN operation for indexed files. (#676)
+  * The runtime library now correctly sets the file status to 30 when attempting to open indexed files with invalid or corrupted file formats.
+
+-----------------------------------------------------------------------
+
+* opensource COBOL 4J 1.1.10
+
+** New Features
+
+(1) Add a manual for the compiler configuration file (#665)
+(2) Add a built-in subroutine
+  * C$SLEEP (#669)
+  
+** Miscellaneous
+
+(1) Improve the test coverage slightly (#667, #664)
+
+-----------------------------------------------------------------------
+
+* opensource COBOL 4J 1.1.9
+
+** New Features
+
+(1) Add a sub command create for cobj-idx.
+  * `cobj-idx create` creates a new indexed file.
+  
+** Fix
+
+(1) Handle non-ASCII characters in EXTERNAL items and EXTERNAL file names correctly.
+(2) Show error messages if unimplemented subroutines are used.
+(3) Fix non-ASCII characters in external items and external file descriptors
+  * The older version does not convert `－` in EXTERNAL items and EXTERNAL file names into another valid character in Java.
+  * The older version converts `ＢＣ` in EXTERNAL file names into invalid characters.
+
+-----------------------------------------------------------------------
+
+* opensource COBOL 4J 1.1.8-hotfix1
+
+** Bug Fixes
+
+  (1) Fix code generations for some WRITE statements.
+    * Older versions of the compiler converts some WRITE statements into invalid Java code.
+  (2) Fix the compiler to handle source code with UTF-8 encoded half-width Katakana characters correctly.
+
+-----------------------------------------------------------------------
+
+* opensource COBOL 4J 1.1.8
+
+** Bug Fixes
+
+  (1) Fix a bug of duplicate record keys of indexed files.
+
+-----------------------------------------------------------------------
+
+* opensource COBOL 4J 1.1.7-hotfix1
+
+** New Features
+
+  (1) Fix bugs related to UTF-8
+    * With older versions, DISPLAY statements output invalid UTF-8 data when the arguments are sub items of group fields.
+    * With older versions, initilizing data with VALUE clauses fails in some cases.
+
+-----------------------------------------------------------------------
+
+* opensource COBOL 4J 1.1.7
+
+** New Features
+
+  (1) Implement the environment variable `COB_TERMINAL_ENCODING`.
+    * If the value of `COB_TERMINAL_ENCODING` is `UTF-8`, the DISPLAY statement outputs data after converting it to UTF-8. Otherwise, it outputs raw data (typically encoded in Shift JIS).
+    * If the value of `COB_TERMINAL_ENCODING` is `UTF-8`, the ACCEPT statement processes input data as UTF-8 encoded. Otherwise, it processes input data as Shift JIS encoded.
+  (2) Fix the UTF-8 compatible compiler to recognize that the size of multibyte characters in COBOL source code as 2 bytes instead of 3 bytes.
+    * This change allows users to write more multibyte characters on each line of the COBOL source code.
+
+-----------------------------------------------------------------------
+
+* opensource COBOL 4J 1.1.6
+
 ** New Features
 
   (1) Compile UTF-8 Source Code
     * The latest version of cobj is now able to accept UTF-8 encoded COBOL and generate UTF-8 encoded Java.
 
 -----------------------------------------------------------------------
+
+* opensource COBOL 4J 1.1.5
 
 ** New Features
 

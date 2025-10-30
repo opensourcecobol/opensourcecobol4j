@@ -30,6 +30,7 @@ TESTS = syntax \
 	jp-compat \
 	command-line-options \
 	cobj-idx \
+	file-lock \
 	misc
 else
 TESTS = syntax \
@@ -41,6 +42,7 @@ TESTS = syntax \
 	jp-compat \
 	command-line-options \
 	cobj-idx \
+	file-lock \
 	misc
 endif
 
@@ -73,7 +75,8 @@ run_DEPENDENCIES = \
 	run.src/subscripts.at \
 	run.src/extensions.at \
 	run.src/return-code.at \
-	run.src/functions.at
+	run.src/functions.at \
+	run.src/system-routines.at
 
 data_rep_DEPENDENCIES = \
 	data-rep.at \
@@ -185,7 +188,6 @@ command_line_options_DEPENDENCIES = \
 	command-line-options.src/ffold-copy.at \
 	command-line-options.src/info-java-dir.at \
 	command-line-options.src/java-package.at \
-	command-line-options.src/edit-code-command.at \
 	command-line-options.src/file-path.at \
 	command-line-options.src/fdefaultbyte.at \
 	command-line-options.src/ffunctions-all.at \
@@ -198,10 +200,27 @@ command_line_options_DEPENDENCIES = \
 
 cobj_idx_DEPENDENCIES = \
 	cobj-idx.at \
+	cobj-idx.src/create.at \
 	cobj-idx.src/info.at \
 	cobj-idx.src/load.at \
 	cobj-idx.src/unload.at \
+	cobj-idx.src/migrate.at \
+	cobj-idx.src/unlock.at \
 	cobj-idx.src/misc.at
+
+indexed_lock_DEPENDENCIES = \
+	file-lock.at \
+	file-lock.src/lock-file.at \
+	file-lock.src/access-same-record.at \
+	file-lock.src/access-different-record.at \
+	file-lock.src/input-mode.at \
+	file-lock.src/same-process.at \
+	file-lock.src/open-start-write-rewrite.at \
+	file-lock.src/release-lock.at \
+	file-lock.src/open-input.at \
+	file-lock.src/lock-mode-clause.at \
+	file-lock.src/old-file.at \
+	file-lock.src/lock-mode-automatic.at
 
 misc_DEPENDENCIES = \
 	misc.src/signed-comp3.at \
@@ -241,7 +260,10 @@ misc_DEPENDENCIES = \
 	misc.src/search-occurs-depending.at \
 	misc.src/fix-subtract.at \
 	misc.src/display-numeric-NUMERIC-class.at \
-	misc.src/display-inspect-sign.at
+	misc.src/display-inspect-sign.at \
+	misc.src/comp1-comp2.at \
+	misc.src/variable-length-file.at \
+	misc.src/convert-string-concat.at \
 
 EXTRA_DIST = $(srcdir)/package.m4 \
 	$(TESTS) \
@@ -285,4 +307,5 @@ $(srcdir)/i18n_sjis: $(i18n_sjis_DEPENDENCIES)
 $(srcdir)/jp-compat: $(jp_compat_DEPENDENCIES)
 $(srcdir)/command-line-options: $(command_line_options_DEPENDENCIES)
 $(srcdir)/cobj-idx: $(cobj_idx_DEPENDENCIES)
+$(srcdir)/file-lock: $(indexed_lock_DEPENDENCIES)
 $(srcdir)/misc: $(misc_DEPENDENCIES)

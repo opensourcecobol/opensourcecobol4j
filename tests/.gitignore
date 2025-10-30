@@ -6,4 +6,5 @@ run~
 syntax~
 command-line-options~
 cobj-idx~
+file-lock~
 *.dir

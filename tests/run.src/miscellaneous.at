@@ -2095,3 +2095,83 @@ AT_CHECK([java prog], [1], [],
 ])
 
 AT_CLEANUP
+
+AT_SETUP([Open an invalid formatted indexed file])
+
+AT_CHECK([echo invalid-data > invalid-formatted-file])
+
+AT_DATA([prog.cbl],
+[
+       IDENTIFICATION DIVISION.
+       PROGRAM-ID. prog.
+
+       ENVIRONMENT DIVISION.
+       INPUT-OUTPUT SECTION.
+       FILE-CONTROL.
+           SELECT F ASSIGN TO "invalid-formatted-file"
+               ORGANIZATION IS INDEXED
+               ACCESS MODE IS DYNAMIC
+               RECORD KEY IS REC-KEY
+               FILE STATUS IS FILE-STATUS.
+
+       DATA DIVISION.
+       FILE SECTION.
+       FD  f.
+       01  REC.
+         05  REC-KEY      PIC X(5).
+
+       WORKING-STORAGE SECTION.
+       01  FILE-STATUS      PIC XX.
+       PROCEDURE DIVISION.
+       MAIN-PROCEDURE.
+
+       OPEN INPUT f.
+       DISPLAY FILE-STATUS.
+       CLOSE f.
+])
+
+AT_CHECK([${COMPILE} prog.cbl])
+AT_CHECK([java prog], [0], 
+[30
+])
+AT_CLEANUP
+
+AT_SETUP([Open an invalid formatted indexed file])
+
+AT_CHECK([echo invalid-data > invalid-formatted-file])
+
+AT_DATA([prog.cbl],
+[
+       IDENTIFICATION DIVISION.
+       PROGRAM-ID. prog.
+
+       ENVIRONMENT DIVISION.
+       INPUT-OUTPUT SECTION.
+       FILE-CONTROL.
+           SELECT F ASSIGN TO "invalid-formatted-file"
+               ORGANIZATION IS INDEXED
+               ACCESS MODE IS DYNAMIC
+               RECORD KEY IS REC-KEY
+               FILE STATUS IS FILE-STATUS.
+
+       DATA DIVISION.
+       FILE SECTION.
+       FD  f.
+       01  REC.
+         05  REC-KEY      PIC X(5).
+
+       WORKING-STORAGE SECTION.
+       01  FILE-STATUS      PIC XX.
+       PROCEDURE DIVISION.
+       MAIN-PROCEDURE.
+
+       OPEN INPUT f.
+       DISPLAY FILE-STATUS.
+       CLOSE f.
+])
+
+AT_CHECK([${COMPILE} prog.cbl])
+AT_CHECK([java prog], [0], 
+[30
+])
+AT_CLEANUP

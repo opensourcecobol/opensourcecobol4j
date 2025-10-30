@@ -4,6 +4,94 @@ All notable changes to this project will be documented in this file.
 
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 
+## [1.1.13] - 2025-09-29
+
+### Fixed
+
+* Fix file locking of SEQUENTIAL, LINE SEQUENTIAL and RELATIVE file types. (#714)
+* Fix reading process for variable length SEQUENTIAL files. (#722)
+
+## Miscellaneous
+
+* `cobj-idx unlock` and `cobj-idx migrate` can handle multiple files at once. (#708)
+
+## [1.1.12] - 2025-08-28
+
+### Add
+
+* Implemented new file locking and record locking for INDEXED files.
+* Add a new sub command `migrate` for `cobj-idx`.
+  * With this command, you can convert an old version of an INDEXED file to a new version compatible with the latest opensource COBOL 4J.
+* Add a new sub command `unlock` for `cobj-idx`.
+  * With this command, you can unlock all record locks and file locks on an INDEXED file.
+* Add documentation of locking for INDEXED files.
+
+## [1.1.11] - 2025-07-25
+
+### Fix
+
+* Fix OPEN operation for indexed files. (#676)
+  * The runtime library now correctly sets the file status to 30 when attempting to open indexed files with invalid or corrupted file formats.
+
+## [1.1.10] - 2025-06-30
+
+### Add
+
+* Add a manual for the compiler configuration file (#665)
+* Add a built-in subroutine
+  * C$SLEEP (#669)
+  
+### Miscellaneous
+
+* Improve the test coverage slightly (#667, #664)
+
+## [1.1.9] - 2025-05-30
+
+### Add
+
+* Add a sub command create for cobj-idx.
+  * `cobj-idx create` creates a new indexed file.
+  
+### Fix
+
+* Handle non-ASCII characters in EXTERNAL items and EXTERNAL file names correctly.
+* Show error messages if unimplemented subroutines are used.
+* Fix non-ASCII characters in external items and external file descriptors
+  * The older version does not convert `－` in EXTERNAL items and EXTERNAL file names into another valid character in Java.
+  * The older version converts `ＢＣ` in EXTERNAL file names into invalid characters.
+
+## [1.1.8-hotfix1] - 2025-04-18
+
+### Fix
+
+* Fix code generations for some WRITE statements.
+  * Older versions of the compiler converts some WRITE statements into invalid Java code.
+* Fix the compiler to handle source code with UTF-8 encoded half-width Katakana characters correctly.
+
+## [1.1.8] - 2025-03-31
+
+### Fix
+
+* Fix a bug of duplicate record keys of indexed files.
+
+## [1.1.7-hotfix1] - 2025-02-28
+
+### Fix
+
+* Fix bugs related to UTF-8 (#590)
+  * With older versions, DISPLAY statements output invalid UTF-8 data when the arguments are sub items of group fields.
+  * With older versions, initilizing data with VALUE clauses fails in some cases.
+
+## [1.1.7] - 2025-02-28
+
+### Add
+
+* Implement the environment variable `COB_TERMINAL_ENCODING`. (#590)
+  * If the value of `COB_TERMINAL_ENCODING` is `UTF-8`, the DISPLAY statement outputs data after converting it to UTF-8. Otherwise, it outputs raw data (typically encoded in Shift JIS).
+  * If the value of `COB_TERMINAL_ENCODING` is `UTF-8`, the ACCEPT statement processes input data as UTF-8 encoded. Otherwise, it processes input data as Shift JIS encoded.
+* Fix the UTF-8 compatible compiler to recognize that the size of multibyte characters in COBOL source code as 2 bytes instead of 3 bytes. (#592)
+  * This change allows users to write more multibyte characters on each line of the COBOL source code.
+
 ## [1.1.6] - 2025-01-31
 
 ### Add

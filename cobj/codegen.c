@@ -79,6 +79,8 @@ static const char *excp_current_program_id = NULL;
 static const char *excp_current_section = NULL;
 static const char *excp_current_paragraph = NULL;
 static struct cb_program *current_prog;
+static size_t *sgmt_sizes = NULL;
+static size_t sgmt_count = 0;
 
 extern int cb_default_byte_specified;
 extern unsigned char cb_default_byte;
@@ -187,7 +189,6 @@ static char *convert_byte_value_format(char value);
 static void append_label_id_map(struct cb_label *label);
 static void create_label_id_map(struct cb_program *prog);
 static void destroy_label_id_map(void);
-static void joutput_edit_code_command(const char *target);
 
 static void joutput_label_variable(struct cb_label *label);
 static void joutput_label_variable_name(char *s, int key,
@@ -464,6 +465,7 @@ struct string_literal_cache {
   enum cb_string_category category;
   char *var_name;
   struct string_literal_cache *next;
+  size_t *segment_sizes; /* segment sizes for strings concatenated with '&' */
 };
 
 int string_literal_id = 0;
@@ -532,7 +534,8 @@ static enum cb_string_category get_string_category(const unsigned char *s,
 }
 
 static void joutput_string_write(const unsigned char *s, int size,
-                                 enum cb_string_category category) {
+                                 enum cb_string_category category,
+                                 const size_t *tmp_sgmt_sizes) {
   int i;
 
 #ifdef I18N_UTF8
@@ -553,7 +556,11 @@ static void joutput_string_write(const unsigned char *s, int size,
     } else {
       joutput("CobolUtil.stringToBytes(");
     }
-
+    if (tmp_sgmt_sizes) {
+      joutput_indent_level += 2;
+      joutput_newline();
+      joutput_prefix();
+    }
     joutput("\"");
 
 #ifdef I18N_UTF8
@@ -569,6 +576,8 @@ static void joutput_string_write(const unsigned char *s, int size,
     }
 #else
     int output_multibyte = 0;
+    int sum_sgmt_size = 0;
+    int sgmt_index = 0;
     for (i = 0; i < size; i++) {
       int c = s[i];
       if (!output_multibyte && (c == '\"' || c == '\\')) {
@@ -578,11 +587,33 @@ static void joutput_string_write(const unsigned char *s, int size,
       } else {
         joutput("%c", c);
       }
+
+      // insert line breaks between segments concatenated with '&'
+      if (tmp_sgmt_sizes && i < size - 1) {
+        size_t segment_end_position =
+            sum_sgmt_size + tmp_sgmt_sizes[sgmt_index] - 1;
+        if (i == segment_end_position) {
+          joutput("\" + ");
+          joutput_newline();
+          joutput_prefix();
+          joutput("\"");
+          sum_sgmt_size += tmp_sgmt_sizes[sgmt_index];
+          sgmt_index++;
+        }
+      }
       output_multibyte = !output_multibyte &&
                          ((0x81 <= c && c <= 0x9f) || (0xe0 <= c && c <= 0xef));
     }
 #endif
-    joutput("\")");
+    if (tmp_sgmt_sizes) {
+      joutput("\"");
+      joutput_newline();
+      joutput_indent_level -= 2;
+      joutput_prefix();
+      joutput(")");
+    } else {
+      joutput("\")");
+    }
   } else {
     if (param_wrap_string_flag) {
       joutput("CobolDataStorage.makeCobolDataStorage(");
@@ -632,6 +663,16 @@ static void joutput_string(const unsigned char *s, int size) {
     new_literal_cache->var_name[var_name_length + 1 + i] = '\0';
   }
 
+  // set segment sizes to new cache
+  if (sgmt_sizes) {
+    new_literal_cache->segment_sizes = cobc_malloc(sizeof(size_t) * sgmt_count);
+    memcpy(new_literal_cache->segment_sizes, sgmt_sizes,
+           sizeof(size_t) * sgmt_count);
+    sgmt_sizes = NULL;
+  } else {
+    new_literal_cache->segment_sizes = NULL;
+  }
+
   // add the new cache to string_literal_list
   new_literal_cache->next = string_literal_list;
   string_literal_list = new_literal_cache;
@@ -659,7 +700,8 @@ static void joutput_all_string_literals() {
     joutput_prefix();
     joutput("public static final %s %s = ", data_type, l->var_name);
     param_wrap_string_flag = l->param_wrap_string_flag;
-    joutput_string_write(l->string_value, l->size, l->category);
+    joutput_string_write(l->string_value, l->size, l->category,
+                         l->segment_sizes);
     joutput(";\n");
     l = l->next;
   }
@@ -673,35 +715,6 @@ static void joutput_local(const char *fmt, ...) {
     vfprintf(joutput_target, fmt, ap);
     va_end(ap);
   }
-}
-
-static void joutput_edit_code_command(const char *target) {
-  if (!edit_code_command_is_set) {
-    return;
-  }
-
-  char command[BUF_SIZE];
-  char buf[BUF_SIZE];
-  sprintf(command, "%s --target=%s", edit_code_command, target);
-
-#ifdef _WIN32
-  FILE *fp = _popen(command, "r");
-#else
-  FILE *fp = popen(command, "r");
-#endif
-  if (fp == NULL) {
-    return;
-  }
-  memset(buf, 0, BUF_SIZE);
-
-  while (fgets(buf, BUF_SIZE, fp) != NULL) {
-    joutput("%s", buf);
-  }
-#ifdef _WIN32
-  _pclose(fp);
-#else
-  pclose(fp);
-#endif
 }
 
 /*
@@ -807,7 +820,6 @@ static int is_call_parameter(const struct cb_field *f) {
 }
 
 static int joutput_field_storage(struct cb_field *f, struct cb_field *top) {
-  const char *p;
   int flag_call_parameter = is_call_parameter(top);
   if (flag_call_parameter ||
       (f->offset == 0 && strcmp(f->name, top->name) == 0)) {
@@ -815,37 +827,9 @@ static int joutput_field_storage(struct cb_field *f, struct cb_field *top) {
     joutput(base_name);
     free(base_name);
     return flag_call_parameter;
-  } else if (cb_flag_short_variable) {
-    joutput(CB_PREFIX_BASE);
-    for (p = f->name; *p != '\0'; ++p) {
-      if (*p == '-') {
-        joutput("_");
-      } else {
-        joutput("%c", *p);
-      }
-    }
-  } else if (cb_flag_serial_variable) {
+  } else {
     char *base_name = get_java_identifier_base(f);
     joutput(base_name);
-  } else {
-    joutput(CB_PREFIX_BASE);
-    struct cb_field *field = f;
-    int flag_first_iteration = 1;
-    while (field) {
-      if (flag_first_iteration) {
-        flag_first_iteration = 0;
-      } else {
-        joutput("__");
-      }
-      for (p = field->name; *p != '\0'; ++p) {
-        if (*p == '-') {
-          joutput("_");
-        } else {
-          joutput("%c", *p);
-        }
-      }
-      field = field->parent;
-    }
   }
   return 0;
 }
@@ -868,15 +852,8 @@ static void joutput_base(struct cb_field *f) {
 
   // EDIT
   /* Base name */
-  if (top->flag_external) {
-    strcpy(name, top->name);
-    char *nmp;
-    for (nmp = name; *nmp; nmp++) {
-      if (*nmp == '-') {
-        *nmp = '_';
-      }
-    }
-  } else {
+  strcpy_identifier_cobol_to_java(name, top->name);
+  if (!top->flag_external) {
     register_data_storage_list(f, top);
   }
 
@@ -1397,14 +1374,24 @@ static void joutput_integer(cb_tree x) {
       }
       if (f->size == 2 || f->size == 4 || f->size == 8) {
         if (f->flag_binary_swap) {
+          if (!integer_reference_flag) {
+            switch (f->size) {
+            case 2:
+              joutput("(short)(");
+              break;
+            case 4:
+              joutput("(int)(");
+              break;
+            }
+          }
           joutput_data(x);
           if (!integer_reference_flag) {
             switch (f->size) {
             case 2:
-              joutput(".bswap_16()");
+              joutput(".bswap_16())");
               break;
             case 4:
-              joutput(".bswap_32()");
+              joutput(".bswap_32())");
               break;
             case 8:
               joutput(".bswap_64()");
@@ -2276,9 +2263,7 @@ static void joutput_initialize_fp(cb_tree x, struct cb_field *f) {
 }
 
 static void joutput_initialize_external(cb_tree x, struct cb_field *f) {
-  unsigned char *p;
   cb_tree file;
-  char name[COB_MINI_BUFF];
 
   joutput_prefix();
   joutput_data(x);
@@ -2287,22 +2272,10 @@ static void joutput_initialize_external(cb_tree x, struct cb_field *f) {
             f->size);
   } else if (f->storage == CB_STORAGE_FILE) {
     file = CB_TREE(f->file);
-    strcpy(name, CB_FILE(file)->record->name);
-    for (p = (unsigned char *)name; *p; p++) {
-      if (*p == '-') {
-        *p = '_';
-      }
-    }
-    joutput(" = CobolExternal.getStorageAddress (\"%s\", %d);\n", name,
-            f->size);
+    joutput(" = CobolExternal.getStorageAddress (\"%s\", %d);\n",
+            CB_FILE(file)->record->name, f->size);
   } else {
-    strcpy(name, f->name);
-    for (p = (unsigned char *)name; *p; p++) {
-      if (islower(*p)) {
-        *p = (unsigned char)toupper(*p);
-      }
-    }
-    joutput(" = CobolExternal.getStorageAddress (\"%s\", %d);\n", name,
+    joutput(" = CobolExternal.getStorageAddress (\"%s\", %d);\n", f->name,
             f->size);
   }
 }
@@ -2358,6 +2331,13 @@ static void joutput_initialize_one(struct cb_initialize *p, cb_tree x) {
   /* Initialize by value */
   if (p->val && f->values) {
     cb_tree value = CB_VALUE(f->values);
+    struct cb_literal *l = CB_LITERAL_P(value) ? CB_LITERAL(value) : NULL;
+    // save the size information of '&' concatenated segments
+    if (l && l->segment_count > 0) {
+      sgmt_sizes = cobc_malloc(sizeof(size_t) * l->segment_count);
+      memcpy(sgmt_sizes, l->segment_sizes, sizeof(size_t) * l->segment_count);
+      sgmt_count = l->segment_count;
+    }
 
     /* NATIONAL also needs no editing but mbchar conversion. */
     if (CB_TREE_CATEGORY(x) == CB_CATEGORY_NATIONAL) {
@@ -2418,7 +2398,6 @@ static void joutput_initialize_one(struct cb_initialize *p, cb_tree x) {
       /* We do not use joutput_move here because
          we do not want to have the value be edited. */
 
-      struct cb_literal *l = CB_LITERAL(value);
       static char *buff = NULL;
       static int lastsize = 0;
       if (!buff) {
@@ -2460,6 +2439,7 @@ static void joutput_initialize_one(struct cb_initialize *p, cb_tree x) {
           joutput_data(x);
           joutput(".fillBytes(%d, %d);\n", buffchar, f->size);
         } else {
+#if !I18N_UTF8
           if (f->size >= 8) {
             buffchar = *(buff + f->size - 1);
             int n = 0;
@@ -2479,6 +2459,7 @@ static void joutput_initialize_one(struct cb_initialize *p, cb_tree x) {
               return;
             }
           }
+#endif
           joutput_data(x);
 #if I18N_UTF8
           joutput(".setByByteArrayAndPaddingSpaces (");
@@ -4426,13 +4407,11 @@ static void joutput_internal_function(struct cb_program *prog,
   cb_tree l;
   struct cb_field *f;
   struct cb_file *fl;
-  char *p;
   int i;
   // int			n;
   int parmnum = 0;
   // int			seen = 0;
   // int			anyseen;
-  char name[COB_MINI_BUFF];
 
   /* Program function */
   // output ("static int\n%s_ (const int entry", prog->program_id);
@@ -4679,15 +4658,11 @@ static void joutput_internal_function(struct cb_program *prog,
     for (l = prog->file_list; l; l = CB_CHAIN(l)) {
       f = CB_FILE(CB_VALUE(l))->record;
       if (f->flag_external) {
-        strcpy(name, f->name);
-        for (p = name; *p; p++) {
-          if (*p == '-') {
-            *p = '_';
-          }
-        }
-        joutput_line("%s%s = CobolExternal.getStorageAddress (\"%s\", %d);",
-                     CB_PREFIX_BASE, name, name,
-                     CB_FILE(CB_VALUE(l))->record_max);
+        joutput_prefix();
+        joutput_base(f);
+        joutput(" = CobolExternal.getStorageAddress (\"%s\", %d);", f->name,
+                CB_FILE(CB_VALUE(l))->record_max);
+        joutput_newline();
       }
     }
     joutput_initial_values(prog->working_storage);
@@ -4777,15 +4752,10 @@ static void joutput_internal_function(struct cb_program *prog,
     for (l = prog->file_list; l; l = CB_CHAIN(l)) {
       f = CB_FILE(CB_VALUE(l))->record;
       if (f->flag_external) {
-        strcpy(name, f->name);
-        for (p = name; *p; p++) {
-          if (*p == '-') {
-            *p = '_';
-          }
-        }
-        joutput_line("%s%s = CobolExternal.getStorageAddress (\"%s\", %d);",
-                     CB_PREFIX_BASE, name, name,
-                     CB_FILE(CB_VALUE(l))->record_max);
+        joutput_prefix();
+        joutput_base(f);
+        joutput_line(" = CobolExternal.getStorageAddress (\"%s\", %d);",
+                     f->name, CB_FILE(CB_VALUE(l))->record_max);
       }
     }
     joutput_initial_values(prog->working_storage);
@@ -5517,8 +5487,6 @@ static void joutput_declare_member_variables(struct cb_program *prog,
   struct base_list *blp;
   const char *prevprog;
   struct cb_field *f;
-  char *p;
-  char name[COB_MINI_BUFF];
 
   /* CobolDecimal型変数の宣言 */
   if (prog->decimal_index_max) {
@@ -5636,27 +5604,21 @@ static void joutput_declare_member_variables(struct cb_program *prog,
   /* External items */
   for (f = prog->working_storage; f; f = f->sister) {
     if (f->flag_external) {
-      strcpy(name, f->name);
-      for (p = name; *p; p++) {
-        if (*p == '-') {
-          *p = '_';
-        }
-      }
-      joutput("private CobolDataStorage\t%s%s = null;", CB_PREFIX_BASE, name);
-      joutput("  /* %s */\n", f->name);
+      joutput_prefix();
+      joutput("private CobolDataStorage ");
+      joutput_base(f);
+      joutput(" = null;  /* %s */", f->name);
+      joutput_newline();
     }
   }
   for (l = prog->file_list; l; l = CB_CHAIN(l)) {
     f = CB_FILE(CB_VALUE(l))->record;
     if (f->flag_external) {
-      strcpy(name, f->name);
-      for (p = name; *p; p++) {
-        if (*p == '-') {
-          *p = '_';
-        }
-      }
-      joutput("private CobolDataStorage\t%s%s = null;", CB_PREFIX_BASE, name);
-      joutput("  /* %s */\n", f->name);
+      joutput_prefix();
+      joutput("private CobolDataStorage ");
+      joutput_base(f);
+      joutput(" = null;  /* %s */", f->name);
+      joutput_newline();
     }
   }
 
@@ -6147,9 +6109,6 @@ void codegen(struct cb_program *prog, const int nested, char **program_id_list,
   if (cb_java_package_name) {
     joutput_line("package %s;\n", cb_java_package_name);
   }
-  if (edit_code_command_is_set) {
-    joutput_edit_code_command("file-header");
-  }
 
   joutput_line("import java.io.UnsupportedEncodingException;");
   joutput_line("import jp.osscons.opensourcecobol.libcobj.*;");
@@ -6178,17 +6137,7 @@ void codegen(struct cb_program *prog, const int nested, char **program_id_list,
     }
   }*/
 
-  if (edit_code_command_is_set) {
-    joutput_edit_code_command("main-class-annotation");
-  }
-  if (edit_code_command_is_set) {
-    joutput("public class %s implements CobolRunnable, ", prog->program_id);
-    joutput_edit_code_command("main-class-implements");
-    joutput(" {\n");
-  } else {
-    joutput_line("public class %s implements CobolRunnable {",
-                 prog->program_id);
-  }
+  joutput_line("public class %s implements CobolRunnable {", prog->program_id);
   joutput_indent_level += 2;
   joutput("\n");
 
@@ -6200,9 +6149,6 @@ void codegen(struct cb_program *prog, const int nested, char **program_id_list,
   // output_storage ("union cob_call_union\tcob_unifunc;\n\n");
   joutput_line("private CobolRunnable cob_unifunc;\n");
 
-  if (edit_code_command_is_set) {
-    joutput_edit_code_command("main-class-contents");
-  }
   joutput("\n");
 
   joutput_line("@Override");

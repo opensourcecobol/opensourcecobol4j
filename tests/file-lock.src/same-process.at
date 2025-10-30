@@ -1,0 +1,124 @@
+AT_SETUP([Record locking of indexed files (same process)])
+AT_DATA([prog.cbl], [
+       IDENTIFICATION DIVISION.
+       PROGRAM-ID. prog.
+
+       ENVIRONMENT DIVISION.
+       INPUT-OUTPUT SECTION.
+       FILE-CONTROL.
+           SELECT F ASSIGN TO "f.dat"
+               ORGANIZATION IS INDEXED
+               ACCESS MODE IS DYNAMIC
+               RECORD KEY IS REC-KEY
+      *        LOCK MODE IS AUTOMATIC
+               ALTERNATE RECORD KEY IS REC-KEY2 WITH DUPLICATES
+               FILE STATUS IS FILE-STATUS.
+
+       DATA DIVISION.
+       FILE SECTION.
+       FD  f.
+       01  REC.
+           05 REC-KEY      PIC X(5).
+           05 REC-KEY2     PIC X(5).
+           05 REC-DATA     PIC X(5).
+
+       WORKING-STORAGE SECTION.
+       01 FILE-STATUS      PIC XX.
+       01 COMMAND-COUNTER-1 PIC 9(3) VALUE 0.
+       01 COMMAND-COUNTER-2 PIC 9(3) VALUE 0.
+
+       PROCEDURE DIVISION.
+
+       OPERATIONS-TEST.
+       
+           PERFORM VARYING COMMAND-COUNTER-1 FROM 1 BY 1
+               UNTIL COMMAND-COUNTER-1 > 1
+              PERFORM VARYING COMMAND-COUNTER-2 FROM 1 BY 1
+                  UNTIL COMMAND-COUNTER-2 > 1
+      * initialize file
+                   OPEN OUTPUT f
+                   MOVE "AAAA1" TO REC-KEY
+                   MOVE "BBBB1" TO REC-KEY2
+                   MOVE "CCCC1" TO REC-DATA
+                   WRITE REC
+                   CLOSE f
+      * test read operations
+                   OPEN I-O f
+                   MOVE "AAAA1" TO REC-KEY
+                   EVALUATE COMMAND-COUNTER-1
+                       WHEN 1
+                           READ f
+                       WHEN 2
+                           READ f WITH LOCK
+                       WHEN 3
+                           READ f WITH NO LOCK
+                       WHEN 4
+                           START F KEY IS = REC-KEY
+                           READ f NEXT RECORD
+                       WHEN 5
+                           START F KEY IS = REC-KEY
+                           READ f NEXT RECORD WITH LOCK
+                       WHEN 6
+                           START F KEY IS = REC-KEY
+                           READ f NEXT RECORD WITH NO LOCK
+                       WHEN OTHER
+                           CONTINUE
+                   END-EVALUATE
+
+                   IF FILE-STATUS NOT = "00"
+                     DISPLAY "COMMAND-COUNTER-1: " COMMAND-COUNTER-1
+                     DISPLAY "FILE-STATUS: " FILE-STATUS
+                   END-IF
+        
+                   MOVE "AAAA1" TO REC-KEY
+                   EVALUATE COMMAND-COUNTER-2
+                       WHEN 1
+                          READ f
+                       WHEN 2
+                          READ f WITH LOCK
+                       WHEN 3
+                          READ f WITH NO LOCK
+                       WHEN 4
+                          START F KEY IS = REC-KEY
+                       WHEN 5
+                          START F KEY IS = REC-KEY
+                          READ f NEXT RECORD
+                       WHEN 6
+                          START F KEY IS = REC-KEY
+                          READ f NEXT RECORD WITH LOCK
+                       WHEN 7
+                          START F KEY IS = REC-KEY
+                          READ f NEXT RECORD WITH NO LOCK
+                       WHEN 8
+                          WRITE REC
+                       WHEN 9
+                          REWRITE REC
+                       WHEN 10
+                          DELETE F
+                       WHEN OTHER
+                          CONTINUE
+                   END-EVALUATE
+      * WRITE operation fails
+                   IF COMMAND-COUNTER-2 = 8
+                      IF FILE-STATUS NOT = "22"
+                          DISPLAY "COMMAND-COUNTER-2: "
+                            COMMAND-COUNTER-2
+                          DISPLAY "FILE-STATUS: " FILE-STATUS
+                      END-IF
+                   ELSE
+      * other operations succeed
+                     IF FILE-STATUS NOT = "00"
+                        DISPLAY "COMMAND-COUNTER-2: "
+                          COMMAND-COUNTER-2
+                        DISPLAY "FILE-STATUS: " FILE-STATUS
+                     END-IF
+                   END-IF
+                   CLOSE f
+              END-PERFORM
+           END-PERFORM.
+           STOP RUN.
+])
+
+AT_CHECK([cobj prog.cbl])
+AT_CHECK([java -Xlog:perf+memops=off prog])
+AT_CLEANUP

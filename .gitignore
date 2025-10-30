@@ -54,6 +54,7 @@ tests/jp-compat
 tests/cobj-idx
 tests/misc
 tests/run
+tests/file-lock
 tests/*.log
 tests/syntax
 tests/cobol85/*/*.class

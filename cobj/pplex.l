@@ -453,8 +453,16 @@ convert_ucs_hyphen_minus (char *namebuf)
 {
 	char *p = namebuf;
 	while (NULL != (p = strstr (p, UTF8_MINUS_SIGN))) {
-		memcpy (p, UTF8_FULLWIDTH_HYPHEN_MINUS, 3);
-		p += 3;
+		*p = '_';
+        memmove(p+1, p+3, strlen(p+3)+1);
+        p++;
+	}
+
+	p = namebuf;
+	while (NULL != (p = strstr (p, UTF8_FULLWIDTH_HYPHEN_MINUS))) {
+		*p = '_';
+        memmove(p+1, p+3, strlen(p+3)+1);
+        p++;
 	}
 	return;
 }
@@ -958,6 +966,7 @@ ppinput (char *buff, int max_size)
 	int	i;
 	int	n;
 	int	coln;
+	int buff_len = 0;
 	char	*str1 = NULL;
 	char	*str2 = NULL;
 	int comment_counter = 0;
@@ -1129,8 +1138,19 @@ start:
 		within_comment = 0;
 	}
 
+#ifdef I18N_UTF8
+	unsigned char *p = (unsigned char *)buff;
+	if(utf8_ext_pick(p)){
+		buff_len = (int) utf8_calc_sjis_size(p, strlen(buff));
+	}else{
+		buff_len = n;
+	}
+#else /*!I18N_UTF8*/
+	buff_len = n;
+#endif /*I18N_UTF8*/
+
 	/* check the text that is longer than cb_text_column */
-	if (n > cb_text_column + 1 && cb_source_format != CB_FORMAT_VARIABLE) {
+	if (buff_len > cb_text_column + 1 && cb_source_format != CB_FORMAT_VARIABLE) {
 
 		/* show warning if it is not whitespaces */
 		if (cb_warn_column_overflow && last_line_2 < cb_source_line - 1) {
@@ -1144,7 +1164,12 @@ start:
 		}
 
 		/* remove it */
+#ifdef I18N_UTF8
+        p = (unsigned char *) buff;
+		strcpy (buff + utf8_calc_sjis_column(p, cb_text_column), "\n");
+#else /*!I18N_UTF8*/
 		strcpy (buff + cb_text_column, "\n");
+#endif /*I18N_UTF8*/
 		last_line_2 = cb_source_line;
 		n = cb_text_column + 1;
 	}

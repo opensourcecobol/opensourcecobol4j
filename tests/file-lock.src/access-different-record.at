@@ -1,0 +1,368 @@
+AT_SETUP([Record locking of indexed files (different records)])
+AT_DATA([a.sh], [
+javac wait.java setValue.java
+
+OPERATION_READ="READ F."
+OPERATION_READ_WITH_LOCK="READ F WITH LOCK."
+OPERATION_READ_WITH_NO_LOCK="READ F WITH NO LOCK."
+OPERATION_START="START F KEY IS = REC-KEY."
+OPERATION_READ_NEXT_RECORD="START F KEY IS = REC-KEY. READ F NEXT RECORD."
+OPERATION_READ_NEXT_RECORD_WITH_LOCK="START F KEY IS = REC-KEY. READ F NEXT RECORD WITH LOCK."
+OPERATION_READ_NEXT_RECORD_WITH_NO_LOCK="START F KEY IS = REC-KEY. READ F NEXT RECORD WITH NO LOCK."
+OPERATION_WRITE="WRITE REC."
+OPERATION_REWRITE="REWRITE REC."
+OPERATION_DELETE="DELETE F."
+
+OPERATIONS=(
+    "OPERATION_READ"
+    "OPERATION_READ_WITH_LOCK"
+    "OPERATION_READ_WITH_NO_LOCK"
+    "OPERATION_START"
+    "OPERATION_READ_NEXT_RECORD"
+    "OPERATION_READ_NEXT_RECORD_WITH_LOCK"
+    "OPERATION_READ_NEXT_RECORD_WITH_NO_LOCK"
+    "OPERATION_WRITE"
+    "OPERATION_REWRITE"
+    "OPERATION_DELETE"
+)
+
+
+declare -A PROGRAM_ID_TABLE1
+
+PROGRAM_ID_TABLE1@<:@"$OPERATION_READ"@:>@="id_read1"
+PROGRAM_ID_TABLE1@<:@"$OPERATION_READ_WITH_LOCK"@:>@="id_read_with_lock1"
+PROGRAM_ID_TABLE1@<:@"$OPERATION_READ_WITH_NO_LOCK"@:>@="id_read_with_no_lock1"
+PROGRAM_ID_TABLE1@<:@"$OPERATION_START"@:>@="id_start"
+PROGRAM_ID_TABLE1@<:@"$OPERATION_READ_NEXT_RECORD"@:>@="id_read_next_rec1"
+PROGRAM_ID_TABLE1@<:@"$OPERATION_READ_NEXT_RECORD_WITH_LOCK"@:>@="id_read_next_rec_with_lock1"
+PROGRAM_ID_TABLE1@<:@"$OPERATION_READ_NEXT_RECORD_WITH_NO_LOCK"@:>@="id_read_next_rec_with_no_lock1"
+PROGRAM_ID_TABLE1@<:@"$OPERATION_WRITE"@:>@="id_write1"
+PROGRAM_ID_TABLE1@<:@"$OPERATION_REWRITE"@:>@="id_rewrite1"
+PROGRAM_ID_TABLE1@<:@"$OPERATION_DELETE"@:>@="id_delete1"
+
+declare -A PROGRAM_ID_TABLE1_FOR_WRITE
+
+PROGRAM_ID_TABLE1_FOR_WRITE@<:@"$OPERATION_READ"@:>@="id_read1_write"
+PROGRAM_ID_TABLE1_FOR_WRITE@<:@"$OPERATION_READ_WITH_LOCK"@:>@="id_read_lock1_write"
+PROGRAM_ID_TABLE1_FOR_WRITE@<:@"$OPERATION_READ_WITH_NO_LOCK"@:>@="id_read_no_lock1_write"
+PROGRAM_ID_TABLE1_FOR_WRITE@<:@"$OPERATION_START"@:>@="id_start_write"
+PROGRAM_ID_TABLE1_FOR_WRITE@<:@"$OPERATION_READ_NEXT_RECORD"@:>@="id_read_next_rec1_write"
+PROGRAM_ID_TABLE1_FOR_WRITE@<:@"$OPERATION_READ_NEXT_RECORD_WITH_LOCK"@:>@="id_read_next_rec_lock1_write"
+PROGRAM_ID_TABLE1_FOR_WRITE@<:@"$OPERATION_READ_NEXT_RECORD_WITH_NO_LOCK"@:>@="id_read_next_rec_no_lock1_write"
+PROGRAM_ID_TABLE1_FOR_WRITE@<:@"$OPERATION_WRITE"@:>@="id_write1_write"
+PROGRAM_ID_TABLE1_FOR_WRITE@<:@"$OPERATION_REWRITE"@:>@="id_rewrite1_write"
+PROGRAM_ID_TABLE1_FOR_WRITE@<:@"$OPERATION_DELETE"@:>@="id_delete1_write"
+
+declare -A PROGRAM_ID_TABLE2
+
+PROGRAM_ID_TABLE2@<:@"$OPERATION_READ"@:>@="id_read2"
+PROGRAM_ID_TABLE2@<:@"$OPERATION_READ_WITH_LOCK"@:>@="id_read_with_lock2"
+PROGRAM_ID_TABLE2@<:@"$OPERATION_READ_WITH_NO_LOCK"@:>@="id_read_with_no_lock2"
+PROGRAM_ID_TABLE2@<:@"$OPERATION_START"@:>@="id_start"
+PROGRAM_ID_TABLE2@<:@"$OPERATION_READ_NEXT_RECORD"@:>@="id_read_next_rec2"
+PROGRAM_ID_TABLE2@<:@"$OPERATION_READ_NEXT_RECORD_WITH_LOCK"@:>@="id_read_next_rec_with_lock2"
+PROGRAM_ID_TABLE2@<:@"$OPERATION_READ_NEXT_RECORD_WITH_NO_LOCK"@:>@="id_read_next_rec_with_no_lock2"
+PROGRAM_ID_TABLE2@<:@"$OPERATION_WRITE"@:>@="id_write2"
+PROGRAM_ID_TABLE2@<:@"$OPERATION_REWRITE"@:>@="id_rewrite2"
+PROGRAM_ID_TABLE2@<:@"$OPERATION_DELETE"@:>@="id_delete2"
+
+
+PROGRAM1_OPERATIONS=(
+    "$OPERATION_READ"
+    "$OPERATION_READ_WITH_LOCK"
+    "$OPERATION_READ_WITH_NO_LOCK"
+    "$OPERATION_READ_NEXT_RECORD"
+    "$OPERATION_READ_NEXT_RECORD_WITH_LOCK"
+    "$OPERATION_READ_NEXT_RECORD_WITH_NO_LOCK"
+)
+
+PROGRAM2_OPERATIONS=(
+    "$OPERATION_READ"
+    "$OPERATION_READ_WITH_LOCK"
+    "$OPERATION_READ_WITH_NO_LOCK"
+    "$OPERATION_READ_NEXT_RECORD"
+    "$OPERATION_READ_NEXT_RECORD_WITH_LOCK"
+    "$OPERATION_READ_NEXT_RECORD_WITH_NO_LOCK"
+    "$OPERATION_START"
+    "$OPERATION_WRITE"
+    "$OPERATION_REWRITE"
+    "$OPERATION_DELETE"
+)
+
+for operation in "${PROGRAM1_OPERATIONS@<:@@@:>@}"; do
+    cat prog1.template.cbl |
+    sed -e 's/@WRITE_RECORD@/MOVE "AAAA2BBBB2CCCC2" TO REC. WRITE REC./' |\
+    sed -e "s/@OPERATION@/${operation}/" |\
+    sed -e "s/@PROGRAM_ID@/${PROGRAM_ID_TABLE1@<:@${operation}@:>@}/" \
+    > prog1.cbl
+    cobj prog1.cbl
+
+    cat prog1.template.cbl |
+    sed -e 's/@WRITE_RECORD@//' |\
+    sed -e "s/@OPERATION@/${operation}/" |\
+    sed -e "s/@PROGRAM_ID@/${PROGRAM_ID_TABLE1_FOR_WRITE@<:@${operation}@:>@}/" \
+    > prog1.cbl
+    cobj prog1.cbl
+done
+
+for operation in "${PROGRAM2_OPERATIONS@<:@@@:>@}"; do
+    cat prog2.template.cbl |
+    sed -e "s/@OPERATION@/${operation}/" |\
+    sed -e "s/@PROGRAM_ID@/${PROGRAM_ID_TABLE2@<:@${operation}@:>@}/" \
+    > prog2.cbl
+    cobj prog2.cbl
+done
+
+function run_test() {
+    if test "$1" == "" -o "$2" == "" -o "$3" == "" -o "$4" == "" -o "$5" == "" -o "$6" == ""; then
+        echo empty strings are in arguments
+        echo "\$1: $1"
+        echo "\$2: $2"
+        echo "\$3: $3"
+        echo "\$4: $4"
+        echo "\$5: $5"
+        echo "\$6: $6"
+        return 1
+    fi
+    OPERATION1=$1
+    OPERATION2=$2
+    PROG1_STATUS=$3
+    PROG2_STATUS=$4
+    PROG2_MESSAGE=$5
+    FINAL_RECORD_STATE=$6
+
+    rm -f playground-record-lock-*
+
+    if test "$OPERATION2" == "$OPERATION_WRITE"; then
+        java -Xlog:perf+memops=off ${PROGRAM_ID_TABLE1_FOR_WRITE@<:@$OPERATION1@:>@} > prog1.log &
+    else
+        java -Xlog:perf+memops=off ${PROGRAM_ID_TABLE1@<:@$OPERATION1@:>@} > prog1.log &
+    fi
+    PID1=$!
+    java -Xlog:perf+memops=off ${PROGRAM_ID_TABLE2@<:@$OPERATION2@:>@} > prog2.log &
+    PID2=$!
+
+    wait $PID1 $PID2
+
+    echo "$PROG1_STATUS" > prog1.expected.log
+    echo "$FINAL_RECORD_STATE" >> prog1.expected.log
+
+    echo "$PROG2_STATUS" > prog2.expected.log
+    echo "$PROG2_MESSAGE" >> prog2.expected.log
+
+    if ! diff prog1.log prog1.expected.log || ! diff prog2.log prog2.expected.log; then
+        echo "$OPERATION1, $OPERATION2, $PROG1_STATUS, $PROG2_STATUS, $PROG2_MESSAGE"
+        echo prog1.log ===
+        cat prog1.log
+        echo prog1.expected.log ===
+        cat prog1.expected.log
+        echo prog2.log ===
+        cat prog2.log
+        echo prog2.expected.log ===
+        cat prog2.expected.log
+    fi
+}
+
+run_test "$OPERATION_READ" "$OPERATION_READ"                          "00" "00" "changed"     "record not changed"
+run_test "$OPERATION_READ" "$OPERATION_READ_WITH_LOCK"                "00" "00" "changed"     "record not changed"
+run_test "$OPERATION_READ" "$OPERATION_READ_WITH_NO_LOCK"             "00" "00" "changed"     "record not changed"
+run_test "$OPERATION_READ" "$OPERATION_START"                         "00" "00" "not changed" "record not changed"
+run_test "$OPERATION_READ" "$OPERATION_READ_NEXT_RECORD"              "00" "00" "changed"     "record not changed"
+run_test "$OPERATION_READ" "$OPERATION_READ_NEXT_RECORD_WITH_LOCK"    "00" "00" "changed"     "record not changed"
+run_test "$OPERATION_READ" "$OPERATION_READ_NEXT_RECORD_WITH_NO_LOCK" "00" "00" "changed"     "record not changed"
+run_test "$OPERATION_READ" "$OPERATION_WRITE"                         "00" "00" "not changed" "record not changed"
+run_test "$OPERATION_READ" "$OPERATION_REWRITE"                       "00" "00" "not changed" "record not changed"
+run_test "$OPERATION_READ" "$OPERATION_DELETE"                        "00" "00" "not changed" "record not changed"
+
+run_test "$OPERATION_READ_WITH_LOCK" "$OPERATION_READ"                          "00" "00" "changed"     "record not changed"
+run_test "$OPERATION_READ_WITH_LOCK" "$OPERATION_READ_WITH_LOCK"                "00" "00" "changed" "record not changed"
+run_test "$OPERATION_READ_WITH_LOCK" "$OPERATION_READ_WITH_NO_LOCK"             "00" "00" "changed"     "record not changed"
+run_test "$OPERATION_READ_WITH_LOCK" "$OPERATION_START"                         "00" "00" "not changed" "record not changed"
+run_test "$OPERATION_READ_WITH_LOCK" "$OPERATION_READ_NEXT_RECORD"              "00" "00" "changed"     "record not changed"
+run_test "$OPERATION_READ_WITH_LOCK" "$OPERATION_READ_NEXT_RECORD_WITH_LOCK"    "00" "00" "changed" "record not changed"
+run_test "$OPERATION_READ_WITH_LOCK" "$OPERATION_READ_NEXT_RECORD_WITH_NO_LOCK" "00" "00" "changed"     "record not changed"
+run_test "$OPERATION_READ_WITH_LOCK" "$OPERATION_WRITE"                         "00" "00" "not changed" "record not changed"
+run_test "$OPERATION_READ_WITH_LOCK" "$OPERATION_REWRITE"                       "00" "00" "not changed" "record not changed"
+run_test "$OPERATION_READ_WITH_LOCK" "$OPERATION_DELETE"                        "00" "00" "not changed" "record not changed"
+
+run_test "$OPERATION_READ_WITH_NO_LOCK" "$OPERATION_READ"                          "00" "00" "changed"     "record not changed"
+run_test "$OPERATION_READ_WITH_NO_LOCK" "$OPERATION_READ_WITH_LOCK"                "00" "00" "changed"     "record not changed"
+run_test "$OPERATION_READ_WITH_NO_LOCK" "$OPERATION_READ_WITH_NO_LOCK"             "00" "00" "changed"     "record not changed"
+run_test "$OPERATION_READ_WITH_NO_LOCK" "$OPERATION_START"                         "00" "00" "not changed" "record not changed"
+run_test "$OPERATION_READ_WITH_NO_LOCK" "$OPERATION_READ_NEXT_RECORD"              "00" "00" "changed"     "record not changed"
+run_test "$OPERATION_READ_WITH_NO_LOCK" "$OPERATION_READ_NEXT_RECORD_WITH_LOCK"    "00" "00" "changed"     "record not changed"
+run_test "$OPERATION_READ_WITH_NO_LOCK" "$OPERATION_READ_NEXT_RECORD_WITH_NO_LOCK" "00" "00" "changed"     "record not changed"
+run_test "$OPERATION_READ_WITH_NO_LOCK" "$OPERATION_WRITE"                         "00" "00" "not changed" "record not changed"
+run_test "$OPERATION_READ_WITH_NO_LOCK" "$OPERATION_REWRITE"                       "00" "00" "not changed" "record not changed"
+run_test "$OPERATION_READ_WITH_NO_LOCK" "$OPERATION_DELETE"                        "00" "00" "not changed" "record not changed"
+
+run_test "$OPERATION_READ_NEXT_RECORD" "$OPERATION_READ"                          "00" "00" "changed"     "record not changed"
+run_test "$OPERATION_READ_NEXT_RECORD" "$OPERATION_READ_WITH_LOCK"                "00" "00" "changed"     "record not changed"
+run_test "$OPERATION_READ_NEXT_RECORD" "$OPERATION_READ_WITH_NO_LOCK"             "00" "00" "changed"     "record not changed"
+run_test "$OPERATION_READ_NEXT_RECORD" "$OPERATION_START"                         "00" "00" "not changed" "record not changed"
+run_test "$OPERATION_READ_NEXT_RECORD" "$OPERATION_READ_NEXT_RECORD"              "00" "00" "changed"     "record not changed"
+run_test "$OPERATION_READ_NEXT_RECORD" "$OPERATION_READ_NEXT_RECORD_WITH_LOCK"    "00" "00" "changed"     "record not changed"
+run_test "$OPERATION_READ_NEXT_RECORD" "$OPERATION_READ_NEXT_RECORD_WITH_NO_LOCK" "00" "00" "changed"     "record not changed"
+run_test "$OPERATION_READ_NEXT_RECORD" "$OPERATION_WRITE"                         "00" "00" "not changed" "record not changed"
+run_test "$OPERATION_READ_NEXT_RECORD" "$OPERATION_REWRITE"                       "00" "00" "not changed" "record not changed"
+run_test "$OPERATION_READ_NEXT_RECORD" "$OPERATION_DELETE"                        "00" "00" "not changed" "record not changed"
+
+run_test "$OPERATION_READ_NEXT_RECORD_WITH_LOCK" "$OPERATION_READ"                          "00" "00" "changed"     "record not changed"
+run_test "$OPERATION_READ_NEXT_RECORD_WITH_LOCK" "$OPERATION_READ_WITH_LOCK"                "00" "00" "changed" "record not changed"
+run_test "$OPERATION_READ_NEXT_RECORD_WITH_LOCK" "$OPERATION_READ_WITH_NO_LOCK"             "00" "00" "changed"     "record not changed"
+run_test "$OPERATION_READ_NEXT_RECORD_WITH_LOCK" "$OPERATION_START"                         "00" "00" "not changed" "record not changed"
+run_test "$OPERATION_READ_NEXT_RECORD_WITH_LOCK" "$OPERATION_READ_NEXT_RECORD"              "00" "00" "changed"     "record not changed"
+run_test "$OPERATION_READ_NEXT_RECORD_WITH_LOCK" "$OPERATION_READ_NEXT_RECORD_WITH_LOCK"    "00" "00" "changed" "record not changed"
+run_test "$OPERATION_READ_NEXT_RECORD_WITH_LOCK" "$OPERATION_READ_NEXT_RECORD_WITH_NO_LOCK" "00" "00" "changed"     "record not changed"
+run_test "$OPERATION_READ_NEXT_RECORD_WITH_LOCK" "$OPERATION_WRITE"                         "00" "00" "not changed" "record not changed"
+run_test "$OPERATION_READ_NEXT_RECORD_WITH_LOCK" "$OPERATION_REWRITE"                       "00" "00" "not changed" "record not changed"
+run_test "$OPERATION_READ_NEXT_RECORD_WITH_LOCK" "$OPERATION_DELETE"                        "00" "00" "not changed" "record not changed"
+
+run_test "$OPERATION_READ_NEXT_RECORD_WITH_NO_LOCK" "$OPERATION_READ"                          "00" "00" "changed"     "record not changed"
+run_test "$OPERATION_READ_NEXT_RECORD_WITH_NO_LOCK" "$OPERATION_READ_WITH_LOCK"                "00" "00" "changed"     "record not changed"
+run_test "$OPERATION_READ_NEXT_RECORD_WITH_NO_LOCK" "$OPERATION_READ_WITH_NO_LOCK"             "00" "00" "changed"     "record not changed"
+run_test "$OPERATION_READ_NEXT_RECORD_WITH_NO_LOCK" "$OPERATION_START"                         "00" "00" "not changed" "record not changed"
+run_test "$OPERATION_READ_NEXT_RECORD_WITH_NO_LOCK" "$OPERATION_READ_NEXT_RECORD"              "00" "00" "changed"     "record not changed"
+run_test "$OPERATION_READ_NEXT_RECORD_WITH_NO_LOCK" "$OPERATION_READ_NEXT_RECORD_WITH_LOCK"    "00" "00" "changed"     "record not changed"
+run_test "$OPERATION_READ_NEXT_RECORD_WITH_NO_LOCK" "$OPERATION_READ_NEXT_RECORD_WITH_NO_LOCK" "00" "00" "changed"     "record not changed"
+run_test "$OPERATION_READ_NEXT_RECORD_WITH_NO_LOCK" "$OPERATION_WRITE"                         "00" "00" "not changed" "record not changed"
+run_test "$OPERATION_READ_NEXT_RECORD_WITH_NO_LOCK" "$OPERATION_REWRITE"                       "00" "00" "not changed" "record not changed"
+run_test "$OPERATION_READ_NEXT_RECORD_WITH_NO_LOCK" "$OPERATION_DELETE"                        "00" "00" "not changed" "record not changed"
+])
+
+
+AT_CHECK([cp ../../file-lock.src/module-sync/wait.java .])
+AT_CHECK([cp ../../file-lock.src/module-sync/setValue.java .])
+
+AT_DATA([prog1.template.cbl], [
+       IDENTIFICATION DIVISION.
+       PROGRAM-ID. @PROGRAM_ID@.
+
+       ENVIRONMENT DIVISION.
+       INPUT-OUTPUT SECTION.
+       FILE-CONTROL.
+           SELECT F ASSIGN TO "f.dat"
+               ORGANIZATION IS INDEXED
+               ACCESS MODE IS DYNAMIC
+               RECORD KEY IS REC-KEY
+      *        LOCK MODE IS AUTOMATIC
+               ALTERNATE RECORD KEY IS REC-KEY2 WITH DUPLICATES
+               FILE STATUS IS FILE-STATUS.
+
+       DATA DIVISION.
+       FILE SECTION.
+       FD  f.
+       01  REC.
+           05 REC-KEY      PIC X(5).
+           05 REC-KEY2     PIC X(5).
+           05 REC-DATA     PIC X(5).
+
+       WORKING-STORAGE SECTION.
+       01 FILE-STATUS      PIC XX.
+       01 DUMMY PIC X(10) VALUE "DUMMY DATA".
+       PROCEDURE DIVISION.
+       MAIN-PROCEDURE.
+           OPEN OUTPUT f.
+           MOVE "AAAA1" TO REC-KEY.
+           MOVE "BBBB1" TO REC-KEY2.
+           MOVE "CCCC1" TO REC-DATA.
+           WRITE REC.
+           @WRITE_RECORD@
+           CLOSE f.
+
+           OPEN I-O f.
+
+           MOVE "AAAA1" TO REC-KEY.
+           @OPERATION@
+
+           DISPLAY FILE-STATUS.
+       
+           CALL "setValue" USING
+               "playground-record-lock-01"
+               "AAAA1 record is locked".
+           CALL "wait" USING
+               "playground-record-lock-02"
+               "end of prog2".
+           CLOSE f.
+
+           OPEN INPUT f.
+           MOVE "AAAA1" TO REC-KEY.
+           READ F.
+
+           IF FILE-STATUS = "23"
+             DISPLAY "record deleted"
+             GO TO FINISH
+           END-IF.
+
+           IF REC = "AAAA1_____*****"
+             DISPLAY "record rewritten"
+             GO TO FINISH
+           END-IF.
+
+           IF REC = "AAAA1BBBB1CCCC1"
+             DISPLAY "record not changed"
+           ELSE
+             DISPLAY "unexpected: rec=" REC
+           END-IF.
+
+       FINISH.
+           CLOSE f.
+
+])
+
+AT_DATA([prog2.template.cbl], [
+       IDENTIFICATION DIVISION.
+       PROGRAM-ID. @PROGRAM_ID@.
+
+       ENVIRONMENT DIVISION.
+       INPUT-OUTPUT SECTION.
+       FILE-CONTROL.
+           SELECT F ASSIGN TO "f.dat"
+               ORGANIZATION IS INDEXED
+               ACCESS MODE IS DYNAMIC
+               RECORD KEY IS REC-KEY
+               ALTERNATE RECORD KEY IS REC-KEY2 WITH DUPLICATES
+               FILE STATUS IS FILE-STATUS.
+
+       DATA DIVISION.
+       FILE SECTION.
+       FD  f.
+       01  REC.
+           05 REC-KEY      PIC X(5).
+           05 REC-KEY2     PIC X(5).
+           05 REC-DATA     PIC X(5).
+
+       WORKING-STORAGE SECTION.
+       01 FILE-STATUS      PIC XX.
+       01 REC-BACKUP PIC X(15).
+       PROCEDURE DIVISION.
+       MAIN-PROCEDURE.
+           CALL "wait" USING
+               "playground-record-lock-01"
+               "AAAA1 record is locked".
+
+           OPEN I-O f.
+
+           INITIALIZE REC.
+           MOVE "AAAA2_____*****" TO REC.
+           MOVE REC TO REC-BACKUP.
+
+           @OPERATION@
+
+           DISPLAY FILE-STATUS.
+           IF REC = REC-BACKUP
+              DISPLAY "not changed"
+           ELSE
+              DISPLAY "changed"
+           END-IF.
+
+           CLOSE f.
+
+           CALL "setValue" USING
+             "playground-record-lock-02"
+             "end of prog2".
+])
+
+AT_CHECK([bash a.sh])
+AT_CLEANUP
+

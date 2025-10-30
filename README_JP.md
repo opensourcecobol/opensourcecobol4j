@@ -46,9 +46,9 @@ dnf install -y java-21-amazon-corretto-devel gcc make bison flex automake autoco
 
 ### opensource COBOL 4Jのインストール
 ```
-curl -L -o opensourcecobol4j-v1.1.6.tar.gz https://github.com/opensourcecobol/opensourcecobol4j/archive/refs/tags/v1.1.6.tar.gz
-tar zxvf opensourcecobol4j-v1.1.6.tar.gz
-cd opensourcecobol4j-1.1.6
+curl -L -o opensourcecobol4j-v1.1.13.tar.gz https://github.com/opensourcecobol/opensourcecobol4j/archive/refs/tags/v1.1.13.tar.gz
+tar zxvf opensourcecobol4j-v1.1.13.tar.gz
+cd opensourcecobol4j-1.1.13
 ./configure --prefix=/usr/
 make
 sudo make install
@@ -57,9 +57,9 @@ sudo make install
 UTF-8のCOBOLソースコード対応版コンパイラをインストールする場合は、下記のコマンドを実行する。
 
 ```
-curl -L -o opensourcecobol4j-v1.1.6.tar.gz https://github.com/opensourcecobol/opensourcecobol4j/archive/refs/tags/v1.1.6.tar.gz
-tar zxvf opensourcecobol4j-v1.1.6.tar.gz
-cd opensourcecobol4j-1.1.6
+curl -L -o opensourcecobol4j-v1.1.13.tar.gz https://github.com/opensourcecobol/opensourcecobol4j/archive/refs/tags/v1.1.13.tar.gz
+tar zxvf opensourcecobol4j-v1.1.13.tar.gz
+cd opensourcecobol4j-1.1.13
 ./configure --prefix=/usr/ --enable-utf8
 touch cobj/*.m4
 make
@@ -126,7 +126,7 @@ Windows版のopensource COBOL 4JはVisual Studioに含まれるCLコンパイラ
 opensource COBOL 4JのDockerコンテナを利用できます。
 
 ```bash
-docker pull opensourcecobol/opensourcecobol4j:1.1.6
+docker pull opensourcecobol/opensourcecobol4j:20250929
 ```
 
 以下のコマンドを実行して、"Hello World"のCOBOLプログラムを実行します。
@@ -159,6 +159,8 @@ java [PROGRAM-ID]
 
 * [ランタイムライブラリ`libcobj.jar`のAPIリファレンス](https://opensourcecobol.github.io/opensourcecobol4j/javadoc/libcobj/index.html)
 * [opensource COBOL 4J: Java変換解説](./doc/converted_Java_file_JP.md)
+* [configuration-params-JP](./doc/configuration-params-JP.md)
+* [INDEXEDファイルのロックの仕様](./doc/specification-locking-indexed-file_JP.md)
 
 ## 実装状況
 実装済み機能：
@@ -216,10 +218,21 @@ cobj-idx - A utility tool to handle an indexed file of opensource COBOL 4J
 Usage:
 cobj-idx <sub command> [options] <indexed file>
 
-Sub commands:
 
 cobj-idx info <indexed-file>
     Show information of the indexed file.
+
+cobj-idx create <indexed file> --size=<record size> --key=<key information>
+    Create a new indexed file.
+    The record size and key information are specified by the options.
+    By default, this command does not overwrite the indexed file.
+    To overwrite the indexed file, use the --new option.
+    Example) cobj-idx create test.idx --size=100 --key=2,2:5,4:d15,5
+             File name: test.idx
+             Record size: 100
+             Primary key: 2-3
+             Alternate key (No Duplicates):5-8
+             Alternate key (Duplicates): 15-19
 
 cobj-idx load <indexed file>
     Load the data from stdin into the indexed file.
@@ -254,6 +267,7 @@ Options:
 
 -v, --version
     Print the version of cobj-idx.
+
 ```
 
 ## cobj-api

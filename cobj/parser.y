@@ -2889,8 +2889,16 @@ usage_clause:
 usage:
   BINARY			{ current_field->usage = CB_USAGE_BINARY; }
 | COMP				{ current_field->usage = CB_USAGE_BINARY; }
-| COMP_1			{ current_field->usage = CB_USAGE_FLOAT; }
-| COMP_2			{ current_field->usage = CB_USAGE_DOUBLE; }
+| COMP_1			
+{
+	current_field->usage = CB_USAGE_FLOAT; 
+	cb_error (_("COMP-1 not implemented"));
+}
+| COMP_2			
+{ 
+	current_field->usage = CB_USAGE_DOUBLE; 
+	cb_error (_("COMP-2 not implemented"));
+}
 | COMP_3			{ current_field->usage = CB_USAGE_PACKED; }
 | COMP_4			{ current_field->usage = CB_USAGE_BINARY; }
 | COMP_5			{ current_field->usage = CB_USAGE_COMP_5; }
@@ -5374,9 +5382,7 @@ read_statement:
 		     CB_FILE(cb_ref ($3))->organization != COB_ORG_INDEXED)) {
 			current_statement->handler_id = COB_EC_I_O_PERMANENT_ERROR;
 		}
-		if ($7 && (CB_FILE(cb_ref ($3))->lock_mode & COB_LOCK_AUTOMATIC)) {
-			cb_error (_("LOCK clause invalid with file LOCK AUTOMATIC"));
-		} else if ($8 &&
+		if ($8 &&
 		      (CB_FILE(cb_ref ($3))->organization != COB_ORG_RELATIVE &&
 		       CB_FILE(cb_ref ($3))->organization != COB_ORG_INDEXED)) {
 			cb_error (_("KEY clause invalid with this file type"));

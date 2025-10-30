@@ -26,6 +26,7 @@ update_versions_in_file libcobj/app/src/main/java/jp/osscons/opensourcecobol/lib
 update_versions_in_file win/config.h
 
 # Rebuild
+automake --add-missing
 autoreconf
 ./configure --prefix=/usr/
 make

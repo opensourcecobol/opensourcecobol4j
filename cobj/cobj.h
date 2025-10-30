@@ -175,9 +175,6 @@ DECLNORET extern void cobc_abort(const char *filename,
 
 extern size_t cobc_check_valid_name(char *name);
 
-extern char edit_code_command[512];
-extern char edit_code_command_is_set;
-
 #ifdef I18N_UTF8
 #define COB_U8CSIZ 3
 
@@ -200,6 +197,7 @@ extern void utf8_spc_to_ascii(char *);
 extern int utf8_national_length(const unsigned char *str, int len);
 extern size_t utf8_calc_sjis_size(const unsigned char *data, int len);
 extern int utf8_hankaku_kana(const unsigned char *data);
+extern int utf8_calc_sjis_column(const unsigned char *p, int column);
 #else  /*!I18N_UTF8*/
 extern const unsigned char *sjis_pick(const unsigned char *);
 extern size_t sjis_strlen(const unsigned char *);
@@ -385,4 +383,5 @@ extern int cb_verify(const enum cb_support tag, const char *feature);
 extern int cb_flag_info_json;
 extern char *cb_info_json_dir;
 
+extern int cb_default_select_lock_mode;
 #endif /* CB_COBC_H */

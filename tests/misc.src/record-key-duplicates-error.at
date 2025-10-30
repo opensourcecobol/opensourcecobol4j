@@ -26,3 +26,80 @@ AT_CHECK([${COBJ} prog.cbl], [1], [],
 [prog.cbl:8: Error: Record keys with duplicates are not yet supported
 ])
 AT_CLEANUP
+
+AT_SETUP([Error on rewriting record keys with duplicates])
+
+AT_DATA([prog.cbl],
+[       IDENTIFICATION DIVISION.
+       PROGRAM-ID. prog.
+
+       ENVIRONMENT DIVISION.
+       INPUT-OUTPUT SECTION.
+       FILE-CONTROL.
+           SELECT DUP-FILE ASSIGN TO "dupfile.dat"
+               ORGANIZATION IS INDEXED
+               ACCESS MODE IS DYNAMIC
+               RECORD KEY IS DUP-KEY 
+               ALTERNATE RECORD KEY IS DUP-KEY2 WITH DUPLICATES
+               FILE STATUS IS FILE-STATUS.
+
+       DATA DIVISION.
+       FILE SECTION.
+       FD  DUP-FILE.
+       01  DUP-RECORD.
+           05  DUP-KEY      PIC X(5).
+           05  DUP-KEY2     PIC X(5).
+           05  DUP-DATA     PIC X(10).
+
+       WORKING-STORAGE SECTION.
+       01  FILE-STATUS      PIC XX.
+       01  WS-END-OF-FILE   PIC X VALUE 'N'.
+
+       PROCEDURE DIVISION.
+       MAIN-PROCEDURE.
+           OPEN OUTPUT DUP-FILE.
+           MOVE "11111AAAAAaaaaaaaaaa" TO DUP-RECORD.
+           WRITE DUP-RECORD.
+           MOVE "22222BBBBBbbbbbbbbbb" TO DUP-RECORD.
+           WRITE DUP-RECORD.
+           MOVE "33333BBBBBcccccccccc" TO DUP-RECORD.
+           WRITE DUP-RECORD.
+           MOVE "44444AAAAAdddddddddd" TO DUP-RECORD.
+           WRITE DUP-RECORD.
+           MOVE "55555CCCCCeeeeeeeeee" TO DUP-RECORD.
+           WRITE DUP-RECORD.
+           CLOSE DUP-FILE.
+
+           OPEN I-O DUP-FILE
+           IF FILE-STATUS NOT = "00"
+              DISPLAY "Error opening file: " FILE-STATUS
+              STOP RUN
+           END-IF.
+
+           MOVE "BBBBB" TO DUP-KEY2.
+           START DUP-FILE KEY IS >= DUP-KEY2.
+           IF FILE-STATUS = "00"
+               MOVE 'N' TO WS-END-OF-FILE
+               PERFORM UNTIL WS-END-OF-FILE = 'Y'
+                   READ DUP-FILE NEXT
+                       AT END
+                           MOVE 'Y' TO WS-END-OF-FILE
+                       NOT AT END
+                           REWRITE DUP-RECORD
+                           DISPLAY DUP-RECORD
+               END-PERFORM
+           ELSE
+               DISPLAY "Key not found"
+           END-IF.
+           CLOSE DUP-FILE.
+           STOP RUN.
+])
+
+AT_CHECK([${COBJ} prog.cbl])
+AT_CHECK([java prog], [0],
+[22222BBBBBbbbbbbbbbb
+33333BBBBBcccccccccc
+55555CCCCCeeeeeeeeee
+])
+
+AT_CLEANUP

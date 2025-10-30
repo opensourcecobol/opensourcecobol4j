@@ -1,0 +1,45 @@
+
+# INDEXEDファイルのロック仕様
+
+## SELECT句のLOCK MODE
+
+- SELECT句のLOCK MODEにはAUTOMATICかMANUALのみ指定可能である。
+- 省略した場合のLOCK MODEのデフォルト値はMANUAL
+  - コンパイル時に`-lock-mode-automatic`を指定した場合、LOCK MODEを省略した場合のデフォルト値はAUTOMATICになる。
+
+## レコードロックの動作
+
+- OPEN I-Oでファイルを開き、WITH NO LOCKもWITH LOCKも指定されないREAD文を実行したとき
+  - SELECT句のLOCK MODEがMANUALの場合、当該レコードをロックしない
+  - SELECT句のLOCK MODEがAUTOMATICの場合、当該レコードをロックする
+- OPEN I-Oでファイルを開き、WITH LOCK指定のあるREAD文を実行したとき、当該レコードをロックする
+- OPEN I-Oでファイルを開き、WITH NO LOCK指定のあるREAD文を実行したとき、当該レコードをロックしない
+- レコードロックにより処理が失敗した場合、ファイルステータスが51となる
+
+## ファイルロックの動作
+
+- OPEN OUTPUTで開いたときに、当該ファイルにファイルロックがかかる
+- ファイルロックにより処理が失敗した場合、ファイルステータスは61となる
+
+## 古いバージョンのINDEXEDファイルを新バージョンに対応させる。
+
+古いバージョンのINDEXEDファイルは、直接最新バージョンのopensource COBOL 4Jでは使用できません。
+古いバージョンで作成したINDEXEDファイルを新バージョンに対応したものに変換するには、以下のコマンドを実行してください。
+
+```sh
+cobj-idx migrate <<INDEXEDファイル>>
+```
+
+これにより、指定したINDEXEDファイルが新バージョンに対応したものに変換される。
+
+## INDEXEDファイルのロックを解除する
+
+下記のコマンドで、INDEXEDファイルにかかったファイルロックとすべてのレコードロックを解除できる。
+
+```sh
+cobj-idx unlock <<INDEXEDファイル>>
+```
+
+## 古いバージョンのINDEXEDファイルを開いたときの動作
+
+古いバージョンのINDEXEDファイルを開こうとした場合、ファイルステータスが92となる。

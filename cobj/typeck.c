@@ -3099,13 +3099,47 @@ void cb_emit_call(cb_tree prog, cb_tree cb_using, cb_tree returning,
     const struct system_table *psyst;
     for (psyst = (const struct system_table *)&system_tab[0]; psyst->syst_name;
          psyst++) {
-      if (!strcmp((const char *)CB_LITERAL(prog)->data,
-                  (const char *)psyst->syst_name)) {
+      const char *data = (const char *)CB_LITERAL(prog)->data;
+      if (!strcmp(data, (const char *)psyst->syst_name)) {
+        // error if the subroutine is not implemented
+        switch (psyst - &system_tab[0]) {
+        case CBL_CHANGE_DIR:
+        case CBL_CHECK_FILE_EXIST:
+        case CBL_CLOSE_FILE:
+        case CBL_COPY_FILE:
+        case CBL_CREATE_DIR:
+        case CBL_CREATE_FILE:
+        case CBL_DELETE_DIR:
+        case CBL_DELETE_FILE:
+        case CBL_ERROR_PROC:
+        case CBL_EXIT_PROC:
+        case CBL_FLUSH_FILE:
+        case CBL_GET_CURRENT_DIR:
+        case CBL_IMP:
+        case CBL_OPEN_FILE:
+        case CBL_READ_FILE:
+        case CBL_RENAME_FILE:
+        case CBL_WRITE_FILE:
+        case CBL_OC_KEISEN:
+        case CBL_OC_ATTRIBUTE:
+        case C$CHDIR:
+        case C$COPY:
+        case C$DELETE:
+        case C$FILEINFO:
+        case C$GETPID:
+        case C$JUSTIFY:
+        case C$MAKEDIR:
+        case C$NARG:
+        case C$PARAMSIZE:
+          cb_error(_("%s not implemented"), data);
+          return;
+        }
         if (psyst->syst_params > cb_list_length(cb_using)) {
           cb_error(_("Wrong number of CALL parameters for '%s'"),
                    (char *)psyst->syst_name);
           return;
         }
+
         is_sys_call = 1;
         break;
       }
