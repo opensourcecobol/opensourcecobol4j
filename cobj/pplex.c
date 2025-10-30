@@ -405,7 +405,6 @@ typedef unsigned int flex_uint32_t;
 #endif
 
 /* The state buf must be large enough to hold one state per character in the main buffer.
-/* The state buf must be large enough to hold one state per character in the main buffer.
  */
 #define YY_STATE_BUF_SIZE   ((YY_BUF_SIZE + 2) * sizeof(yy_state_type))
 #define YY_STATE_BUF_SIZE   ((YY_BUF_SIZE + 2) * sizeof(yy_state_type))
