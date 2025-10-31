@@ -4,6 +4,16 @@ All notable changes to this project will be documented in this file.
 
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 
+## [1.1.14] - 2025-10-31
+### Improved
+* `cobj` now preserves string concatenation structure in the generated Java code. (#731)
+
+### Fixed
+* Fix the implementation of `PROGRAM STATUS`. (#735)
+
+### Miscellaneous
+* For Windows support, tests are now run on Windows Server 2025. (#732)
+
 ## [1.1.13] - 2025-09-29
 
 ### Fixed

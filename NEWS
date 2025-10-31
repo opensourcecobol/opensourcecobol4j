@@ -1,5 +1,20 @@
 NEWS - user visible changes				-*- outline -*-
 
+* opensource COBOL 4J 1.1.14
+
+** Improvement
+(1) `cobj` now preserves string concatenation structure in the generated Java code.
+
+** Bug Fixes
+
+(1) Fix the implementation of `PROGRAM STATUS`.
+
+** Miscellaneous
+
+(1) For Windows support, tests are now run on Windows Server 2025.
+
+-----------------------------------------------------------------------
+
 -----------------------------------------------------------------------
 
 * opensource COBOL 4J 1.1.13

@@ -1,8 +1,8 @@
+### Improved
+* `cobj` now preserves string concatenation structure in the generated Java code. (#731)
+
 ### Fixed
+* Fix the implementation of `PROGRAM STATUS`. (#735)
 
-* Fix file locking of SEQUENTIAL, LINE SEQUENTIAL and RELATIVE file types. (#714)
-* Fix reading process for variable length SEQUENTIAL files. (#722)
-
-## Miscellaneous
-
-* `cobj-idx unlock` and `cobj-idx migrate` can handle multiple files at once. (#708)
+### Miscellaneous
+* For Windows support, tests are now run on Windows Server 2025. (#732)
