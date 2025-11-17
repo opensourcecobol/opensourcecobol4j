@@ -3161,7 +3161,9 @@ void cb_emit_cancel(cb_tree prog) {
   cb_emit(cb_build_funcall_1("CobolResolve.fieldCancel", prog));
 }
 
-void cb_emit_cancel_all() { cb_emit(cb_build_funcall_0("CobolResolve.cancelAll")); }
+void cb_emit_cancel_all() {
+  cb_emit(cb_build_funcall_0("CobolResolve.cancelAll"));
+}
 
 /*
  * CLOSE statement

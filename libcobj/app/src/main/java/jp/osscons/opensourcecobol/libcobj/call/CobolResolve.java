@@ -485,10 +485,10 @@ public class CobolResolve {
      * callTableに保存されているすべてのCallRunnableのインスタンスのcancelメソッドを呼び出す
      */
     public static void cancelAll() {
-      for (CobolRunnable runnable : callTable.values()) {
-        if (runnable.isActive() == false) {
-            runnable.cancel();
-          }
+        for (CobolRunnable runnable : callTable.values()) {
+            if (runnable.isActive() == false) {
+                runnable.cancel();
+            }
         }
     }
 
