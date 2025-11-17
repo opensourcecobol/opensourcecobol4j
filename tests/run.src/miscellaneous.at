@@ -546,7 +546,6 @@ AT_CHECK([java caller], [0],
 AT_CLEANUP
 
 AT_SETUP([CANCEL ALL])
-AT_CHECK([${SKIP_TEST}])
 
 AT_DATA([prog.cob], [
        IDENTIFICATION   DIVISION.
@@ -585,9 +584,9 @@ AT_DATA([call02.cob], [
            GOBACK.
 ])
 
-AT_CHECK([${COMPILE} prog.cob])
-AT_CHECK([${COMPILE_MODULE} call01.cob])
-AT_CHECK([${COMPILE_MODULE} call02.cob])
+AT_CHECK([${COBJ} prog.cob])
+AT_CHECK([${COBJ} call01.cob])
+AT_CHECK([${COBJ} call02.cob])
 AT_CHECK([java prog], [0],
 [1
 1
