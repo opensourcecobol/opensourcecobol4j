@@ -914,7 +914,7 @@ static void cobc_print_usage(void) {
          "generated source code"));
   puts(_("  -m, -jar                          Create <PROGRAM-ID>.jar and "
          "remove class files"));
-  puts(_("  -single-jar=<JAR file name>       Create <JAR file name>.jar and "
+  puts(_("  -single-jar=<JAR file name>       Create <JAR file name> and "
          "remove class files"));
   puts(_("                                    The JAR file contains all class "
          "files of all specified COBOL programs"));
