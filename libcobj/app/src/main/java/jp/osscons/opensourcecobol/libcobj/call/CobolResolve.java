@@ -482,6 +482,17 @@ public class CobolResolve {
     }
 
     /**
+     * callTableに保存されているすべてのCallRunnableのインスタンスのcancelメソッドを呼び出す
+     */
+    public static void cancelAll() {
+      for (CobolRunnable runnable : callTable.values()) {
+        if (runnable.isActive() == false) {
+            runnable.cancel();
+          }
+        }
+    }
+
+    /**
      * 指定のプログラムのcancelメソッドを呼び出す
      *
      * @param f cancelを呼び出すプログラム名を示すCOBOL変数
