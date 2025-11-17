@@ -854,29 +854,29 @@ static void joutput_base(struct cb_field *f) {
   /* Base name */
   strcpy_identifier_cobol_to_java(name, top->name);
   // if (!top->flag_external) {
-    register_data_storage_list(f, top);
+  register_data_storage_list(f, top);
   // }
 
   if (!top->flag_base) {
     // if (!top->flag_external) {
-      if (!top->flag_local || top->flag_is_global) {
-        bl = cobc_malloc(sizeof(struct base_list));
-        bl->f = top;
-        bl->curr_prog = excp_current_program_id;
-        bl->next = base_cache;
-        base_cache = bl;
+    if (!top->flag_local || top->flag_is_global) {
+      bl = cobc_malloc(sizeof(struct base_list));
+      bl->f = top;
+      bl->curr_prog = excp_current_program_id;
+      bl->next = base_cache;
+      base_cache = bl;
+    } else {
+      if (current_prog->flag_global_use) {
+        joutput_local("unsigned char\t\t*%s%s = NULL;", CB_PREFIX_BASE, name);
+        joutput_local("unsigned char\t\t*%s%s = NULL;", CB_PREFIX_BASE, name);
+        joutput_local("\t/* %s */\n", top->name);
+        joutput_local("static unsigned char\t*save_%s%s;\n", CB_PREFIX_BASE,
+                      name);
       } else {
-        if (current_prog->flag_global_use) {
-          joutput_local("unsigned char\t\t*%s%s = NULL;", CB_PREFIX_BASE, name);
-          joutput_local("unsigned char\t\t*%s%s = NULL;", CB_PREFIX_BASE, name);
-          joutput_local("\t/* %s */\n", top->name);
-          joutput_local("static unsigned char\t*save_%s%s;\n", CB_PREFIX_BASE,
-                        name);
-        } else {
-          joutput_local("unsigned char\t*%s%s = NULL;", CB_PREFIX_BASE, name);
-          joutput_local("\t/* %s */\n", top->name);
-        }
+        joutput_local("unsigned char\t*%s%s = NULL;", CB_PREFIX_BASE, name);
+        joutput_local("\t/* %s */\n", top->name);
       }
+    }
     // }
     top->flag_base = 1;
   }
@@ -884,9 +884,9 @@ static void joutput_base(struct cb_field *f) {
   // if (top->flag_external) {
   //   joutput("%s%s", CB_PREFIX_BASE, name);
   // } else {
-    if (joutput_field_storage(f, top) && f->offset != 0) {
-      joutput(".getSubDataStorage(%d)", f->offset);
-    }
+  if (joutput_field_storage(f, top) && f->offset != 0) {
+    joutput(".getSubDataStorage(%d)", f->offset);
+  }
   // }
 
   if (cb_field_variable_address(f)) {
@@ -5085,7 +5085,7 @@ static void joutput_init_method(struct cb_program *prog) {
                 blp->f->memory_size);
       } else if (blp->f->flag_external) {
         joutput_initialize_external(cb_build_field_reference(blp->f, NULL),
-                                     blp->f);
+                                    blp->f);
       } else {
         joutput_prefix();
         joutput("%s = new CobolDataStorage(%d);", base_name,
