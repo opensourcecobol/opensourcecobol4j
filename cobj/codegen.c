@@ -853,12 +853,10 @@ static void joutput_base(struct cb_field *f) {
   // EDIT
   /* Base name */
   strcpy_identifier_cobol_to_java(name, top->name);
-  // if (!top->flag_external) {
+
   register_data_storage_list(f, top);
-  // }
 
   if (!top->flag_base) {
-    // if (!top->flag_external) {
     if (!top->flag_local || top->flag_is_global) {
       bl = cobc_malloc(sizeof(struct base_list));
       bl->f = top;
@@ -868,7 +866,6 @@ static void joutput_base(struct cb_field *f) {
     } else {
       if (current_prog->flag_global_use) {
         joutput_local("unsigned char\t\t*%s%s = NULL;", CB_PREFIX_BASE, name);
-        joutput_local("unsigned char\t\t*%s%s = NULL;", CB_PREFIX_BASE, name);
         joutput_local("\t/* %s */\n", top->name);
         joutput_local("static unsigned char\t*save_%s%s;\n", CB_PREFIX_BASE,
                       name);
@@ -877,17 +874,12 @@ static void joutput_base(struct cb_field *f) {
         joutput_local("\t/* %s */\n", top->name);
       }
     }
-    // }
     top->flag_base = 1;
   }
 
-  // if (top->flag_external) {
-  //   joutput("%s%s", CB_PREFIX_BASE, name);
-  // } else {
   if (joutput_field_storage(f, top) && f->offset != 0) {
     joutput(".getSubDataStorage(%d)", f->offset);
   }
-  // }
 
   if (cb_field_variable_address(f)) {
     for (p = f->parent; p; f = f->parent, p = f->parent) {
@@ -2597,12 +2589,6 @@ static void joutput_initialize(struct cb_initialize *p) {
   int c;
 
   f = cb_field(p->var);
-  // if (f->flag_external) {
-  //   joutput_initialize_external(p->var, f);
-  //   if (!p->flag_statement) {
-  //     return;
-  //   }
-  // }
   switch (initialize_type(p, f, 1)) {
   case INITIALIZE_NONE:
     break;
@@ -2622,6 +2608,7 @@ static void joutput_initialize(struct cb_initialize *p) {
     break;
   }
 }
+
 /*
  * SEARCH
  */
