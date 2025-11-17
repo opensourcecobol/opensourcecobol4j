@@ -88,7 +88,6 @@ AT_CLEANUP
 
 
 AT_SETUP([EXTERNAL data item])
-AT_CHECK([${SKIP_TEST}])
 
 AT_DATA([callee.cob], [
        IDENTIFICATION   DIVISION.
@@ -122,7 +121,7 @@ AT_DATA([caller.cob], [
 
 AT_CHECK([${COMPILE_MODULE} callee.cob])
 AT_CHECK([${COMPILE} caller.cob])
-AT_CHECK([java prog], [0],
+AT_CHECK([${RUN_MODULE} caller], [0],
 [Hello
 World
 ])
@@ -131,7 +130,6 @@ AT_CLEANUP
 
 
 AT_SETUP([EXTERNAL AS data item])
-AT_CHECK([${SKIP_TEST}])
 
 AT_DATA([callee.cob], [
        IDENTIFICATION   DIVISION.
@@ -168,7 +166,7 @@ AT_DATA([caller.cob], [
 
 AT_CHECK([${COMPILE_MODULE} callee.cob])
 AT_CHECK([${COMPILE} caller.cob])
-AT_CHECK([java prog], [0],
+AT_CHECK([${RUN_MODULE} caller], [0],
 [Extrn
 Hello
 World
