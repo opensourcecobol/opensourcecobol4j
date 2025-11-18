@@ -5070,7 +5070,9 @@ static void joutput_init_method(struct cb_program *prog) {
         joutput_prefix();
         joutput("%s = new CobolDataStorage(%d);", base_name,
                 blp->f->memory_size);
-      } else if (blp->f->flag_external) {
+      }
+
+      if (blp->f->flag_external) {
         joutput_initialize_external(cb_build_field_reference(blp->f, NULL),
                                     blp->f);
       } else {
