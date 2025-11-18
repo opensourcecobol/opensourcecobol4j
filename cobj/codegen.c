@@ -5588,27 +5588,6 @@ static void joutput_declare_member_variables(struct cb_program *prog,
     joutput("\n");
   }
 
-  /* External items */
-  // for (f = prog->working_storage; f; f = f->sister) {
-  //   if (f->flag_external) {
-  //     joutput_prefix();
-  //     joutput("private CobolDataStorage ");
-  //     joutput_base(f);
-  //     joutput(" = null;  /* %s */", f->name);
-  //     joutput_newline();
-  //   }
-  // }
-  // for (l = prog->file_list; l; l = CB_CHAIN(l)) {
-  //   f = CB_FILE(CB_VALUE(l))->record;
-  //   if (f->flag_external) {
-  //     joutput_prefix();
-  //     joutput("private CobolDataStorage ");
-  //     joutput_base(f);
-  //     joutput(" = null;  /* %s */", f->name);
-  //     joutput_newline();
-  //   }
-  // }
-
   /* AbstractCobolField型変数の宣言(非定数) */
   if (field_cache) {
     joutput_line("/* Fields */\n");
