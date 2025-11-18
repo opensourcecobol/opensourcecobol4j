@@ -545,7 +545,7 @@ AT_CHECK([java caller], [0],
 
 AT_CLEANUP
 
-AT_SETUP([CANCEL ALL])
+AT_SETUP([CANCEL ALL (1)])
 
 AT_DATA([prog.cob], [
        IDENTIFICATION   DIVISION.
@@ -590,6 +590,104 @@ AT_CHECK([${COBJ} call02.cob])
 AT_CHECK([java prog], [0],
 [1
 1
+])
+
+AT_CLEANUP
+
+AT_SETUP([CANCEL ALL (2)])
+
+AT_DATA([prog.cob], [
+       IDENTIFICATION   DIVISION.
+       PROGRAM-ID.      prog.
+       DATA DIVISION.
+       WORKING-STORAGE SECTION.
+       PROCEDURE        DIVISION.
+           CALL "child".
+           CALL "sister".
+           DISPLAY "CALL1END".
+           CALL "child".
+           CALL "sister".
+           DISPLAY "CALL2END".
+           CANCEL ALL.
+           CALL "child".
+           CALL "sister".
+           DISPLAY "CALL3END".
+           STOP RUN.
+])
+
+AT_DATA([child.cob], [
+       IDENTIFICATION   DIVISION.
+       PROGRAM-ID.      child.
+       DATA DIVISION.
+       WORKING-STORAGE SECTION.
+       77  VAR          PIC 9(01) value 1.
+       PROCEDURE        DIVISION.
+           DISPLAY VAR NO ADVANCING.
+           ADD  1 TO VAR.
+           CALL "grandchild1".
+           GOBACK.
+])
+
+AT_DATA([sister.cob], [
+       IDENTIFICATION   DIVISION.
+       PROGRAM-ID.      sister.
+       DATA DIVISION.
+       WORKING-STORAGE SECTION.
+       77  VAR          PIC 9(01) value 2.
+       PROCEDURE        DIVISION.
+           DISPLAY VAR NO ADVANCING.
+           ADD  1 TO VAR.
+           CALL "grandchild2".
+           CALL "grandchild3".
+           GOBACK.
+])
+
+AT_DATA([grandchild1.cob], [
+       IDENTIFICATION   DIVISION.
+       PROGRAM-ID.      grandchild1.
+       DATA DIVISION.
+       WORKING-STORAGE SECTION.
+       77  VAR          PIC 9(01) value 3.
+       PROCEDURE        DIVISION.
+           DISPLAY VAR NO ADVANCING.
+           ADD  1 TO VAR.
+           GOBACK.
+])
+
+AT_DATA([grandchild2.cob], [
+       IDENTIFICATION   DIVISION.
+       PROGRAM-ID.      grandchild2.
+       DATA DIVISION.
+       WORKING-STORAGE SECTION.
+       77  VAR          PIC 9(01) value 4.
+       PROCEDURE        DIVISION.
+           DISPLAY VAR NO ADVANCING.
+           ADD  1 TO VAR.
+           GOBACK.
+])
+
+AT_DATA([grandchild3.cob], [
+       IDENTIFICATION   DIVISION.
+       PROGRAM-ID.      grandchild3.
+       DATA DIVISION.
+       WORKING-STORAGE SECTION.
+       77  VAR          PIC 9(01) value 5.
+       PROCEDURE        DIVISION.
+           DISPLAY VAR NO ADVANCING.
+           ADD  1 TO VAR.
+           GOBACK.
+])
+
+AT_CHECK([${COBJ} prog.cob], [0])
+AT_CHECK([${COBJ} child.cob], [0])
+AT_CHECK([${COBJ} sister.cob], [0])
+AT_CHECK([${COBJ} grandchild1.cob], [0])
+AT_CHECK([${COBJ} grandchild2.cob], [0])
+AT_CHECK([${COBJ} grandchild3.cob], [0])
+AT_CHECK([java prog], [0], 
+[13245CALL1END
+24356CALL2END
+13245CALL3END
 ])
 
 AT_CLEANUP
