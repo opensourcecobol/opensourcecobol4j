@@ -88,7 +88,6 @@ AT_CLEANUP
 
 
 AT_SETUP([EXTERNAL data item])
-AT_CHECK([${SKIP_TEST}])
 
 AT_DATA([callee.cob], [
        IDENTIFICATION   DIVISION.
@@ -122,7 +121,7 @@ AT_DATA([caller.cob], [
 
 AT_CHECK([${COMPILE_MODULE} callee.cob])
 AT_CHECK([${COMPILE} caller.cob])
-AT_CHECK([java prog], [0],
+AT_CHECK([${RUN_MODULE} caller], [0],
 [Hello
 World
 ])
@@ -131,7 +130,6 @@ AT_CLEANUP
 
 
 AT_SETUP([EXTERNAL AS data item])
-AT_CHECK([${SKIP_TEST}])
 
 AT_DATA([callee.cob], [
        IDENTIFICATION   DIVISION.
@@ -168,10 +166,77 @@ AT_DATA([caller.cob], [
 
 AT_CHECK([${COMPILE_MODULE} callee.cob])
 AT_CHECK([${COMPILE} caller.cob])
-AT_CHECK([java prog], [0],
+AT_CHECK([${RUN_MODULE} caller], [0],
 [Extrn
 Hello
 World
+])
+
+AT_CLEANUP
+
+AT_SETUP([EXTERNAL group data item])
+
+AT_DATA([prog.cbl], [
+        IDENTIFICATION  DIVISION. 
+        PROGRAM-ID.     prog.
+        DATA DIVISION.
+        WORKING-STORAGE SECTION.
+        01 A            EXTERNAL.
+           03 A1        PIC X(5).
+           03 A2        PIC X(3).
+           03 A3.
+             05 A3-1    PIC 9(1).
+             05 A3-2    PIC 9(1).
+        PROCEDURE DIVISION.
+            MOVE "HELLO" TO A1.
+            MOVE "ABC"   TO A2.
+            MOVE 12      TO A3.
+
+            DISPLAY A.
+            DISPLAY A1.
+            DISPLAY A2.
+            DISPLAY A3.
+
+            MOVE "DEF"   TO A2.
+            DISPLAY A.
+
+            CALL "sub".
+
+            MOVE 5       TO A3-2.
+
+            DISPLAY A.
+
+            STOP RUN.
+])
+
+AT_DATA([sub.cbl], [
+        IDENTIFICATION  DIVISION.
+        PROGRAM-ID.     sub.
+        DATA DIVISION.
+        WORKING-STORAGE SECTION.
+        01 A            EXTERNAL.
+           03 A1        PIC X(5).
+           03 A2        PIC X(3).
+           03 A3.
+             05 A3-1    PIC 9(1).
+             05 A3-2    PIC 9(1).
+        PROCEDURE DIVISION.
+            DISPLAY A.
+            MOVE 34      TO A3.
+            MOVE "WORLD" TO A1.
+            GOBACK.
+])
+
+AT_CHECK([${COBJ} prog.cbl])
+AT_CHECK([${COBJ} sub.cbl])
+AT_CHECK([java prog], [0], 
+[HELLOABC12
+HELLO
+ABC
+12
+HELLODEF12
+HELLODEF12
+WORLDDEF35
 ])
 
 AT_CLEANUP
