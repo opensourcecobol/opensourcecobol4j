@@ -205,6 +205,12 @@ public class CobolResolve {
         cobException.put(0x1609, "EC-XML-RANGE");
     }
 
+    /** コールスタックリストのヘッド */
+    private static CobolCallStackList callStackListHead = null;
+
+    /** 現在のコールスタックリスト */
+    private static CobolCallStackList currentCallStackList = null;
+
     /**
      * 下記の環境変数を読み込み、CobolResolve内で定義されたメソッドの動作が変わる。<br>
      * 環境変数COB_LOAD_CASEにLOWERが指定されているときは、resolveメソッドに渡された引数を小文字に変換してから処理を開始する。<br>
@@ -484,13 +490,13 @@ public class CobolResolve {
     /**
      * callTableに保存されているすべてのCallRunnableのインスタンスのcancelメソッドを呼び出す
      */
-    public static void cancelAll() {
-        for (CobolRunnable runnable : callTable.values()) {
-            if (runnable.isActive() == false) {
-                runnable.cancel();
-            }
-        }
-    }
+    // public static void cancelAll() {
+    //     for (CobolRunnable runnable : callTable.values()) {
+    //         if (runnable.isActive() == false) {
+    //             runnable.cancel();
+    //         }
+    //     }
+    // }
 
     /**
      * 指定のプログラムのcancelメソッドを呼び出す
@@ -519,5 +525,127 @@ public class CobolResolve {
         if (runner != null) {
             runner.cancel();
         }
+    }
+
+    /**
+     * コールスタックリストを初期化する
+     */
+    private static void initCallStackList() {
+        if (callStackListHead == null) {
+            callStackListHead = new CobolCallStackList();
+        }
+        currentCallStackList = callStackListHead;
+    }
+
+    /**
+     * 新しいコールスタックリストを作成する
+     *
+     * @param name プログラム名
+     * @return 作成したコールスタックリスト
+     */
+    private static CobolCallStackList createCallStackList(String name) {
+        CobolCallStackList newList = new CobolCallStackList(name);
+        newList.setParent(currentCallStackList);
+        currentCallStackList = newList;
+        return newList;
+    }
+
+    /**
+     * 指定されたコールスタックリストとその子孫すべてをキャンセルする（再帰的）
+     *
+     * @param p キャンセル対象のコールスタックリスト
+     */
+    private static void cancelCallStackList(CobolCallStackList p) {
+        if (p == null) {
+            // プログラムがない場合は何もしない
+            return;
+        }
+
+        // このプログラムをキャンセル
+        String programName = p.getName();
+        if (programName != null) {
+            CobolRunnable runnable = callTable.get(programName);
+            if (runnable != null && !runnable.isActive()) {
+                runnable.cancel();
+            }
+        }
+
+        // 子要素を再帰的にキャンセル
+        if (p.getChildren() != null) {
+            cancelCallStackList(p.getChildren());
+        }
+
+        // 兄弟要素を再帰的にキャンセル
+        CobolCallStackList s = p.getSister();
+        while (s != null) {
+            cancelCallStackList(s);
+            s = s.getSister();
+        }
+    }
+
+    /**
+     * コールスタックにプログラムをプッシュする
+     *
+     * @param name プログラム名
+     */
+    public static void pushCallStackList(String name) {
+        if (currentCallStackList == null) {
+            initCallStackList();
+        }
+
+        CobolCallStackList p = currentCallStackList.getChildren();
+        if (p == null) {
+            currentCallStackList.setChildren(createCallStackList(name));
+            return;
+        }
+
+        if (p.getName().equals(name)) {
+            currentCallStackList = p;
+            return;
+        }
+
+        if (p.getSister() == null) {
+            p.setSister(createCallStackList(name));
+            return;
+        }
+
+        p = p.getSister();
+        while (true) {
+            if (p.getName().equals(name)) {
+                currentCallStackList = p;
+                return;
+            }
+            if (p.getSister() == null) {
+                break;
+            }
+            p = p.getSister();
+        }
+
+        currentCallStackList.setSister(createCallStackList(name));
+    }
+
+    /**
+     * コールスタックから一つ戻る（ポップ）
+     */
+    public static void popCallStackList() {
+        if (currentCallStackList != null) {
+            currentCallStackList = currentCallStackList.getParent();
+        }
+    }
+
+    /**
+     * 現在のコールスタックの子要素すべてをキャンセルする
+     *
+     * @throws CobolRuntimeException 現在のスタックがnullの場合
+     */
+    public static void cancelAll() throws CobolRuntimeException {
+        if (currentCallStackList == null) {
+            throw new CobolRuntimeException(
+                    CobolRuntimeException.COBOL_FATAL_ERROR,
+                    "Call to 'cancelAll' current stack is NULL");
+            // initCallStackList();
+            // return;
+        }
+        cancelCallStackList(currentCallStackList.getChildren());
     }
 }
