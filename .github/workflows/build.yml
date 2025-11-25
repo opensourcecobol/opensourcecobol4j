@@ -51,7 +51,7 @@ jobs:
           dnf install -y java-21-amazon-corretto-devel gcc make autoconf diffutils gettext tar gzip bison flex
 
       - name: Checkout opensource COBOL 4J
-        uses: actions/checkout@v5
+        uses: actions/checkout@v6
       
       - name: Setup Gradle
         uses: gradle/actions/setup-gradle@v5
