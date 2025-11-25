@@ -1,5 +1,6 @@
 package jp.osscons.opensourcecobol.libcobj.call;
 
+/** CALLしたプログラムを階層構造で管理するためのクラス */
 public class CobolCallStackList {
     private CobolCallStackList parent;
     private CobolCallStackList children;
@@ -14,7 +15,11 @@ public class CobolCallStackList {
         this.name = null;
     }
 
-    /** コンストラクタ */
+    /** 
+     * コンストラクタ 
+     * 
+     * @param name プログラム名
+     * */
     public CobolCallStackList(String name) {
         this.parent = null;
         this.children = null;
@@ -25,7 +30,7 @@ public class CobolCallStackList {
     /**
      * 親ノードを取得する
      * 
-     * @return 親ノード
+     * @return parent 親ノード
      */
     public CobolCallStackList getParent() {
         return parent;
@@ -34,7 +39,7 @@ public class CobolCallStackList {
     /**
      * 親ノードを設定する
      * 
-     * @param parent
+     * @param parent 親ノード
      */
     public void setParent(CobolCallStackList parent) {
         this.parent = parent;
@@ -43,7 +48,7 @@ public class CobolCallStackList {
     /**
      * 子ノードを取得する
      * 
-     * @return
+     * @return children 子ノード
      */
     public CobolCallStackList getChildren() {
         return children;
@@ -52,7 +57,7 @@ public class CobolCallStackList {
     /**
      * 子ノードを設定する
      * 
-     * @param children
+     * @param children 子ノード
      */
     public void setChildren(CobolCallStackList children) {
         this.children = children;
@@ -61,7 +66,7 @@ public class CobolCallStackList {
     /**
      * 兄弟ノードを取得する
      * 
-     * @return
+     * @return sister 兄弟ノード
      */
     public CobolCallStackList getSister() {
         return sister;
@@ -70,7 +75,7 @@ public class CobolCallStackList {
     /**
      * 兄弟ノードを設定する
      * 
-     * @param sister
+     * @param sister 兄弟ノード
      */
     public void setSister(CobolCallStackList sister) {
         this.sister = sister;
@@ -85,11 +90,11 @@ public class CobolCallStackList {
         return name;
     }
 
-    /**
-     * プログラム名を設定する
-     * 
-     * @param name
-     */
+    // /**
+    //  * プログラム名を設定する
+    //  * 
+    //  * @param name
+    //  */
     // public void setName(String name) {
     //     this.name = name;
     // }
