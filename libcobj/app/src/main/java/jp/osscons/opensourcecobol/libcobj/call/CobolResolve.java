@@ -643,8 +643,6 @@ public class CobolResolve {
             throw new CobolRuntimeException(
                     CobolRuntimeException.COBOL_FATAL_ERROR,
                     "Call to 'cancelAll' current stack is NULL");
-            // initCallStackList();
-            // return;
         }
         cancelCallStackList(currentCallStackList.getChildren());
     }

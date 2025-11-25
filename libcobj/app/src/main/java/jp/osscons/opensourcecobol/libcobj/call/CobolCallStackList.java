@@ -22,35 +22,75 @@ public class CobolCallStackList {
         this.name = name;
     }
 
+    /**
+     * 親ノードを取得する
+     * 
+     * @return 親ノード
+     */
     public CobolCallStackList getParent() {
         return parent;
     }
 
+    /**
+     * 親ノードを設定する
+     * 
+     * @param parent
+     */
     public void setParent(CobolCallStackList parent) {
         this.parent = parent;
     }
 
+    /**
+     * 子ノードを取得する
+     * 
+     * @return
+     */
     public CobolCallStackList getChildren() {
         return children;
     }
 
+    /**
+     * 子ノードを設定する
+     * 
+     * @param children
+     */
     public void setChildren(CobolCallStackList children) {
         this.children = children;
     }
 
+    /**
+     * 兄弟ノードを取得する
+     * 
+     * @return
+     */
     public CobolCallStackList getSister() {
         return sister;
     }
 
+    /**
+     * 兄弟ノードを設定する
+     * 
+     * @param sister
+     */
     public void setSister(CobolCallStackList sister) {
         this.sister = sister;
     }
 
+    /**
+     * プログラム名を取得する
+     * 
+     * @return name プログラム名
+     */
     public String getName() {
         return name;
     }
 
-    public void setName(String name) {
-        this.name = name;
-    }
+    /**
+     * プログラム名を設定する
+     * 
+     * @param name
+     */
+    // public void setName(String name) {
+    //     this.name = name;
+    // }
 }
