@@ -6121,7 +6121,6 @@ void codegen(struct cb_program *prog, const int nested, char **program_id_list,
 
   joutput_line("@Override");
   joutput_line("public int run(CobolDataStorage... argStorages) {");
-  joutput_line("  CobolResolve.pushCallStackList(\"%s\");", prog->program_id);
   joutput_line("  return %s_(0, argStorages);", prog->program_id);
   joutput_line("}\n");
 
