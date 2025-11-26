@@ -488,17 +488,6 @@ public class CobolResolve {
     }
 
     /**
-     * callTableに保存されているすべてのCallRunnableのインスタンスのcancelメソッドを呼び出す
-     */
-    // public static void cancelAll() {
-    //     for (CobolRunnable runnable : callTable.values()) {
-    //         if (runnable.isActive() == false) {
-    //             runnable.cancel();
-    //         }
-    //     }
-    // }
-
-    /**
      * 指定のプログラムのcancelメソッドを呼び出す
      *
      * @param f cancelを呼び出すプログラム名を示すCOBOL変数
@@ -551,17 +540,16 @@ public class CobolResolve {
     }
 
     /**
-     * 指定されたコールスタックリストとその子孫すべてをキャンセルする（再帰的）
+     * 指定されたコールスタックリストとその子プログラムをすべてキャンセルする
      *
      * @param p キャンセル対象のコールスタックリスト
      */
     private static void cancelCallStackList(CobolCallStackList p) {
         if (p == null) {
-            // プログラムがない場合は何もしない
             return;
         }
 
-        // このプログラムをキャンセル
+        // プログラムをキャンセル
         String programName = p.getName();
         if (programName != null) {
             CobolRunnable runnable = callTable.get(programName);
@@ -570,7 +558,7 @@ public class CobolResolve {
             }
         }
 
-        // 子要素を再帰的にキャンセル
+        // 子プログラムを再帰的にキャンセル
         if (p.getChildren() != null) {
             cancelCallStackList(p.getChildren());
         }
@@ -625,7 +613,7 @@ public class CobolResolve {
     }
 
     /**
-     * コールスタックから一つ戻る（ポップ）
+     * コールスタックから一つ取り出す
      */
     public static void popCallStackList() {
         if (currentCallStackList != null) {
@@ -634,7 +622,7 @@ public class CobolResolve {
     }
 
     /**
-     * 現在のコールスタックの子要素すべてをキャンセルする
+     * 現在のコールスタックの子プログラムをすべてキャンセルする
      *
      * @throws CobolRuntimeException 現在のスタックがnullの場合
      */
