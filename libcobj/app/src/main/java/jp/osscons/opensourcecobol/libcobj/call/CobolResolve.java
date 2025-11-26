@@ -561,13 +561,13 @@ public class CobolResolve {
         // 子プログラムを再帰的にキャンセル
         if (p.getChildren() != null) {
             cancelCallStackList(p.getChildren());
+            p.setChildren(null);
         }
 
         // 兄弟要素を再帰的にキャンセル
-        CobolCallStackList s = p.getSister();
-        while (s != null) {
-            cancelCallStackList(s);
-            s = s.getSister();
+        if (p.getSister() != null) {
+            cancelCallStackList(p.getSister());
+            p.setSister(null);
         }
     }
 
@@ -609,7 +609,7 @@ public class CobolResolve {
             p = p.getSister();
         }
 
-        currentCallStackList.setSister(createCallStackList(name));
+        p.setSister(createCallStackList(name));
     }
 
     /**
