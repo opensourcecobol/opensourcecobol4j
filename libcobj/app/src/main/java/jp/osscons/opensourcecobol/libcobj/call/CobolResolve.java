@@ -633,5 +633,6 @@ public class CobolResolve {
                     "Call to 'cancelAll' current stack is NULL");
         }
         cancelCallStackList(currentCallStackList.getChildren());
+        currentCallStackList.setChildren(null);
     }
 }
