@@ -8,7 +8,7 @@ public class CobolCallStackList {
     private String name;
 
     /** コンストラクタ */
-    public CobolCallStackList() {
+    protected CobolCallStackList() {
         this.parent = null;
         this.children = null;
         this.sister = null;
@@ -20,7 +20,7 @@ public class CobolCallStackList {
      * 
      * @param name プログラム名
      * */
-    public CobolCallStackList(String name) {
+    protected CobolCallStackList(String name) {
         this.parent = null;
         this.children = null;
         this.sister = null;
@@ -32,7 +32,7 @@ public class CobolCallStackList {
      * 
      * @return parent 親ノード
      */
-    public CobolCallStackList getParent() {
+    protected CobolCallStackList getParent() {
         return parent;
     }
 
@@ -41,7 +41,7 @@ public class CobolCallStackList {
      * 
      * @param parent 親ノード
      */
-    public void setParent(CobolCallStackList parent) {
+    protected void setParent(CobolCallStackList parent) {
         this.parent = parent;
     }
 
@@ -50,7 +50,7 @@ public class CobolCallStackList {
      * 
      * @return children 子ノード
      */
-    public CobolCallStackList getChildren() {
+    protected CobolCallStackList getChildren() {
         return children;
     }
 
@@ -59,7 +59,7 @@ public class CobolCallStackList {
      * 
      * @param children 子ノード
      */
-    public void setChildren(CobolCallStackList children) {
+    protected void setChildren(CobolCallStackList children) {
         this.children = children;
     }
 
@@ -68,7 +68,7 @@ public class CobolCallStackList {
      * 
      * @return sister 兄弟ノード
      */
-    public CobolCallStackList getSister() {
+    protected CobolCallStackList getSister() {
         return sister;
     }
 
@@ -77,7 +77,7 @@ public class CobolCallStackList {
      * 
      * @param sister 兄弟ノード
      */
-    public void setSister(CobolCallStackList sister) {
+    protected void setSister(CobolCallStackList sister) {
         this.sister = sister;
     }
 
@@ -86,16 +86,7 @@ public class CobolCallStackList {
      * 
      * @return name プログラム名
      */
-    public String getName() {
+    protected String getName() {
         return name;
     }
-
-    // /**
-    //  * プログラム名を設定する
-    //  * 
-    //  * @param name
-    //  */
-    // public void setName(String name) {
-    //     this.name = name;
-    // }
 }
