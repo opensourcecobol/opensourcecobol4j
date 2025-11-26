@@ -19,7 +19,7 @@ public class CobolCallStackList {
      * コンストラクタ 
      * 
      * @param name プログラム名
-     * */
+     */
     protected CobolCallStackList(String name) {
         this.parent = null;
         this.children = null;
