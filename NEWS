@@ -1,5 +1,17 @@
 NEWS - user visible changes				-*- outline -*-
 
+* opensource COBOL 4J 1.1.15
+
+** Bug Fixes
+
+(1) Fix a bug related to EXTERNAL items.
+
+** Miscellaneous
+
+(1) Slightly improve the readability of generated Java code for GO TO statements.
+
+-----------------------------------------------------------------------
+
 * opensource COBOL 4J 1.1.14
 
 ** Improvement
@@ -12,8 +24,6 @@ NEWS - user visible changes				-*- outline -*-
 ** Miscellaneous
 
 (1) For Windows support, tests are now run on Windows Server 2025.
-
------------------------------------------------------------------------
 
 -----------------------------------------------------------------------
 
