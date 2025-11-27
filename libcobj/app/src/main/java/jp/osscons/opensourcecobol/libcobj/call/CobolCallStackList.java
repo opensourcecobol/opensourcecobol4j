@@ -15,9 +15,9 @@ public class CobolCallStackList {
         this.name = null;
     }
 
-    /** 
-     * コンストラクタ 
-     * 
+    /**
+     * コンストラクタ
+     *
      * @param name プログラム名
      */
     protected CobolCallStackList(String name) {
@@ -29,7 +29,7 @@ public class CobolCallStackList {
 
     /**
      * 親ノードを取得する
-     * 
+     *
      * @return parent 親ノード
      */
     protected CobolCallStackList getParent() {
@@ -38,7 +38,7 @@ public class CobolCallStackList {
 
     /**
      * 親ノードを設定する
-     * 
+     *
      * @param parent 親ノード
      */
     protected void setParent(CobolCallStackList parent) {
@@ -47,7 +47,7 @@ public class CobolCallStackList {
 
     /**
      * 子ノードを取得する
-     * 
+     *
      * @return children 子ノード
      */
     protected CobolCallStackList getChildren() {
@@ -56,7 +56,7 @@ public class CobolCallStackList {
 
     /**
      * 子ノードを設定する
-     * 
+     *
      * @param children 子ノード
      */
     protected void setChildren(CobolCallStackList children) {
@@ -65,7 +65,7 @@ public class CobolCallStackList {
 
     /**
      * 兄弟ノードを取得する
-     * 
+     *
      * @return sister 兄弟ノード
      */
     protected CobolCallStackList getSister() {
@@ -74,7 +74,7 @@ public class CobolCallStackList {
 
     /**
      * 兄弟ノードを設定する
-     * 
+     *
      * @param sister 兄弟ノード
      */
     protected void setSister(CobolCallStackList sister) {
@@ -83,7 +83,7 @@ public class CobolCallStackList {
 
     /**
      * プログラム名を取得する
-     * 
+     *
      * @return name プログラム名
      */
     protected String getName() {

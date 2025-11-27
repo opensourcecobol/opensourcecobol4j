@@ -555,9 +555,7 @@ public class CobolResolve {
             try {
                 CobolResolve.cobCancel(programName);
             } catch (CobolStopRunException e) {
-                throw new CobolRuntimeException(
-                        CobolRuntimeException.COBOL_FATAL_ERROR,
-                        "Failed to cancel program: " + programName);
+                return;
             }
         }
 
