@@ -757,6 +757,171 @@ AT_CHECK([java prog], [0],
 
 AT_CLEANUP
 
+AT_SETUP([CANCEL ALL (3)])
+
+AT_DATA([prog.cbl], [
+        IDENTIFICATION           DIVISION.
+        PROGRAM-ID.              prog.
+        DATA                     DIVISION.
+        WORKING-STORAGE          SECTION.
+        01  WS-COUNTER           PIC 9(3) VALUE 0.
+        01  WS-MESSAGE           PIC X(50).
+        01  P-NAME               PIC X(17) VALUE "prog".
+        PROCEDURE                DIVISION.
+            ADD 1 TO WS-COUNTER.
+            DISPLAY "@<:@" P-NAME "@:>@ WS-COUNTER    = " WS-COUNTER.
+
+            CALL "child".
+
+            ADD 1 TO WS-COUNTER.
+            DISPLAY "@<:@" P-NAME "@:>@ WS-COUNTER    = " WS-COUNTER.
+
+            CALL "child".
+
+            ADD 1 TO WS-COUNTER.
+            DISPLAY "@<:@" P-NAME "@:>@ WS-COUNTER    = " WS-COUNTER.
+
+            STOP RUN.
+])
+
+AT_DATA([child.cbl], [
+        IDENTIFICATION           DIVISION.
+        PROGRAM-ID.              child.
+        DATA                     DIVISION.
+        WORKING-STORAGE          SECTION.
+        01  WS-CALL-COUNT        PIC 9(3) VALUE 0.
+        01  P-NAME               PIC X(17) VALUE "child".
+        PROCEDURE                DIVISION.
+            ADD 1 TO WS-CALL-COUNT.
+            DISPLAY "@<:@" P-NAME "@:>@ WS-CALL-COUNT = " WS-CALL-COUNT.
+
+            CALL "grandchild01".
+
+            DISPLAY "@<:@" P-NAME "@:>@ WS-CALL-COUNT = " WS-CALL-COUNT.
+
+            CALL "grandchild02".
+
+            GOBACK.
+])
+
+AT_DATA([grandchild01.cbl], [
+        IDENTIFICATION           DIVISION.
+        PROGRAM-ID.              grandchild01.
+        DATA                     DIVISION.
+        WORKING-STORAGE          SECTION.
+        01  WS-COUNTER           PIC 9(3) VALUE 0.
+        01  P-NAME               PIC X(17) VALUE "grandchild01".
+        PROCEDURE                DIVISION.
+            ADD 1 TO WS-COUNTER.
+            DISPLAY "@<:@" P-NAME "@:>@ WS-COUNTER    = " WS-COUNTER.
+
+            CALL "greatgrandchild01".
+            CALL "greatgrandchild02".
+
+            DISPLAY "@<:@" P-NAME "@:>@ *** CANCEL  ALL ***".
+            CANCEL ALL.
+
+            CALL "greatgrandchild01".
+            CALL "greatgrandchild02".
+
+            DISPLAY "@<:@" P-NAME "@:>@ WS-COUNTER    = " WS-COUNTER.
+            GOBACK.
+])
+
+AT_DATA([grandchild02.cbl], [
+        IDENTIFICATION           DIVISION.
+        PROGRAM-ID.              grandchild02.
+        DATA                     DIVISION.
+        WORKING-STORAGE          SECTION.
+        01  WS-COUNTER           PIC 9(3) VALUE 0.
+        01  P-NAME               PIC X(17) VALUE "grandchild02".
+        PROCEDURE                DIVISION.
+            ADD 1 TO WS-COUNTER.
+            DISPLAY "@<:@" P-NAME "@:>@ WS-COUNTER    = " WS-COUNTER.
+
+            IF WS-COUNTER = 1 THEN
+                DISPLAY "@<:@" P-NAME "@:>@ FIRST CALL"
+            END-IF.
+
+            GOBACK.
+])
+
+AT_DATA([greatgrandchild01.cbl], [
+        IDENTIFICATION           DIVISION.
+        PROGRAM-ID.              greatgrandchild01.
+        DATA                     DIVISION.
+        WORKING-STORAGE          SECTION.
+        01  WS-COUNTER           PIC 9(3) VALUE 0.
+        01  P-NAME               PIC X(17) VALUE "greatgrandchild01".
+        PROCEDURE                DIVISION.
+            ADD 1 TO WS-COUNTER.
+            DISPLAY "@<:@" P-NAME "@:>@ WS-COUNTER    = " WS-COUNTER.
+
+            IF WS-COUNTER = 1 THEN
+                DISPLAY "@<:@" P-NAME "@:>@ FIRST CALL"
+            END-IF.
+            GOBACK.
+])
+
+AT_DATA([greatgrandchild02.cbl], [
+        IDENTIFICATION           DIVISION.
+        PROGRAM-ID.              greatgrandchild02.
+        DATA                     DIVISION.
+        WORKING-STORAGE          SECTION.
+        01  WS-COUNTER           PIC 9(3) VALUE 0.
+        01  P-NAME               PIC X(17) VALUE "greatgrandchild02".
+        PROCEDURE                DIVISION.
+            ADD 1 TO WS-COUNTER.
+            DISPLAY "@<:@" P-NAME "@:>@ WS-COUNTER    = " WS-COUNTER.
+
+            IF WS-COUNTER = 1 THEN
+                DISPLAY "@<:@" P-NAME "@:>@ FIRST CALL"
+            END-IF.
+            GOBACK.
+])
+
+AT_CHECK([${COBJ} prog.cbl], [0])
+AT_CHECK([${COBJ} child.cbl], [0])
+AT_CHECK([${COBJ} grandchild01.cbl], [0])
+AT_CHECK([${COBJ} grandchild02.cbl], [0])
+AT_CHECK([${COBJ} greatgrandchild01.cbl], [0])
+AT_CHECK([${COBJ} greatgrandchild02.cbl], [0])
+
+AT_CHECK([java prog], [0], 
+[@<:@prog             @:>@ WS-COUNTER    = 001
+@<:@child            @:>@ WS-CALL-COUNT = 001
+@<:@grandchild01     @:>@ WS-COUNTER    = 001
+@<:@greatgrandchild01@:>@ WS-COUNTER    = 001
+@<:@greatgrandchild01@:>@ FIRST CALL
+@<:@greatgrandchild02@:>@ WS-COUNTER    = 001
+@<:@greatgrandchild02@:>@ FIRST CALL
+@<:@grandchild01     @:>@ *** CANCEL  ALL ***
+@<:@greatgrandchild01@:>@ WS-COUNTER    = 001
+@<:@greatgrandchild01@:>@ FIRST CALL
+@<:@greatgrandchild02@:>@ WS-COUNTER    = 001
+@<:@greatgrandchild02@:>@ FIRST CALL
+@<:@grandchild01     @:>@ WS-COUNTER    = 001
+@<:@child            @:>@ WS-CALL-COUNT = 001
+@<:@grandchild02     @:>@ WS-COUNTER    = 001
+@<:@grandchild02     @:>@ FIRST CALL
+@<:@prog             @:>@ WS-COUNTER    = 002
+@<:@child            @:>@ WS-CALL-COUNT = 002
+@<:@grandchild01     @:>@ WS-COUNTER    = 002
+@<:@greatgrandchild01@:>@ WS-COUNTER    = 002
+@<:@greatgrandchild02@:>@ WS-COUNTER    = 002
+@<:@grandchild01     @:>@ *** CANCEL  ALL ***
+@<:@greatgrandchild01@:>@ WS-COUNTER    = 001
+@<:@greatgrandchild01@:>@ FIRST CALL
+@<:@greatgrandchild02@:>@ WS-COUNTER    = 001
+@<:@greatgrandchild02@:>@ FIRST CALL
+@<:@grandchild01     @:>@ WS-COUNTER    = 002
+@<:@child            @:>@ WS-CALL-COUNT = 002
+@<:@grandchild02     @:>@ WS-COUNTER    = 002
+@<:@prog             @:>@ WS-COUNTER    = 003
+])
+
+AT_CLEANUP
+
 AT_SETUP([CALL binary literal parameter/LENGTH OF - so])
 AT_CHECK([${SKIP_TEST}])
 
