@@ -1,8 +1,8 @@
-### Improved
-* `cobj` now preserves string concatenation structure in the generated Java code. (#731)
-
 ### Fixed
-* Fix the implementation of `PROGRAM STATUS`. (#735)
+
+* Fix a bug related to EXTERNAL items. (#747, #750)
 
 ### Miscellaneous
-* For Windows support, tests are now run on Windows Server 2025. (#732)
+
+* Slightly improve the readability of generated Java code for GO TO statements. (#752)
+
