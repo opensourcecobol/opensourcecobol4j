@@ -552,9 +552,12 @@ public class CobolResolve {
         // プログラムをキャンセル
         String programName = p.getName();
         if (programName != null) {
-            CobolRunnable runnable = callTable.get(programName);
-            if (runnable != null && !runnable.isActive()) {
-                runnable.cancel();
+            try {
+                CobolResolve.cobCancel(programName);
+            } catch (CobolStopRunException e) {
+                throw new CobolRuntimeException(
+                        CobolRuntimeException.COBOL_FATAL_ERROR,
+                        "Failed to cancel program: " + programName);
             }
         }
 
