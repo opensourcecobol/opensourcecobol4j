@@ -137,19 +137,27 @@ AT_DATA([prog.cbl], [
 ])
 
 AT_CHECK([${COBJ} -j java_dir prog.cbl], [1], [], 
-[Error - 'java_dir' is not a valid directory
+[Error: 'java_dir' is not a valid directory
 ])
 
 AT_CHECK([${COBJ} -java-source-dir=java_dir prog.cbl], [1], [], 
-[Error - 'java_dir' is not a valid directory
+[Error: 'java_dir' is not a valid directory
+])
+
+AT_CHECK([${COBJ} -java-source-dir= prog.cbl], [1], [], 
+[Error: Missing directory path argument
 ])
 
 AT_CHECK([${COBJ} -o class_dir prog.cbl], [1], [], 
-[Error - 'class_dir' is not a valid directory
+[Error: 'class_dir' is not a valid directory
 ])
 
 AT_CHECK([${COBJ} -class-file-dir=class_dir prog.cbl], [1], [], 
-[Error - 'class_dir' is not a valid directory
+[Error: 'class_dir' is not a valid directory
+])
+
+AT_CHECK([${COBJ} -class-file-dir= prog.cbl], [1], [], 
+[Error: Missing directory path argument
 ])
 
 AT_CLEANUP
