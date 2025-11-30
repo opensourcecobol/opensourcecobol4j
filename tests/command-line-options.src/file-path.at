@@ -123,3 +123,41 @@ AT_CHECK([test ! -e prog.java])
 AT_CHECK([rm -f *.java *.class class_dir/* java_dir/*])
 
 AT_CLEANUP
+
+
+AT_SETUP([file-path options with non-existent directory])
+
+AT_DATA([prog.cbl], [
+       IDENTIFICATION              DIVISION.
+       PROGRAM-ID.                 prog.
+       DATA                        DIVISION.
+       WORKING-STORAGE             SECTION.
+       PROCEDURE                   DIVISION.
+           DISPLAY "HELLO".
+])
+
+AT_CHECK([${COBJ} -j java_dir prog.cbl], [1], [], 
+[Error: 'java_dir' is not a valid directory
+])
+
+AT_CHECK([${COBJ} -java-source-dir=java_dir prog.cbl], [1], [], 
+[Error: 'java_dir' is not a valid directory
+])
+
+AT_CHECK([${COBJ} -java-source-dir= prog.cbl], [1], [], 
+[Error: Missing directory path argument
+])
+
+AT_CHECK([${COBJ} -o class_dir prog.cbl], [1], [], 
+[Error: 'class_dir' is not a valid directory
+])
+
+AT_CHECK([${COBJ} -class-file-dir=class_dir prog.cbl], [1], [], 
+[Error: 'class_dir' is not a valid directory
+])
+
+AT_CHECK([${COBJ} -class-file-dir= prog.cbl], [1], [], 
+[Error: Missing directory path argument
+])
+
+AT_CLEANUP

@@ -1048,12 +1048,28 @@ static int process_command_line(const int argc, char *argv[]) {
     case 'o':
       /* -o : the directory where class files are stored */
       /* -class-file-dir : the directory where class files are stored */
+      if (optarg == NULL || *optarg == '\0') {
+        fprintf(stderr, "Error: Missing directory path argument\n");
+        exit(1);
+      }
+      if (stat(optarg, &st) != 0 || !(S_ISDIR(st.st_mode))) {
+        fprintf(stderr, "Error: '%s' is not a valid directory\n", optarg);
+        exit(1);
+      }
       output_name = strdup(optarg);
       break;
 
     case 'j':
       /* -j : the directory where java files are stored */
       /* -java-source-dir : the directory where java files are stored */
+      if (optarg == NULL || *optarg == '\0') {
+        fprintf(stderr, "Error: Missing directory path argument\n");
+        exit(1);
+      }
+      if (stat(optarg, &st) != 0 || !(S_ISDIR(st.st_mode))) {
+        fprintf(stderr, "Error: '%s' is not a valid directory\n", optarg);
+        exit(1);
+      }
       java_source_dir = strdup(optarg);
       break;
 
