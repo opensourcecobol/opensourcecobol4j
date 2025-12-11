@@ -215,7 +215,7 @@ AT_CHECK([${COMPILE_LIMIT_TEST} prog.cob], [1], [],
 
 AT_CLEANUP
 
-AT_SETUP([Field length limit PIC N/VALID (SJIS)])
+AT_SETUP([Field length limit PIC N/VALID (UTF-8)])
 export LC_ALL=''
 
 AT_DATA([prog.cob], [
@@ -223,7 +223,7 @@ AT_DATA([prog.cob], [
        PROGRAM-ID.      prog.
        DATA             DIVISION.
        WORKING-STORAGE  SECTION.
-       01 VALID-N       PIC N(8388608).
+       01 VALID-N       PIC N(5592405).
        PROCEDURE        DIVISION.
            STOP RUN.
 ])
@@ -232,7 +232,7 @@ AT_CHECK([${COMPILE_LIMIT_TEST} prog.cob], [0])
 
 AT_CLEANUP
 
-AT_SETUP([Field length limit PIC N/TOO LONG (SJIS)])
+AT_SETUP([Field length limit PIC N/TOO LONG (UTF-8)])
 export LC_ALL=''
 
 AT_DATA([prog.cob], [
@@ -240,18 +240,18 @@ AT_DATA([prog.cob], [
        PROGRAM-ID.      prog.
        DATA             DIVISION.
        WORKING-STORAGE  SECTION.
-       01 INVALID-N     PIC N(8388609).
+       01 INVALID-N     PIC N(5592406).
        PROCEDURE        DIVISION.
            STOP RUN.
 ])
 
 AT_CHECK([${COMPILE_LIMIT_TEST} prog.cob], [1], [],
-[prog.cob:6: Error: National field cannot be larger than 8388608 digits
+[prog.cob:6: Error: National field cannot be larger than 5592405 digits
 ])
 
 AT_CLEANUP
 
-AT_SETUP([Field length limit PIC BN/VALID (SJIS)])
+AT_SETUP([Field length limit PIC BN/VALID (UTF-8)])
 export LC_ALL=''
 
 AT_DATA([prog.cob], [
@@ -259,7 +259,7 @@ AT_DATA([prog.cob], [
        PROGRAM-ID.      prog.
        DATA             DIVISION.
        WORKING-STORAGE  SECTION.
-       01 VALID-BN      PIC BN(8388607).
+       01 VALID-BN      PIC BN(5592404).
        PROCEDURE        DIVISION.
            STOP RUN.
 ])
@@ -268,7 +268,7 @@ AT_CHECK([${COMPILE_LIMIT_TEST} prog.cob], [0])
 
 AT_CLEANUP
 
-AT_SETUP([Field length limit PIC BN/TOO LONG (SJIS)])
+AT_SETUP([Field length limit PIC BN/TOO LONG (UTF-8)])
 export LC_ALL=''
 
 AT_DATA([prog.cob], [
@@ -276,13 +276,13 @@ AT_DATA([prog.cob], [
        PROGRAM-ID.      prog.
        DATA             DIVISION.
        WORKING-STORAGE  SECTION.
-       01 INVALID-BN    PIC BN(8388608).
+       01 INVALID-BN    PIC BN(5592405).
        PROCEDURE        DIVISION.
            STOP RUN.
 ])
 
 AT_CHECK([${COMPILE_LIMIT_TEST} prog.cob], [1], [],
-[prog.cob:6: Error: NationalEdit field cannot be larger than 8388608 digits
+[prog.cob:6: Error: NationalEdit field cannot be larger than 5592405 digits
 ])
 
 AT_CLEANUP
