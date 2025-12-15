@@ -80,7 +80,7 @@ jobs:
       
       - name: Upload log files if tests fail
         if: failure()
-        uses: actions/upload-artifact@v5
+        uses: actions/upload-artifact@v6
         with:
           name: ${{ inputs.test-name }}-${{ env.ARTIFACT_NAME }}-log
           path: tests/${{ inputs.test-name }}.dir/
