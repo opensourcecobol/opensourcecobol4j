@@ -149,6 +149,24 @@ prog.cob:9: Error: User defined name must be less than 32 characters
 
 AT_CLEANUP
 
+AT_SETUP([Section and Paragraph name])
+export LC_ALL=''
+
+AT_DATA([prog.cob], [
+       IDENTIFICATION   DIVISION.
+       PROGRAM-ID.      prog.
+       DATA             DIVISION.
+       WORKING-STORAGE  SECTION.
+       PROCEDURE        DIVISION.
+       Ｓ－初期化       SECTION.
+       Ｐ－初期化.
+           DISPLAY "Hello, " WITH NO ADVANCING.
+           STOP RUN.
+])
+AT_CHECK([${COMPILE} prog.cob])
+AT_CHECK([java prog], [0], [Hello, ])
+AT_CLEANUP
+
 AT_SETUP([Nihongo Filename])
 export LC_ALL=''
 

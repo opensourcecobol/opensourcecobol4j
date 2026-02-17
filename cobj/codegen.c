@@ -5979,7 +5979,9 @@ static void joutput_label_variable_name(char *s, int key,
   if (s) {
     if (section && section->name) {
       const char *c;
-      for (c = (const char *)section->name; *c; ++c) {
+      char section_buf[COB_SMALL_BUFF];
+      strcpy_identifier_cobol_to_java(section_buf, (const char *)section->name);
+      for (c = (const char *)section_buf; *c; ++c) {
         if (*c == ' ') {
           joutput("_");
         } else if (*c == '-') {
@@ -5990,9 +5992,9 @@ static void joutput_label_variable_name(char *s, int key,
       }
       joutput("__");
     }
-    char buf[COB_SMALL_BUFF];
-    strcpy_identifier_cobol_to_java(buf, s);
-    char *p = buf;
+    char label_buf[COB_SMALL_BUFF];
+    strcpy_identifier_cobol_to_java(label_buf, s);
+    char *p = label_buf;
     while (*p) {
       if (*p < 0x80) {
         if (*p == '-') {
@@ -6009,7 +6011,7 @@ static void joutput_label_variable_name(char *s, int key,
         }
       }
     }
-    joutput("%s", buf);
+    joutput("%s", label_buf);
   } else {
     joutput("anonymous__%d", key);
   }
