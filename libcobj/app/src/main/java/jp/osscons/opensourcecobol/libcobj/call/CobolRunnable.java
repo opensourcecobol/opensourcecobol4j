@@ -34,9 +34,9 @@ public interface CobolRunnable {
     void cancel();
 
     /**
-     * 取り扱いについては準備中
+     * プログラムが現在実行中かどうかを返す
      *
-     * @return 準備中
+     * @return プログラムが実行中の場合はtrue、そうでない場合はfalse
      */
     boolean isActive();
 }
