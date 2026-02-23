@@ -868,7 +868,6 @@ X = X Y = 56 Z = 34
 AT_CLEANUP
 
 AT_SETUP([PROCEDURE DIVISION CHAINING ...])
-AT_CHECK([${SKIP_TEST}])
 
 AT_DATA([prog.cob], [
        IDENTIFICATION   DIVISION.
@@ -888,7 +887,27 @@ AT_DATA([prog.cob], [
 
 AT_CHECK([${COMPILE} prog.cob])
 
+AT_CHECK([java prog], [0],
+[ @&t@
+    @&t@
+])
+
 AT_CHECK([java prog X ABCD], [0],
+[X
+ABCD
+])
+
+AT_CHECK([java prog XY ABCDE], [0],
+[X
+ABCD
+])
+
+AT_CHECK([java prog XY ABC], [0],
+[X
+ABC @&t@
+])
+
+AT_CHECK([java prog 'XY' 'ABCD!!'], [0],
 [X
 ABCD
 ])
