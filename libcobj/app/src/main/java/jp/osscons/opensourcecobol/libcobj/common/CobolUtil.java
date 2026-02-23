@@ -702,4 +702,32 @@ public class CobolUtil {
     public static String getSourceStatement() {
         return sourceStatement;
     }
+
+    /**
+     * コマンドライン引数からCHAININGパラメータを設定する。
+     *
+     * @param data CHAININGパラメータのデータストレージ
+     * @param parm パラメータのインデックス (1始まり)
+     * @param size データストレージのサイズ
+     */
+    public static void CobolChainSetup(CobolDataStorage data, int parm, int size) {
+        data.memset((byte) ' ', size);
+        // C版ではcob_argvのインデックス0にプログラム名が含まれるため、cob_argv[parm]で引数を取得する。
+        // Javaではcommand_lineArgsにプログラム名が含まれないため、parm - 1を使用する。
+        int index = parm - 1;
+        if (CobolUtil.commandLineArgs != null && index < CobolUtil.commandLineArgs.length) {
+            byte[] argBytes =
+                    CobolUtil.commandLineArgs[index].getBytes(AbstractCobolField.charSetSJIS);
+            int len = argBytes.length;
+            if (len <= size) {
+                data.memcpy(argBytes, len);
+            } else {
+                data.memcpy(argBytes, size);
+            }
+        }
+        // C版ではcob_call_params = cob_argc - 1 (プログラム名を除外)。
+        // JavaではcommandLineArgs.lengthが既にプログラム名を除外した値になっている。
+        CobolCallParams.callParams =
+                (CobolUtil.commandLineArgs != null) ? CobolUtil.commandLineArgs.length : 0;
+    }
 }

@@ -2313,7 +2313,7 @@ static void joutput_initialize_one(struct cb_initialize *p, cb_tree x) {
   /* CHAINING */
   if (f->flag_chained) {
     joutput_prefix();
-    joutput("cob_chain_setup (");
+    joutput("CobolUtil.CobolChainSetup (");
     joutput_data(x);
     joutput(", %d, %d);\n", f->param_num, f->size);
     return;
@@ -5863,9 +5863,19 @@ static void joutput_declare_member_variables(struct cb_program *prog,
         joutput_line("private AbstractCobolField %s;", field_name);
         free(field_name);
       }
-      char *base_name = get_java_identifier_base(cp->field);
-      joutput_line("private CobolDataStorage %s;", base_name);
-      free(base_name);
+      int in_base = 0;
+      struct base_list *bl;
+      for (bl = base_cache; bl; bl = bl->next) {
+        if (bl->f == cp->field) {
+          in_base = 1;
+          break;
+        }
+      }
+      if (!in_base) {
+        char *base_name = get_java_identifier_base(cp->field);
+        joutput_line("private CobolDataStorage %s;", base_name);
+        free(base_name);
+      }
     }
   }
 
