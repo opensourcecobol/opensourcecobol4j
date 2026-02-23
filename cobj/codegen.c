@@ -2313,7 +2313,7 @@ static void joutput_initialize_one(struct cb_initialize *p, cb_tree x) {
   /* CHAINING */
   if (f->flag_chained) {
     joutput_prefix();
-    joutput("CobolUtil.CobolChainSetup (");
+    joutput("CobolUtil.chainSetUp (");
     joutput_data(x);
     joutput(", %d, %d);\n", f->param_num, f->size);
     return;

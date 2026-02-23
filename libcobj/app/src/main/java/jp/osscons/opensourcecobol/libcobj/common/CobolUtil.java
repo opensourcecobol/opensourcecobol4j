@@ -710,7 +710,7 @@ public class CobolUtil {
      * @param parm パラメータのインデックス (1始まり)
      * @param size データストレージのサイズ
      */
-    public static void CobolChainSetup(CobolDataStorage data, int parm, int size) {
+    public static void chainSetUp(CobolDataStorage data, int parm, int size) {
         data.memset((byte) ' ', size);
         // C版ではcob_argvのインデックス0にプログラム名が含まれるため、cob_argv[parm]で引数を取得する。
         // Javaではcommand_lineArgsにプログラム名が含まれないため、parm - 1を使用する。
