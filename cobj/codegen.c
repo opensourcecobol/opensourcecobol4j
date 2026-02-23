@@ -2213,7 +2213,7 @@ static void joutput_initialize_literal(cb_tree x, struct cb_field *f,
   if (l->size >= f->size) {
     joutput_prefix();
     joutput_data(x);
-    joutput("memcpy (");
+    joutput(".memcpy (");
     joutput_string(l->data, f->size);
     joutput(", %d);\n", f->size);
     return;
@@ -2234,7 +2234,7 @@ static void joutput_initialize_literal(cb_tree x, struct cb_field *f,
   if (n) {
     joutput_prefix();
     joutput_data(x);
-    joutput(".memcpy(i0 * %u, ", (unsigned int)l->size);
+    joutput(".memcpy(%u, ", (unsigned int)(i * l->size));
     joutput_string(l->data, n);
     joutput(", %u);\n", (unsigned int)n);
   }
