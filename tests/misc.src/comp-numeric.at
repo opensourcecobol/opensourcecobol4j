@@ -1,0 +1,337 @@
+AT_SETUP([COMP-3 numeric comparison])
+
+AT_DATA([prog.cbl], [
+       IDENTIFICATION              DIVISION.
+       PROGRAM-ID.                 prog.
+       DATA                        DIVISION.
+       WORKING-STORAGE             SECTION.
+      * Same digits, same scale, unsigned
+       01 A1 PIC 9(10) COMP-3 VALUE 1234567890.
+       01 A2 PIC 9(10) COMP-3 VALUE 1234567890.
+       01 A3 PIC 9(10) COMP-3 VALUE 9999999999.
+       01 A4 PIC 9(10) COMP-3 VALUE 0.
+      * Same digits, same scale, signed
+       01 S1 PIC S9(10) COMP-3 VALUE -1234567890.
+       01 S2 PIC S9(10) COMP-3 VALUE -1234567890.
+       01 S3 PIC S9(10) COMP-3 VALUE 1234567890.
+       01 S4 PIC S9(10) COMP-3 VALUE -9999999999.
+       01 S5 PIC S9(10) COMP-3 VALUE 0.
+      * Different digits, same scale
+       01 D1 PIC 9(5) COMP-3 VALUE 12345.
+       01 D2 PIC 9(10) COMP-3 VALUE 12345.
+       01 D3 PIC 9(10) COMP-3 VALUE 9999912345.
+       01 D4 PIC 9(15) COMP-3 VALUE 12345.
+       01 D5 PIC S9(5) COMP-3 VALUE -123.
+       01 D6 PIC S9(8) COMP-3 VALUE -123.
+       01 D7 PIC S9(8) COMP-3 VALUE -99999123.
+      * Same digits, different scale (fallback to parent)
+       01 E1 PIC 9(5)V99 COMP-3 VALUE 12345.67.
+       01 E2 PIC 9(5)V9 COMP-3 VALUE 12345.6.
+       01 E3 PIC 9(5)V99 COMP-3 VALUE 12345.60.
+       01 E4 PIC S9(5)V99 COMP-3 VALUE -100.50.
+       01 E5 PIC S9(5)V9 COMP-3 VALUE -100.5.
+      * Large numbers
+       01 L1 PIC 9(18) COMP-3 VALUE 123456789012345678.
+       01 L2 PIC 9(18) COMP-3 VALUE 123456789012345678.
+       01 L3 PIC 9(18) COMP-3 VALUE 999999999999999999.
+       01 L4 PIC S9(18) COMP-3 VALUE -123456789012345678.
+       01 L5 PIC S9(18) COMP-3 VALUE -123456789012345678.
+       01 L6 PIC S9(18) COMP-3 VALUE -999999999999999999.
+      * Zero edge cases
+       01 Z1 PIC 9(10) COMP-3 VALUE 0.
+       01 Z2 PIC 9(10) COMP-3 VALUE 0.
+       01 Z3 PIC S9(10) COMP-3 VALUE 0.
+       01 Z4 PIC S9(10) COMP-3 VALUE 0.
+       01 Z5 PIC 9(5) COMP-3 VALUE 0.
+       01 Z6 PIC 9(10) COMP-3 VALUE 0.
+       01 P1 PIC 9(10) COMP-3 VALUE 1.
+       01 N1 PIC S9(10) COMP-3 VALUE -1.
+      * Signed vs unsigned
+       01 U1 PIC 9(10) COMP-3 VALUE 12345.
+       01 SU1 PIC S9(10) COMP-3 VALUE 12345.
+       01 SU2 PIC S9(10) COMP-3 VALUE -12345.
+      * Boundary values
+       01 B1 PIC 9(1) COMP-3 VALUE 0.
+       01 B2 PIC 9(1) COMP-3 VALUE 9.
+       01 B3 PIC S9(1) COMP-3 VALUE -9.
+       01 B4 PIC S9(1) COMP-3 VALUE 9.
+       01 B5 PIC 9(3) COMP-3 VALUE 0.
+       01 B6 PIC 9(3) COMP-3 VALUE 999.
+      * Odd and even digits
+       01 ODD1 PIC 9(3) COMP-3 VALUE 123.
+       01 ODD2 PIC 9(3) COMP-3 VALUE 456.
+       01 ODD3 PIC 9(5) COMP-3 VALUE 123.
+       01 EVEN1 PIC 9(4) COMP-3 VALUE 1234.
+       01 EVEN2 PIC 9(4) COMP-3 VALUE 5678.
+       01 EVEN3 PIC 9(6) COMP-3 VALUE 1234.
+       PROCEDURE                   DIVISION.
+       MAIN-RTN.
+      * Test: Same digits, same scale, unsigned
+           IF A1 = A2
+               DISPLAY "OK A1=A2"
+           ELSE
+               DISPLAY "NG A1=A2"
+           END-IF.
+           IF A1 < A3
+               DISPLAY "OK A1<A3"
+           ELSE
+               DISPLAY "NG A1<A3"
+           END-IF.
+           IF A3 > A1
+               DISPLAY "OK A3>A1"
+           ELSE
+               DISPLAY "NG A3>A1"
+           END-IF.
+           IF A4 < A1
+               DISPLAY "OK A4<A1"
+           ELSE
+               DISPLAY "NG A4<A1"
+           END-IF.
+           IF A4 = 0
+               DISPLAY "OK A4=0"
+           ELSE
+               DISPLAY "NG A4=0"
+           END-IF.
+      * Test: Same digits, same scale, signed
+           IF S1 = S2
+               DISPLAY "OK S1=S2"
+           ELSE
+               DISPLAY "NG S1=S2"
+           END-IF.
+           IF S1 < S3
+               DISPLAY "OK S1<S3"
+           ELSE
+               DISPLAY "NG S1<S3"
+           END-IF.
+           IF S3 > S1
+               DISPLAY "OK S3>S1"
+           ELSE
+               DISPLAY "NG S3>S1"
+           END-IF.
+           IF S4 < S1
+               DISPLAY "OK S4<S1"
+           ELSE
+               DISPLAY "NG S4<S1"
+           END-IF.
+           IF S5 > S1
+               DISPLAY "OK S5>S1"
+           ELSE
+               DISPLAY "NG S5>S1"
+           END-IF.
+           IF S5 < S3
+               DISPLAY "OK S5<S3"
+           ELSE
+               DISPLAY "NG S5<S3"
+           END-IF.
+      * Test: Different digits, same scale
+           IF D1 = D2
+               DISPLAY "OK D1=D2"
+           ELSE
+               DISPLAY "NG D1=D2"
+           END-IF.
+           IF D1 < D3
+               DISPLAY "OK D1<D3"
+           ELSE
+               DISPLAY "NG D1<D3"
+           END-IF.
+           IF D2 < D3
+               DISPLAY "OK D2<D3"
+           ELSE
+               DISPLAY "NG D2<D3"
+           END-IF.
+           IF D1 = D4
+               DISPLAY "OK D1=D4"
+           ELSE
+               DISPLAY "NG D1=D4"
+           END-IF.
+           IF D5 = D6
+               DISPLAY "OK D5=D6"
+           ELSE
+               DISPLAY "NG D5=D6"
+           END-IF.
+           IF D5 > D7
+               DISPLAY "OK D5>D7"
+           ELSE
+               DISPLAY "NG D5>D7"
+           END-IF.
+           IF D6 > D7
+               DISPLAY "OK D6>D7"
+           ELSE
+               DISPLAY "NG D6>D7"
+           END-IF.
+      * Test: Same digits, different scale (fallback)
+           IF E1 > E2
+               DISPLAY "OK E1>E2"
+           ELSE
+               DISPLAY "NG E1>E2"
+           END-IF.
+           IF E2 = E3
+               DISPLAY "OK E2=E3"
+           ELSE
+               DISPLAY "NG E2=E3"
+           END-IF.
+           IF E4 = E5
+               DISPLAY "OK E4=E5"
+           ELSE
+               DISPLAY "NG E4=E5"
+           END-IF.
+      * Test: Large numbers
+           IF L1 = L2
+               DISPLAY "OK L1=L2"
+           ELSE
+               DISPLAY "NG L1=L2"
+           END-IF.
+           IF L1 < L3
+               DISPLAY "OK L1<L3"
+           ELSE
+               DISPLAY "NG L1<L3"
+           END-IF.
+           IF L4 = L5
+               DISPLAY "OK L4=L5"
+           ELSE
+               DISPLAY "NG L4=L5"
+           END-IF.
+           IF L6 < L4
+               DISPLAY "OK L6<L4"
+           ELSE
+               DISPLAY "NG L6<L4"
+           END-IF.
+           IF L4 < L1
+               DISPLAY "OK L4<L1"
+           ELSE
+               DISPLAY "NG L4<L1"
+           END-IF.
+      * Test: Zero edge cases
+           IF Z1 = Z2
+               DISPLAY "OK Z1=Z2"
+           ELSE
+               DISPLAY "NG Z1=Z2"
+           END-IF.
+           IF Z3 = Z4
+               DISPLAY "OK Z3=Z4"
+           ELSE
+               DISPLAY "NG Z3=Z4"
+           END-IF.
+           IF Z1 = Z3
+               DISPLAY "OK Z1=Z3"
+           ELSE
+               DISPLAY "NG Z1=Z3"
+           END-IF.
+           IF Z5 = Z6
+               DISPLAY "OK Z5=Z6"
+           ELSE
+               DISPLAY "NG Z5=Z6"
+           END-IF.
+           IF Z1 < P1
+               DISPLAY "OK Z1<P1"
+           ELSE
+               DISPLAY "NG Z1<P1"
+           END-IF.
+           IF Z3 > N1
+               DISPLAY "OK Z3>N1"
+           ELSE
+               DISPLAY "NG Z3>N1"
+           END-IF.
+      * Test: Signed vs unsigned
+           IF U1 = SU1
+               DISPLAY "OK U1=SU1"
+           ELSE
+               DISPLAY "NG U1=SU1"
+           END-IF.
+           IF U1 > SU2
+               DISPLAY "OK U1>SU2"
+           ELSE
+               DISPLAY "NG U1>SU2"
+           END-IF.
+           IF SU1 > SU2
+               DISPLAY "OK SU1>SU2"
+           ELSE
+               DISPLAY "NG SU1>SU2"
+           END-IF.
+      * Test: Boundary values
+           IF B1 < B2
+               DISPLAY "OK B1<B2"
+           ELSE
+               DISPLAY "NG B1<B2"
+           END-IF.
+           IF B3 < B4
+               DISPLAY "OK B3<B4"
+           ELSE
+               DISPLAY "NG B3<B4"
+           END-IF.
+           IF B5 < B6
+               DISPLAY "OK B5<B6"
+           ELSE
+               DISPLAY "NG B5<B6"
+           END-IF.
+      * Test: Odd and even digits
+           IF ODD1 < ODD2
+               DISPLAY "OK ODD1<ODD2"
+           ELSE
+               DISPLAY "NG ODD1<ODD2"
+           END-IF.
+           IF ODD1 = ODD3
+               DISPLAY "OK ODD1=ODD3"
+           ELSE
+               DISPLAY "NG ODD1=ODD3"
+           END-IF.
+           IF EVEN1 < EVEN2
+               DISPLAY "OK EVEN1<EVEN2"
+           ELSE
+               DISPLAY "NG EVEN1<EVEN2"
+           END-IF.
+           IF EVEN1 = EVEN3
+               DISPLAY "OK EVEN1=EVEN3"
+           ELSE
+               DISPLAY "NG EVEN1=EVEN3"
+           END-IF.
+           STOP RUN.
+])
+
+AT_CHECK([${COBJ} prog.cbl])
+AT_CHECK([java prog], [0],
+[OK A1=A2
+OK A1<A3
+OK A3>A1
+OK A4<A1
+OK A4=0
+OK S1=S2
+OK S1<S3
+OK S3>S1
+OK S4<S1
+OK S5>S1
+OK S5<S3
+OK D1=D2
+OK D1<D3
+OK D2<D3
+OK D1=D4
+OK D5=D6
+OK D5>D7
+OK D6>D7
+OK E1>E2
+OK E2=E3
+OK E4=E5
+OK L1=L2
+OK L1<L3
+OK L4=L5
+OK L6<L4
+OK L4<L1
+OK Z1=Z2
+OK Z3=Z4
+OK Z1=Z3
+OK Z5=Z6
+OK Z1<P1
+OK Z3>N1
+OK U1=SU1
+OK U1>SU2
+OK SU1>SU2
+OK B1<B2
+OK B3<B4
+OK B5<B6
+OK ODD1<ODD2
+OK ODD1=ODD3
+OK EVEN1<EVEN2
+OK EVEN1=EVEN3
+])
+
+AT_CLEANUP

@@ -868,4 +868,117 @@ public class CobolNumericPackedField extends AbstractCobolField {
         }
         return val;
     }
+
+    @Override
+    public int numericCompareTo(AbstractCobolField field) {
+        if (!field.getAttribute().isTypeNumericPacked()) {
+            return super.numericCompareTo(field);
+        }
+
+        CobolNumericPackedField other = (CobolNumericPackedField) field;
+        int scale1 = this.getAttribute().getScale();
+        int scale2 = other.getAttribute().getScale();
+
+        if (scale1 != scale2) {
+            return super.numericCompareTo(field);
+        }
+
+        return comparePackedFields(other);
+    }
+
+    private int comparePackedFields(CobolNumericPackedField other) {
+        int sign1 = this.getSign();
+        int sign2 = other.getSign();
+
+        boolean isZero1 = isPackedZero();
+        boolean isZero2 = other.isPackedZero();
+
+        if (isZero1 && isZero2) {
+            return 0;
+        }
+        if (isZero1) {
+            return sign2 >= 0 ? -1 : 1;
+        }
+        if (isZero2) {
+            return sign1 >= 0 ? 1 : -1;
+        }
+
+        if ((sign1 >= 0) != (sign2 >= 0)) {
+            return sign1 >= 0 ? 1 : -1;
+        }
+
+        int cmp = compareMagnitudes(other);
+
+        return sign1 < 0 ? -cmp : cmp;
+    }
+
+    private boolean isPackedZero() {
+        CobolDataStorage data = this.getDataStorage();
+        int size = this.getSize();
+        for (int i = 0; i < size - 1; i++) {
+            if (data.getByte(i) != 0) {
+                return false;
+            }
+        }
+        return (data.getByte(size - 1) & 0xF0) == 0;
+    }
+
+    private int compareMagnitudes(CobolNumericPackedField other) {
+        int digits1 = this.getAttribute().getDigits();
+        int digits2 = other.getAttribute().getDigits();
+
+        if (digits1 == digits2) {
+            int size = this.getSize();
+            CobolDataStorage data1 = this.getDataStorage();
+            CobolDataStorage data2 = other.getDataStorage();
+
+            for (int i = 0; i < size - 1; i++) {
+                int b1 = Byte.toUnsignedInt(data1.getByte(i));
+                int b2 = Byte.toUnsignedInt(data2.getByte(i));
+                if (b1 != b2) {
+                    return b1 - b2;
+                }
+            }
+            int last1 = (data1.getByte(size - 1) >>> 4) & 0x0F;
+            int last2 = (data2.getByte(size - 1) >>> 4) & 0x0F;
+            return last1 - last2;
+        }
+
+        int maxDigits = Math.max(digits1, digits2);
+
+        for (int pos = 0; pos < maxDigits; pos++) {
+            int d1 = getDigitAt(pos, maxDigits);
+            int d2 = other.getDigitAt(pos, maxDigits);
+            if (d1 != d2) {
+                return d1 - d2;
+            }
+        }
+        return 0;
+    }
+
+    private int getDigitAt(int pos, int maxDigits) {
+        int digits = this.getAttribute().getDigits();
+        int leadingZeros = maxDigits - digits;
+
+        if (pos < leadingZeros) {
+            return 0;
+        }
+
+        int digitIndex = pos - leadingZeros;
+        CobolDataStorage data = this.getDataStorage();
+
+        int byteIndex;
+        boolean isUpperNibble;
+
+        if (digits % 2 == 0) {
+            byteIndex = (digitIndex + 1) / 2;
+            isUpperNibble = (digitIndex % 2 != 0);
+        } else {
+            byteIndex = digitIndex / 2;
+            isUpperNibble = (digitIndex % 2 == 0);
+        }
+
+        byte b = data.getByte(byteIndex);
+        return isUpperNibble ? (b >>> 4) & 0x0F : b & 0x0F;
+    }
 }
