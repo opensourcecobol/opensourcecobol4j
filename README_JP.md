@@ -46,9 +46,9 @@ dnf install -y java-21-amazon-corretto-devel gcc make bison flex automake autoco
 
 ### opensource COBOL 4Jのインストール
 ```
-curl -L -o opensourcecobol4j-v1.1.17.tar.gz https://github.com/opensourcecobol/opensourcecobol4j/archive/refs/tags/v1.1.17.tar.gz
-tar zxvf opensourcecobol4j-v1.1.17.tar.gz
-cd opensourcecobol4j-1.1.17
+curl -L -o opensourcecobol4j-v1.1.18.tar.gz https://github.com/opensourcecobol/opensourcecobol4j/archive/refs/tags/v1.1.18.tar.gz
+tar zxvf opensourcecobol4j-v1.1.18.tar.gz
+cd opensourcecobol4j-1.1.18
 ./configure --prefix=/usr/
 make
 sudo make install
@@ -57,9 +57,9 @@ sudo make install
 UTF-8のCOBOLソースコード対応版コンパイラをインストールする場合は、下記のコマンドを実行する。
 
 ```
-curl -L -o opensourcecobol4j-v1.1.17.tar.gz https://github.com/opensourcecobol/opensourcecobol4j/archive/refs/tags/v1.1.17.tar.gz
-tar zxvf opensourcecobol4j-v1.1.17.tar.gz
-cd opensourcecobol4j-1.1.17
+curl -L -o opensourcecobol4j-v1.1.18.tar.gz https://github.com/opensourcecobol/opensourcecobol4j/archive/refs/tags/v1.1.18.tar.gz
+tar zxvf opensourcecobol4j-v1.1.18.tar.gz
+cd opensourcecobol4j-1.1.18
 ./configure --prefix=/usr/ --enable-utf8
 touch cobj/*.m4
 make
@@ -126,7 +126,7 @@ Windows版のopensource COBOL 4JはVisual Studioに含まれるCLコンパイラ
 opensource COBOL 4JのDockerコンテナを利用できます。
 
 ```bash
-docker pull opensourcecobol/opensourcecobol4j:20260128
+docker pull opensourcecobol/opensourcecobol4j:20260227
 ```
 
 以下のコマンドを実行して、"Hello World"のCOBOLプログラムを実行します。
@@ -161,6 +161,7 @@ java [PROGRAM-ID]
 * [opensource COBOL 4J: Java変換解説](./doc/converted_Java_file_JP.md)
 * [configuration-params-JP](./doc/configuration-params-JP.md)
 * [INDEXEDファイルのロックの仕様](./doc/specification-locking-indexed-file_JP.md)
+* [環境変数リファレンス](./doc/environment_variables_JP.md)
 
 ## 実装状況
 実装済み機能：

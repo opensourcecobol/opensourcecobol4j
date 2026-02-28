@@ -4,6 +4,18 @@ All notable changes to this project will be documented in this file.
 
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 
+## [1.1.18] - 2026-02-27
+
+### Fixed
+
+- Fix a bug where full-width hyphens (ー) in SECTION names were not correctly converted to full-width underscores (＿) in generated Java code. (#788)
+- Fix bugs in Java code generation for VALUE ALL literal initialization. (#790)
+
+### Documentation
+
+- Add documentation for environment variables referenced by the runtime. (#762)
+  - see doc/environment_variables.md or doc/environment_variables_JP.md
+
 ## [1.1.17] - 2026-01-28
 
 ### Improvements

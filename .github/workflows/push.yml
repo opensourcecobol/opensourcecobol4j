@@ -21,6 +21,10 @@ jobs:
   check-workflows:
     uses: ./.github/workflows/check-workflows.yml
 
+  unit-test:
+    needs: check-workflows
+    uses: ./.github/workflows/unit-test.yml
+
   build:
     needs: check-workflows
     strategy:

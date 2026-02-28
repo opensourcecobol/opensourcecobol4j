@@ -2,6 +2,20 @@ NEWS - user visible changes				-*- outline -*-
 
 -----------------------------------------------------------------------
 
+* opensource COBOL 4J 1.1.18
+
+** Bug Fixes
+
+(1) Fix a bug where full-width hyphens (ー) in SECTION names were not correctly converted to full-width underscores (＿) in generated Java code.
+(2) Fix bugs in Java code generation for VALUE ALL literal initialization.
+
+** Documentation
+
+(1) Add documentation for environment variables referenced by the runtime.
+  * see doc/environment_variables.md or doc/environment_variables_JP.md
+
+-----------------------------------------------------------------------
+
 * opensource COBOL 4J 1.1.17
 
 ** Improvements

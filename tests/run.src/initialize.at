@@ -142,3 +142,51 @@ AT_CHECK([${COMPILE} prog.cob])
 AT_CHECK([java prog], [0], [ 0])
 
 AT_CLEANUP
+
+AT_SETUP([INITIALIZE with VALUE ALL literal])
+
+AT_DATA([prog.cbl], [
+       IDENTIFICATION DIVISION.
+       PROGRAM-ID. prog.
+       DATA DIVISION.
+       WORKING-STORAGE SECTION.
+       01 WS-SHORT PIC X(3) VALUE ALL "AB".
+       01 WS-EXACT PIC X(4) VALUE ALL "AB".
+       01 WS-LONG  PIC X(5) VALUE ALL "AB".
+       01 WS-GE1   PIC X(3) VALUE ALL "ABCDE".
+       01 WS-GE2   PIC X(5) VALUE ALL "ABCDE".
+       PROCEDURE DIVISION.
+           DISPLAY "@<:@" WS-SHORT "@:>@".
+           DISPLAY "@<:@" WS-EXACT "@:>@".
+           DISPLAY "@<:@" WS-LONG  "@:>@".
+           DISPLAY "@<:@" WS-GE1   "@:>@".
+           DISPLAY "@<:@" WS-GE2   "@:>@".
+           INITIALIZE WS-SHORT.
+           INITIALIZE WS-EXACT.
+           INITIALIZE WS-LONG.
+           INITIALIZE WS-GE1.
+           INITIALIZE WS-GE2.
+           DISPLAY "@<:@" WS-SHORT "@:>@".
+           DISPLAY "@<:@" WS-EXACT "@:>@".
+           DISPLAY "@<:@" WS-LONG  "@:>@".
+           DISPLAY "@<:@" WS-GE1   "@:>@".
+           DISPLAY "@<:@" WS-GE2   "@:>@".
+           STOP RUN.
+])
+
+AT_CHECK([${COMPILE} prog.cbl], [0], [],
+[prog.cbl:9: Warning: Value size exceeds data size
+])
+AT_CHECK([java prog], [0], [[[ABA]]
+[[ABAB]]
+[[ABABA]]
+[[ABC]]
+[[ABCDE]]
+[[   ]]
+[[    ]]
+[[     ]]
+[[   ]]
+[[     ]]
+])
+
+AT_CLEANUP
