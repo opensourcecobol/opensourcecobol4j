@@ -964,7 +964,7 @@ static void joutput_data(cb_tree x) {
     joutput_param(x, 0);
     break;
   case CB_TAG_INTRINSIC:
-    joutput("module.cob_procedure_parameters[%d]->data", field_iteration);
+    joutput("CobolModule.getCurrentModule().cob_procedure_parameters.get(%d).getDataStorage()", field_iteration);
     break;
   case CB_TAG_CONST:
     if (x == cb_null) {
