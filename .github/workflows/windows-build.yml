@@ -43,14 +43,14 @@ jobs:
       
       - name: Upload libcobj.jar
         if: ${{inputs.upload-artifacts}}
-        uses: actions/upload-artifact@v6
+        uses: actions/upload-artifact@v7
         with:
           name: libcobj.jar
           path: libcobj/app/build/libs/libcobj.jar 
       
       - name: Upload cobj.exe
         if: ${{inputs.upload-artifacts}}
-        uses: actions/upload-artifact@v6
+        uses: actions/upload-artifact@v7
         with:
           name: cobj.exe
           path: win/x64/Release/cobj.exe
