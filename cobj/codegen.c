@@ -3033,6 +3033,7 @@ static void joutput_call(struct cb_call *p) {
   joutput(" (");
   for (l = p->args, n = 1; l; l = CB_CHAIN(l), n++) {
     x = CB_VALUE(l);
+    field_iteration = (int)n - 1;
     switch (CB_PURPOSE_INT(l)) {
     case CB_CALL_BY_REFERENCE:
       if (CB_NUMERIC_LITERAL_P(x) || CB_BINARY_OP_P(x)) {
