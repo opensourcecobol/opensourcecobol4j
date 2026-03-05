@@ -887,20 +887,31 @@ static void joutput_base(struct cb_field *f) {
   }
 
   if (cb_field_variable_address(f)) {
+    int first_term = 1;
+    joutput(".getSubDataStorage(");
     for (p = f->parent; p; f = f->parent, p = f->parent) {
       for (p = p->children; p != f; p = p->sister) {
         struct cb_field *v = cb_field_variable_size(p);
         if (v) {
-          joutput(" + %d + ", v->offset - p->offset);
+          if (!first_term) {
+            joutput(" + ");
+          }
+          first_term = 0;
+          joutput("%d + ", v->offset - p->offset);
           if (v->size != 1) {
             joutput("%d * ", v->size);
           }
           joutput_integer(v->occurs_depending);
         } else {
-          joutput(" + %d", p->size * p->occurs_max);
+          if (!first_term) {
+            joutput(" + ");
+          }
+          first_term = 0;
+          joutput("%d", p->size * p->occurs_max);
         }
       }
     }
+    joutput(")");
   }
 }
 
@@ -5283,7 +5294,7 @@ static void joutput_init_method(struct cb_program *prog) {
       char *base_name = get_java_identifier_base(entry->top);
       joutput("%s", base_name);
       free(base_name);
-      if (entry->f->offset != 0) {
+      if (entry->f->offset != 0 && !cb_field_variable_address(entry->f)) {
         joutput(".getSubDataStorage(%d)", entry->f->offset);
       }
       joutput(";\n");
