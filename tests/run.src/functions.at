@@ -1898,3 +1898,157 @@ AT_CHECK([java prog], [0],
 ])
 
 AT_CLEANUP
+
+AT_SETUP([CALL USING FUNCTION UPPER-CASE])
+
+AT_DATA([callee.cob], [
+       IDENTIFICATION   DIVISION.
+       PROGRAM-ID.      callee.
+       DATA             DIVISION.
+       LINKAGE          SECTION.
+       01 X             PIC X(5).
+       PROCEDURE        DIVISION USING X.
+           DISPLAY X
+           END-DISPLAY.
+           EXIT PROGRAM.
+])
+
+AT_DATA([caller.cob], [
+       IDENTIFICATION   DIVISION.
+       PROGRAM-ID.      caller.
+       DATA             DIVISION.
+       WORKING-STORAGE  SECTION.
+       01 X             PIC X(5) VALUE "hello".
+       PROCEDURE        DIVISION.
+           CALL "callee" USING FUNCTION UPPER-CASE(X)
+           END-CALL.
+           STOP RUN.
+])
+
+AT_CHECK([${COMPILE} caller.cob])
+AT_CHECK([${COMPILE_MODULE} callee.cob])
+AT_CHECK([java caller], [0],
+[HELLO
+])
+
+AT_CLEANUP
+
+AT_SETUP([CALL USING mixed fields and FUNCTION UPPER-CASE])
+
+AT_DATA([callee.cob], [
+       IDENTIFICATION   DIVISION.
+       PROGRAM-ID.      callee.
+       DATA             DIVISION.
+       LINKAGE          SECTION.
+       01 A             PIC X(5).
+       01 B             PIC X(5).
+       01 C             PIC X(5).
+       PROCEDURE        DIVISION USING A B C.
+           DISPLAY A
+           END-DISPLAY.
+           DISPLAY B
+           END-DISPLAY.
+           DISPLAY C
+           END-DISPLAY.
+           EXIT PROGRAM.
+])
+
+AT_DATA([caller.cob], [
+       IDENTIFICATION   DIVISION.
+       PROGRAM-ID.      caller.
+       DATA             DIVISION.
+       WORKING-STORAGE  SECTION.
+       01 X             PIC X(5) VALUE "hello".
+       01 Y             PIC X(5) VALUE "world".
+       01 Z             PIC X(5) VALUE "cobol".
+       PROCEDURE        DIVISION.
+           CALL "callee" USING
+               Y
+               FUNCTION UPPER-CASE(X)
+               FUNCTION UPPER-CASE(Z)
+           END-CALL.
+           STOP RUN.
+])
+
+AT_CHECK([${COMPILE} caller.cob])
+AT_CHECK([${COMPILE_MODULE} callee.cob])
+AT_CHECK([java caller], [0],
+[world
+HELLO
+COBOL
+])
+
+AT_CLEANUP
+
+AT_SETUP([CALL USING FUNCTION LENGTH])
+AT_CHECK([${SKIP_TEST}])
+
+AT_DATA([callee.cob], [
+       IDENTIFICATION   DIVISION.
+       PROGRAM-ID.      callee.
+       DATA             DIVISION.
+       LINKAGE          SECTION.
+       01 LEN            PIC 9(4).
+       PROCEDURE        DIVISION USING LEN.
+           DISPLAY LEN
+           END-DISPLAY.
+           EXIT PROGRAM.
+])
+
+AT_DATA([caller.cob], [
+       IDENTIFICATION   DIVISION.
+       PROGRAM-ID.      caller.
+       DATA             DIVISION.
+       WORKING-STORAGE  SECTION.
+       01 X             PIC X(5) VALUE "HELLO".
+       PROCEDURE        DIVISION.
+           CALL "callee" USING FUNCTION LENGTH(X)
+           END-CALL.
+           STOP RUN.
+])
+
+AT_CHECK([${COMPILE} caller.cob])
+AT_CHECK([${COMPILE_MODULE} callee.cob])
+AT_CHECK([java caller], [0],
+[0005
+])
+
+AT_CLEANUP
+
+AT_SETUP([CALL USING FUNCTION MEAN])
+AT_CHECK([${SKIP_TEST}])
+
+AT_DATA([callee.cob], [
+       IDENTIFICATION   DIVISION.
+       PROGRAM-ID.      callee.
+       DATA             DIVISION.
+       LINKAGE          SECTION.
+       01 X             PIC 9(3)V9(2).
+       PROCEDURE        DIVISION USING X.
+           DISPLAY X
+           END-DISPLAY.
+           EXIT PROGRAM.
+])
+
+AT_DATA([caller.cob], [
+       IDENTIFICATION   DIVISION.
+       PROGRAM-ID.      caller.
+       DATA             DIVISION.
+       WORKING-STORAGE  SECTION.
+       01 WS-NUM1       PIC 9(3)V9(2) VALUE 10.50.
+       01 WS-NUM2       PIC 9(3)V9(2) VALUE 20.30.
+       01 WS-NUM3       PIC 9(3)V9(2) VALUE 30.20.
+       PROCEDURE        DIVISION.
+           CALL "callee" USING
+               FUNCTION MEAN(WS-NUM1 WS-NUM2 WS-NUM3)
+           END-CALL.
+           STOP RUN.
+])
+
+AT_CHECK([${COMPILE} caller.cob])
+AT_CHECK([${COMPILE_MODULE} callee.cob])
+AT_CHECK([java caller], [0],
+[020.33
+])
+
+AT_CLEANUP
