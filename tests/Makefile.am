@@ -268,7 +268,8 @@ misc_DEPENDENCIES = \
 	misc.src/display-inspect-sign.at \
 	misc.src/comp1-comp2.at \
 	misc.src/variable-length-file.at \
-	misc.src/convert-string-concat.at
+	misc.src/convert-string-concat.at \
+	misc.src/complex-odo.at
 
 EXTRA_DIST = $(srcdir)/package.m4 \
 	$(TESTS) \

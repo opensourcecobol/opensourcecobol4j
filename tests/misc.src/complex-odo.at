@@ -1,0 +1,37 @@
+AT_SETUP([OCCURS DEPENDING ON with complex-odo])
+
+AT_DATA([test.conf], [
+include "default.conf"
+
+name: "test"
+
+complex-odo: yes
+])
+
+AT_DATA([prog.cbl], [
+        IDENTIFICATION DIVISION.
+        PROGRAM-ID. prog.
+        DATA DIVISION.
+        WORKING-STORAGE SECTION.
+        01  MY-REC.
+            02  GEM-LRECL       PIC 9(8) BINARY.
+            02  FILLER01        OCCURS 227 DEPENDING ON GEM-LRECL
+                                PIC X(1).
+            02  PPLEN           PIC S9(004) COMP.
+        PROCEDURE DIVISION.
+            MOVE 0 TO GEM-LRECL.
+            MOVE 5 TO PPLEN.
+            DISPLAY PPLEN.
+            MOVE 10 TO GEM-LRECL.
+            MOVE 20 TO PPLEN.
+            DISPLAY PPLEN.
+            STOP RUN.
+])
+
+AT_CHECK([${COBJ} -conf=test.conf prog.cbl], [0])
+AT_CHECK([${RUN_MODULE} prog], [0],
+[+0005
++0020
+])
+
+AT_CLEANUP
