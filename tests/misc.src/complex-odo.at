@@ -13,18 +13,18 @@ AT_DATA([prog.cbl], [
         PROGRAM-ID. prog.
         DATA DIVISION.
         WORKING-STORAGE SECTION.
-        01  MY-REC.
-            02  GEM-LRECL       PIC 9(8) BINARY.
-            02  FILLER01        OCCURS 227 DEPENDING ON GEM-LRECL
+        01  T-REC.
+            02  T-ODO-COUNT     PIC 9(8) BINARY.
+            02  T-ODO-ITEM      OCCURS 227 DEPENDING ON T-ODO-COUNT
                                 PIC X(1).
-            02  PPLEN           PIC S9(004) COMP.
+            02  T-AFTER-ODO     PIC S9(004) COMP.
         PROCEDURE DIVISION.
-            MOVE 0 TO GEM-LRECL.
-            MOVE 5 TO PPLEN.
-            DISPLAY PPLEN.
-            MOVE 10 TO GEM-LRECL.
-            MOVE 20 TO PPLEN.
-            DISPLAY PPLEN.
+            MOVE 0 TO T-ODO-COUNT.
+            MOVE 5 TO T-AFTER-ODO.
+            DISPLAY T-AFTER-ODO.
+            MOVE 10 TO T-ODO-COUNT.
+            MOVE 20 TO T-AFTER-ODO.
+            DISPLAY T-AFTER-ODO.
             STOP RUN.
 ])
 

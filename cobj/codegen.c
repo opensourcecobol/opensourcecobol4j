@@ -882,7 +882,8 @@ static void joutput_base(struct cb_field *f) {
     top->flag_base = 1;
   }
 
-  if (joutput_field_storage(f, top) && f->offset != 0) {
+  if (joutput_field_storage(f, top) && f->offset != 0 &&
+      !cb_field_variable_address(f)) {
     joutput(".getSubDataStorage(%d)", f->offset);
   }
 
