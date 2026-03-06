@@ -38,7 +38,9 @@ public class CobolPointerRegistry {
 
         @Override
         public boolean equals(Object o) {
-            if (!(o instanceof StorageKey)) return false;
+            if (!(o instanceof StorageKey)) {
+                return false;
+            }
             StorageKey k = (StorageKey) o;
             return this.data == k.data && this.index == k.index;
         }
@@ -56,10 +58,14 @@ public class CobolPointerRegistry {
      * @return アドレス値
      */
     public static long register(CobolDataStorage s) {
-        if (s == null) return 0L;
+        if (s == null) {
+            return 0L;
+        }
         StorageKey key = new StorageKey(s);
         Long existing = storageToId.get(key);
-        if (existing != null) return existing;
+        if (existing != null) {
+            return existing;
+        }
         long id = nextId++;
         idToStorage.put(id, s);
         storageToId.put(key, id);
@@ -73,7 +79,9 @@ public class CobolPointerRegistry {
      * @return 対応する CobolDataStorage
      */
     public static CobolDataStorage resolve(long id) {
-        if (id == 0L) return null;
+        if (id == 0L) {
+            return null;
+        }
         return idToStorage.get(id);
     }
 }
