@@ -168,6 +168,13 @@ public class CobolDataStorage {
      * @param s TODO: 準備中
      * @return TODO: 準備中
      */
+    public static CobolDataStorage primitiveToDataStorage(long n) {
+        byte[] bytes = new byte[8];
+        ByteBuffer buffer = ByteBuffer.wrap(bytes);
+        buffer.putLong(n);
+        return new CobolDataStorage(bytes);
+    }
+
     public static CobolDataStorage primitiveToDataStorage(String s) {
         return new CobolDataStorage(s);
     }

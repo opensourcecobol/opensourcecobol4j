@@ -3172,9 +3172,13 @@ static void joutput_call(struct cb_call *p) {
             break;
           case CB_USAGE_INDEX:
           case CB_USAGE_LENGTH:
-          case CB_USAGE_POINTER:
           case CB_USAGE_PROGRAM_POINTER:
             joutput_integer(x);
+            break;
+          case CB_USAGE_POINTER:
+            joutput("CobolDataStorage.primitiveToDataStorage(");
+            joutput_integer(x);
+            joutput(")");
             break;
           default:
             joutput("*(");
