@@ -317,7 +317,8 @@ public class CobolResolve {
      * @param runner CobolRunnableを実装したクラス。nullでもよい。
      * @return runnerがnullでない場合はrunnerを返し、そうでないときはクラス名とパッケージ名を元に検索処理を実施する。
      *     検索して動的にクラスの読み込みに成功したら、それを返す。検索に失敗したら nullを返す。
-     * @throws CobolRuntimeException 指定されたプログラム名に対応するクラスが見つからない場合にスローされる
+     * @throws CobolRuntimeException runnerがnullの場合に、委譲先の {@link #resolve(String, String)}
+     *     で指定されたプログラム名に対応するクラスが見つからない場合にスローされる
      */
     public static CobolRunnable resolve(
             String packageName, AbstractCobolField cobolField, CobolRunnable runner)
@@ -341,7 +342,8 @@ public class CobolResolve {
      * @param runner CobolRunnableを実装したクラス。nullでもよい。
      * @return runnerがnullでない場合はrunnerを返し、そうでないときはクラス名とパッケージ名を元に検索処理を実施する。
      *     検索して動的にクラスの読み込みに成功したら、それを返す。検索に失敗したら nullを返す。
-     * @throws CobolRuntimeException 指定されたプログラム名に対応するクラスが見つからない場合にスローされる
+     * @throws CobolRuntimeException runnerがnullの場合に、委譲先の {@link #resolve(String, String)}
+     *     で指定されたプログラム名に対応するクラスが見つからない場合にスローされる
      */
     public static CobolRunnable resolve(String packageName, String name, CobolRunnable runner)
             throws CobolRuntimeException {
@@ -464,6 +466,7 @@ public class CobolResolve {
      * 引数で与えられたプログラム名に対応するCobolRunnableのインスタンスの cancelメソッドを呼び出す
      *
      * @param cobolField プログラム名を示すCOBOL変数
+     * @throws CobolRuntimeException 委譲先の {@link #cancel(String)} でプログラム名がnullの場合にスローされる
      */
     public static void cancel(AbstractCobolField cobolField) {
         cancel(cobolField.getString());
@@ -473,6 +476,7 @@ public class CobolResolve {
      * 引数で与えられたプログラム名に対応するCobolRunnableのインスタンスの cancelメソッドを呼び出す
      *
      * @param name プログラム名
+     * @throws CobolRuntimeException プログラム名がnullの場合にスローされる
      */
     public static void cancel(String name) {
         if (name == null) {
