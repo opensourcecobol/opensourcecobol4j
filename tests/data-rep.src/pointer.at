@@ -20,7 +20,6 @@
 
 
 AT_SETUP([POINTER: display])
-AT_CHECK([${SKIP_TEST}])
 
 AT_DATA([prog.cob], [
        IDENTIFICATION   DIVISION.
@@ -38,6 +37,9 @@ AT_DATA([prog.cob], [
 ])
 
 AT_CHECK([${COMPILE} prog.cob])
-AT_CHECK([java prog], [0], [ignore])
+AT_CHECK([java prog], [0], 
+[0000000000
+0000000001
+])
 
 AT_CLEANUP
