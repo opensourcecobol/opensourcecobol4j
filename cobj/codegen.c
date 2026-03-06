@@ -1327,9 +1327,10 @@ static void joutput_integer(cb_tree x) {
       return;
 
     case CB_USAGE_POINTER:
-      joutput("(*(unsigned char **) (");
       joutput_data(x);
-      joutput("))");
+      if (!integer_reference_flag) {
+        joutput(".longValue()");
+      }
       return;
 
     case CB_USAGE_PROGRAM_POINTER:
@@ -3834,7 +3835,11 @@ static void joutput_stmt(cb_tree x, enum joutput_stmt_type output_type) {
     }
 
     ++index_read_flag;
-    joutput_integer(ap->val);
+    if (f->usage == CB_USAGE_POINTER && ap->val == cb_null) {
+      joutput("0L");
+    } else {
+      joutput_integer(ap->val);
+    }
     --index_read_flag;
     if (output_type == JOUTPUT_STMT_TRIM) {
       joutput(")\n");
