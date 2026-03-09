@@ -14,9 +14,10 @@ AT_DATA([prog.cbl], [
         DATA DIVISION.
         WORKING-STORAGE SECTION.
         01  T-REC.
-            02  T-ODO-COUNT     PIC 9(8) BINARY.
-            02  T-ODO-ITEM      OCCURS 227 DEPENDING ON T-ODO-COUNT
-                                PIC X(1).
+            02  T-GROUP.
+                03  T-ODO-COUNT PIC 9(8) BINARY.
+                03  T-ODO-ITEM  OCCURS 227 DEPENDING ON T-ODO-COUNT
+                                PIC X(2).
             02  T-AFTER-ODO     PIC S9(004) COMP.
         PROCEDURE DIVISION.
             MOVE 0 TO T-ODO-COUNT.

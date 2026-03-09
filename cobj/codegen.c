@@ -69,6 +69,7 @@ static int gen_native = 0;
 static int gen_custom = 0;
 static int field_iteration = 0;
 static int screenptr = 0;
+static int integer_reference_flag = 0;
 
 static int i_counters[COB_MAX_SUBSCRIPTS];
 
@@ -893,21 +894,22 @@ static void joutput_base(struct cb_field *f) {
     for (p = f->parent; p; f = f->parent, p = f->parent) {
       for (p = p->children; p != f; p = p->sister) {
         struct cb_field *v = cb_field_variable_size(p);
+
+        if (!first_term) {
+          joutput(" + ");
+        }
+        first_term = 0;
+
         if (v) {
-          if (!first_term) {
-            joutput(" + ");
-          }
-          first_term = 0;
           joutput("%d + ", v->offset - p->offset);
           if (v->size != 1) {
             joutput("%d * ", v->size);
           }
+          int tmp_flag = integer_reference_flag;
+          integer_reference_flag = 0;
           joutput_integer(v->occurs_depending);
+          integer_reference_flag = tmp_flag;
         } else {
-          if (!first_term) {
-            joutput(" + ");
-          }
-          first_term = 0;
           joutput("%d", p->size * p->occurs_max);
         }
       }
@@ -1266,7 +1268,6 @@ static void joutput_const_identifier(struct literal_list *l) {
 /*
  * Integer
  */
-static int integer_reference_flag = 0;
 static void joutput_integer(cb_tree x) {
   struct cb_binary_op *p;
   struct cb_cast *cp;
