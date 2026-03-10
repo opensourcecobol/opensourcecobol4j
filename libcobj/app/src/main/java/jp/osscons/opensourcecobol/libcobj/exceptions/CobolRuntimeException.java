@@ -23,7 +23,12 @@ import jp.osscons.opensourcecobol.libcobj.common.CobolUtil;
 
 /** 実行時エラーを示す例外。エラー番号とエラーメッセージを保持する */
 public class CobolRuntimeException extends RuntimeException {
-    /** 現在のエラーコード。CobolExceptionTabCode.codeテーブルから取得した16進数のエラーコードが格納される。 */
+    /**
+     * 現在のエラーコード。16進数のエラーコードが格納される。
+     * 通常はsetExceptionメソッドによりCobolExceptionTabCode.codeテーブルから設定されるが、
+     * CobolFileやCobolLineSequentialFile等から直接代入される場合もある。
+     * 主にファイルI/O操作や数値演算のエラー判定に使用される。
+     */
     public static int code;
 
     private static int cobException = 0;
@@ -104,9 +109,9 @@ public class CobolRuntimeException extends RuntimeException {
     }
 
     /**
-     * 例外が設定されているかどうかを返す。
+     * 例外が設定されたことがあるかどうかを返す。 setExceptionが一度でも呼ばれると1を返し、以降0に戻ることはない。
      *
-     * @return 例外が設定されている場合は1、未設定の場合は0
+     * @return setExceptionが呼ばれたことがある場合は1、一度も呼ばれていない場合は0
      */
     public static int getException() {
         return cobException;

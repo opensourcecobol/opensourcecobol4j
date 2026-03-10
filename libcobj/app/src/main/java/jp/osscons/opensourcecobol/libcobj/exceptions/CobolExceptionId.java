@@ -125,7 +125,7 @@ public class CobolExceptionId {
     /** COBOL例外EC-I-O-EOPに対応する例外コード。ページの終端に達した場合に使用される。 */
     public static final int COB_EC_I_O_EOP = 34;
 
-    /** COBOL例外EC-I-O-EOP-OVERFLOWに対応する例外コード。ページの終端を超えた場合に使用される。 */
+    /** この例外コードは使用されない */
     public static final int COB_EC_I_O_EOP_OVERFLOW = 35;
 
     /** COBOL例外EC-I-O-FILE-SHARINGに対応する例外コード。ファイル共有の競合が発生した場合に使用される。 */
@@ -215,7 +215,7 @@ public class CobolExceptionId {
     /** COBOL例外EC-OVERFLOWに対応する例外コード。オーバーフローに関するエラーのカテゴリを示す。 */
     public static final int COB_EC_OVERFLOW = 64;
 
-    /** COBOL例外EC-OVERFLOW-IMPに対応する例外コード。実装固有のオーバーフローエラーを示す。 */
+    /** この例外コードは使用されない */
     public static final int COB_EC_OVERFLOW_IMP = 65;
 
     /** COBOL例外EC-OVERFLOW-STRINGに対応する例外コード。STRING文でポインタが範囲外、またはデータが領域を超えた場合に使用される。 */
