@@ -2138,12 +2138,12 @@ public class CobolIntrinsic {
             return currField;
         }
         if (CobolRuntimeException.getOrigSection() != null
-                && CobolRuntimeException.getOrigParagragh() != null) {
+                && CobolRuntimeException.getOrigParagraph() != null) {
             buff =
                     String.format(
                             "%s; %s OF %s; %d",
                             CobolRuntimeException.getOrigProgramId(),
-                            CobolRuntimeException.getOrigParagragh(),
+                            CobolRuntimeException.getOrigParagraph(),
                             CobolRuntimeException.getOrigSection(),
                             CobolRuntimeException.getOrigLine());
         } else if (CobolRuntimeException.getOrigSection() != null) {
@@ -2153,12 +2153,12 @@ public class CobolIntrinsic {
                             CobolRuntimeException.getOrigProgramId(),
                             CobolRuntimeException.getOrigSection(),
                             CobolRuntimeException.getOrigLine());
-        } else if (CobolRuntimeException.getOrigParagragh() != null) {
+        } else if (CobolRuntimeException.getOrigParagraph() != null) {
             buff =
                     String.format(
                             "%s; %s; %d",
                             CobolRuntimeException.getOrigProgramId(),
-                            CobolRuntimeException.getOrigParagragh(),
+                            CobolRuntimeException.getOrigParagraph(),
                             CobolRuntimeException.getOrigLine());
         } else {
             buff =

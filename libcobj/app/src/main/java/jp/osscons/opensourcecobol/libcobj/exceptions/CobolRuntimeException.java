@@ -135,7 +135,7 @@ public class CobolRuntimeException extends RuntimeException {
      *
      * @return エラー発生時のパラグラフ名
      */
-    public static String getOrigParagragh() {
+    public static String getOrigParagraph() {
         return origParagraph;
     }
 
