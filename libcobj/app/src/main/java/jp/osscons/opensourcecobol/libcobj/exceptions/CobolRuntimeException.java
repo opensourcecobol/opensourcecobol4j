@@ -23,7 +23,7 @@ import jp.osscons.opensourcecobol.libcobj.common.CobolUtil;
 
 /** 実行時エラーを示す例外。エラー番号とエラーメッセージを保持する */
 public class CobolRuntimeException extends RuntimeException {
-    /** TODO: 準備中 */
+    /** 現在のエラーコード。CobolExceptionTabCode.codeテーブルから取得した16進数のエラーコードが格納される。 */
     public static int code;
 
     private static int cobException = 0;
@@ -69,7 +69,7 @@ public class CobolRuntimeException extends RuntimeException {
     }
 
     /**
-     * 実行時例外を設定する。 エラーIDをベースに、CobolExceptioTabCode.codeテーブルを参照して、対応するエラーコードが設定される。
+     * 実行時例外を設定する。 エラーIDをベースに、CobolExceptionTabCode.codeテーブルを参照して、対応するエラーコードが設定される。
      * また、エラー発生時のプログラムID、セクション名、パラグラフ名、行番号、ステートメントを取得し、このクラスの静的変数に保持する。
      *
      * @param id エラーID
@@ -104,9 +104,9 @@ public class CobolRuntimeException extends RuntimeException {
     }
 
     /**
-     * 常に0を返す。TODO: 必要に応じてこのメソッドは削除ないし修正する。
+     * 例外が設定されているかどうかを返す。
      *
-     * @return 0
+     * @return 例外が設定されている場合は1、未設定の場合は0
      */
     public static int getException() {
         return cobException;

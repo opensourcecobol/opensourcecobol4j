@@ -58,7 +58,7 @@ public final class CobolStopRunException extends Exception {
      * CobolStopRunExceptionを例外としてスローする。 COBOLプログラム終了時のデフォルトの終了処理は実行されない。
      *
      * @param returnCode STOP RUNの返り値
-     * @throws CobolStopRunException TODO: 準備中
+     * @throws CobolStopRunException 常にスローされる
      */
     public static void throwException(int returnCode) throws CobolStopRunException {
         throw new CobolStopRunException(returnCode);
@@ -68,7 +68,7 @@ public final class CobolStopRunException extends Exception {
      * CobolStopRunExceptionを例外としてスローする。 COBOLプログラム終了時のデフォルトの終了処理は実行されない。
      *
      * @param storage STOP RUNの返り値
-     * @throws CobolStopRunException TODO: 準備中
+     * @throws CobolStopRunException 常にスローされる
      */
     public static void throwException(CobolDataStorage storage) throws CobolStopRunException {
         throw new CobolStopRunException(storage);

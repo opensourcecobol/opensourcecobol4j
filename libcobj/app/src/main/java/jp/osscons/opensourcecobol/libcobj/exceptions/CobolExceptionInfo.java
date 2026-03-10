@@ -20,13 +20,13 @@ package jp.osscons.opensourcecobol.libcobj.exceptions;
 
 /** エラーコードを保持する。 */
 public class CobolExceptionInfo {
-    /** エラーコード。TODO: 準備中 */
+    /** 現在のエラーコード。CobolExceptionTabCode.codeテーブルから取得した16進数のエラーコードが格納される。 */
     public static int code = 0;
 
     /**
-     * エラーコードを設定する。TODO: 準備中
+     * エラーコードを設定する。指定された例外IDに対応するエラーコードをCobolExceptionTabCode.codeテーブルから取得し、codeフィールドに設定する。
      *
-     * @param id TODO: 準備中
+     * @param id CobolExceptionIdで定義された例外ID
      */
     public static void setException(int id) {
         CobolExceptionInfo.code = CobolExceptionTabCode.code[id];
