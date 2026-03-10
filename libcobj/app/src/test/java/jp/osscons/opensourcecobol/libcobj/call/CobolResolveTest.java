@@ -144,70 +144,76 @@ class CobolResolveTest {
 
     @Test
     void testPushAndPopCallStackList() {
-        assertDoesNotThrow(() -> {
-            CobolResolve.pushCallStackList("PROGRAM1");
-            CobolResolve.pushCallStackList("PROGRAM2");
-            CobolResolve.popCallStackList();
-            CobolResolve.popCallStackList();
-        });
+        assertDoesNotThrow(
+                () -> {
+                    CobolResolve.pushCallStackList("PROGRAM1");
+                    CobolResolve.pushCallStackList("PROGRAM2");
+                    CobolResolve.popCallStackList();
+                    CobolResolve.popCallStackList();
+                });
     }
 
     @Test
     void testPushCallStackListSameName() {
-        assertDoesNotThrow(() -> {
-            CobolResolve.pushCallStackList("PROGRAM1");
-            CobolResolve.pushCallStackList("PROGRAM1");
-            CobolResolve.popCallStackList();
-            CobolResolve.popCallStackList();
-        });
+        assertDoesNotThrow(
+                () -> {
+                    CobolResolve.pushCallStackList("PROGRAM1");
+                    CobolResolve.pushCallStackList("PROGRAM1");
+                    CobolResolve.popCallStackList();
+                    CobolResolve.popCallStackList();
+                });
     }
 
     @Test
     void testPushCallStackListMultipleSiblings() {
-        assertDoesNotThrow(() -> {
-            CobolResolve.pushCallStackList("PROGRAM1");
-            CobolResolve.popCallStackList();
-            CobolResolve.pushCallStackList("PROGRAM2");
-            CobolResolve.popCallStackList();
-            CobolResolve.pushCallStackList("PROGRAM3");
-            CobolResolve.popCallStackList();
-        });
+        assertDoesNotThrow(
+                () -> {
+                    CobolResolve.pushCallStackList("PROGRAM1");
+                    CobolResolve.popCallStackList();
+                    CobolResolve.pushCallStackList("PROGRAM2");
+                    CobolResolve.popCallStackList();
+                    CobolResolve.pushCallStackList("PROGRAM3");
+                    CobolResolve.popCallStackList();
+                });
     }
 
     @Test
     void testPushCallStackListDeepNesting() {
-        assertDoesNotThrow(() -> {
-            CobolResolve.pushCallStackList("LEVEL1");
-            CobolResolve.pushCallStackList("LEVEL2");
-            CobolResolve.pushCallStackList("LEVEL3");
-            CobolResolve.pushCallStackList("LEVEL4");
-            CobolResolve.popCallStackList();
-            CobolResolve.popCallStackList();
-            CobolResolve.popCallStackList();
-            CobolResolve.popCallStackList();
-        });
+        assertDoesNotThrow(
+                () -> {
+                    CobolResolve.pushCallStackList("LEVEL1");
+                    CobolResolve.pushCallStackList("LEVEL2");
+                    CobolResolve.pushCallStackList("LEVEL3");
+                    CobolResolve.pushCallStackList("LEVEL4");
+                    CobolResolve.popCallStackList();
+                    CobolResolve.popCallStackList();
+                    CobolResolve.popCallStackList();
+                    CobolResolve.popCallStackList();
+                });
     }
 
     @Test
     void testPushCallStackListMixedPattern() {
-        assertDoesNotThrow(() -> {
-            CobolResolve.pushCallStackList("MAIN");
-            CobolResolve.pushCallStackList("SUB1");
-            CobolResolve.popCallStackList();
-            CobolResolve.pushCallStackList("SUB2");
-            CobolResolve.pushCallStackList("SUB2A");
-            CobolResolve.popCallStackList();
-            CobolResolve.popCallStackList();
-            CobolResolve.popCallStackList();
-        });
+        assertDoesNotThrow(
+                () -> {
+                    CobolResolve.pushCallStackList("MAIN");
+                    CobolResolve.pushCallStackList("SUB1");
+                    CobolResolve.popCallStackList();
+                    CobolResolve.pushCallStackList("SUB2");
+                    CobolResolve.pushCallStackList("SUB2A");
+                    CobolResolve.popCallStackList();
+                    CobolResolve.popCallStackList();
+                    CobolResolve.popCallStackList();
+                });
     }
 
     @Test
     void testPopCallStackListOnEmpty() {
-        assertDoesNotThrow(() -> {
-            CobolResolve.popCallStackList();
-            CobolResolve.popCallStackList();
-        });
+        assertDoesNotThrow(
+                () -> {
+                    CobolResolve.popCallStackList();
+                    CobolResolve.popCallStackList();
+                });
     }
 
     @Test
