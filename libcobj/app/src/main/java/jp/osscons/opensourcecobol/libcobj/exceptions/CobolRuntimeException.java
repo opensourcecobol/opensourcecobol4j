@@ -110,6 +110,7 @@ public class CobolRuntimeException extends RuntimeException {
 
     /**
      * 例外が設定されたことがあるかどうかを返す。 setExceptionが一度でも呼ばれると1を返し、以降0に戻ることはない。
+     * setException(0)を呼ぶとcodeは0にリセットされるが、cobExceptionは1のまま変わらない。
      *
      * @return setExceptionが呼ばれたことがある場合は1、一度も呼ばれていない場合は0
      */
