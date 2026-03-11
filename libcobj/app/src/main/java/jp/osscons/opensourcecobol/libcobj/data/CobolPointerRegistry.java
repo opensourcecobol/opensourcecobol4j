@@ -77,8 +77,13 @@ public final class CobolPointerRegistry {
     /**
      * アドレス値から CobolDataStorage を取得する。
      *
+     * <p>制限事項: SET PTR UP BY n / SET PTR DOWN BY n でポインタ演算された値は
+     * レジストリに登録されていないため、resolve() は IllegalArgumentException をスローする。
+     * 例: SET PTR TO ADDRESS OF X → SET PTR UP BY 5 → SET ADDRESS OF Y TO PTR は失敗する。
+     *
      * @param id アドレス値 (0L の場合は null を返す)
      * @return 対応する CobolDataStorage
+     * @throws IllegalArgumentException 未登録のアドレス値が指定された場合
      */
     public static CobolDataStorage resolve(long id) {
         if (id == 0L) {
