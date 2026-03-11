@@ -3844,9 +3844,8 @@ static void joutput_stmt(cb_tree x, enum joutput_stmt_type output_type) {
       if (CB_REFERENCE_P(target_val)) {
         struct cb_field *target_f = cb_field(target_val);
         if (target_f->parent != NULL) {
-          fprintf(stderr,
-                  "SET ADDRESS OF is only supported for 01/77 level "
-                  "LINKAGE items\n");
+          fprintf(stderr, "SET ADDRESS OF is only supported for 01/77 level "
+                          "LINKAGE items\n");
           ABORT();
         }
       }
