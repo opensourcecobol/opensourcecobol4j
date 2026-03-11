@@ -69,6 +69,7 @@ static int gen_native = 0;
 static int gen_custom = 0;
 static int field_iteration = 0;
 static int screenptr = 0;
+static int integer_reference_flag = 0;
 
 static int i_counters[COB_MAX_SUBSCRIPTS];
 
@@ -882,25 +883,38 @@ static void joutput_base(struct cb_field *f) {
     top->flag_base = 1;
   }
 
-  if (joutput_field_storage(f, top) && f->offset != 0) {
+  if (joutput_field_storage(f, top) && f->offset != 0 &&
+      !cb_field_variable_address(f)) {
     joutput(".getSubDataStorage(%d)", f->offset);
   }
 
   if (cb_field_variable_address(f)) {
+    int first_term = 1;
+    joutput(".getSubDataStorage(");
     for (p = f->parent; p; f = f->parent, p = f->parent) {
       for (p = p->children; p != f; p = p->sister) {
         struct cb_field *v = cb_field_variable_size(p);
+
+        if (!first_term) {
+          joutput(" + ");
+        }
+        first_term = 0;
+
         if (v) {
-          joutput(" + %d + ", v->offset - p->offset);
+          joutput("%d + ", v->offset - p->offset);
           if (v->size != 1) {
             joutput("%d * ", v->size);
           }
+          int tmp_flag = integer_reference_flag;
+          integer_reference_flag = 0;
           joutput_integer(v->occurs_depending);
+          integer_reference_flag = tmp_flag;
         } else {
-          joutput(" + %d", p->size * p->occurs_max);
+          joutput("%d", p->size * p->occurs_max);
         }
       }
     }
+    joutput(")");
   }
 }
 
@@ -1254,7 +1268,6 @@ static void joutput_const_identifier(struct literal_list *l) {
 /*
  * Integer
  */
-static int integer_reference_flag = 0;
 static void joutput_integer(cb_tree x) {
   struct cb_binary_op *p;
   struct cb_cast *cp;
@@ -5332,7 +5345,7 @@ static void joutput_init_method(struct cb_program *prog) {
       char *base_name = get_java_identifier_base(entry->top);
       joutput("%s", base_name);
       free(base_name);
-      if (entry->f->offset != 0) {
+      if (entry->f->offset != 0 && !cb_field_variable_address(entry->f)) {
         joutput(".getSubDataStorage(%d)", entry->f->offset);
       }
       joutput(";\n");

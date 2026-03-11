@@ -1,0 +1,341 @@
+AT_SETUP([OCCURS DEPENDING ON with complex-odo (simple)])
+
+AT_DATA([test.conf], [
+include "default.conf"
+
+name: "test"
+
+complex-odo: yes
+])
+
+AT_DATA([prog.cbl], [
+        IDENTIFICATION DIVISION.
+        PROGRAM-ID. prog.
+        DATA DIVISION.
+        WORKING-STORAGE SECTION.
+        01  T-REC.
+            02  T-ODO-COUNT     PIC 9(8) BINARY.
+            02  T-ODO-ITEM      OCCURS 227 DEPENDING ON T-ODO-COUNT
+                                PIC X(2).
+            02  T-AFTER-ODO     PIC S9(004) COMP.
+        PROCEDURE DIVISION.
+            MOVE 0 TO T-ODO-COUNT.
+            MOVE 5 TO T-AFTER-ODO.
+            DISPLAY T-AFTER-ODO.
+            MOVE 10 TO T-ODO-COUNT.
+            MOVE 20 TO T-AFTER-ODO.
+            DISPLAY T-AFTER-ODO.
+            STOP RUN.
+])
+
+AT_CHECK([${COBJ} -conf=test.conf prog.cbl], [0])
+AT_CHECK([${RUN_MODULE} prog], [0],
+[+0005
++0020
+])
+
+AT_CLEANUP
+
+AT_SETUP([OCCURS DEPENDING ON with complex-odo (group)])
+
+AT_DATA([test.conf], [
+include "default.conf"
+
+name: "test"
+
+complex-odo: yes
+])
+
+AT_DATA([prog.cbl], [
+        IDENTIFICATION DIVISION.
+        PROGRAM-ID. prog.
+        DATA DIVISION.
+        WORKING-STORAGE SECTION.
+        01  T-REC.
+            02  T-GROUP.
+                03  T-ODO-COUNT PIC 9(8) BINARY.
+                03  T-ODO-ITEM  OCCURS 227 DEPENDING ON T-ODO-COUNT
+                                PIC X(2).
+            02  T-AFTER-ODO     PIC S9(004) COMP.
+        PROCEDURE DIVISION.
+            MOVE 0 TO T-ODO-COUNT.
+            MOVE 5 TO T-AFTER-ODO.
+            DISPLAY T-AFTER-ODO.
+            MOVE 10 TO T-ODO-COUNT.
+            MOVE 20 TO T-AFTER-ODO.
+            DISPLAY T-AFTER-ODO.
+            STOP RUN.
+])
+
+AT_CHECK([${COBJ} -conf=test.conf prog.cbl], [0])
+AT_CHECK([${RUN_MODULE} prog], [0],
+[+0005
++0020
+])
+
+AT_CLEANUP
+
+AT_SETUP([OCCURS DEPENDING ON with complex-odo (multiple)])
+
+AT_DATA([test.conf], [
+include "default.conf"
+
+name: "test"
+
+complex-odo: yes
+])
+
+AT_DATA([prog.cbl], [
+        IDENTIFICATION DIVISION.
+        PROGRAM-ID. prog.
+        DATA DIVISION.
+        WORKING-STORAGE SECTION.
+        01  T-REC.
+            02  T-ODO-COUNT1    PIC 9(8) BINARY.
+            02  T-ODO-ITEM1     OCCURS 10 DEPENDING ON T-ODO-COUNT1
+                                PIC X(2).
+            02  T-ODO-COUNT2    PIC 9(8) BINARY.
+            02  T-ODO-ITEM2     OCCURS 10 DEPENDING ON T-ODO-COUNT2
+                                PIC X(2).
+            02  T-AFTER-ODO     PIC S9(004) COMP.
+        PROCEDURE DIVISION.
+            MOVE 0 TO T-ODO-COUNT1.
+            MOVE 0 TO T-ODO-COUNT2.
+            MOVE 5 TO T-AFTER-ODO.
+            DISPLAY T-AFTER-ODO.
+            MOVE 3 TO T-ODO-COUNT1.
+            MOVE 2 TO T-ODO-COUNT2.
+            MOVE 20 TO T-AFTER-ODO.
+            DISPLAY T-AFTER-ODO.
+            STOP RUN.
+])
+
+AT_CHECK([${COBJ} -conf=test.conf prog.cbl], [0])
+AT_CHECK([${RUN_MODULE} prog], [0],
+[+0005
++0020
+])
+
+AT_CLEANUP
+
+AT_SETUP([OCCURS DEPENDING ON with complex-odo (nested group)])
+
+AT_DATA([test.conf], [
+include "default.conf"
+
+name: "test"
+
+complex-odo: yes
+])
+
+AT_DATA([prog.cbl], [
+        IDENTIFICATION DIVISION.
+        PROGRAM-ID. prog.
+        DATA DIVISION.
+        WORKING-STORAGE SECTION.
+        01  T-REC.
+            02  T-ODO-COUNT     PIC 9(8) BINARY.
+            02  T-ODO-GROUP     OCCURS 10 DEPENDING ON T-ODO-COUNT.
+                03  T-ITEM-A    PIC X(2).
+                03  T-ITEM-B    PIC X(3).
+            02  T-AFTER-ODO     PIC S9(004) COMP.
+        PROCEDURE DIVISION.
+            MOVE 0 TO T-ODO-COUNT.
+            MOVE 5 TO T-AFTER-ODO.
+            DISPLAY T-AFTER-ODO.
+            MOVE 10 TO T-ODO-COUNT.
+            MOVE 20 TO T-AFTER-ODO.
+            DISPLAY T-AFTER-ODO.
+            STOP RUN.
+])
+
+AT_CHECK([${COBJ} -conf=test.conf prog.cbl], [0])
+AT_CHECK([${RUN_MODULE} prog], [0],
+[+0005
++0020
+])
+
+AT_CLEANUP
+
+AT_SETUP([OCCURS DEPENDING ON with complex-odo (multiple nested)])
+
+AT_DATA([test.conf], [
+include "default.conf"
+
+name: "test"
+
+complex-odo: yes
+])
+
+AT_DATA([prog.cbl], [
+        IDENTIFICATION DIVISION.
+        PROGRAM-ID. prog.
+        DATA DIVISION.
+        WORKING-STORAGE SECTION.
+        01  T-REC.
+            02  T-ODO-COUNT1    PIC 9(8) BINARY.
+            02  T-ODO-GROUP1    OCCURS 10 DEPENDING ON T-ODO-COUNT1.
+                03  T-ITEM1-A   PIC X(2).
+                03  T-ITEM1-B   PIC X(3).
+            02  T-ODO-COUNT2    PIC 9(8) BINARY.
+            02  T-ODO-GROUP2    OCCURS 10 DEPENDING ON T-ODO-COUNT2.
+                03  T-ITEM2-A   PIC X(2).
+                03  T-ITEM2-B   PIC X(3).
+            02  T-AFTER-ODO     PIC S9(004) COMP.
+        PROCEDURE DIVISION.
+            MOVE 0 TO T-ODO-COUNT1.
+            MOVE 0 TO T-ODO-COUNT2.
+            MOVE 5 TO T-AFTER-ODO.
+            DISPLAY T-AFTER-ODO.
+            MOVE 3 TO T-ODO-COUNT1.
+            MOVE 2 TO T-ODO-COUNT2.
+            MOVE 20 TO T-AFTER-ODO.
+            DISPLAY T-AFTER-ODO.
+            STOP RUN.
+])
+
+AT_CHECK([${COBJ} -conf=test.conf prog.cbl], [0])
+AT_CHECK([${RUN_MODULE} prog], [0],
+[+0005
++0020
+])
+
+AT_CLEANUP
+
+AT_SETUP([OCCURS DEPENDING ON with complex-odo (multiple fields after)])
+
+AT_DATA([test.conf], [
+include "default.conf"
+
+name: "test"
+
+complex-odo: yes
+])
+
+AT_DATA([prog.cbl], [
+        IDENTIFICATION DIVISION.
+        PROGRAM-ID. prog.
+        DATA DIVISION.
+        WORKING-STORAGE SECTION.
+        01  T-REC.
+            02  T-ODO-COUNT     PIC 9(8) BINARY.
+            02  T-ODO-ITEM      OCCURS 10 DEPENDING ON T-ODO-COUNT
+                                PIC X(2).
+            02  T-AFTER-ODO1    PIC S9(004) COMP.
+            02  T-AFTER-ODO2    PIC S9(004) COMP.
+            02  T-AFTER-ODO3    PIC X(5).
+        PROCEDURE DIVISION.
+            MOVE 0 TO T-ODO-COUNT.
+            MOVE 5 TO T-AFTER-ODO1.
+            MOVE 10 TO T-AFTER-ODO2.
+            MOVE "ABCDE" TO T-AFTER-ODO3.
+            DISPLAY T-AFTER-ODO1.
+            DISPLAY T-AFTER-ODO2.
+            DISPLAY T-AFTER-ODO3.
+            MOVE 7 TO T-ODO-COUNT.
+            MOVE 20 TO T-AFTER-ODO1.
+            MOVE 30 TO T-AFTER-ODO2.
+            MOVE "FGHIJ" TO T-AFTER-ODO3.
+            DISPLAY T-AFTER-ODO1.
+            DISPLAY T-AFTER-ODO2.
+            DISPLAY T-AFTER-ODO3.
+            STOP RUN.
+])
+
+AT_CHECK([${COBJ} -conf=test.conf prog.cbl], [0])
+AT_CHECK([${RUN_MODULE} prog], [0],
+[+0005
++0010
+ABCDE
++0020
++0030
+FGHIJ
+])
+
+AT_CLEANUP
+
+AT_SETUP([OCCURS DEPENDING ON with complex-odo (group after)])
+
+AT_DATA([test.conf], [
+include "default.conf"
+
+name: "test"
+
+complex-odo: yes
+])
+
+AT_DATA([prog.cbl], [
+        IDENTIFICATION DIVISION.
+        PROGRAM-ID. prog.
+        DATA DIVISION.
+        WORKING-STORAGE SECTION.
+        01  T-REC.
+            02  T-ODO-COUNT     PIC 9(8) BINARY.
+            02  T-ODO-ITEM      OCCURS 10 DEPENDING ON T-ODO-COUNT
+                                PIC X(2).
+            02  T-AFTER-GROUP.
+                03  T-AFTER-A   PIC S9(004) COMP.
+                03  T-AFTER-B   PIC X(5).
+        PROCEDURE DIVISION.
+            MOVE 0 TO T-ODO-COUNT.
+            MOVE 5 TO T-AFTER-A.
+            MOVE "ABCDE" TO T-AFTER-B.
+            DISPLAY T-AFTER-A.
+            DISPLAY T-AFTER-B.
+            MOVE 7 TO T-ODO-COUNT.
+            MOVE 20 TO T-AFTER-A.
+            MOVE "FGHIJ" TO T-AFTER-B.
+            DISPLAY T-AFTER-A.
+            DISPLAY T-AFTER-B.
+            STOP RUN.
+])
+
+AT_CHECK([${COBJ} -conf=test.conf prog.cbl], [0])
+AT_CHECK([${RUN_MODULE} prog], [0],
+[+0005
+ABCDE
++0020
+FGHIJ
+])
+
+AT_CLEANUP
+
+AT_SETUP([OCCURS DEPENDING ON with complex-odo (deeply nested)])
+
+AT_DATA([test.conf], [
+include "default.conf"
+
+name: "test"
+
+complex-odo: yes
+])
+
+AT_DATA([prog.cbl], [
+        IDENTIFICATION DIVISION.
+        PROGRAM-ID. prog.
+        DATA DIVISION.
+        WORKING-STORAGE SECTION.
+        01  T-REC.
+            02  T-OUTER-GROUP.
+                03  T-INNER-GROUP.
+                    04  T-ODO-COUNT PIC 9(8) BINARY.
+                    04  T-ODO-ITEM  OCCURS 10 DEPENDING ON T-ODO-COUNT
+                                    PIC X(2).
+            02  T-AFTER-ODO     PIC S9(004) COMP.
+        PROCEDURE DIVISION.
+            MOVE 0 TO T-ODO-COUNT.
+            MOVE 5 TO T-AFTER-ODO.
+            DISPLAY T-AFTER-ODO.
+            MOVE 10 TO T-ODO-COUNT.
+            MOVE 20 TO T-AFTER-ODO.
+            DISPLAY T-AFTER-ODO.
+            STOP RUN.
+])
+
+AT_CHECK([${COBJ} -conf=test.conf prog.cbl], [0])
+AT_CHECK([${RUN_MODULE} prog], [0],
+[+0005
++0020
+])
+
+AT_CLEANUP
