@@ -19,6 +19,7 @@
 package jp.osscons.opensourcecobol.libcobj.exceptions;
 
 import jp.osscons.opensourcecobol.libcobj.data.CobolDataStorage;
+import jp.osscons.opensourcecobol.libcobj.data.CobolPointerRegistry;
 import jp.osscons.opensourcecobol.libcobj.file.CobolFile;
 
 /** STOP RUNの呼び出し時にスローされる例外。返り値を保持する。 */
@@ -91,5 +92,6 @@ public final class CobolStopRunException extends Exception {
         // TODO screen実装時に追加
         // cob_screen_terminate();
         CobolFile.exitFileIO();
+        CobolPointerRegistry.clear();
     }
 }

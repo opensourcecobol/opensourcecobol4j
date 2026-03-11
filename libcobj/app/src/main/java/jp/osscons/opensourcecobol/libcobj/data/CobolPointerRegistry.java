@@ -84,4 +84,11 @@ public class CobolPointerRegistry {
         }
         return idToStorage.get(id);
     }
+
+    /** レジストリを初期状態にリセットする。プログラム終了時に呼び出す。 */
+    public static void clear() {
+        idToStorage.clear();
+        storageToId.clear();
+        nextId = 1;
+    }
 }
