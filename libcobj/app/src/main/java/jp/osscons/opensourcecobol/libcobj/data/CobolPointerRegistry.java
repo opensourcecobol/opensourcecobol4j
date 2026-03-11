@@ -32,7 +32,7 @@ public class CobolPointerRegistry {
         final int index;
 
         StorageKey(CobolDataStorage s) {
-            this.data = s.getData();
+            this.data = s.getRefOfData();
             this.index = s.getIndex();
         }
 
