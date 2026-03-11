@@ -3836,8 +3836,22 @@ static void joutput_stmt(cb_tree x, enum joutput_stmt_type output_type) {
 
     /* SET ADDRESS OF <var> TO ... (reference assignment) */
     if (CB_CAST_P(ap->var) && CB_CAST(ap->var)->type == CB_CAST_ADDRESS) {
+      /* Verify that the target is a 01/77 level item so that
+         joutput_data emits a simple assignable variable (e.g. b_L_G).
+         Subfields would generate getSubDataStorage() which is not
+         a valid assignment target in Java. */
+      cb_tree target_val = CB_CAST(ap->var)->val;
+      if (CB_REFERENCE_P(target_val)) {
+        struct cb_field *target_f = cb_field(target_val);
+        if (target_f->parent != NULL) {
+          fprintf(stderr,
+                  "SET ADDRESS OF is only supported for 01/77 level "
+                  "LINKAGE items\n");
+          ABORT();
+        }
+      }
       joutput_prefix();
-      joutput_data(CB_CAST(ap->var)->val);
+      joutput_data(target_val);
       joutput(" = ");
       if (ap->val == cb_null) {
         joutput("null");

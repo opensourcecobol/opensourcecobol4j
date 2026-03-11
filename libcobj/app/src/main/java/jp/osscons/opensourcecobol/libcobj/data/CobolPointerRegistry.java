@@ -22,10 +22,12 @@ import java.util.HashMap;
 import java.util.Map;
 
 /** COBOL USAGE POINTER のアドレス値と CobolDataStorage の対応を管理するレジストリ */
-public class CobolPointerRegistry {
+public final class CobolPointerRegistry {
     private static long nextId = 1;
     private static final Map<Long, CobolDataStorage> idToStorage = new HashMap<>();
     private static final Map<StorageKey, Long> storageToId = new HashMap<>();
+
+    private CobolPointerRegistry() {}
 
     private static class StorageKey {
         final byte[] data;
@@ -82,7 +84,12 @@ public class CobolPointerRegistry {
         if (id == 0L) {
             return null;
         }
-        return idToStorage.get(id);
+        CobolDataStorage storage = idToStorage.get(id);
+        if (storage == null) {
+            throw new IllegalArgumentException(
+                    "Invalid pointer id " + id + ": no storage registered for this id.");
+        }
+        return storage;
     }
 
     /** レジストリを初期状態にリセットする。プログラム終了時に呼び出す。 */
