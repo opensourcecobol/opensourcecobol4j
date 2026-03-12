@@ -137,7 +137,7 @@ public class CobolExceptionId {
     /** COBOL例外EC-I-O-INVALID-KEYに対応する例外コード。不正なキーによるファイルアクセスの場合に使用される。 */
     public static final int COB_EC_I_O_INVALID_KEY = 38;
 
-    /** COBOL例外EC-I-O-LINAGEに対応する例外コード。LINAGE句に関連するエラーの場合に使用される。 */
+    /** この例外コードは使用されない */
     public static final int COB_EC_I_O_LINAGE = 39;
 
     /** COBOL例外EC-I-O-LOGIC-ERRORに対応する例外コード。ファイル操作の論理エラーの場合に使用される。 */
