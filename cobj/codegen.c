@@ -1617,7 +1617,7 @@ static void joutput_param(cb_tree x, int id) {
         break;
       case CB_ALPHABET_CUSTOM:
         gen_custom = 1;
-        joutput("&%s%s", CB_PREFIX_FIELD, rbp->cname);
+        joutput("%s%s", CB_PREFIX_FIELD, rbp->cname);
         break;
       }
       if (r->check) {
