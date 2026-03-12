@@ -19,88 +19,126 @@
 package jp.osscons.opensourcecobol.libcobj.data;
 
 import java.util.HashMap;
+import java.util.IdentityHashMap;
 import java.util.Map;
 
-/** COBOL USAGE POINTER のアドレス値と CobolDataStorage の対応を管理するレジストリ */
+/**
+ * COBOL USAGE POINTER のアドレス値と CobolDataStorage の対応を管理するレジストリ。
+ *
+ * <p>ポインタ値は long の上位32ビットにバイト配列ID、下位32ビットにオフセット(インデックス)を
+ * エンコードする。これにより SET PTR UP/DOWN BY n のポインタ演算が自然に動作する。
+ */
 public final class CobolPointerRegistry {
-    private static long nextId = 1;
-    private static final Map<Long, CobolDataStorage> idToStorage = new HashMap<>();
-    private static final Map<StorageKey, Long> storageToId = new HashMap<>();
+    /** 次に割り当てるバイト配列IDのカウンタ */
+    private static int nextId = 1;
+
+    /** バイト配列ID → バイト配列の逆引きマップ (resolveで使用) */
+    private static final Map<Integer, byte[]> idToByteArray = new HashMap<>();
+
+    /** バイト配列 → バイト配列IDの正引きマップ (registerで使用、IdentityHashMapで参照同一性を比較) */
+    private static final IdentityHashMap<byte[], Integer> byteArrayToId = new IdentityHashMap<>();
+
+    /** バイト配列 → (インデックス → CobolDataStorage) のキャッシュ。同じ配列・同じオフセットのインスタンスを再利用する */
+    private static final IdentityHashMap<byte[], Map<Integer, CobolDataStorage>>
+            cobolDataStorageCache = new IdentityHashMap<>();
 
     private CobolPointerRegistry() {}
 
-    private static class StorageKey {
-        final byte[] data;
-        final int index;
-
-        StorageKey(CobolDataStorage s) {
-            this.data = s.getRefOfData();
-            this.index = s.getIndex();
-        }
-
-        @Override
-        public boolean equals(Object o) {
-            if (!(o instanceof StorageKey)) {
-                return false;
-            }
-            StorageKey k = (StorageKey) o;
-            return this.data == k.data && this.index == k.index;
-        }
-
-        @Override
-        public int hashCode() {
-            return System.identityHashCode(data) ^ index;
-        }
-    }
-
     /**
-     * CobolDataStorage を登録し、対応するアドレス値(long)を返す。 同じバイト配列・同じインデックスの場合は同じアドレス値を返す。
+     * CobolDataStorage を登録し、対応するアドレス値(long)を返す。
+     *
+     * <p>アドレス値は上位32ビットにバイト配列ID、下位32ビットにインデックスをエンコードした値。
+     * 同じバイト配列・同じインデックスの場合は同じアドレス値を返す。
      *
      * @param s 登録する CobolDataStorage (null の場合は 0L を返す)
      * @return アドレス値
      */
     public static long register(CobolDataStorage s) {
         if (s == null) {
+            // NULLポインタは0Lで表現する
             return 0L;
         }
-        StorageKey key = new StorageKey(s);
-        Long existing = storageToId.get(key);
-        if (existing != null) {
-            return existing;
+
+        byte[] data = s.getRefOfData();
+        int index = s.getIndex();
+
+        // バイト配列が未登録であれば新しいIDを割り当てて双方向マップに登録する
+        Integer byteArrayId = byteArrayToId.get(data);
+        if (byteArrayId == null) {
+            byteArrayId = nextId++;
+            idToByteArray.put(byteArrayId, data);
+            byteArrayToId.put(data, byteArrayId);
         }
-        long id = nextId++;
-        idToStorage.put(id, s);
-        storageToId.put(key, id);
-        return id;
+
+        // CobolDataStorageインスタンスをキャッシュに登録する (同じ配列・オフセットは初回のみ)
+        Map<Integer, CobolDataStorage> indexCache =
+                cobolDataStorageCache.computeIfAbsent(data, k -> new HashMap<>());
+        indexCache.putIfAbsent(index, s);
+
+        // 上位32ビット: バイト配列ID、下位32ビット: オフセット にエンコードして返す
+        return (((long) byteArrayId) << 32) | (0x00000000ffffffffL & index);
     }
 
     /**
      * アドレス値から CobolDataStorage を取得する。
      *
-     * <p>制限事項: SET PTR UP BY n / SET PTR DOWN BY n でポインタ演算された値は
-     * レジストリに登録されていないため、resolve() は IllegalArgumentException をスローする。
-     * 例: SET PTR TO ADDRESS OF X → SET PTR UP BY 5 → SET ADDRESS OF Y TO PTR は失敗する。
+     * <p>ポインタ演算 (SET PTR UP/DOWN BY n) された値にも対応する。 上位32ビットからバイト配列IDを、下位32ビットからオフセットを取り出し、
+     * 対応する CobolDataStorage を返す。キャッシュにヒットした場合は既存インスタンスを再利用する。
      *
      * @param id アドレス値 (0L の場合は null を返す)
      * @return 対応する CobolDataStorage
-     * @throws IllegalArgumentException 未登録のアドレス値が指定された場合
+     * @throws IllegalArgumentException 未登録のバイト配列IDが指定された場合
      */
     public static CobolDataStorage resolve(long id) {
         if (id == 0L) {
+            // NULLポインタ
             return null;
         }
-        CobolDataStorage storage = idToStorage.get(id);
-        if (storage == null) {
+
+        // アドレス値を上位32ビット(バイト配列ID)と下位32ビット(オフセット)に分解する
+        int byteArrayId = (int) (id >>> 32);
+        int index = (int) (0x00000000ffffffffL & id);
+
+        // バイト配列IDから元のバイト配列を取得する
+        byte[] data = idToByteArray.get(byteArrayId);
+        if (data == null) {
             throw new IllegalArgumentException(
-                    "Invalid pointer id " + id + ": no storage registered for this id.");
+                    "Invalid pointer id "
+                            + id
+                            + ": no byte array registered for byteArrayId "
+                            + byteArrayId
+                            + ".");
         }
-        return storage;
+
+        // キャッシュに既存のCobolDataStorageがあればそれを返す
+        Map<Integer, CobolDataStorage> indexCache = cobolDataStorageCache.get(data);
+        if (indexCache != null) {
+            CobolDataStorage cached = indexCache.get(index);
+            if (cached != null) {
+                return cached;
+            }
+        }
+
+        // キャッシュにない場合は新規作成してキャッシュに登録する
+        // (ポインタ演算でオフセットが変わった場合にここに到達する)
+        CobolDataStorage created = new CobolDataStorage(data, index);
+        if (indexCache == null) {
+            indexCache = new HashMap<>();
+            cobolDataStorageCache.put(data, indexCache);
+        }
+        indexCache.put(index, created);
+        return created;
     }
 
-    /** レジストリを初期状態にリセットする。プログラム終了時に呼び出す。 */
+    /**
+     * レジストリを初期状態にリセットする。
+     *
+     * <p>STOP RUN 時に呼び出し、登録済みのポインタ情報をすべて解放してメモリリークを防止する。
+     */
     public static void clear() {
-        idToStorage.clear();
-        storageToId.clear();
+        idToByteArray.clear();
+        byteArrayToId.clear();
+        cobolDataStorageCache.clear();
         nextId = 1;
     }
 }

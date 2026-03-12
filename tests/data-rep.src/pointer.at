@@ -268,3 +268,41 @@ AT_CHECK([java prog], [0],
 ])
 
 AT_CLEANUP
+
+
+AT_SETUP([POINTER: SET UP BY then dereference])
+
+AT_DATA([prog.cob], [
+       IDENTIFICATION   DIVISION.
+       PROGRAM-ID.      prog.
+       DATA             DIVISION.
+       WORKING-STORAGE  SECTION.
+       01 X             PIC X(10) VALUE "0123456789".
+       01 PTR           USAGE POINTER VALUE NULL.
+       LINKAGE          SECTION.
+       01 C1            PIC X(1).
+       PROCEDURE        DIVISION.
+           SET PTR TO ADDRESS OF X.
+           SET PTR UP BY 3.
+           SET ADDRESS OF C1 TO PTR.
+           DISPLAY C1
+           END-DISPLAY.
+           SET PTR UP BY 4.
+           SET ADDRESS OF C1 TO PTR.
+           DISPLAY C1
+           END-DISPLAY.
+           SET PTR DOWN BY 5.
+           SET ADDRESS OF C1 TO PTR.
+           DISPLAY C1
+           END-DISPLAY.
+           STOP RUN.
+])
+
+AT_CHECK([${COMPILE} prog.cob])
+AT_CHECK([java prog], [0],
+[3
+7
+2
+])
+
+AT_CLEANUP
