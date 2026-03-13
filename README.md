@@ -166,6 +166,21 @@ Run.
 java [PROGRAM-ID]
 ```
 
+> **Tip:** When compiling multiple COBOL source files, pass all files to a single `cobj` invocation instead of invoking `cobj` separately for each file. This can significantly reduce the total compilation time.
+>
+> ```bash
+> # Recommended: compile all files at once
+> cobj file1.cbl file2.cbl file3.cbl
+>
+> # You can also use wildcards
+> cobj *.cbl
+>
+> # Not recommended: compile each file separately
+> cobj file1.cbl
+> cobj file2.cbl
+> cobj file3.cbl
+> ```
+
 ## Documentation
 
 * [The API reference of the runtime library `libcobj.jar`](https://opensourcecobol.github.io/opensourcecobol4j/javadoc/libcobj/index.html)

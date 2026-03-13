@@ -26,10 +26,10 @@ public class CobolExceptionId {
     /** この例外コードは使用されない */
     public static final int COB_EC_ALL = 1;
 
-    /** TODO: 準備中 */
+    /** COBOL例外EC-ARGUMENTに対応する例外コード。引数に関するエラーのカテゴリを示す。 */
     public static final int COB_EC_ARGUMENT = 2;
 
-    /** TODO: 準備中 */
+    /** COBOL例外EC-ARGUMENT-FUNCTIONに対応する例外コード。組み込み関数に不正な引数が渡された場合に使用される。 */
     public static final int COB_EC_ARGUMENT_FUNCTION = 3;
 
     /** この例外コードは使用されない */
@@ -47,16 +47,16 @@ public class CobolExceptionId {
     /** この例外コードは使用されない */
     public static final int COB_EC_BOUND_OVERFLOW = 8;
 
-    /** TODO: 準備中 */
+    /** COBOL例外EC-BOUND-PTRに対応する例外コード。ポインタの境界違反を示す。 */
     public static final int COB_EC_BOUND_PTR = 9;
 
-    /** TODO: 準備中 */
+    /** COBOL例外EC-BOUND-REF-MODに対応する例外コード。参照変更のオフセットや長さが範囲外の場合に使用される。 */
     public static final int COB_EC_BOUND_REF_MOD = 10;
 
     /** この例外コードは使用されない */
     public static final int COB_EC_BOUND_SET = 11;
 
-    /** TODO: 準備中 */
+    /** COBOL例外EC-BOUND-SUBSCRIPTに対応する例外コード。配列の添え字が範囲外の場合に使用される。 */
     public static final int COB_EC_BOUND_SUBSCRIPT = 12;
 
     /** この例外コードは使用されない */
@@ -116,46 +116,46 @@ public class CobolExceptionId {
     /** この例外コードは使用されない */
     public static final int COB_EC_FLOW_USE = 31;
 
-    /** TODO: 準備中 */
+    /** COBOL例外EC-I-Oに対応する例外コード。ファイルI/O操作に関するエラーのカテゴリを示す。 */
     public static final int COB_EC_I_O = 32;
 
-    /** TODO: 準備中 */
+    /** COBOL例外EC-I-O-AT-ENDに対応する例外コード。ファイルの終端に達した場合に使用される。 */
     public static final int COB_EC_I_O_AT_END = 33;
 
-    /** TODO: 準備中 */
+    /** COBOL例外EC-I-O-EOPに対応する例外コード。ページの終端に達した場合に使用される。 */
     public static final int COB_EC_I_O_EOP = 34;
 
-    /** TODO: 準備中 */
+    /** この例外コードは使用されない */
     public static final int COB_EC_I_O_EOP_OVERFLOW = 35;
 
-    /** TODO: 準備中 */
+    /** COBOL例外EC-I-O-FILE-SHARINGに対応する例外コード。ファイル共有の競合が発生した場合に使用される。 */
     public static final int COB_EC_I_O_FILE_SHARING = 36;
 
-    /** TODO: 準備中 */
+    /** COBOL例外EC-I-O-IMPに対応する例外コード。実装固有のI/Oエラーを示す。 */
     public static final int COB_EC_I_O_IMP = 37;
 
-    /** TODO: 準備中 */
+    /** COBOL例外EC-I-O-INVALID-KEYに対応する例外コード。不正なキーによるファイルアクセスの場合に使用される。 */
     public static final int COB_EC_I_O_INVALID_KEY = 38;
 
-    /** TODO: 準備中 */
+    /** この例外コードは使用されない */
     public static final int COB_EC_I_O_LINAGE = 39;
 
-    /** TODO: 準備中 */
+    /** COBOL例外EC-I-O-LOGIC-ERRORに対応する例外コード。ファイル操作の論理エラーの場合に使用される。 */
     public static final int COB_EC_I_O_LOGIC_ERROR = 40;
 
-    /** TODO: 準備中 */
+    /** COBOL例外EC-I-O-PERMANENT-ERRORに対応する例外コード。回復不能なI/Oエラーの場合に使用される。 */
     public static final int COB_EC_I_O_PERMANENT_ERROR = 41;
 
-    /** TODO: 準備中 */
+    /** COBOL例外EC-I-O-RECORD-OPERATIONに対応する例外コード。レコード操作に関するエラーの場合に使用される。 */
     public static final int COB_EC_I_O_RECORD_OPERATION = 42;
 
-    /** TODO: 準備中 */
+    /** COBOL例外EC-IMPに対応する例外コード。実装固有のエラーのカテゴリを示す。 */
     public static final int COB_EC_IMP = 43;
 
-    /** TODO: 準備中 */
+    /** COBOL例外EC-IMP-ACCEPTに対応する例外コード。ACCEPT文で環境変数が見つからない場合などに使用される。 */
     public static final int COB_EC_IMP_ACCEPT = 44;
 
-    /** TODO: 準備中 */
+    /** COBOL例外EC-IMP-DISPLAYに対応する例外コード。DISPLAY文で環境変数が未設定の場合などに使用される。 */
     public static final int COB_EC_IMP_DISPLAY = 45;
 
     /** この例外コードは使用されない */
@@ -212,16 +212,16 @@ public class CobolExceptionId {
     /** この例外コードは使用されない */
     public static final int COB_EC_ORDER_NOT_SUPPORTED = 63;
 
-    /** TODO: 準備中 */
+    /** COBOL例外EC-OVERFLOWに対応する例外コード。オーバーフローに関するエラーのカテゴリを示す。 */
     public static final int COB_EC_OVERFLOW = 64;
 
-    /** TODO: 準備中 */
+    /** この例外コードは使用されない */
     public static final int COB_EC_OVERFLOW_IMP = 65;
 
-    /** TODO: 準備中 */
+    /** COBOL例外EC-OVERFLOW-STRINGに対応する例外コード。STRING文でポインタが範囲外、またはデータが領域を超えた場合に使用される。 */
     public static final int COB_EC_OVERFLOW_STRING = 66;
 
-    /** TODO: 準備中 */
+    /** COBOL例外EC-OVERFLOW-UNSTRINGに対応する例外コード。UNSTRING文でポインタが範囲外、またはデータが領域を超えた場合に使用される。 */
     public static final int COB_EC_OVERFLOW_UNSTRING = 67;
 
     /** この例外コードは使用されない */
@@ -239,7 +239,7 @@ public class CobolExceptionId {
     /** この例外コードは使用されない */
     public static final int COB_EC_PROGRAM_IMP = 72;
 
-    /** TODO: 準備中 */
+    /** COBOL例外EC-PROGRAM-NOT-FOUNDに対応する例外コード。CALL文で呼び出し先のプログラムが見つからない場合に使用される。 */
     public static final int COB_EC_PROGRAM_NOT_FOUND = 73;
 
     /** この例外コードは使用されない */
@@ -269,7 +269,7 @@ public class CobolExceptionId {
     /** この例外コードは使用されない */
     public static final int COB_EC_RANGE_INDEX = 82;
 
-    /** TODO: 準備中 */
+    /** COBOL例外EC-RANGE-INSPECT-SIZEに対応する例外コード。INSPECT文でオペランドのフィールドサイズが不正な場合に使用される。 */
     public static final int COB_EC_RANGE_INSPECT_SIZE = 83;
 
     /** この例外コードは使用されない */
@@ -353,7 +353,7 @@ public class CobolExceptionId {
     /** この例外コードは使用されない */
     public static final int COB_EC_SIZE_IMP = 110;
 
-    /** TODO: 準備中 */
+    /** COBOL例外EC-SIZE-OVERFLOWに対応する例外コード。数値演算の結果がフィールドの桁数を超えた場合に使用される。 */
     public static final int COB_EC_SIZE_OVERFLOW = 111;
 
     /** この例外コードは使用されない */

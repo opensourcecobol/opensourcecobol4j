@@ -1278,7 +1278,7 @@ static void joutput_integer(cb_tree x) {
     if (x == cb_zero) {
       joutput("0");
     } else if (x == cb_null) {
-      joutput("null");
+      joutput("0L");
     } else {
       joutput("%s", CB_CONST(x)->val);
     }
@@ -1316,9 +1316,15 @@ static void joutput_integer(cb_tree x) {
     cp = CB_CAST(x);
     switch (cp->type) {
     case CB_CAST_ADDRESS:
-      joutput("(");
-      joutput_data(cp->val);
-      joutput(")");
+      if (integer_reference_flag) {
+        joutput("(");
+        joutput_data(cp->val);
+        joutput(")");
+      } else {
+        joutput("CobolPointerRegistry.register(");
+        joutput_data(cp->val);
+        joutput(")");
+      }
       break;
     case CB_CAST_PROGRAM_POINTER:
       joutput_func_1("CobolResolve.resolveToPointer", x);
@@ -1340,9 +1346,10 @@ static void joutput_integer(cb_tree x) {
       return;
 
     case CB_USAGE_POINTER:
-      joutput("(*(unsigned char **) (");
       joutput_data(x);
-      joutput("))");
+      if (!integer_reference_flag) {
+        joutput(".longValue()");
+      }
       return;
 
     case CB_USAGE_PROGRAM_POINTER:
@@ -3178,9 +3185,13 @@ static void joutput_call(struct cb_call *p) {
             break;
           case CB_USAGE_INDEX:
           case CB_USAGE_LENGTH:
-          case CB_USAGE_POINTER:
           case CB_USAGE_PROGRAM_POINTER:
             joutput_integer(x);
+            break;
+          case CB_USAGE_POINTER:
+            joutput("CobolDataStorage.primitiveToDataStorage(");
+            joutput_integer(x);
+            joutput(")");
             break;
           default:
             joutput("*(");
@@ -3823,6 +3834,44 @@ static void joutput_stmt(cb_tree x, enum joutput_stmt_type output_type) {
   case CB_TAG_ASSIGN:
     ap = CB_ASSIGN(x);
 
+    /* SET ADDRESS OF <var> TO ... (reference assignment) */
+    if (CB_CAST_P(ap->var) && CB_CAST(ap->var)->type == CB_CAST_ADDRESS) {
+      /* Verify that the target is a 01/77 level item so that
+         joutput_data emits a simple assignable variable (e.g. b_L_G).
+         Subfields would generate getSubDataStorage() which is not
+         a valid assignment target in Java. */
+      cb_tree target_val = CB_CAST(ap->var)->val;
+      if (CB_REFERENCE_P(target_val)) {
+        struct cb_field *target_f = cb_field(target_val);
+        if (target_f->parent != NULL) {
+          fprintf(stderr, "SET ADDRESS OF is only supported for 01/77 level "
+                          "LINKAGE items\n");
+          ABORT();
+        }
+      }
+      joutput_prefix();
+      joutput_data(target_val);
+      joutput(" = ");
+      if (ap->val == cb_null) {
+        joutput("null");
+      } else if (CB_CAST_P(ap->val) &&
+                 CB_CAST(ap->val)->type == CB_CAST_ADDRESS) {
+        /* SET ADDRESS OF Y TO ADDRESS OF X */
+        joutput_data(CB_CAST(ap->val)->val);
+      } else {
+        /* SET ADDRESS OF Y TO PTR */
+        joutput("CobolPointerRegistry.resolve(");
+        joutput_integer(ap->val);
+        joutput(")");
+      }
+      if (output_type == JOUTPUT_STMT_TRIM) {
+        joutput("\n");
+      } else {
+        joutput(";\n");
+      }
+      break;
+    }
+
     joutput_prefix();
 
     int tmp_flag = integer_reference_flag;
@@ -3847,7 +3896,17 @@ static void joutput_stmt(cb_tree x, enum joutput_stmt_type output_type) {
     }
 
     ++index_read_flag;
-    joutput_integer(ap->val);
+    if (f->usage == CB_USAGE_POINTER && ap->val == cb_null) {
+      joutput("0L");
+    } else if (f->usage == CB_USAGE_POINTER && CB_CAST_P(ap->val) &&
+               CB_CAST(ap->val)->type == CB_CAST_ADDRESS) {
+      /* SET PTR TO ADDRESS OF X */
+      joutput("CobolPointerRegistry.register(");
+      joutput_data(CB_CAST(ap->val)->val);
+      joutput(")");
+    } else {
+      joutput_integer(ap->val);
+    }
     --index_read_flag;
     if (output_type == JOUTPUT_STMT_TRIM) {
       joutput(")\n");

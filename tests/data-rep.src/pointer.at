@@ -20,7 +20,6 @@
 
 
 AT_SETUP([POINTER: display])
-AT_CHECK([${SKIP_TEST}])
 
 AT_DATA([prog.cob], [
        IDENTIFICATION   DIVISION.
@@ -38,6 +37,331 @@ AT_DATA([prog.cob], [
 ])
 
 AT_CHECK([${COMPILE} prog.cob])
-AT_CHECK([java prog], [0], [ignore])
+AT_CHECK([java prog], [0], 
+[0000000000
+0000000001
+])
+
+AT_CLEANUP
+
+
+AT_SETUP([POINTER: SET UP BY and DOWN BY])
+
+AT_DATA([prog.cob], [
+       IDENTIFICATION   DIVISION.
+       PROGRAM-ID.      prog.
+       DATA             DIVISION.
+       WORKING-STORAGE  SECTION.
+       01 PTR           USAGE POINTER VALUE NULL.
+       PROCEDURE        DIVISION.
+           SET PTR UP BY 5.
+           DISPLAY PTR
+           END-DISPLAY.
+           SET PTR UP BY 3.
+           DISPLAY PTR
+           END-DISPLAY.
+           SET PTR DOWN BY 2.
+           DISPLAY PTR
+           END-DISPLAY.
+           SET PTR DOWN BY 6.
+           DISPLAY PTR
+           END-DISPLAY.
+           STOP RUN.
+])
+
+AT_CHECK([${COMPILE} prog.cob])
+AT_CHECK([java prog], [0],
+[0000000005
+0000000008
+0000000006
+0000000000
+])
+
+AT_CLEANUP
+
+
+AT_SETUP([POINTER: MOVE between POINTER fields])
+
+AT_DATA([prog.cob], [
+       IDENTIFICATION   DIVISION.
+       PROGRAM-ID.      prog.
+       DATA             DIVISION.
+       WORKING-STORAGE  SECTION.
+       01 X             PIC X(3) VALUE "ABC".
+       01 PTR-1         USAGE POINTER VALUE NULL.
+       01 PTR-2         USAGE POINTER VALUE NULL.
+       LINKAGE          SECTION.
+       01 Y             PIC X(3).
+       PROCEDURE        DIVISION.
+           SET PTR-1 TO ADDRESS OF X.
+           MOVE PTR-1 TO PTR-2.
+           IF PTR-1 = PTR-2
+             DISPLAY "MOVE-OK"
+             END-DISPLAY
+           ELSE
+             DISPLAY "MOVE-NG"
+             END-DISPLAY
+           END-IF.
+           SET ADDRESS OF Y TO PTR-2.
+           DISPLAY Y
+           END-DISPLAY.
+           STOP RUN.
+])
+
+AT_CHECK([${COMPILE} prog.cob])
+AT_CHECK([java prog], [0],
+[MOVE-OK
+ABC
+])
+
+AT_CLEANUP
+
+
+AT_SETUP([POINTER: OCCURS])
+
+AT_DATA([prog.cob], [
+       IDENTIFICATION   DIVISION.
+       PROGRAM-ID.      prog.
+       DATA             DIVISION.
+       WORKING-STORAGE  SECTION.
+       01 X-1           PIC X(3) VALUE "AAA".
+       01 X-2           PIC X(3) VALUE "BBB".
+       01 X-3           PIC X(3) VALUE "CCC".
+       01 PTR-TBL.
+         02 PTR          USAGE POINTER OCCURS 3.
+       LINKAGE          SECTION.
+       01 Y             PIC X(3).
+       PROCEDURE        DIVISION.
+           SET PTR(1) TO ADDRESS OF X-1.
+           SET PTR(2) TO ADDRESS OF X-2.
+           SET PTR(3) TO ADDRESS OF X-3.
+           SET ADDRESS OF Y TO PTR(2).
+           DISPLAY Y
+           END-DISPLAY.
+           SET ADDRESS OF Y TO PTR(3).
+           DISPLAY Y
+           END-DISPLAY.
+           SET ADDRESS OF Y TO PTR(1).
+           DISPLAY Y
+           END-DISPLAY.
+           STOP RUN.
+])
+
+AT_CHECK([${COMPILE} prog.cob])
+AT_CHECK([java prog], [0],
+[BBB
+CCC
+AAA
+])
+
+AT_CLEANUP
+
+
+AT_SETUP([POINTER: comparison])
+
+AT_DATA([prog.cob], [
+       IDENTIFICATION   DIVISION.
+       PROGRAM-ID.      prog.
+       DATA             DIVISION.
+       WORKING-STORAGE  SECTION.
+       01 X             PIC X(3) VALUE "ABC".
+       01 Z             PIC X(3) VALUE "DEF".
+       01 PTR-1         USAGE POINTER VALUE NULL.
+       01 PTR-2         USAGE POINTER VALUE NULL.
+       01 PTR-3         USAGE POINTER VALUE NULL.
+       PROCEDURE        DIVISION.
+           SET PTR-1 TO ADDRESS OF X.
+           SET PTR-2 TO ADDRESS OF X.
+           SET PTR-3 TO ADDRESS OF Z.
+           IF PTR-1 = PTR-2
+             DISPLAY "SAME-OK"
+             END-DISPLAY
+           ELSE
+             DISPLAY "SAME-NG"
+             END-DISPLAY
+           END-IF.
+           IF PTR-1 NOT = PTR-3
+             DISPLAY "DIFF-OK"
+             END-DISPLAY
+           ELSE
+             DISPLAY "DIFF-NG"
+             END-DISPLAY
+           END-IF.
+           STOP RUN.
+])
+
+AT_CHECK([${COMPILE} prog.cob])
+AT_CHECK([java prog], [0],
+[SAME-OK
+DIFF-OK
+])
+
+AT_CLEANUP
+
+
+AT_SETUP([POINTER: INITIALIZE GROUP])
+
+AT_DATA([prog.cob], [
+       IDENTIFICATION   DIVISION.
+       PROGRAM-ID.      prog.
+       DATA             DIVISION.
+       WORKING-STORAGE  SECTION.
+       01 X             PIC X(3) VALUE "ABC".
+       01 G.
+         02 PTR-1       USAGE POINTER VALUE NULL.
+         02 PTR-2       USAGE POINTER VALUE NULL.
+       PROCEDURE        DIVISION.
+           SET PTR-1 TO ADDRESS OF X.
+           SET PTR-2 TO ADDRESS OF X.
+           IF PTR-1 NOT = NULL
+             DISPLAY "SET-OK"
+             END-DISPLAY
+           ELSE
+             DISPLAY "SET-NG"
+             END-DISPLAY
+           END-IF.
+           INITIALIZE G.
+           IF PTR-1 = NULL
+             DISPLAY "INIT1-OK"
+             END-DISPLAY
+           ELSE
+             DISPLAY "INIT1-NG"
+             END-DISPLAY
+           END-IF.
+           IF PTR-2 = NULL
+             DISPLAY "INIT2-OK"
+             END-DISPLAY
+           ELSE
+             DISPLAY "INIT2-NG"
+             END-DISPLAY
+           END-IF.
+           STOP RUN.
+])
+
+AT_CHECK([${COMPILE} prog.cob])
+AT_CHECK([java prog], [0],
+[SET-OK
+INIT1-OK
+INIT2-OK
+])
+
+AT_CLEANUP
+
+
+AT_SETUP([POINTER: LENGTH OF])
+
+AT_DATA([prog.cob], [
+       IDENTIFICATION   DIVISION.
+       PROGRAM-ID.      prog.
+       DATA             DIVISION.
+       WORKING-STORAGE  SECTION.
+       01 PTR-1         USAGE POINTER VALUE NULL.
+       PROCEDURE        DIVISION.
+           DISPLAY LENGTH OF PTR-1
+           END-DISPLAY.
+           STOP RUN.
+])
+
+AT_CHECK([${COMPILE} prog.cob])
+AT_CHECK([java prog], [0],
+[8
+])
+
+AT_CLEANUP
+
+
+AT_SETUP([POINTER: SET UP BY then dereference])
+
+AT_DATA([prog.cob], [
+       IDENTIFICATION   DIVISION.
+       PROGRAM-ID.      prog.
+       DATA             DIVISION.
+       WORKING-STORAGE  SECTION.
+       01 X             PIC X(10) VALUE "0123456789".
+       01 PTR           USAGE POINTER VALUE NULL.
+       LINKAGE          SECTION.
+       01 C1            PIC X(1).
+       PROCEDURE        DIVISION.
+           SET PTR TO ADDRESS OF X.
+           SET PTR UP BY 3.
+           SET ADDRESS OF C1 TO PTR.
+           DISPLAY C1
+           END-DISPLAY.
+           SET PTR UP BY 4.
+           SET ADDRESS OF C1 TO PTR.
+           DISPLAY C1
+           END-DISPLAY.
+           SET PTR DOWN BY 5.
+           SET ADDRESS OF C1 TO PTR.
+           DISPLAY C1
+           END-DISPLAY.
+           STOP RUN.
+])
+
+AT_CHECK([${COMPILE} prog.cob])
+AT_CHECK([java prog], [0],
+[3
+7
+2
+])
+
+AT_CLEANUP
+
+
+AT_SETUP([POINTER: multiple UP/DOWN BY with multi-byte dereference])
+
+AT_DATA([prog.cob], [
+       IDENTIFICATION   DIVISION.
+       PROGRAM-ID.      prog.
+       DATA             DIVISION.
+       WORKING-STORAGE  SECTION.
+       01 BUF           PIC X(10) VALUE "ABCDEFGHIJ".
+       01 PTR           USAGE POINTER VALUE NULL.
+       LINKAGE          SECTION.
+       01 C1            PIC X(1).
+       01 C3            PIC X(3).
+       PROCEDURE        DIVISION.
+           SET PTR TO ADDRESS OF BUF.
+
+           SET ADDRESS OF C1 TO PTR.
+           DISPLAY "DEREF(PTR)   = " C1
+           END-DISPLAY.
+
+           SET PTR UP BY 3.
+           SET ADDRESS OF C1 TO PTR.
+           DISPLAY "DEREF(PTR+3) = " C1
+           END-DISPLAY.
+
+           SET ADDRESS OF C3 TO PTR.
+           DISPLAY "DEREF 3BYTES = " C3
+           END-DISPLAY.
+
+           SET PTR UP BY 2.
+           SET ADDRESS OF C1 TO PTR.
+           DISPLAY "DEREF(PTR+5) = " C1
+           END-DISPLAY.
+
+           SET PTR DOWN BY 4.
+           SET ADDRESS OF C1 TO PTR.
+           DISPLAY "DEREF(PTR+1) = " C1
+           END-DISPLAY.
+
+           SET PTR DOWN BY 1.
+           SET ADDRESS OF C3 TO PTR.
+           DISPLAY "DEREF(PTR+0) = " C3
+           END-DISPLAY.
+
+           STOP RUN.
+])
+
+AT_CHECK([${COMPILE} prog.cob])
+AT_CHECK([java prog], [0],
+[DEREF(PTR)   = A
+DEREF(PTR+3) = D
+DEREF 3BYTES = DEF
+DEREF(PTR+5) = F
+DEREF(PTR+1) = B
+DEREF(PTR+0) = ABC
+])
 
 AT_CLEANUP

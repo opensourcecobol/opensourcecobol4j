@@ -134,7 +134,6 @@ AT_CLEANUP
 ## ADDRESS OF
 
 AT_SETUP([ADDRESS OF])
-AT_CHECK([${SKIP_TEST}])
 
 AT_DATA([prog.cob], [
        IDENTIFICATION   DIVISION.
@@ -193,6 +192,256 @@ OK
 
 AT_CLEANUP
 
+
+AT_SETUP([CALL BY VALUE with POINTER])
+
+AT_DATA([callee.cob], [
+       IDENTIFICATION   DIVISION.
+       PROGRAM-ID.      callee.
+       DATA             DIVISION.
+       LINKAGE          SECTION.
+       01 PTR           USAGE POINTER.
+       01 Y             PIC X(5).
+       PROCEDURE        DIVISION
+           USING BY VALUE PTR.
+           SET ADDRESS OF Y TO PTR.
+           DISPLAY Y
+           END-DISPLAY.
+           EXIT PROGRAM.
+])
+
+AT_DATA([caller.cob], [
+       IDENTIFICATION   DIVISION.
+       PROGRAM-ID.      caller.
+       DATA             DIVISION.
+       WORKING-STORAGE  SECTION.
+       01 X             PIC X(5) VALUE "HELLO".
+       01 PTR-1         USAGE POINTER VALUE NULL.
+       PROCEDURE        DIVISION.
+           SET PTR-1 TO ADDRESS OF X.
+           CALL "callee" USING BY VALUE PTR-1
+           END-CALL.
+           STOP RUN.
+])
+
+AT_CHECK([${COMPILE} caller.cob])
+AT_CHECK([${COMPILE_MODULE} callee.cob])
+AT_CHECK([java caller], [0],
+[HELLO
+])
+
+AT_CLEANUP
+
+
+AT_SETUP([SET ADDRESS OF and modify via LINKAGE])
+
+AT_DATA([prog.cob], [
+       IDENTIFICATION   DIVISION.
+       PROGRAM-ID.      prog.
+       DATA             DIVISION.
+       WORKING-STORAGE  SECTION.
+       01 X             PIC X(5) VALUE "ABCDE".
+       LINKAGE          SECTION.
+       01 Y             PIC X(5).
+       PROCEDURE        DIVISION.
+           SET ADDRESS OF Y TO ADDRESS OF X.
+           DISPLAY X
+           END-DISPLAY.
+           MOVE "ZYXWV" TO Y.
+           DISPLAY X
+           END-DISPLAY.
+           STOP RUN.
+])
+
+AT_CHECK([${COMPILE} prog.cob])
+AT_CHECK([java prog], [0],
+[ABCDE
+ZYXWV
+])
+
+AT_CLEANUP
+
+
+AT_SETUP([SET ADDRESS OF reassignment])
+
+AT_DATA([prog.cob], [
+       IDENTIFICATION   DIVISION.
+       PROGRAM-ID.      prog.
+       DATA             DIVISION.
+       WORKING-STORAGE  SECTION.
+       01 X-1           PIC X(5) VALUE "FIRST".
+       01 X-2           PIC X(5) VALUE "SECND".
+       LINKAGE          SECTION.
+       01 Y             PIC X(5).
+       PROCEDURE        DIVISION.
+           SET ADDRESS OF Y TO ADDRESS OF X-1.
+           DISPLAY Y
+           END-DISPLAY.
+           SET ADDRESS OF Y TO ADDRESS OF X-2.
+           DISPLAY Y
+           END-DISPLAY.
+           MOVE "CHANG" TO Y.
+           DISPLAY X-1
+           END-DISPLAY.
+           DISPLAY X-2
+           END-DISPLAY.
+           STOP RUN.
+])
+
+AT_CHECK([${COMPILE} prog.cob])
+AT_CHECK([java prog], [0],
+[FIRST
+SECND
+FIRST
+CHANG
+])
+
+AT_CLEANUP
+
+
+AT_SETUP([CALL BY REFERENCE with POINTER])
+
+AT_DATA([callee.cob], [
+       IDENTIFICATION   DIVISION.
+       PROGRAM-ID.      callee.
+       DATA             DIVISION.
+       WORKING-STORAGE  SECTION.
+       01 X-SUB         PIC X(5) VALUE "WORLD".
+       LINKAGE          SECTION.
+       01 PTR           USAGE POINTER.
+       PROCEDURE        DIVISION
+           USING BY REFERENCE PTR.
+           SET PTR TO ADDRESS OF X-SUB.
+           EXIT PROGRAM.
+])
+
+AT_DATA([caller.cob], [
+       IDENTIFICATION   DIVISION.
+       PROGRAM-ID.      caller.
+       DATA             DIVISION.
+       WORKING-STORAGE  SECTION.
+       01 PTR-1         USAGE POINTER VALUE NULL.
+       LINKAGE          SECTION.
+       01 Y             PIC X(5).
+       PROCEDURE        DIVISION.
+           CALL "callee" USING BY REFERENCE PTR-1
+           END-CALL.
+           SET ADDRESS OF Y TO PTR-1.
+           DISPLAY Y
+           END-DISPLAY.
+           STOP RUN.
+])
+
+AT_CHECK([${COMPILE} caller.cob])
+AT_CHECK([${COMPILE_MODULE} callee.cob])
+AT_CHECK([java caller], [0],
+[WORLD
+])
+
+AT_CLEANUP
+
+
+AT_SETUP([CALL BY CONTENT with POINTER])
+
+AT_DATA([callee.cob], [
+       IDENTIFICATION   DIVISION.
+       PROGRAM-ID.      callee.
+       DATA             DIVISION.
+       WORKING-STORAGE  SECTION.
+       01 X-SUB         PIC X(3) VALUE "SUB".
+       LINKAGE          SECTION.
+       01 PTR           USAGE POINTER.
+       01 Y             PIC X(5).
+       PROCEDURE        DIVISION
+           USING BY REFERENCE PTR.
+           SET ADDRESS OF Y TO PTR.
+           DISPLAY Y
+           END-DISPLAY.
+           SET PTR TO ADDRESS OF X-SUB.
+           EXIT PROGRAM.
+])
+
+AT_DATA([caller.cob], [
+       IDENTIFICATION   DIVISION.
+       PROGRAM-ID.      caller.
+       DATA             DIVISION.
+       WORKING-STORAGE  SECTION.
+       01 X             PIC X(5) VALUE "HELLO".
+       01 PTR-1         USAGE POINTER VALUE NULL.
+       LINKAGE          SECTION.
+       01 Y             PIC X(5).
+       PROCEDURE        DIVISION.
+           SET PTR-1 TO ADDRESS OF X.
+           CALL "callee" USING BY CONTENT PTR-1
+           END-CALL.
+           SET ADDRESS OF Y TO PTR-1.
+           DISPLAY Y
+           END-DISPLAY.
+           STOP RUN.
+])
+
+AT_CHECK([${COMPILE} caller.cob])
+AT_CHECK([${COMPILE_MODULE} callee.cob])
+AT_CHECK([java caller], [0],
+[HELLO
+HELLO
+])
+
+AT_CLEANUP
+
+
+AT_SETUP([Nested CALL with POINTER])
+
+AT_DATA([sub2.cob], [
+       IDENTIFICATION   DIVISION.
+       PROGRAM-ID.      sub2.
+       DATA             DIVISION.
+       LINKAGE          SECTION.
+       01 PTR           USAGE POINTER.
+       01 Y             PIC X(5).
+       PROCEDURE        DIVISION
+           USING BY VALUE PTR.
+           SET ADDRESS OF Y TO PTR.
+           DISPLAY Y
+           END-DISPLAY.
+           EXIT PROGRAM.
+])
+
+AT_DATA([sub1.cob], [
+       IDENTIFICATION   DIVISION.
+       PROGRAM-ID.      sub1.
+       DATA             DIVISION.
+       LINKAGE          SECTION.
+       01 PTR           USAGE POINTER.
+       PROCEDURE        DIVISION
+           USING BY VALUE PTR.
+           CALL "sub2" USING BY VALUE PTR
+           END-CALL.
+           EXIT PROGRAM.
+])
+
+AT_DATA([caller.cob], [
+       IDENTIFICATION   DIVISION.
+       PROGRAM-ID.      caller.
+       DATA             DIVISION.
+       WORKING-STORAGE  SECTION.
+       01 X             PIC X(5) VALUE "CHAIN".
+       01 PTR-1         USAGE POINTER VALUE NULL.
+       PROCEDURE        DIVISION.
+           SET PTR-1 TO ADDRESS OF X.
+           CALL "sub1" USING BY VALUE PTR-1
+           END-CALL.
+           STOP RUN.
+])
+
+AT_CHECK([${COMPILE} caller.cob])
+AT_CHECK([${COMPILE_MODULE} sub1.cob])
+AT_CHECK([${COMPILE_MODULE} sub2.cob])
+AT_CHECK([java caller], [0],
+[CHAIN
+])
+
+AT_CLEANUP
 
 
 ## LENGTH OF
@@ -373,6 +622,57 @@ AT_CLEANUP
 
 
 ## CALL
+
+AT_SETUP([CALL with GROUP LINKAGE item])
+
+AT_DATA([callee.cob], [
+       IDENTIFICATION   DIVISION.
+       PROGRAM-ID.      callee.
+       DATA             DIVISION.
+       LINKAGE          SECTION.
+       01 L-G.
+         02 L-NAME      PIC X(5).
+         02 L-AGE       PIC 9(3).
+       PROCEDURE        DIVISION
+           USING BY REFERENCE L-G.
+           DISPLAY L-NAME
+           END-DISPLAY.
+           DISPLAY L-AGE
+           END-DISPLAY.
+           MOVE "BOB  " TO L-NAME.
+           MOVE 30 TO L-AGE.
+           EXIT PROGRAM.
+])
+
+AT_DATA([caller.cob], [
+       IDENTIFICATION   DIVISION.
+       PROGRAM-ID.      caller.
+       DATA             DIVISION.
+       WORKING-STORAGE  SECTION.
+       01 G.
+         02 G-NAME      PIC X(5) VALUE "ALICE".
+         02 G-AGE       PIC 9(3) VALUE 25.
+       PROCEDURE        DIVISION.
+           CALL "callee" USING BY REFERENCE G
+           END-CALL.
+           DISPLAY G-NAME
+           END-DISPLAY.
+           DISPLAY G-AGE
+           END-DISPLAY.
+           STOP RUN.
+])
+
+AT_CHECK([${COMPILE} caller.cob])
+AT_CHECK([${COMPILE_MODULE} callee.cob])
+AT_CHECK([java caller], [0],
+[ALICE
+025
+BOB  @&t@
+030
+])
+
+AT_CLEANUP
+
 
 AT_SETUP([CALL USING file-name - so])
 AT_CHECK([${SKIP_TEST}])

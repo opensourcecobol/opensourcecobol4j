@@ -38,6 +38,7 @@ SRC_FILES = \
 	./app/src/main/java/jp/osscons/opensourcecobol/libcobj/data/CobolGroupField.java \
 	./app/src/main/java/jp/osscons/opensourcecobol/libcobj/data/CobolNationalField.java \
 	./app/src/main/java/jp/osscons/opensourcecobol/libcobj/data/CobolNumericEditedField.java \
+	./app/src/main/java/jp/osscons/opensourcecobol/libcobj/data/CobolPointerRegistry.java \
 	./app/src/main/java/jp/osscons/opensourcecobol/libcobj/exceptions/CobolExceptionId.java \
 	./app/src/main/java/jp/osscons/opensourcecobol/libcobj/exceptions/CobolStopRunException.java \
 	./app/src/main/java/jp/osscons/opensourcecobol/libcobj/exceptions/CobolExceptionInfo.java \

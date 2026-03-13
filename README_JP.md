@@ -155,6 +155,21 @@ cobj [COBOL source file]
 java [PROGRAM-ID]
 ```
 
+> **Tip:** 複数のCOBOLソースファイルをコンパイルする場合は、`cobj`をファイルごとに個別に呼び出すのではなく、すべてのファイルを一度の`cobj`呼び出しに渡すことを推奨します。これにより、合計のコンパイル時間を大幅に短縮できます。
+>
+> ```bash
+> # 推奨: すべてのファイルを一度にコンパイル
+> cobj file1.cbl file2.cbl file3.cbl
+>
+> # ワイルドカードも使用可能
+> cobj *.cbl
+>
+> # 非推奨: ファイルごとに個別にコンパイル
+> cobj file1.cbl
+> cobj file2.cbl
+> cobj file3.cbl
+> ```
+
 ## ドキュメント
 
 * [ランタイムライブラリ`libcobj.jar`のAPIリファレンス](https://opensourcecobol.github.io/opensourcecobol4j/javadoc/libcobj/index.html)
