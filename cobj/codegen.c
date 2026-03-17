@@ -2954,8 +2954,11 @@ static void joutput_call(struct cb_call *p) {
         break;
       }
       break;
-    default:
+    case CB_TAG_CAST:
       joutput("(AbstractCobolField) null");
+      break;
+    default:
+      joutput("null");
       break;
     }
     if (CB_CHAIN(l)) {
