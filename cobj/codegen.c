@@ -2849,12 +2849,14 @@ static void joutput_call(struct cb_call *p) {
         joutput_line("CobolDataStorage content_%d = new CobolDataStorage(8);",
                      (int)n);
       } else if (CB_CAST_P(x)) {
-        joutput_line("CobolDataStorage ptr_%d = new CobolDataStorage(8);", (int)n);
+        joutput_line("CobolDataStorage ptr_%d = new CobolDataStorage(8);",
+                     (int)n);
       }
       break;
     case CB_CALL_BY_CONTENT:
       if (CB_CAST_P(x)) {
-        joutput_line("CobolDataStorage ptr_%d = new CobolDataStorage(8);", (int)n);
+        joutput_line("CobolDataStorage ptr_%d = new CobolDataStorage(8);",
+                     (int)n);
       } else if (CB_TREE_TAG(x) != CB_TAG_INTRINSIC && x != cb_null &&
                  !(CB_CAST_P(x))) {
         joutput_prefix();
