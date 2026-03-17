@@ -2849,12 +2849,12 @@ static void joutput_call(struct cb_call *p) {
         joutput_line("CobolDataStorage content_%d = new CobolDataStorage(8);",
                      (int)n);
       } else if (CB_CAST_P(x)) {
-        joutput_line("void *ptr_%d;", (int)n);
+        joutput_line("CobolDataStorage ptr_%d = new CobolDataStorage(8);", (int)n);
       }
       break;
     case CB_CALL_BY_CONTENT:
       if (CB_CAST_P(x)) {
-        joutput_line("void *ptr_%d;", (int)n);
+        joutput_line("CobolDataStorage ptr_%d = new CobolDataStorage(8);", (int)n);
       } else if (CB_TREE_TAG(x) != CB_TAG_INTRINSIC && x != cb_null &&
                  !(CB_CAST_P(x))) {
         joutput_prefix();
@@ -2890,17 +2890,17 @@ static void joutput_call(struct cb_call *p) {
         joutput("L);\n");
       } else if (CB_CAST_P(x)) {
         joutput_prefix();
-        joutput("ptr_%d = ", (int)n);
+        joutput("ptr_%d.set(", (int)n);
         joutput_integer(x);
-        joutput(";\n");
+        joutput(");\n");
       }
       break;
     case CB_CALL_BY_CONTENT:
       if (CB_CAST_P(x)) {
         joutput_prefix();
-        joutput("ptr_%d = ", (int)n);
+        joutput("ptr_%d.set(", (int)n);
         joutput_integer(x);
-        joutput(";\n");
+        joutput(");\n");
       } else if (CB_TREE_TAG(x) != CB_TAG_INTRINSIC) {
         if (CB_NUMERIC_LITERAL_P(x)) {
           joutput_prefix();
@@ -2953,7 +2953,7 @@ static void joutput_call(struct cb_call *p) {
       }
       break;
     default:
-      joutput("null");
+      joutput("(AbstractCobolField) null");
       break;
     }
     if (CB_CHAIN(l)) {
@@ -3061,7 +3061,7 @@ static void joutput_call(struct cb_call *p) {
       } else if (CB_REFERENCE_P(x) && CB_FILE_P(cb_ref(x))) {
         joutput_param(cb_ref(x), -1);
       } else if (CB_CAST_P(x)) {
-        joutput("&ptr_%d", (int)n);
+        joutput("ptr_%d", (int)n);
       } else {
         int tmp_param_wrap_string_flag = param_wrap_string_flag;
         param_wrap_string_flag = 1;
@@ -3072,7 +3072,7 @@ static void joutput_call(struct cb_call *p) {
     case CB_CALL_BY_CONTENT:
       if (CB_TREE_TAG(x) != CB_TAG_INTRINSIC && x != cb_null) {
         if (CB_CAST_P(x)) {
-          joutput("&ptr_%d", (int)n);
+          joutput("ptr_%d", (int)n);
         } else {
           joutput("content_%d", (int)n);
         }
