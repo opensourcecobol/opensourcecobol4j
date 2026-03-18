@@ -825,14 +825,34 @@ static int is_call_parameter(const struct cb_field *f) {
   return 0;
 }
 
+static int is_dangling_linkage(const struct cb_field *f) {
+  struct cb_field *lf;
+  cb_tree p;
+  for (lf = current_prog->linkage_storage; lf; lf = lf->sister) {
+    if (f == lf) {
+      for (p = current_prog->parameter_list; p; p = CB_CHAIN(p)) {
+        if (f == cb_field(CB_VALUE(p))) {
+          return 0;
+        }
+      }
+      return 1;
+    }
+  }
+  return 0;
+}
+
+static int is_runtime_resolved_parent(const struct cb_field *f) {
+  return is_call_parameter(f) || is_dangling_linkage(f);
+}
+
 static int joutput_field_storage(struct cb_field *f, struct cb_field *top) {
-  int flag_call_parameter = is_call_parameter(top);
-  if (flag_call_parameter ||
+  int flag_runtime_resolved = is_runtime_resolved_parent(top);
+  if (flag_runtime_resolved ||
       (f->offset == 0 && strcmp(f->name, top->name) == 0)) {
     char *base_name = get_java_identifier_base(top);
     joutput(base_name);
     free(base_name);
-    return flag_call_parameter;
+    return flag_runtime_resolved;
   } else {
     char *base_name = get_java_identifier_base(f);
     joutput(base_name);
@@ -5354,7 +5374,7 @@ static void joutput_init_method(struct cb_program *prog) {
     int i;
     for (i = 0; i < data_storage_cache_count; ++i) {
       struct data_storage_list *entry = sorted_data_storage_cache[i];
-      if (is_call_parameter(entry->top) && entry->f != entry->top) {
+      if (is_runtime_resolved_parent(entry->top) && entry->f != entry->top) {
         continue;
       }
       joutput_prefix();
@@ -5839,7 +5859,7 @@ static void joutput_declare_member_variables(struct cb_program *prog,
 
     for (i = 0; i < data_storage_cache_count; ++i) {
       struct data_storage_list *entry = sorted_data_storage_cache[i];
-      if (is_call_parameter(entry->top) && entry->f != entry->top) {
+      if (is_runtime_resolved_parent(entry->top) && entry->f != entry->top) {
         continue;
       }
       joutput_prefix();
