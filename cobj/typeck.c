@@ -4811,7 +4811,8 @@ int validate_move(cb_tree src, cb_tree dst, size_t is_value) {
   case CB_TAG_FIELD:
   case CB_TAG_REFERENCE:
     if (CB_REFERENCE_P(src) && CB_ALPHABET_NAME_P(CB_REFERENCE(src)->value)) {
-      break;
+      cb_error_x(loc, _("'%s' is not a field"), cb_name(src));
+      return -1;
     }
     if (CB_REFERENCE_P(src) && CB_FILE_P(CB_REFERENCE(src)->value)) {
       goto invalid;
@@ -5617,7 +5618,8 @@ cb_tree cb_build_move(cb_tree src, cb_tree dst) {
   }
 
   if (CB_REFERENCE_P(src) && CB_ALPHABET_NAME_P(CB_REFERENCE(src)->value)) {
-    return cb_build_move_call(src, dst);
+    cb_error_x(src, _("'%s' is not a field"), cb_name(src));
+    return cb_error_node;
   }
   if (CB_INDEX_P(dst)) {
     if (src == cb_null) {
