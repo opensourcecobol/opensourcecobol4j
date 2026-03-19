@@ -853,6 +853,62 @@ AT_CHECK([java caller], [0],
 AT_CLEANUP
 
 
+AT_SETUP([CALL with mixed BY REFERENCE and BY CONTENT ADDRESS OF])
+
+AT_DATA([callee.cob], [
+       IDENTIFICATION   DIVISION.
+       PROGRAM-ID.      callee.
+       DATA             DIVISION.
+       LINKAGE          SECTION.
+       01 PTR-1         USAGE POINTER.
+       01 PTR-2         USAGE POINTER.
+       01 Y1            PIC X(5).
+       01 Y2            PIC X(3).
+       PROCEDURE        DIVISION
+           USING BY REFERENCE PTR-1, PTR-2.
+           SET ADDRESS OF Y1 TO PTR-1.
+           SET ADDRESS OF Y2 TO PTR-2.
+           DISPLAY Y1
+           END-DISPLAY.
+           DISPLAY Y2
+           END-DISPLAY.
+           SET PTR-2 TO ADDRESS OF Y1.
+           EXIT PROGRAM.
+])
+
+AT_DATA([caller.cob], [
+       IDENTIFICATION   DIVISION.
+       PROGRAM-ID.      caller.
+       DATA             DIVISION.
+       WORKING-STORAGE  SECTION.
+       01 X1            PIC X(5) VALUE "HELLO".
+       01 X2            PIC X(3) VALUE "ABC".
+       01 PTR-BAK       USAGE POINTER VALUE NULL.
+       LINKAGE          SECTION.
+       01 Y             PIC X(3).
+       PROCEDURE        DIVISION.
+           SET PTR-BAK TO ADDRESS OF X2.
+           CALL "callee" USING
+               BY REFERENCE ADDRESS OF X1,
+               BY CONTENT ADDRESS OF X2
+           END-CALL.
+           SET ADDRESS OF Y TO PTR-BAK.
+           DISPLAY Y
+           END-DISPLAY.
+           STOP RUN.
+])
+
+AT_CHECK([${COMPILE} caller.cob])
+AT_CHECK([${COMPILE_MODULE} callee.cob])
+AT_CHECK([java caller], [0],
+[HELLO
+ABC
+ABC
+])
+
+AT_CLEANUP
+
+
 AT_SETUP([Nested CALL with POINTER])
 
 AT_DATA([sub2.cob], [
