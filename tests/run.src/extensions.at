@@ -1708,3 +1708,183 @@ prog.cob:9: Warning: Unreachable statement 'DISPLAY'
 
 AT_CLEANUP
 
+
+AT_SETUP([CALL BY VALUE with BINARY])
+
+AT_DATA([callee.cob], [
+       IDENTIFICATION   DIVISION.
+       PROGRAM-ID.      callee.
+       DATA             DIVISION.
+       LINKAGE          SECTION.
+       01 LK-NUM        PIC 9(9) BINARY.
+       PROCEDURE        DIVISION USING LK-NUM.
+           DISPLAY LK-NUM END-DISPLAY.
+           EXIT PROGRAM.
+])
+
+AT_DATA([caller.cob], [
+       IDENTIFICATION   DIVISION.
+       PROGRAM-ID.      caller.
+       DATA             DIVISION.
+       WORKING-STORAGE  SECTION.
+       01 WS-NUM        PIC 9(9) BINARY VALUE 1234.
+       PROCEDURE        DIVISION.
+           CALL "callee" USING
+               BY VALUE WS-NUM
+           END-CALL.
+           STOP RUN.
+])
+
+AT_CHECK([${COMPILE} caller.cob])
+AT_CHECK([${COMPILE_MODULE} callee.cob])
+AT_CHECK([java caller], [0],
+[000001234
+])
+
+AT_CLEANUP
+
+
+AT_SETUP([CALL BY VALUE SIZE AUTO])
+
+AT_DATA([callee.cob], [
+       IDENTIFICATION   DIVISION.
+       PROGRAM-ID.      callee.
+       DATA             DIVISION.
+       LINKAGE          SECTION.
+       01 LK-NUM        PIC 9(9) BINARY.
+       PROCEDURE        DIVISION USING LK-NUM.
+           DISPLAY LK-NUM END-DISPLAY.
+           EXIT PROGRAM.
+])
+
+AT_DATA([caller.cob], [
+       IDENTIFICATION   DIVISION.
+       PROGRAM-ID.      caller.
+       DATA             DIVISION.
+       WORKING-STORAGE  SECTION.
+       01 WS-NUM        PIC 9(9) BINARY VALUE 123456789.
+       PROCEDURE        DIVISION.
+           CALL "callee" USING
+               BY VALUE SIZE AUTO WS-NUM
+           END-CALL.
+           STOP RUN.
+])
+
+AT_CHECK([${COMPILE} caller.cob])
+AT_CHECK([${COMPILE_MODULE} callee.cob])
+AT_CHECK([java caller], [0],
+[123456789
+])
+
+AT_CLEANUP
+
+
+AT_SETUP([CALL BY VALUE SIZE 8])
+
+AT_DATA([callee.cob], [
+       IDENTIFICATION   DIVISION.
+       PROGRAM-ID.      callee.
+       DATA             DIVISION.
+       LINKAGE          SECTION.
+       01 LK-NUM        PIC 9(18) BINARY.
+       PROCEDURE        DIVISION USING LK-NUM.
+           DISPLAY LK-NUM END-DISPLAY.
+           EXIT PROGRAM.
+])
+
+AT_DATA([caller.cob], [
+       IDENTIFICATION   DIVISION.
+       PROGRAM-ID.      caller.
+       DATA             DIVISION.
+       WORKING-STORAGE  SECTION.
+       01 WS-NUM        PIC 9(18) BINARY VALUE 123456789012345678.
+       PROCEDURE        DIVISION.
+           CALL "callee" USING
+               BY VALUE SIZE 8 WS-NUM
+           END-CALL.
+           STOP RUN.
+])
+
+AT_CHECK([${COMPILE} caller.cob])
+AT_CHECK([${COMPILE_MODULE} callee.cob])
+AT_CHECK([java caller], [0],
+[123456789012345678
+])
+
+AT_CLEANUP
+
+
+AT_SETUP([CALL BY VALUE UNSIGNED SIZE])
+
+AT_DATA([callee.cob], [
+       IDENTIFICATION   DIVISION.
+       PROGRAM-ID.      callee.
+       DATA             DIVISION.
+       LINKAGE          SECTION.
+       01 LK-NUM        PIC 9(9) BINARY.
+       PROCEDURE        DIVISION USING LK-NUM.
+           DISPLAY LK-NUM END-DISPLAY.
+           EXIT PROGRAM.
+])
+
+AT_DATA([caller.cob], [
+       IDENTIFICATION   DIVISION.
+       PROGRAM-ID.      caller.
+       DATA             DIVISION.
+       WORKING-STORAGE  SECTION.
+       01 WS-NUM        PIC 9(4) VALUE 5678.
+       PROCEDURE        DIVISION.
+           CALL "callee" USING
+               BY VALUE UNSIGNED SIZE 4 WS-NUM
+           END-CALL.
+           STOP RUN.
+])
+
+AT_CHECK([${COMPILE} caller.cob])
+AT_CHECK([${COMPILE_MODULE} callee.cob])
+AT_CHECK([java caller], [0],
+[000005678
+])
+
+AT_CLEANUP
+
+
+AT_SETUP([CALL BY VALUE with DISPLAY and PACKED-DECIMAL])
+
+AT_DATA([callee.cob], [
+       IDENTIFICATION   DIVISION.
+       PROGRAM-ID.      callee.
+       DATA             DIVISION.
+       LINKAGE          SECTION.
+       01 LK-DISP       PIC 9(9) BINARY.
+       01 LK-PACK       PIC 9(9) BINARY.
+       PROCEDURE        DIVISION USING LK-DISP LK-PACK.
+           DISPLAY LK-DISP END-DISPLAY.
+           DISPLAY LK-PACK END-DISPLAY.
+           EXIT PROGRAM.
+])
+
+AT_DATA([caller.cob], [
+       IDENTIFICATION   DIVISION.
+       PROGRAM-ID.      caller.
+       DATA             DIVISION.
+       WORKING-STORAGE  SECTION.
+       01 WS-DISP       PIC 9(4) VALUE 1111.
+       01 WS-PACK       PIC 9(4) PACKED-DECIMAL VALUE 2222.
+       PROCEDURE        DIVISION.
+           CALL "callee" USING
+               BY VALUE WS-DISP
+               BY VALUE WS-PACK
+           END-CALL.
+           STOP RUN.
+])
+
+AT_CHECK([${COMPILE} caller.cob])
+AT_CHECK([${COMPILE_MODULE} callee.cob])
+AT_CHECK([java caller], [0],
+[000001111
+000002222
+])
+
+AT_CLEANUP
+
