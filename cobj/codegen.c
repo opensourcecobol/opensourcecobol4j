@@ -3116,11 +3116,6 @@ static void joutput_call(struct cb_call *p) {
           case CB_USAGE_DISPLAY:
             sizes = CB_SIZES_INT(l);
             if (sizes == CB_SIZE_AUTO) {
-              if (f->pic->have_sign) {
-                joutput("(unsigned ");
-              } else {
-                joutput("(");
-              }
               if (f->usage == CB_USAGE_PACKED || f->usage == CB_USAGE_DISPLAY) {
                 sizes = f->pic->digits - f->pic->scale;
               } else {
@@ -3155,33 +3150,19 @@ static void joutput_call(struct cb_call *p) {
                 sizes = CB_SIZE_8;
                 break;
               }
-            } else {
-              if (CB_SIZES_INT_UNSIGNED(l)) {
-                joutput("(unsigned ");
-              } else {
-                joutput("(");
-              }
             }
             switch (sizes) {
-            case CB_SIZE_1:
-              joutput("char");
-              break;
-            case CB_SIZE_2:
-              joutput("short");
-              break;
-            case CB_SIZE_4:
-              joutput("int");
-              break;
             case CB_SIZE_8:
-              joutput("long long");
+              joutput("CobolDataStorage.primitiveToDataStorage((long)(");
+              joutput_integer(x);
+              joutput("))");
               break;
             default:
-              joutput("int");
+              joutput("CobolDataStorage.primitiveToDataStorage((int)(");
+              joutput_integer(x);
+              joutput("))");
               break;
             }
-            joutput(")(");
-            joutput_integer(x);
-            joutput(")");
             break;
           case CB_USAGE_INDEX:
           case CB_USAGE_LENGTH:
@@ -3194,6 +3175,9 @@ static void joutput_call(struct cb_call *p) {
             joutput(")");
             break;
           default:
+            /* FIXME: COMP-1 / COMP-2を使うとここを通ることがある
+             * COMP-1 / COMP-2を実装するときにここも見直す必要がある
+             */
             joutput("*(");
             joutput_data(x);
             joutput(")");
