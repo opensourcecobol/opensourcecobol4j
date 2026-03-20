@@ -40,10 +40,10 @@ import jp.osscons.opensourcecobol.libcobj.exceptions.CobolExceptionInfo;
 /** DISPLAY文やACCEPT文に関するメソッドを実装するクラス */
 public class CobolTerminal {
 
-    /** TDOD: 準備中 */
+    /** DISPLAY文で設定されたコマンドラインデータのバイト数 */
     private static int commlncnt = 0;
 
-    /** TDOD: 準備中 */
+    /** DISPLAY文で設定されたコマンドラインデータのバイト配列 */
     private static byte[] commlnptr = null;
 
     /**
@@ -115,7 +115,7 @@ public class CobolTerminal {
     /**
      * 標準入力からデータを受け取る
      *
-     * @param f TODO: 準備中
+     * @param f 入力データを格納するCOBOL変数
      */
     public static void accept(AbstractCobolField f) {
         try {
@@ -152,9 +152,12 @@ public class CobolTerminal {
     // Time
 
     /**
-     * libcob/common.c job_or_current_localtime
+     * ジョブ実行時刻または現在時刻を返す. COB_DATE環境変数で設定された時刻({@link
+     * CobolUtil#cobLocalTm})が存在する場合はその値を返し, 設定されていない場合は現在時刻を返す.
      *
-     * @return TODO: 準備中
+     * <p>libcob/common.cのjob_or_current_localtimeに対応する.
+     *
+     * @return ジョブ実行時刻または現在のローカル日時
      */
     private static LocalDateTime jobOrCurrentLocalTime() {
         if (CobolUtil.cobLocalTm != null) {
@@ -165,9 +168,9 @@ public class CobolTerminal {
     }
 
     /**
-     * TODO: 準備中
+     * ACCEPT FROM DATE文の実装. 現在の日付を"yyMMdd"形式(2桁年+月+日)でCOBOL変数に格納する.
      *
-     * @param f TODO: 準備中
+     * @param f 日付データを格納するCOBOL変数
      */
     public static void acceptDate(AbstractCobolField f) {
         LocalDateTime date = jobOrCurrentLocalTime();
@@ -176,9 +179,9 @@ public class CobolTerminal {
     }
 
     /**
-     * TODO: 準備中
+     * ACCEPT FROM DATE YYYYMMDD文の実装. 現在の日付を"yyyyMMdd"形式(4桁年+月+日)でCOBOL変数に格納する.
      *
-     * @param f TODO: 準備中
+     * @param f 日付データを格納するCOBOL変数
      */
     public static void acceptDate_yyyymmdd(AbstractCobolField f) {
         LocalDateTime date = jobOrCurrentLocalTime();
@@ -187,9 +190,9 @@ public class CobolTerminal {
     }
 
     /**
-     * TODO: 準備中
+     * ACCEPT FROM DAY文の実装. 現在の日付を"yyDDD"形式(2桁年+年間通算日)でCOBOL変数に格納する.
      *
-     * @param f TODO: 準備中
+     * @param f 日付データを格納するCOBOL変数
      */
     public static void acceptDay(AbstractCobolField f) {
         LocalDateTime date = jobOrCurrentLocalTime();
@@ -198,9 +201,9 @@ public class CobolTerminal {
     }
 
     /**
-     * TODO: 準備中
+     * ACCEPT FROM DAY YYYYDDD文の実装. 現在の日付を"yyyyDDD"形式(4桁年+年間通算日)でCOBOL変数に格納する.
      *
-     * @param f TODO: 準備中
+     * @param f 日付データを格納するCOBOL変数
      */
     public static void acceptDay_yyyyddd(AbstractCobolField f) {
         LocalDateTime date = jobOrCurrentLocalTime();
@@ -209,9 +212,9 @@ public class CobolTerminal {
     }
 
     /**
-     * TODO: 準備中
+     * ACCEPT FROM DAY-OF-WEEK文の実装. 現在の曜日を1桁の数値(1=月曜日〜7=日曜日)でCOBOL変数に格納する.
      *
-     * @param f TODO: 準備中
+     * @param f 曜日データを格納するCOBOL変数
      */
     public static void acceptDayOfWeek(AbstractCobolField f) {
         LocalDateTime date = jobOrCurrentLocalTime();
@@ -219,9 +222,9 @@ public class CobolTerminal {
     }
 
     /**
-     * TODO: 準備中
+     * ACCEPT FROM TIME文の実装. 現在の時刻を"HHmmssSS"形式(時+分+秒+1/100秒)でCOBOL変数に格納する.
      *
-     * @param f TODO: 準備中
+     * @param f 時刻データを格納するCOBOL変数
      */
     public static void acceptTime(AbstractCobolField f) {
         LocalDateTime date = LocalDateTime.now();
@@ -232,18 +235,21 @@ public class CobolTerminal {
     // Environment
 
     /**
-     * TODO: 準備中
+     * DISPLAY UPON ENVIRONMENT-NAME文の実装. 後続の{@link #displayEnvValue(AbstractCobolField)}や{@link
+     * #acceptEnvironment(AbstractCobolField)}で使用する環境変数名を設定する.
      *
-     * @param f TODO: 準備中
+     * @param f 環境変数名を保持するCOBOL変数
      */
     public static void displayEnvironment(AbstractCobolField f) {
         CobolUtil.cobLocalEnv = f.fieldToString();
     }
 
     /**
-     * TODO: 準備中
+     * DISPLAY UPON ENVIRONMENT-VALUE文の実装. {@link #displayEnvironment(AbstractCobolField)}
+     * で設定された環境変数名に対して値を設定する. 環境変数名が未設定または空文字列の場合は{@link
+     * CobolExceptionId#COB_EC_IMP_DISPLAY}例外を設定する.
      *
-     * @param f TODO: 準備中
+     * @param f 設定する環境変数の値を保持するCOBOL変数
      */
     public static void displayEnvValue(AbstractCobolField f) {
         if (CobolUtil.cobLocalEnv == null || CobolUtil.cobLocalEnv.equals("")) {
@@ -254,9 +260,11 @@ public class CobolTerminal {
     }
 
     /**
-     * TODO: 準備中
+     * ACCEPT FROM ENVIRONMENT-VALUE文の実装. {@link #displayEnvironment(AbstractCobolField)}
+     * で設定された環境変数名の値を取得し,COBOL変数に格納する. 環境変数が存在しない場合は{@link
+     * CobolExceptionId#COB_EC_IMP_ACCEPT}例外を設定し,スペース1文字を格納する.
      *
-     * @param f TODO: 準備中
+     * @param f 環境変数の値を格納するCOBOL変数
      */
     public static void acceptEnvironment(AbstractCobolField f) {
         String p = null;
@@ -276,9 +284,10 @@ public class CobolTerminal {
     }
 
     /**
-     * TODO: 準備中
+     * DISPLAY UPON COMMAND-LINE文の実装. COBOL変数の内容をコマンドラインデータとして内部バッファに保存する.
+     * 保存されたデータは{@link #acceptCommandLine(AbstractCobolField)}で取得できる.
      *
-     * @param f TODO: 準備中
+     * @param f コマンドラインとして設定するデータを保持するCOBOL変数
      */
     public static void displayCommandLine(AbstractCobolField f) {
         CobolTerminal.commlnptr = new byte[f.getSize()];
@@ -289,9 +298,11 @@ public class CobolTerminal {
     }
 
     /**
-     * TODO: 準備中
+     * ACCEPT FROM COMMAND-LINE文の実装. {@link #displayCommandLine(AbstractCobolField)}
+     * で設定されたコマンドラインデータが存在する場合はそのデータを返し,
+     * 存在しない場合はプログラム起動時のコマンドライン引数をスペース区切りで結合した文字列をCOBOL変数に格納する.
      *
-     * @param f TODO: 準備中
+     * @param f コマンドラインデータを格納するCOBOL変数
      */
     public static void acceptCommandLine(AbstractCobolField f) {
         if (CobolTerminal.commlncnt != 0) {
@@ -303,9 +314,11 @@ public class CobolTerminal {
     }
 
     /**
-     * TODO: 準備中
+     * DISPLAY UPON ARGUMENT-NUMBER文の実装. COBOL変数の値を現在の引数インデックスとして設定する.
+     * 値が0未満またはコマンドライン引数の数を超える場合は{@link
+     * CobolExceptionId#COB_EC_IMP_DISPLAY}例外を設定する.
      *
-     * @param f TODO: 準備中
+     * @param f 引数インデックス(1始まり)を保持するCOBOL変数
      */
     public static void displayArgNumber(AbstractCobolField f) {
         CobolFieldAttribute attr =
@@ -323,9 +336,9 @@ public class CobolTerminal {
     }
 
     /**
-     * TODO: 準備中
+     * ACCEPT FROM ARGUMENT-NUMBER文の実装. コマンドライン引数の総数をCOBOL変数に格納する.
      *
-     * @param f TODO: 準備中
+     * @param f 引数の総数を格納するCOBOL変数
      */
     public static void acceptArgNumber(AbstractCobolField f) {
         CobolFieldAttribute attr =
@@ -338,9 +351,11 @@ public class CobolTerminal {
     }
 
     /**
-     * TODO: 準備中
+     * ACCEPT FROM ARGUMENT-VALUE文の実装. {@link #displayArgNumber(AbstractCobolField)}
+     * で設定された引数インデックスに対応するコマンドライン引数の値をCOBOL変数に格納し, インデックスを1つ進める.
+     * インデックスが引数の総数を超えている場合は{@link CobolExceptionId#COB_EC_IMP_ACCEPT}例外を設定する.
      *
-     * @param f TODO: 準備中
+     * @param f 引数の値を格納するCOBOL変数
      */
     public static void acceptArgValue(AbstractCobolField f) {
         if (CobolUtil.currentArgIndex > CobolUtil.commandLineArgs.length) {
