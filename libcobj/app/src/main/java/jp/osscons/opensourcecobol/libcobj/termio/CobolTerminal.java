@@ -152,12 +152,12 @@ public class CobolTerminal {
     // Time
 
     /**
-     * ジョブ実行時刻または現在時刻を返す. COB_DATE環境変数で設定された時刻({@link
+     * COB_DATE環境変数で設定された日時または現在時刻を返す. COB_DATE環境変数で設定された日時({@link
      * CobolUtil#cobLocalTm})が存在する場合はその値を返し, 設定されていない場合は現在時刻を返す.
      *
      * <p>libcob/common.cのjob_or_current_localtimeに対応する.
      *
-     * @return ジョブ実行時刻または現在のローカル日時
+     * @return COB_DATE環境変数で設定された日時または現在のローカル日時
      */
     private static LocalDateTime jobOrCurrentLocalTime() {
         if (CobolUtil.cobLocalTm != null) {
@@ -223,6 +223,9 @@ public class CobolTerminal {
 
     /**
      * ACCEPT FROM TIME文の実装. 現在の時刻を"HHmmssSS"形式(時+分+秒+1/100秒)でCOBOL変数に格納する.
+     *
+     * <p>他の日付系メソッド({@link #acceptDate(AbstractCobolField)}等)とは異なり, {@link
+     * #jobOrCurrentLocalTime()}を使用せず{@code LocalDateTime.now()}を直接呼び出すため, COB_DATE環境変数の設定は反映されない.
      *
      * @param f 時刻データを格納するCOBOL変数
      */
