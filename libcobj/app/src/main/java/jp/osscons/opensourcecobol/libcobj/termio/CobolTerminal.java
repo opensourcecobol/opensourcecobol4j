@@ -261,7 +261,7 @@ public class CobolTerminal {
 
     /**
      * ACCEPT FROM ENVIRONMENT-VALUE文の実装. {@link #displayEnvironment(AbstractCobolField)}
-     * で設定された環境変数名の値を取得し,COBOL変数に格納する. 環境変数が存在しない場合は{@link
+     * で設定された環境変数名の値を取得し,COBOL変数に格納する. 環境変数名が未設定の場合や環境変数が存在しない場合は{@link
      * CobolExceptionId#COB_EC_IMP_ACCEPT}例外を設定し,スペース1文字を格納する.
      *
      * @param f 環境変数の値を格納するCOBOL変数
