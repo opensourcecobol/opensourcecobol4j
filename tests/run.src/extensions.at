@@ -2067,3 +2067,75 @@ AT_CHECK([java caller], [0],
 ])
 
 AT_CLEANUP
+
+
+AT_SETUP([CALL BY VALUE with literal])
+
+AT_DATA([callee.cob], [
+       IDENTIFICATION   DIVISION.
+       PROGRAM-ID.      callee.
+       DATA             DIVISION.
+       LINKAGE          SECTION.
+       01 LK-NUM1       PIC 9(9) BINARY.
+       01 LK-NUM2       PIC 9(9) BINARY.
+       PROCEDURE        DIVISION USING LK-NUM1 LK-NUM2.
+           DISPLAY LK-NUM1 END-DISPLAY.
+           DISPLAY LK-NUM2 END-DISPLAY.
+           EXIT PROGRAM.
+])
+
+AT_DATA([caller.cob], [
+       IDENTIFICATION   DIVISION.
+       PROGRAM-ID.      caller.
+       DATA             DIVISION.
+       WORKING-STORAGE  SECTION.
+       PROCEDURE        DIVISION.
+           CALL "callee" USING
+               BY VALUE 12345
+               BY VALUE 67890
+           END-CALL.
+           STOP RUN.
+])
+
+AT_CHECK([${COMPILE} caller.cob])
+AT_CHECK([${COMPILE_MODULE} callee.cob])
+AT_CHECK([java caller], [0],
+[000012345
+000067890
+])
+
+AT_CLEANUP
+
+
+AT_SETUP([CALL BY VALUE with non-numeric literal])
+
+AT_DATA([callee.cob], [
+       IDENTIFICATION   DIVISION.
+       PROGRAM-ID.      callee.
+       DATA             DIVISION.
+       LINKAGE          SECTION.
+       01 LK-NUM        PIC 9(9) BINARY.
+       PROCEDURE        DIVISION USING LK-NUM.
+           DISPLAY LK-NUM END-DISPLAY.
+           EXIT PROGRAM.
+])
+
+AT_DATA([caller.cob], [
+       IDENTIFICATION   DIVISION.
+       PROGRAM-ID.      caller.
+       DATA             DIVISION.
+       WORKING-STORAGE  SECTION.
+       PROCEDURE        DIVISION.
+           CALL "callee" USING
+               BY VALUE "A"
+           END-CALL.
+           STOP RUN.
+])
+
+AT_CHECK([${COMPILE} caller.cob])
+AT_CHECK([${COMPILE_MODULE} callee.cob])
+AT_CHECK([java caller], [0],
+[000000065
+])
+
+AT_CLEANUP

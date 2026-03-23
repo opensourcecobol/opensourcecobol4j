@@ -3094,7 +3094,7 @@ static void joutput_call(struct cb_call *p) {
             joutput("CobolDataStorage.primitiveToDataStorage(%d)",
                     cb_get_int(x));
           } else {
-            joutput("CobolDataStroage.primitiveToDataStorage(%d)",
+            joutput("CobolDataStorage.primitiveToDataStorage(%d)",
                     CB_LITERAL(x)->data[0]);
           }
           break;
