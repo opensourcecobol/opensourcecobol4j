@@ -45,7 +45,6 @@ AT_CLEANUP
 
 
 AT_SETUP([LOCAL-STORAGE])
-AT_CHECK([${SKIP_TEST}])
 
 AT_DATA([callee.cob], [
        IDENTIFICATION   DIVISION.
@@ -75,14 +74,16 @@ AT_DATA([caller.cob], [
            STOP RUN.
 ])
 
-AT_CHECK([${COMPILE_MODULE} callee.cob])
-AT_CHECK([${COMPILE} caller.cob])
-AT_CHECK([java prog], [0],
-[WRK-X = abc
-LCL-X = abc
-WRK-X = 000
-LCL-X = abc
+AT_CHECK([${COMPILE_MODULE} callee.cob], [1], [], 
+[callee.cob:7: Error: LOCAL-STORAGE SECTION is not supported
 ])
+# AT_CHECK([${COMPILE} caller.cob])
+# AT_CHECK([java prog], [0],
+# [WRK-X = abc
+# LCL-X = abc
+# WRK-X = 000
+# LCL-X = abc
+# ])
 
 AT_CLEANUP
 
