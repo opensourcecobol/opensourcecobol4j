@@ -870,12 +870,17 @@ static void joutput_base(struct cb_field *f) {
       bl->next = base_cache;
       base_cache = bl;
     } else {
+      /* FIXME: LOCAL-STORAGEのフィールドがbase_cacheに登録されないため、
+       * JavaのCobolDataStorage宣言に出力されない。
+       * 以下のC言語スタイルの"unsigned char *"はJavaとして不正。 */
       if (current_prog->flag_global_use) {
+        /* USE GLOBAL宣言がある場合(DECLARATIVESでUSE GLOBAL指定時) */
         joutput_local("unsigned char\t\t*%s%s = NULL;", CB_PREFIX_BASE, name);
         joutput_local("\t/* %s */\n", top->name);
         joutput_local("static unsigned char\t*save_%s%s;\n", CB_PREFIX_BASE,
                       name);
       } else {
+        /* USE GLOBAL宣言がない場合 */
         joutput_local("unsigned char\t*%s%s = NULL;", CB_PREFIX_BASE, name);
         joutput_local("\t/* %s */\n", top->name);
       }
