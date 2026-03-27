@@ -1243,9 +1243,8 @@ public class CobolFile {
         }
         if ((this.organization == COB_ORG_SEQUENTIAL
                         || this.organization == COB_ORG_LINE_SEQUENTIAL)
-                && (mode == COB_OPEN_OUTPUT || mode == COB_OPEN_EXTEND)
-                && CobolUtil.fileSeqWriteBufferSize > 0) {
-            this.file.prepareWriteBuffer(CobolUtil.fileSeqWriteBufferSize * this.record_max);
+                && CobolUtil.fileSeqBufferSize > 0) {
+            this.file.prepareBuffer(CobolUtil.fileSeqBufferSize * this.record_max);
         }
         return 0;
     }

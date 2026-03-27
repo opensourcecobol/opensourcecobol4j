@@ -446,13 +446,22 @@ $ OC_EXTEND_CREATES=yes java ocextcreates
 FILE STATUS: 00
 ```
 
-#### COB_FILE_SEQ_WRITE_BUFFER_SIZE
+#### COB_FILE_SEQ_BUFFER_SIZE
 
-Specifies the write buffer size for sequential files.
+Specifies the buffer size for sequential file I/O (both read and write).
+
+- **Value**: Integer >= 0 (default: 10). The value represents a multiplier for the record size.
+- **Example**: `COB_FILE_SEQ_BUFFER_SIZE=100`
+- **Purpose**: Adjusts read and write performance for SEQUENTIAL and LINE SEQUENTIAL files. The actual buffer size is calculated as `COB_FILE_SEQ_BUFFER_SIZE * record_max` bytes. Setting to 0 disables buffering.
+
+#### COB_FILE_SEQ_WRITE_BUFFER_SIZE (Deprecated)
+
+Deprecated. Use `COB_FILE_SEQ_BUFFER_SIZE` instead.
+
+This environment variable is retained for backward compatibility. When `COB_FILE_SEQ_BUFFER_SIZE` is not set, this variable is used as a fallback with the same effect.
 
 - **Value**: Integer >= 0 (default: 10)
 - **Example**: `COB_FILE_SEQ_WRITE_BUFFER_SIZE=100`
-- **Purpose**: Adjusts write performance.
 
 #### COB_IO_ASSUME_REWRITE
 

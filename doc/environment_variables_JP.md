@@ -446,13 +446,22 @@ $ OC_EXTEND_CREATES=yes java ocextcreates
 FILE STATUS: 00
 ```
 
-#### COB_FILE_SEQ_WRITE_BUFFER_SIZE
+#### COB_FILE_SEQ_BUFFER_SIZE
 
-順編成ファイルの書き込みバッファサイズを指定します。
+順編成ファイルの読み書きバッファサイズを指定します。
+
+- **値**: 0以上の整数（デフォルト: 10）。レコードサイズに対する倍率を指定します。
+- **例**: `COB_FILE_SEQ_BUFFER_SIZE=100`
+- **用途**: SEQUENTIALおよびLINE SEQUENTIALファイルの読み書きパフォーマンスを調整できます。実際のバッファサイズは `COB_FILE_SEQ_BUFFER_SIZE * record_max` バイトとなります。0を指定するとバッファリングが無効になります。
+
+#### COB_FILE_SEQ_WRITE_BUFFER_SIZE（非推奨）
+
+非推奨です。代わりに `COB_FILE_SEQ_BUFFER_SIZE` を使用してください。
+
+後方互換性のために残されています。`COB_FILE_SEQ_BUFFER_SIZE` が設定されていない場合にフォールバックとして同じ効果で使用されます。
 
 - **値**: 0以上の整数（デフォルト: 10）
 - **例**: `COB_FILE_SEQ_WRITE_BUFFER_SIZE=100`
-- **用途**: 書き込みパフォーマンスを調整できます。
 
 #### COB_IO_ASSUME_REWRITE
 

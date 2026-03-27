@@ -1,0 +1,672 @@
+AT_SETUP([COB_FILE_SEQ_BUFFER_SIZE: SEQUENTIAL read])
+
+AT_DATA([prog.cbl], [
+       IDENTIFICATION   DIVISION.
+       PROGRAM-ID.      prog.
+       ENVIRONMENT      DIVISION.
+       INPUT-OUTPUT     SECTION.
+       FILE-CONTROL.
+       SELECT TEST-FILE ASSIGN "TESTSEQ"
+           ORGANIZATION SEQUENTIAL.
+       DATA             DIVISION.
+       FILE             SECTION.
+       FD TEST-FILE.
+       01 TEST-REC      PIC X(4).
+       PROCEDURE        DIVISION.
+           OPEN OUTPUT TEST-FILE.
+           MOVE "AAAA" TO TEST-REC.
+           WRITE TEST-REC.
+           MOVE "BBBB" TO TEST-REC.
+           WRITE TEST-REC.
+           MOVE "CCCC" TO TEST-REC.
+           WRITE TEST-REC.
+           CLOSE TEST-FILE.
+
+           OPEN INPUT TEST-FILE.
+           READ TEST-FILE.
+           DISPLAY TEST-REC.
+           READ TEST-FILE.
+           DISPLAY TEST-REC.
+           READ TEST-FILE.
+           DISPLAY TEST-REC.
+           CLOSE TEST-FILE.
+           STOP RUN.
+])
+
+AT_CHECK([${COMPILE} prog.cbl])
+AT_CHECK([COB_FILE_SEQ_BUFFER_SIZE=10 ${RUN_MODULE} prog], [0],
+[AAAA
+BBBB
+CCCC
+])
+
+AT_CLEANUP
+
+
+AT_SETUP([COB_FILE_SEQ_BUFFER_SIZE: SEQUENTIAL read with buffer size 1])
+
+AT_DATA([prog.cbl], [
+       IDENTIFICATION   DIVISION.
+       PROGRAM-ID.      prog.
+       ENVIRONMENT      DIVISION.
+       INPUT-OUTPUT     SECTION.
+       FILE-CONTROL.
+       SELECT TEST-FILE ASSIGN "TESTSEQ"
+           ORGANIZATION SEQUENTIAL.
+       DATA             DIVISION.
+       FILE             SECTION.
+       FD TEST-FILE.
+       01 TEST-REC      PIC X(4).
+       PROCEDURE        DIVISION.
+           OPEN OUTPUT TEST-FILE.
+           MOVE "AAAA" TO TEST-REC.
+           WRITE TEST-REC.
+           MOVE "BBBB" TO TEST-REC.
+           WRITE TEST-REC.
+           MOVE "CCCC" TO TEST-REC.
+           WRITE TEST-REC.
+           CLOSE TEST-FILE.
+
+           OPEN INPUT TEST-FILE.
+           READ TEST-FILE.
+           DISPLAY TEST-REC.
+           READ TEST-FILE.
+           DISPLAY TEST-REC.
+           READ TEST-FILE.
+           DISPLAY TEST-REC.
+           CLOSE TEST-FILE.
+           STOP RUN.
+])
+
+AT_CHECK([${COMPILE} prog.cbl])
+AT_CHECK([COB_FILE_SEQ_BUFFER_SIZE=1 ${RUN_MODULE} prog], [0],
+[AAAA
+BBBB
+CCCC
+])
+
+AT_CLEANUP
+
+
+AT_SETUP([COB_FILE_SEQ_BUFFER_SIZE: SEQUENTIAL read with buffer disabled])
+
+AT_DATA([prog.cbl], [
+       IDENTIFICATION   DIVISION.
+       PROGRAM-ID.      prog.
+       ENVIRONMENT      DIVISION.
+       INPUT-OUTPUT     SECTION.
+       FILE-CONTROL.
+       SELECT TEST-FILE ASSIGN "TESTSEQ"
+           ORGANIZATION SEQUENTIAL.
+       DATA             DIVISION.
+       FILE             SECTION.
+       FD TEST-FILE.
+       01 TEST-REC      PIC X(4).
+       PROCEDURE        DIVISION.
+           OPEN OUTPUT TEST-FILE.
+           MOVE "AAAA" TO TEST-REC.
+           WRITE TEST-REC.
+           MOVE "BBBB" TO TEST-REC.
+           WRITE TEST-REC.
+           MOVE "CCCC" TO TEST-REC.
+           WRITE TEST-REC.
+           CLOSE TEST-FILE.
+
+           OPEN INPUT TEST-FILE.
+           READ TEST-FILE.
+           DISPLAY TEST-REC.
+           READ TEST-FILE.
+           DISPLAY TEST-REC.
+           READ TEST-FILE.
+           DISPLAY TEST-REC.
+           CLOSE TEST-FILE.
+           STOP RUN.
+])
+
+AT_CHECK([${COMPILE} prog.cbl])
+AT_CHECK([COB_FILE_SEQ_BUFFER_SIZE=0 ${RUN_MODULE} prog], [0],
+[AAAA
+BBBB
+CCCC
+])
+
+AT_CLEANUP
+
+
+AT_SETUP([COB_FILE_SEQ_BUFFER_SIZE: LINE SEQUENTIAL read via getc])
+
+AT_DATA([prog.cbl], [
+       IDENTIFICATION   DIVISION.
+       PROGRAM-ID.      prog.
+       ENVIRONMENT      DIVISION.
+       INPUT-OUTPUT     SECTION.
+       FILE-CONTROL.
+       SELECT TEST-FILE ASSIGN "TESTLSEQ"
+           ORGANIZATION LINE SEQUENTIAL.
+       DATA             DIVISION.
+       FILE             SECTION.
+       FD TEST-FILE.
+       01 TEST-REC      PIC X(8).
+       PROCEDURE        DIVISION.
+           OPEN OUTPUT TEST-FILE.
+           MOVE "LINE0001" TO TEST-REC.
+           WRITE TEST-REC.
+           MOVE "LINE0002" TO TEST-REC.
+           WRITE TEST-REC.
+           MOVE "LINE0003" TO TEST-REC.
+           WRITE TEST-REC.
+           CLOSE TEST-FILE.
+
+           OPEN INPUT TEST-FILE.
+           READ TEST-FILE.
+           DISPLAY TEST-REC.
+           READ TEST-FILE.
+           DISPLAY TEST-REC.
+           READ TEST-FILE.
+           DISPLAY TEST-REC.
+           CLOSE TEST-FILE.
+           STOP RUN.
+])
+
+AT_CHECK([${COMPILE} prog.cbl])
+AT_CHECK([COB_FILE_SEQ_BUFFER_SIZE=10 ${RUN_MODULE} prog], [0],
+[LINE0001
+LINE0002
+LINE0003
+])
+
+AT_CLEANUP
+
+
+AT_SETUP([COB_FILE_SEQ_BUFFER_SIZE: SEQUENTIAL I-O rewrite])
+
+AT_DATA([prog.cbl], [
+       IDENTIFICATION   DIVISION.
+       PROGRAM-ID.      prog.
+       ENVIRONMENT      DIVISION.
+       INPUT-OUTPUT     SECTION.
+       FILE-CONTROL.
+       SELECT TEST-FILE ASSIGN "TESTREWR"
+           ORGANIZATION SEQUENTIAL.
+       DATA             DIVISION.
+       FILE             SECTION.
+       FD TEST-FILE.
+       01 TEST-REC      PIC X(4).
+       PROCEDURE        DIVISION.
+           OPEN OUTPUT TEST-FILE.
+           MOVE "AAAA" TO TEST-REC.
+           WRITE TEST-REC.
+           MOVE "BBBB" TO TEST-REC.
+           WRITE TEST-REC.
+           MOVE "CCCC" TO TEST-REC.
+           WRITE TEST-REC.
+           CLOSE TEST-FILE.
+
+           OPEN I-O TEST-FILE.
+           READ TEST-FILE.
+           READ TEST-FILE.
+           MOVE "XXXX" TO TEST-REC.
+           REWRITE TEST-REC.
+           CLOSE TEST-FILE.
+
+           OPEN INPUT TEST-FILE.
+           READ TEST-FILE.
+           DISPLAY TEST-REC.
+           READ TEST-FILE.
+           DISPLAY TEST-REC.
+           READ TEST-FILE.
+           DISPLAY TEST-REC.
+           CLOSE TEST-FILE.
+           STOP RUN.
+])
+
+AT_CHECK([${COMPILE} prog.cbl])
+AT_CHECK([COB_FILE_SEQ_BUFFER_SIZE=10 ${RUN_MODULE} prog], [0],
+[AAAA
+XXXX
+CCCC
+])
+
+AT_CLEANUP
+
+
+AT_SETUP([COB_FILE_SEQ_BUFFER_SIZE: SEQUENTIAL I-O interleaved read and rewrite])
+
+AT_DATA([prog.cbl], [
+       IDENTIFICATION   DIVISION.
+       PROGRAM-ID.      prog.
+       ENVIRONMENT      DIVISION.
+       INPUT-OUTPUT     SECTION.
+       FILE-CONTROL.
+       SELECT TEST-FILE ASSIGN "TESTREWR"
+           ORGANIZATION SEQUENTIAL.
+       DATA             DIVISION.
+       FILE             SECTION.
+       FD TEST-FILE.
+       01 TEST-REC      PIC X(4).
+       PROCEDURE        DIVISION.
+           OPEN OUTPUT TEST-FILE.
+           MOVE "REC1" TO TEST-REC.
+           WRITE TEST-REC.
+           MOVE "REC2" TO TEST-REC.
+           WRITE TEST-REC.
+           MOVE "REC3" TO TEST-REC.
+           WRITE TEST-REC.
+           MOVE "REC4" TO TEST-REC.
+           WRITE TEST-REC.
+           MOVE "REC5" TO TEST-REC.
+           WRITE TEST-REC.
+           MOVE "REC6" TO TEST-REC.
+           WRITE TEST-REC.
+           MOVE "REC7" TO TEST-REC.
+           WRITE TEST-REC.
+           MOVE "REC8" TO TEST-REC.
+           WRITE TEST-REC.
+           CLOSE TEST-FILE.
+
+           OPEN I-O TEST-FILE.
+           READ TEST-FILE.
+           DISPLAY TEST-REC.
+           MOVE "UPD1" TO TEST-REC.
+           REWRITE TEST-REC.
+           READ TEST-FILE.
+           DISPLAY TEST-REC.
+           READ TEST-FILE.
+           DISPLAY TEST-REC.
+           MOVE "UPD3" TO TEST-REC.
+           REWRITE TEST-REC.
+           READ TEST-FILE.
+           DISPLAY TEST-REC.
+           MOVE "UPD4" TO TEST-REC.
+           REWRITE TEST-REC.
+           READ TEST-FILE.
+           DISPLAY TEST-REC.
+           READ TEST-FILE.
+           DISPLAY TEST-REC.
+           MOVE "UPD6" TO TEST-REC.
+           REWRITE TEST-REC.
+           READ TEST-FILE.
+           DISPLAY TEST-REC.
+           READ TEST-FILE.
+           DISPLAY TEST-REC.
+           CLOSE TEST-FILE.
+
+           OPEN INPUT TEST-FILE.
+           READ TEST-FILE.
+           DISPLAY TEST-REC.
+           READ TEST-FILE.
+           DISPLAY TEST-REC.
+           READ TEST-FILE.
+           DISPLAY TEST-REC.
+           READ TEST-FILE.
+           DISPLAY TEST-REC.
+           READ TEST-FILE.
+           DISPLAY TEST-REC.
+           READ TEST-FILE.
+           DISPLAY TEST-REC.
+           READ TEST-FILE.
+           DISPLAY TEST-REC.
+           READ TEST-FILE.
+           DISPLAY TEST-REC.
+           CLOSE TEST-FILE.
+           STOP RUN.
+])
+
+AT_CHECK([${COMPILE} prog.cbl])
+AT_CHECK([COB_FILE_SEQ_BUFFER_SIZE=2 ${RUN_MODULE} prog], [0],
+[REC1
+REC2
+REC3
+REC4
+REC5
+REC6
+REC7
+REC8
+UPD1
+REC2
+UPD3
+UPD4
+REC5
+UPD6
+REC7
+REC8
+])
+
+AT_CLEANUP
+
+
+AT_SETUP([COB_FILE_SEQ_BUFFER_SIZE: SEQUENTIAL many records])
+
+AT_DATA([prog.cbl], [
+       IDENTIFICATION   DIVISION.
+       PROGRAM-ID.      prog.
+       ENVIRONMENT      DIVISION.
+       INPUT-OUTPUT     SECTION.
+       FILE-CONTROL.
+       SELECT TEST-FILE ASSIGN "TESTMANY"
+           ORGANIZATION SEQUENTIAL
+           FILE STATUS F-STATUS.
+       DATA             DIVISION.
+       FILE             SECTION.
+       FD TEST-FILE.
+       01 TEST-REC      PIC X(10).
+       WORKING-STORAGE  SECTION.
+       01 CTR           PIC 9(4) VALUE 0.
+       01 READ-CTR      PIC 9(4) VALUE 0.
+       01 F-STATUS      PIC X(2).
+       01 EOF-FLAG      PIC 9 VALUE 0.
+       PROCEDURE        DIVISION.
+           OPEN OUTPUT TEST-FILE.
+           PERFORM 100 TIMES
+               ADD 1 TO CTR
+               MOVE CTR TO TEST-REC
+               WRITE TEST-REC
+           END-PERFORM.
+           CLOSE TEST-FILE.
+
+           MOVE 0 TO READ-CTR.
+           MOVE 0 TO EOF-FLAG.
+           OPEN INPUT TEST-FILE.
+           PERFORM UNTIL EOF-FLAG = 1
+               READ TEST-FILE
+                   AT END
+                       MOVE 1 TO EOF-FLAG
+                   NOT AT END
+                       ADD 1 TO READ-CTR
+               END-READ
+           END-PERFORM.
+           CLOSE TEST-FILE.
+           DISPLAY READ-CTR.
+           STOP RUN.
+])
+
+AT_CHECK([${COMPILE} prog.cbl])
+AT_CHECK([COB_FILE_SEQ_BUFFER_SIZE=3 ${RUN_MODULE} prog], [0],
+[0100
+])
+
+AT_CLEANUP
+
+
+AT_SETUP([COB_FILE_SEQ_BUFFER_SIZE: LINE SEQUENTIAL many records])
+
+AT_DATA([prog.cbl], [
+       IDENTIFICATION   DIVISION.
+       PROGRAM-ID.      prog.
+       ENVIRONMENT      DIVISION.
+       INPUT-OUTPUT     SECTION.
+       FILE-CONTROL.
+       SELECT TEST-FILE ASSIGN "TESTLMNY"
+           ORGANIZATION LINE SEQUENTIAL
+           FILE STATUS F-STATUS.
+       DATA             DIVISION.
+       FILE             SECTION.
+       FD TEST-FILE.
+       01 TEST-REC      PIC X(10).
+       WORKING-STORAGE  SECTION.
+       01 CTR           PIC 9(4) VALUE 0.
+       01 READ-CTR      PIC 9(4) VALUE 0.
+       01 F-STATUS      PIC X(2).
+       01 EOF-FLAG      PIC 9 VALUE 0.
+       PROCEDURE        DIVISION.
+           OPEN OUTPUT TEST-FILE.
+           PERFORM 100 TIMES
+               ADD 1 TO CTR
+               MOVE CTR TO TEST-REC
+               WRITE TEST-REC
+           END-PERFORM.
+           CLOSE TEST-FILE.
+
+           MOVE 0 TO READ-CTR.
+           MOVE 0 TO EOF-FLAG.
+           OPEN INPUT TEST-FILE.
+           PERFORM UNTIL EOF-FLAG = 1
+               READ TEST-FILE
+                   AT END
+                       MOVE 1 TO EOF-FLAG
+                   NOT AT END
+                       ADD 1 TO READ-CTR
+               END-READ
+           END-PERFORM.
+           CLOSE TEST-FILE.
+           DISPLAY READ-CTR.
+           STOP RUN.
+])
+
+AT_CHECK([${COMPILE} prog.cbl])
+AT_CHECK([COB_FILE_SEQ_BUFFER_SIZE=3 ${RUN_MODULE} prog], [0],
+[0100
+])
+
+AT_CLEANUP
+
+
+AT_SETUP([COB_FILE_SEQ_WRITE_BUFFER_SIZE: deprecated fallback])
+
+AT_DATA([prog.cbl], [
+       IDENTIFICATION   DIVISION.
+       PROGRAM-ID.      prog.
+       ENVIRONMENT      DIVISION.
+       INPUT-OUTPUT     SECTION.
+       FILE-CONTROL.
+       SELECT TEST-FILE ASSIGN "TESTDEP"
+           ORGANIZATION SEQUENTIAL.
+       DATA             DIVISION.
+       FILE             SECTION.
+       FD TEST-FILE.
+       01 TEST-REC      PIC X(4).
+       PROCEDURE        DIVISION.
+           OPEN OUTPUT TEST-FILE.
+           MOVE "AAAA" TO TEST-REC.
+           WRITE TEST-REC.
+           MOVE "BBBB" TO TEST-REC.
+           WRITE TEST-REC.
+           CLOSE TEST-FILE.
+
+           OPEN INPUT TEST-FILE.
+           READ TEST-FILE.
+           DISPLAY TEST-REC.
+           READ TEST-FILE.
+           DISPLAY TEST-REC.
+           CLOSE TEST-FILE.
+           STOP RUN.
+])
+
+AT_CHECK([${COMPILE} prog.cbl])
+AT_CHECK([COB_FILE_SEQ_WRITE_BUFFER_SIZE=10 ${RUN_MODULE} prog], [0],
+[AAAA
+BBBB
+])
+
+AT_CLEANUP
+
+
+AT_SETUP([COB_FILE_SEQ_BUFFER_SIZE: SEQUENTIAL read then write in I-O mode])
+
+AT_DATA([prog.cbl], [
+       IDENTIFICATION   DIVISION.
+       PROGRAM-ID.      prog.
+       ENVIRONMENT      DIVISION.
+       INPUT-OUTPUT     SECTION.
+       FILE-CONTROL.
+       SELECT TEST-FILE ASSIGN "TESTRW"
+           ORGANIZATION SEQUENTIAL.
+       DATA             DIVISION.
+       FILE             SECTION.
+       FD TEST-FILE.
+       01 TEST-REC      PIC X(4).
+       PROCEDURE        DIVISION.
+           OPEN OUTPUT TEST-FILE.
+           MOVE "AAAA" TO TEST-REC.
+           WRITE TEST-REC.
+           MOVE "BBBB" TO TEST-REC.
+           WRITE TEST-REC.
+           MOVE "CCCC" TO TEST-REC.
+           WRITE TEST-REC.
+           CLOSE TEST-FILE.
+
+           OPEN I-O TEST-FILE.
+           READ TEST-FILE.
+           DISPLAY TEST-REC.
+           MOVE "ZZZZ" TO TEST-REC.
+           REWRITE TEST-REC.
+           READ TEST-FILE.
+           DISPLAY TEST-REC.
+           READ TEST-FILE.
+           DISPLAY TEST-REC.
+           CLOSE TEST-FILE.
+
+           OPEN INPUT TEST-FILE.
+           READ TEST-FILE.
+           DISPLAY TEST-REC.
+           READ TEST-FILE.
+           DISPLAY TEST-REC.
+           READ TEST-FILE.
+           DISPLAY TEST-REC.
+           CLOSE TEST-FILE.
+           STOP RUN.
+])
+
+AT_CHECK([${COMPILE} prog.cbl])
+AT_CHECK([COB_FILE_SEQ_BUFFER_SIZE=10 ${RUN_MODULE} prog], [0],
+[AAAA
+BBBB
+CCCC
+ZZZZ
+BBBB
+CCCC
+])
+
+AT_CLEANUP
+
+
+AT_SETUP([COB_FILE_SEQ_BUFFER_SIZE: SEQUENTIAL I-O repeated mode transitions])
+
+AT_DATA([prog.cbl], [
+       IDENTIFICATION   DIVISION.
+       PROGRAM-ID.      prog.
+       ENVIRONMENT      DIVISION.
+       INPUT-OUTPUT     SECTION.
+       FILE-CONTROL.
+       SELECT TEST-FILE ASSIGN "TESTRW"
+           ORGANIZATION SEQUENTIAL.
+       DATA             DIVISION.
+       FILE             SECTION.
+       FD TEST-FILE.
+       01 TEST-REC      PIC X(2).
+       PROCEDURE        DIVISION.
+           OPEN OUTPUT TEST-FILE.
+           MOVE "AA" TO TEST-REC.
+           WRITE TEST-REC.
+           MOVE "BB" TO TEST-REC.
+           WRITE TEST-REC.
+           MOVE "CC" TO TEST-REC.
+           WRITE TEST-REC.
+           MOVE "DD" TO TEST-REC.
+           WRITE TEST-REC.
+           MOVE "EE" TO TEST-REC.
+           WRITE TEST-REC.
+           MOVE "FF" TO TEST-REC.
+           WRITE TEST-REC.
+           CLOSE TEST-FILE.
+
+           OPEN I-O TEST-FILE.
+           READ TEST-FILE.
+           DISPLAY TEST-REC.
+           MOVE "XX" TO TEST-REC.
+           REWRITE TEST-REC.
+           READ TEST-FILE.
+           DISPLAY TEST-REC.
+           MOVE "YY" TO TEST-REC.
+           REWRITE TEST-REC.
+           READ TEST-FILE.
+           DISPLAY TEST-REC.
+           READ TEST-FILE.
+           DISPLAY TEST-REC.
+           READ TEST-FILE.
+           DISPLAY TEST-REC.
+           MOVE "ZZ" TO TEST-REC.
+           REWRITE TEST-REC.
+           READ TEST-FILE.
+           DISPLAY TEST-REC.
+           CLOSE TEST-FILE.
+
+           OPEN INPUT TEST-FILE.
+           READ TEST-FILE.
+           DISPLAY TEST-REC.
+           READ TEST-FILE.
+           DISPLAY TEST-REC.
+           READ TEST-FILE.
+           DISPLAY TEST-REC.
+           READ TEST-FILE.
+           DISPLAY TEST-REC.
+           READ TEST-FILE.
+           DISPLAY TEST-REC.
+           READ TEST-FILE.
+           DISPLAY TEST-REC.
+           CLOSE TEST-FILE.
+           STOP RUN.
+])
+
+AT_CHECK([${COMPILE} prog.cbl])
+AT_CHECK([COB_FILE_SEQ_BUFFER_SIZE=1 ${RUN_MODULE} prog], [0],
+[AA
+BB
+CC
+DD
+EE
+FF
+XX
+YY
+CC
+DD
+ZZ
+FF
+])
+
+AT_CLEANUP
+
+
+AT_SETUP([COB_FILE_SEQ_BUFFER_SIZE: LINE SEQUENTIAL read with short records])
+
+AT_DATA([prog.cbl], [
+       IDENTIFICATION   DIVISION.
+       PROGRAM-ID.      prog.
+       ENVIRONMENT      DIVISION.
+       INPUT-OUTPUT     SECTION.
+       FILE-CONTROL.
+       SELECT TEST-FILE ASSIGN "TESTSHRT"
+           ORGANIZATION LINE SEQUENTIAL.
+       DATA             DIVISION.
+       FILE             SECTION.
+       FD TEST-FILE.
+       01 TEST-REC      PIC X(20).
+       PROCEDURE        DIVISION.
+           OPEN OUTPUT TEST-FILE.
+           MOVE "AB" TO TEST-REC.
+           WRITE TEST-REC.
+           MOVE "CDEFGHIJ" TO TEST-REC.
+           WRITE TEST-REC.
+           MOVE "K" TO TEST-REC.
+           WRITE TEST-REC.
+           CLOSE TEST-FILE.
+
+           OPEN INPUT TEST-FILE.
+           READ TEST-FILE.
+           DISPLAY ">" TEST-REC "<".
+           READ TEST-FILE.
+           DISPLAY ">" TEST-REC "<".
+           READ TEST-FILE.
+           DISPLAY ">" TEST-REC "<".
+           CLOSE TEST-FILE.
+           STOP RUN.
+])
+
+AT_CHECK([${COMPILE} prog.cbl])
+AT_CHECK([COB_FILE_SEQ_BUFFER_SIZE=2 ${RUN_MODULE} prog], [0],
+[>AB                  <
+>CDEFGHIJ            <
+>K                   <
+])
+
+AT_CLEANUP

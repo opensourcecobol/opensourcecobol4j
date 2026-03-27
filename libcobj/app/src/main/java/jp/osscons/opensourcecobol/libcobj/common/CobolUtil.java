@@ -69,8 +69,8 @@ public class CobolUtil {
     /** TDOD: 準備中 */
     public static Calendar cal;
 
-    /** TDOD: 準備中 */
-    public static int fileSeqWriteBufferSize = 10;
+    /** 順編成ファイルの読み書きバッファサイズ（レコード数単位） */
+    public static int fileSeqBufferSize = 10;
 
     /** DISPLAY/ACCEPT文によるデータ出力時のエンコーディング */
     public static CobolEncoding terminalEncoding = CobolEncoding.SHIFT_JIS;
@@ -345,11 +345,18 @@ public class CobolUtil {
             CobolUtil.nibbleCForUnsigned = true;
         }
 
-        s = System.getenv("COB_FILE_SEQ_WRITE_BUFFER_SIZE");
+        s = CobolUtil.getEnv("COB_FILE_SEQ_BUFFER_SIZE");
+        if (s == null) {
+            s = CobolUtil.getEnv("COB_FILE_SEQ_WRITE_BUFFER_SIZE");
+        }
         if (s != null) {
-            int size = Integer.parseInt(s);
-            if (size >= 0) {
-                CobolUtil.fileSeqWriteBufferSize = size;
+            try {
+                int size = Integer.parseInt(s);
+                if (size >= 0) {
+                    CobolUtil.fileSeqBufferSize = size;
+                }
+            } catch (NumberFormatException ignored) {
+                // ignore invalid value
             }
         }
 
