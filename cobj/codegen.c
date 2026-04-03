@@ -3152,6 +3152,21 @@ static void joutput_call(struct cb_call *p) {
               }
             }
             switch (sizes) {
+            case CB_SIZE_1:
+              joutput("CobolDataStorage.primitiveToDataStorage((byte)(");
+              joutput_integer(x);
+              joutput("))");
+              break;
+            case CB_SIZE_2:
+              joutput("CobolDataStorage.primitiveToDataStorage((short)(");
+              joutput_integer(x);
+              joutput("))");
+              break;
+            case CB_SIZE_4:
+              joutput("CobolDataStorage.primitiveToDataStorage((int)(");
+              joutput_integer(x);
+              joutput("))");
+              break;
             case CB_SIZE_8:
               joutput("CobolDataStorage.primitiveToDataStorage((long)(");
               joutput_integer(x);
