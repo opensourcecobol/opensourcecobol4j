@@ -1,19 +1,19 @@
 package jp.osscons.opensourcecobol.libcobj.ui;
 
-/** TODO: 準備中 */
+/** int型のCALL文の結果を保持する{@link CobolCallResult}のサブクラス */
 public class CobolResultInt extends CobolCallResult {
     private int value;
 
     /**
-     * TODO: 準備中
+     * 指定されたint値を保持するCobolResultIntを生成する。
      *
-     * @param i TODO: 準備中
+     * @param i 保持するint値
      */
     public CobolResultInt(int i) {
         this.value = i;
     }
 
-    /** TODO: 準備中 */
+    /** {@inheritDoc} */
     @Override
     public int getInt() throws CobolResultSetException {
         return this.value;

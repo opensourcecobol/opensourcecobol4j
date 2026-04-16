@@ -1,19 +1,19 @@
 package jp.osscons.opensourcecobol.libcobj.ui;
 
-/** TODO: 準備中 */
+/** String型のCALL文の結果を保持する{@link CobolCallResult}のサブクラス */
 public class CobolResultString extends CobolCallResult {
     private String value;
 
     /**
-     * TODO: 準備中
+     * 指定されたString値を保持するCobolResultStringを生成する。
      *
-     * @param s TODO: 準備中
+     * @param s 保持するString値
      */
     public CobolResultString(String s) {
         this.value = s;
     }
 
-    /** TODO: 準備中 */
+    /** {@inheritDoc} */
     @Override
     public String getString() throws CobolResultSetException {
         return this.value;

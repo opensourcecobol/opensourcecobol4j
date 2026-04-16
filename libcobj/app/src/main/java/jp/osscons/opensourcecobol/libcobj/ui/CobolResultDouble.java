@@ -1,19 +1,19 @@
 package jp.osscons.opensourcecobol.libcobj.ui;
 
-/** TODO: 準備中 */
+/** double型のCALL文の結果を保持する{@link CobolCallResult}のサブクラス */
 public class CobolResultDouble extends CobolCallResult {
     private double value;
 
     /**
-     * TODO: 準備中
+     * 指定されたdouble値を保持するCobolResultDoubleを生成する。
      *
-     * @param d TODO: 準備中
+     * @param d 保持するdouble値
      */
     public CobolResultDouble(double d) {
         this.value = d;
     }
 
-    /** TODO: 準備中 */
+    /** {@inheritDoc} */
     @Override
     public double getDouble() throws CobolResultSetException {
         return this.value;
