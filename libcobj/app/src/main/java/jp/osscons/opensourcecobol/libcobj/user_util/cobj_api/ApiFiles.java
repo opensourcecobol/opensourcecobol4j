@@ -32,7 +32,13 @@ class ApiFiles {
         javaCreate(filePath);
     }
 
-    /** API連携用のJavaファイルを生成する */
+    /**
+     * API連携用のJavaファイルを生成する。<br>
+     * 引数で指定されたJSONファイルを読み込み、そのPROGRAM-IDとPROCEDURE DIVISION USING句の情報から
+     * {@code <PROGRAM-ID>Controller.java}と{@code <PROGRAM-ID>Record.java}の2つのJavaファイルを出力する。
+     *
+     * @param filePath cobjコマンドの{@code -info-json-dir}オプションで生成されたJSONファイルのパス
+     */
     static void javaCreate(String filePath) {
         try {
             String json = new String(Files.readAllBytes(Paths.get(filePath)));
@@ -63,10 +69,11 @@ class ApiFiles {
     }
 
     /**
-     * <PROGRAM-ID>Controller.javaのコードを記述する
+     * {@code <PROGRAM-ID>Controller.java}のコードを記述する。<br>
+     * Spring BootのRestControllerとして動作するクラスを生成し、GET・POSTリクエストを受け付けて
+     * COBOLプログラムを呼び出した結果を{@code <PROGRAM-ID>Record}として返す処理を出力する。
      *
-     * @param ctlFile <PROGRAM-ID>Controller.javaのファイルの情報を保持する
-     * @param programId PROGRAM-IDに記述されているプログラム名
+     * @param ctlFile 生成する{@code <PROGRAM-ID>Controller.java}の書き込み先FileWriter
      * @param params PROCEDURE DIVISION USING句に記述されている引数の配列
      */
     private static void writeController(FileWriter ctlFile, JSONArray params) {
@@ -214,9 +221,12 @@ class ApiFiles {
     }
 
     /**
-     * <PROGRAM-ID>Record.javaのコードを記述する
+     * {@code <PROGRAM-ID>Record.java}のコードを記述する。<br>
+     * Controllerクラスがレスポンスとして返却するJava recordクラスを生成する。
+     * PROCEDURE DIVISION USING句の各引数をrecordのフィールドとして定義し、HTTPステータスコードを表す
+     * {@code statuscode}フィールドを先頭に持つ。
      *
-     * @param rcdFile <PROGRAM-ID>Record.javaのファイル情報を保持する
+     * @param rcdFile 生成する{@code <PROGRAM-ID>Record.java}の書き込み先FileWriter
      * @param params PROCEDURE DIVISION USING句に記述されている引数の配列
      */
     private static void writeRecord(FileWriter rcdFile, JSONArray params) {
@@ -258,12 +268,18 @@ class ApiFiles {
     }
 
     /**
-     * 生成されるJavaファイルに記述されるメソッドの引数などを記述する
+     * 生成されるJavaファイルに記述されるメソッドの引数などをカンマ区切りで出力する。<br>
+     * {@code isType}と{@code isRecord}の組み合わせにより、出力される文字列の形式が変化する。
+     * <ul>
+     *   <li>{@code isType=true}の場合: {@code <型> <変数名>}の形式で宣言として出力する</li>
+     *   <li>{@code isRecord=true}の場合: {@code <PROGRAM-ID>Record.<変数名>()}の形式でrecordアクセサ呼び出しとして出力する</li>
+     *   <li>どちらもfalseの場合: {@code <変数名>}のみを出力する</li>
+     * </ul>
      *
-     * @param writer 生成されるJavaファイルの情報を保持する
+     * @param writer 書き込み先のPrintWriter
      * @param params PROCEDURE DIVISION USING句に記述されている引数の配列
-     * @param isType 引数の型を記述するかどうか
-     * @param isRecord 引数がレコード型かどうか
+     * @param isType 引数に型を付与して宣言形式で出力する場合は{@code true}
+     * @param isRecord 引数をrecordのアクセサ呼び出しとして出力する場合は{@code true}
      */
     private static void argPrint(
             PrintWriter writer, JSONArray params, boolean isType, boolean isRecord) {
