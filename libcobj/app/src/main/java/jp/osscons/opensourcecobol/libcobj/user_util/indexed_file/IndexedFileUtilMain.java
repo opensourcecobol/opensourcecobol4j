@@ -745,7 +745,8 @@ class IndexedFileUtilMain {
      * @param indexedFilePath 作成するインデックスファイルのパス
      * @param recordSize 1レコードのバイト数
      * @param keyInfoList インデックスファイルに設定するキー情報のリスト
-     * @return 生成された{@link CobolFile}インスタンス
+     * @return 生成された{@link CobolFile}インスタンスを含む{@link Optional}。このメソッドは常に値を含む
+     *     {@link Optional}を返す
      */
     private static Optional<CobolFile> createCobolFile(
             String indexedFilePath, Integer recordSize, List<CobolFileKeyInfo> keyInfoList) {

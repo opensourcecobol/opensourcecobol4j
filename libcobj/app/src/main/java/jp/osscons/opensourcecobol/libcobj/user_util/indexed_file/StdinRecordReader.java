@@ -72,8 +72,11 @@ class StdinRecordReader implements RecordReader {
 
     /**
      * 標準入力からSEQUENTIAL形式で1レコードずつ読み込む内部クラス。<br>
-     * 入力データはレコード区切りを持たず、{@code recordSize}バイトずつ連続して並んでいることを想定する。
-     * 入力データの総バイト数が{@code recordSize}の倍数でない場合は{@link LoadResult#LoadResultDataSizeMismatch}を返す。
+     * 実装上は{@link Scanner#next()}で標準入力から空白区切りの1トークンを{@link String}として取得し、
+     * そのバイト列を{@code recordSize}バイトずつ区切って1レコードとして扱う。このため、入力全体が
+     * 空白文字を含まない1つのトークンであり、かつそのバイト長が{@code recordSize}の倍数であることを想定する。
+     * 1トークン分のバイト長が{@code recordSize}の倍数でない場合は
+     * {@link LoadResult#LoadResultDataSizeMismatch}を返す。
      */
     static class StdinSeqReader extends StdinRecordReader {
         private boolean firstFetchFail;

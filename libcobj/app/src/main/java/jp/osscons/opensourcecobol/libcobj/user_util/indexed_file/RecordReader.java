@@ -25,7 +25,7 @@ interface RecordReader {
 
     /**
      * 指定された入力データ形式および入力ソースに対応する{@code RecordReader}の実装を返す。<br>
-     * {@code filePath}が存在する場合はファイルから、存在しない場合は標準入力から読み込む実装を返す。
+     * {@code filePath}が指定されている場合はファイルから、指定されていない場合は標準入力から読み込む実装を返す。
      *
      * @param userDataFormat 入力データの形式
      * @param recordSize 1レコードのバイト数
