@@ -445,7 +445,9 @@ public class CobolIntrinsic {
 
     /**
      * COBOLの組み込み関数FUNCTION CURRENT-DATEに対応する。<br>
-     * 現在の日付と時刻を「YYYYMMDDhhmmsshh+ZZZZ」形式の21文字の文字列として返す。
+     * 現在の日付と時刻を「YYYYMMDDHHMMSScc+ZZZZ」形式の21文字の文字列として返す。<br>
+     * ここでccは1/100秒(ミリ秒の上位2桁)を表す。<br>
+     * なおタイムゾーンは未実装のため、末尾の「+ZZZZ」(GMTオフセット)は常にハードコードされた「00000」となる。
      *
      * @param offset 結果に対する部分参照の開始位置(1始まり)。0以下の場合は部分参照を行わない
      * @param length 結果に対する部分参照の長さ

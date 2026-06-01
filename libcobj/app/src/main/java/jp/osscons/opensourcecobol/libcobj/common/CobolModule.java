@@ -66,8 +66,9 @@ public class CobolModule {
      * C$NARGなどの呼び出し元情報を取得する機能に相当する。
      *
      * @param data 呼び出し元プログラム名の書き込み先となる記憶領域
-     * @return 呼び出し元の情報を書き込んだ場合は0、呼び出し元が存在しない場合は-1、
-     *     第1引数が存在しない場合は1
+     * @return 呼び出し元の情報を書き込んだ場合、または第1引数が存在しない場合は1、
+     *     呼び出し元が存在しない場合(空白を書き込んだ場合)は0、
+     *     呼び出し元のプログラムIDがnullの場合は-1
      */
     public static int calledBy(CobolDataStorage data) {
         AbstractCobolField param = CobolModule.getCurrentModule().cob_procedure_parameters.get(0);

@@ -319,7 +319,7 @@ public class CobolInspect {
     /**
      * libcob/strings.cのcob_inspect_charactersの実装。<br>
      * INSPECT ... CHARACTERS句に対応し、走査範囲内の未処理のすべての文字を対象とする。<br>
-     * 計数モードでは対象文字数をf1に加算し、置換モードでは各文字をf1の文字で置き換える。
+     * 計数モードでは対象文字数をf1に加算し、置換モードでは対象範囲をf1の内容で置き換える。
      *
      * @param f1 計数モードでは計数結果を加算するフィールド、置換モードでは置換後の文字を表すフィールド
      * @throws CobolStopRunException 処理中にSTOP RUNが実行された場合
