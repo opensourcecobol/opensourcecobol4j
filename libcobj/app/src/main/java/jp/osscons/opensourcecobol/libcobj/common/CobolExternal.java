@@ -23,28 +23,48 @@ import java.util.HashMap;
 import jp.osscons.opensourcecobol.libcobj.data.CobolDataStorage;
 import jp.osscons.opensourcecobol.libcobj.file.CobolFile;
 
-/** TODO: 準備中 */
+/**
+ * EXTERNAL属性を持つデータ項目およびファイルを管理するクラス<br>
+ * libcobのcob_externalに対応する。名前をキーとして領域を一元管理し、複数のプログラム間で
+ * 同一の実体(ファイルやデータ領域)を共有できるようにする。
+ */
 public final class CobolExternal {
 
+    /** このインスタンスが保持するEXTERNALファイルの実体 */
     private CobolFile extAllocFile;
+
+    /** このインスタンスが保持するEXTERNALデータ領域の実体 */
     private CobolDataStorage extAllocStorage;
 
+    /** EXTERNAL名から対応する{@link CobolExternal}インスタンスへの対応表 */
     private static AbstractMap<String, CobolExternal> externalMap =
             new HashMap<String, CobolExternal>();
 
+    /**
+     * EXTERNALファイルを保持するインスタンスを生成する。
+     *
+     * @param file 共有するファイルの実体
+     */
     private CobolExternal(CobolFile file) {
         this.extAllocFile = file;
     }
 
+    /**
+     * EXTERNALデータ領域を保持するインスタンスを生成する。
+     *
+     * @param storage 共有するデータ領域の実体
+     * @param size データ領域のサイズ(バイト数)
+     */
     private CobolExternal(CobolDataStorage storage, int size) {
         this.extAllocStorage = storage;
     }
 
     /**
-     * TODO: 準備中
+     * 指定された名前に対応するEXTERNALファイルを取得する。<br>
+     * 既に登録されていればその実体を返し、未登録の場合は新たに生成して登録した上で返す。
      *
-     * @param name TODO: 準備中
-     * @return TODO: 準備中
+     * @param name EXTERNALファイルの名前
+     * @return 名前に対応する共有ファイル
      */
     public static CobolFile getFileAddress(String name) {
         if (externalMap.containsKey(name)) {
@@ -58,11 +78,12 @@ public final class CobolExternal {
     }
 
     /**
-     * TODO: 準備中
+     * 指定された名前に対応するEXTERNALデータ領域を取得する。<br>
+     * 既に登録されていればその実体を返し、未登録の場合は指定サイズの領域を新たに生成して登録した上で返す。
      *
-     * @param name TODO: 準備中
-     * @param size TODO: 準備中
-     * @return TODO: 準備中
+     * @param name EXTERNALデータ領域の名前
+     * @param size 新規生成する場合のデータ領域のサイズ(バイト数)
+     * @return 名前に対応する共有データ領域
      */
     public static CobolDataStorage getStorageAddress(String name, int size) {
         if (externalMap.containsKey(name)) {

@@ -32,96 +32,120 @@ import jp.osscons.opensourcecobol.libcobj.exceptions.CobolRuntimeException;
 import jp.osscons.opensourcecobol.libcobj.exceptions.CobolStopRunException;
 import jp.osscons.opensourcecobol.libcobj.file.CobolFile;
 
-/** TDOD: 準備中 */
+/**
+ * COBOLランタイムの各種ユーティリティ機能を提供するクラス。<br>
+ * libcobのcommon.cに相当し、ランタイムの初期化、環境変数の取得・設定、コマンドライン引数(CHAINING)の処理、<br>
+ * ランタイムエラーの報告、SWITCHの設定・取得、参照修飾(reference modification)の境界チェック、<br>
+ * 文字列比較などのヘルパー処理をまとめて提供する。
+ */
 public class CobolUtil {
+    /** I/O操作でREWRITEを暗黙的に行うとみなすかどうかのフラグ(環境変数COB_IO_ASSUME_REWRITEで設定)。 */
     private static boolean cob_io_assume_rewrite = false;
+
+    /** 冗長出力を有効にするかどうかのフラグ(環境変数COB_VERBOSEで設定)。 */
     private static boolean cob_verbose = false;
+
+    /** ランタイムエラー発生時に呼び出されるハンドラのリストの先頭。 */
     private static HandlerList hdlrs = null;
+
+    /** ランタイムエラーメッセージの文字列。 */
     private static String runtime_err_str = null;
 
-    /** TDOD: 準備中 */
+    /** 環境変数COB_DATEで指定された固定日付を保持する。指定がない場合はnull。 */
     public static LocalDateTime cobLocalTm = null;
 
-    /** TDOD: 準備中 */
+    /** ロケール関連の環境変数の値を保持する。 */
     public static String cobLocalEnv = null;
 
-    /** TDOD: 準備中 */
+    /** プログラムに渡されたコマンドライン引数(プログラム名を含まない)。 */
     public static String[] commandLineArgs = null;
 
-    /** TDOD: 準備中 */
+    /** ACCEPT FROM ARGUMENT-VALUE等で参照される、現在のコマンドライン引数のインデックス(1始まり)。 */
     public static int currentArgIndex = 1;
 
-    /** TDOD: 準備中 */
+    /** 符号なし数値のニブル定数Cの扱いを制御するフラグ(環境変数COB_NIBBLE_C_UNSIGNEDで設定)。 */
     public static boolean nibbleCForUnsigned = false;
 
-    /** TDOD: 準備中 */
+    /** COBOLのプログラムスイッチ(SWITCH-1〜SWITCH-8)の状態。インデックス0が1番目に対応する。 */
     public static boolean[] cobSwitch = new boolean[8];
 
-    /** TDOD: 準備中 */
+    /** CALL文で呼び出された際に渡されたパラメータ数を保存する。 */
     public static int cobSaveCallParams = 0;
 
-    /** TDOD: 準備中 */
+    /** 冗長出力を有効にするかどうかのフラグ。 */
     public static boolean verbose = false;
 
-    /** TDOD: 準備中 */
+    /** プログラム終了時にエラーが発生したことを示すフラグ。 */
     public static boolean cobErrorOnExitFlag = false;
 
-    /** TDOD: 準備中 */
+    /** 現在日時を取得するためのCalendarインスタンス。 */
     public static Calendar cal;
 
-    /** TDOD: 準備中 */
+    /** 順編成ファイルへの書き込みバッファサイズ(環境変数COB_FILE_SEQ_WRITE_BUFFER_SIZEで設定)。 */
     public static int fileSeqWriteBufferSize = 10;
 
     /** DISPLAY/ACCEPT文によるデータ出力時のエンコーディング */
     public static CobolEncoding terminalEncoding = CobolEncoding.SHIFT_JIS;
 
+    /** 行トレース(READY TRACE)が有効かどうかのフラグ。 */
     private static boolean lineTrace = false;
 
-    /** TDOD: 準備中 */
+    /** 現在実行中のソースファイル名。 */
     private static String sourceFile;
 
-    /** TDOD: 準備中 */
+    /** 現在実行中のソース行番号。 */
     private static int sourceLine;
 
-    /** TDOD: 準備中 */
+    /** 現在実行中のプログラムID。 */
     private static String currProgramId;
 
-    /** TDOD: 準備中 */
+    /** 現在実行中のセクション名。 */
     private static String currSection;
 
-    /** TDOD: 準備中 */
+    /** 現在実行中の段落(パラグラフ)名。 */
     private static String currParagraph;
 
-    /** TDOD: 準備中 */
+    /** 現在実行中の文(ステートメント)の名称。 */
     private static String sourceStatement;
 
+    /**
+     * ランタイムエラー発生時に呼び出されるハンドラを連結リストとして表す抽象クラス。<br>
+     * libcobのcob_runtime_error_handlerに相当する。
+     */
     abstract static class HandlerList {
+        /** リスト上の次のハンドラ。末尾の場合はnull。 */
         public HandlerList next = null;
 
+        /**
+         * エラーメッセージを処理する。
+         *
+         * @param s エラーメッセージ文字列
+         * @return ハンドラの処理結果
+         */
         public abstract int proc(String s);
     }
 
-    /** TDOD: 準備中 */
+    /** 致命的エラー種別: cob_init()が呼び出されていない。 */
     public static final int FERROR_INITIALIZED = 0;
 
-    /** TDOD: 準備中 */
+    /** 致命的エラー種別: コード生成エラー(報告が必要な内部エラー)。 */
     public static final int FERROR_CODEGEN = 1;
 
-    /** TDOD: 準備中 */
+    /** 致命的エラー種別: CHAININGプログラムの再帰呼び出し。 */
     public static final int FERROR_CHAINING = 2;
 
-    /** TDOD: 準備中 */
+    /** 致命的エラー種別: スタックオーバーフロー(PERFORMの入れ子が深すぎる等)。 */
     public static final int FERROR_STACK = 3;
 
     private static Properties envVarTable = new Properties();
 
     // libcob/common.cのcob_check_envの実装
     /**
-     * TODO: 準備中
+     * 指定した環境変数の値が、指定した値と一致するかどうかを判定する。
      *
-     * @param name TODO: 準備中
-     * @param value TODO: 準備中
-     * @return TODO: 準備中
+     * @param name 環境変数名
+     * @param value 比較対象の値
+     * @return 環境変数が存在し値が一致する場合は1、それ以外(引数がnullの場合を含む)は0
      */
     public static int checkEnv(String name, String value) {
         if (name == null || value == null) {
@@ -138,22 +162,23 @@ public class CobolUtil {
     }
 
     /**
-     * TODO: 準備中
+     * I/O操作でREWRITEを暗黙的に行うとみなす設定が有効かどうかを返す。
      *
-     * @return TODO: 準備中
+     * @return 暗黙のREWRITEが有効な場合はtrue、そうでない場合はfalse
      */
     public static boolean cob_io_rewwrite_assumed() {
         return cob_io_assume_rewrite;
     }
 
     /**
-     * TODO: 準備中
+     * 日本語項目(NATIONAL)に対する参照修飾の境界チェックを行う。<br>
+     * 1文字が2バイトであることを考慮し、各値を文字単位に換算してから境界チェックを実行する。
      *
-     * @param offset TODO: 準備中
-     * @param length TODO: 準備中
-     * @param size TODO: 準備中
-     * @param name TODO: 準備中
-     * @throws CobolStopRunException TODO: 準備中
+     * @param offset 参照修飾の開始位置(バイト単位、1始まり)
+     * @param length 参照修飾の長さ(バイト単位)
+     * @param size 対象項目の全体サイズ(バイト単位)
+     * @param name 対象項目の名前(バイト配列)
+     * @throws CobolStopRunException 参照修飾が境界外でランタイムを停止する場合
      */
     public static void cobCheckRefModNational(int offset, long length, int size, byte[] name)
             throws CobolStopRunException {
@@ -161,13 +186,14 @@ public class CobolUtil {
     }
 
     /**
-     * TODO: 準備中
+     * 日本語項目(NATIONAL)に対する参照修飾の境界チェックを行う。<br>
+     * 1文字が2バイトであることを考慮し、各値を文字単位に換算してから境界チェックを実行する。
      *
-     * @param offset TODO: 準備中
-     * @param length TODO: 準備中
-     * @param size TODO: 準備中
-     * @param name TODO: 準備中
-     * @throws CobolStopRunException TODO: 準備中
+     * @param offset 参照修飾の開始位置(バイト単位、1始まり)
+     * @param length 参照修飾の長さ(バイト単位)
+     * @param size 対象項目の全体サイズ(バイト単位)
+     * @param name 対象項目の名前
+     * @throws CobolStopRunException 参照修飾が境界外でランタイムを停止する場合
      */
     public static void cobCheckRefModNational(int offset, long length, int size, String name)
             throws CobolStopRunException {
@@ -175,14 +201,14 @@ public class CobolUtil {
     }
 
     /**
-     * TODO: 準備中
+     * 参照修飾の境界チェックを行う。
      *
-     * @param offset TODO: 準備中
-     * @param length TODO: 準備中
-     * @param size TODO: 準備中
-     * @param name TODO: 準備中
-     * @param nameLen TODO: 準備中
-     * @throws CobolStopRunException TODO: 準備中
+     * @param offset 参照修飾の開始位置(1始まり)
+     * @param length 参照修飾の長さ
+     * @param size 対象項目の全体サイズ
+     * @param name 対象項目の名前を保持するデータストレージ
+     * @param nameLen 対象項目の名前の長さ(バイト数)
+     * @throws CobolStopRunException 参照修飾が境界外でランタイムを停止する場合
      */
     public static void cobCheckRefMod(
             int offset, long length, int size, CobolDataStorage name, int nameLen)
@@ -191,14 +217,14 @@ public class CobolUtil {
     }
 
     /**
-     * TODO: 準備中
+     * 参照修飾の境界チェックを行う。
      *
-     * @param offset TODO: 準備中
-     * @param length TODO: 準備中
-     * @param size TODO: 準備中
-     * @param name TODO: 準備中
-     * @param nameLen TODO: 準備中
-     * @throws CobolStopRunException TODO: 準備中
+     * @param offset 参照修飾の開始位置(1始まり)
+     * @param length 参照修飾の長さ
+     * @param size 対象項目の全体サイズ
+     * @param name 対象項目の名前(バイト配列)
+     * @param nameLen 対象項目の名前の長さ(バイト数)
+     * @throws CobolStopRunException 参照修飾が境界外でランタイムを停止する場合
      */
     public static void cobCheckRefMod(int offset, long length, int size, byte[] name, int nameLen)
             throws CobolStopRunException {
@@ -206,13 +232,13 @@ public class CobolUtil {
     }
 
     /**
-     * TODO: 準備中
+     * 参照修飾の境界チェックを行う。バイト配列の名前をSHIFT_JISの文字列に変換して処理する。
      *
-     * @param offset TODO: 準備中
-     * @param length TODO: 準備中
-     * @param size TODO: 準備中
-     * @param name TODO: 準備中
-     * @throws CobolStopRunException TODO: 準備中
+     * @param offset 参照修飾の開始位置(1始まり)
+     * @param length 参照修飾の長さ
+     * @param size 対象項目の全体サイズ
+     * @param name 対象項目の名前(バイト配列)
+     * @throws CobolStopRunException 参照修飾が境界外でランタイムを停止する場合
      */
     public static void cobCheckRefMod(int offset, long length, int size, byte[] name)
             throws CobolStopRunException {
@@ -221,14 +247,14 @@ public class CobolUtil {
     }
 
     /**
-     * TODO: 準備中
+     * 参照修飾の境界チェックを行う。
      *
-     * @param offset TODO: 準備中
-     * @param length TODO: 準備中
-     * @param size TODO: 準備中
-     * @param name TODO: 準備中
-     * @param nameLen TODO: 準備中
-     * @throws CobolStopRunException TODO: 準備中
+     * @param offset 参照修飾の開始位置(1始まり)
+     * @param length 参照修飾の長さ
+     * @param size 対象項目の全体サイズ
+     * @param name 対象項目の名前
+     * @param nameLen 対象項目の名前の長さ(バイト数)
+     * @throws CobolStopRunException 参照修飾が境界外でランタイムを停止する場合
      */
     public static void cobCheckRefMod(int offset, long length, int size, String name, int nameLen)
             throws CobolStopRunException {
@@ -236,13 +262,14 @@ public class CobolUtil {
     }
 
     /**
-     * TODO: 準備中
+     * 参照修飾(reference modification)の開始位置と長さが項目の境界内に収まっているかをチェックする。<br>
+     * 境界外の場合はCOB_EC_BOUND_REF_MOD例外を設定し、ランタイムエラーを出力して実行を停止する。
      *
-     * @param offset TODO: 準備中
-     * @param length TODO: 準備中
-     * @param size TODO: 準備中
-     * @param name TODO: 準備中
-     * @throws CobolStopRunException TODO: 準備中
+     * @param offset 参照修飾の開始位置(1始まり)
+     * @param length 参照修飾の長さ
+     * @param size 対象項目の全体サイズ
+     * @param name 対象項目の名前
+     * @throws CobolStopRunException 参照修飾が境界外でランタイムを停止する場合
      */
     public static void cobCheckRefMod(int offset, long length, int size, String name)
             throws CobolStopRunException {
@@ -262,11 +289,12 @@ public class CobolUtil {
     }
 
     /**
-     * TODO: 準備中
+     * BASED項目またはLINKAGE項目が有効なアドレス(非null)を持つかをチェックする。<br>
+     * アドレスがnullの場合はランタイムエラーを出力して実行を停止する。
      *
-     * @param x TODO: 準備中
-     * @param name TODO: 準備中
-     * @throws CobolStopRunException TODO: 準備中
+     * @param x チェック対象の項目を指すデータストレージ
+     * @param name 対象項目の名前(バイト配列)
+     * @throws CobolStopRunException アドレスがnullでランタイムを停止する場合
      */
     public static void cobCheckBased(CobolDataStorage x, byte[] name) throws CobolStopRunException {
         if (x == null) {
@@ -276,10 +304,14 @@ public class CobolUtil {
     }
 
     /**
-     * TODO: 準備中
+     * COBOLランタイムを初期化する。<br>
+     * 未初期化の場合は、コマンドライン引数の保存、各サブシステム(INSPECT/ファイルI/O/組み込み関数)の初期化、<br>
+     * およびCOB_SWITCH_1〜COB_SWITCH_8環境変数によるスイッチ設定を行う。<br>
+     * その後、COB_DATE、COB_VERBOSE、COB_IO_ASSUME_REWRITE、COB_NIBBLE_C_UNSIGNED、<br>
+     * COB_FILE_SEQ_WRITE_BUFFER_SIZE、COB_TERMINAL_ENCODINGなどの環境変数を読み込んでランタイム設定を反映する。
      *
-     * @param argv TODO: 準備中
-     * @param cobInitialized TODO: 準備中
+     * @param argv コマンドライン引数(プログラム名を含まない)
+     * @param cobInitialized すでに初期化済みかどうか。trueの場合はサブシステムの初期化をスキップする
      */
     public static void cob_init(String[] argv, boolean cobInitialized) {
         // TODO 未完成
@@ -366,9 +398,11 @@ public class CobolUtil {
 
     // libcob/common.cとcob_localtime
     /**
-     * TODO: 準備中
+     * 現在のローカル日時を取得する。<br>
+     * 環境変数COB_DATEで固定日付({@link #cobLocalTm})が指定されている場合は、その日付に現在の時刻(時・分・秒)を<br>
+     * 反映した日時を返す。指定がない場合はシステムの現在日時を返す。
      *
-     * @return TODO: 準備中
+     * @return 取得したローカル日時
      */
     public static LocalDateTime localtime() {
         LocalDateTime rt = LocalDateTime.now();
@@ -385,9 +419,10 @@ public class CobolUtil {
 
     // libcob/cob_verbose_outputの実装
     /**
-     * TODO: 準備中
+     * 冗長出力が有効な場合に、メッセージを標準出力へ出力する。<br>
+     * 出力時には先頭に"libcobj: "が付加される。
      *
-     * @param s TODO cob_verboseの初期化
+     * @param s 出力するメッセージ
      */
     public static void verboseOutput(String s) {
         if (cob_verbose) {
@@ -397,9 +432,12 @@ public class CobolUtil {
 
     // libcob/fileio.cのcob_rintime_errorの実装
     /**
-     * TODO: 準備中
+     * ランタイムエラーメッセージを出力する。<br>
+     * 登録済みのエラーハンドラ({@link HandlerList})がある場合は順に呼び出した上で解放し、<br>
+     * ソースファイル名と行番号(判明している場合)を前置して、先頭に"libcobj: "を付けたメッセージを<br>
+     * SHIFT_JISエンコードで標準エラー出力へ書き込む。
      *
-     * @param s TODO: 準備中
+     * @param s 出力するエラーメッセージ
      */
     public static void runtimeError(String s) {
         if (hdlrs != null) {
@@ -431,10 +469,11 @@ public class CobolUtil {
 
     // libcob/common.c cob_get_environment
     /**
-     * TODO: 準備中
+     * 環境変数の値を取得し、指定したフィールドへ格納する。<br>
+     * 指定した名前の環境変数が存在しない場合はCOB_EC_IMP_ACCEPT例外を設定し、空白を格納する。
      *
-     * @param envname TODO: 準備中
-     * @param envval TODO: 準備中
+     * @param envname 取得する環境変数名を保持するフィールド
+     * @param envval 取得した値を格納するフィールド
      */
     public static void getEnvironment(AbstractCobolField envname, AbstractCobolField envval) {
         String p = CobolUtil.getEnv(envname.fieldToString());
@@ -447,19 +486,20 @@ public class CobolUtil {
 
     // libcob/common.cのCOB_CHK_PARMSの実装
     /**
-     * TODO: 準備中
+     * サブルーチン呼び出し時に渡されたパラメータ数を検査する(libcobのCOB_CHK_PARMSに相当)。<br>
+     * 現状の実装では検査処理は行わない。
      *
-     * @param funcName TODO: 準備中
-     * @param numParams TODO: 準備中
+     * @param funcName 検査対象の関数(サブルーチン)名
+     * @param numParams 期待されるパラメータ数
      */
     public static void COB_CHK_PARMS(String funcName, int numParams) {}
 
     // libcob/common.cのcob_get_switchの実装
     /**
-     * TODO: 準備中
+     * 指定したプログラムスイッチの状態を取得する。
      *
-     * @param n TODO: 準備中
-     * @return TODO: 準備中
+     * @param n スイッチのインデックス(0始まり、SWITCH-1が0に対応する)
+     * @return スイッチがONの場合はtrue、OFFの場合はfalse
      */
     public static boolean getSwitch(int n) {
         return CobolUtil.cobSwitch[n];
@@ -467,10 +507,10 @@ public class CobolUtil {
 
     // libcob/common.cのcob_set_switchの実装
     /**
-     * TODO: 準備中
+     * 指定したプログラムスイッチの状態を設定する。
      *
-     * @param n TODO: 準備中
-     * @param flag TODO: 準備中
+     * @param n スイッチのインデックス(0始まり、SWITCH-1が0に対応する)
+     * @param flag 設定する値。0でOFF、1でONに設定する(それ以外の値の場合は変更しない)
      */
     public static void setSwitch(int n, int flag) {
         if (flag == 0) {
@@ -482,13 +522,14 @@ public class CobolUtil {
 
     // libcob/common.cのalnum_cmpsの実装
     /**
-     * TODO: 準備中
+     * 2つの英数字データを指定したバイト数だけ比較する。<br>
+     * 照合順序(collating sequence)が指定されている場合は、その変換表を適用してから各バイトを比較する。
      *
-     * @param s1 TODO: 準備中
-     * @param s2 TODO: 準備中
-     * @param size TODO: 準備中
-     * @param col TODO: 準備中
-     * @return TODO: 準備中
+     * @param s1 比較対象の1つ目のデータストレージ
+     * @param s2 比較対象の2つ目のデータストレージ
+     * @param size 比較するバイト数
+     * @param col 照合順序の変換表。nullの場合は変換せずバイト値で比較する
+     * @return s1がs2より小さい場合は負、等しい場合は0、大きい場合は正の値
      */
     public static int alnumCmps(
             CobolDataStorage s1, CobolDataStorage s2, int size, CobolDataStorage col) {
@@ -514,13 +555,14 @@ public class CobolUtil {
 
     // libcob/common.cのnational_cmpsの実装
     /**
-     * TODO: 準備中
+     * 2つの日本語(NATIONAL)データを指定したバイト数だけ比較する。<br>
+     * 2バイトを1文字として上位バイト・下位バイトを結合した値同士で比較する。
      *
-     * @param s1 TODO: 準備中
-     * @param s2 TODO: 準備中
-     * @param size TODO: 準備中
-     * @param col TODO: 準備中
-     * @return TODO: 準備中
+     * @param s1 比較対象の1つ目のデータストレージ
+     * @param s2 比較対象の2つ目のデータストレージ
+     * @param size 比較するバイト数
+     * @param col 照合順序の変換表(現状の実装では使用しない)
+     * @return s1がs2より小さい場合は負、等しい場合は0、大きい場合は正の値
      */
     public static int nationalCmps(
             CobolDataStorage s1, CobolDataStorage s2, int size, CobolDataStorage col) {
@@ -535,21 +577,23 @@ public class CobolUtil {
         return ret;
     }
 
-    /** TODO: 準備中 */
+    /** 行トレース(READY TRACE)を有効にする。以降の実行位置がトレース出力される。 */
     public static void readyTrace() {
         CobolUtil.lineTrace = true;
     }
 
-    /** TODO: 準備中 */
+    /** 行トレース(RESET TRACE)を無効にする。 */
     public static void resetTrace() {
         CobolUtil.lineTrace = false;
     }
 
     /**
-     * TODO: 準備中
+     * 致命的エラーを報告し、ランタイムの実行を停止する。<br>
+     * 指定されたエラー種別に応じたメッセージをランタイムエラーとして出力した後、実行を停止する。
      *
-     * @param fatalError TODO: 準備中
-     * @throws CobolStopRunException TODO: 準備中
+     * @param fatalError 致命的エラーの種別。{@link #FERROR_INITIALIZED}、{@link #FERROR_CODEGEN}、{@link
+     *     #FERROR_CHAINING}、{@link #FERROR_STACK}のいずれか
+     * @throws CobolStopRunException 常にランタイムを停止するためにスローされる
      */
     public static void fatalError(int fatalError) throws CobolStopRunException {
         switch (fatalError) {
@@ -573,14 +617,16 @@ public class CobolUtil {
     }
 
     /**
-     * TODO: 準備中
+     * 現在の実行位置(プログラムID、ソースファイル、行番号、セクション、段落、文)を設定する。<br>
+     * これらの情報はランタイムエラー出力やトレースに利用される。<br>
+     * 行トレースが有効な場合は、プログラムID・行番号・文をトレースとして標準エラー出力へ出力する。
      *
-     * @param progId TODO: 準備中
-     * @param sfile TODO: 準備中
-     * @param sline TODO: 準備中
-     * @param csect TODO: 準備中
-     * @param cpara TODO: 準備中
-     * @param cstatement TODO: 準備中
+     * @param progId 現在のプログラムID
+     * @param sfile 現在のソースファイル名
+     * @param sline 現在のソース行番号
+     * @param csect 現在のセクション名
+     * @param cpara 現在の段落(パラグラフ)名
+     * @param cstatement 現在の文(ステートメント)の名称。nullの場合は更新しない
      */
     public static void setLocation(
             String progId, String sfile, int sline, String csect, String cpara, String cstatement) {
@@ -603,10 +649,11 @@ public class CobolUtil {
     }
 
     /**
-     * TODO: 準備中
+     * 環境変数の値を取得する。<br>
+     * まず{@link #setEnv}で設定された内部テーブルを参照し、存在しない場合はシステムの環境変数を参照する。
      *
-     * @param envVarName TODO: 準備中
-     * @return TODO: 準備中
+     * @param envVarName 取得する環境変数名
+     * @return 環境変数の値。存在しない場合はnull
      */
     public static String getEnv(String envVarName) {
         String envVarInTable = CobolUtil.envVarTable.getProperty(envVarName);
@@ -639,65 +686,65 @@ public class CobolUtil {
     }
 
     /**
-     * TODO: 準備中
+     * 文字列をSHIFT_JISエンコードのバイト配列に変換する。
      *
-     * @param s TODO: 準備中
-     * @return TODO: 準備中
+     * @param s 変換する文字列
+     * @return SHIFT_JISでエンコードしたバイト配列
      */
     public static byte[] stringToBytes(String s) {
         return s.getBytes(AbstractCobolField.charSetSJIS);
     }
 
     /**
-     * TODO: 準備中
+     * 可変長引数で渡されたバイト列をバイト配列として返す。
      *
-     * @param bytes TODO: 準備中
-     * @return TODO: 準備中
+     * @param bytes バイト配列に変換するバイト列
+     * @return 渡されたバイト列からなるバイト配列
      */
     public static byte[] toBytes(byte... bytes) {
         return bytes;
     }
 
     /**
-     * TODO: 準備中
+     * 現在実行中のプログラムIDを取得する。
      *
-     * @return TODO: 準備中
+     * @return 現在のプログラムID
      */
     public static String getCurrProgramId() {
         return currProgramId;
     }
 
     /**
-     * TODO: 準備中
+     * 現在実行中のセクション名を取得する。
      *
-     * @return TODO: 準備中
+     * @return 現在のセクション名
      */
     public static String getCurrSection() {
         return currSection;
     }
 
     /**
-     * TODO: 準備中
+     * 現在実行中の段落(パラグラフ)名を取得する。
      *
-     * @return TODO: 準備中
+     * @return 現在の段落名
      */
     public static String getCurrParagraph() {
         return currParagraph;
     }
 
     /**
-     * TODO: 準備中
+     * 現在実行中のソース行番号を取得する。
      *
-     * @return TODO: 準備中
+     * @return 現在のソース行番号
      */
     public static int getSourceLine() {
         return sourceLine;
     }
 
     /**
-     * TODO: 準備中
+     * 現在実行中の文(ステートメント)の名称を取得する。
      *
-     * @return TODO: 準備中
+     * @return 現在の文の名称
      */
     public static String getSourceStatement() {
         return sourceStatement;

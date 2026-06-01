@@ -21,13 +21,16 @@ package jp.osscons.opensourcecobol.libcobj.common;
 import jp.osscons.opensourcecobol.libcobj.data.AbstractCobolField;
 import jp.osscons.opensourcecobol.libcobj.exceptions.CobolStopRunException;
 
-/** TODO: 準備中 */
+/**
+ * {@link AbstractCobolField}を返す処理を遅延実行するための関数型インターフェイス<br>
+ * 生成されたJavaコード中で、COBOLフィールドを後から評価したい箇所(コールバック)を表現するために用いる。
+ */
 public interface GetAbstractCobolField {
     /**
-     * TODO: 準備中
+     * 処理を実行し、結果の{@link AbstractCobolField}を返す。
      *
-     * @return TODO: 準備中
-     * @throws CobolStopRunException TODO: 準備中
+     * @return 処理結果のCOBOLフィールド
+     * @throws CobolStopRunException 処理中にSTOP RUNが実行された場合
      */
     AbstractCobolField run() throws CobolStopRunException;
 }
