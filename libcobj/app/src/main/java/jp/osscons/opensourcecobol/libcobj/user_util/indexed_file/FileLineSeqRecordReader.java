@@ -5,21 +5,25 @@ import java.io.FileReader;
 import java.io.IOException;
 import jp.osscons.opensourcecobol.libcobj.data.CobolDataStorage;
 
-/** TODO: 準備中 */
+/**
+ * LINE SEQUENTIAL形式で書かれたファイルから1レコードずつ読み込む{@link RecordReader}の実装。<br>
+ * 1行を1レコードとして扱い、各行のバイト数がコンストラクタで指定された{@code recordSize}と一致することを期待する。
+ */
 class FileLineSeqRecordReader implements RecordReader {
-    /** TODO: 準備中 */
+    /** 1レコードのバイト数 */
     int recordSize;
 
-    /** TODO: 準備中 */
+    /** 入力ファイルを行単位で読み込むためのリーダ */
     BufferedReader reader;
 
     private String filePath;
 
     /**
-     * TODO: 準備中
+     * 新しい{@code FileLineSeqRecordReader}インスタンスを生成する。<br>
+     * この時点ではファイルは開かれず、{@link #open()}の呼び出しによって開かれる。
      *
-     * @param recordSize TODO: 準備中
-     * @param filePath TODO: 準備中
+     * @param recordSize 1レコードのバイト数
+     * @param filePath 読み込み対象のファイルのパス
      */
     FileLineSeqRecordReader(int recordSize, String filePath) {
         this.recordSize = recordSize;

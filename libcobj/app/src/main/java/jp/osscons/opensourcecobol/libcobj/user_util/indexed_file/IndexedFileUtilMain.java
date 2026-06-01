@@ -42,9 +42,11 @@ class IndexedFileUtilMain {
     private static final String version = jp.osscons.opensourcecobol.libcobj.Const.version;
 
     /**
-     * Main method
+     * cobj-idxコマンドのエントリポイント。<br>
+     * コマンドライン引数をパースし、指定されたサブコマンド({@code info} / {@code create} / {@code load} /
+     * {@code unload} / {@code migrate} / {@code unlock})を実行する。
      *
-     * @param args TODO: 準備中
+     * @param args コマンドラインから入力された引数の配列
      */
     public static void main(String[] args) {
 
@@ -215,7 +217,7 @@ class IndexedFileUtilMain {
         }
     }
 
-    /** Print help message. */
+    /** cobj-idxコマンドのヘルプメッセージを標準出力へ出力する。 */
     private static void printHelpMessage() {
         System.out.println(
                 "cobj-idx - A utility tool to handle an indexed file of opensource COBOL 4J");
@@ -293,10 +295,15 @@ class IndexedFileUtilMain {
     }
 
     /**
-     * Parse the key options and return a list of CobolFileKeyInfo.
+     * {@code -k}オプション({@code --key})の値をパースし、{@link CobolFileKeyInfo}のリストを返す。<br>
+     * キーは{@code offset,size}の組をコロン区切りで並べた文字列で指定され、
+     * 先頭に{@code d}を付けた{@code dOFFSET,SIZE}は重複キーを意味する。例えば
+     * {@code 2,2:5,4:d15,5}は「プライマリキーがオフセット2長さ2、重複なしのオルタネートキーが
+     * オフセット5長さ4、重複ありのオルタネートキーがオフセット15長さ5」を表す。
      *
-     * @param cmd the CommandLine object containing the parsed command line arguments
-     * @return a list of CobolFileKeyInfo objects parsed from the key options in the provided CommandLine argument
+     * @param cmd パース済みのコマンドライン
+     * @return キー情報のリスト
+     * @throws Exception キーの指定が不正な場合や、プライマリキーが重複キーとして指定されている場合など
      */
     private static List<CobolFileKeyInfo> parseKeyOptions(CommandLine cmd) throws Exception {
         if (cmd.hasOption("k")) {
@@ -385,10 +392,11 @@ class IndexedFileUtilMain {
     }
 
     /**
-     * Process info sub command, which shows information of the indexed file.
+     * {@code info}サブコマンドを実行し、インデックスファイルのメタ情報(レコードサイズ、レコード件数、
+     * プライマリキー・オルタネートキーの位置など)を標準出力へ出力する。
      *
-     * @param indexedFilePath TODO: 準備中
-     * @return 0 if success, otherwise non-zero. The return value is error code.
+     * @param indexedFilePath 情報を表示する対象のインデックスファイルのパス
+     * @return 成功した場合は{@code 0}、失敗した場合は非ゼロの終了コード
      */
     private static int processInfoCommand(String indexedFilePath) {
         File indexedFile = new File(indexedFilePath);
@@ -453,6 +461,15 @@ class IndexedFileUtilMain {
         }
     }
 
+    /**
+     * {@code migrate}サブコマンドの実体。<br>
+     * opensource COBOL 4J 1.1.12より前のバージョンで作成されたインデックスファイルを最新形式へ移行する。
+     * 具体的には{@code file_lock}テーブルを作成し、{@code table0}にファイルロック用の列
+     * ({@code locked_by}、{@code process_id}、{@code locked_at})が存在しない場合にそれらを追加する。
+     *
+     * @param indexedFilePath 移行対象のインデックスファイルのパス
+     * @throws Exception インデックスファイルへの接続に失敗した場合
+     */
     private static void migrateIndexedFile(String indexedFilePath) throws Exception {
         try (Connection conn = DriverManager.getConnection("jdbc:sqlite:" + indexedFilePath);
                 Statement st = conn.createStatement()) {
@@ -495,6 +512,14 @@ class IndexedFileUtilMain {
         }
     }
 
+    /**
+     * {@code unlock}サブコマンドの実体。<br>
+     * 指定されたインデックスファイルに対してかけられているすべてのロック情報を削除する。
+     * {@code file_lock}テーブルのすべての行を削除し、{@code table0}のロック関連列をすべて{@code NULL}に戻す。
+     *
+     * @param indexedFilePath ロック解除対象のインデックスファイルのパス
+     * @throws Exception インデックスファイルへの接続に失敗した場合
+     */
     private static void unlockIndexedFile(String indexedFilePath) throws Exception {
         try (Connection conn = DriverManager.getConnection("jdbc:sqlite:" + indexedFilePath);
                 Statement st = conn.createStatement()) {
@@ -508,10 +533,14 @@ class IndexedFileUtilMain {
     }
 
     /**
-     * Process load sub command, which loads data inputted from stdin to the indexed file.
+     * {@code load}サブコマンドを実行し、指定された入力ソース(標準入力またはファイル)から読み込んだ
+     * データをインデックスファイルに書き込む。
      *
-     * @param indexedFilePath TODO: 準備中
-     * @return TODO: 準備中
+     * @param indexedFilePath ロード先のインデックスファイルのパス
+     * @param deleteBeforeLoading ロード前に既存のレコードをすべて削除する場合は{@code true}
+     * @param userDataFormat 入力データの形式
+     * @param filePath 入力データのファイルパス。標準入力から読み込む場合は空の{@link Optional}
+     * @return 成功した場合は{@code 0}、失敗した場合は非ゼロの終了コード
      */
     private static int processLoadCommand(
             String indexedFilePath,
@@ -587,14 +616,15 @@ class IndexedFileUtilMain {
     }
 
     /**
-     * Process unload sub command, which writes records stored in the indexed file to stdout.
+     * {@code unload}サブコマンドを実行し、インデックスファイル内のすべてのレコードを指定された出力先
+     * (標準出力またはファイル)に書き出す。
      *
-     * @param indexedFilePath The path of the indexed file.
-     * @param userDataFormat The format of the output data. If this value is
-     *     UserDataFormat.LINE_SEQUENTIAL, each records are separated by a newline character (0x20).
-     *     If this value is UserDataFormat.SEQUENTIAL, each records are concatenated without any
-     *     separator.
-     * @return 0 if success, otherwise non-zero. The return value is error code.
+     * @param indexedFilePath アンロード元のインデックスファイルのパス
+     * @param userDataFormat 出力データの形式。{@link UserDataFormat#LINE_SEQUENTIAL}の場合、各レコードは
+     *     改行文字で区切られる。{@link UserDataFormat#SEQUENTIAL}の場合、各レコードは区切り文字なしで
+     *     連結される
+     * @param filePath 出力先のファイルパス。標準出力に書き出す場合は空の{@link Optional}
+     * @return 成功した場合は{@code 0}、失敗した場合は非ゼロの終了コード
      */
     private static int processUnloadCommand(
             String indexedFilePath, UserDataFormat userDataFormat, Optional<String> filePath) {
@@ -709,10 +739,14 @@ class IndexedFileUtilMain {
     }
 
     /**
-     * Create a CobolFile instance from the path of the indexed file.
+     * 指定されたパス・レコードサイズ・キー情報から新規に{@link CobolFile}のインスタンスを生成する。<br>
+     * {@code create}サブコマンドの実装で、インデックスファイルをこれから作成する際に使用される。
      *
-     * @param indexedFilePath TODO: 準備中
-     * @return CobolFile instance if success, otherwise empty.
+     * @param indexedFilePath 作成するインデックスファイルのパス
+     * @param recordSize 1レコードのバイト数
+     * @param keyInfoList インデックスファイルに設定するキー情報のリスト
+     * @return 生成された{@link CobolFile}インスタンスを含む{@link Optional}。このメソッドは常に値を含む
+     *     {@link Optional}を返す
      */
     private static Optional<CobolFile> createCobolFile(
             String indexedFilePath, Integer recordSize, List<CobolFileKeyInfo> keyInfoList) {

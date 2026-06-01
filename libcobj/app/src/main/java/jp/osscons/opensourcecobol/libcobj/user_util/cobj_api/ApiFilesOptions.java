@@ -15,6 +15,7 @@ class ApiFilesOptions {
     /** cobj-apiコマンドによって生成されるJavaファイルが配置されるディレクトリ名 */
     static String outputDir;
 
+    /** cobj-apiコマンドの入力として指定されたJSONファイルのパス */
     static String filePath;
 
     /**

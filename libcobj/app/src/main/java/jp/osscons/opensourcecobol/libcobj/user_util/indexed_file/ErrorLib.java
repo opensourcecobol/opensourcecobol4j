@@ -1,12 +1,12 @@
 package jp.osscons.opensourcecobol.libcobj.user_util.indexed_file;
 
-/** Manage error info */
+/** cobj-idxコマンドで発生するエラーのメッセージ出力と終了コードの生成をまとめたクラス */
 class ErrorLib {
     /**
-     * Error when indexed file does not exist
+     * 指定されたインデックスファイルが存在しない場合のエラーメッセージを標準エラー出力へ出力する。
      *
-     * @param indexedFilePath TODO: 準備中
-     * @return 1
+     * @param indexedFilePath 存在が確認できなかったインデックスファイルのパス
+     * @return 終了コードとして用いる{@code 1}
      */
     static int errorFileDoesNotExist(String indexedFilePath) {
         System.err.println("error: '" + indexedFilePath + "' does not exist.");
@@ -14,10 +14,10 @@ class ErrorLib {
     }
 
     /**
-     * Error when indexed file is not a valid indexed file
+     * 指定されたファイルが正しいインデックスファイルでない場合のエラーメッセージを標準エラー出力へ出力する。
      *
-     * @param indexedFilePath TODO: 準備中
-     * @return 1
+     * @param indexedFilePath 正しいインデックスファイルとして認識できなかったファイルのパス
+     * @return 終了コードとして用いる{@code 1}
      */
     static int errorInvalidIndexedFile(String indexedFilePath) {
         System.err.println("error: '" + indexedFilePath + "' is not a valid indexed file.");
@@ -25,9 +25,9 @@ class ErrorLib {
     }
 
     /**
-     * Error when IO operations of indexed files
+     * インデックスファイルに対する入出力処理でエラーが発生した場合のエラーメッセージを標準エラー出力へ出力する。
      *
-     * @return 1
+     * @return 終了コードとして用いる{@code 1}
      */
     static int errorIO() {
         System.err.println("error: IO error.");
@@ -35,9 +35,9 @@ class ErrorLib {
     }
 
     /**
-     * Error when some keys in input data have conflicts
+     * 入力データの中でキーの重複があるためにロードに失敗した場合のエラーメッセージを標準エラー出力へ出力する。
      *
-     * @return 1
+     * @return 終了コードとして用いる{@code 1}
      */
     static int errorDuplicateKeys() {
         System.err.println("error: loading fails because of duplicate keys.");
@@ -45,10 +45,10 @@ class ErrorLib {
     }
 
     /**
-     * Error when some records in input data have invalid size
+     * 入力データに想定と異なる長さのレコードが含まれる場合のエラーメッセージを標準エラー出力へ出力する。
      *
-     * @param correctSize TODO: 準備中
-     * @return TODO: 準備中
+     * @param correctSize インデックスファイルに定義されている正しいレコードサイズ(バイト数)
+     * @return 終了コードとして用いる{@code 1}
      */
     static int errorDataSizeMismatch(int correctSize) {
         System.err.println("error: all record must have the length of " + correctSize + " bytes.");
