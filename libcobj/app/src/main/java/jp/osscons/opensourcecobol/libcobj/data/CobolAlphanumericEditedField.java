@@ -22,7 +22,7 @@ import java.math.BigDecimal;
 import java.nio.ByteBuffer;
 import java.nio.ByteOrder;
 
-/** TODO: 準備中 */
+/** PICにXやAなどの編集用文字を含む英数字編集項目を表現するクラス. */
 public class CobolAlphanumericEditedField extends AbstractCobolField {
     /**
      * コンストラクタ
@@ -112,10 +112,10 @@ public class CobolAlphanumericEditedField extends AbstractCobolField {
     }
 
     /**
-     * TODO: 準備中
+     * 転記元データを転記先のPIC編集指定に従って英数字編集項目へ転記する.
      *
-     * @param dst TODO: 準備中
-     * @param src TODO: 準備中
+     * @param dst 転記先の英数字編集項目
+     * @param src 転記元のフィールド
      */
     public static void moveAlphanumToEdited(AbstractCobolField dst, AbstractCobolField src) {
         CobolDataStorage srcd = src.getDataStorage();

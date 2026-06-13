@@ -18,7 +18,7 @@
  */
 package jp.osscons.opensourcecobol.libcobj.data;
 
-/** TODO: 準備中 */
+/** ALL指定の英数字項目(PIC Xの全桁繰り返し)を表現するクラス. */
 public class CobolAlphanumericAllField extends CobolAlphanumericField {
     /**
      * コンストラクタ

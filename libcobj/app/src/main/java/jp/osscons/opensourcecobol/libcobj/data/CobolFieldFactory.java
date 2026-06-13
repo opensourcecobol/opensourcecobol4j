@@ -38,12 +38,13 @@ public class CobolFieldFactory {
     }
 
     /**
-     * TODO: 準備中
+     * 引数に応じて適切なAbstractCobolFieldクラスのサブクラスを生成する。
+     * バイト配列をCobolDataStorageに変換した上で、attrに設定された値に応じて適切なAbstractCobolFieldのサブクラスのインスタンスを生成する。
      *
-     * @param size TODO: 準備中
-     * @param bytes TODO: 準備中
-     * @param attr TODO: 準備中
-     * @return TODO: 準備中
+     * @param size データを保存するバイト領域の大きさ
+     * @param bytes データを保存する領域に書き込まれる初期データのバイト配列
+     * @param attr 変数の様々な情報を格納するインスタンス
+     * @return attrの値に応じてインスタンス化されたAbstractCobolField型のデータ
      */
     public static AbstractCobolField makeCobolField(
             int size, byte[] bytes, CobolFieldAttribute attr) {
@@ -51,11 +52,12 @@ public class CobolFieldFactory {
     }
 
     /**
-     * TODO: 準備中
+     * 引数に応じて適切なAbstractCobolFieldクラスのサブクラスを生成する。
+     * バイト配列をCobolDataStorageに変換し、データを保存するバイト領域の大きさにはバイト配列の長さを用いる。
      *
-     * @param bytes TODO: 準備中
-     * @param attr TODO: 準備中
-     * @return TODO: 準備中
+     * @param bytes データを保存する領域に書き込まれる初期データのバイト配列
+     * @param attr 変数の様々な情報を格納するインスタンス
+     * @return attrの値に応じてインスタンス化されたAbstractCobolField型のデータ
      */
     public static AbstractCobolField makeCobolField(byte[] bytes, CobolFieldAttribute attr) {
         return CobolFieldFactory.makeCobolField(bytes.length, new CobolDataStorage(bytes), attr);
@@ -103,12 +105,13 @@ public class CobolFieldFactory {
     }
 
     /**
-     * TODO: 準備中
+     * 引数に応じて適切なAbstractCobolFieldクラスのサブクラスを生成する。
+     * long型で渡されたsizeをint型に変換した上で、attrに設定された値に応じて適切なAbstractCobolFieldのサブクラスのインスタンスを生成する。
      *
-     * @param size TODO: 準備中
-     * @param data TODO: 準備中
-     * @param attr TODO: 準備中
-     * @return TODO: 準備中
+     * @param size データを保存するバイト領域の大きさ
+     * @param data データを保存する領域
+     * @param attr 変数の様々な情報を格納するインスタンス
+     * @return attrの値に応じてインスタンス化されたAbstractCobolField型のデータ
      */
     public static AbstractCobolField makeCobolField(
             long size, CobolDataStorage data, CobolFieldAttribute attr) {

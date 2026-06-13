@@ -24,7 +24,7 @@ import jp.osscons.opensourcecobol.libcobj.common.CobolConstant;
 import jp.osscons.opensourcecobol.libcobj.common.CobolModule;
 import jp.osscons.opensourcecobol.libcobj.exceptions.CobolRuntimeException;
 
-/** TODO: 準備中 */
+/** PIC 文字列が9(5) COMPなどの2進数の変数を表現するクラス. */
 public class CobolNumericBinaryField extends AbstractCobolField {
 
     /**
@@ -81,9 +81,9 @@ public class CobolNumericBinaryField extends AbstractCobolField {
     }
 
     /**
-     * TODO: 準備中
+     * thisが保持する2進数のデータにlong型の値を設定する
      *
-     * @param n TODO: 準備中
+     * @param n 設定する値
      */
     public void setLongValue(long n) {
         this.setBinaryValue(n);

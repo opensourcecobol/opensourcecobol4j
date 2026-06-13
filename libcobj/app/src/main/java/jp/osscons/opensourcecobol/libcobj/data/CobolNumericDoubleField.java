@@ -21,15 +21,15 @@ package jp.osscons.opensourcecobol.libcobj.data;
 import java.math.BigDecimal;
 import jp.osscons.opensourcecobol.libcobj.exceptions.CobolRuntimeException;
 
-/** TODO: 準備中 */
+/** PIC 文字列が COMP-2 などの倍精度浮動小数点の変数を表現するクラス. */
 public class CobolNumericDoubleField extends AbstractCobolField {
 
     /**
-     * TODO: 準備中
+     * コンストラクタ
      *
-     * @param size TODO: 準備中
-     * @param dataStorage TODO: 準備中
-     * @param attribute TODO: 準備中
+     * @param size データを格納するバイト配列の長さ
+     * @param dataStorage データを格納するバイト配列を扱うオブジェクト
+     * @param attribute 変数に関する様々な情報を保持するオブジェクト
      */
     public CobolNumericDoubleField(
             int size, CobolDataStorage dataStorage, CobolFieldAttribute attribute) {
@@ -110,9 +110,9 @@ public class CobolNumericDoubleField extends AbstractCobolField {
     }
 
     /**
-     * TODO: 準備中
+     * 表示用数字項目からthis(倍精度浮動小数点)への代入を行う
      *
-     * @param src TODO: 準備中
+     * @param src 代入元のデータ(AbstractCobolField型)
      */
     public void moveDisplayToDouble(AbstractCobolField src) {
         double dval = 0;

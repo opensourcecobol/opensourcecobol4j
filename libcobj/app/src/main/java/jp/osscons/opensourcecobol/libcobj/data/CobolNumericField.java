@@ -43,9 +43,9 @@ public class CobolNumericField extends AbstractCobolField {
     }
 
     /**
-     * TODO: 準備中
+     * 文字列が数字として正しいかどうかを検査する(未実装)
      *
-     * @param s TODO: 準備中
+     * @param s 検査対象の文字列
      */
     public void checkNumeric(String s) {}
 
@@ -528,10 +528,10 @@ public class CobolNumericField extends AbstractCobolField {
     /**
      * libcob/move.cのstore_common_regionの実装
      *
-     * @param field TODO: 準備中
-     * @param data TODO: 準備中
-     * @param size TODO: 準備中
-     * @param scale TODO: 準備中
+     * @param field 格納先のフィールド
+     * @param data 格納する数字データを保持するオブジェクト
+     * @param size dataが保持する数字の桁数
+     * @param scale dataが保持する数字の小数点以下の桁数
      */
     private void storeCommonRegion(
             AbstractCobolField field, CobolDataStorage data, int size, int scale) {
@@ -541,11 +541,11 @@ public class CobolNumericField extends AbstractCobolField {
     /**
      * libcob/move.cのstore_common_regionの実装
      *
-     * @param field TODO: 準備中
-     * @param data TODO: 準備中
-     * @param dataStartIndex TODO: 準備中
-     * @param size TODO: 準備中
-     * @param scale TODO: 準備中
+     * @param field 格納先のフィールド
+     * @param data 格納する数字データを保持するオブジェクト
+     * @param dataStartIndex dataにアクセスするときの開始位置
+     * @param size dataが保持する数字の桁数
+     * @param scale dataが保持する数字の小数点以下の桁数
      */
     private void storeCommonRegion(
             AbstractCobolField field,
@@ -728,11 +728,11 @@ public class CobolNumericField extends AbstractCobolField {
     /**
      * libcob/numeric.cのdisplay_add_intの実装
      *
-     * @param data TODO: 準備中
+     * @param data 加算対象の数字データを保持するオブジェクト
      * @param firstDataIndex dataにアクセスするときの開始位置
-     * @param size TODO: 準備中
-     * @param n TODO: 準備中
-     * @return TODO: 準備中
+     * @param size 数字の桁数
+     * @param n 加算する値
+     * @return オーバーフローが発生した場合は1, それ以外は0
      */
     private int displayAddInt(CobolDataStorage data, int firstDataIndex, int size, long n) {
         int carry = 0;

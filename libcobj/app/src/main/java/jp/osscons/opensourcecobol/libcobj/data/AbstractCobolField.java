@@ -41,7 +41,7 @@ public abstract class AbstractCobolField {
     static int lastsize = 0;
     static CobolDataStorage lastdata = null;
 
-    /** TODO: 準備中 */
+    /** 文字データの符号化に使用するShift_JIS文字セット */
     public static Charset charSetSJIS = Charset.forName("SHIFT-JIS");
 
     static final int[] cobExp10 = {
@@ -74,7 +74,7 @@ public abstract class AbstractCobolField {
     /**
      * メンバ変数dataStorageのsetter
      *
-     * @param dataStorage TODO: 準備中
+     * @param dataStorage 設定するデータを格納するバイト配列を扱うオブジェクト
      */
     public void setDataStorage(CobolDataStorage dataStorage) {
         this.dataStorage = dataStorage;
@@ -83,7 +83,7 @@ public abstract class AbstractCobolField {
     /**
      * メンバ変数attributeのsetter
      *
-     * @param attribute TODO: 準備中
+     * @param attribute 設定する変数に関する様々な情報を保持するオブジェクト(符号付か,COMP-3指定かなど)
      */
     public void setAttribute(CobolFieldAttribute attribute) {
         this.attribute = attribute;
@@ -101,7 +101,7 @@ public abstract class AbstractCobolField {
     /**
      * メンバ変数sizeのsetter
      *
-     * @param size TODO: 準備中
+     * @param size 設定するデータを格納するバイト配列の長さ
      */
     public void setSize(int size) {
         this.size = size;
@@ -135,9 +135,9 @@ public abstract class AbstractCobolField {
     }
 
     /**
-     * TODO: 準備中
+     * thisの保持する数値データを4バイトの2進数(符号付き)に変換し,そのバイト配列を返す
      *
-     * @return TODO: 準備中
+     * @return thisの保持する数値データを4バイトの2進数に変換したバイト配列
      */
     public byte[] getBytes() {
         CobolFieldAttribute attr =
@@ -161,9 +161,9 @@ public abstract class AbstractCobolField {
     public abstract String getString();
 
     /**
-     * TODO: 準備中
+     * thisの保持する数値データを4バイトの2進数に変換し,int値として返す
      *
-     * @return TODO: 準備中
+     * @return thisの保持する数値データをintに変換した値
      */
     public int getInt() {
         CobolFieldAttribute attr =
@@ -180,9 +180,9 @@ public abstract class AbstractCobolField {
     }
 
     /**
-     * TODO: 準備中
+     * thisの保持するデータをdouble型の値に変換して返す
      *
-     * @return TODO: 準備中
+     * @return thisの文字列表現をdoubleに変換した値.変換できない場合は0
      */
     public double getDouble() {
         try {
@@ -250,16 +250,16 @@ public abstract class AbstractCobolField {
     }
 
     /**
-     * TODO: 準備中
+     * 数値を表すデータが実装すべきメソッド. 引数で与えられた値をthisの保持する数値データに設定する.
      *
-     * @param decimal TODO: 準備中
+     * @param decimal thisに設定する数値
      */
     public abstract void setDecimal(BigDecimal decimal);
 
     /**
      * thisの保持する数値データをint型で返す
      *
-     * @param size TODO: 準備中
+     * @param size 変換に使用するバイトデータの桁数
      * @return thisの保持する数値データをintに変換した値
      */
     public int getInt(int size) {
@@ -286,9 +286,9 @@ public abstract class AbstractCobolField {
      * thisの保持する数値データに,引数で与えられたフィールドの保持する数値データを加算する
      *
      * @param field 加算する数値を保持するフィールド
-     * @param opt 加算に関するオプション.詳しくはTODO: 準備中
+     * @param opt 桁あふれ時の丸めや切り捨てなど,結果をthisに格納する際の動作を指定するオプション
      * @return 加算後のthisの保持する数値データ
-     * @throws CobolStopRunException TODO: 準備中
+     * @throws CobolStopRunException 実行を停止する状況が発生した場合にスローされる
      */
     public int add(AbstractCobolField field, int opt) throws CobolStopRunException {
         CobolDecimal d1 = this.getDecimal();
@@ -301,9 +301,9 @@ public abstract class AbstractCobolField {
      * thisの保持する数値データに,引数で与えられたフィールドの保持する数値データを減算する
      *
      * @param field 減算する数値を保持するフィールド
-     * @param opt 減算に関するオプション.詳しくはTODO: 準備中
+     * @param opt 桁あふれ時の丸めや切り捨てなど,結果をthisに格納する際の動作を指定するオプション
      * @return 減算後のthisの保持する数値データ
-     * @throws CobolStopRunException TODO: 準備中
+     * @throws CobolStopRunException 実行を停止する状況が発生した場合にスローされる
      */
     public int sub(AbstractCobolField field, int opt) throws CobolStopRunException {
         CobolDecimal d1 = this.getDecimal();
@@ -315,9 +315,9 @@ public abstract class AbstractCobolField {
     /**
      * 保持する数値データに指定された値を加算する
      *
-     * @param n thisの保持する数値データから加算する数値
-     * @return 基本的に0が返される.詳しくは詳しくはTODO: 準備中
-     * @throws CobolStopRunException TODO: 準備中
+     * @param n thisの保持する数値データに加算する数値
+     * @return 基本的に0が返される
+     * @throws CobolStopRunException 実行を停止する状況が発生した場合にスローされる
      */
     public int addInt(int n) throws CobolStopRunException {
         if (n == 0) {
@@ -336,10 +336,10 @@ public abstract class AbstractCobolField {
     }
 
     /**
-     * TODO: 準備中
+     * thisの保持するパック10進数(COMP-3)形式の数値データに指定された整数値を加算する
      *
-     * @param n TODO: 準備中
-     * @return TODO: 準備中
+     * @param n thisの保持する数値データに加算する整数値
+     * @return 基本的に0が返される
      */
     public abstract int addPackedInt(int n);
 
@@ -347,21 +347,21 @@ public abstract class AbstractCobolField {
      * thisの保持する数値データに指定された値を減算する
      *
      * @param n thisの保持する数値データから減算する数値
-     * @return 基本的に0が返される.詳しくはTODO: 準備中
-     * @throws CobolStopRunException TODO: 準備中
+     * @return 基本的に0が返される
+     * @throws CobolStopRunException 実行を停止する状況が発生した場合にスローされる
      */
     public int subInt(int n) throws CobolStopRunException {
         return n == 0 ? 0 : this.addInt(-n);
     }
 
     /**
-     * TODO: 準備中
+     * thisを被除数として除算を行い,商をquotientに格納する.剰余は後続のdivRemainderで取得できるよう内部に保持される.
      *
-     * @param divisor TODO: 準備中
-     * @param quotient TODO: 準備中
-     * @param opt TODO: 準備中
-     * @return TODO: 準備中
-     * @throws CobolStopRunException TODO: 準備中
+     * @param divisor 除数を保持するフィールド
+     * @param quotient 商を格納するフィールド
+     * @param opt 桁あふれ時の丸めや切り捨てなど,結果を格納する際の動作を指定するオプション
+     * @return 基本的に0が返される
+     * @throws CobolStopRunException 実行を停止する状況が発生した場合にスローされる
      */
     public int divQuotient(AbstractCobolField divisor, AbstractCobolField quotient, int opt)
             throws CobolStopRunException {
@@ -389,11 +389,11 @@ public abstract class AbstractCobolField {
     }
 
     /**
-     * TODO: 準備中
+     * 直前のdivQuotientで保持された剰余をthisに格納する
      *
-     * @param opt TODO: 準備中
-     * @return TODO: 準備中
-     * @throws CobolStopRunException TODO: 準備中
+     * @param opt 桁あふれ時の丸めや切り捨てなど,結果をthisに格納する際の動作を指定するオプション
+     * @return 基本的に0が返される
+     * @throws CobolStopRunException 実行を停止する状況が発生した場合にスローされる
      */
     public int divRemainder(int opt) throws CobolStopRunException {
         return CobolDecimal.cobD3.getField(this, opt);
@@ -464,10 +464,10 @@ public abstract class AbstractCobolField {
     }
 
     /**
-     * TODO: 準備中
+     * thisと引数で与えられたフィールドの保持する数値データを数値として比較する
      *
-     * @param field TODO: 準備中
-     * @return TODO: 準備中
+     * @param field thisと比較するフィールド
+     * @return 保持する数値データの比較を行い,this&lt;fieldなら負の値,this==fieldなら0,this&gt;fieldなら正の値
      */
     public int numericCompareTo(AbstractCobolField field) {
         CobolDecimal d1 = this.getDecimal();
@@ -496,10 +496,10 @@ public abstract class AbstractCobolField {
     }
 
     /**
-     * TODO: 準備中
+     * 代入処理(moveFrom)の前処理を行う. 全体集団項目(ALL)の代入や,英数字から日本語項目への変換などを処理する.
      *
-     * @param src TODO: 準備中
-     * @return TODO: 準備中
+     * @param src 代入元のフィールド
+     * @return 後続の代入処理を行うべき代入元フィールド.前処理内で代入が完結した場合や代入する必要がない場合はnull
      */
     protected AbstractCobolField preprocessOfMoving(AbstractCobolField src) {
         AbstractCobolField src1 = src;
@@ -546,9 +546,9 @@ public abstract class AbstractCobolField {
     }
 
     /**
-     * TODO: 準備中
+     * 全体集団項目(ALL定数)からthisへの代入を行う. 代入元のデータをthisのサイズいっぱいに繰り返し展開してから代入する.
      *
-     * @param src TODO: 準備中
+     * @param src 代入元のフィールド
      */
     protected void moveFromAll(AbstractCobolField src) {
         int size = 0;
@@ -730,10 +730,10 @@ public abstract class AbstractCobolField {
     public abstract void moveFrom(BigDecimal number);
 
     /**
-     * TODO: 準備中
+     * thisの保持するデータが数値でない場合に実行時エラーを発生させ,実行を停止する
      *
-     * @param s TODO: 準備中
-     * @throws CobolStopRunException TODO: 準備中
+     * @param s エラーメッセージに表示する変数名(Shift_JISでエンコードされたバイト配列)
+     * @throws CobolStopRunException thisの保持するデータが数値でない場合にスローされる
      */
     public void checkNumeric(byte[] s) throws CobolStopRunException {
         if (!this.isNumeric()) {
@@ -870,10 +870,10 @@ public abstract class AbstractCobolField {
     }
 
     /**
-     * TODO: 準備中
+     * thisのデータを,引数で与えられたフィールドのデータを繰り返し並べたものと比較する
      *
      * @param field thisと比較するフィールド
-     * @return TODO: 準備中
+     * @return 比較を行い,this&lt;fieldなら負の値,this==fieldなら0,this&gt;fieldなら正の値
      */
     protected int compareAll(AbstractCobolField field) {
         int size = this.getSize();
@@ -902,15 +902,15 @@ public abstract class AbstractCobolField {
     }
 
     /**
-     * TODO: 準備中
+     * 2つのバイトデータを英数字として1バイトずつ比較する
      *
-     * @param s1 TODO: 準備中
+     * @param s1 比較対象の一方のバイトデータ
      * @param s1Start s1のバイトデータにアクセスるするときの最初の添え字の相対位置
-     * @param s2 TODO: 準備中
+     * @param s2 比較対象のもう一方のバイトデータ
      * @param s2Start s2のバイトデータにアクセスるするときの最初の添え字の相対位置
-     * @param size TODO: 準備中
-     * @param col TODO: 準備中
-     * @return TODO: 準備中
+     * @param size 比較するバイト数
+     * @param col 文字の照合順序(コレーティングシーケンス).nullの場合はバイト値で比較する
+     * @return 比較を行い,s1&lt;s2なら負の値,s1==s2なら0,s1&gt;s2なら正の値
      */
     protected int alnumCmps(
             CobolDataStorage s1,
@@ -935,7 +935,7 @@ public abstract class AbstractCobolField {
     }
 
     /**
-     * TODO: 準備中
+     * thisと同じサイズ・データ・属性を持つCobolNumericField型のフィールドを生成して返す
      *
      * @return thisからCobolNumericField型へ変換した値
      */
@@ -944,10 +944,10 @@ public abstract class AbstractCobolField {
     }
 
     /**
-     * TODO: 準備中
+     * thisが英数字項目で,かつ引数のfieldが数値項目の場合に,thisの保持するデータがすべて数字であるか検査する
      *
-     * @param field TODO: 準備中
-     * @throws CobolStopRunException TODO: 準備中
+     * @param field 代入元など対象となる数値項目のフィールド
+     * @throws CobolStopRunException thisに数字以外のバイトが含まれている場合にスローされる
      */
     public void checkMoveStrNum(AbstractCobolField field) throws CobolStopRunException {
         switch (this.getAttribute().getType()) {
@@ -982,13 +982,13 @@ public abstract class AbstractCobolField {
     }
 
     /**
-     * TODO: 準備中
+     * s2のバイトデータをs1へ指定したバイト数だけコピーする
      *
-     * @param s1 TODO: 準備中
+     * @param s1 コピー先のバイトデータ
      * @param s1StartIndex s1のバイトデータにアクセスるするときの最初の添え字の相対位置
-     * @param s2 TODO: 準備中
+     * @param s2 コピー元のバイトデータ
      * @param s2StartIndex s2のバイトデータにアクセスるするときの最初の添え字の相対位置
-     * @param size TODO: 準備中
+     * @param size コピーするバイト数
      */
     protected void ownByteMemcpy(
             CobolDataStorage s1,
@@ -1009,7 +1009,7 @@ public abstract class AbstractCobolField {
     }
 
     /**
-     * TODO: 準備中
+     * thisの保持するデータを,末尾の空白および0バイトを取り除いた文字列にして返す
      *
      * @return this.dataの保持するデータを文字列にして返す.
      */
@@ -1025,9 +1025,9 @@ public abstract class AbstractCobolField {
     }
 
     /**
-     * TODO: 準備中
+     * 引数で与えられたint値をthisの保持する数値データに設定する
      *
-     * @param n TODO: 準備中
+     * @param n thisに設定するint値
      */
     public void setInt(int n) {
         CobolFieldAttribute attr =
@@ -1043,18 +1043,18 @@ public abstract class AbstractCobolField {
     }
 
     /**
-     * TODO: 準備中
+     * 引数で与えられたバイトデータをint値として読み取り,thisの保持する数値データに設定する
      *
-     * @param data TODO: 準備中
+     * @param data thisに設定する値を保持するバイトデータ
      */
     public void setInt(CobolDataStorage data) {
         this.setInt((int) data.intValue());
     }
 
     /**
-     * TODO: 準備中
+     * 引数で与えられたlong値をthisの保持する数値データに設定する
      *
-     * @param n TODO: 準備中
+     * @param n thisに設定するlong値
      */
     public void setLong(Long n) {
         CobolFieldAttribute attr =
@@ -1070,10 +1070,10 @@ public abstract class AbstractCobolField {
     }
 
     /**
-     * TODO: 準備中
+     * 引数で与えられたバイト配列を英数字データとしてthisへ代入する
      *
-     * @param src TODO: 準備中
-     * @param size TODO: 準備中
+     * @param src 代入元のバイト配列
+     * @param size 代入元として使用するバイト数
      */
     public void memcpy(byte[] src, int size) {
         CobolFieldAttribute attr =
@@ -1084,19 +1084,19 @@ public abstract class AbstractCobolField {
     }
 
     /**
-     * TODO: 準備中
+     * 引数で与えられたバイト配列全体を英数字データとしてthisへ代入する
      *
-     * @param src TODO: 準備中
+     * @param src 代入元のバイト配列
      */
     public void memcpy(byte[] src) {
         this.memcpy(src, src.length);
     }
 
     /**
-     * TODO: 準備中
+     * 引数で与えられた文字列をShift_JISでエンコードし,英数字データとしてthisへ代入する
      *
-     * @param src TODO: 準備中
-     * @param size TODO: 準備中
+     * @param src 代入元の文字列
+     * @param size 代入元として使用するバイト数
      */
     public void memcpy(String src, int size) {
         byte[] bytes = src.getBytes(AbstractCobolField.charSetSJIS);
@@ -1104,27 +1104,27 @@ public abstract class AbstractCobolField {
     }
 
     /**
-     * TODO: 準備中
+     * 引数で与えられた文字列全体をShift_JISでエンコードし,英数字データとしてthisへ代入する
      *
-     * @param src TODO: 準備中
+     * @param src 代入元の文字列
      */
     public void memcpy(String src) {
         this.memcpy(src.getBytes(AbstractCobolField.charSetSJIS));
     }
 
     /**
-     * TODO: 準備中
+     * thisが省略された引数(OMITTED)であるかどうかを返す
      *
-     * @return TODO: 準備中
+     * @return データを格納するバイト配列が存在しない(省略されている)場合はtrue,そうでなければfalse
      */
     public boolean isOmitted() {
         return this.dataStorage == null;
     }
 
     /**
-     * TODO: 準備中
+     * thisの保持するデータが数値として有効であるかどうかを判定する(CLASS NUMERIC判定)
      *
-     * @return TODO: 準備中
+     * @return 保持するデータが数値として有効であればtrue,そうでなければfalse
      */
     public boolean isNumeric() {
         int i;
@@ -1187,9 +1187,9 @@ public abstract class AbstractCobolField {
     }
 
     /**
-     * TODO: 準備中
+     * thisの保持するデータが英字および空白のみで構成されているかどうかを判定する(CLASS ALPHABETIC判定)
      *
-     * @return TODO: 準備中
+     * @return 保持するデータが英字または空白のみであればtrue,そうでなければfalse
      */
     public boolean isAlpha() {
         for (int i = 0; i < this.size; ++i) {
@@ -1202,9 +1202,9 @@ public abstract class AbstractCobolField {
     }
 
     /**
-     * TODO: 準備中
+     * thisの保持するデータが大文字および空白のみで構成されているかどうかを判定する(CLASS ALPHABETIC-UPPER判定)
      *
-     * @return TODO: 準備中
+     * @return 保持するデータが大文字または空白のみであればtrue,そうでなければfalse
      */
     public boolean isUpper() {
         for (int i = 0; i < this.size; ++i) {
@@ -1217,9 +1217,9 @@ public abstract class AbstractCobolField {
     }
 
     /**
-     * TODO: 準備中
+     * thisの保持するデータが小文字および空白のみで構成されているかどうかを判定する(CLASS ALPHABETIC-LOWER判定)
      *
-     * @return TODO: 準備中
+     * @return 保持するデータが小文字または空白のみであればtrue,そうでなければfalse
      */
     public boolean isLower() {
         for (int i = 0; i < this.size; ++i) {
@@ -1232,10 +1232,10 @@ public abstract class AbstractCobolField {
     }
 
     /**
-     * TODO: 準備中
+     * thisの保持するデータを,指定した1文字で全体を埋めたデータと比較する
      *
-     * @param c TODO: 準備中
-     * @return TODO: 準備中
+     * @param c 比較対象の文字(thisのサイズ分だけ繰り返されるとみなす)
+     * @return 比較を行い,this&lt;cの並びなら負の値,等しければ0,this&gt;cの並びなら正の値
      */
     public int cmpChar(byte c) {
         int sign = this.getSign();
@@ -1271,10 +1271,10 @@ public abstract class AbstractCobolField {
     }
 
     /**
-     * TODO: 準備中
+     * thisのデータをotherのデータに対して繰り返し並べ,照合順序を考慮して比較する(ALL定数の比較)
      *
-     * @param other TODO: 準備中
-     * @return TODO: 準備中
+     * @param other thisと比較するフィールド
+     * @return 比較を行い,this&lt;otherなら負の値,this==otherなら0,this&gt;otherなら正の値
      */
     public int cmpAll(AbstractCobolField other) {
         int ret = 0;
@@ -1331,10 +1331,10 @@ public abstract class AbstractCobolField {
     }
 
     /**
-     * TODO: 準備中
+     * thisとotherを文字列として比較する. サイズが異なる場合は短い方を空白(日本語項目の場合は全角空白)で埋めて比較する.
      *
-     * @param other TODO: 準備中
-     * @return TODO: 準備中
+     * @param other thisと比較するフィールド
+     * @return 比較を行い,this&lt;otherなら負の値,this==otherなら0,this&gt;otherなら正の値
      */
     public int cmpSimpleStr(AbstractCobolField other) {
         AbstractCobolField lf, sf;
@@ -1372,10 +1372,10 @@ public abstract class AbstractCobolField {
     }
 
     /**
-     * TODO: 準備中
+     * thisとotherを英数字として比較する. 数値表示項目(DISPLAY)の場合は符号を一時的に正にしてから比較し,比較後に符号を元に戻す.
      *
-     * @param other TODO: 準備中
-     * @return TODO: 準備中
+     * @param other thisと比較するフィールド
+     * @return 比較を行い,this&lt;otherなら負の値,this==otherなら0,this&gt;otherなら正の値
      */
     public int cmpAlnum(AbstractCobolField other) {
         int sign1 = this.getSign();
@@ -1400,9 +1400,9 @@ public abstract class AbstractCobolField {
     }
 
     /**
-     * TODO: 準備中
+     * 符号の有無にかかわらず,thisの保持する数値データの符号を実際に取得する. 必要に応じて符号桁を数字に戻す処理も行う.
      *
-     * @return TODO: 準備中
+     * @return 数値データが正(または符号なし)なら1,負なら-1.数値型でない場合は0
      */
     public int realGetSign() {
         CobolDataStorage p;
@@ -1449,9 +1449,9 @@ public abstract class AbstractCobolField {
     }
 
     /**
-     * TODO: 準備中
+     * 符号の有無にかかわらず,thisの保持する数値データに符号を実際に設定する
      *
-     * @param sign TODO: 準備中
+     * @param sign 正符号を設定するときは0以上の値,負符号を設定するときは負の値
      */
     public void realPutSign(int sign) {
         CobolDataStorage p;
@@ -1492,9 +1492,9 @@ public abstract class AbstractCobolField {
     }
 
     /**
-     * TODO: 準備中
+     * thisの保持する数値データを8バイトの2進数に変換し,long値として返す
      *
-     * @return TODO: 準備中
+     * @return thisの保持する数値データをlongに変換した値
      */
     public long getLong() {
         CobolFieldAttribute attr =
@@ -1512,18 +1512,18 @@ public abstract class AbstractCobolField {
     }
 
     /**
-     * TODO: 準備中
+     * thisの保持する数値データをlong値として返す. 基底クラスでは0を返し,各サブクラスでオーバーライドされる.
      *
-     * @return TODO: 準備中
+     * @return thisの保持する数値データをlongに変換した値.基底クラスでは0
      */
     public long getLongValue() {
         return 0;
     }
 
     /**
-     * TODO: 準備中
+     * 半角文字への変換を伴う代入を行う(暫定実装として通常の代入を行う)
      *
-     * @param src TODO: 準備中
+     * @param src 代入元のフィールド
      */
     public void hankakuMoveFrom(AbstractCobolField src) {
         // TODO 暫定実装
@@ -1532,10 +1532,10 @@ public abstract class AbstractCobolField {
 
     // libcob/common.cのcob_get_sign_ebcdicの実装
     /**
-     * TODO: 準備中
+     * EBCDIC形式で符号が重ねられた符号桁から符号を取得し,その桁を対応する数字に戻す
      *
-     * @param p TODO: 準備中
-     * @return TODO: 準備中
+     * @param p 符号桁を先頭に持つバイトデータ
+     * @return 符号が正なら1,負なら-1
      */
     private static int getSignEbcdic(CobolDataStorage p) {
         switch (p.getByte(0)) {
@@ -1608,10 +1608,10 @@ public abstract class AbstractCobolField {
 
     // libcob/common.cのcob_put_sign_ebcdicの実装
     /**
-     * TODO: 準備中
+     * 符号桁の数字に対し,指定された符号をEBCDIC形式で重ねて設定する
      *
-     * @param p TODO: 準備中
-     * @param sign TODO: 準備中
+     * @param p 符号桁を先頭に持つバイトデータ
+     * @param sign 負符号を設定するときは負の値,正符号を設定するときはそれ以外の値
      */
     private static void putSignEbcdic(CobolDataStorage p, int sign) {
         if (sign < 0) {
@@ -1692,12 +1692,12 @@ public abstract class AbstractCobolField {
 
     // libcob/common.cのcommon_compcの実装
     /**
-     * TODO: 準備中
+     * バイトデータを,指定した1文字で全体を埋めたデータと,照合順序を考慮して比較する
      *
-     * @param s1 TODO: 準備中
-     * @param c TODO: 準備中
-     * @param size TODO: 準備中
-     * @return TODO: 準備中
+     * @param s1 比較対象のバイトデータ
+     * @param c 比較対象の文字(size分だけ繰り返されるとみなす)
+     * @param size 比較するバイト数
+     * @return 比較を行い,s1&lt;cの並びなら負の値,等しければ0,s1&gt;cの並びなら正の値
      */
     private static int commonCmpc(CobolDataStorage s1, byte c, int size) {
         CobolDataStorage s = CobolModule.getCurrentModule().collating_sequence;
@@ -1723,12 +1723,12 @@ public abstract class AbstractCobolField {
 
     // libcob/common.cのis_national_paddingの実装
     /**
-     * TODO: 準備中
+     * バイトデータの指定範囲が,日本語項目の余白(半角空白または全角空白)のみで構成されているかどうかを判定する
      *
-     * @param offset TODO: 準備中
-     * @param s TODO: 準備中
-     * @param size TODO: 準備中
-     * @return TODO: 準備中
+     * @param offset 判定を開始するバイトデータの添え字
+     * @param s 判定対象のバイトデータ
+     * @param size 判定するバイト数
+     * @return 余白(半角空白または全角空白)のみで構成されていれば1,そうでなければ0
      */
     private static int isNationalPadding(int offset, CobolDataStorage s, int size) {
         int ret = 1;

@@ -139,9 +139,9 @@ public class CobolNumericPackedField extends AbstractCobolField {
     }
 
     /**
-     * TODO: 準備中
+     * 文字列が数字として正しいかどうかを検査する(未実装)
      *
-     * @param s TODO: 準備中
+     * @param s 検査対象の文字列
      */
     public void checkNumeric(String s) {}
 
@@ -531,7 +531,7 @@ public class CobolNumericPackedField extends AbstractCobolField {
     /**
      * byte型データを右に4回シフトした値を返す CとJavaのビット演算の仕様に差異があるため実装した
      *
-     * @param b TODO: 準備中
+     * @param b 上位4ビットを取り出す対象のバイト値
      * @return b>>4
      */
     private byte upper4bits(byte b) {
@@ -756,8 +756,8 @@ public class CobolNumericPackedField extends AbstractCobolField {
     /**
      * libcob/codegen.hのcob_cmp_packed_intの実装
      *
-     * @param n TODO: 準備中
-     * @return TODO: 準備中
+     * @param n 比較対象の整数値
+     * @return thisの数値がnより小さければ-1, 大きければ1, 等しければ0
      */
     private int cmpPackedInt(int n) {
         CobolDataStorage data = this.getDataStorage();
@@ -782,8 +782,8 @@ public class CobolNumericPackedField extends AbstractCobolField {
     /**
      * libcob/numeric.cのcob_cmp_packedの実装
      *
-     * @param n TODO: 準備中
-     * @return TODO: 準備中
+     * @param n 比較対象の整数値
+     * @return thisの数値がnより小さければ負の値, 大きければ正の値, 等しければ0
      */
     private int cmpPacked(int n) {
         int sign = this.getSign();
