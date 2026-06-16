@@ -18,8 +18,12 @@
  */
 package jp.osscons.opensourcecobol.libcobj.common;
 
-/** TODO: 準備中 */
+/**
+ * CALL文で呼び出されたプログラムに渡された引数の個数を保持するクラス<br>
+ * libcobのcob_call_paramsに対応し、USING句で渡された実引数の個数を表す。<br>
+ * 呼び出されたプログラム側でこの値を参照することで、省略された引数の判定などに利用する。
+ */
 public class CobolCallParams {
-    /** TODO: 準備中 */
+    /** CALL文で渡された引数の個数 */
     public static int callParams = 0;
 }

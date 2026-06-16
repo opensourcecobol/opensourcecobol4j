@@ -23,16 +23,24 @@ import java.util.List;
 import jp.osscons.opensourcecobol.libcobj.data.AbstractCobolField;
 import jp.osscons.opensourcecobol.libcobj.data.CobolDataStorage;
 
-/** libcob/common.hのcob_moduleに対応するクラス */
+/**
+ * libcob/common.hのcob_moduleに対応するクラス<br>
+ * 実行中のプログラム1つ分の実行時情報(照合順序、小数点文字、通貨記号、各種フラグ、
+ * プログラムID、手続き部の引数など)を保持する。<br>
+ * CALLによる呼び出しの入れ子をモジュールスタックで管理し、現在実行中のモジュールを追跡する。
+ */
 public class CobolModule {
 
+    /** モジュールの呼び出し階層を表すスタック */
     private static List<CobolModule> moduleStack = new ArrayList<CobolModule>();
+
+    /** 現在実行中のモジュール */
     private static CobolModule currentModule;
 
     /**
-     * TODO: 準備中
+     * 現在実行中のモジュールを取得する。
      *
-     * @return TODO: 準備中
+     * @return 現在実行中のモジュール
      */
     public static CobolModule getCurrentModule() {
         return currentModule;
@@ -54,10 +62,13 @@ public class CobolModule {
     }
 
     /**
-     * TODO: 準備中
+     * 呼び出し元プログラムの名前(プログラムID)を指定された記憶領域へ書き込む。<br>
+     * C$NARGなどの呼び出し元情報を取得する機能に相当する。
      *
-     * @param data TODO: 準備中
-     * @return TODO: 準備中
+     * @param data 呼び出し元プログラム名の書き込み先となる記憶領域
+     * @return 呼び出し元の情報を書き込んだ場合、または第1引数が存在しない場合は1、
+     *     呼び出し元が存在しない場合(空白を書き込んだ場合)は0、
+     *     呼び出し元のプログラムIDがnullの場合は-1
      */
     public static int calledBy(CobolDataStorage data) {
         AbstractCobolField param = CobolModule.getCurrentModule().cob_procedure_parameters.get(0);
@@ -80,68 +91,68 @@ public class CobolModule {
     /**
      * モジュールキューが空かどうか
      *
-     * @return TODO: 準備中
+     * @return モジュールスタックが空の場合はtrue、そうでない場合はfalse
      */
     public static boolean isQueueEmpty() {
         return moduleStack.isEmpty();
     }
 
-    /** TODO: 準備中 */
+    /** スタック上の次の(呼び出し元の)モジュール */
     // private CobolModule next;
-    /** TODO: 準備中 */
+    /** PROGRAM COLLATING SEQUENCEで指定された照合順序 */
     public CobolDataStorage collating_sequence;
 
-    /** TODO: 準備中 */
+    /** 画面入出力時のCRT STATUS */
     // private AbstractCobolField cut_status;
-    /** TODO: 準備中 */
+    /** 画面入出力時のカーソル位置 */
     // private AbstractCobolField cursor_pos;
-    /** TODO: 準備中 */
+    /** 符号の表示方法(DISPLAY SIGN) */
     public int display_sign;
 
-    /** TODO: 準備中 */
+    /** 小数点として用いる文字 */
     public char decimal_point;
 
-    /** TODO: 準備中 */
+    /** 通貨記号として用いる文字 */
     public char currency_symbol;
 
-    /** TODO: 準備中 */
+    /** 桁区切りとして用いる文字 */
     // private char numeric_separator;
-    /** TODO: 準備中 */
+    /** ファイル名のマッピングを行うかどうかのフラグ */
     public int flag_filename_mapping;
 
-    /** TODO: 準備中 */
+    /** 2進数項目の桁あふれを切り捨てるかどうかのフラグ */
     public int flag_binary_truncate;
 
-    /** TODO: 準備中 */
+    /** DISPLAY文の整形出力を行うかどうかのフラグ */
     public int flag_pretty_display;
 
-    /** TODO: 準備中 */
+    /** 予約領域 */
     // private int spare8;
-    /** TODO: 準備中 */
+    /** プログラムID(プログラム名) */
     private String program_id;
 
-    /** TODO: 準備中 */
+    /** プログラムのパッケージ名 */
     // private String packageName;
 
-    /** TODO: 準備中 */
+    /** 手続き部に渡された引数(USING句の引数)のリスト */
     public List<AbstractCobolField> cob_procedure_parameters;
 
     /**
      * コンストラクタ
      *
-     * @param next TODO: 準備中
-     * @param collatingSequence TODO: 準備中
-     * @param cutStatus TODO: 準備中
-     * @param cursorPos TODO: 準備中
-     * @param displaySign TODO: 準備中
-     * @param decimalPoint TODO: 準備中
-     * @param currencySymbol TODO: 準備中
-     * @param numericSeparator TODO: 準備中
-     * @param flagFilenameMapping TODO: 準備中
-     * @param flagBinaryTruncate TODO: 準備中
-     * @param flagPrettyDisplay TODO: 準備中
-     * @param spare8 TODO: 準備中
-     * @param programId TODO: 準備中
+     * @param next スタック上の次の(呼び出し元の)モジュール
+     * @param collatingSequence PROGRAM COLLATING SEQUENCEで指定された照合順序
+     * @param cutStatus 画面入出力時のCRT STATUS
+     * @param cursorPos 画面入出力時のカーソル位置
+     * @param displaySign 符号の表示方法(DISPLAY SIGN)
+     * @param decimalPoint 小数点として用いる文字
+     * @param currencySymbol 通貨記号として用いる文字
+     * @param numericSeparator 桁区切りとして用いる文字
+     * @param flagFilenameMapping ファイル名のマッピングを行うかどうかのフラグ
+     * @param flagBinaryTruncate 2進数項目の桁あふれを切り捨てるかどうかのフラグ
+     * @param flagPrettyDisplay DISPLAY文の整形出力を行うかどうかのフラグ
+     * @param spare8 予約領域
+     * @param programId プログラムID(プログラム名)
      */
     public CobolModule(
             CobolModule next,
@@ -175,9 +186,9 @@ public class CobolModule {
     }
 
     /**
-     * TODO 実装
+     * このモジュールのプログラムID(プログラム名)を設定する。
      *
-     * @param programName TODO: 準備中
+     * @param programName 設定するプログラム名
      */
     public void setProgramId(String programName) {
         if (this.program_id != null) {
@@ -187,9 +198,10 @@ public class CobolModule {
     }
 
     /**
-     * TODO: 準備中
+     * このモジュールの手続き部の引数(USING句の引数)を設定する。<br>
+     * 既存の引数をすべて消去した上で、指定された引数で置き換える。
      *
-     * @param field TODO: 準備中
+     * @param field 手続き部に渡す引数の並び
      */
     public void setParameters(AbstractCobolField... field) {
         cob_procedure_parameters.clear();
@@ -199,9 +211,9 @@ public class CobolModule {
     }
 
     /**
-     * TODO: 準備中
+     * 現在実行中のモジュールにおける小数点文字を取得する。
      *
-     * @return TODO: 準備中
+     * @return 現在のモジュールの小数点文字
      */
     public static int getDecimalPoint() {
         return currentModule.decimal_point;

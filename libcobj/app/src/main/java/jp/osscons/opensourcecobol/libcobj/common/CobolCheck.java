@@ -24,17 +24,22 @@ import jp.osscons.opensourcecobol.libcobj.exceptions.CobolExceptionId;
 import jp.osscons.opensourcecobol.libcobj.exceptions.CobolRuntimeException;
 import jp.osscons.opensourcecobol.libcobj.exceptions.CobolStopRunException;
 
-/** TODO: 準備中 */
+/**
+ * COBOLの実行時境界チェックを行うクラス<br>
+ * 表(OCCURS)の添字や、OCCURS DEPENDING ONの可変回数が範囲内にあるかを検査する。<br>
+ * 範囲外の場合は{@link CobolExceptionId#COB_EC_BOUND_SUBSCRIPT}を設定し、実行時エラーを出力して実行を中止する。
+ */
 public class CobolCheck {
     /**
-     * TODO: 準備中
+     * 表の添字が指定された範囲内にあるかを検査する。<br>
+     * 範囲外の場合は例外を設定し、実行時エラーメッセージを出力して実行を中止する。
      *
-     * @param i TODO: 準備中
-     * @param min TODO: 準備中
-     * @param max TODO: 準備中
-     * @param name TODO: 準備中
-     * @param len TODO: 準備中
-     * @throws CobolStopRunException TODO: 準備中
+     * @param i 検査対象の添字の値
+     * @param min 添字の下限値
+     * @param max 添字の上限値
+     * @param name 表として参照しているデータ項目の名前(SJISのバイト列)
+     * @param len データ項目名のバイト数
+     * @throws CobolStopRunException 添字が範囲外で実行が中止された場合
      */
     public static void checkSubscript(int i, int min, int max, byte[] name, int len)
             throws CobolStopRunException {
@@ -49,14 +54,15 @@ public class CobolCheck {
     }
 
     /**
-     * TODO: 準備中
+     * 表の添字が指定された範囲内にあるかを検査する({@code long}型の添字を受け取るオーバーロード)。<br>
+     * 添字をint型に変換した上で{@link #checkSubscript(int, int, int, byte[], int)}に委譲する。
      *
-     * @param i TODO: 準備中
-     * @param min TODO: 準備中
-     * @param max TODO: 準備中
-     * @param name TODO: 準備中
-     * @param len TODO: 準備中
-     * @throws CobolStopRunException TODO: 準備中
+     * @param i 検査対象の添字の値
+     * @param min 添字の下限値
+     * @param max 添字の上限値
+     * @param name 表として参照しているデータ項目の名前(SJISのバイト列)
+     * @param len データ項目名のバイト数
+     * @throws CobolStopRunException 添字が範囲外で実行が中止された場合
      */
     public static void checkSubscript(long i, int min, int max, byte[] name, int len)
             throws CobolStopRunException {
@@ -64,14 +70,15 @@ public class CobolCheck {
     }
 
     /**
-     * TODO: 準備中
+     * 表の添字が指定された範囲内にあるかを検査する({@link CobolDataStorage}で名前を受け取るオーバーロード)。<br>
+     * データ項目名をバイト列として取り出した上で{@link #checkSubscript(int, int, int, byte[], int)}に委譲する。
      *
-     * @param i TODO: 準備中
-     * @param min TODO: 準備中
-     * @param max TODO: 準備中
-     * @param name TODO: 準備中
-     * @param len TODO: 準備中
-     * @throws CobolStopRunException TODO: 準備中
+     * @param i 検査対象の添字の値
+     * @param min 添字の下限値
+     * @param max 添字の上限値
+     * @param name 表として参照しているデータ項目の名前を保持する記憶領域
+     * @param len データ項目名のバイト数
+     * @throws CobolStopRunException 添字が範囲外で実行が中止された場合
      */
     public static void checkSubscript(long i, int min, int max, CobolDataStorage name, int len)
             throws CobolStopRunException {
@@ -79,13 +86,14 @@ public class CobolCheck {
     }
 
     /**
-     * TODO: 準備中
+     * OCCURS DEPENDING ONの可変回数が指定された範囲内にあるかを検査する。<br>
+     * 範囲外の場合は例外を設定し、実行時エラーメッセージを出力して実行を中止する。
      *
-     * @param i TODO: 準備中
-     * @param min TODO: 準備中
-     * @param max TODO: 準備中
-     * @param name TODO: 準備中
-     * @throws CobolStopRunException TODO: 準備中
+     * @param i 検査対象の可変回数の値
+     * @param min 可変回数の下限値
+     * @param max 可変回数の上限値
+     * @param name OCCURS DEPENDING ONの対象となるデータ項目の名前
+     * @throws CobolStopRunException 可変回数が範囲外で実行が中止された場合
      */
     public static void checkOdo(int i, int min, int max, String name) throws CobolStopRunException {
         if (i < min || max < i) {
@@ -97,13 +105,14 @@ public class CobolCheck {
     }
 
     /**
-     * TODO: 準備中
+     * OCCURS DEPENDING ONの可変回数が指定された範囲内にあるかを検査する(名前をバイト列で受け取るオーバーロード)。<br>
+     * データ項目名をSJISの文字列に変換した上で{@link #checkOdo(int, int, int, String)}に委譲する。
      *
-     * @param i TODO: 準備中
-     * @param min TODO: 準備中
-     * @param max TODO: 準備中
-     * @param name TODO: 準備中
-     * @throws CobolStopRunException TODO: 準備中
+     * @param i 検査対象の可変回数の値
+     * @param min 可変回数の下限値
+     * @param max 可変回数の上限値
+     * @param name OCCURS DEPENDING ONの対象となるデータ項目の名前(SJISのバイト列)
+     * @throws CobolStopRunException 可変回数が範囲外で実行が中止された場合
      */
     public static void checkOdo(int i, int min, int max, byte[] name) throws CobolStopRunException {
         CobolCheck.checkOdo(i, min, max, new String(name, AbstractCobolField.charSetSJIS));

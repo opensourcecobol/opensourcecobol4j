@@ -26,24 +26,66 @@ import jp.osscons.opensourcecobol.libcobj.exceptions.CobolExceptionId;
 import jp.osscons.opensourcecobol.libcobj.exceptions.CobolRuntimeException;
 import jp.osscons.opensourcecobol.libcobj.exceptions.CobolStopRunException;
 
-/** TODO: 準備中 */
+/**
+ * COBOLのINSPECT文を実装するクラス<br>
+ * libcob/strings.cのcob_inspect_*系の関数に対応する。<br>
+ * TALLYING(文字の計数)・REPLACING(文字の置換)・CONVERTING(文字の変換)の各機能を提供する。<br>
+ * INSPECT文は{@link #init(AbstractCobolField, int)}で対象を設定し、{@link #start()}や
+ * {@link #before(AbstractCobolField)}・{@link #after(AbstractCobolField)}で走査範囲(BEFORE/AFTER)を限定した上で、
+ * {@link #all(AbstractCobolField, AbstractCobolField)}などで計数・置換を行い、最後に{@link #finish()}で確定する
+ * という手順で実行する。
+ */
 public class CobolInspect {
+    /** 一致する文字をすべて対象とする(INSPECT ... ALLに対応) */
     private static final int INSPECT_ALL = 0;
+
+    /** 先頭から連続する一致のみを対象とする(INSPECT ... LEADINGに対応) */
     private static final int INSPECT_LEADING = 1;
+
+    /** 最初に一致した1箇所のみを対象とする(INSPECT ... FIRSTに対応) */
     private static final int INSPECT_FIRST = 2;
+
+    /** 末尾から連続する一致のみを対象とする(INSPECT ... TRAILINGに対応) */
     private static final int INSPECT_TRAILING = 3;
 
+    /** INSPECTの対象となるフィールド */
     private static AbstractCobolField inspectVar;
+
+    /** INSPECTの対象フィールドの記憶領域 */
     private static CobolDataStorage inspectData;
+
+    /** 走査範囲の開始位置(0始まり) */
     private static int inspectStart;
+
+    /** 走査範囲の終了位置(この位置は含まない) */
     private static int inspectEnd;
+
+    /** 各バイトの処理状況を保持する配列(-1:未処理、1:計数済み、その他:置換後のバイト値) */
     private static int[] inspectMark = null;
+
+    /** {@link #inspectMark}として確保済みの領域サイズ */
     private static int lastsize = 0;
+
+    /** INSPECTの対象フィールドのサイズ(バイト数) */
     private static int inspectSize;
+
+    /** REPLACING(置換)モードかどうかを表す(0以外で置換、0で計数) */
     private static int inspectReplacing;
+
+    /** 対象フィールドの元の符号(処理後に復元するために退避する) */
     private static int inspectSign;
+
+    /** INSPECTの対象フィールドの控え */
     private static AbstractCobolField inspectVarCopy;
 
+    /**
+     * 形象定数f1を、対象f2のサイズに合わせて繰り返し展開したフィールドを生成する。<br>
+     * REPLACINGでALL形象定数を置換文字として用いる場合に、長さを一致させるために使用する。
+     *
+     * @param f1 展開元となる形象定数のフィールド
+     * @param f2 展開後の長さの基準となるフィールド
+     * @return f2と同じサイズに展開された英数字フィールド
+     */
     private static AbstractCobolField figurative(AbstractCobolField f1, AbstractCobolField f2) {
         int size1 = 0;
         int size2 = f2.getSize();
@@ -62,6 +104,16 @@ public class CobolInspect {
                 new CobolFieldAttribute(CobolFieldAttribute.COB_TYPE_ALPHANUMERIC, 0, 0, 0, null));
     }
 
+    /**
+     * ALL/LEADING/FIRST/TRAILINGに共通する、文字列の照合・計数・置換処理を行う。<br>
+     * 指定された種別に応じて走査範囲内でf2を検索し、計数モードでは出現回数をf1に加算し、
+     * 置換モードでは{@link #inspectMark}に置換後のバイト値を記録する。
+     *
+     * @param f1 計数モードでは計数結果を加算するフィールド、置換モードでは置換後の文字を表すフィールド
+     * @param f2 検索対象となる文字または文字列を表すフィールド
+     * @param type 照合の種別({@link #INSPECT_ALL}・{@link #INSPECT_LEADING}・{@link #INSPECT_FIRST}・{@link #INSPECT_TRAILING})
+     * @throws CobolStopRunException 処理中にSTOP RUNが実行された場合
+     */
     private static void common(AbstractCobolField f1, AbstractCobolField f2, int type)
             throws CobolStopRunException {
         if (f1 == null) {
@@ -161,10 +213,11 @@ public class CobolInspect {
     }
 
     /**
-     * libcob/strings.cのcob_inspect_initの実装。詳しい説明はTODO: 準備中。
+     * libcob/strings.cのcob_inspect_initの実装。<br>
+     * INSPECT文の処理を開始し、対象フィールドや処理状況を記録する各種状態を初期化する。
      *
-     * @param var TODO: 準備中
-     * @param replacing TODO: 準備中
+     * @param var INSPECTの対象となるフィールド
+     * @param replacing REPLACING(置換)を行う場合は0以外、TALLYING(計数)の場合は0
      */
     public static void init(AbstractCobolField var, int replacing) {
         CobolInspect.inspectVarCopy = var;
@@ -190,16 +243,20 @@ public class CobolInspect {
         CobolRuntimeException.setException(0);
     }
 
-    /** libcob/strings.cのcob_inspect_startの実装 */
+    /**
+     * libcob/strings.cのcob_inspect_startの実装。<br>
+     * 走査範囲を対象フィールドの全体(先頭から末尾まで)に設定する。
+     */
     public static void start() {
         inspectStart = 0;
         inspectEnd = inspectSize;
     }
 
     /**
-     * libcob/strings.cのcob_inspect_beforeの実装。詳しい説明はTODO: 準備中。
+     * libcob/strings.cのcob_inspect_beforeの実装。<br>
+     * BEFORE INITIAL句に対応し、指定された区切り文字が最初に現れる位置で走査範囲の終了位置を制限する。
      *
-     * @param str TODO: 準備中
+     * @param str 走査範囲の終端を定める区切り文字(BEFORE INITIALの基準)を表すフィールド
      */
     public static void before(AbstractCobolField str) {
         CobolDataStorage p2 = null;
@@ -242,9 +299,10 @@ public class CobolInspect {
     }
 
     /**
-     * libcob/strings.cのcob_inspect_afterの実装。詳しい説明はTODO: 準備中。
+     * libcob/strings.cのcob_inspect_afterの実装。<br>
+     * AFTER INITIAL句に対応し、指定された区切り文字が最初に現れる位置の直後から走査範囲の開始位置を制限する。
      *
-     * @param str TODO: 準備中
+     * @param str 走査範囲の始端を定める区切り文字(AFTER INITIALの基準)を表すフィールド
      */
     public static void after(AbstractCobolField str) {
         CobolDataStorage data = str.getDataStorage();
@@ -259,10 +317,12 @@ public class CobolInspect {
     }
 
     /**
-     * libcob/strings.cのcob_inspect_charactersの実装。詳しい説明はTODO: 準備中。
+     * libcob/strings.cのcob_inspect_charactersの実装。<br>
+     * INSPECT ... CHARACTERS句に対応し、走査範囲内の未処理のすべての文字を対象とする。<br>
+     * 計数モードでは対象文字数をf1に加算し、置換モードでは対象範囲をf1の内容で置き換える。
      *
-     * @param f1 TODO: 準備中
-     * @throws CobolStopRunException TODO: 準備中
+     * @param f1 計数モードでは計数結果を加算するフィールド、置換モードでは置換後の文字を表すフィールド
+     * @throws CobolStopRunException 処理中にSTOP RUNが実行された場合
      */
     public static void characters(AbstractCobolField f1) throws CobolStopRunException {
         int mark = inspectStart;
@@ -297,11 +357,12 @@ public class CobolInspect {
     }
 
     /**
-     * libcob/strings.cのcob_inspect_allの実装。詳しい説明はTODO: 準備中。
+     * libcob/strings.cのcob_inspect_allの実装。<br>
+     * INSPECT ... ALL句に対応し、走査範囲内に現れるf2のすべての出現を対象に計数または置換を行う。
      *
-     * @param f1 TODO: 準備中
-     * @param f2 TODO: 準備中
-     * @throws CobolStopRunException TODO: 準備中
+     * @param f1 計数モードでは計数結果を加算するフィールド、置換モードでは置換後の文字を表すフィールド
+     * @param f2 検索対象となる文字または文字列を表すフィールド
+     * @throws CobolStopRunException 処理中にSTOP RUNが実行された場合
      */
     public static void all(AbstractCobolField f1, AbstractCobolField f2)
             throws CobolStopRunException {
@@ -309,11 +370,12 @@ public class CobolInspect {
     }
 
     /**
-     * libcob/strings.cのcob_inspect_leadingの実装。詳しい説明はTODO: 準備中。
+     * libcob/strings.cのcob_inspect_leadingの実装。<br>
+     * INSPECT ... LEADING句に対応し、走査範囲の先頭から連続して現れるf2のみを対象に計数または置換を行う。
      *
-     * @param f1 TODO: 準備中
-     * @param f2 TODO: 準備中
-     * @throws CobolStopRunException TODO: 準備中
+     * @param f1 計数モードでは計数結果を加算するフィールド、置換モードでは置換後の文字を表すフィールド
+     * @param f2 検索対象となる文字または文字列を表すフィールド
+     * @throws CobolStopRunException 処理中にSTOP RUNが実行された場合
      */
     public static void leading(AbstractCobolField f1, AbstractCobolField f2)
             throws CobolStopRunException {
@@ -321,11 +383,12 @@ public class CobolInspect {
     }
 
     /**
-     * libcob/strings.cのcob_inspect_firstの実装。詳しい説明はTODO: 準備中。
+     * libcob/strings.cのcob_inspect_firstの実装。<br>
+     * INSPECT ... FIRST句に対応し、走査範囲内で最初に現れたf2の1箇所のみを対象に計数または置換を行う。
      *
-     * @param f1 TODO: 準備中
-     * @param f2 TODO: 準備中
-     * @throws CobolStopRunException TODO: 準備中
+     * @param f1 計数モードでは計数結果を加算するフィールド、置換モードでは置換後の文字を表すフィールド
+     * @param f2 検索対象となる文字または文字列を表すフィールド
+     * @throws CobolStopRunException 処理中にSTOP RUNが実行された場合
      */
     public static void first(AbstractCobolField f1, AbstractCobolField f2)
             throws CobolStopRunException {
@@ -333,11 +396,12 @@ public class CobolInspect {
     }
 
     /**
-     * libcob/strings.cのcob_inspect_trailingの実装。詳しい説明はTODO: 準備中。
+     * libcob/strings.cのcob_inspect_trailingの実装。<br>
+     * INSPECT ... TRAILING句に対応し、走査範囲の末尾から連続して現れるf2のみを対象に計数または置換を行う。
      *
-     * @param f1 TODO: 準備中
-     * @param f2 TODO: 準備中
-     * @throws CobolStopRunException TODO: 準備中
+     * @param f1 計数モードでは計数結果を加算するフィールド、置換モードでは置換後の文字を表すフィールド
+     * @param f2 検索対象となる文字または文字列を表すフィールド
+     * @throws CobolStopRunException 処理中にSTOP RUNが実行された場合
      */
     public static void trailing(AbstractCobolField f1, AbstractCobolField f2)
             throws CobolStopRunException {
@@ -345,10 +409,11 @@ public class CobolInspect {
     }
 
     /**
-     * libcob/strings.cのcob_inspect_convertingの実装。詳しい説明はTODO: 準備中。
+     * libcob/strings.cのcob_inspect_convertingの実装。<br>
+     * INSPECT ... CONVERTING句に対応し、走査範囲内でf1に含まれる各文字を、対応するf2の文字に変換する。
      *
-     * @param f1 TODO: 準備中
-     * @param f2 TODO: 準備中
+     * @param f1 変換元となる文字の集合を表すフィールド
+     * @param f2 変換先となる文字の集合を表すフィールド
      */
     public static void converting(AbstractCobolField f1, AbstractCobolField f2) {
         int type1 = f1.getAttribute().getType();
@@ -400,7 +465,11 @@ public class CobolInspect {
         }
     }
 
-    /** libcob/strings.cのcob_inspect_finishの実装。詳しい説明はTODO: 準備中。 */
+    /**
+     * libcob/strings.cのcob_inspect_finishの実装。<br>
+     * INSPECT文の処理を確定する。置換モードの場合は{@link #inspectMark}に記録した置換結果を対象フィールドへ書き戻し、
+     * 退避していた符号を復元する。
+     */
     public static void finish() {
         if (inspectReplacing != 0) {
             for (int i = 0; i < inspectSize; ++i) {
@@ -412,7 +481,7 @@ public class CobolInspect {
         inspectVar.putSign(inspectSign);
     }
 
-    /** TODO: 準備中 */
+    /** 処理状況を記録する{@link #inspectMark}を既定サイズ({@link CobolConstant#COB_MEDIUM_BUFF})で初期化する。 */
     public static void initString() {
         CobolInspect.inspectMark = new int[CobolConstant.COB_MEDIUM_BUFF];
         lastsize = CobolConstant.COB_MEDIUM_BUFF;

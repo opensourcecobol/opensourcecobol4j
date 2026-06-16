@@ -20,13 +20,16 @@ package jp.osscons.opensourcecobol.libcobj.common;
 
 import jp.osscons.opensourcecobol.libcobj.exceptions.CobolStopRunException;
 
-/** TODO: 準備中 */
+/**
+ * int型の値を返す処理を遅延実行するための関数型インターフェイス<br>
+ * 生成されたJavaコード中で、int型の値を後から評価したい箇所(コールバック)を表現するために用いる。
+ */
 public interface GetInt {
     /**
-     * TODO: 準備中
+     * 処理を実行し、結果のint型の値を返す。
      *
-     * @return TODO: 準備中
-     * @throws CobolStopRunException TODO: 準備中
+     * @return 処理結果のint型の値
+     * @throws CobolStopRunException 処理中にSTOP RUNが実行された場合
      */
     int run() throws CobolStopRunException;
 }
