@@ -20,8 +20,8 @@ package jp.osscons.opensourcecobol.libcobj.data;
 
 /**
  * COBOL変数の属性情報を保持するクラス.<br>
- * 変数の種別(数値・英数字・日本語など)・桁数・スケール・各種フラグ・PICTURE句の文字列を保持する。
- * 種別とフラグは{@code COB_TYPE_*}・{@code COB_FLAG_*}定数で表現される。
+ * 変数の種別(数値・英数字・日本語など)・桁数・スケール・各種フラグ・PICTURE句の文字列を保持する.
+ * 種別とフラグは{@code COB_TYPE_*}・{@code COB_FLAG_*}定数で表現される.
  */
 public class CobolFieldAttribute {
 
@@ -137,7 +137,7 @@ public class CobolFieldAttribute {
     }
 
     /**
-     * コピーコンストラクタ.別の属性オブジェクトの各値をコピーして新しいオブジェクトを生成する。
+     * コピーコンストラクタ.別の属性オブジェクトの各値をコピーして新しいオブジェクトを生成する.
      *
      * @param other コピー元の属性オブジェクト
      */
@@ -240,7 +240,7 @@ public class CobolFieldAttribute {
     }
 
     /**
-     * 変数種別が不明な種別かどうかを判定する。
+     * 変数種別が不明な種別かどうかを判定する.
      *
      * @return 不明な種別であればtrue
      */
@@ -249,7 +249,7 @@ public class CobolFieldAttribute {
     }
 
     /**
-     * 変数種別が集団項目かどうかを判定する。
+     * 変数種別が集団項目かどうかを判定する.
      *
      * @return 集団項目であればtrue
      */
@@ -258,7 +258,7 @@ public class CobolFieldAttribute {
     }
 
     /**
-     * 変数種別が真理値項目かどうかを判定する。
+     * 変数種別が真理値項目かどうかを判定する.
      *
      * @return 真理値項目であればtrue
      */
@@ -267,7 +267,7 @@ public class CobolFieldAttribute {
     }
 
     /**
-     * 変数種別が数値項目かどうかを判定する。
+     * 変数種別が数値項目かどうかを判定する.
      *
      * @return 数値項目であればtrue
      */
@@ -276,7 +276,7 @@ public class CobolFieldAttribute {
     }
 
     /**
-     * 変数種別が表示用数値項目(USAGE DISPLAY)かどうかを判定する。
+     * 変数種別が表示用数値項目(USAGE DISPLAY)かどうかを判定する.
      *
      * @return 表示用数値項目であればtrue
      */
@@ -285,7 +285,7 @@ public class CobolFieldAttribute {
     }
 
     /**
-     * 変数種別が2進数値項目(USAGE COMP/BINARY)かどうかを判定する。
+     * 変数種別が2進数値項目(USAGE COMP/BINARY)かどうかを判定する.
      *
      * @return 2進数値項目であればtrue
      */
@@ -294,7 +294,7 @@ public class CobolFieldAttribute {
     }
 
     /**
-     * 変数種別がパック10進数値項目(USAGE COMP-3)かどうかを判定する。
+     * 変数種別がパック10進数値項目(USAGE COMP-3)かどうかを判定する.
      *
      * @return パック10進数値項目であればtrue
      */
@@ -303,7 +303,7 @@ public class CobolFieldAttribute {
     }
 
     /**
-     * 変数種別が単精度浮動小数点数値項目(USAGE COMP-1)かどうかを判定する。
+     * 変数種別が単精度浮動小数点数値項目(USAGE COMP-1)かどうかを判定する.
      *
      * @return 単精度浮動小数点数値項目であればtrue
      */
@@ -312,7 +312,7 @@ public class CobolFieldAttribute {
     }
 
     /**
-     * 変数種別が倍精度浮動小数点数値項目(USAGE COMP-2)かどうかを判定する。
+     * 変数種別が倍精度浮動小数点数値項目(USAGE COMP-2)かどうかを判定する.
      *
      * @return 倍精度浮動小数点数値項目であればtrue
      */
@@ -321,7 +321,7 @@ public class CobolFieldAttribute {
     }
 
     /**
-     * 変数種別が編集数値項目かどうかを判定する。
+     * 変数種別が編集数値項目かどうかを判定する.
      *
      * @return 編集数値項目であればtrue
      */
@@ -330,7 +330,7 @@ public class CobolFieldAttribute {
     }
 
     /**
-     * 変数種別が英数字項目(PIC X)かどうかを判定する。
+     * 変数種別が英数字項目(PIC X)かどうかを判定する.
      *
      * @return 英数字項目であればtrue
      */
@@ -339,7 +339,7 @@ public class CobolFieldAttribute {
     }
 
     /**
-     * 変数種別がALL指定の英数字項目かどうかを判定する。
+     * 変数種別がALL指定の英数字項目かどうかを判定する.
      *
      * @return ALL指定の英数字項目であればtrue
      */
@@ -348,7 +348,7 @@ public class CobolFieldAttribute {
     }
 
     /**
-     * 変数種別が英数字編集項目かどうかを判定する。
+     * 変数種別が英数字編集項目かどうかを判定する.
      *
      * @return 英数字編集項目であればtrue
      */
@@ -357,7 +357,7 @@ public class CobolFieldAttribute {
     }
 
     /**
-     * 変数種別が日本語項目(PIC N)かどうかを判定する。
+     * 変数種別が日本語項目(PIC N)かどうかを判定する.
      *
      * @return 日本語項目であればtrue
      */
@@ -366,7 +366,7 @@ public class CobolFieldAttribute {
     }
 
     /**
-     * 変数種別が日本語編集項目かどうかを判定する。
+     * 変数種別が日本語編集項目かどうかを判定する.
      *
      * @return 日本語編集項目であればtrue
      */
@@ -375,7 +375,7 @@ public class CobolFieldAttribute {
     }
 
     /**
-     * 変数種別がALL指定の日本語項目かどうかを判定する。
+     * 変数種別がALL指定の日本語項目かどうかを判定する.
      *
      * @return ALL指定の日本語項目であればtrue
      */
@@ -384,7 +384,7 @@ public class CobolFieldAttribute {
     }
 
     /**
-     * 符号を持つ数値であるフラグが立っているかどうかを判定する。
+     * 符号を持つ数値であるフラグが立っているかどうかを判定する.
      *
      * @return 符号を持つ数値であればtrue
      */
@@ -393,7 +393,7 @@ public class CobolFieldAttribute {
     }
 
     /**
-     * 符号を独立した桁として保持する(SIGN SEPARATE)フラグが立っているかどうかを判定する。
+     * 符号を独立した桁として保持する(SIGN SEPARATE)フラグが立っているかどうかを判定する.
      *
      * @return SIGN SEPARATEであればtrue
      */
@@ -402,7 +402,7 @@ public class CobolFieldAttribute {
     }
 
     /**
-     * 符号を先頭桁に保持する(SIGN LEADING)フラグが立っているかどうかを判定する。
+     * 符号を先頭桁に保持する(SIGN LEADING)フラグが立っているかどうかを判定する.
      *
      * @return SIGN LEADINGであればtrue
      */
@@ -411,7 +411,7 @@ public class CobolFieldAttribute {
     }
 
     /**
-     * 値が0のとき空白で表示する(BLANK WHEN ZERO)フラグが立っているかどうかを判定する。
+     * 値が0のとき空白で表示する(BLANK WHEN ZERO)フラグが立っているかどうかを判定する.
      *
      * @return BLANK WHEN ZEROであればtrue
      */
@@ -420,7 +420,7 @@ public class CobolFieldAttribute {
     }
 
     /**
-     * 右寄せ(JUSTIFIED RIGHT)フラグが立っているかどうかを判定する。
+     * 右寄せ(JUSTIFIED RIGHT)フラグが立っているかどうかを判定する.
      *
      * @return 右寄せであればtrue
      */
@@ -429,7 +429,7 @@ public class CobolFieldAttribute {
     }
 
     /**
-     * 2進数値のバイト順を入れ替える(バイトスワップする)フラグが立っているかどうかを判定する。
+     * 2進数値のバイト順を入れ替える(バイトスワップする)フラグが立っているかどうかを判定する.
      *
      * @return バイトスワップするのであればtrue
      */
@@ -438,7 +438,7 @@ public class CobolFieldAttribute {
     }
 
     /**
-     * 2進数値を実際のバイト幅で扱う(REAL BINARY)フラグが立っているかどうかを判定する。
+     * 2進数値を実際のバイト幅で扱う(REAL BINARY)フラグが立っているかどうかを判定する.
      *
      * @return REAL BINARYであればtrue
      */
@@ -447,7 +447,7 @@ public class CobolFieldAttribute {
     }
 
     /**
-     * ポインタ項目であるフラグが立っているかどうかを判定する。
+     * ポインタ項目であるフラグが立っているかどうかを判定する.
      *
      * @return ポインタ項目であればtrue
      */
