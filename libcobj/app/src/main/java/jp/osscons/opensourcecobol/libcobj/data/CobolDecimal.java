@@ -348,9 +348,9 @@ public class CobolDecimal {
     }
 
     /**
-     * このオブジェクトの示す数値に対してmod演算を行う
+     * このオブジェクトの示す数値に対して除算を行う
      *
-     * @param decimal このオブジェクトの示す数値にmod演算する値
+     * @param decimal このオブジェクトの示す数値を除算する値
      * @throws CobolStopRunException 0除算が検出され,かつ実行時エラーで終了する設定の場合にスローされる
      */
     public void div(CobolDecimal decimal) throws CobolStopRunException {
