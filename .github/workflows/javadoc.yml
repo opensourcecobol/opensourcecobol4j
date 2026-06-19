@@ -16,7 +16,7 @@ jobs:
           java-version: '21'
 
       - name: Checkout opensource COBOL 4J
-        uses: actions/checkout@v6
+        uses: actions/checkout@v7
       
       - name: Run javadoc
         working-directory: libcobj
