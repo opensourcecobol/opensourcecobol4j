@@ -304,6 +304,14 @@ Options:
 ```
 cobj-apiを用いたSpring Bootアプリケーションの作成方法については、[こちら](./doc/cobj-api_SpringBoot_JP.md)をご覧ください。
 
+## libcobj-version
+`libcobj-version`コマンドは、インストールされているopensource COBOL 4Jの`libcobj.jar`のバージョンを表示します。`cobj-idx`や`cobj-api`と同様に、opensource COBOL 4Jをインストールする際に一緒にインストールされます。
+
+```
+$ libcobj-version
+libcobj 1.1.20
+```
+
 ## コントリビューㇳ
 コントリビュータ向けのガイドラインは[CONTRIBUTING_JP.md](./CONTRIBUTING_JP.md)を参照してください。
 コントリビュータの一覧は https://github.com/opensourcecobol/opensourcecobol4j/graphs/contributors に掲載されています。

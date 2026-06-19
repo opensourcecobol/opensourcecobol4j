@@ -1,6 +1,7 @@
 TARGET_JAR = app/build/libs/libcobj.jar
 COBJ_IDX = bin/cobj-idx
 COBJ_API = bin/cobj-api
+LIBCOBJ_VERSION = bin/libcobj-version
 
 SRC_FILES = \
 	settings.gradle.kts \
@@ -79,7 +80,8 @@ SRC_FILES = \
 	./app/src/main/java/jp/osscons/opensourcecobol/libcobj/user_util/indexed_file/FileSeqRecordReader.java \
 	./app/src/main/java/jp/osscons/opensourcecobol/libcobj/user_util/indexed_file/FileLineSeqRecordReader.java\
 	./app/src/main/java/jp/osscons/opensourcecobol/libcobj/user_util/cobj_api/ApiFiles.java \
-	./app/src/main/java/jp/osscons/opensourcecobol/libcobj/user_util/cobj_api/ApiFilesOptions.java
+	./app/src/main/java/jp/osscons/opensourcecobol/libcobj/user_util/cobj_api/ApiFilesOptions.java \
+	./app/src/main/java/jp/osscons/opensourcecobol/libcobj/user_util/show_version/ShowVersion.java
 
 TEST_FILE = \
 	./app/src/test/java/jp/osscons/opensourcecobol/libcobj/user_util/cobj_api/ApiFilesTest.java
@@ -92,11 +94,12 @@ $(TARGET_JAR): $(SRC_FILES)
 clean:
 	rm -rf $(TARGET_JAR)
 
-install: $(TARGET_JAR) $(COBJ_IDX) $(COBJ_API)
+install: $(TARGET_JAR) $(COBJ_IDX) $(COBJ_API) $(LIBCOBJ_VERSION)
 	mkdir -p $(DESTDIR)$(prefix)/lib/opensourcecobol4j/
 	install $(TARGET_JAR) $(DESTDIR)$(prefix)/lib/opensourcecobol4j/
 	install $(COBJ_IDX) $(DESTDIR)$(prefix)/bin/
 	install $(COBJ_API) $(DESTDIR)$(prefix)/bin/
+	install $(LIBCOBJ_VERSION) $(DESTDIR)$(prefix)/bin/
 
 test:
 	./gradlew test

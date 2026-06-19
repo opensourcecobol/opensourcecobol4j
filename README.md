@@ -320,6 +320,14 @@ Options:
 
 For information on how to create a Spring Boot application using cobj-api, see [here](./doc/cobj-api_SpringBoot.md).
 
+## libcobj-version
+`libcobj-version` prints the version of `libcobj.jar` used by the installed opensource COBOL 4J. It is installed together with `cobj-idx` and `cobj-api`.
+
+```
+$ libcobj-version
+libcobj 1.1.20
+```
+
 ## Contributing
 
 Guidelines for contributing to opensource COBOL 4J can be found in [CONTRIBUTING.md](./CONTRIBUTING.md).
