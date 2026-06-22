@@ -145,6 +145,77 @@ AT_CHECK([export TESTENV=envvalue && java prog], [0], [envvalue:newvalue])
 
 AT_CLEANUP
 
+AT_SETUP([DISPLAY ENVIRONMENT-VALUE strips trailing spaces])
+
+AT_DATA([prog.cob], [
+       IDENTIFICATION   DIVISION.
+       PROGRAM-ID.      prog.
+       ENVIRONMENT      DIVISION.
+       INPUT-OUTPUT     SECTION.
+       FILE-CONTROL.
+           SELECT OUT-FILE ASSIGN OUTPATH
+                  ORGANIZATION IS LINE SEQUENTIAL.
+       DATA             DIVISION.
+       FILE             SECTION.
+       FD OUT-FILE.
+       01 OUT-REC       PIC X(5).
+       WORKING-STORAGE  SECTION.
+       01 WK-PATH       PIC X(32).
+       PROCEDURE        DIVISION.
+           MOVE SPACE         TO WK-PATH.
+           STRING 'hello.txt' DELIMITED BY SIZE
+                  INTO WK-PATH.
+           DISPLAY 'OUTPATH'  UPON ENVIRONMENT-NAME.
+           DISPLAY WK-PATH    UPON ENVIRONMENT-VALUE.
+           OPEN OUTPUT OUT-FILE.
+           MOVE 'HELLO'       TO OUT-REC.
+           WRITE OUT-REC.
+           CLOSE OUT-FILE.
+           STOP RUN.
+])
+
+AT_CHECK([${COMPILE_JP_COMPAT} prog.cob], [0])
+AT_CHECK([java prog], [0])
+AT_CHECK([test -f hello.txt && cat hello.txt], [0], [HELLO
+])
+
+AT_CLEANUP
+
+AT_SETUP([SET ENVIRONMENT strips trailing spaces])
+
+AT_DATA([prog.cob], [
+       IDENTIFICATION   DIVISION.
+       PROGRAM-ID.      prog.
+       ENVIRONMENT      DIVISION.
+       INPUT-OUTPUT     SECTION.
+       FILE-CONTROL.
+           SELECT OUT-FILE ASSIGN OUTPATH2
+                  ORGANIZATION IS LINE SEQUENTIAL.
+       DATA             DIVISION.
+       FILE             SECTION.
+       FD OUT-FILE.
+       01 OUT-REC       PIC X(5).
+       WORKING-STORAGE  SECTION.
+       01 WK-PATH       PIC X(32).
+       PROCEDURE        DIVISION.
+           MOVE SPACE         TO WK-PATH.
+           STRING 'world.txt' DELIMITED BY SIZE
+                  INTO WK-PATH.
+           SET ENVIRONMENT 'OUTPATH2' TO WK-PATH.
+           OPEN OUTPUT OUT-FILE.
+           MOVE 'WORLD'       TO OUT-REC.
+           WRITE OUT-REC.
+           CLOSE OUT-FILE.
+           STOP RUN.
+])
+
+AT_CHECK([${COMPILE_JP_COMPAT} prog.cob], [0])
+AT_CHECK([java prog], [0])
+AT_CHECK([test -f world.txt && cat world.txt], [0], [WORLD
+])
+
+AT_CLEANUP
+
 AT_SETUP([SPECIAL NAMES unterminated])
 
 AT_DATA([prog.cob], [

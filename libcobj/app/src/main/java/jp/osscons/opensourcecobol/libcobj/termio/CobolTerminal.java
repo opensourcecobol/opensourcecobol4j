@@ -252,6 +252,10 @@ public class CobolTerminal {
      * で設定された環境変数名に対して値を設定する. 環境変数名が未設定または空文字列の場合は{@link
      * CobolExceptionId#COB_EC_IMP_DISPLAY}例外を設定する.
      *
+     * <p>COBOL変数{@code f}の値は{@link AbstractCobolField#fieldToString(java.nio.charset.Charset)}
+     * によって末尾の空白とNULバイトが取り除かれてから環境変数値として設定される. これは本家CのopensourceCOBOLが
+     * {@code cob_display_env_value}内で{@code cob_field_to_string}を使用する挙動と一致する.
+     *
      * @param f 設定する環境変数の値を保持するCOBOL変数
      */
     public static void displayEnvValue(AbstractCobolField f) {
@@ -259,7 +263,10 @@ public class CobolTerminal {
             CobolExceptionInfo.setException(CobolExceptionId.COB_EC_IMP_DISPLAY);
             return;
         }
-        CobolUtil.setEnv(CobolUtil.cobLocalEnv, f.getString());
+        // Strip trailing spaces and NULs so that PIC X(n) source fields do not
+        // leak padding into the environment variable value. Matches libcob's
+        // cob_field_to_string used by cob_display_env_value.
+        CobolUtil.setEnv(CobolUtil.cobLocalEnv, f.fieldToString(AbstractCobolField.charSetSJIS));
     }
 
     /**

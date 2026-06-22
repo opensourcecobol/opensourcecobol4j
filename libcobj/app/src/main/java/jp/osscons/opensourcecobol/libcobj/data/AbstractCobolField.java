@@ -1025,6 +1025,25 @@ public abstract class AbstractCobolField {
     }
 
     /**
+     * 末尾の空白とNULバイトを取り除いたうえで指定されたcharsetでデコードして文字列として返す.
+     * 本家CのopensourceCOBOLにおける{@code cob_field_to_string}と同等の処理を行う.
+     *
+     * @param charset デコードに使用するcharset
+     * @return 末尾の空白/NULを取り除いた文字列
+     */
+    public String fieldToString(Charset charset) {
+        CobolDataStorage data = this.getDataStorage();
+        int end;
+        for (end = this.getSize(); end > 0; --end) {
+            byte b = data.getByte(end - 1);
+            if (b != ' ' && b != 0) {
+                break;
+            }
+        }
+        return new String(data.getByteArray(0, end), charset);
+    }
+
+    /**
      * TODO: 準備中
      *
      * @param n TODO: 準備中
