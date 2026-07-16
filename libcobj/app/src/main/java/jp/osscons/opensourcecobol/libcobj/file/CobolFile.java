@@ -207,7 +207,7 @@ public class CobolFile {
     /** 省略可能ファイルが存在せずに正常終了したことを表すCOBOLのファイル状態コード(5). */
     protected static final int COB_STATUS_05_SUCCESS_OPTIONAL = 5;
 
-    /** ユニットに関係しない操作が正常終了したことを表すCOBOLのファイル状態コード(7). */
+    /** リール/ユニットでないファイルに対するREEL/UNIT付き操作が正常終了したことを表すCOBOLのファイル状態コード(7). */
     protected static final int COB_STATUS_07_SUCCESS_NO_UNIT = 7;
 
     /** ファイル終了(end of file)を表すCOBOLのファイル状態コード(10). */
@@ -336,7 +336,7 @@ public class CobolFile {
     /** ファイル状態(FILE STATUS)領域のサイズ(バイト数). */
     protected static final int FNSTATUSSIZE = 3;
 
-    /** 直近に入出力エラーが発生したファイルを保持する静的フィールド. */
+    /** 直近に入出力操作(saveStatusの呼び出し)を行ったファイルを保持する静的フィールド. */
     public static CobolFile errorFile;
 
     /** 各種処理で用いる小さめのバッファのサイズ. */
@@ -1507,7 +1507,7 @@ public class CobolFile {
     /**
      * レコードを順次読み込む(READ文の実装)のオーバーロード. キー引数を整数で受け取り, 内部的には順次読み込みを行う.
      *
-     * @param key 読み込みに用いるキー番号
+     * @param key 読み込みに用いるキー番号(この多重定義では使用されない)
      * @param fnstatus FILE STATUS句で指定されたデータ項目
      * @param readOpts READ文のオプション(COB_READ_*)
      */
@@ -1808,7 +1808,7 @@ public class CobolFile {
         saveStatus(COB_STATUS_00_SUCCESS, fnstatus);
     }
 
-    /** ファイルのロックを解除する下位処理. 開いている場合はバッファをフラッシュしてロックを解放する. */
+    /** ファイルのロックを解除する下位処理. 開いている場合は書き込みバッファをフラッシュする. */
     public void unlock_() {
         if (this.open_mode != COB_OPEN_CLOSED && this.open_mode != COB_OPEN_LOCKED) {
             this.file.flush();
