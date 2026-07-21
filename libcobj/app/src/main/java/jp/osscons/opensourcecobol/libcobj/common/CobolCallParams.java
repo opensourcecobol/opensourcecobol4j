@@ -24,6 +24,9 @@ package jp.osscons.opensourcecobol.libcobj.common;
  * 呼び出されたプログラム側でこの値を参照することで、省略された引数の判定などに利用する。
  */
 public class CobolCallParams {
+    /** このクラスはインスタンス化しない。 */
+    private CobolCallParams() {}
+
     /** CALL文で渡された引数の個数 */
     public static int callParams = 0;
 }

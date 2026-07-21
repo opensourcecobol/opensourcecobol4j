@@ -36,6 +36,9 @@ import jp.osscons.opensourcecobol.libcobj.exceptions.CobolStopRunException;
  * という手順で実行する。
  */
 public class CobolInspect {
+    /** このクラスはインスタンス化しない。 */
+    private CobolInspect() {}
+
     /** 一致する文字をすべて対象とする(INSPECT ... ALLに対応) */
     private static final int INSPECT_ALL = 0;
 

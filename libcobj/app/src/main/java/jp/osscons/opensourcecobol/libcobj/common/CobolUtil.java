@@ -39,6 +39,9 @@ import jp.osscons.opensourcecobol.libcobj.file.CobolFile;
  * 文字列比較などのヘルパー処理をまとめて提供する。
  */
 public class CobolUtil {
+    /** このクラスはインスタンス化しない。 */
+    private CobolUtil() {}
+
     /** I/O操作でREWRITEを暗黙的に行うとみなすかどうかのフラグ(環境変数COB_IO_ASSUME_REWRITEで設定)。 */
     private static boolean cob_io_assume_rewrite = false;
 

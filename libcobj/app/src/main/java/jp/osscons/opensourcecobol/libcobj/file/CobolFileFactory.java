@@ -23,6 +23,9 @@ import jp.osscons.opensourcecobol.libcobj.data.AbstractCobolField;
 /** TODO: 準備中 */
 public class CobolFileFactory {
 
+    /** このクラスはインスタンス化しない。 */
+    private CobolFileFactory() {}
+
     /**
      * TODO: 準備中
      *

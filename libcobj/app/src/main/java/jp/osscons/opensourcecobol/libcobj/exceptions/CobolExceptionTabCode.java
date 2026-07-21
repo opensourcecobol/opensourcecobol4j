@@ -23,6 +23,9 @@ package jp.osscons.opensourcecobol.libcobj.exceptions;
  * codeテーブルのインデックスはCobolExceptionIdの定数値に対応し、値はCOBOL標準で規定された16進数のエラーコードである。
  */
 public class CobolExceptionTabCode {
+    /** このクラスはインスタンス化しない。 */
+    private CobolExceptionTabCode() {}
+
     /** CobolExceptionIdの例外IDをインデックスとし、対応する16進数のCOBOLエラーコードを格納する配列 */
     static int[] code = {
         0, 0xFFFF, 0x0100, 0x0101, 0x0102, 0x0200, 0x0201, 0x0202, 0x0203, 0x0204, 0x0205, 0x0206,

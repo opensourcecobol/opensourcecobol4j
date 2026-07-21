@@ -37,6 +37,9 @@ import jp.osscons.opensourcecobol.libcobj.exceptions.CobolStopRunException;
 
 /** TODO: 準備中 */
 public class CobolFileSort {
+    /** このクラスはインスタンス化しない。 */
+    private CobolFileSort() {}
+
     /** TODO: 準備中 */
     protected static final int COBSORTEND = 1;
 

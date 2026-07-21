@@ -23,6 +23,9 @@ import jp.osscons.opensourcecobol.libcobj.exceptions.CobolRuntimeException;
 /** AbstractCobolFieldのサブクラスを生成するためのメソッドを定義するクラス */
 public class CobolFieldFactory {
 
+    /** このクラスはインスタンス化しない。 */
+    private CobolFieldFactory() {}
+
     /**
      * 引数に応じて適切なAbstractCobolFieldクラスのサブクラスを生成する.
      * 特にattrに設定された値に応じて適切なAbstractCobolFieldのサブクラスのインスタンスを生成する.

@@ -30,6 +30,9 @@ import jp.osscons.opensourcecobol.libcobj.exceptions.CobolStopRunException;
  * 範囲外の場合は{@link CobolExceptionId#COB_EC_BOUND_SUBSCRIPT}を設定し、実行時エラーを出力して実行を中止する。
  */
 public class CobolCheck {
+    /** このクラスはインスタンス化しない。 */
+    private CobolCheck() {}
+
     /**
      * 表の添字が指定された範囲内にあるかを検査する。<br>
      * 範囲外の場合は例外を設定し、実行時エラーメッセージを出力して実行を中止する。

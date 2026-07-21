@@ -47,6 +47,9 @@ import jp.osscons.opensourcecobol.libcobj.file.CobolFile;
  */
 public class CobolIntrinsic {
 
+    /** このクラスはインスタンス化しない。 */
+    private CobolIntrinsic() {}
+
     /** 各月初日までの通日(非うるう年)。インデックスは月(0〜12)。 */
     private static int[] normalDays = {0, 31, 59, 90, 120, 151, 181, 212, 243, 273, 304, 334, 365};
 

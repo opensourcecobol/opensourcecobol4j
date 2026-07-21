@@ -47,6 +47,9 @@ class Dlm {
  * @see AbstractCobolField
  */
 public class CobolString {
+    /** このクラスはインスタンス化しない。 */
+    private CobolString() {}
+
     /** UNSTRING文の区切り文字リストの既定の確保数。 */
     private static final int DLM_DEFAULT_NUM = 8;
 

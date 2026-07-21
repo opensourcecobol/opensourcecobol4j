@@ -35,6 +35,9 @@ import jp.osscons.opensourcecobol.libcobj.exceptions.CobolStopRunException;
 
 /** 組み込み関数を提供するクラス */
 public class CobolSystemRoutine {
+    /** このクラスはインスタンス化しない。 */
+    private CobolSystemRoutine() {}
+
     private static final boolean runsOnWindows = "\\".equals(System.getProperty("file.separator"));
 
     /**

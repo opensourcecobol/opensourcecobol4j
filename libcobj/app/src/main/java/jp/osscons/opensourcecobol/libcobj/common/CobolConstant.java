@@ -29,6 +29,9 @@ import jp.osscons.opensourcecobol.libcobj.data.CobolFieldFactory;
  * 各種バッファサイズ、10のべき乗表などをまとめて定義する。
  */
 public class CobolConstant {
+    /** このクラスはインスタンス化しない。 */
+    private CobolConstant() {}
+
     /** 英数字のALL定数(SPACE・ZEROなどの形象定数)に用いる属性 */
     public static final CobolFieldAttribute allAttr =
             new CobolFieldAttribute(CobolFieldAttribute.COB_TYPE_ALPHANUMERIC_ALL, 0, 0, 0, null);
