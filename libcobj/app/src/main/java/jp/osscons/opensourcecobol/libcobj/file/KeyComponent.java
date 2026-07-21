@@ -22,6 +22,9 @@ import jp.osscons.opensourcecobol.libcobj.data.AbstractCobolField;
 
 /** TODO: 準備中 */
 public class KeyComponent {
+    /** 新しいインスタンスを生成する。 */
+    public KeyComponent() {}
+
     /** TODO: 準備中 */
     public AbstractCobolField field;
 

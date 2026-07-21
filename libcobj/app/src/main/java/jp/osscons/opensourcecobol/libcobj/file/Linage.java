@@ -22,6 +22,9 @@ import jp.osscons.opensourcecobol.libcobj.data.AbstractCobolField;
 
 /** TODO: 準備中 */
 public class Linage {
+    /** 新しいインスタンスを生成する。 */
+    public Linage() {}
+
     private AbstractCobolField linage;
     private AbstractCobolField linageCtr;
     private AbstractCobolField latfoot;
