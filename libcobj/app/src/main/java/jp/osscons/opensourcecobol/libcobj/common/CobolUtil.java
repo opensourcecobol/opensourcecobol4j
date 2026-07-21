@@ -677,7 +677,7 @@ public class CobolUtil {
     /**
      * 環境変数を設定する。
      *
-     * @param envVarName 環境変数の名前。 先頭と末尾の空白は無視される。
+     * @param envVarName 環境変数の名前。先頭と末尾の空白は無視される。
      * @param envVarValue 設定する環境変数の値。
      */
     public static void setEnv(AbstractCobolField envVarName, AbstractCobolField envVarValue) {

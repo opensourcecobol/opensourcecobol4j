@@ -193,7 +193,7 @@ public abstract class AbstractCobolField {
     }
 
     /**
-     * 数値を表すデータが実装すべきメソッド。 保持する数値データをCobolDecimal型に変換する。
+     * 数値を表すデータが実装すべきメソッド。保持する数値データをCobolDecimal型に変換する。
      *
      * @return 保持する数値データをCobolDecimal型に変換した値
      */
@@ -250,7 +250,7 @@ public abstract class AbstractCobolField {
     }
 
     /**
-     * 数値を表すデータが実装すべきメソッド。 引数で与えられた値をthisの保持する数値データに設定する。
+     * 数値を表すデータが実装すべきメソッド。引数で与えられた値をthisの保持する数値データに設定する。
      *
      * @param decimal thisに設定する数値
      */
@@ -496,7 +496,7 @@ public abstract class AbstractCobolField {
     }
 
     /**
-     * 代入処理(moveFrom)の前処理を行う。 全体集団項目(ALL)の代入や、英数字から日本語項目への変換などを処理する。
+     * 代入処理(moveFrom)の前処理を行う。全体集団項目(ALL)の代入や、英数字から日本語項目への変換などを処理する。
      *
      * @param src 代入元のフィールド
      * @return 後続の代入処理を行うべき代入元フィールド。前処理内で代入が完結した場合や代入する必要がない場合はnull
@@ -546,7 +546,7 @@ public abstract class AbstractCobolField {
     }
 
     /**
-     * 全体集団項目(ALL定数)からthisへの代入を行う。 代入元のデータをthisのサイズいっぱいに繰り返し展開してから代入する。
+     * 全体集団項目(ALL定数)からthisへの代入を行う。代入元のデータをthisのサイズいっぱいに繰り返し展開してから代入する。
      *
      * @param src 代入元のフィールド
      */
@@ -1331,7 +1331,7 @@ public abstract class AbstractCobolField {
     }
 
     /**
-     * thisとotherを文字列として比較する。 サイズが異なる場合は短い方を空白(日本語項目の場合は全角空白)で埋めて比較する。
+     * thisとotherを文字列として比較する。サイズが異なる場合は短い方を空白(日本語項目の場合は全角空白)で埋めて比較する。
      *
      * @param other thisと比較するフィールド
      * @return 比較を行い、this&lt;otherなら負の値、this==otherなら0、this&gt;otherなら正の値
@@ -1372,7 +1372,7 @@ public abstract class AbstractCobolField {
     }
 
     /**
-     * thisとotherを英数字として比較する。 数値表示項目(DISPLAY)の場合は符号を一時的に正にしてから比較し、比較後に符号を元に戻す。
+     * thisとotherを英数字として比較する。数値表示項目(DISPLAY)の場合は符号を一時的に正にしてから比較し、比較後に符号を元に戻す。
      *
      * @param other thisと比較するフィールド
      * @return 比較を行い、this&lt;otherなら負の値、this==otherなら0、this&gt;otherなら正の値
@@ -1400,7 +1400,7 @@ public abstract class AbstractCobolField {
     }
 
     /**
-     * 符号の有無にかかわらず、thisの保持する数値データの符号を実際に取得する。 必要に応じて符号桁を数字に戻す処理も行う。
+     * 符号の有無にかかわらず、thisの保持する数値データの符号を実際に取得する。必要に応じて符号桁を数字に戻す処理も行う。
      *
      * @return 数値データが正(または符号なし)なら1、負なら-1。数値型でない場合は0
      */
@@ -1512,7 +1512,7 @@ public abstract class AbstractCobolField {
     }
 
     /**
-     * thisの保持する数値データをlong値として返す。 基底クラスでは0を返し、各サブクラスでオーバーライドされる。
+     * thisの保持する数値データをlong値として返す。基底クラスでは0を返し、各サブクラスでオーバーライドされる。
      *
      * @return thisの保持する数値データをlongに変換した値。基底クラスでは0
      */

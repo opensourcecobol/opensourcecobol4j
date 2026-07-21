@@ -153,7 +153,7 @@ public class CobolTerminal {
 
     /**
      * COB_DATE環境変数で設定された日時または現在時刻を返す. COB_DATE環境変数で設定された日時({@link
-     * CobolUtil#cobLocalTm})が存在する場合はその値を返し、 設定されていない場合は現在時刻を返す。
+     * CobolUtil#cobLocalTm})が存在する場合はその値を返し、設定されていない場合は現在時刻を返す。
      *
      * <p>libcob/common.cのjob_or_current_localtimeに対応する。
      *
@@ -168,7 +168,7 @@ public class CobolTerminal {
     }
 
     /**
-     * ACCEPT FROM DATE文の実装。 現在の日付を"yyMMdd"形式(2桁年+月+日)でCOBOL変数に格納する。
+     * ACCEPT FROM DATE文の実装。現在の日付を"yyMMdd"形式(2桁年+月+日)でCOBOL変数に格納する。
      *
      * @param f 日付データを格納するCOBOL変数
      */
@@ -179,7 +179,7 @@ public class CobolTerminal {
     }
 
     /**
-     * ACCEPT FROM DATE YYYYMMDD文の実装。 現在の日付を"yyyyMMdd"形式(4桁年+月+日)でCOBOL変数に格納する。
+     * ACCEPT FROM DATE YYYYMMDD文の実装。現在の日付を"yyyyMMdd"形式(4桁年+月+日)でCOBOL変数に格納する。
      *
      * @param f 日付データを格納するCOBOL変数
      */
@@ -190,7 +190,7 @@ public class CobolTerminal {
     }
 
     /**
-     * ACCEPT FROM DAY文の実装。 現在の日付を"yyDDD"形式(2桁年+年間通算日)でCOBOL変数に格納する。
+     * ACCEPT FROM DAY文の実装。現在の日付を"yyDDD"形式(2桁年+年間通算日)でCOBOL変数に格納する。
      *
      * @param f 日付データを格納するCOBOL変数
      */
@@ -201,7 +201,7 @@ public class CobolTerminal {
     }
 
     /**
-     * ACCEPT FROM DAY YYYYDDD文の実装。 現在の日付を"yyyyDDD"形式(4桁年+年間通算日)でCOBOL変数に格納する。
+     * ACCEPT FROM DAY YYYYDDD文の実装。現在の日付を"yyyyDDD"形式(4桁年+年間通算日)でCOBOL変数に格納する。
      *
      * @param f 日付データを格納するCOBOL変数
      */
@@ -212,7 +212,7 @@ public class CobolTerminal {
     }
 
     /**
-     * ACCEPT FROM DAY-OF-WEEK文の実装。 現在の曜日を1桁の数値(1=月曜日〜7=日曜日)でCOBOL変数に格納する。
+     * ACCEPT FROM DAY-OF-WEEK文の実装。現在の曜日を1桁の数値(1=月曜日〜7=日曜日)でCOBOL変数に格納する。
      *
      * @param f 曜日データを格納するCOBOL変数
      */
@@ -222,10 +222,10 @@ public class CobolTerminal {
     }
 
     /**
-     * ACCEPT FROM TIME文の実装。 現在の時刻を"HHmmssSS"形式(時+分+秒+1/100秒)でCOBOL変数に格納する。
+     * ACCEPT FROM TIME文の実装。現在の時刻を"HHmmssSS"形式(時+分+秒+1/100秒)でCOBOL変数に格納する。
      *
-     * <p>他の日付系メソッド({@link #acceptDate(AbstractCobolField)}等)とは異なり、 {@link
-     * #jobOrCurrentLocalTime()}を使用せず{@code LocalDateTime.now()}を直接呼び出すため、 COB_DATE環境変数の設定は反映されない。
+     * <p>他の日付系メソッド({@link #acceptDate(AbstractCobolField)}等)とは異なり、{@link
+     * #jobOrCurrentLocalTime()}を使用せず{@code LocalDateTime.now()}を直接呼び出すため、COB_DATE環境変数の設定は反映されない。
      *
      * @param f 時刻データを格納するCOBOL変数
      */
@@ -238,7 +238,7 @@ public class CobolTerminal {
     // Environment
 
     /**
-     * DISPLAY UPON ENVIRONMENT-NAME文の実装。 後続の{@link #displayEnvValue(AbstractCobolField)}や{@link
+     * DISPLAY UPON ENVIRONMENT-NAME文の実装。後続の{@link #displayEnvValue(AbstractCobolField)}や{@link
      * #acceptEnvironment(AbstractCobolField)}で使用する環境変数名を設定する。
      *
      * @param f 環境変数名を保持するCOBOL変数
@@ -249,7 +249,7 @@ public class CobolTerminal {
 
     /**
      * DISPLAY UPON ENVIRONMENT-VALUE文の実装. {@link #displayEnvironment(AbstractCobolField)}
-     * で設定された環境変数名に対して値を設定する。 環境変数名が未設定または空文字列の場合は{@link
+     * で設定された環境変数名に対して値を設定する。環境変数名が未設定または空文字列の場合は{@link
      * CobolExceptionId#COB_EC_IMP_DISPLAY}例外を設定する。
      *
      * @param f 設定する環境変数の値を保持するCOBOL変数
@@ -264,7 +264,7 @@ public class CobolTerminal {
 
     /**
      * ACCEPT FROM ENVIRONMENT-VALUE文の実装. {@link #displayEnvironment(AbstractCobolField)}
-     * で設定された環境変数名の値を取得し、COBOL変数に格納する。 環境変数名が未設定の場合や環境変数が存在しない場合は{@link
+     * で設定された環境変数名の値を取得し、COBOL変数に格納する。環境変数名が未設定の場合や環境変数が存在しない場合は{@link
      * CobolExceptionId#COB_EC_IMP_ACCEPT}例外を設定し、スペース1文字を格納する。
      *
      * @param f 環境変数の値を格納するCOBOL変数
@@ -339,7 +339,7 @@ public class CobolTerminal {
     }
 
     /**
-     * ACCEPT FROM ARGUMENT-NUMBER文の実装。 コマンドライン引数の総数をCOBOL変数に格納する。
+     * ACCEPT FROM ARGUMENT-NUMBER文の実装。コマンドライン引数の総数をCOBOL変数に格納する。
      *
      * @param f 引数の総数を格納するCOBOL変数
      */
@@ -355,7 +355,7 @@ public class CobolTerminal {
 
     /**
      * ACCEPT FROM ARGUMENT-VALUE文の実装. {@link #displayArgNumber(AbstractCobolField)}
-     * で設定された引数インデックスに対応するコマンドライン引数の値をCOBOL変数に格納し、 インデックスを1つ進める。
+     * で設定された引数インデックスに対応するコマンドライン引数の値をCOBOL変数に格納し、インデックスを1つ進める。
      * インデックスが引数の総数を超えている場合は{@link CobolExceptionId#COB_EC_IMP_ACCEPT}例外を設定する。
      *
      * @param f 引数の値を格納するCOBOL変数

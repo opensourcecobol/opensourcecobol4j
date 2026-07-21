@@ -769,7 +769,7 @@ public class CobolNumericPackedField extends AbstractCobolField {
      * libcob/codegen.hのcob_cmp_packed_intの実装
      *
      * @param n 比較対象の整数値
-     * @return thisの数値がnより小さければ-1、 大きければ1、 等しければ0
+     * @return thisの数値がnより小さければ-1、大きければ1、等しければ0
      */
     private int cmpPackedInt(int n) {
         CobolDataStorage data = this.getDataStorage();
@@ -795,7 +795,7 @@ public class CobolNumericPackedField extends AbstractCobolField {
      * libcob/numeric.cのcob_cmp_packedの実装
      *
      * @param n 比較対象の整数値
-     * @return thisの数値がnより小さければ負の値、 大きければ正の値、 等しければ0
+     * @return thisの数値がnより小さければ負の値、大きければ正の値、等しければ0
      */
     private int cmpPacked(int n) {
         int sign = this.getSign();
