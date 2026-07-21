@@ -19,7 +19,7 @@
 package jp.osscons.opensourcecobol.libcobj.exceptions;
 
 /** 例外コードを定義するクラス */
-public class CobolExceptionId {
+public final class CobolExceptionId {
     /** このクラスはインスタンス化しない。 */
     private CobolExceptionId() {}
 

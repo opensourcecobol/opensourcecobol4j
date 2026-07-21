@@ -23,6 +23,7 @@ import jp.osscons.opensourcecobol.libcobj.data.AbstractCobolField;
 /** TODO: 準備中 */
 public class CobolFileKey {
     /** 新しいインスタンスを生成する。 */
+    @SuppressWarnings("PMD.UnnecessaryConstructor")
     public CobolFileKey() {}
 
     /** TODO: 準備中 */

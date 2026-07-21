@@ -19,7 +19,7 @@
 package jp.osscons.opensourcecobol.libcobj.exceptions;
 
 /** エラーコードを保持する。 */
-public class CobolExceptionInfo {
+public final class CobolExceptionInfo {
     /** このクラスはインスタンス化しない。 */
     private CobolExceptionInfo() {}
 

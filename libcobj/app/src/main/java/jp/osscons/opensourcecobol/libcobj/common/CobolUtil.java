@@ -38,7 +38,7 @@ import jp.osscons.opensourcecobol.libcobj.file.CobolFile;
  * ランタイムエラーの報告、SWITCHの設定・取得、参照修飾(reference modification)の境界チェック、<br>
  * 文字列比較などのヘルパー処理をまとめて提供する。
  */
-public class CobolUtil {
+public final class CobolUtil {
     /** このクラスはインスタンス化しない。 */
     private CobolUtil() {}
 

@@ -7,6 +7,7 @@ package jp.osscons.opensourcecobol.libcobj.ui;
  */
 public class CobolCallResult {
     /** 新しいインスタンスを生成する。 */
+    @SuppressWarnings("PMD.UnnecessaryConstructor")
     public CobolCallResult() {}
 
     /**

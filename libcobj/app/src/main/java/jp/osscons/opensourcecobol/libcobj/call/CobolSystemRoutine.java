@@ -34,7 +34,7 @@ import jp.osscons.opensourcecobol.libcobj.data.CobolDataStorage;
 import jp.osscons.opensourcecobol.libcobj.exceptions.CobolStopRunException;
 
 /** 組み込み関数を提供するクラス */
-public class CobolSystemRoutine {
+public final class CobolSystemRoutine {
     /** このクラスはインスタンス化しない。 */
     private CobolSystemRoutine() {}
 

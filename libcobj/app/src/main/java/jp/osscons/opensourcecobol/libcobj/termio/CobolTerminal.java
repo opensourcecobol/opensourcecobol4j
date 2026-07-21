@@ -38,7 +38,7 @@ import jp.osscons.opensourcecobol.libcobj.exceptions.CobolExceptionId;
 import jp.osscons.opensourcecobol.libcobj.exceptions.CobolExceptionInfo;
 
 /** DISPLAY文やACCEPT文に関するメソッドを実装するクラス */
-public class CobolTerminal {
+public final class CobolTerminal {
 
     /** このクラスはインスタンス化しない。 */
     private CobolTerminal() {}

@@ -32,7 +32,7 @@ import jp.osscons.opensourcecobol.libcobj.exceptions.CobolRuntimeException;
 import jp.osscons.opensourcecobol.libcobj.exceptions.CobolStopRunException;
 
 /** 動的にクラスファイルを読み込んでCALL文のような機能を実装するためのクラス */
-public class CobolResolve {
+public final class CobolResolve {
 
     /** このクラスはインスタンス化しない。 */
     private CobolResolve() {}

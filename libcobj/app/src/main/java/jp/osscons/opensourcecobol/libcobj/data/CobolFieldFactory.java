@@ -21,7 +21,7 @@ package jp.osscons.opensourcecobol.libcobj.data;
 import jp.osscons.opensourcecobol.libcobj.exceptions.CobolRuntimeException;
 
 /** AbstractCobolFieldのサブクラスを生成するためのメソッドを定義するクラス */
-public class CobolFieldFactory {
+public final class CobolFieldFactory {
 
     /** このクラスはインスタンス化しない。 */
     private CobolFieldFactory() {}

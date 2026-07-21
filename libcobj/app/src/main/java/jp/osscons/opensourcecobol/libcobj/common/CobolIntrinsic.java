@@ -45,7 +45,7 @@ import jp.osscons.opensourcecobol.libcobj.file.CobolFile;
  * 各組み込み関数を、{@code funcXxx}という名前の静的メソッドとして提供する。<br>
  * 各メソッドは計算結果を{@link AbstractCobolField}として返す。
  */
-public class CobolIntrinsic {
+public final class CobolIntrinsic {
 
     /** このクラスはインスタンス化しない。 */
     private CobolIntrinsic() {}

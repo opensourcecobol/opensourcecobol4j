@@ -22,7 +22,7 @@ package jp.osscons.opensourcecobol.libcobj.exceptions;
  * CobolExceptionIdで定義された例外IDから、COBOL標準の16進数エラーコードへの変換テーブルを保持するクラス。
  * codeテーブルのインデックスはCobolExceptionIdの定数値に対応し、値はCOBOL標準で規定された16進数のエラーコードである。
  */
-public class CobolExceptionTabCode {
+public final class CobolExceptionTabCode {
     /** このクラスはインスタンス化しない。 */
     private CobolExceptionTabCode() {}
 

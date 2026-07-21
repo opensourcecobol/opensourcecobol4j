@@ -20,7 +20,7 @@
 package jp.osscons.opensourcecobol.libcobj;
 
 /** TODO: 準備中 */
-public class Const {
+public final class Const {
 
     /** このクラスはインスタンス化しない。 */
     private Const() {}

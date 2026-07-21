@@ -46,7 +46,7 @@ class Dlm {
  *
  * @see AbstractCobolField
  */
-public class CobolString {
+public final class CobolString {
     /** このクラスはインスタンス化しない。 */
     private CobolString() {}
 
