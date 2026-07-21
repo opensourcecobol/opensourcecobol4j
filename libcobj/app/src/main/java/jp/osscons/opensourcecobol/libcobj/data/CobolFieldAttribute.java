@@ -104,10 +104,10 @@ public class CobolFieldAttribute {
     /** ポインタ項目であることを表すフラグ. */
     public static final int COB_FLAG_IS_POINTER = 0x80;
 
-    /** VARYING field (variable-length string with length header). */
+    /** VARYING項目（長さヘッダを持つ可変長文字列）であることを表すフラグ. */
     public static final int COB_FLAG_VARYING = 0x100;
 
-    /** NATIONAL VARYING field (PIC N VARYING). */
+    /** NATIONAL VARYING項目（PIC N VARYING）であることを表すフラグ. */
     public static final int COB_FLAG_NATIONAL_VARYING = 0x200;
 
     /** 変数種別 */
@@ -462,9 +462,9 @@ public class CobolFieldAttribute {
     }
 
     /**
-     * Check if the VARYING flag is set.
+     * VARYINGフラグが設定されているかどうかを判定する.
      *
-     * @return true if the field is a VARYING variable-length string
+     * @return 項目がVARYINGの可変長文字列である場合はtrue
      */
     public boolean isFlagVarying() {
         return (flags & COB_FLAG_VARYING) != 0;

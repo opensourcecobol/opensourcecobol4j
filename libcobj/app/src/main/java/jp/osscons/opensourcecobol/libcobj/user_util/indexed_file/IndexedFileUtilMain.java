@@ -34,9 +34,9 @@ import org.apache.commons.cli.ParseException;
 import org.sqlite.SQLiteConfig;
 
 /**
- * Main class of the utility tool `cobj-idx` to handle a indexed file of opensource COBOL 4J. This
- * tool is used to show information of the indexed file, load data to the indexed file, and unload
- * data from the indexed file.
+ * opensource COBOL 4Jの索引ファイルを扱うユーティリティツール `cobj-idx` のメインクラス.
+ * このツールは、索引ファイルの情報を表示する、索引ファイルにデータをロードする、
+ * 索引ファイルからデータをアンロードする、といった用途に使用される.
  */
 class IndexedFileUtilMain {
     private static final String version = jp.osscons.opensourcecobol.libcobj.Const.version;

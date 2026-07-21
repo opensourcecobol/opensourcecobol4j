@@ -665,21 +665,20 @@ public class CobolUtil {
     }
 
     /**
-     * get environemnt variable
+     * 環境変数を設定する.
      *
-     * @param envVarName the name of an environment variable.
-     * @param envVarValue the value to be set to the environment variable.
+     * @param envVarName 環境変数の名前.
+     * @param envVarValue 環境変数に設定する値.
      */
     public static void setEnv(String envVarName, String envVarValue) {
         CobolUtil.envVarTable.setProperty(envVarName, envVarValue);
     }
 
     /**
-     * Set environemnt variable
+     * 環境変数を設定する.
      *
-     * @param envVarName the name of an environment variable. The leading and trailing spaces are
-     *     ignored.
-     * @param envVarValue the value of an environment variable to be set.
+     * @param envVarName 環境変数の名前. 先頭と末尾の空白は無視される.
+     * @param envVarValue 設定する環境変数の値.
      */
     public static void setEnv(AbstractCobolField envVarName, AbstractCobolField envVarValue) {
         CobolUtil.envVarTable.setProperty(envVarName.getString().trim(), envVarValue.getString());
