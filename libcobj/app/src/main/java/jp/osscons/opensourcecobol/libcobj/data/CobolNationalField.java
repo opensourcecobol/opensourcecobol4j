@@ -21,10 +21,10 @@ package jp.osscons.opensourcecobol.libcobj.data;
 import java.math.BigDecimal;
 import jp.osscons.opensourcecobol.libcobj.exceptions.CobolRuntimeException;
 
-/** PIC 文字列がN(5)やN(9)の変数を表現するクラス. */
+/** PIC 文字列がN(5)やN(9)の変数を表現するクラス。 */
 public class CobolNationalField extends AbstractCobolField {
 
-    /** 半角から全角への変換処理で生成されたバイト列のサイズを保持する作業用フィールド. */
+    /** 半角から全角への変換処理で生成されたバイト列のサイズを保持する作業用フィールド。 */
     public static int workReturnSize;
 
     /**
@@ -157,10 +157,10 @@ public class CobolNationalField extends AbstractCobolField {
     }
 
     /**
-     * 転記元データが存在する場合に,全角へ変換したバイト列を返す.
+     * 転記元データが存在する場合に,全角へ変換したバイト列を返す。
      *
      * @param src 変換対象の英数字項目
-     * @return 全角へ変換したバイト列.変換対象が空または先頭バイトが0の場合はnull
+     * @return 全角へ変換したバイト列。変換対象が空または先頭バイトが0の場合はnull
      */
     public static byte[] judge_hankakujpn_exist(AbstractCobolField src) {
         byte[] tmpZenJpnWord = null;
@@ -176,11 +176,11 @@ public class CobolNationalField extends AbstractCobolField {
     }
 
     /**
-     * 半角文字のバイト列をシフトJISの全角文字のバイト列へ変換する.
+     * 半角文字のバイト列をシフトJISの全角文字のバイト列へ変換する。
      *
      * @param str 変換対象の半角文字のバイト列
      * @param size 変換対象のバイト数
-     * @return 全角へ変換したバイト列.変換後のサイズは{@link #workReturnSize}に格納される
+     * @return 全角へ変換したバイト列。変換後のサイズは{@link #workReturnSize}に格納される
      */
     public static byte[] han2zen(byte[] str, int size) {
         byte[] buf;

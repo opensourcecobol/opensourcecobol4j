@@ -6,7 +6,7 @@ import java.sql.ResultSet;
 import java.sql.Statement;
 import java.util.Optional;
 
-/** SQLiteのテーブルからデータをフェッチした結果を表す. */
+/** SQLiteのテーブルからデータをフェッチした結果を表す。 */
 class FetchResult {
     /** TODO: 準備中 */
     byte[] key;

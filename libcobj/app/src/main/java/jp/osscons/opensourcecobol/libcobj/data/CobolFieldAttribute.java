@@ -20,94 +20,94 @@ package jp.osscons.opensourcecobol.libcobj.data;
 
 /**
  * COBOL変数の属性情報を保持するクラス.<br>
- * 変数の種別(数値・英数字・日本語など)・桁数・スケール・各種フラグ・PICTURE句の文字列を保持する.
- * 種別とフラグは{@code COB_TYPE_*}・{@code COB_FLAG_*}定数で表現される.
+ * 変数の種別(数値・英数字・日本語など)・桁数・スケール・各種フラグ・PICTURE句の文字列を保持する。
+ * 種別とフラグは{@code COB_TYPE_*}・{@code COB_FLAG_*}定数で表現される。
  */
 public class CobolFieldAttribute {
 
     /* field types */
 
-    /** 不明な種別を表す変数種別. */
+    /** 不明な種別を表す変数種別。 */
     public static final int COB_TYPE_UNKNOWN = 0x00;
 
-    /** 集団項目を表す変数種別. */
+    /** 集団項目を表す変数種別。 */
     public static final int COB_TYPE_GROUP = 0x01;
 
-    /** 真理値項目を表す変数種別. */
+    /** 真理値項目を表す変数種別。 */
     public static final int COB_TYPE_BOOLEAN = 0x02;
 
-    /** 数値項目を表す変数種別(数値種別共通のビットを含む). */
+    /** 数値項目を表す変数種別(数値種別共通のビットを含む)。 */
     public static final int COB_TYPE_NUMERIC = 0x10;
 
-    /** 表示用数値項目(USAGE DISPLAY)を表す変数種別. */
+    /** 表示用数値項目(USAGE DISPLAY)を表す変数種別。 */
     public static final int COB_TYPE_NUMERIC_DISPLAY = 0x10;
 
-    /** 2進数値項目(USAGE COMP/BINARY)を表す変数種別. */
+    /** 2進数値項目(USAGE COMP/BINARY)を表す変数種別。 */
     public static final int COB_TYPE_NUMERIC_BINARY = 0x11;
 
-    /** パック10進数値項目(USAGE COMP-3)を表す変数種別. */
+    /** パック10進数値項目(USAGE COMP-3)を表す変数種別。 */
     public static final int COB_TYPE_NUMERIC_PACKED = 0x12;
 
-    /** 単精度浮動小数点数値項目(USAGE COMP-1)を表す変数種別. */
+    /** 単精度浮動小数点数値項目(USAGE COMP-1)を表す変数種別。 */
     public static final int COB_TYPE_NUMERIC_FLOAT = 0x13;
 
-    /** 倍精度浮動小数点数値項目(USAGE COMP-2)を表す変数種別. */
+    /** 倍精度浮動小数点数値項目(USAGE COMP-2)を表す変数種別。 */
     public static final int COB_TYPE_NUMERIC_DOUBLE = 0x14;
 
-    /** 編集数値項目を表す変数種別. */
+    /** 編集数値項目を表す変数種別。 */
     public static final int COB_TYPE_NUMERIC_EDITED = 0x24;
 
-    /** 英数字項目(PIC X)を表す変数種別. */
+    /** 英数字項目(PIC X)を表す変数種別。 */
     public static final int COB_TYPE_ALPHANUMERIC = 0x21;
 
-    /** ALL指定の英数字項目を表す変数種別. */
+    /** ALL指定の英数字項目を表す変数種別。 */
     public static final int COB_TYPE_ALPHANUMERIC_ALL = 0x22;
 
-    /** 英数字編集項目を表す変数種別. */
+    /** 英数字編集項目を表す変数種別。 */
     public static final int COB_TYPE_ALPHANUMERIC_EDITED = 0x23;
 
-    /** 日本語項目(PIC N)を表す変数種別. */
+    /** 日本語項目(PIC N)を表す変数種別。 */
     public static final int COB_TYPE_NATIONAL = 0x40;
 
-    /** 日本語編集項目を表す変数種別. */
+    /** 日本語編集項目を表す変数種別。 */
     public static final int COB_TYPE_NATIONAL_EDITED = 0x41;
 
-    /** ALL指定の日本語項目を表す変数種別. */
+    /** ALL指定の日本語項目を表す変数種別。 */
     public static final int COB_TYPE_NATIONAL_ALL = 0x42;
 
     /* field flags */
 
-    /** フラグが何も指定されていないことを表す値. */
+    /** フラグが何も指定されていないことを表す値。 */
     public static final int COB_FLAG_NOT_SPECIFIED = 0x00;
 
-    /** 符号を持つ数値であることを表すフラグ. */
+    /** 符号を持つ数値であることを表すフラグ。 */
     public static final int COB_FLAG_HAVE_SIGN = 0x01;
 
-    /** 符号を独立した桁として保持する(SIGN SEPARATE)ことを表すフラグ. */
+    /** 符号を独立した桁として保持する(SIGN SEPARATE)ことを表すフラグ。 */
     public static final int COB_FLAG_SIGN_SEPARATE = 0x02;
 
-    /** 符号を先頭桁に保持する(SIGN LEADING)ことを表すフラグ. */
+    /** 符号を先頭桁に保持する(SIGN LEADING)ことを表すフラグ。 */
     public static final int COB_FLAG_SIGN_LEADING = 0x04;
 
-    /** 値が0のとき空白で表示する(BLANK WHEN ZERO)ことを表すフラグ. */
+    /** 値が0のとき空白で表示する(BLANK WHEN ZERO)ことを表すフラグ。 */
     public static final int COB_FLAG_BLANK_ZERO = 0x08;
 
-    /** 右寄せ(JUSTIFIED RIGHT)であることを表すフラグ. */
+    /** 右寄せ(JUSTIFIED RIGHT)であることを表すフラグ。 */
     public static final int COB_FLAG_JUSTIFIED = 0x10;
 
-    /** 2進数値のバイト順を入れ替える(バイトスワップする)ことを表すフラグ. */
+    /** 2進数値のバイト順を入れ替える(バイトスワップする)ことを表すフラグ。 */
     public static final int COB_FLAG_BINARY_SWAP = 0x20;
 
-    /** 2進数値を実際のバイト幅(BINARY-C-LONG等)で扱うことを表すフラグ. */
+    /** 2進数値を実際のバイト幅(BINARY-C-LONG等)で扱うことを表すフラグ。 */
     public static final int COB_FLAG_REAL_BINARY = 0x40;
 
-    /** ポインタ項目であることを表すフラグ. */
+    /** ポインタ項目であることを表すフラグ。 */
     public static final int COB_FLAG_IS_POINTER = 0x80;
 
-    /** VARYING項目（長さヘッダを持つ可変長文字列）であることを表すフラグ. */
+    /** VARYING項目（長さヘッダを持つ可変長文字列）であることを表すフラグ。 */
     public static final int COB_FLAG_VARYING = 0x100;
 
-    /** NATIONAL VARYING項目（PIC N VARYING）であることを表すフラグ. */
+    /** NATIONAL VARYING項目（PIC N VARYING）であることを表すフラグ。 */
     public static final int COB_FLAG_NATIONAL_VARYING = 0x200;
 
     /** 変数種別 */
@@ -143,7 +143,7 @@ public class CobolFieldAttribute {
     }
 
     /**
-     * コピーコンストラクタ.別の属性オブジェクトの各値をコピーして新しいオブジェクトを生成する.
+     * コピーコンストラクタ。別の属性オブジェクトの各値をコピーして新しいオブジェクトを生成する。
      *
      * @param other コピー元の属性オブジェクト
      */
@@ -246,7 +246,7 @@ public class CobolFieldAttribute {
     }
 
     /**
-     * 変数種別が不明な種別かどうかを判定する.
+     * 変数種別が不明な種別かどうかを判定する。
      *
      * @return 不明な種別であればtrue
      */
@@ -255,7 +255,7 @@ public class CobolFieldAttribute {
     }
 
     /**
-     * 変数種別が集団項目かどうかを判定する.
+     * 変数種別が集団項目かどうかを判定する。
      *
      * @return 集団項目であればtrue
      */
@@ -264,7 +264,7 @@ public class CobolFieldAttribute {
     }
 
     /**
-     * 変数種別が真理値項目かどうかを判定する.
+     * 変数種別が真理値項目かどうかを判定する。
      *
      * @return 真理値項目であればtrue
      */
@@ -273,7 +273,7 @@ public class CobolFieldAttribute {
     }
 
     /**
-     * 変数種別が数値項目かどうかを判定する.
+     * 変数種別が数値項目かどうかを判定する。
      *
      * @return 数値項目であればtrue
      */
@@ -282,7 +282,7 @@ public class CobolFieldAttribute {
     }
 
     /**
-     * 変数種別が表示用数値項目(USAGE DISPLAY)かどうかを判定する.
+     * 変数種別が表示用数値項目(USAGE DISPLAY)かどうかを判定する。
      *
      * @return 表示用数値項目であればtrue
      */
@@ -291,7 +291,7 @@ public class CobolFieldAttribute {
     }
 
     /**
-     * 変数種別が2進数値項目(USAGE COMP/BINARY)かどうかを判定する.
+     * 変数種別が2進数値項目(USAGE COMP/BINARY)かどうかを判定する。
      *
      * @return 2進数値項目であればtrue
      */
@@ -300,7 +300,7 @@ public class CobolFieldAttribute {
     }
 
     /**
-     * 変数種別がパック10進数値項目(USAGE COMP-3)かどうかを判定する.
+     * 変数種別がパック10進数値項目(USAGE COMP-3)かどうかを判定する。
      *
      * @return パック10進数値項目であればtrue
      */
@@ -309,7 +309,7 @@ public class CobolFieldAttribute {
     }
 
     /**
-     * 変数種別が単精度浮動小数点数値項目(USAGE COMP-1)かどうかを判定する.
+     * 変数種別が単精度浮動小数点数値項目(USAGE COMP-1)かどうかを判定する。
      *
      * @return 単精度浮動小数点数値項目であればtrue
      */
@@ -318,7 +318,7 @@ public class CobolFieldAttribute {
     }
 
     /**
-     * 変数種別が倍精度浮動小数点数値項目(USAGE COMP-2)かどうかを判定する.
+     * 変数種別が倍精度浮動小数点数値項目(USAGE COMP-2)かどうかを判定する。
      *
      * @return 倍精度浮動小数点数値項目であればtrue
      */
@@ -327,7 +327,7 @@ public class CobolFieldAttribute {
     }
 
     /**
-     * 変数種別が編集数値項目かどうかを判定する.
+     * 変数種別が編集数値項目かどうかを判定する。
      *
      * @return 編集数値項目であればtrue
      */
@@ -336,7 +336,7 @@ public class CobolFieldAttribute {
     }
 
     /**
-     * 変数種別が英数字項目(PIC X)かどうかを判定する.
+     * 変数種別が英数字項目(PIC X)かどうかを判定する。
      *
      * @return 英数字項目であればtrue
      */
@@ -345,7 +345,7 @@ public class CobolFieldAttribute {
     }
 
     /**
-     * 変数種別がALL指定の英数字項目かどうかを判定する.
+     * 変数種別がALL指定の英数字項目かどうかを判定する。
      *
      * @return ALL指定の英数字項目であればtrue
      */
@@ -354,7 +354,7 @@ public class CobolFieldAttribute {
     }
 
     /**
-     * 変数種別が英数字編集項目かどうかを判定する.
+     * 変数種別が英数字編集項目かどうかを判定する。
      *
      * @return 英数字編集項目であればtrue
      */
@@ -363,7 +363,7 @@ public class CobolFieldAttribute {
     }
 
     /**
-     * 変数種別が日本語項目(PIC N)かどうかを判定する.
+     * 変数種別が日本語項目(PIC N)かどうかを判定する。
      *
      * @return 日本語項目であればtrue
      */
@@ -372,7 +372,7 @@ public class CobolFieldAttribute {
     }
 
     /**
-     * 変数種別が日本語編集項目かどうかを判定する.
+     * 変数種別が日本語編集項目かどうかを判定する。
      *
      * @return 日本語編集項目であればtrue
      */
@@ -381,7 +381,7 @@ public class CobolFieldAttribute {
     }
 
     /**
-     * 変数種別がALL指定の日本語項目かどうかを判定する.
+     * 変数種別がALL指定の日本語項目かどうかを判定する。
      *
      * @return ALL指定の日本語項目であればtrue
      */
@@ -390,7 +390,7 @@ public class CobolFieldAttribute {
     }
 
     /**
-     * 符号を持つ数値であるフラグが立っているかどうかを判定する.
+     * 符号を持つ数値であるフラグが立っているかどうかを判定する。
      *
      * @return 符号を持つ数値であればtrue
      */
@@ -399,7 +399,7 @@ public class CobolFieldAttribute {
     }
 
     /**
-     * 符号を独立した桁として保持する(SIGN SEPARATE)フラグが立っているかどうかを判定する.
+     * 符号を独立した桁として保持する(SIGN SEPARATE)フラグが立っているかどうかを判定する。
      *
      * @return SIGN SEPARATEであればtrue
      */
@@ -408,7 +408,7 @@ public class CobolFieldAttribute {
     }
 
     /**
-     * 符号を先頭桁に保持する(SIGN LEADING)フラグが立っているかどうかを判定する.
+     * 符号を先頭桁に保持する(SIGN LEADING)フラグが立っているかどうかを判定する。
      *
      * @return SIGN LEADINGであればtrue
      */
@@ -417,7 +417,7 @@ public class CobolFieldAttribute {
     }
 
     /**
-     * 値が0のとき空白で表示する(BLANK WHEN ZERO)フラグが立っているかどうかを判定する.
+     * 値が0のとき空白で表示する(BLANK WHEN ZERO)フラグが立っているかどうかを判定する。
      *
      * @return BLANK WHEN ZEROであればtrue
      */
@@ -426,7 +426,7 @@ public class CobolFieldAttribute {
     }
 
     /**
-     * 右寄せ(JUSTIFIED RIGHT)フラグが立っているかどうかを判定する.
+     * 右寄せ(JUSTIFIED RIGHT)フラグが立っているかどうかを判定する。
      *
      * @return 右寄せであればtrue
      */
@@ -435,7 +435,7 @@ public class CobolFieldAttribute {
     }
 
     /**
-     * 2進数値のバイト順を入れ替える(バイトスワップする)フラグが立っているかどうかを判定する.
+     * 2進数値のバイト順を入れ替える(バイトスワップする)フラグが立っているかどうかを判定する。
      *
      * @return バイトスワップするのであればtrue
      */
@@ -444,7 +444,7 @@ public class CobolFieldAttribute {
     }
 
     /**
-     * 2進数値を実際のバイト幅で扱う(REAL BINARY)フラグが立っているかどうかを判定する.
+     * 2進数値を実際のバイト幅で扱う(REAL BINARY)フラグが立っているかどうかを判定する。
      *
      * @return REAL BINARYであればtrue
      */
@@ -453,7 +453,7 @@ public class CobolFieldAttribute {
     }
 
     /**
-     * ポインタ項目であるフラグが立っているかどうかを判定する.
+     * ポインタ項目であるフラグが立っているかどうかを判定する。
      *
      * @return ポインタ項目であればtrue
      */
@@ -462,7 +462,7 @@ public class CobolFieldAttribute {
     }
 
     /**
-     * VARYINGフラグが設定されているかどうかを判定する.
+     * VARYINGフラグが設定されているかどうかを判定する。
      *
      * @return 項目がVARYINGの可変長文字列である場合はtrue
      */

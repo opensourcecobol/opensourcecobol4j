@@ -27,7 +27,7 @@ import jp.osscons.opensourcecobol.libcobj.exceptions.CobolExceptionId;
 import jp.osscons.opensourcecobol.libcobj.exceptions.CobolRuntimeException;
 import jp.osscons.opensourcecobol.libcobj.exceptions.CobolStopRunException;
 
-/** PIC 文字列が9(5)や9(9)の変数を表現するクラス. */
+/** PIC 文字列が9(5)や9(9)の変数を表現するクラス。 */
 public class CobolNumericField extends AbstractCobolField {
 
     /**

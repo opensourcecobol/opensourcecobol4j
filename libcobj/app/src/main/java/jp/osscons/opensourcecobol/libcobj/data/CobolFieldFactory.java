@@ -24,8 +24,8 @@ import jp.osscons.opensourcecobol.libcobj.exceptions.CobolRuntimeException;
 public class CobolFieldFactory {
 
     /**
-     * 引数に応じて適切なAbstractCobolFieldクラスのサブクラスを生成する.
-     * 特にattrに設定された値に応じて適切なAbstractCobolFieldのサブクラスのインスタンスを生成する.
+     * 引数に応じて適切なAbstractCobolFieldクラスのサブクラスを生成する。
+     * 特にattrに設定された値に応じて適切なAbstractCobolFieldのサブクラスのインスタンスを生成する。
      *
      * @param size データを保存するバイト領域の大きさ
      * @param str データを保存する領域に書き込まれる初期データ
@@ -38,8 +38,8 @@ public class CobolFieldFactory {
     }
 
     /**
-     * 引数に応じて適切なAbstractCobolFieldクラスのサブクラスを生成する.
-     * バイト配列をCobolDataStorageに変換した上で,attrに設定された値に応じて適切なAbstractCobolFieldのサブクラスのインスタンスを生成する.
+     * 引数に応じて適切なAbstractCobolFieldクラスのサブクラスを生成する。
+     * バイト配列をCobolDataStorageに変換した上で,attrに設定された値に応じて適切なAbstractCobolFieldのサブクラスのインスタンスを生成する。
      *
      * @param size データを保存するバイト領域の大きさ
      * @param bytes データを保存する領域に書き込まれる初期データのバイト配列
@@ -52,8 +52,8 @@ public class CobolFieldFactory {
     }
 
     /**
-     * 引数に応じて適切なAbstractCobolFieldクラスのサブクラスを生成する.
-     * バイト配列をCobolDataStorageに変換し,データを保存するバイト領域の大きさにはバイト配列の長さを用いる.
+     * 引数に応じて適切なAbstractCobolFieldクラスのサブクラスを生成する。
+     * バイト配列をCobolDataStorageに変換し,データを保存するバイト領域の大きさにはバイト配列の長さを用いる。
      *
      * @param bytes データを保存する領域に書き込まれる初期データのバイト配列
      * @param attr 変数の様々な情報を格納するインスタンス
@@ -64,8 +64,8 @@ public class CobolFieldFactory {
     }
 
     /**
-     * 引数に応じて適切なAbstractCobolFieldクラスのサブクラスを生成する.
-     * 特にattrに設定された値に応じて適切なAbstractCobolFieldのサブクラスのインスタンスを生成する.
+     * 引数に応じて適切なAbstractCobolFieldクラスのサブクラスを生成する。
+     * 特にattrに設定された値に応じて適切なAbstractCobolFieldのサブクラスのインスタンスを生成する。
      *
      * @param size データを保存するバイト領域の大きさ
      * @param data データを保存する領域
@@ -105,8 +105,8 @@ public class CobolFieldFactory {
     }
 
     /**
-     * 引数に応じて適切なAbstractCobolFieldクラスのサブクラスを生成する.
-     * long型で渡されたsizeをint型に変換した上で,attrに設定された値に応じて適切なAbstractCobolFieldのサブクラスのインスタンスを生成する.
+     * 引数に応じて適切なAbstractCobolFieldクラスのサブクラスを生成する。
+     * long型で渡されたsizeをint型に変換した上で,attrに設定された値に応じて適切なAbstractCobolFieldのサブクラスのインスタンスを生成する。
      *
      * @param size データを保存するバイト領域の大きさ
      * @param data データを保存する領域

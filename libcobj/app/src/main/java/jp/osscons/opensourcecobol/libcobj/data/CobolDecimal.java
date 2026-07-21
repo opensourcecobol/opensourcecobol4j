@@ -267,7 +267,7 @@ public class CobolDecimal {
     }
 
     /**
-     * 2つのCobolDecimalのいずれかが非数(NaN)であるかを判定する.いずれかが非数の場合はd1のスケールを非数に設定する
+     * 2つのCobolDecimalのいずれかが非数(NaN)であるかを判定する。いずれかが非数の場合はd1のスケールを非数に設定する
      *
      * @param d1 判定対象のCobolDecimalインスタンス(演算結果の格納先)
      * @param d2 判定対象のCobolDecimalインスタンス
@@ -433,7 +433,7 @@ public class CobolDecimal {
      *
      * @param f 値の格納先となるCOBOLフィールド
      * @param opt 格納方法を指定するオプションフラグ(丸めや桁あふれ時の動作などを指定する)
-     * @return 格納処理の結果を示す例外コード.正常終了の場合は0
+     * @return 格納処理の結果を示す例外コード。正常終了の場合は0
      * @throws CobolStopRunException 格納処理の途中で実行停止が発生した場合にスローされる
      */
     public int getField(AbstractCobolField f, int opt) throws CobolStopRunException {
@@ -499,7 +499,7 @@ public class CobolDecimal {
      *
      * @param f 値の格納先となるCOBOLフィールド
      * @param opt 格納方法を指定するオプションフラグ
-     * @return 格納処理の結果を示すコード.正常終了の場合は0
+     * @return 格納処理の結果を示すコード。正常終了の場合は0
      */
     public int getDoubleField(AbstractCobolField f, int opt) {
         CobolDataStorage storage = new CobolDataStorage(8);
@@ -520,7 +520,7 @@ public class CobolDecimal {
     /**
      * このオブジェクトの値を10のn乗倍して小数点位置をずらし,スケールをnだけ増加させる.nが正の場合は乗算,負の場合は除算を行う
      *
-     * @param n 小数点をずらす桁数.正の値で値を10倍方向に,負の値で1/10方向にシフトする
+     * @param n 小数点をずらす桁数。正の値で値を10倍方向に,負の値で1/10方向にシフトする
      */
     public void shiftDecimal(int n) {
         if (n == 0) {
@@ -538,7 +538,7 @@ public class CobolDecimal {
 
     // libcob/numeric.cのalign_decimalの実装
     /**
-     * 2つのCobolDecimalのスケールを揃える.スケールの小さい方をシフトして,両者のスケールを大きい方に合わせる
+     * 2つのCobolDecimalのスケールを揃える。スケールの小さい方をシフトして,両者のスケールを大きい方に合わせる
      *
      * @param d1 スケールを揃える対象のCobolDecimalインスタンス
      * @param d2 スケールを揃える対象のCobolDecimalインスタンス
@@ -571,7 +571,7 @@ public class CobolDecimal {
      *
      * @param f 値の格納先となるCOBOLフィールド
      * @param opt 格納方法を指定するオプションフラグ(桁あふれ時の動作などを指定する)
-     * @return 格納処理の結果を示すコード.正常終了の場合は0,桁あふれ発生時は対応する例外コード
+     * @return 格納処理の結果を示すコード。正常終了の場合は0,桁あふれ発生時は対応する例外コード
      * @throws CobolStopRunException 格納処理の途中で実行停止が発生した場合にスローされる
      */
     public int getDisplayField(AbstractCobolField f, int opt) throws CobolStopRunException {
@@ -619,7 +619,7 @@ public class CobolDecimal {
      *
      * @param f 値の格納先となるCOBOLフィールド
      * @param opt 格納方法を指定するオプションフラグ(桁あふれ時の動作などを指定する)
-     * @return 格納処理の結果を示すコード.正常終了の場合は0,桁あふれ発生時は対応する例外コード
+     * @return 格納処理の結果を示すコード。正常終了の場合は0,桁あふれ発生時は対応する例外コード
      */
     public int getPackedField(AbstractCobolField f, int opt) {
         int sign = this.value.signum();
@@ -684,7 +684,7 @@ public class CobolDecimal {
      *
      * @param f 値の格納先となるCOBOLフィールド
      * @param opt 格納方法を指定するオプションフラグ(桁あふれ時の動作や切り捨ての有無などを指定する)
-     * @return 格納処理の結果を示すコード.正常終了の場合は0,桁あふれ発生時は対応する例外コード
+     * @return 格納処理の結果を示すコード。正常終了の場合は0,桁あふれ発生時は対応する例外コード
      */
     private int getBinaryField(AbstractCobolField f, int opt) {
         CobolDataStorage data = f.getDataStorage();

@@ -101,7 +101,7 @@ public abstract class CobolControl {
     }
 
     /**
-     * PERFORM ... THRU ...文に相当し、begin番目からend番目までの制御単位を順に実行する制御単位を生成する。<br>
+     * PERFORM ... THRU ..。文に相当し、begin番目からend番目までの制御単位を順に実行する制御単位を生成する。<br>
      * 終端が節の場合は、後続の段落も含めて節の終わりまで実行する。
      *
      * @param contList 段落・節を格納した制御単位の配列

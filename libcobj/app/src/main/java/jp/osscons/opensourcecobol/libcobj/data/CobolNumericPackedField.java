@@ -21,7 +21,7 @@ package jp.osscons.opensourcecobol.libcobj.data;
 import java.math.BigDecimal;
 import jp.osscons.opensourcecobol.libcobj.exceptions.CobolRuntimeException;
 
-/** PIC 文字列が9(5) COMP-3などの変数を表現するクラス. */
+/** PIC 文字列が9(5) COMP-3などの変数を表現するクラス。 */
 public class CobolNumericPackedField extends AbstractCobolField {
     private static final byte[] packed_bytes = {
         0x00,
