@@ -36,30 +36,30 @@ import jp.osscons.opensourcecobol.libcobj.data.CobolFieldFactory;
 import jp.osscons.opensourcecobol.libcobj.exceptions.CobolStopRunException;
 
 /** TODO: 準備中 */
-public class CobolFileSort {
-    /** TODO: 準備中 */
-    protected static final int COBSORTEND = 1;
+public final class CobolFileSort {
+    /** このクラスはインスタンス化しない。 */
+    private CobolFileSort() {}
 
     /** TODO: 準備中 */
-    protected static final int COBSORTABORT = 2;
+    private static final int COBSORTEND = 1;
 
     /** TODO: 準備中 */
-    protected static final int COBSORTFILEERR = 3;
+    private static final int COBSORTABORT = 2;
 
     /** TODO: 準備中 */
-    protected static final int COBSORTNOTOPEN = 4;
+    private static final int COBSORTFILEERR = 3;
 
     /** TODO: 準備中 */
-    protected static final int COB_ASCENDING = 0;
+    private static final int COBSORTNOTOPEN = 4;
 
     /** TODO: 準備中 */
-    protected static final int COB_DESCENDING = 1;
+    private static final int COB_ASCENDING = 0;
 
     private static String cob_process_id = "";
     private static int cob_iteration = 0;
 
     /** TODO: 準備中 */
-    protected static int cob_sort_memory = 128 * 1024 * 1024;
+    private static int cob_sort_memory = 128 * 1024 * 1024;
 
     // Javaの標準ライブラリでソートするならtrue
     private static boolean SORT_STD_LIB = true;

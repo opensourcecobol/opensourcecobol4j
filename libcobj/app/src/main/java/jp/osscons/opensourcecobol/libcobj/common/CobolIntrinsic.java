@@ -45,7 +45,10 @@ import jp.osscons.opensourcecobol.libcobj.file.CobolFile;
  * 各組み込み関数を、{@code funcXxx}という名前の静的メソッドとして提供する。<br>
  * 各メソッドは計算結果を{@link AbstractCobolField}として返す。
  */
-public class CobolIntrinsic {
+public final class CobolIntrinsic {
+
+    /** このクラスはインスタンス化しない。 */
+    private CobolIntrinsic() {}
 
     /** 各月初日までの通日(非うるう年)。インデックスは月(0〜12)。 */
     private static int[] normalDays = {0, 31, 59, 90, 120, 151, 181, 212, 243, 273, 304, 334, 365};

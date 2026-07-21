@@ -34,7 +34,10 @@ import jp.osscons.opensourcecobol.libcobj.data.CobolDataStorage;
 import jp.osscons.opensourcecobol.libcobj.exceptions.CobolStopRunException;
 
 /** 組み込み関数を提供するクラス */
-public class CobolSystemRoutine {
+public final class CobolSystemRoutine {
+    /** このクラスはインスタンス化しない。 */
+    private CobolSystemRoutine() {}
+
     private static final boolean runsOnWindows = "\\".equals(System.getProperty("file.separator"));
 
     /**
@@ -138,6 +141,7 @@ public class CobolSystemRoutine {
      * opensource COBOLのlibcob/common.cのcob_acuw_sleep関数に相当する
      *
      * @param data C$SLEEPの引数として指定されたCOBOL変数のバイト列。
+     * @return 常に0(正常終了を表す戻り値)。
      */
     @SuppressWarnings("PMD.AvoidDollarSigns")
     public static int C$SLEEP(CobolDataStorage data) {

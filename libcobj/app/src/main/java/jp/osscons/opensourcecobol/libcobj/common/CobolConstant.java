@@ -28,7 +28,10 @@ import jp.osscons.opensourcecobol.libcobj.data.CobolFieldFactory;
  * ZERO・SPACE・HIGH-VALUE・LOW-VALUE・QUOTEなどの形象定数や、それらの全角(ZEN)版、
  * 各種バッファサイズ、10のべき乗表などをまとめて定義する。
  */
-public class CobolConstant {
+public final class CobolConstant {
+    /** このクラスはインスタンス化しない。 */
+    private CobolConstant() {}
+
     /** 英数字のALL定数(SPACE・ZEROなどの形象定数)に用いる属性 */
     public static final CobolFieldAttribute allAttr =
             new CobolFieldAttribute(CobolFieldAttribute.COB_TYPE_ALPHANUMERIC_ALL, 0, 0, 0, null);

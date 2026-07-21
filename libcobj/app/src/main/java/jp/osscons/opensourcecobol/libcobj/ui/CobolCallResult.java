@@ -6,6 +6,10 @@ package jp.osscons.opensourcecobol.libcobj.ui;
  * 対応しない型のgetメソッドを呼び出した場合は{@link CobolResultSetException}がスローされる。
  */
 public class CobolCallResult {
+    /** 新しいインスタンスを生成する。 */
+    @SuppressWarnings("PMD.UnnecessaryConstructor")
+    public CobolCallResult() {}
+
     /**
      * 結果をint型として取得する。
      *

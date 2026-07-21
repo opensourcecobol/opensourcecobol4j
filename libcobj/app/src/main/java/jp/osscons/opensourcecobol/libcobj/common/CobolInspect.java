@@ -35,7 +35,10 @@ import jp.osscons.opensourcecobol.libcobj.exceptions.CobolStopRunException;
  * {@link #all(AbstractCobolField, AbstractCobolField)}などで計数・置換を行い、最後に{@link #finish()}で確定する
  * という手順で実行する。
  */
-public class CobolInspect {
+public final class CobolInspect {
+    /** このクラスはインスタンス化しない。 */
+    private CobolInspect() {}
+
     /** 一致する文字をすべて対象とする(INSPECT ... ALLに対応) */
     private static final int INSPECT_ALL = 0;
 

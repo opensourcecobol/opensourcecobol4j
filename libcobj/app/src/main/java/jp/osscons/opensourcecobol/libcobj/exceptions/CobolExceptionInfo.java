@@ -19,7 +19,10 @@
 package jp.osscons.opensourcecobol.libcobj.exceptions;
 
 /** エラーコードを保持する。 */
-public class CobolExceptionInfo {
+public final class CobolExceptionInfo {
+    /** このクラスはインスタンス化しない。 */
+    private CobolExceptionInfo() {}
+
     /**
      * 現在のエラーコード。CobolExceptionTabCode.codeテーブルから取得した16進数のエラーコードが格納される。
      * CobolRuntimeExceptionとは異なりコンテキスト情報は保持せず、エラーコードのみを管理する。
