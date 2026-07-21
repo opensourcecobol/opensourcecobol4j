@@ -141,6 +141,7 @@ public class CobolSystemRoutine {
      * opensource COBOLのlibcob/common.cのcob_acuw_sleep関数に相当する
      *
      * @param data C$SLEEPの引数として指定されたCOBOL変数のバイト列。
+     * @return 常に0(正常終了を表す戻り値)。
      */
     @SuppressWarnings("PMD.AvoidDollarSigns")
     public static int C$SLEEP(CobolDataStorage data) {
