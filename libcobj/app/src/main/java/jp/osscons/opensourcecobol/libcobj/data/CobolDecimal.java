@@ -112,7 +112,7 @@ public class CobolDecimal {
     }
 
     /**
-     * 値はvalueを指定し,スケールは0に設定する
+     * 値はvalueを指定し、スケールは0に設定する
      *
      * @param value 設定する値
      */
@@ -133,7 +133,7 @@ public class CobolDecimal {
     }
 
     /**
-     * 値を指定し,スケールは0に設定する
+     * 値を指定し、スケールは0に設定する
      *
      * @param n 設定する値
      */
@@ -151,7 +151,7 @@ public class CobolDecimal {
     }
 
     /**
-     * 値を設定し,スケールは0に設定する
+     * 値を設定し、スケールは0に設定する
      *
      * @param n 設定する値
      */
@@ -245,7 +245,7 @@ public class CobolDecimal {
     }
 
     /**
-     * このオブジェクトの値とスケールを,指定されたCobolDecimalの値とスケールで設定する
+     * このオブジェクトの値とスケールを、指定されたCobolDecimalの値とスケールで設定する
      *
      * @param decimal 設定元のCobolDecimalインスタンス
      */
@@ -256,7 +256,7 @@ public class CobolDecimal {
     }
 
     /**
-     * 指定されたCOBOLフィールドの値とスケールを,このオブジェクトに設定する
+     * 指定されたCOBOLフィールドの値とスケールを、このオブジェクトに設定する
      *
      * @param f 設定元のCOBOLフィールド
      */
@@ -271,7 +271,7 @@ public class CobolDecimal {
      *
      * @param d1 判定対象のCobolDecimalインスタンス(演算結果の格納先)
      * @param d2 判定対象のCobolDecimalインスタンス
-     * @return いずれかが非数の場合はtrue,そうでない場合はfalse
+     * @return いずれかが非数の場合はtrue、そうでない場合はfalse
      */
     private static boolean DECIMAL_CHECK(CobolDecimal d1, CobolDecimal d2) {
         if (d1.getScale() == DECIMAL_NAN || d2.getScale() == DECIMAL_NAN) {
@@ -351,7 +351,7 @@ public class CobolDecimal {
      * このオブジェクトの示す数値に対して除算を行う
      *
      * @param decimal このオブジェクトの示す数値を除算する値
-     * @throws CobolStopRunException 0除算が検出され,かつ実行時エラーで終了する設定の場合にスローされる
+     * @throws CobolStopRunException 0除算が検出され、かつ実行時エラーで終了する設定の場合にスローされる
      */
     public void div(CobolDecimal decimal) throws CobolStopRunException {
         if (DECIMAL_CHECK(this, decimal)) {
@@ -407,7 +407,7 @@ public class CobolDecimal {
     }
 
     /**
-     * 倍精度浮動小数点数の値を,スケール9のCobolDecimalの値として設定する
+     * 倍精度浮動小数点数の値を、スケール9のCobolDecimalの値として設定する
      *
      * @param v 設定する倍精度浮動小数点数の値
      */
@@ -429,7 +429,7 @@ public class CobolDecimal {
     }
 
     /**
-     * このオブジェクトの値を,指定されたCOBOLフィールドの属性(型・桁数・スケール)に合わせて格納する
+     * このオブジェクトの値を、指定されたCOBOLフィールドの属性(型・桁数・スケール)に合わせて格納する
      *
      * @param f 値の格納先となるCOBOLフィールド
      * @param opt 格納方法を指定するオプションフラグ(丸めや桁あふれ時の動作などを指定する)
@@ -495,7 +495,7 @@ public class CobolDecimal {
     }
 
     /**
-     * このオブジェクトの値を倍精度浮動小数点数に変換し,指定されたCOBOLフィールドに格納する
+     * このオブジェクトの値を倍精度浮動小数点数に変換し、指定されたCOBOLフィールドに格納する
      *
      * @param f 値の格納先となるCOBOLフィールド
      * @param opt 格納方法を指定するオプションフラグ
@@ -518,9 +518,9 @@ public class CobolDecimal {
     }
 
     /**
-     * このオブジェクトの値を10のn乗倍して小数点位置をずらし,スケールをnだけ増加させる.nが正の場合は乗算,負の場合は除算を行う
+     * このオブジェクトの値を10のn乗倍して小数点位置をずらし、スケールをnだけ増加させる.nが正の場合は乗算、負の場合は除算を行う
      *
-     * @param n 小数点をずらす桁数。正の値で値を10倍方向に,負の値で1/10方向にシフトする
+     * @param n 小数点をずらす桁数。正の値で値を10倍方向に、負の値で1/10方向にシフトする
      */
     public void shiftDecimal(int n) {
         if (n == 0) {
@@ -538,7 +538,7 @@ public class CobolDecimal {
 
     // libcob/numeric.cのalign_decimalの実装
     /**
-     * 2つのCobolDecimalのスケールを揃える。スケールの小さい方をシフトして,両者のスケールを大きい方に合わせる
+     * 2つのCobolDecimalのスケールを揃える。スケールの小さい方をシフトして、両者のスケールを大きい方に合わせる
      *
      * @param d1 スケールを揃える対象のCobolDecimalインスタンス
      * @param d2 スケールを揃える対象のCobolDecimalインスタンス
@@ -553,10 +553,10 @@ public class CobolDecimal {
 
     // libcob/numeric.cのcob_decimal_cmpの実装 引数で与えられたCobolDecimal型のインスタンスとの比較をする.
     /**
-     * このオブジェクトの値と,指定されたCobolDecimalの値を比較する
+     * このオブジェクトの値と、指定されたCobolDecimalの値を比較する
      *
      * @param decimal 比較対象のCobolDecimalインスタンス
-     * @return このオブジェクトの値が大きい場合は正,等しい場合は0,小さい場合は負の値
+     * @return このオブジェクトの値が大きい場合は正、等しい場合は0、小さい場合は負の値
      */
     public int compareTo(CobolDecimal decimal) {
         alignDecimal(this, decimal);
@@ -567,11 +567,11 @@ public class CobolDecimal {
 
     // libcob/numeric.cのcob_decimal_get_displayの実装
     /**
-     * このオブジェクトの値を表示用数字(USAGE DISPLAY)形式に変換し,指定されたCOBOLフィールドに格納する
+     * このオブジェクトの値を表示用数字(USAGE DISPLAY)形式に変換し、指定されたCOBOLフィールドに格納する
      *
      * @param f 値の格納先となるCOBOLフィールド
      * @param opt 格納方法を指定するオプションフラグ(桁あふれ時の動作などを指定する)
-     * @return 格納処理の結果を示すコード。正常終了の場合は0,桁あふれ発生時は対応する例外コード
+     * @return 格納処理の結果を示すコード。正常終了の場合は0、桁あふれ発生時は対応する例外コード
      * @throws CobolStopRunException 格納処理の途中で実行停止が発生した場合にスローされる
      */
     public int getDisplayField(AbstractCobolField f, int opt) throws CobolStopRunException {
@@ -615,11 +615,11 @@ public class CobolDecimal {
 
     // libcob/numeric.cのcob_decimal_get_packedの実装
     /**
-     * このオブジェクトの値をパック10進数(USAGE COMP-3)形式に変換し,指定されたCOBOLフィールドに格納する
+     * このオブジェクトの値をパック10進数(USAGE COMP-3)形式に変換し、指定されたCOBOLフィールドに格納する
      *
      * @param f 値の格納先となるCOBOLフィールド
      * @param opt 格納方法を指定するオプションフラグ(桁あふれ時の動作などを指定する)
-     * @return 格納処理の結果を示すコード。正常終了の場合は0,桁あふれ発生時は対応する例外コード
+     * @return 格納処理の結果を示すコード。正常終了の場合は0、桁あふれ発生時は対応する例外コード
      */
     public int getPackedField(AbstractCobolField f, int opt) {
         int sign = this.value.signum();
@@ -680,11 +680,11 @@ public class CobolDecimal {
 
     // libcob/numeric.cのcob_decimal_get_binaryの実装
     /**
-     * このオブジェクトの値を2進数(USAGE COMP)形式に変換し,指定されたCOBOLフィールドに格納する
+     * このオブジェクトの値を2進数(USAGE COMP)形式に変換し、指定されたCOBOLフィールドに格納する
      *
      * @param f 値の格納先となるCOBOLフィールド
      * @param opt 格納方法を指定するオプションフラグ(桁あふれ時の動作や切り捨ての有無などを指定する)
-     * @return 格納処理の結果を示すコード。正常終了の場合は0,桁あふれ発生時は対応する例外コード
+     * @return 格納処理の結果を示すコード。正常終了の場合は0、桁あふれ発生時は対応する例外コード
      */
     private int getBinaryField(AbstractCobolField f, int opt) {
         CobolDataStorage data = f.getDataStorage();
@@ -745,7 +745,7 @@ public class CobolDecimal {
 
     // libcob/numeric.cのnum_byte_memcpyの実装
     /**
-     * コピー元のデータ領域から指定したバイト数を,コピー先のデータ領域へ1バイトずつコピーする
+     * コピー元のデータ領域から指定したバイト数を、コピー先のデータ領域へ1バイトずつコピーする
      *
      * @param s1 コピー先のデータ領域
      * @param s1StartIndex コピー先の開始インデックス

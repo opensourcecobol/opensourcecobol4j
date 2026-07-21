@@ -113,10 +113,10 @@ public class CobolFieldAttribute {
     /** 変数種別 */
     private int type;
 
-    /** 数値の時,桁数を示す */
+    /** 数値の時、桁数を示す */
     private int digits;
 
-    /** 数値の時,スケールを示す */
+    /** 数値の時、スケールを示す */
     private int scale;
 
     /** 様々なフラグ */
@@ -129,8 +129,8 @@ public class CobolFieldAttribute {
      * コンストラクタ
      *
      * @param type フィールドの種別
-     * @param digits 数値型のとき,桁数を表す
-     * @param scale 数値型の時,スケールを表す
+     * @param digits 数値型のとき、桁数を表す
+     * @param scale 数値型の時、スケールを表す
      * @param flags 各種フラグ
      * @param pic PIC文字列
      */

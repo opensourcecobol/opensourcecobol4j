@@ -732,7 +732,7 @@ public class CobolNumericField extends AbstractCobolField {
      * @param firstDataIndex dataにアクセスするときの開始位置
      * @param size 数字の桁数
      * @param n 加算する値
-     * @return オーバーフローが発生し,かつ切り捨て指定(BINARY-TRUNC)が有効な場合は1, それ以外は0
+     * @return オーバーフローが発生し、かつ切り捨て指定(BINARY-TRUNC)が有効な場合は1、 それ以外は0
      */
     private int displayAddInt(CobolDataStorage data, int firstDataIndex, int size, long n) {
         int carry = 0;

@@ -49,8 +49,8 @@ public class CobolTerminal {
     /**
      * 標準出力または標準エラー出力にデータを出力する
      *
-     * @param dispStdout trueなら標準出力に,それ以外は標準エラー出力に出力する
-     * @param newline trueなら出力後に改行しない,それ以外の場合は改行する
+     * @param dispStdout trueなら標準出力に、それ以外は標準エラー出力に出力する
+     * @param newline trueなら出力後に改行しない、それ以外の場合は改行する
      * @param fields 出力するCOBOL変数(可変長)
      */
     public static void display(boolean dispStdout, boolean newline, AbstractCobolField... fields) {
@@ -86,8 +86,8 @@ public class CobolTerminal {
     /**
      * 標準出力または標準エラー出力にデータを出力する
      *
-     * @param outorerr 0なら標準出力に,それ以外は標準エラー出力に出力する。
-     * @param newline 0なら出力後に改行しない,それ以外の場合は改行する
+     * @param outorerr 0なら標準出力に、それ以外は標準エラー出力に出力する。
+     * @param newline 0なら出力後に改行しない、それ以外の場合は改行する
      * @param varcnt 出力するCOBOL変数の数
      * @param fields 出力するCOBOL変数(可変長)
      */
@@ -153,7 +153,7 @@ public class CobolTerminal {
 
     /**
      * COB_DATE環境変数で設定された日時または現在時刻を返す. COB_DATE環境変数で設定された日時({@link
-     * CobolUtil#cobLocalTm})が存在する場合はその値を返し, 設定されていない場合は現在時刻を返す。
+     * CobolUtil#cobLocalTm})が存在する場合はその値を返し、 設定されていない場合は現在時刻を返す。
      *
      * <p>libcob/common.cのjob_or_current_localtimeに対応する。
      *
@@ -224,8 +224,8 @@ public class CobolTerminal {
     /**
      * ACCEPT FROM TIME文の実装。 現在の時刻を"HHmmssSS"形式(時+分+秒+1/100秒)でCOBOL変数に格納する。
      *
-     * <p>他の日付系メソッド({@link #acceptDate(AbstractCobolField)}等)とは異なり, {@link
-     * #jobOrCurrentLocalTime()}を使用せず{@code LocalDateTime.now()}を直接呼び出すため, COB_DATE環境変数の設定は反映されない。
+     * <p>他の日付系メソッド({@link #acceptDate(AbstractCobolField)}等)とは異なり、 {@link
+     * #jobOrCurrentLocalTime()}を使用せず{@code LocalDateTime.now()}を直接呼び出すため、 COB_DATE環境変数の設定は反映されない。
      *
      * @param f 時刻データを格納するCOBOL変数
      */
@@ -264,8 +264,8 @@ public class CobolTerminal {
 
     /**
      * ACCEPT FROM ENVIRONMENT-VALUE文の実装. {@link #displayEnvironment(AbstractCobolField)}
-     * で設定された環境変数名の値を取得し,COBOL変数に格納する。 環境変数名が未設定の場合や環境変数が存在しない場合は{@link
-     * CobolExceptionId#COB_EC_IMP_ACCEPT}例外を設定し,スペース1文字を格納する。
+     * で設定された環境変数名の値を取得し、COBOL変数に格納する。 環境変数名が未設定の場合や環境変数が存在しない場合は{@link
+     * CobolExceptionId#COB_EC_IMP_ACCEPT}例外を設定し、スペース1文字を格納する。
      *
      * @param f 環境変数の値を格納するCOBOL変数
      */
@@ -302,7 +302,7 @@ public class CobolTerminal {
 
     /**
      * ACCEPT FROM COMMAND-LINE文の実装. {@link #displayCommandLine(AbstractCobolField)}
-     * で設定されたコマンドラインデータが存在する場合はそのデータを返し,
+     * で設定されたコマンドラインデータが存在する場合はそのデータを返し、
      * 存在しない場合はプログラム起動時のコマンドライン引数をスペース区切りで結合した文字列をCOBOL変数に格納する。
      *
      * @param f コマンドラインデータを格納するCOBOL変数
@@ -355,7 +355,7 @@ public class CobolTerminal {
 
     /**
      * ACCEPT FROM ARGUMENT-VALUE文の実装. {@link #displayArgNumber(AbstractCobolField)}
-     * で設定された引数インデックスに対応するコマンドライン引数の値をCOBOL変数に格納し, インデックスを1つ進める。
+     * で設定された引数インデックスに対応するコマンドライン引数の値をCOBOL変数に格納し、 インデックスを1つ進める。
      * インデックスが引数の総数を超えている場合は{@link CobolExceptionId#COB_EC_IMP_ACCEPT}例外を設定する。
      *
      * @param f 引数の値を格納するCOBOL変数

@@ -438,7 +438,7 @@ public class CobolResolve {
      * リフレクション機能を用いて動的にクラスファイルを読み込んでCobolRunnableのインスタンスを生成する
      *
      * @param name 読み込むクラスファイルのパス
-     * @return 読み込みに失敗したときはnull,其れ以外は読み込んだCobolRunnbableのインスタンス
+     * @return 読み込みに失敗したときはnull、其れ以外は読み込んだCobolRunnbableのインスタンス
      */
     private static CobolRunnable getInstance(String name) {
         CobolRunnable runnable = null;

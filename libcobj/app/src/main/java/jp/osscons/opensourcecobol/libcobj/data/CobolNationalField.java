@@ -157,7 +157,7 @@ public class CobolNationalField extends AbstractCobolField {
     }
 
     /**
-     * 転記元データが存在する場合に,全角へ変換したバイト列を返す。
+     * 転記元データが存在する場合に、全角へ変換したバイト列を返す。
      *
      * @param src 変換対象の英数字項目
      * @return 全角へ変換したバイト列。変換対象が空または先頭バイトが0の場合はnull
