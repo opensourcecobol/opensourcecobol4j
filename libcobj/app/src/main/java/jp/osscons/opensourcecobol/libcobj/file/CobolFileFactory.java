@@ -23,6 +23,9 @@ import jp.osscons.opensourcecobol.libcobj.data.AbstractCobolField;
 /** ファイル編成に応じた適切なCobolFileのサブクラスを生成するファクトリクラス. */
 public class CobolFileFactory {
 
+    /** ユーティリティクラスのインスタンス化を防ぐための private コンストラクタ。 */
+    private CobolFileFactory() {}
+
     /**
      * ファイル編成(organization)に応じて適切なCobolFileのサブクラスを生成する.
      * 順編成ならCobolSequentialFile,行順編成ならCobolLineSequentialFile,相対編成なら
