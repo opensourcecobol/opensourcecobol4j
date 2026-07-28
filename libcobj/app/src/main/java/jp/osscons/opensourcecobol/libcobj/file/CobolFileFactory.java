@@ -21,7 +21,7 @@ package jp.osscons.opensourcecobol.libcobj.file;
 import jp.osscons.opensourcecobol.libcobj.data.AbstractCobolField;
 
 /** ファイル編成に応じた適切なCobolFileのサブクラスを生成するファクトリクラス. */
-public class CobolFileFactory {
+public final class CobolFileFactory {
 
     /** ユーティリティクラスのインスタンス化を防ぐための private コンストラクタ。 */
     private CobolFileFactory() {}
