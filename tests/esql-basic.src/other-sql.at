@@ -30,23 +30,23 @@ AT_DATA([prog.cbl], [
        PERFORM CONNECT-DB.
 
            EXEC SQL
-               DROP TABLE IF EXISTS EMP
+               DROP TABLE IF EXISTS EMP_OTHERSQL
            END-EXEC.
            PERFORM OUTPUT-RETURN-CODE-TEST.
 
            EXEC SQL
-                CREATE TABLE EMP
+                CREATE TABLE EMP_OTHERSQL
                 (
                     EMP_NO     NUMERIC(4,0) NOT NULL,
                     EMP_NAME   CHAR(20),
                     EMP_SALARY NUMERIC(4,0),
-                    CONSTRAINT IEMP_0 PRIMARY KEY (EMP_NO)
+                    CONSTRAINT IEMP_OTHERSQL PRIMARY KEY (EMP_NO)
                 )
            END-EXEC.
            PERFORM OUTPUT-RETURN-CODE-TEST.
 
            EXEC SQL
-               DROP TABLE IF EXISTS EMP
+               DROP TABLE IF EXISTS EMP_OTHERSQL
            END-EXEC.
            PERFORM OUTPUT-RETURN-CODE-TEST.
 

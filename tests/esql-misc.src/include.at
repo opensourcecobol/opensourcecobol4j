@@ -34,18 +34,18 @@ AT_DATA([DECLARE-SECTION], [
 
 AT_DATA([EXEC-SELECT], [
            EXEC SQL
-               SELECT * INTO :READ-TBL FROM EMP WHERE EMP_NO > 4
+               SELECT * INTO :READ-TBL FROM EMP_MINCL WHERE EMP_NO > 4
            END-EXEC.
 ])
 
 AT_DATA([exec-create-table], [
            EXEC SQL
-                CREATE TABLE EMP
+                CREATE TABLE EMP_MINCL
                 (
                     EMP_NO     NUMERIC(4,0) NOT NULL,
                     EMP_NAME   CHAR(20),
                     EMP_SALARY NUMERIC(4,0),
-                    CONSTRAINT IEMP_0 PRIMARY KEY (EMP_NO)
+                    CONSTRAINT IEMP_MINCL PRIMARY KEY (EMP_NO)
                 )
            END-EXEC.
 ])
@@ -122,7 +122,7 @@ AT_DATA([prog.cbl], [
            EXEC SQL INCLUDE exec-connect END-EXEC.
 
            EXEC SQL
-               DROP TABLE IF EXISTS EMP
+               DROP TABLE IF EXISTS EMP_MINCL
            END-EXEC.
 
            EXEC SQL INCLUDE
@@ -135,7 +135,7 @@ AT_DATA([prog.cbl], [
               MOVE TEST-NAME(IDX)   TO  EMP-NAME
               MOVE TEST-SALARY(IDX) TO  EMP-SALARY
               EXEC SQL
-                 INSERT INTO EMP VALUES
+                 INSERT INTO EMP_MINCL VALUES
                         (:EMP-NO,:EMP-NAME,:EMP-SALARY)
               END-EXEC
            END-PERFORM.
@@ -153,7 +153,7 @@ AT_DATA([prog.cbl], [
            END-EXEC.
 
            EXEC SQL
-               DROP TABLE IF EXISTS EMP
+               DROP TABLE IF EXISTS EMP_MINCL
            END-EXEC.
 
            EXEC SQL

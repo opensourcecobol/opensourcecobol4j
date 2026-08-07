@@ -100,11 +100,11 @@ jobs:
       - name: Run ESQL tests
         working-directory: tests/
         run: |
-          ./esql-basic
-          ./esql-sqlca
-          ./esql-cobol-data
-          ./esql-misc
-          ./esql-sql-data
+          ./esql-basic -j4
+          ./esql-sqlca -j4
+          ./esql-cobol-data -j4
+          ./esql-misc -j4
+          ./esql-sql-data -j4
 
       - name: Upload test logs if tests fail
         if: failure()

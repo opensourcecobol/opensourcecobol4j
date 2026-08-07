@@ -28,61 +28,61 @@ AT_DATA([prog.cbl], [
        PERFORM SETUP-DB.
 
        EXEC SQL
-         INSERT INTO TESTTABLE VALUES (1, 'hello')
+         INSERT INTO TT_ISUD VALUES (1, 'hello')
        END-EXEC.
        PERFORM SHOW-STATUS.
        EXEC SQL COMMIT END-EXEC.
 
        EXEC SQL
-         INSERT INTO TESTTABLE VALUES ('invalid', 'invalid')
+         INSERT INTO TT_ISUD VALUES ('invalid', 'invalid')
        END-EXEC.
        PERFORM SHOW-STATUS.
        EXEC SQL COMMIT END-EXEC.
 
        EXEC SQL
-         SELECT V INTO :READ-TBL FROM TESTTABLE
+         SELECT V INTO :READ-TBL FROM TT_ISUD
        END-EXEC.
        PERFORM SHOW-STATUS.
        EXEC SQL COMMIT END-EXEC.
 
        EXEC SQL
-         SELECT V INTO :READ-TBL FROM TESTTABLEERROR
+         SELECT V INTO :READ-TBL FROM TTERR_ISUD
        END-EXEC.
        PERFORM SHOW-STATUS.
        EXEC SQL COMMIT END-EXEC.
 
        EXEC SQL
-         UPDATE TESTTABLE SET V = 'world' WHERE ID = 1
+         UPDATE TT_ISUD SET V = 'world' WHERE ID = 1
        END-EXEC.
        PERFORM SHOW-STATUS.
        EXEC SQL COMMIT END-EXEC.
 
        EXEC SQL
-         UPDATE TESTTABLE SET V = 'world' WHERE ID = 3
+         UPDATE TT_ISUD SET V = 'world' WHERE ID = 3
        END-EXEC.
        PERFORM SHOW-STATUS.
        EXEC SQL COMMIT END-EXEC.
 
        EXEC SQL
-         UPDATE TESTTABLEERROR SET V = 'world' WHERE ID = 1
+         UPDATE TTERR_ISUD SET V = 'world' WHERE ID = 1
        END-EXEC.
        PERFORM SHOW-STATUS.
        EXEC SQL COMMIT END-EXEC.
 
        EXEC SQL
-         DELETE FROM TESTTABLE WHERE ID = 1
+         DELETE FROM TT_ISUD WHERE ID = 1
        END-EXEC.
        PERFORM SHOW-STATUS.
        EXEC SQL COMMIT END-EXEC.
 
        EXEC SQL
-         DELETE FROM TESTTABLE WHERE ID = 3
+         DELETE FROM TT_ISUD WHERE ID = 3
        END-EXEC.
        PERFORM SHOW-STATUS.
        EXEC SQL COMMIT END-EXEC.
 
        EXEC SQL
-         DELETE FROM TESTTABLEERROR WHERE ID = 3
+         DELETE FROM TTERR_ISUD WHERE ID = 3
        END-EXEC.
        PERFORM SHOW-STATUS.
        EXEC SQL COMMIT END-EXEC.
@@ -107,11 +107,11 @@ AT_DATA([prog.cbl], [
            END-EXEC.
 
            EXEC SQL
-               DROP TABLE IF EXISTS TESTTABLE
+               DROP TABLE IF EXISTS TT_ISUD
            END-EXEC.
 
            EXEC SQL
-               CREATE TABLE TESTTABLE
+               CREATE TABLE TT_ISUD
                (
                  ID integer,
                  V  char(5)

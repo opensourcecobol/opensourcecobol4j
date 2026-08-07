@@ -89,7 +89,7 @@ AT_DATA([prog.cbl], [
 
       *    SHOW RESULT
            EXEC SQL
-               SELECT FIELD INTO :READ-TBL-V FROM TESTTABLEV ORDER BY N
+               SELECT FIELD INTO :READ-TBL-V FROM TTV_NUMV ORDER BY N
            END-EXEC.
 
            PERFORM VARYING IDX FROM 1 BY 1 UNTIL IDX > 10
@@ -98,7 +98,7 @@ AT_DATA([prog.cbl], [
 
       *    SHOW RESULT
            EXEC SQL
-               SELECT FIELD INTO :READ-TBL-P FROM TESTTABLEP ORDER BY N
+               SELECT FIELD INTO :READ-TBL-P FROM TTP_NUMV ORDER BY N
            END-EXEC.
 
            PERFORM VARYING IDX FROM 1 BY 1 UNTIL IDX > 10
@@ -107,7 +107,7 @@ AT_DATA([prog.cbl], [
 
       *    SHOW RESULT
            EXEC SQL
-               SELECT FIELD INTO :READ-TBL FROM TESTTABLE ORDER BY N
+               SELECT FIELD INTO :READ-TBL FROM TT_NUMV ORDER BY N
            END-EXEC.
 
            PERFORM VARYING IDX FROM 1 BY 1 UNTIL IDX > 10
@@ -136,19 +136,19 @@ AT_DATA([prog.cbl], [
            END-EXEC.
 
            EXEC SQL
-               DROP TABLE IF EXISTS TESTTABLEV
+               DROP TABLE IF EXISTS TTV_NUMV
            END-EXEC.
 
            EXEC SQL
-               DROP TABLE IF EXISTS TESTTABLEP
+               DROP TABLE IF EXISTS TTP_NUMV
            END-EXEC.
 
            EXEC SQL
-               DROP TABLE IF EXISTS TESTTABLE
+               DROP TABLE IF EXISTS TT_NUMV
            END-EXEC.
 
            EXEC SQL
-                CREATE TABLE TESTTABLEV
+                CREATE TABLE TTV_NUMV
                 (
                     N         NUMERIC(2,0) NOT NULL,
                     FIELD     DECIMAL(6,2) NOT NULL
@@ -156,7 +156,7 @@ AT_DATA([prog.cbl], [
            END-EXEC.
 
            EXEC SQL
-                CREATE TABLE TESTTABLEP
+                CREATE TABLE TTP_NUMV
                 (
                     N         NUMERIC(2,0) NOT NULL,
                     FIELD     NUMERIC(6,0) NOT NULL
@@ -164,7 +164,7 @@ AT_DATA([prog.cbl], [
            END-EXEC.
 
            EXEC SQL
-                CREATE TABLE TESTTABLE
+                CREATE TABLE TT_NUMV
                 (
                     N         NUMERIC(2,0) NOT NULL,
                     FIELD     NUMERIC(4,0) NOT NULL
@@ -175,7 +175,7 @@ AT_DATA([prog.cbl], [
            PERFORM VARYING IDX FROM 1 BY 1 UNTIL IDX > 10
               MOVE D-V(IDX)     TO  VV
               EXEC SQL
-                 INSERT INTO TESTTABLEV VALUES (:IDX, :VV)
+                 INSERT INTO TTV_NUMV VALUES (:IDX, :VV)
               END-EXEC
            END-PERFORM.
 
@@ -183,7 +183,7 @@ AT_DATA([prog.cbl], [
            PERFORM VARYING IDX FROM 1 BY 1 UNTIL IDX > 10
               MOVE D-P(IDX)     TO  VP
               EXEC SQL
-                 INSERT INTO TESTTABLEP VALUES (:IDX, :VP)
+                 INSERT INTO TTP_NUMV VALUES (:IDX, :VP)
               END-EXEC
            END-PERFORM.
 
@@ -191,7 +191,7 @@ AT_DATA([prog.cbl], [
            PERFORM VARYING IDX FROM 1 BY 1 UNTIL IDX > 10
               MOVE D(IDX)     TO  V
               EXEC SQL
-                 INSERT INTO TESTTABLE VALUES (:IDX, :V)
+                 INSERT INTO TT_NUMV VALUES (:IDX, :V)
               END-EXEC
            END-PERFORM.
 
@@ -204,15 +204,15 @@ AT_DATA([prog.cbl], [
        CLEANUP-DB.
       ******************************************************************
            EXEC SQL
-               DROP TABLE IF EXISTS TESTTABLEV
+               DROP TABLE IF EXISTS TTV_NUMV
            END-EXEC.
 
            EXEC SQL
-               DROP TABLE IF EXISTS TESTTABLEP
+               DROP TABLE IF EXISTS TTP_NUMV
            END-EXEC.
 
            EXEC SQL
-               DROP TABLE IF EXISTS TESTTABLE
+               DROP TABLE IF EXISTS TT_NUMV
            END-EXEC.
 
            EXEC SQL

@@ -55,16 +55,16 @@ AT_DATA([prog.cbl], [
            END-EXEC.
 
            EXEC SQL
-               DROP TABLE IF EXISTS EMP
+               DROP TABLE IF EXISTS EMP_USQLCONV1
            END-EXEC.
 
            EXEC SQL
-                CREATE TABLE EMP
+                CREATE TABLE EMP_USQLCONV1
                 (
                     EMP_NO     NUMERIC(4,0) NOT NULL,
                     EMP_NAME   CHAR(20),
                     EMP_SALARY NUMERIC(4,0),
-                    CONSTRAINT IEMP_0 PRIMARY KEY (EMP_NO)
+                    CONSTRAINT IEMP_USQLCONV1 PRIMARY KEY (EMP_NO)
                 )
            END-EXEC.
 
@@ -73,7 +73,7 @@ AT_DATA([prog.cbl], [
               MOVE "北海　太郎"   TO  EMP-NAME
               MOVE 400 TO  EMP-SALARY
               EXEC SQL
-                 INSERT INTO EMP VALUES
+                 INSERT INTO EMP_USQLCONV1 VALUES
                         (:EMP-NO,:EMP-NAME,:EMP-SALARY)
               END-EXEC
 
@@ -81,7 +81,7 @@ AT_DATA([prog.cbl], [
                                    EXEC SQL
                                      DECLARE C1 CURSOR FOR
                                      SELECT EMP_NO, EMP_NAME, EMP_SALARY
-                                     FROM EMP
+                                     FROM EMP_USQLCONV1
                                      ORDER BY EMP_NO
                                    END-EXEC.
       *    OPEN CURSOR
@@ -97,7 +97,7 @@ AT_DATA([prog.cbl], [
            END-EXEC.
 
            EXEC SQL
-               DROP TABLE IF EXISTS EMP
+               DROP TABLE IF EXISTS EMP_USQLCONV1
            END-EXEC.
 
            EXEC SQL
@@ -204,16 +204,16 @@ AT_DATA([prog.cbl], [
            END-EXEC.
 
            EXEC SQL
-               DROP TABLE IF EXISTS EMP
+               DROP TABLE IF EXISTS EMP_USQLCONV2
            END-EXEC.
 
            EXEC SQL
-                CREATE TABLE EMP
+                CREATE TABLE EMP_USQLCONV2
                 (
                     EMP_NO     NUMERIC(4,0) NOT NULL,
                     EMP_NAME   CHAR(20),
                     EMP_給料 NUMERIC(4,0),
-                    CONSTRAINT IEMP_0 PRIMARY KEY (EMP_NO)
+                    CONSTRAINT IEMP_USQLCONV2 PRIMARY KEY (EMP_NO)
                 )
            END-EXEC.
 
@@ -222,7 +222,7 @@ AT_DATA([prog.cbl], [
               MOVE "北海　太郎"   TO  EMP-NAME
               MOVE 400 TO  EMP-SALARY
               EXEC SQL
-                 INSERT INTO EMP VALUES
+                 INSERT INTO EMP_USQLCONV2 VALUES
                         (:EMP-NO,:EMP-NAME,:EMP-SALARY)
               END-EXEC
 
@@ -230,7 +230,7 @@ AT_DATA([prog.cbl], [
                                    EXEC SQL
                                      DECLARE C1 CURSOR FOR
                                      SELECT EMP_NO, EMP_NAME,  EMP_給料
-                                     FROM EMP
+                                     FROM EMP_USQLCONV2
                                      ORDER BY EMP_NO
                                    END-EXEC.
       *    OPEN CURSOR
@@ -246,7 +246,7 @@ AT_DATA([prog.cbl], [
            END-EXEC.
 
            EXEC SQL
-               DROP TABLE IF EXISTS EMP
+               DROP TABLE IF EXISTS EMP_USQLCONV2
            END-EXEC.
 
            EXEC SQL
@@ -323,14 +323,14 @@ AT_DATA([prog.cbl], [
 
        PERFORM SETUP-DB.
            EXEC SQL
-                 INSERT INTO MSG VALUES ('abcdefghijklmnopqrstuvwxyzabcd
+            INSERT INTO MSG_UML1 VALUES ('abcdefghijklmnopqrstuvwxyzabcd
        efghijklmnopqrstuvwxyz
            abcdef')
            END-EXEC.
 
            EXEC SQL
                DECLARE C1 CURSOR FOR
-               SELECT MSG_DATA FROM MSG
+               SELECT MSG_DATA FROM MSG_UML1
            END-EXEC.
 
            EXEC SQL
@@ -365,11 +365,11 @@ AT_DATA([prog.cbl], [
            END-EXEC.
 
            EXEC SQL
-               DROP TABLE IF EXISTS MSG
+               DROP TABLE IF EXISTS MSG_UML1
            END-EXEC.
 
            EXEC SQL
-                CREATE TABLE MSG
+                CREATE TABLE MSG_UML1
                 (
                     MSG_DATA   CHAR(105)
                 )
@@ -379,7 +379,7 @@ AT_DATA([prog.cbl], [
        CLEANUP-DB.
       ******************************************************************
            EXEC SQL
-               DROP TABLE IF EXISTS MSG
+               DROP TABLE IF EXISTS MSG_UML1
            END-EXEC.
 
            EXEC SQL
@@ -455,14 +455,14 @@ AT_DATA([prog.cbl], [
 
        PERFORM SETUP-DB.
            EXEC SQL
-                 INSERT INTO MSG VALUES ('abcdefghijklmnopqrstuvwxyz''ab
+            INSERT INTO MSG_UML2 VALUES ('abcdefghijklmnopqrstuvwxyz''ab
        cdefghijklmnopqrstuvwxyz''
              abcdef')
            END-EXEC.
 
            EXEC SQL
                DECLARE C1 CURSOR FOR
-               SELECT MSG_DATA FROM MSG
+               SELECT MSG_DATA FROM MSG_UML2
            END-EXEC.
 
            EXEC SQL
@@ -497,11 +497,11 @@ AT_DATA([prog.cbl], [
            END-EXEC.
 
            EXEC SQL
-               DROP TABLE IF EXISTS MSG
+               DROP TABLE IF EXISTS MSG_UML2
            END-EXEC.
 
            EXEC SQL
-                CREATE TABLE MSG
+                CREATE TABLE MSG_UML2
                 (
                     MSG_DATA   CHAR(105)
                 )
@@ -511,7 +511,7 @@ AT_DATA([prog.cbl], [
        CLEANUP-DB.
       ******************************************************************
            EXEC SQL
-               DROP TABLE IF EXISTS MSG
+               DROP TABLE IF EXISTS MSG_UML2
            END-EXEC.
 
            EXEC SQL
@@ -578,7 +578,7 @@ AT_DATA([prog.cbl], [
        01  USERNAME                PIC  X(30) VALUE SPACE.
        01  PASSWD                  PIC  X(10) VALUE SPACE.
 
-       01  MSG-DATA                PIC  X(428) VALUE SPACE.
+       01  MSG-DATA                PIC  X(423) VALUE SPACE.
 
       ******************************************************************
        PROCEDURE                   DIVISION.
@@ -587,7 +587,7 @@ AT_DATA([prog.cbl], [
 
        PERFORM SETUP-DB.
        EXEC SQL
-       INSERT INTO MSG VALUES ('aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa
+       INSERT INTO MSG_UML3 VALUES ('aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa
        bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb
        ccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc
        ddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddd
@@ -598,7 +598,7 @@ AT_DATA([prog.cbl], [
 
            EXEC SQL
                DECLARE C1 CURSOR FOR
-               SELECT MSG_DATA FROM MSG
+               SELECT MSG_DATA FROM MSG_UML3
            END-EXEC.
 
            EXEC SQL
@@ -633,13 +633,13 @@ AT_DATA([prog.cbl], [
            END-EXEC.
 
            EXEC SQL
-               DROP TABLE IF EXISTS MSG
+               DROP TABLE IF EXISTS MSG_UML3
            END-EXEC.
 
            EXEC SQL
-                CREATE TABLE MSG
+                CREATE TABLE MSG_UML3
                 (
-                    MSG_DATA   CHAR(428)
+                    MSG_DATA   CHAR(423)
                 )
            END-EXEC.
 
@@ -647,7 +647,7 @@ AT_DATA([prog.cbl], [
        CLEANUP-DB.
       ******************************************************************
            EXEC SQL
-               DROP TABLE IF EXISTS MSG
+               DROP TABLE IF EXISTS MSG_UML3
            END-EXEC.
 
            EXEC SQL
@@ -690,7 +690,7 @@ AT_DATA([prog.cbl], [
 AT_CHECK([${EMBED_DB_INFO} prog.cbl])
 AT_CHECK([${COMPILE_MODULE} prog.cbl])
 AT_CHECK([${RUN_MODULE} prog], [0],
-[aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaabbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbcccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccdddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeefffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggg
+[aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaabbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbcccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccdddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeefffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggg
 ])
 
 AT_CLEANUP

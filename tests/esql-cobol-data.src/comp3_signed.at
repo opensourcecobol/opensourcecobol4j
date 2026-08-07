@@ -152,7 +152,7 @@ AT_DATA([prog.cbl], [
 
            EXEC SQL
                SELECT FIELD INTO :READ-TBL-V-1
-               FROM TESTTABLEV1 ORDER BY N
+               FROM TTV1_COMP3S ORDER BY N
            END-EXEC.
 
            PERFORM VARYING IDX FROM 1 BY 1 UNTIL IDX > 10
@@ -163,7 +163,7 @@ AT_DATA([prog.cbl], [
 
            EXEC SQL
                SELECT FIELD INTO :READ-TBL-V-2
-               FROM TESTTABLEV2 ORDER BY N
+               FROM TTV2_COMP3S ORDER BY N
            END-EXEC.
 
            PERFORM VARYING IDX FROM 1 BY 1 UNTIL IDX > 10
@@ -174,7 +174,7 @@ AT_DATA([prog.cbl], [
 
            EXEC SQL
                SELECT FIELD INTO :READ-TBL-P-1
-               FROM TESTTABLEP1 ORDER BY N
+               FROM TTP1_COMP3S ORDER BY N
            END-EXEC.
 
            PERFORM VARYING IDX FROM 1 BY 1 UNTIL IDX > 10
@@ -185,7 +185,7 @@ AT_DATA([prog.cbl], [
 
            EXEC SQL
                SELECT FIELD INTO :READ-TBL-P-2
-               FROM TESTTABLEP2 ORDER BY N
+               FROM TTP2_COMP3S ORDER BY N
            END-EXEC.
 
            PERFORM VARYING IDX FROM 1 BY 1 UNTIL IDX > 10
@@ -195,7 +195,7 @@ AT_DATA([prog.cbl], [
            DISPLAY "================".
 
            EXEC SQL
-               SELECT FIELD INTO :READ-TBL-1 FROM TESTTABLE1 ORDER BY N
+               SELECT FIELD INTO :READ-TBL-1 FROM TT1_COMP3S ORDER BY N
            END-EXEC.
 
            PERFORM VARYING IDX FROM 1 BY 1 UNTIL IDX > 10
@@ -205,7 +205,7 @@ AT_DATA([prog.cbl], [
            DISPLAY "================".
 
            EXEC SQL
-               SELECT FIELD INTO :READ-TBL-2 FROM TESTTABLE2 ORDER BY N
+               SELECT FIELD INTO :READ-TBL-2 FROM TT2_COMP3S ORDER BY N
            END-EXEC.
 
            PERFORM VARYING IDX FROM 1 BY 1 UNTIL IDX > 10
@@ -234,38 +234,38 @@ AT_DATA([prog.cbl], [
            END-EXEC.
 
            EXEC SQL
-               DROP TABLE IF EXISTS TESTTABLEV1
+               DROP TABLE IF EXISTS TTV1_COMP3S
            END-EXEC.
 
            EXEC SQL
-               DROP TABLE IF EXISTS TESTTABLEV2
+               DROP TABLE IF EXISTS TTV2_COMP3S
            END-EXEC.
 
            EXEC SQL
-               DROP TABLE IF EXISTS TESTTABLEP1
+               DROP TABLE IF EXISTS TTP1_COMP3S
            END-EXEC.
 
            EXEC SQL
-               DROP TABLE IF EXISTS TESTTABLEP2
+               DROP TABLE IF EXISTS TTP2_COMP3S
            END-EXEC.
 
            EXEC SQL
-               DROP TABLE IF EXISTS TESTTABLE1
+               DROP TABLE IF EXISTS TT1_COMP3S
            END-EXEC.
 
            EXEC SQL
-               DROP TABLE IF EXISTS TESTTABLE2
+               DROP TABLE IF EXISTS TT2_COMP3S
            END-EXEC.
 
            EXEC SQL
-                CREATE TABLE TESTTABLEV1
+                CREATE TABLE TTV1_COMP3S
                 (
                     N         NUMERIC(2,0) NOT NULL,
                     FIELD     DECIMAL(6,2) NOT NULL
                 )
            END-EXEC.
            EXEC SQL
-                CREATE TABLE TESTTABLEV2
+                CREATE TABLE TTV2_COMP3S
                 (
                     N         NUMERIC(2,0) NOT NULL,
                     FIELD     DECIMAL(7,2) NOT NULL
@@ -273,7 +273,7 @@ AT_DATA([prog.cbl], [
            END-EXEC.
 
            EXEC SQL
-                CREATE TABLE TESTTABLEP1
+                CREATE TABLE TTP1_COMP3S
                 (
                     N         NUMERIC(2,0) NOT NULL,
                     FIELD     NUMERIC(6,0) NOT NULL
@@ -281,7 +281,7 @@ AT_DATA([prog.cbl], [
            END-EXEC.
 
            EXEC SQL
-                CREATE TABLE TESTTABLEP2
+                CREATE TABLE TTP2_COMP3S
                 (
                     N         NUMERIC(2,0) NOT NULL,
                     FIELD     NUMERIC(7,0) NOT NULL
@@ -289,7 +289,7 @@ AT_DATA([prog.cbl], [
            END-EXEC.
 
            EXEC SQL
-                CREATE TABLE TESTTABLE1
+                CREATE TABLE TT1_COMP3S
                 (
                     N         NUMERIC(2,0) NOT NULL,
                     FIELD     NUMERIC(4,0) NOT NULL
@@ -297,7 +297,7 @@ AT_DATA([prog.cbl], [
            END-EXEC.
 
            EXEC SQL
-                CREATE TABLE TESTTABLE2
+                CREATE TABLE TT2_COMP3S
                 (
                     N         NUMERIC(2,0) NOT NULL,
                     FIELD     NUMERIC(5,0) NOT NULL
@@ -307,42 +307,42 @@ AT_DATA([prog.cbl], [
            PERFORM VARYING IDX FROM 1 BY 1 UNTIL IDX > 10
               MOVE D-V-1(IDX)     TO  VV-1
               EXEC SQL
-                 INSERT INTO TESTTABLEV1 VALUES (:IDX, :VV-1)
+                 INSERT INTO TTV1_COMP3S VALUES (:IDX, :VV-1)
               END-EXEC
            END-PERFORM.
 
            PERFORM VARYING IDX FROM 1 BY 1 UNTIL IDX > 10
               MOVE D-V-2(IDX)     TO  VV-2
               EXEC SQL
-                 INSERT INTO TESTTABLEV2 VALUES (:IDX, :VV-2)
+                 INSERT INTO TTV2_COMP3S VALUES (:IDX, :VV-2)
               END-EXEC
            END-PERFORM.
 
            PERFORM VARYING IDX FROM 1 BY 1 UNTIL IDX > 10
               MOVE D-P-1(IDX)     TO  VP-1
               EXEC SQL
-                 INSERT INTO TESTTABLEP1 VALUES (:IDX, :VP-1)
+                 INSERT INTO TTP1_COMP3S VALUES (:IDX, :VP-1)
               END-EXEC
            END-PERFORM.
 
            PERFORM VARYING IDX FROM 1 BY 1 UNTIL IDX > 10
               MOVE D-P-2(IDX)     TO  VP-2
               EXEC SQL
-                 INSERT INTO TESTTABLEP2 VALUES (:IDX, :VP-2)
+                 INSERT INTO TTP2_COMP3S VALUES (:IDX, :VP-2)
               END-EXEC
            END-PERFORM.
 
            PERFORM VARYING IDX FROM 1 BY 1 UNTIL IDX > 10
               MOVE D-1(IDX)     TO  V-1
               EXEC SQL
-                 INSERT INTO TESTTABLE1 VALUES (:IDX, :V-1)
+                 INSERT INTO TT1_COMP3S VALUES (:IDX, :V-1)
               END-EXEC
            END-PERFORM.
 
            PERFORM VARYING IDX FROM 1 BY 1 UNTIL IDX > 10
               MOVE D-2(IDX)     TO  V-2
               EXEC SQL
-                 INSERT INTO TESTTABLE2 VALUES (:IDX, :V-2)
+                 INSERT INTO TT2_COMP3S VALUES (:IDX, :V-2)
               END-EXEC
            END-PERFORM.
 

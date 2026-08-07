@@ -48,7 +48,7 @@ AT_DATA([prog.cbl], [
            EXEC SQL 
                DECLARE C1 CURSOR FOR
                SELECT EMP_NO, EMP_NAME, EMP_SALARY 
-                      FROM EMP
+                      FROM EMP_ERRMLERRMC
                       WHERE EMP_SALARY > 0
                       ORDER BY EMP_NO
            END-EXEC.
@@ -141,14 +141,14 @@ AT_DATA([prog.cbl], [
            DISPLAY "<valid connect> SQLERRMC:" SQLERRMC "|".
 
            EXEC SQL
-               DROP TABLE IF EXISTS EMP
+               DROP TABLE IF EXISTS EMP_ERRMLERRMC
            END-EXEC.
 
            EXEC SQL COMMIT END-EXEC.
 
       *    INVALID CREATE TABLE
            EXEC SQL
-                CREATE TABLE EMP
+                CREATE TABLE EMP_ERRMLERRMC
                 (
                     EMP_NO     NUMERIC(4,0),
                     EMP_NAME   CHAR(20),
@@ -162,7 +162,7 @@ AT_DATA([prog.cbl], [
 
       *    VALID CREATE TABLE
            EXEC SQL
-                CREATE TABLE EMP
+                CREATE TABLE EMP_ERRMLERRMC
                 (
                     EMP_NO     NUMERIC(4,0),
                     EMP_NAME   CHAR(20),
@@ -178,7 +178,7 @@ AT_DATA([prog.cbl], [
               MOVE TEST-NAME(IDX)   TO  EMP-NAME
               MOVE TEST-SALARY(IDX) TO  EMP-SALARY
               EXEC SQL
-                 INSERT INTO EMP VALUES
+                 INSERT INTO EMP_ERRMLERRMC VALUES
                         (:EMP-NO,:EMP-NAME,:EMP-SALARY)
               END-EXEC
            END-PERFORM.
@@ -187,7 +187,7 @@ AT_DATA([prog.cbl], [
            EXEC SQL COMMIT END-EXEC.
 
            EXEC SQL
-               INSERT INTO EMP VALUES
+               INSERT INTO EMP_ERRMLERRMC VALUES
                       (:EMP-NO,,,,,,,,:EMP-NAME,:EMP-SALARY)
            END-EXEC
            DISPLAY "<invalid insert 1> SQLERRML:" SQLERRML.

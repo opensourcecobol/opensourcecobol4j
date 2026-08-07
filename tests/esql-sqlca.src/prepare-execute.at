@@ -31,7 +31,7 @@ AT_DATA([prog.cbl], [
        01 SQL-COMMAND-ARG PIC 99 VALUE 2.
 
        01 INVALID-COMMAND PIC X(50)
-         VALUE "DELETE FROM TESTTABLEERROR WHERE ID > ?".
+         VALUE "DELETE FROM TTERR_QPREP WHERE ID > ?".
 
        01 DATA-ID PIC 9(4).
        01 DATA-V PIC X(5).
@@ -47,8 +47,8 @@ AT_DATA([prog.cbl], [
            
          PERFORM SETUP-DB.
 
-         MOVE "DELETE FROM TESTTABLE WHERE ID > ?" TO SQL-COMMAND-ARR.
-         MOVE 34 TO SQL-COMMAND-LEN.
+         MOVE "DELETE FROM TT_QPREP WHERE ID > ?" TO SQL-COMMAND-ARR.
+         MOVE 33 TO SQL-COMMAND-LEN.
 
          EXEC SQL
              PREPARE st FROM :SQL-COMMAND
@@ -61,7 +61,7 @@ AT_DATA([prog.cbl], [
          PERFORM SHOW-STATUS.
 
          MOVE INVALID-COMMAND TO SQL-COMMAND-ARR.
-         MOVE 39 TO SQL-COMMAND-LEN.
+         MOVE 36 TO SQL-COMMAND-LEN.
 
          EXEC SQL
              PREPARE st FROM :SQL-COMMAND
@@ -93,11 +93,11 @@ AT_DATA([prog.cbl], [
          END-EXEC.
 
          EXEC SQL
-             DROP TABLE IF EXISTS TESTTABLE
+             DROP TABLE IF EXISTS TT_QPREP
          END-EXEC.
 
          EXEC SQL
-             CREATE TABLE TESTTABLE
+             CREATE TABLE TT_QPREP
              (
                ID integer,
                V  char(5)
@@ -108,7 +108,7 @@ AT_DATA([prog.cbl], [
            MOVE TEST-ID(IDX) TO DATA-ID
            MOVE TEST-V(IDX) TO DATA-V
            EXEC SQL
-             INSERT INTO TESTTABLE VALUES
+             INSERT INTO TT_QPREP VALUES
                (:DATA-ID, :DATA-V)
            END-EXEC
          END-PERFORM.

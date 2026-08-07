@@ -34,11 +34,11 @@ AT_DATA([prog.cbl], [
            END-EXEC.
 
            EXEC SQL
-               DROP TABLE IF EXISTS EMP
+               DROP TABLE IF EXISTS EMP_COMPILE
            END-EXEC.
 
            EXEC SQL
-               DROP TABLE IF EXISTS EMP
+               DROP TABLE IF EXISTS EMP_COMPILE
            END-EXEC.
 
            EXEC SQL

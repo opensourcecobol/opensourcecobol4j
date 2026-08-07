@@ -29,21 +29,22 @@ AT_DATA([prog.cbl], [
 
       * Test case 0001 *************************************************
        EXEC SQL
-           DECLARE CURSOR1 CURSOR FOR SELECT * FROM EMP
+           DECLARE CURSOR1 CURSOR FOR SELECT * FROM EMP_DECLARE
        END-EXEC.
        PERFORM DISPLAY-TEST-RESULT.
       ******************************************************************
 
       * Test case 0002 *************************************************
        EXEC SQL
-           DECLARE CURSOR2 CURSOR FOR SELECT EMP-NO FROM EMP
+           DECLARE CURSOR2 CURSOR FOR SELECT EMP-NO FROM EMP_DECLARE
        END-EXEC.
        PERFORM DISPLAY-TEST-RESULT.
       ******************************************************************
 
       * Test case 0003 *************************************************
        EXEC SQL
-           DECLARE CURSOR3 CURSOR FOR SELECT EMP-NO, EMP-SALARY FROM EMP
+           DECLARE CURSOR3 CURSOR FOR
+               SELECT EMP-NO, EMP-SALARY FROM EMP_DECLARE
        END-EXEC.
        PERFORM DISPLAY-TEST-RESULT.
       ******************************************************************
@@ -70,16 +71,16 @@ AT_DATA([prog.cbl], [
            END-EXEC.
 
            EXEC SQL
-               DROP TABLE IF EXISTS EMP
+               DROP TABLE IF EXISTS EMP_DECLARE
            END-EXEC.
 
            EXEC SQL
-                CREATE TABLE EMP
+                CREATE TABLE EMP_DECLARE
                 (
                     EMP_NO     NUMERIC(4,0) NOT NULL,
                     EMP_NAME   CHAR(20),
                     EMP_SALARY NUMERIC(4,0),
-                    CONSTRAINT IEMP_0 PRIMARY KEY (EMP_NO)
+                    CONSTRAINT IEMP_DECLARE PRIMARY KEY (EMP_NO)
                 )
            END-EXEC.
 
@@ -87,7 +88,7 @@ AT_DATA([prog.cbl], [
        CLEANUP-DB.
       ******************************************************************
            EXEC SQL
-               DROP TABLE IF EXISTS EMP
+               DROP TABLE IF EXISTS EMP_DECLARE
            END-EXEC.
 
            EXEC SQL

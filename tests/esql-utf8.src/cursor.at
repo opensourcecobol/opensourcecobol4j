@@ -56,30 +56,30 @@ AT_DATA([INSERTTBL.cbl], [
 
       *    DROP TABLE
            EXEC SQL
-               DROP TABLE IF EXISTS EMP
+               DROP TABLE IF EXISTS EMP_CURSOR
            END-EXEC.
            IF  SQLCODE NOT = ZERO PERFORM ERROR-RTN.
 
       *    CREATE TABLE
            EXEC SQL
-                CREATE TABLE EMP
+                CREATE TABLE EMP_CURSOR
                 (
                     EMP_NO     NUMERIC(4,0) NOT NULL,
                     EMP_NAME   CHAR(20),
                     EMP_SALARY NUMERIC(4,0),
-                    CONSTRAINT IEMP_0 PRIMARY KEY (EMP_NO)
+                    CONSTRAINT IEMP_CURSOR PRIMARY KEY (EMP_NO)
                 )
            END-EXEC.
            IF  SQLCODE NOT = ZERO PERFORM ERROR-RTN STOP RUN.
 
       *    INSERT ROWS USING LITERAL
            EXEC SQL
-               INSERT INTO EMP VALUES (46, '鹿児島　六郎', -320)
+               INSERT INTO EMP_CURSOR VALUES (46, '鹿児島　六郎', -320)
            END-EXEC.
            IF  SQLCODE NOT = ZERO PERFORM ERROR-RTN.
 
            EXEC SQL
-               INSERT INTO EMP VALUES (47, '沖縄　七郎', 480)
+               INSERT INTO EMP_CURSOR VALUES (47, '沖縄　七郎', 480)
            END-EXEC.
            IF  SQLCODE NOT = ZERO PERFORM ERROR-RTN.
 
@@ -89,7 +89,7 @@ AT_DATA([INSERTTBL.cbl], [
               MOVE TEST-NAME(IDX)   TO  EMP-NAME
               MOVE TEST-SALARY(IDX) TO  EMP-SALARY
               EXEC SQL
-                 INSERT INTO EMP VALUES
+                 INSERT INTO EMP_CURSOR VALUES
                         (:EMP-NO,:EMP-NAME,:EMP-SALARY)
               END-EXEC
               IF  SQLCODE NOT = ZERO
@@ -183,7 +183,7 @@ AT_DATA([FETCHTBL.cbl], [
 
       *    SELECT COUNT(*) INTO HOST-VARIABLE
            EXEC SQL
-               SELECT COUNT(*) INTO :EMP-CNT FROM EMP
+               SELECT COUNT(*) INTO :EMP-CNT FROM EMP_CURSOR
            END-EXEC.
            DISPLAY "TOTAL RECORD: " EMP-CNT.
 
@@ -191,7 +191,7 @@ AT_DATA([FETCHTBL.cbl], [
            EXEC SQL
                DECLARE カーソル1 CURSOR FOR
                SELECT EMP_NO, EMP_NAME, EMP_SALARY
-                      FROM EMP
+                      FROM EMP_CURSOR
                       ORDER BY EMP_NO
            END-EXEC.
            EXEC SQL

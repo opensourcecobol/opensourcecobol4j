@@ -109,7 +109,7 @@ AT_DATA([prog.cbl], [
                 EMP_NAME039,
                 EMP_NAME040
             INTO :READ-DATA
-            FROM EMP
+            FROM EMP_ULONGSQL
            END-EXEC.
 
             DISPLAY EMP_NAME001.
@@ -175,11 +175,11 @@ AT_DATA([prog.cbl], [
            END-EXEC.
 
            EXEC SQL
-               DROP TABLE IF EXISTS EMP
+               DROP TABLE IF EXISTS EMP_ULONGSQL
            END-EXEC.
 
            EXEC SQL
-                CREATE TABLE EMP
+                CREATE TABLE EMP_ULONGSQL
                 (
                     EMP_NAME001 CHAR(50),
                     EMP_NAME002 CHAR(50),
@@ -226,7 +226,7 @@ AT_DATA([prog.cbl], [
 
       *    INSERT ROWS USING HOST VARIABLE
            EXEC SQL
-              INSERT INTO EMP VALUES
+              INSERT INTO EMP_ULONGSQL VALUES
              (
              'あああああああああああああああああああ',
              'aああああああああああああああああああ',
@@ -281,7 +281,7 @@ AT_DATA([prog.cbl], [
       ******************************************************************
 
       *    EXEC SQL
-      *        DROP TABLE IF EXISTS EMP
+      *        DROP TABLE IF EXISTS EMP_ULONGSQL
       *    END-EXEC.
 
            EXEC SQL

@@ -91,12 +91,12 @@ jobs:
       run: |
         export PATH="/tmp/diff-wrapper:$PATH"
         cd tests
-        ./esql-basic
-        ./esql-sqlca
-        ./esql-cobol-data
-        ./esql-misc
-        ./esql-sql-data
-        ./esql-utf8
+        ./esql-basic -j4
+        ./esql-sqlca -j4
+        ./esql-cobol-data -j4
+        ./esql-misc -j4
+        ./esql-sql-data -j4
+        ./esql-utf8 -j4
 
     - name: Upload log files if tests fail
       if: failure()

@@ -23,7 +23,7 @@ AT_DATA([prog.cbl], [
        PERFORM SETUP-DB.
 
            EXEC SQL
-              INSERT INTO EMP VALUES
+              INSERT INTO EMP_IMPLDECL VALUES
                      (:EMP-NO,:EMP-NAME,:EMP-SALARY)
            END-EXEC.
 
@@ -37,7 +37,7 @@ AT_DATA([prog.cbl], [
 
            EXEC SQL
                SELECT * INTO :EMP-NO, :EMP-NAME, :EMP-SALARY
-               FROM EMP WHERE EMP_NO = 1
+               FROM EMP_IMPLDECL WHERE EMP_NO = 1
            END-EXEC.
 
            IF SQLCODE = ZERO
@@ -66,11 +66,11 @@ AT_DATA([prog.cbl], [
            END-EXEC.
 
            EXEC SQL
-               DROP TABLE IF EXISTS EMP
+               DROP TABLE IF EXISTS EMP_IMPLDECL
            END-EXEC.
 
            EXEC SQL
-                CREATE TABLE EMP
+                CREATE TABLE EMP_IMPLDECL
                 (
                     EMP_NO     NUMERIC(4,0) NOT NULL,
                     EMP_NAME   CHAR(20),
@@ -86,7 +86,7 @@ AT_DATA([prog.cbl], [
        CLEANUP-DB.
       ******************************************************************
            EXEC SQL
-               DROP TABLE IF EXISTS EMP
+               DROP TABLE IF EXISTS EMP_IMPLDECL
            END-EXEC.
 
            EXEC SQL

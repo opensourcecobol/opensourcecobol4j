@@ -45,7 +45,7 @@ AT_DATA([prog.cbl], [
            PERFORM VARYING IDX FROM 1 BY 1 UNTIL IDX > 5
                EXEC SQL
                    SELECT FIELD INTO :GRPA.VAL(IDX)
-                     FROM TESTTABLE WHERE N = :IDX
+                     FROM TT_SUBSCRIPT WHERE N = :IDX
                END-EXEC
            END-PERFORM.
 
@@ -57,7 +57,7 @@ AT_DATA([prog.cbl], [
                MOVE IDX TO TMP-IDX OF GRP2
                EXEC SQL
                    SELECT FIELD INTO :GRPB.VAL(GRP2.TMP-IDX)
-                     FROM TESTTABLE WHERE N = :IDX
+                     FROM TT_SUBSCRIPT WHERE N = :IDX
                END-EXEC
            END-PERFORM.
 
@@ -97,11 +97,11 @@ AT_DATA([prog.cbl], [
            END-EXEC.
 
            EXEC SQL
-               DROP TABLE IF EXISTS TESTTABLE
+               DROP TABLE IF EXISTS TT_SUBSCRIPT
            END-EXEC.
 
            EXEC SQL
-                CREATE TABLE TESTTABLE
+                CREATE TABLE TT_SUBSCRIPT
                 (
                     N         NUMERIC(2,0) NOT NULL,
                     FIELD     NUMERIC(4,0) NOT NULL
@@ -121,7 +121,7 @@ AT_DATA([prog.cbl], [
               MOVE IDX TO TMP-IDX OF GRP2
               MOVE VAL OF ROW(IDX) TO VAL OF ROW2(IDX)
               EXEC SQL
-                 INSERT INTO TESTTABLE
+                 INSERT INTO TT_SUBSCRIPT
                    VALUES (:IDX, :GRPB.VAL(GRP2.TMP-IDX))
               END-EXEC
            END-PERFORM.
@@ -142,7 +142,7 @@ AT_DATA([prog.cbl], [
        CLEANUP-DB.
       ******************************************************************
            EXEC SQL
-               DROP TABLE IF EXISTS TESTTABLE
+               DROP TABLE IF EXISTS TT_SUBSCRIPT
            END-EXEC.
 
            EXEC SQL

@@ -65,7 +65,7 @@ AT_DATA([prog.cbl], [
 
       *    SHOW RESULT
            EXEC SQL
-               SELECT * INTO :READ-TBL FROM EMP WHERE EMP_NO > 4
+               SELECT * INTO :READ-TBL FROM EMP_GRPSUB WHERE EMP_NO > 4
            END-EXEC.
            PERFORM OUTPUT-RETURN-CODE-TEST.
 
@@ -99,16 +99,16 @@ AT_DATA([prog.cbl], [
            END-EXEC.
 
            EXEC SQL
-               DROP TABLE IF EXISTS EMP
+               DROP TABLE IF EXISTS EMP_GRPSUB
            END-EXEC.
 
            EXEC SQL
-                CREATE TABLE EMP
+                CREATE TABLE EMP_GRPSUB
                 (
                     EMP_NO     NUMERIC(4,0) NOT NULL,
                     EMP_NAME   CHAR(20),
                     EMP_SALARY NUMERIC(4,0),
-                    CONSTRAINT IEMP_0 PRIMARY KEY (EMP_NO)
+                    CONSTRAINT IEMP_GRPSUB PRIMARY KEY (EMP_NO)
                 )
            END-EXEC.
 
@@ -118,7 +118,7 @@ AT_DATA([prog.cbl], [
               MOVE TEST-NAME(IDX)   TO  EMP-NAME OF EMP-REC-VARS
               MOVE TEST-SALARY(IDX) TO  EMP-SALARY OF EMP-REC-VARS
               EXEC SQL
-                 INSERT INTO EMP VALUES
+                 INSERT INTO EMP_GRPSUB VALUES
                         (:EMP-REC-VARS.EMP-NO,
                          :EMP-REC-VARS.EMP-NAME,
                          :EMP-REC-VARS.EMP-SALARY)
@@ -138,7 +138,7 @@ AT_DATA([prog.cbl], [
            END-EXEC.
 
            EXEC SQL
-               DROP TABLE IF EXISTS EMP
+               DROP TABLE IF EXISTS EMP_GRPSUB
            END-EXEC.
 
            EXEC SQL

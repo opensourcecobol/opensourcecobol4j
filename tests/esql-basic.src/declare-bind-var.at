@@ -67,18 +67,18 @@ AT_DATA([prog.cbl], [
            
       *    DROP TABLE
            EXEC SQL
-               DROP TABLE IF EXISTS EMP
+               DROP TABLE IF EXISTS EMP_DECLBINDVAR
            END-EXEC.
            IF  SQLCODE NOT = ZERO PERFORM ERROR-RTN.
            
       *    CREATE TABLE 
            EXEC SQL
-                CREATE TABLE EMP
+                CREATE TABLE EMP_DECLBINDVAR
                 (
                     EMP_NO     NUMERIC(4,0) NOT NULL,
                     EMP_NAME   CHAR(20),
                    EMP_SALARY NUMERIC(4,0),
-                    CONSTRAINT IEMP_0 PRIMARY KEY (EMP_NO)
+                    CONSTRAINT IEMP_DECLBINDVAR PRIMARY KEY (EMP_NO)
                 )
            END-EXEC.
            IF  SQLCODE NOT = ZERO PERFORM ERROR-RTN STOP RUN.
@@ -89,7 +89,7 @@ AT_DATA([prog.cbl], [
               MOVE TEST-NAME(IDX)   TO  EMP-NAME
               MOVE TEST-SALARY(IDX) TO  EMP-SALARY
               EXEC SQL
-                 INSERT INTO EMP VALUES
+                 INSERT INTO EMP_DECLBINDVAR VALUES
                         (:EMP-NO,:EMP-NAME,:EMP-SALARY)
               END-EXEC
               IF  SQLCODE NOT = ZERO 
@@ -106,7 +106,7 @@ AT_DATA([prog.cbl], [
            EXEC SQL 
                DECLARE C1 CURSOR FOR
                SELECT EMP_NO, EMP_NAME, EMP_SALARY 
-                      FROM EMP
+                      FROM EMP_DECLBINDVAR
                       WHERE EMP_NO >= :EMP-NO-MIN
                         AND EMP_NO <= :EMP-NO-MAX
                       ORDER BY EMP_NO
@@ -139,7 +139,7 @@ AT_DATA([prog.cbl], [
            EXEC SQL 
                DECLARE C2 CURSOR FOR
                SELECT EMP_NO, EMP_NAME, EMP_SALARY 
-                      FROM EMP
+                      FROM EMP_DECLBINDVAR
                       WHERE EMP_NO >= :EMP-NO-MIN-U
                         AND EMP_NO <= :EMP-NO-MAX-U
                       ORDER BY EMP_NO
@@ -171,7 +171,7 @@ AT_DATA([prog.cbl], [
            EXEC SQL 
                DECLARE C3 CURSOR FOR
                SELECT EMP_NO, EMP_NAME, EMP_SALARY 
-                      FROM EMP
+                      FROM EMP_DECLBINDVAR
                       WHERE EMP_NAME = :EMP-NAME-X
                       ORDER BY EMP_NO
            END-EXEC.
@@ -204,7 +204,7 @@ AT_DATA([prog.cbl], [
            EXEC SQL 
                DECLARE C4 CURSOR FOR
                SELECT EMP_NO, EMP_NAME, EMP_SALARY 
-                      FROM EMP
+                      FROM EMP_DECLBINDVAR
                       WHERE EMP_NAME != :EMP-NAME-X
                         AND EMP_NO >= :EMP-NO-MIN-U
                         AND EMP_NO <= :EMP-NO-MAX-U
@@ -237,7 +237,7 @@ AT_DATA([prog.cbl], [
            EXEC SQL 
                DECLARE C5 CURSOR FOR
                SELECT EMP_NO, EMP_NAME, EMP_SALARY 
-                      FROM EMP
+                      FROM EMP_DECLBINDVAR
                       GROUP BY EMP_NO
                       HAVING EMP_NO = :EMP-NO
                       ORDER BY EMP_NO
@@ -270,7 +270,7 @@ AT_DATA([prog.cbl], [
            EXEC SQL 
                DECLARE C6 CURSOR FOR
                SELECT EMP_NO, EMP_NAME, EMP_SALARY 
-                      FROM EMP
+                      FROM EMP_DECLBINDVAR
                       WHERE EMP_NO >= :EMP-NO-MIN-U
                       GROUP BY EMP_NO
                       HAVING EMP_NO <= :EMP-NO-MAX-U

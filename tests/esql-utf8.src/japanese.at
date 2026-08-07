@@ -47,7 +47,7 @@ AT_DATA([prog.cbl], [
 
       *    SHOW RESULT
            EXEC SQL
-               SELECT FIELD INTO :READ-TBL FROM TESTTABLE ORDER BY N
+               SELECT FIELD INTO :READ-TBL FROM TT_UJAPANESE ORDER BY N
            END-EXEC.
 
            PERFORM VARYING IDX FROM 1 BY 1 UNTIL IDX > 10
@@ -76,11 +76,11 @@ AT_DATA([prog.cbl], [
            END-EXEC.
 
            EXEC SQL
-               DROP TABLE IF EXISTS TESTTABLE
+               DROP TABLE IF EXISTS TT_UJAPANESE
            END-EXEC.
 
            EXEC SQL
-                CREATE TABLE TESTTABLE
+                CREATE TABLE TT_UJAPANESE
                 (
                     N         NUMERIC(2,0) NOT NULL,
                     FIELD     CHAR(10)
@@ -91,7 +91,7 @@ AT_DATA([prog.cbl], [
            PERFORM VARYING IDX FROM 1 BY 1 UNTIL IDX > 10
               MOVE D(IDX)     TO  V
               EXEC SQL
-                 INSERT INTO TESTTABLE VALUES (:IDX, :V)
+                 INSERT INTO TT_UJAPANESE VALUES (:IDX, :V)
               END-EXEC
            END-PERFORM.
 
@@ -104,7 +104,7 @@ AT_DATA([prog.cbl], [
        CLEANUP-DB.
       ******************************************************************
       *    EXEC SQL
-      *        DROP TABLE IF EXISTS TESTTABLE
+      *        DROP TABLE IF EXISTS TT_UJAPANESE
       *    END-EXEC.
 
            EXEC SQL

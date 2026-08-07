@@ -77,18 +77,18 @@ AT_DATA([prog.cbl], [
        MAIN-RTN.
        PERFORM SETUP-DB.
        EXEC SQL
-           DROP TABLE IF EXISTS TESTTABLE
+           DROP TABLE IF EXISTS TT_SQLTYPE
        END-EXEC.
 
        EXEC SQL
-            CREATE TABLE TESTTABLE
+            CREATE TABLE TT_SQLTYPE
             (
                 FIELD bigint
             )
        END-EXEC.
 
        EXEC SQL
-            INSERT INTO TESTTABLE VALUES (:INPUT-DATA-0) -- 01
+            INSERT INTO TT_SQLTYPE VALUES (:INPUT-DATA-0) -- 01
        END-EXEC
 
        EXEC SQL
@@ -96,25 +96,25 @@ AT_DATA([prog.cbl], [
        END-EXEC.
 
        EXEC SQL
-           SELECT FIELD INTO :OUTPUT-DATA-0-ARR FROM TESTTABLE -- 01
+           SELECT FIELD INTO :OUTPUT-DATA-0-ARR FROM TT_SQLTYPE -- 01
        END-EXEC.
 
        DISPLAY OUTPUT-DATA-0(1).
       ******************************************************************
 
        EXEC SQL
-           DROP TABLE IF EXISTS TESTTABLE
+           DROP TABLE IF EXISTS TT_SQLTYPE
        END-EXEC.
 
        EXEC SQL
-            CREATE TABLE TESTTABLE
+            CREATE TABLE TT_SQLTYPE
             (
                 FIELD bigserial
             )
        END-EXEC.
 
        EXEC SQL
-            INSERT INTO TESTTABLE VALUES (:INPUT-DATA-1) -- 02
+            INSERT INTO TT_SQLTYPE VALUES (:INPUT-DATA-1) -- 02
        END-EXEC
 
        EXEC SQL
@@ -122,25 +122,25 @@ AT_DATA([prog.cbl], [
        END-EXEC.
 
        EXEC SQL
-           SELECT FIELD INTO :OUTPUT-DATA-1-ARR FROM TESTTABLE -- 02
+           SELECT FIELD INTO :OUTPUT-DATA-1-ARR FROM TT_SQLTYPE -- 02
        END-EXEC.
 
        DISPLAY OUTPUT-DATA-1(1).
       ******************************************************************
 
        EXEC SQL
-           DROP TABLE IF EXISTS TESTTABLE
+           DROP TABLE IF EXISTS TT_SQLTYPE
        END-EXEC.
 
        EXEC SQL
-            CREATE TABLE TESTTABLE
+            CREATE TABLE TT_SQLTYPE
             (
                 FIELD char(5)
             )
        END-EXEC.
 
        EXEC SQL
-            INSERT INTO TESTTABLE VALUES (:INPUT-DATA-2) -- 03
+            INSERT INTO TT_SQLTYPE VALUES (:INPUT-DATA-2) -- 03
        END-EXEC
 
        EXEC SQL
@@ -148,25 +148,25 @@ AT_DATA([prog.cbl], [
        END-EXEC.
 
        EXEC SQL
-           SELECT FIELD INTO :OUTPUT-DATA-2-ARR FROM TESTTABLE -- 03
+           SELECT FIELD INTO :OUTPUT-DATA-2-ARR FROM TT_SQLTYPE -- 03
        END-EXEC.
 
        DISPLAY OUTPUT-DATA-2(1).
       ******************************************************************
 
        EXEC SQL
-           DROP TABLE IF EXISTS TESTTABLE
+           DROP TABLE IF EXISTS TT_SQLTYPE
        END-EXEC.
 
        EXEC SQL
-            CREATE TABLE TESTTABLE
+            CREATE TABLE TT_SQLTYPE
             (
                 FIELD date
             )
        END-EXEC.
 
        EXEC SQL
-            INSERT INTO TESTTABLE VALUES (:INPUT-DATA-3) -- 04
+            INSERT INTO TT_SQLTYPE VALUES (:INPUT-DATA-3) -- 04
        END-EXEC
 
        EXEC SQL
@@ -174,25 +174,25 @@ AT_DATA([prog.cbl], [
        END-EXEC.
 
        EXEC SQL
-           SELECT FIELD INTO :OUTPUT-DATA-3-ARR FROM TESTTABLE -- 04
+           SELECT FIELD INTO :OUTPUT-DATA-3-ARR FROM TT_SQLTYPE -- 04
        END-EXEC.
 
        DISPLAY OUTPUT-DATA-3(1).
       ******************************************************************
 
        EXEC SQL
-           DROP TABLE IF EXISTS TESTTABLE
+           DROP TABLE IF EXISTS TT_SQLTYPE
        END-EXEC.
 
        EXEC SQL
-            CREATE TABLE TESTTABLE
+            CREATE TABLE TT_SQLTYPE
             (
                 FIELD double precision
             )
        END-EXEC.
 
        EXEC SQL
-            INSERT INTO TESTTABLE VALUES (:INPUT-DATA-4) -- 05
+            INSERT INTO TT_SQLTYPE VALUES (:INPUT-DATA-4) -- 05
        END-EXEC
 
        EXEC SQL
@@ -200,25 +200,25 @@ AT_DATA([prog.cbl], [
        END-EXEC.
 
        EXEC SQL
-           SELECT FIELD INTO :OUTPUT-DATA-4-ARR FROM TESTTABLE -- 05
+           SELECT FIELD INTO :OUTPUT-DATA-4-ARR FROM TT_SQLTYPE -- 05
        END-EXEC.
 
        DISPLAY OUTPUT-DATA-4(1).
       ******************************************************************
 
        EXEC SQL
-           DROP TABLE IF EXISTS TESTTABLE
+           DROP TABLE IF EXISTS TT_SQLTYPE
        END-EXEC.
 
        EXEC SQL
-            CREATE TABLE TESTTABLE
+            CREATE TABLE TT_SQLTYPE
             (
                 FIELD integer
             )
        END-EXEC.
 
        EXEC SQL
-            INSERT INTO TESTTABLE VALUES (:INPUT-DATA-5) -- 06
+            INSERT INTO TT_SQLTYPE VALUES (:INPUT-DATA-5) -- 06
        END-EXEC
 
        EXEC SQL
@@ -226,25 +226,25 @@ AT_DATA([prog.cbl], [
        END-EXEC.
 
        EXEC SQL
-           SELECT FIELD INTO :OUTPUT-DATA-5-ARR FROM TESTTABLE -- 06
+           SELECT FIELD INTO :OUTPUT-DATA-5-ARR FROM TT_SQLTYPE -- 06
        END-EXEC.
 
        DISPLAY OUTPUT-DATA-5(1).
       ******************************************************************
 
        EXEC SQL
-           DROP TABLE IF EXISTS TESTTABLE
+           DROP TABLE IF EXISTS TT_SQLTYPE
        END-EXEC.
 
        EXEC SQL
-            CREATE TABLE TESTTABLE
+            CREATE TABLE TT_SQLTYPE
             (
                 FIELD numeric(6,2)
             )
        END-EXEC.
 
        EXEC SQL
-            INSERT INTO TESTTABLE VALUES (:INPUT-DATA-6) -- 07
+            INSERT INTO TT_SQLTYPE VALUES (:INPUT-DATA-6) -- 07
        END-EXEC
 
        EXEC SQL
@@ -252,25 +252,25 @@ AT_DATA([prog.cbl], [
        END-EXEC.
 
        EXEC SQL
-           SELECT FIELD INTO :OUTPUT-DATA-6-ARR FROM TESTTABLE -- 07
+           SELECT FIELD INTO :OUTPUT-DATA-6-ARR FROM TT_SQLTYPE -- 07
        END-EXEC.
 
        DISPLAY OUTPUT-DATA-6(1).
       ******************************************************************
 
        EXEC SQL
-           DROP TABLE IF EXISTS TESTTABLE
+           DROP TABLE IF EXISTS TT_SQLTYPE
        END-EXEC.
 
        EXEC SQL
-            CREATE TABLE TESTTABLE
+            CREATE TABLE TT_SQLTYPE
             (
                 FIELD real
             )
        END-EXEC.
 
        EXEC SQL
-            INSERT INTO TESTTABLE VALUES (:INPUT-DATA-7) -- 08
+            INSERT INTO TT_SQLTYPE VALUES (:INPUT-DATA-7) -- 08
        END-EXEC
 
        EXEC SQL
@@ -278,25 +278,25 @@ AT_DATA([prog.cbl], [
        END-EXEC.
 
        EXEC SQL
-           SELECT FIELD INTO :OUTPUT-DATA-7-ARR FROM TESTTABLE -- 08
+           SELECT FIELD INTO :OUTPUT-DATA-7-ARR FROM TT_SQLTYPE -- 08
        END-EXEC.
 
        DISPLAY OUTPUT-DATA-7(1).
       ******************************************************************
 
        EXEC SQL
-           DROP TABLE IF EXISTS TESTTABLE
+           DROP TABLE IF EXISTS TT_SQLTYPE
        END-EXEC.
 
        EXEC SQL
-            CREATE TABLE TESTTABLE
+            CREATE TABLE TT_SQLTYPE
             (
                 FIELD smallint
             )
        END-EXEC.
 
        EXEC SQL
-            INSERT INTO TESTTABLE VALUES (:INPUT-DATA-8) -- 09
+            INSERT INTO TT_SQLTYPE VALUES (:INPUT-DATA-8) -- 09
        END-EXEC
 
        EXEC SQL
@@ -304,25 +304,25 @@ AT_DATA([prog.cbl], [
        END-EXEC.
 
        EXEC SQL
-           SELECT FIELD INTO :OUTPUT-DATA-8-ARR FROM TESTTABLE -- 09
+           SELECT FIELD INTO :OUTPUT-DATA-8-ARR FROM TT_SQLTYPE -- 09
        END-EXEC.
 
        DISPLAY OUTPUT-DATA-8(1).
       ******************************************************************
 
        EXEC SQL
-           DROP TABLE IF EXISTS TESTTABLE
+           DROP TABLE IF EXISTS TT_SQLTYPE
        END-EXEC.
 
        EXEC SQL
-            CREATE TABLE TESTTABLE
+            CREATE TABLE TT_SQLTYPE
             (
                 FIELD smallserial
             )
        END-EXEC.
 
        EXEC SQL
-            INSERT INTO TESTTABLE VALUES (:INPUT-DATA-9) -- 10
+            INSERT INTO TT_SQLTYPE VALUES (:INPUT-DATA-9) -- 10
        END-EXEC
 
        EXEC SQL
@@ -330,25 +330,25 @@ AT_DATA([prog.cbl], [
        END-EXEC.
 
        EXEC SQL
-           SELECT FIELD INTO :OUTPUT-DATA-9-ARR FROM TESTTABLE -- 10
+           SELECT FIELD INTO :OUTPUT-DATA-9-ARR FROM TT_SQLTYPE -- 10
        END-EXEC.
 
        DISPLAY OUTPUT-DATA-9(1).
       ******************************************************************
 
        EXEC SQL
-           DROP TABLE IF EXISTS TESTTABLE
+           DROP TABLE IF EXISTS TT_SQLTYPE
        END-EXEC.
 
        EXEC SQL
-            CREATE TABLE TESTTABLE
+            CREATE TABLE TT_SQLTYPE
             (
                 FIELD serial
             )
        END-EXEC.
 
        EXEC SQL
-            INSERT INTO TESTTABLE VALUES (:INPUT-DATA-10) -- 11
+            INSERT INTO TT_SQLTYPE VALUES (:INPUT-DATA-10) -- 11
        END-EXEC
 
        EXEC SQL
@@ -356,25 +356,25 @@ AT_DATA([prog.cbl], [
        END-EXEC.
 
        EXEC SQL
-           SELECT FIELD INTO :OUTPUT-DATA-10-ARR FROM TESTTABLE -- 11
+           SELECT FIELD INTO :OUTPUT-DATA-10-ARR FROM TT_SQLTYPE -- 11
        END-EXEC.
 
        DISPLAY OUTPUT-DATA-10(1).
       ******************************************************************
 
        EXEC SQL
-           DROP TABLE IF EXISTS TESTTABLE
+           DROP TABLE IF EXISTS TT_SQLTYPE
        END-EXEC.
 
        EXEC SQL
-            CREATE TABLE TESTTABLE
+            CREATE TABLE TT_SQLTYPE
             (
                 FIELD text
             )
        END-EXEC.
 
        EXEC SQL
-            INSERT INTO TESTTABLE VALUES (:INPUT-DATA-11) -- 12
+            INSERT INTO TT_SQLTYPE VALUES (:INPUT-DATA-11) -- 12
        END-EXEC
 
        EXEC SQL
@@ -382,25 +382,25 @@ AT_DATA([prog.cbl], [
        END-EXEC.
 
        EXEC SQL
-           SELECT FIELD INTO :OUTPUT-DATA-11-ARR FROM TESTTABLE -- 12
+           SELECT FIELD INTO :OUTPUT-DATA-11-ARR FROM TT_SQLTYPE -- 12
        END-EXEC.
 
        DISPLAY OUTPUT-DATA-11(1).
       ******************************************************************
 
        EXEC SQL
-           DROP TABLE IF EXISTS TESTTABLE
+           DROP TABLE IF EXISTS TT_SQLTYPE
        END-EXEC.
 
        EXEC SQL
-            CREATE TABLE TESTTABLE
+            CREATE TABLE TT_SQLTYPE
             (
                 FIELD time
             )
        END-EXEC.
 
        EXEC SQL
-            INSERT INTO TESTTABLE VALUES (:INPUT-DATA-12) -- 13
+            INSERT INTO TT_SQLTYPE VALUES (:INPUT-DATA-12) -- 13
        END-EXEC
 
        EXEC SQL
@@ -408,25 +408,25 @@ AT_DATA([prog.cbl], [
        END-EXEC.
 
        EXEC SQL
-           SELECT FIELD INTO :OUTPUT-DATA-12-ARR FROM TESTTABLE -- 13
+           SELECT FIELD INTO :OUTPUT-DATA-12-ARR FROM TT_SQLTYPE -- 13
        END-EXEC.
 
        DISPLAY OUTPUT-DATA-12(1).
       ******************************************************************
 
        EXEC SQL
-           DROP TABLE IF EXISTS TESTTABLE
+           DROP TABLE IF EXISTS TT_SQLTYPE
        END-EXEC.
 
        EXEC SQL
-            CREATE TABLE TESTTABLE
+            CREATE TABLE TT_SQLTYPE
             (
                 FIELD timestamp
             )
        END-EXEC.
 
        EXEC SQL
-            INSERT INTO TESTTABLE VALUES (:INPUT-DATA-13) -- 14
+            INSERT INTO TT_SQLTYPE VALUES (:INPUT-DATA-13) -- 14
        END-EXEC
 
        EXEC SQL
@@ -434,7 +434,7 @@ AT_DATA([prog.cbl], [
        END-EXEC.
 
        EXEC SQL
-           SELECT FIELD INTO :OUTPUT-DATA-13-ARR FROM TESTTABLE -- 14
+           SELECT FIELD INTO :OUTPUT-DATA-13-ARR FROM TT_SQLTYPE -- 14
        END-EXEC.
 
        DISPLAY OUTPUT-DATA-13(1).
@@ -464,7 +464,7 @@ AT_DATA([prog.cbl], [
        CLEANUP-DB.
       ******************************************************************
            EXEC SQL
-               DROP TABLE IF EXISTS TESTTABLE
+               DROP TABLE IF EXISTS TT_SQLTYPE
            END-EXEC.
 
            EXEC SQL

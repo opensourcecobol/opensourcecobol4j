@@ -51,7 +51,7 @@ AT_DATA([prog.cbl], [
               MOVE TEST-NAME(IDX)   TO  EMP-NAME
               MOVE TEST-SALARY(IDX) TO  EMP-SALARY
               EXEC SQL
-                 INSERT INTO EMP VALUES
+                 INSERT INTO EMP_INSERT VALUES
                         (:EMP-NO,:EMP-NAME,:EMP-SALARY)
               END-EXEC
               PERFORM DISPLAY-TEST-RESULT
@@ -79,16 +79,16 @@ AT_DATA([prog.cbl], [
            END-EXEC.
 
            EXEC SQL
-               DROP TABLE IF EXISTS EMP
+               DROP TABLE IF EXISTS EMP_INSERT
            END-EXEC.
 
            EXEC SQL
-                CREATE TABLE EMP
+                CREATE TABLE EMP_INSERT
                 (
                     EMP_NO     NUMERIC(4,0) NOT NULL,
                     EMP_NAME   CHAR(20),
                     EMP_SALARY NUMERIC(4,0),
-                    CONSTRAINT IEMP_0 PRIMARY KEY (EMP_NO)
+                    CONSTRAINT IEMP_INSERT PRIMARY KEY (EMP_NO)
                 )
            END-EXEC.
 
@@ -96,7 +96,7 @@ AT_DATA([prog.cbl], [
        CLEANUP-DB.
       ******************************************************************
            EXEC SQL
-               DROP TABLE IF EXISTS EMP
+               DROP TABLE IF EXISTS EMP_INSERT
            END-EXEC.
 
            EXEC SQL

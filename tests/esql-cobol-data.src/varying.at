@@ -81,11 +81,11 @@ AT_DATA([prog.cbl], [
            END-EXEC.
 
            EXEC SQL
-               DROP TABLE IF EXISTS EMP
+               DROP TABLE IF EXISTS EMP_CDVARYING1
            END-EXEC.
 
            EXEC SQL
-                CREATE TABLE EMP
+                CREATE TABLE EMP_CDVARYING1
                 (
                     EMP_NUM1   NUMERIC(4, 0),
                     EMP_NAME   VARCHAR(10),
@@ -100,7 +100,7 @@ AT_DATA([prog.cbl], [
               MOVE TEST-NUM2(IDX)   TO  EMP-NUM2
               MOVE IDX TO EMP-NAME-LEN
               EXEC SQL
-                 INSERT INTO EMP VALUES
+                 INSERT INTO EMP_CDVARYING1 VALUES
                         (:EMP-NUM1, :EMP-NAME, :EMP-NUM2)
               END-EXEC
       *       PERFORM DISPLAY-TEST-RESULT
@@ -109,7 +109,7 @@ AT_DATA([prog.cbl], [
            EXEC SQL 
                DECLARE C1 CURSOR FOR
                SELECT EMP_NUM1, EMP_NAME, EMP_NUM2
-                      FROM EMP
+                      FROM EMP_CDVARYING1
                       ORDER BY EMP_NUM1
            END-EXEC.
 
@@ -126,7 +126,7 @@ AT_DATA([prog.cbl], [
            END-EXEC.
 
            EXEC SQL
-               DROP TABLE IF EXISTS EMP
+               DROP TABLE IF EXISTS EMP_CDVARYING1
            END-EXEC.
 
            EXEC SQL
@@ -271,11 +271,11 @@ AT_DATA([prog.cbl], [
            END-EXEC.
 
            EXEC SQL
-               DROP TABLE IF EXISTS EMP
+               DROP TABLE IF EXISTS EMP_CDVARYING1
            END-EXEC.
 
            EXEC SQL
-                CREATE TABLE EMP
+                CREATE TABLE EMP_CDVARYING1
                 (
                     EMP_NAME   VARCHAR(10)
                 )
@@ -286,7 +286,7 @@ AT_DATA([prog.cbl], [
               MOVE TEST-NAME(IDX)   TO  EMP-NAME-ARR
               MOVE IDX TO EMP-NAME-LEN
               EXEC SQL
-                 INSERT INTO EMP VALUES
+                 INSERT INTO EMP_CDVARYING1 VALUES
                         (:EMP-NAME)
               END-EXEC
       *       PERFORM DISPLAY-TEST-RESULT
@@ -295,7 +295,7 @@ AT_DATA([prog.cbl], [
            EXEC SQL 
                DECLARE C1 CURSOR FOR
                SELECT EMP_NAME
-                      FROM EMP
+                      FROM EMP_CDVARYING1
                       ORDER BY EMP_NAME
            END-EXEC.
 
@@ -312,7 +312,7 @@ AT_DATA([prog.cbl], [
            END-EXEC.
 
            EXEC SQL
-               DROP TABLE IF EXISTS EMP
+               DROP TABLE IF EXISTS EMP_CDVARYING1
            END-EXEC.
 
            EXEC SQL
@@ -467,11 +467,11 @@ AT_DATA([prog.cbl], [
            END-EXEC.
 
            EXEC SQL
-               DROP TABLE IF EXISTS EMP
+               DROP TABLE IF EXISTS EMP_CDVARYING2
            END-EXEC.
 
            EXEC SQL
-                CREATE TABLE EMP
+                CREATE TABLE EMP_CDVARYING2
                 (
                     EMP_NUM1   NUMERIC(4, 0),
                     EMP_NAME   VARCHAR(10),
@@ -486,7 +486,7 @@ AT_DATA([prog.cbl], [
               MOVE TEST-NUM2(IDX)   TO  EMP-NUM2
               MOVE IDX TO EMP-NAME-LEN
               EXEC SQL
-                 INSERT INTO EMP VALUES
+                 INSERT INTO EMP_CDVARYING2 VALUES
                         (:EMP-NUM1, :EMP-NAME, :EMP-NUM2)
               END-EXEC
       *       PERFORM DISPLAY-TEST-RESULT
@@ -495,7 +495,7 @@ AT_DATA([prog.cbl], [
            EXEC SQL 
                DECLARE C1 CURSOR FOR
                SELECT EMP_NUM1, EMP_NAME, EMP_NUM2
-                      FROM EMP
+                      FROM EMP_CDVARYING2
                       ORDER BY EMP_NUM1
            END-EXEC.
 
@@ -512,7 +512,7 @@ AT_DATA([prog.cbl], [
            END-EXEC.
 
            EXEC SQL
-               DROP TABLE IF EXISTS EMP
+               DROP TABLE IF EXISTS EMP_CDVARYING2
            END-EXEC.
 
            EXEC SQL
@@ -657,11 +657,11 @@ AT_DATA([prog.cbl], [
            END-EXEC.
 
            EXEC SQL
-               DROP TABLE IF EXISTS EMP
+               DROP TABLE IF EXISTS EMP_CDVARYING2
            END-EXEC.
 
            EXEC SQL
-                CREATE TABLE EMP
+                CREATE TABLE EMP_CDVARYING2
                 (
                     EMP_NAME   VARCHAR(10)
                 )
@@ -672,7 +672,7 @@ AT_DATA([prog.cbl], [
               MOVE TEST-NAME(IDX)   TO  EMP-NAME-ARR
               MOVE IDX TO EMP-NAME-LEN
               EXEC SQL
-                 INSERT INTO EMP VALUES
+                 INSERT INTO EMP_CDVARYING2 VALUES
                         (:EMP-NAME)
               END-EXEC
       *       PERFORM DISPLAY-TEST-RESULT
@@ -681,7 +681,7 @@ AT_DATA([prog.cbl], [
            EXEC SQL 
                DECLARE C1 CURSOR FOR
                SELECT EMP_NAME
-                      FROM EMP
+                      FROM EMP_CDVARYING2
                       ORDER BY EMP_NAME
            END-EXEC.
 
@@ -698,7 +698,7 @@ AT_DATA([prog.cbl], [
            END-EXEC.
 
            EXEC SQL
-               DROP TABLE IF EXISTS EMP
+               DROP TABLE IF EXISTS EMP_CDVARYING2
            END-EXEC.
 
            EXEC SQL

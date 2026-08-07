@@ -49,8 +49,9 @@ AT_DATA([prog.cbl], [
        PERFORM SETUP-DB.
 
       *    Set the VARYING host variable (SQL text + length)
-           MOVE "DELETE FROM EMP WHERE EMP_NO > ?" TO SQL-COMMAND-ARR.
-           MOVE 32 TO SQL-COMMAND-LEN.
+           MOVE "DELETE FROM EMP_PREPEXEC1 WHERE EMP_NO > ?"
+             TO SQL-COMMAND-ARR.
+           MOVE 42 TO SQL-COMMAND-LEN.
 
       *    PREPARE
            EXEC SQL
@@ -68,7 +69,7 @@ AT_DATA([prog.cbl], [
            EXEC SQL 
                DECLARE C1 CURSOR FOR
                SELECT EMP_NO, EMP_NAME, EMP_SALARY 
-                      FROM EMP
+                      FROM EMP_PREPEXEC1
                       ORDER BY EMP_NO
            END-EXEC.
 
@@ -112,16 +113,16 @@ AT_DATA([prog.cbl], [
            END-EXEC.
 
            EXEC SQL
-               DROP TABLE IF EXISTS EMP
+               DROP TABLE IF EXISTS EMP_PREPEXEC1
            END-EXEC.
 
            EXEC SQL
-                CREATE TABLE EMP
+                CREATE TABLE EMP_PREPEXEC1
                 (
                     EMP_NO     NUMERIC(4,0) NOT NULL,
                     EMP_NAME   CHAR(20),
                     EMP_SALARY NUMERIC(4,0),
-                    CONSTRAINT IEMP_0 PRIMARY KEY (EMP_NO)
+                    CONSTRAINT IEMP_PREPEXEC1 PRIMARY KEY (EMP_NO)
                 )
            END-EXEC.
 
@@ -131,7 +132,7 @@ AT_DATA([prog.cbl], [
               MOVE TEST-NAME(IDX)   TO  EMP-NAME
               MOVE TEST-SALARY(IDX) TO  EMP-SALARY
               EXEC SQL
-                 INSERT INTO EMP VALUES
+                 INSERT INTO EMP_PREPEXEC1 VALUES
                         (:EMP-NO,:EMP-NAME,:EMP-SALARY)
               END-EXEC
            END-PERFORM.
@@ -144,7 +145,7 @@ AT_DATA([prog.cbl], [
            END-EXEC.
 
            EXEC SQL
-               DROP TABLE IF EXISTS EMP
+               DROP TABLE IF EXISTS EMP_PREPEXEC1
            END-EXEC.
 
            EXEC SQL
@@ -212,7 +213,7 @@ AT_DATA([prog.cbl], [
       *    A plain PIC X(n) must work: prepare reads the whole field
       *    and trims trailing spaces.
        01  SQL-COMMAND   PIC X(50)
-            VALUE "DELETE FROM EMP WHERE EMP_NO > ?".
+            VALUE "DELETE FROM EMP_PREPEXEC2 WHERE EMP_NO > ?".
        01  SQL-COMMAND-ARG         PIC  99 VALUE 5.
        01  DBNAME                  PIC  X(30) VALUE SPACE.
        01  USERNAME                PIC  X(30) VALUE SPACE.
@@ -229,9 +230,9 @@ AT_DATA([prog.cbl], [
            EXEC SQL
                CONNECT :USERNAME IDENTIFIED BY :PASSWD USING :DBNAME
            END-EXEC.
-           EXEC SQL DROP TABLE IF EXISTS EMP END-EXEC.
+           EXEC SQL DROP TABLE IF EXISTS EMP_PREPEXEC2 END-EXEC.
            EXEC SQL
-               CREATE TABLE EMP (EMP_NO NUMERIC(4,0) NOT NULL,
+               CREATE TABLE EMP_PREPEXEC2 (EMP_NO NUMERIC(4,0) NOT NULL,
                EMP_NAME CHAR(20), EMP_SALARY NUMERIC(4,0))
            END-EXEC.
            PERFORM VARYING IDX FROM 1 BY 1 UNTIL IDX > 10
@@ -239,7 +240,8 @@ AT_DATA([prog.cbl], [
               MOVE "NAME" TO EMP-NAME
               COMPUTE EMP-SALARY = IDX * 100
               EXEC SQL
-                 INSERT INTO EMP VALUES (:EMP-NO,:EMP-NAME,:EMP-SALARY)
+                 INSERT INTO EMP_PREPEXEC2 VALUES
+                        (:EMP-NO,:EMP-NAME,:EMP-SALARY)
               END-EXEC
            END-PERFORM.
            EXEC SQL COMMIT WORK END-EXEC.
@@ -248,7 +250,7 @@ AT_DATA([prog.cbl], [
            DISPLAY "PREPARE SQLCODE=" SQLCODE.
            EXEC SQL EXECUTE st USING :SQL-COMMAND-ARG END-EXEC.
            DISPLAY "EXECUTE SQLCODE=" SQLCODE.
-           EXEC SQL DROP TABLE IF EXISTS EMP END-EXEC.
+           EXEC SQL DROP TABLE IF EXISTS EMP_PREPEXEC2 END-EXEC.
            EXEC SQL DISCONNECT ALL END-EXEC.
            STOP RUN.
 ])

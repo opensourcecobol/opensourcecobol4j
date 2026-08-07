@@ -44,7 +44,7 @@ AT_DATA([prog.cbl], [
        EXEC SQL 
          DECLARE C CURSOR FOR
            SELECT V 
-           FROM TESTTABLE
+           FROM TT_OFC
            ORDER BY ID
        END-EXEC.
 
@@ -98,11 +98,11 @@ AT_DATA([prog.cbl], [
            END-EXEC.
 
            EXEC SQL
-               DROP TABLE IF EXISTS TESTTABLE
+               DROP TABLE IF EXISTS TT_OFC
            END-EXEC.
 
            EXEC SQL
-               CREATE TABLE TESTTABLE
+               CREATE TABLE TT_OFC
                (
                  ID integer,
                  V  char(5)
@@ -113,7 +113,7 @@ AT_DATA([prog.cbl], [
              MOVE TEST-ID(IDX) TO DATA-ID
              MOVE TEST-V(IDX) TO DATA-V
              EXEC SQL
-               INSERT INTO TESTTABLE VALUES
+               INSERT INTO TT_OFC VALUES
                  (:DATA-ID, :DATA-V)
              END-EXEC
            END-PERFORM.

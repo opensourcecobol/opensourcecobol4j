@@ -801,7 +801,8 @@ esql_sqlca_DEPENDENCIES = \
 	esql-sqlca.src/open-fetch-close.at \
 	esql-sqlca.src/prepare-execute.at \
 	esql-sqlca.src/fetch-loop.at \
-	esql-sqlca.src/errml-errmc.at
+	esql-sqlca.src/errml-errmc.at \
+	esql-sqlca.src/bulk-fetch.at
 
 esql_cobol_data_DEPENDENCIES = \
 	esql-cobol-data.at \
@@ -811,18 +812,24 @@ esql_cobol_data_DEPENDENCIES = \
 	esql-cobol-data.src/comp3_signed.at \
 	esql-cobol-data.src/alphanumeric.at \
 	esql-cobol-data.src/japanese.at \
-	esql-cobol-data.src/varying.at
+	esql-cobol-data.src/varying.at \
+	esql-cobol-data.src/subscript.at
 
 esql_misc_DEPENDENCIES = \
 	esql-misc.at \
+	esql-misc.src/logging.at \
 	esql-misc.src/long-sql.at \
 	esql-misc.src/include.at \
 	esql-misc.src/fetch-sqlca.at \
 	esql-misc.src/compile.at \
 	esql-misc.src/sql-convert.at \
 	esql-misc.src/implicit-declare.at \
+	esql-misc.src/declare-section.at \
 	esql-misc.src/sql-format.at \
-	esql-misc.src/null-without-indicator.at
+	esql-misc.src/host-var-wrap.at \
+	esql-misc.src/null-without-indicator.at \
+	esql-misc.src/sqlca-warning.at \
+	esql-misc.src/group-sub.at
 
 esql_sql_data_DEPENDENCIES = \
 	esql-sql-data.at \

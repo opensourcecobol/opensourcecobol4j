@@ -100,7 +100,7 @@ jobs:
       - name: Run ESQL UTF-8 tests
         id: esql-utf8
         working-directory: tests/
-        run: ./esql-utf8
+        run: ./esql-utf8 -j4
 
       - name: Upload test logs if tests fail
         if: failure()

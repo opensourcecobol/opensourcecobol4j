@@ -51,7 +51,7 @@ AT_DATA([prog.cbl], [
               MOVE TEST-NAME(IDX)   TO  EMP-NAME
               MOVE TEST-SALARY(IDX) TO  EMP-SALARY
               EXEC SQL
-                 INSERT INTO EMP VALUES
+                 INSERT INTO EMP_UPDATE VALUES
                         (:EMP-NO,:EMP-NAME,:EMP-SALARY)
               END-EXEC
            END-PERFORM.
@@ -59,7 +59,8 @@ AT_DATA([prog.cbl], [
       *    UPDATE
            MOVE 5 TO EMP-NO.
            EXEC SQL
-              UPDATE EMP SET EMP_NAME = 'NO_NAME' WHERE EMP_NO > :EMP-NO
+              UPDATE EMP_UPDATE SET EMP_NAME = 'NO_NAME'
+                WHERE EMP_NO > :EMP-NO
            END-EXEC.
            PERFORM OUTPUT-RETURN-CODE-TEST.
 
@@ -67,7 +68,7 @@ AT_DATA([prog.cbl], [
            EXEC SQL 
                DECLARE C1 CURSOR FOR
                SELECT EMP_NO, EMP_NAME, EMP_SALARY 
-                      FROM EMP
+                      FROM EMP_UPDATE
                       ORDER BY EMP_NO
            END-EXEC.
 
@@ -111,16 +112,16 @@ AT_DATA([prog.cbl], [
            END-EXEC.
 
            EXEC SQL
-               DROP TABLE IF EXISTS EMP
+               DROP TABLE IF EXISTS EMP_UPDATE
            END-EXEC.
 
            EXEC SQL
-                CREATE TABLE EMP
+                CREATE TABLE EMP_UPDATE
                 (
                     EMP_NO     NUMERIC(4,0) NOT NULL,
                     EMP_NAME   CHAR(20),
                     EMP_SALARY NUMERIC(4,0),
-                    CONSTRAINT IEMP_0 PRIMARY KEY (EMP_NO)
+                    CONSTRAINT IEMP_UPDATE PRIMARY KEY (EMP_NO)
                 )
            END-EXEC.
 
@@ -132,7 +133,7 @@ AT_DATA([prog.cbl], [
            END-EXEC.
 
            EXEC SQL
-               DROP TABLE IF EXISTS EMP
+               DROP TABLE IF EXISTS EMP_UPDATE
            END-EXEC.
 
            EXEC SQL
