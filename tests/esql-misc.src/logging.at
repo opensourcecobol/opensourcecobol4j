@@ -1,10 +1,12 @@
 AT_SETUP([debug logging output])
 
-dnl This is the dedicated test for the CobolSql debug/error logging output.
+dnl This is the dedicated test for the CobolEsql debug/error logging output.
 dnl It exercises every statement kind that emits a log line (CONNECT, plain
 dnl EXEC SQL, parameterized EXEC SQL, SELECT INTO, DECLARE/OPEN CURSOR, a
-dnl failing statement that logs at ERROR, and DISCONNECT) and pins the exact
-dnl stderr produced by ${RUN_MODULE_LOG}, the only run that enables logging.
+dnl failing statement that logs at ERROR, ROLLBACK, and DISCONNECT) plus the
+dnl PostgreSQL transaction hooks (BEGIN/COMMIT/ROLLBACK, logged as
+dnl "... (postgresql)"), and pins the exact stderr produced by
+dnl ${RUN_MODULE_LOG}, the only run that enables logging.
 dnl Every other esql test runs with logging off (the default bundled in
 dnl libcobj.jar) and asserts an empty stderr, so log-format changes only need
 dnl to be updated here.
@@ -103,11 +105,15 @@ dnl detail: its offset is the only part of the output that could shift
 dnl between PostgreSQL versions. Everything else (the libcobj-generated
 dnl DEBUG lines and the stable "relation ... does not exist" message) is
 dnl matched exactly so a log-format regression is still caught here.
+dnl No BEGIN follows the DISCONNECT's COMMIT: DISCONNECT commits through
+dnl commitBeforeClose, which skips the next BEGIN because the connection is
+dnl closed right after. COMMIT/ROLLBACK keep their trailing BEGIN.
 AT_CHECK([${RUN_MODULE_LOG} prog 2>stderr.log], [0],
 [done
 ])
 AT_CHECK([grep -v '^  Position:' stderr.log], [0],
-[DEBUG CONNECT successful (id=OCDB_DEFAULT_DBNAME)
+[DEBUG BEGIN (postgresql)
+DEBUG CONNECT successful (id=OCDB_DEFAULT_DBNAME)
 DEBUG EXEC SQL: DROP TABLE IF EXISTS LOGTEST
 DEBUG EXEC SQL: CREATE TABLE LOGTEST ( EMP_NO NUMERIC(4,0) NOT NULL, EMP_NAME CHAR(20), CONSTRAINT ILOGTEST_0 PRIMARY KEY (EMP_NO) )
 DEBUG EXEC SQL (params=2): INSERT INTO LOGTEST VALUES (?, ?)
@@ -117,7 +123,10 @@ DEBUG OPEN CURSOR prog_C1
 DEBUG EXEC SQL: DROP TABLE IF EXISTS LOGTEST
 DEBUG SELECT INTO: SELECT EMP_NAME FROM NOSUCHTABLE
 ERROR SELECT INTO failed: SELECT EMP_NAME FROM NOSUCHTABLE - ERROR: relation "nosuchtable" does not exist
+DEBUG ROLLBACK (postgresql)
+DEBUG BEGIN (postgresql)
 DEBUG DISCONNECT (id=OCDB_DEFAULT_DBNAME)
+DEBUG COMMIT (postgresql)
 ])
 
 AT_CLEANUP

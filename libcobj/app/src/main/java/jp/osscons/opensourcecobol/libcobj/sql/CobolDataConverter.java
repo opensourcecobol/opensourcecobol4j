@@ -14,8 +14,14 @@ import jp.osscons.opensourcecobol.libcobj.data.AbstractCobolField;
 import jp.osscons.opensourcecobol.libcobj.data.CobolDataStorage;
 import jp.osscons.opensourcecobol.libcobj.data.CobolFieldAttribute;
 
-/** COBOL ホスト変数のストレージと Java/JDBC 型との間で相互変換を行う。 */
-final class CobolDataConverter {
+/**
+ * COBOL ホスト変数のストレージと Java/JDBC 型との間で相互変換を行う。
+ *
+ * <p>{@link #setParam}・{@link #getValueFromResultSet}・{@link #stringToCobol} は、
+ * {@link CobolEsqlBackendInterface} 実装（別パッケージで提供されるバックエンドを含む）が利用できる
+ * 公開 API。それ以外のメンバはパッケージ内部用である。
+ */
+public final class CobolDataConverter {
 
     /** ユーティリティクラスのインスタンス化を防ぐための private コンストラクタ。 */
     private CobolDataConverter() {}
@@ -596,7 +602,7 @@ final class CobolDataConverter {
      * @param field 書き込み先の COBOL フィールド
      * @param resultData バイト列としての SQL 結果データ
      */
-    static void stringToCobol(AbstractCobolField field, byte[] resultData) {
+    public static void stringToCobol(AbstractCobolField field, byte[] resultData) {
         if (field == null || field.getDataStorage() == null || resultData == null) {
             return;
         }
@@ -977,7 +983,7 @@ final class CobolDataConverter {
      * @param field バインド対象の COBOL ホスト変数フィールド
      * @throws SQLException JDBC エラーが発生した場合
      */
-    static void setParam(
+    public static void setParam(
             PreparedStatement stmt, int index, ParameterMetaData metaData, AbstractCobolField field)
             throws SQLException {
         String str = cobolToString(field);
@@ -1082,7 +1088,7 @@ final class CobolDataConverter {
      * @return カラムの値をバイト配列として返す。値が SQL NULL の場合は null
      * @throws SQLException 列値の取得・変換に失敗した場合 (実エラーを NULL に潰さず呼び出し元へ伝播する)
      */
-    static byte[] getValueFromResultSet(ResultSet rs, int columnIndex) throws SQLException {
+    public static byte[] getValueFromResultSet(ResultSet rs, int columnIndex) throws SQLException {
         int colType = rs.getMetaData().getColumnType(columnIndex);
         String strValue;
         switch (colType) {

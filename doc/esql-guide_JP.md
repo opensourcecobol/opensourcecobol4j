@@ -454,10 +454,10 @@ java -Dorg.slf4j.simpleLogger.log.jp.osscons.opensourcecobol.libcobj.sql=trace Y
 ```
 
 > [!NOTE]
-> `...libcobj.sql` 名前空間は `CobolSql` ロガー（EXEC SQL の実行）と `SqlConnection` ロガー
+> `...libcobj.sql` 名前空間は `CobolEsql` ロガー（EXEC SQL の実行）と `SqlConnection` ロガー
 > （接続/切断）の両方を含むため、上記の設定で ESQL のログがすべて有効になります。単一のロガーだけを
 > 対象にしたい場合は、クラス名まで付与します
-> （例: `-Dorg.slf4j.simpleLogger.log.jp.osscons.opensourcecobol.libcobj.sql.CobolSql=debug`）。
+> （例: `-Dorg.slf4j.simpleLogger.log.jp.osscons.opensourcecobol.libcobj.sql.CobolEsql=debug`）。
 
 ## 制限事項
 

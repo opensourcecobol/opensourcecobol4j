@@ -22,7 +22,7 @@ ESQL サポートは大きく次の 2 層に分かれます。
 | `cobj/esql-parser.y` | bison パーサ。トークン列からホスト変数情報を取り出して `cb_exec_sql` ノードを構築する。 |
 | `cobj/esql-common.h` | `esql-parser.y` / `esql-scanner.l` と `esql.c` が共有する型と関数のヘッダ。tree.h を含めない (`YYSTYPE` の衝突を避けるため)。 |
 | `cobj/esql.c` | `esql_build_and_resolve()`（ホスト変数の型解決、GROUP の子展開、SELECT INTO/FETCH OCCURS への昇格、`cb_tree` 構築のラッパ関数群）と `esql_inject_sqlca()`（最初の埋め込み SQL 文を検出した時点で `01 SQLCA GLOBAL.` を暗黙挿入）を提供する。 |
-| `cobj/codegen.c` (`joutput_exec_sql` 周辺) | `cb_exec_sql` ノードを Java の `CobolSql.exec(...)` 等の呼び出しに展開する。 |
+| `cobj/codegen.c` (`joutput_exec_sql` 周辺) | `cb_exec_sql` ノードを Java の `CobolEsql.exec(...)` 等の呼び出しに展開する。 |
 
 ### 解析パイプライン
 
@@ -73,7 +73,7 @@ typeck.c / codegen.c
         │  は joutput_param 経由で b_X.getSubDataStorage(...) を含む
         │  AbstractCobolField 引数に変換される。
         ▼
-Java ソース (CobolSql.exec / .selectInto / .fetchCursor ...)
+Java ソース (CobolEsql.exec / .selectInto / .fetchCursor ...)
 ```
 
 ### ホスト変数の AST 表現
@@ -123,7 +123,7 @@ SELECT INTO / FETCH では、`esql_build_and_resolve()` が leaf に `flag_occur
 
 | クラス | 可視性 | 役割 |
 |---|---|---|
-| `CobolSql` | `public` | 生成 Java から呼ばれる唯一の公開 API。`connect`, `disconnect`, `exec`, `execWithParams`, `execWhereCurrentOf`, `execWithParamsWhereCurrentOf`, `selectInto`, `selectIntoOccurs`, `declareCursor`, `declareCursorWithParams`, `openCursor`, `openCursorWithParams`, `fetchCursor`, `fetchCursorOccurs`, `closeCursor`, `prepare`, `executePrepared`, `commit`, `rollback` を提供。`execWhereCurrentOf` / `execWithParamsWhereCurrentOf` は `WHERE CURRENT OF` を含む文専用で、先読みで進んだカーソル位置を巻き戻してから実行する。 |
+| `CobolEsql` | `public` | 生成 Java から呼ばれる唯一の公開 API。`connect`, `disconnect`, `exec`, `execWithParams`, `execWhereCurrentOf`, `execWithParamsWhereCurrentOf`, `selectInto`, `selectIntoOccurs`, `declareCursor`, `declareCursorWithParams`, `openCursor`, `openCursorWithParams`, `fetchCursor`, `fetchCursorOccurs`, `closeCursor`, `prepare`, `executePrepared`, `commit`, `rollback` を提供。`execWhereCurrentOf` / `execWithParamsWhereCurrentOf` は `WHERE CURRENT OF` を含む文専用で、先読みで進んだカーソル位置を巻き戻してから実行する。 |
 | `SqlState` | package-private | 接続テーブル (`addConnection`/`getConnection`)、PREPARE テーブル、カーソルテーブルを保持する内部状態管理。`clearCursors()` は全カーソルをクローズ扱いにし先読みバッファを破棄する（COMMIT / ROLLBACK 時に呼ばれる）。 |
 | `SqlConnection` | package-private | JDBC `Connection` のラッパ。接続文字列 `dbname@host:port` のパース、値が空のときの環境変数 `OCDB_DB_NAME` / `OCDB_DB_USER` / `OCDB_DB_PASS` へのフォールバック、`OCDB_DB_CHAR`（既定 `UTF-8`）による接続エンコーディング設定、各値の末尾空白（COBOL の固定長フィールド由来のパディング）を除去する処理 (`stripTrailingSpaces`、値の途中の空白は保持する)、autocommit + トランザクションごとの明示 `BEGIN` (`beginTransaction`) を担う。 |
 | `SqlCursor` | package-private | カーソルの状態 (open/closed)、`ResultSet`、`PreparedStatement` の組を保持する。先読み（バルクフェッチ）バッファと `overFetch` フラグも保持する。カーソルはインライン `SELECT` からでも、PREPARE 済みステートメント名からでも DECLARE できる。 |
@@ -133,7 +133,7 @@ SELECT INTO / FETCH では、`esql_build_and_resolve()` が leaf に `flag_occur
 
 `SqlConnection`, `SqlCursor`, `SqlState`, `SqlCA`, `CobolDataConverter` はすべて package-private なため、SLF4J のロガー名としては利用できますが、外部から直接 import することは想定していません。
 
-### CobolSql のシグネチャ
+### CobolEsql のシグネチャ
 
 生成 Java から渡されるホスト変数は `AbstractCobolField[]` です。コンパイラ側で添字や修飾は解決済みのため、ランタイムは **添字や階層構造を意識せず**、配列の各要素を `CobolDataConverter` 経由で JDBC のパラメータ / 結果カラムに対応付けるだけです。
 
@@ -143,13 +143,13 @@ SELECT INTO / FETCH では、`esql_build_and_resolve()` が leaf に `flag_occur
 
 ### NULL 列の通知 (ECPG_MISSING_INDICATOR)
 
-ECPG 互換として、ホスト変数側に指標変数が用意されていない状況で NULL 列を読み込んだ場合、ランタイムは `SQLCODE = -213` / `SQLSTATE = 22002`（`ECPG_MISSING_INDICATOR`）を返します。`SqlCA.java` では `ECPG_MISSING_INDICATOR = -213` で、`setMissingIndicator()` が状態を `22002` に設定します。COBOL フィールド自体には（ゼロ埋めで）値が書き込まれるため、行は処理済みとして扱われます。JUnit テスト `CobolSqlTest`, `SqlCATest` に該当ケースが含まれます。
+ECPG 互換として、ホスト変数側に指標変数が用意されていない状況で NULL 列を読み込んだ場合、ランタイムは `SQLCODE = -213` / `SQLSTATE = 22002`（`ECPG_MISSING_INDICATOR`）を返します。`SqlCA.java` では `ECPG_MISSING_INDICATOR = -213` で、`setMissingIndicator()` が状態を `22002` に設定します。COBOL フィールド自体には（ゼロ埋めで）値が書き込まれるため、行は処理済みとして扱われます。JUnit テスト `CobolEsqlTest`, `SqlCATest` に該当ケースが含まれます。
 
 ### バルクフェッチ（先読み）と WHERE CURRENT OF の位置補正
 
 `SqlCursor.fetch` は、環境変数 `OCESQL4J_FETCH_RECORDS`（`BulkFetchConfig` がキャッシュ。既定 1）で指定した件数を 1 回の `FETCH FORWARD N FROM <cursor>` でまとめて取得し、`fetchBuffer` に保持します。以降の `fetchCursor` 呼び出しは、バッファを使い切るまで DB に問い合わせず 1 行ずつ供給し、使い切った時点で次の N 件を先読みします。これにより COBOL の N 回 FETCH に対する DB 往復を 1 回に集約します。既定値 1 のときは従来どおり 1 行ずつ取得します。COMMIT / ROLLBACK / CLOSE 時にはバッファをクリアします（`clearBuffer`）。
 
-先読みはサーバカーソルを実際の現在行より先へ進めるため、`WHERE CURRENT OF` を使う位置付き UPDATE/DELETE では論理的な現在行とずれます。これを補正するため `SqlCursor` は先読みで進めすぎた状態を `overFetch` フラグで記録し、`CobolSql.execWhereCurrentOf` / `execWithParamsWhereCurrentOf` は実行直前に `FETCH BACKWARD` でカーソル位置を巻き戻してから SQL を発行し、補正後は先読みバッファを無効化します（Open COBOL ESQL 4J の overFetch 補正と同じ挙動）。`codegen.c` の `joutput_exec_sql` は `WHERE CURRENT OF` を含む文をこれら専用 API へ振り分けます。
+先読みはサーバカーソルを実際の現在行より先へ進めるため、`WHERE CURRENT OF` を使う位置付き UPDATE/DELETE では論理的な現在行とずれます。これを補正するため `SqlCursor` は先読みで進めすぎた状態を `overFetch` フラグで記録し、`CobolEsql.execWhereCurrentOf` / `execWithParamsWhereCurrentOf` は実行直前に `FETCH BACKWARD` でカーソル位置を巻き戻してから SQL を発行し、補正後は先読みバッファを無効化します（Open COBOL ESQL 4J の overFetch 補正と同じ挙動）。`codegen.c` の `joutput_exec_sql` は `WHERE CURRENT OF` を含む文をこれら専用 API へ振り分けます。
 
 ### トランザクションモデル
 
@@ -163,7 +163,7 @@ ECPG 互換として、ホスト変数側に指標変数が用意されていな
 
 ### prepared statement のキャッシュ (`stmtCache`)
 
-`CobolSql` は `PreparedStatement` を、接続 (`Connection`) をキー、その配下に SQL 文字列をキーとする入れ子の `ConcurrentHashMap` (`stmtCache`) に保持します。接続はオブジェクト同一性、クエリは文字列の完全一致で照合するため、ハッシュ衝突で別クエリの文を取り違える心配はありません。`getOrCreatePreparedStatement` は、同一の `(接続, クエリ)` の組に対しては毎回 prepare し直さず、キャッシュ済みの `PreparedStatement` を再利用します。
+`CobolEsql` は `PreparedStatement` を、接続 (`Connection`) をキー、その配下に SQL 文字列をキーとする入れ子の `ConcurrentHashMap` (`stmtCache`) に保持します。接続はオブジェクト同一性、クエリは文字列の完全一致で照合するため、ハッシュ衝突で別クエリの文を取り違える心配はありません。`getOrCreatePreparedStatement` は、同一の `(接続, クエリ)` の組に対しては毎回 prepare し直さず、キャッシュ済みの `PreparedStatement` を再利用します。
 
 ### カーソル名の修飾
 
@@ -200,7 +200,7 @@ PostgreSQL コンテナを使う autotest スイートを以下のディレク�
 
 ### libcobj 単体テスト (`libcobj/app/src/test/.../sql/`)
 
-`CobolSqlTest`, `SqlStateTest`, `SqlCursorTest`, `SqlConnectionTest`, `CobolDataConverterTest`, `CobolDataConverterPureTest`, `CobolSqlLoggingTest`, `SqlCATest` が単体検証を行います。DB を要するものは testcontainers の PostgreSQL イメージを使い、`CobolDataConverterPureTest` のように DB を介さずデータ変換のみを検証するものもあります。
+`CobolEsqlTest`, `SqlStateTest`, `SqlCursorTest`, `SqlConnectionTest`, `CobolDataConverterTest`, `CobolDataConverterPureTest`, `CobolEsqlLoggingTest`, `SqlCATest` が単体検証を行います。DB を要するものは testcontainers の PostgreSQL イメージを使い、`CobolDataConverterPureTest` のように DB を介さずデータ変換のみを検証するものもあります。
 
 ## 設計上の意思決定
 
@@ -208,7 +208,7 @@ PostgreSQL コンテナを使う autotest スイートを以下のディレク�
 - **scanner 状態を分離する**: 添字や修飾名の解析を `ESQL_HOSTSUB_STATE` に閉じ込めることで、SQL 本体への文字列追記 (`esql_sqlbody_append`) を **その状態では絶対に行わない** という構造的保証を作っている。`?` 以外がプレースホルダ位置に混入する事故が起きない。
 - **dblibj を捨てる**: Open-COBOL-ESQL の Scala 実装 (dblibj) への依存を撤廃し、純粋な Java で `libcobj.jar` 内に閉じる。配布物が `libcobj.jar` 1 本になり、PostgreSQL JDBC ドライバもバンドルする。
 - **`OF` 修飾を採用しない**: COBOL 本体は `X OF Y` も受け付けるが、ESQL の修飾は dotted 形式 (`:Y.X`) のみに統一する。スキャナの状態数を抑えるためと、Embedded SQL の文脈で `OF` が予約語衝突を招きにくくするため。
-- **生成 Java のホスト変数リストを折り返す**: `CobolSql.*` 呼び出しに渡すホスト変数は、`codegen.c` の `joutput_sql_host_list_newline` (引数リスト) と `joutput_sql_field_array` (`new AbstractCobolField[]{...}` リテラル) が出力する。どちらも全要素を 1 行に並べるのではなく `SQL_HOST_VAR_WRAP` (= 5) 個ごとに改行を入れるため、ホスト変数が多い文でも生成ソースが読みやすく保たれる。これは見た目だけの調整で、渡す引数自体は変わらない。
+- **生成 Java のホスト変数リストを折り返す**: `CobolEsql.*` 呼び出しに渡すホスト変数は、`codegen.c` の `joutput_sql_host_list_newline` (引数リスト) と `joutput_sql_field_array` (`new AbstractCobolField[]{...}` リテラル) が出力する。どちらも全要素を 1 行に並べるのではなく `SQL_HOST_VAR_WRAP` (= 5) 個ごとに改行を入れるため、ホスト変数が多い文でも生成ソースが読みやすく保たれる。これは見た目だけの調整で、渡す引数自体は変わらない。
 
 ## 関連ドキュメント
 
