@@ -18,9 +18,9 @@
  */
 package jp.osscons.opensourcecobol.libcobj.common;
 
-import java.time.DateTimeException;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
-import java.util.Calendar;
+import java.time.OffsetDateTime;
 import java.util.Properties;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -77,9 +77,6 @@ public class CobolUtil {
 
     /** プログラム終了時にエラーが発生したことを示すフラグ。 */
     public static boolean cobErrorOnExitFlag = false;
-
-    /** 現在日時を取得するためのCalendarインスタンス。 */
-    public static Calendar cal;
 
     /** 順編成ファイルへの書き込みバッファサイズ(環境変数COB_FILE_SEQ_WRITE_BUFFER_SIZEで設定)。 */
     public static int fileSeqWriteBufferSize = 10;
@@ -333,7 +330,6 @@ public class CobolUtil {
             }
         }
 
-        cal = Calendar.getInstance();
         String s = CobolUtil.getEnv("COB_DATE");
         if (s != null) {
             Pattern p = Pattern.compile("([0-9]{4})/([0-9]{2})/([0-9]{2})");
@@ -346,16 +342,20 @@ public class CobolUtil {
                     int year = Integer.parseInt(m.group(1));
                     int month = Integer.parseInt(m.group(2));
                     int dayOfMonth = Integer.parseInt(m.group(3));
-                    cal.set(Calendar.YEAR, year);
-                    cal.set(Calendar.MONTH, month - 1);
-                    cal.set(Calendar.DAY_OF_MONTH, dayOfMonth);
-                    LocalDateTime tm;
-                    try {
-                        tm = LocalDateTime.of(year, month, dayOfMonth, 0, 0);
-                    } catch (DateTimeException e) {
+                    // 範囲外の月日はGnuCOBOL 3.2(OSSC patch)と同様に無効として扱う。
+                    // opensource COBOL 1.5はmktimeに任せており、2026/13/01を2027/01/01として
+                    // 受け入れる一方、mktimeの戻り値が負になるエポック前の日付をすべて拒否する。
+                    // 後者は再現しないため、範囲チェックのある3.2側に揃えている。
+                    // また0年はISO暦では紀元前1年にあたり、ACCEPT FROM DATEの書式(年号内の年)と
+                    // FUNCTION CURRENT-DATE(暦年)とで異なる値になるため、同様に無効とする。
+                    if (year < 1 || month < 1 || month > 12 || dayOfMonth < 1 || dayOfMonth > 31) {
+                        System.err.println("Warning: COB_DATE format invalid, ignored.");
                         break date_time_block;
                     }
-                    cobLocalTm = tm;
+                    // 範囲内であれば、その月に存在しない日はmktimeと同様に翌月へ繰り越す。
+                    // (例: 2026/02/30は2026/03/02として扱われる。うるう年の判定はLocalDateに任せる)
+                    cobLocalTm =
+                            LocalDate.of(year, month, 1).plusDays(dayOfMonth - 1).atStartOfDay();
                 }
             } else {
                 System.err.println("Warning: COB_DATE format invalid, ignored.");
@@ -398,23 +398,20 @@ public class CobolUtil {
 
     // libcob/common.cとcob_localtime
     /**
-     * 現在のローカル日時を取得する。<br>
-     * 環境変数COB_DATEで固定日付({@link #cobLocalTm})が指定されている場合は、その日付に現在の時刻(時・分・秒)を<br>
-     * 反映した日時を返す。指定がない場合はシステムの現在日時を返す。
+     * 現在のローカル日時をグリニッジ標準時からのオフセット付きで取得する。<br>
+     * 環境変数COB_DATEで固定日付({@link #cobLocalTm})が指定されている場合は、日付部分だけをその値で<br>
+     * 置き換える。時刻とオフセットは常にシステムクロックから取得するため、同一プロセス内でも<br>
+     * 呼び出しのたびに新しい時刻が得られる。
      *
      * @return 取得したローカル日時
      */
-    public static LocalDateTime localtime() {
-        LocalDateTime rt = LocalDateTime.now();
-        if (CobolUtil.cobLocalTm != null) {
-            CobolUtil.cobLocalTm =
-                    CobolUtil.cobLocalTm
-                            .withHour(rt.getHour())
-                            .withMinute(rt.getMinute())
-                            .withSecond(rt.getSecond());
-            rt = CobolUtil.cobLocalTm;
+    static OffsetDateTime localtime() {
+        OffsetDateTime now = OffsetDateTime.now();
+        if (CobolUtil.cobLocalTm == null) {
+            return now;
         }
-        return rt;
+        return OffsetDateTime.of(
+                CobolUtil.cobLocalTm.toLocalDate(), now.toLocalTime(), now.getOffset());
     }
 
     // libcob/cob_verbose_outputの実装

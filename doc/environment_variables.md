@@ -17,6 +17,9 @@ Fixes the date returned at runtime.
 - **Format**: `YYYY/MM/DD`
 - **Example**: `COB_DATE=2024/01/15`
 - **Purpose**: Fixes the date returned by built-in functions such as `CURRENT-DATE`. Useful for testing and reproducible execution.
+- **Note**: Only the date is fixed. The time of day and the GMT offset returned by `FUNCTION CURRENT-DATE` are read from the system clock on every evaluation, so they keep advancing while the program runs. The GMT offset is therefore the one in effect right now, not the one that was in effect on the fixed date: with `TZ=Asia/Tokyo` and `COB_DATE=1880/01/01`, `FUNCTION CURRENT-DATE` returns `+0900`, not the `+0918` that Tokyo used in 1880.
+- **Date normalization**: A day that does not exist in the given month is carried over into the following month, the same way opensource COBOL does. `COB_DATE=2026/02/30` is treated as 2026/03/02, and `COB_DATE=2026/02/29` as 2026/03/01 because 2026 is not a leap year. `COB_DATE=2024/02/29` is a real date and is used as is.
+- **Invalid values**: A value that does not match `YYYY/MM/DD`, a month outside 1 to 12, a day outside 1 to 31, or the year `0000` makes the runtime print `Warning: COB_DATE format invalid, ignored.` to standard error and use the real date instead. `COB_DATE=2026/13/01`, `COB_DATE=2026/99/99` and `COB_DATE=2026/00/00` are all ignored this way.
 
 **Sample Program**
 
@@ -59,6 +62,17 @@ CURRENT-DATE:     20260227
 $ COB_DATE=1970/01/02 java cobdate
 ACCEPT FROM DATE: 19700102
 CURRENT-DATE:     19700102
+
+# A day that does not exist is carried over into the following month
+$ COB_DATE=2026/02/30 java cobdate
+ACCEPT FROM DATE: 20260302
+CURRENT-DATE:     20260302
+
+# An out-of-range value is ignored with a warning (today's date is displayed)
+$ COB_DATE=2026/13/01 java cobdate
+Warning: COB_DATE format invalid, ignored.
+ACCEPT FROM DATE: 20260227
+CURRENT-DATE:     20260227
 ```
 
 #### COB_VERBOSE

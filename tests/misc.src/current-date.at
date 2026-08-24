@@ -15,3 +15,57 @@ AT_CHECK([date +%Y%m%d > out2.txt])
 AT_CHECK([diff out1.txt out2.txt], [0])
 
 AT_CLEANUP
+
+
+AT_SETUP([FUNCTION CURRENT DATE advances in a process])
+
+dnl FUNCTION CURRENT-DATE must return the time of each evaluation,
+dnl not the time at which the process started.
+
+AT_DATA([prog.cbl], [
+       IDENTIFICATION              DIVISION.
+       PROGRAM-ID.                 prog.
+       DATA                        DIVISION.
+       WORKING-STORAGE             SECTION.
+       01 D1                       PIC X(21).
+       01 D2                       PIC X(21).
+       01 CNT                      PIC 9(9) COMP-5.
+       PROCEDURE                   DIVISION.
+         MOVE 0 TO CNT.
+         MOVE FUNCTION CURRENT-DATE TO D1.
+         MOVE FUNCTION CURRENT-DATE TO D2.
+         PERFORM UNTIL D2 NOT = D1 OR CNT > 10000000
+           MOVE FUNCTION CURRENT-DATE TO D2
+           ADD 1 TO CNT
+         END-PERFORM.
+         IF D2 = D1
+           DISPLAY "FROZEN"
+         ELSE
+           DISPLAY "ADVANCED"
+         END-IF.
+])
+
+AT_CHECK([${COBJ} prog.cbl])
+AT_CHECK([java prog], [0], [ADVANCED
+])
+
+AT_CLEANUP
+
+
+AT_SETUP([FUNCTION CURRENT DATE GMT offset])
+
+AT_DATA([prog.cbl], [
+       IDENTIFICATION              DIVISION.
+       PROGRAM-ID.                 prog.
+       DATA                        DIVISION.
+       WORKING-STORAGE             SECTION.
+       PROCEDURE                   DIVISION.
+         DISPLAY FUNCTION CURRENT-DATE.
+])
+
+AT_CHECK([${COBJ} prog.cbl])
+AT_CHECK([java prog | cut -b 17-21 > out1.txt])
+AT_CHECK([date +%z > out2.txt])
+AT_CHECK([diff out1.txt out2.txt], [0])
+
+AT_CLEANUP
