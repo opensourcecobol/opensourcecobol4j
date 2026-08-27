@@ -47,7 +47,7 @@ class ApiFilesOptions {
                             System.exit(0);
                             break;
                         case "v":
-                            System.out.println("2.0.0");
+                            System.out.println("2.1.0");
                             System.exit(0);
                             break;
                         case "java-package":

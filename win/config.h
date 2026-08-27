@@ -299,7 +299,7 @@
 #define ICONV_CONST 
 
 /* Name of package */
-#define PACKAGE "opensource-cobol4j-2.0.0"
+#define PACKAGE "opensource-cobol4j-2.1.0"
 
 /* Define to the address where bug reports for this package should be sent. */
 #define PACKAGE_BUGREPORT "ws-opensource-cobol-contact@osscons.jp"
@@ -308,13 +308,13 @@
 #define PACKAGE_NAME "opensource COBOL 4J"
 
 /* Define to the full name and version of this package. */
-#define PACKAGE_STRING "opensource COBOL 4J 2.0.0"
+#define PACKAGE_STRING "opensource COBOL 4J 2.1.0"
 
 /* Define to the one symbol short name of this package. */
-#define PACKAGE_TARNAME "opensource-cobol4j-2.0.0"
+#define PACKAGE_TARNAME "opensource-cobol4j-2.1.0"
 
 /* Define to the version of this package. */
-#define PACKAGE_VERSION "2.0.0"
+#define PACKAGE_VERSION "2.1.0"
 
 /* Define a patch level */
 #define PATCH_LEVEL 0
