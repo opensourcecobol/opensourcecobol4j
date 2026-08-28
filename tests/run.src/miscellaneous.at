@@ -76,6 +76,11 @@ AT_DATA([caller.cob], [
 
 AT_CHECK([${COMPILE_MODULE} callee.cob], [1], [], 
 [callee.cob:7: Error: LOCAL-STORAGE SECTION is not supported
+    5 |        WORKING-STORAGE  SECTION.
+    6 |        01 WRK-X         PIC XXX VALUE "abc".
+    7 >        LOCAL-STORAGE    SECTION.
+    8 |        01 LCL-X         PIC XXX VALUE "abc".
+    9 |        PROCEDURE        DIVISION.
 ])
 # AT_CHECK([${COMPILE} caller.cob])
 # AT_CHECK([java prog], [0],
@@ -329,9 +334,6 @@ AT_CLEANUP
 
 AT_SETUP([MOVE with refmod (variable)])
 
-dnl TODO: cobj.exe segfaults when compiling this test on Windows.
-AT_SKIP_IF([test -n "$IS_WINDOWS"])
-
 AT_DATA([prog.cob], [
        IDENTIFICATION   DIVISION.
        PROGRAM-ID.      prog.
@@ -455,6 +457,11 @@ AT_DATA([prog.cob], [
 
 AT_CHECK([${COMPILE_ONLY} prog.cob], [1], ,
 [prog.cob:6: Error: Level 01 item 'X' cannot have OCCURS clause
+    4 |        DATA             DIVISION.
+    5 |        WORKING-STORAGE  SECTION.
+    6 >        01 X             PIC X OCCURS 10.
+    7 |        PROCEDURE        DIVISION.
+    8 |            STOP RUN.
 ])
 
 AT_CLEANUP
@@ -1119,6 +1126,11 @@ AT_DATA([prog.cob], [
 
 AT_CHECK([${COMPILE} prog.cob], [1], [],
 [prog.cob:8: Error: 'bc' and 'Z' have not same size!
+    6 |        01 X             PIC X(8) VALUE 'abcdefgh'.
+    7 |        PROCEDURE        DIVISION.
+    8 >            INSPECT X CONVERTING 'bc' TO 'Z'.
+    9 |            DISPLAY X NO ADVANCING
+   10 |            END-DISPLAY.
 ])
 
 AT_CLEANUP
@@ -1903,6 +1915,11 @@ AT_DATA([prog.cob], [
 
 AT_CHECK([${COMPILE} -std=mf prog.cob], [0], ,
 [prog.cob:11: Warning: Size of 'XMAIN0502' larger than size of 'XMAIN0501'
+    9 |            03  XMAIN03.
+   10 |                05  XMAIN0501  PIC X(4).
+   11 >                05  XMAIN0502 REDEFINES XMAIN0501 PIC X(5).
+   12 |        PROCEDURE        DIVISION.
+   13 |            DISPLAY LENGTH OF XMAIN
 ])
 AT_CHECK([java prog], [0], 
 [8
@@ -2234,6 +2251,11 @@ AT_DATA([prog.cob], [
 
 AT_CHECK([${COMPILE} prog.cob], [0], [],
 [prog.cob:20: Warning: KEY ignored with sequential READ
+   18 |            OPEN  INPUT  TEST-FILE.
+   19 |            START TEST-FILE KEY IS EQUAL TO TEST-KEY.
+   20 >            READ TEST-FILE KEY IS TEST-KEY.
+   21 |            DISPLAY TEST-KEY NO ADVANCING.
+   22 |            CLOSE TEST-FILE.
 ])
 
 AT_CLEANUP

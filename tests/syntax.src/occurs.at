@@ -42,10 +42,32 @@ AT_DATA([prog.cob], [
 
 AT_CHECK([${COMPILE_ONLY} prog.cob], [1], ,
 [prog.cob:6: Error: Level 01 item 'X-01' cannot have OCCURS clause
+    4 |        DATA             DIVISION.
+    5 |        WORKING-STORAGE  SECTION.
+    6 >        01 X-01          PIC X OCCURS 10.
+    7 |        01 G             OCCURS 10.
+    8 |          02 X-02        PIC X OCCURS 10.
 prog.cob:7: Error: Level 01 item 'G' cannot have OCCURS clause
+    5 |        WORKING-STORAGE  SECTION.
+    6 |        01 X-01          PIC X OCCURS 10.
+    7 >        01 G             OCCURS 10.
+    8 |          02 X-02        PIC X OCCURS 10.
+    9 |          66 X-66        RENAMES X-02 OCCURS 10.
 prog.cob:9: Error: Level 66 item 'X-66' cannot have other than RENAMES clause
+    7 |        01 G             OCCURS 10.
+    8 |          02 X-02        PIC X OCCURS 10.
+    9 >          66 X-66        RENAMES X-02 OCCURS 10.
+   10 |        77 X-77          PIC X OCCURS 10.
+   11 |        88 X-88          VALUE "X" OCCURS 10.
 prog.cob:10: Error: Level 77 item 'X-77' cannot have OCCURS clause
+    8 |          02 X-02        PIC X OCCURS 10.
+    9 |          66 X-66        RENAMES X-02 OCCURS 10.
+   10 >        77 X-77          PIC X OCCURS 10.
+   11 |        88 X-88          VALUE "X" OCCURS 10.
 prog.cob:11: Error: syntax error
+    9 |          66 X-66        RENAMES X-02 OCCURS 10.
+   10 |        77 X-77          PIC X OCCURS 10.
+   11 >        88 X-88          VALUE "X" OCCURS 10.
 ])
 
 AT_CLEANUP
@@ -65,6 +87,11 @@ AT_DATA([prog.cob], [
 
 AT_CHECK([${COMPILE_ONLY} prog.cob], [1], ,
 [prog.cob:7: Error: 'G-2' cannot have the OCCURS clause due to 'X'
+    5 |        WORKING-STORAGE  SECTION.
+    6 |        01 G-1.
+    7 >          02 G-2         OCCURS 10.
+    8 |            03 X         PIC X(10) OCCURS 1 TO 4 DEPENDING ON I.
+    9 |        77 I             PIC 9.
 ])
 
 AT_CLEANUP
@@ -156,8 +183,23 @@ AT_DATA([prog.cob], [
 
 AT_CHECK([${COMPILE_ONLY} prog.cob], [1], ,
 [prog.cob:7: Error: 'X' cannot have OCCURS DEPENDING
+    5 |        WORKING-STORAGE  SECTION.
+    6 |        01 G-1.
+    7 >          02 X           PIC X OCCURS 1 TO 3 DEPENDING ON I.
+    8 |          02 Y           PIC X.
+    9 |        01 G-2.
 prog.cob:10: Error: 'G-3' cannot have OCCURS DEPENDING
+    8 |          02 Y           PIC X.
+    9 |        01 G-2.
+   10 >          02 G-3         OCCURS 1 TO 3 DEPENDING ON I.
+   11 |            03 X         PIC X.
+   12 |          02 Y           PIC X.
 prog.cob:15: Error: 'X' cannot have OCCURS DEPENDING
+   13 |        01 G-4.
+   14 |          02 G-5.
+   15 >            03 X         PIC X OCCURS 1 TO 3 DEPENDING ON I.
+   16 |          02 Y           PIC X.
+   17 |        01 I             PIC 9.
 ])
 
 AT_CLEANUP
@@ -185,6 +227,9 @@ AT_DATA([prog.cob], [
 
 AT_CHECK([${COMPILE_ONLY} prog.cob], [1], ,
 [prog.cob:8: Error: ODO without TO clause does not conform to COBOL 2002
+    6 |        01 Y             PIC 9.
+    7 |        01 XX.
+    8 >           03 X  PIC X OCCURS 10 DEPENDING ON Y.
 ])
 
 AT_CLEANUP

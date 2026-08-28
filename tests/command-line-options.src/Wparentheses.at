@@ -38,13 +38,53 @@ AT_DATA([prog.cbl], [
 AT_CHECK([${COBJ} -Wparentheses prog.cbl], [0], [],
 [prog.cbl: In paragraph 'MAIN-RTN':
 prog.cbl:14: Warning: Suggest parentheses around AND within OR
+   12 |                   DISPLAY "OK".
+   13 |            IF 1 NOT = 1 OR 1 = 1 AND 1 = 2
+   14 >                   DISPLAY "OK".
+   15 |            IF 1 NOT = 1 AND 1 = 1 OR 1 = 2
+   16 |                   DISPLAY "OK".
 prog.cbl:16: Warning: Suggest parentheses around AND within OR
+   14 |                   DISPLAY "OK".
+   15 |            IF 1 NOT = 1 AND 1 = 1 OR 1 = 2
+   16 >                   DISPLAY "OK".
+   17 |
+   18 |            IF 1 NOT = 1 AND 1 = 1 AND 1 = 2 AND 1 = 1
 prog.cbl:21: Warning: Suggest parentheses around AND within OR
+   19 |                   DISPLAY "OK".
+   20 |            IF 1 NOT = 1 AND 1 = 1 AND 1 = 2 OR 1 = 1
+   21 >                   DISPLAY "OK".
+   22 |            IF 1 NOT = 1 AND 1 = 1 OR 1 = 2 AND 1 = 1
+   23 |                   DISPLAY "OK".
 prog.cbl:23: Warning: Suggest parentheses around AND within OR
+   21 |                   DISPLAY "OK".
+   22 |            IF 1 NOT = 1 AND 1 = 1 OR 1 = 2 AND 1 = 1
+   23 >                   DISPLAY "OK".
+   24 |            IF 1 NOT = 1 AND 1 = 1 OR 1 = 2 OR 1 = 1
+   25 |                   DISPLAY "OK".
 prog.cbl:25: Warning: Suggest parentheses around AND within OR
+   23 |                   DISPLAY "OK".
+   24 |            IF 1 NOT = 1 AND 1 = 1 OR 1 = 2 OR 1 = 1
+   25 >                   DISPLAY "OK".
+   26 |            IF 1 NOT = 1 OR 1 = 1 AND 1 = 2 AND 1 = 1
+   27 |                   DISPLAY "OK".
 prog.cbl:27: Warning: Suggest parentheses around AND within OR
+   25 |                   DISPLAY "OK".
+   26 |            IF 1 NOT = 1 OR 1 = 1 AND 1 = 2 AND 1 = 1
+   27 >                   DISPLAY "OK".
+   28 |            IF 1 NOT = 1 OR 1 = 1 AND 1 = 2 OR 1 = 1
+   29 |                   DISPLAY "OK".
 prog.cbl:29: Warning: Suggest parentheses around AND within OR
+   27 |                   DISPLAY "OK".
+   28 |            IF 1 NOT = 1 OR 1 = 1 AND 1 = 2 OR 1 = 1
+   29 >                   DISPLAY "OK".
+   30 |            IF 1 NOT = 1 OR 1 = 1 OR 1 = 2 AND 1 = 1
+   31 |                   DISPLAY "OK".
 prog.cbl:31: Warning: Suggest parentheses around AND within OR
+   29 |                   DISPLAY "OK".
+   30 |            IF 1 NOT = 1 OR 1 = 1 OR 1 = 2 AND 1 = 1
+   31 >                   DISPLAY "OK".
+   32 |            IF 1 NOT = 1 OR 1 = 1 OR 1 = 2 OR 1 = 1
+   33 |                   DISPLAY "OK".
 ])
 
 AT_CHECK([${COBJ} --help | grep '\-Wparentheses' > /dev/null], [0])

@@ -16,6 +16,10 @@ AT_DATA([prog.cob], [
 
 AT_CHECK([${COMPILE_JP_COMPAT} prog.cob], [1], ,
 [prog.cob:9: Error: Detected division by zero.
+    7 |        PROCEDURE        DIVISION.
+    8 |            MOVE 1 TO X.
+    9 >            DIVIDE X BY 0 GIVING X.
+   10 |            GOBACK.
 ])
 
 AT_CLEANUP
@@ -116,6 +120,10 @@ AT_DATA([prog.cob], [
 
 AT_CHECK([${COMPILE_JP_COMPAT} prog.cob], [1], ,
 [prog.cob:9: Error: Detected division by zero.
+    7 |        PROCEDURE        DIVISION.
+    8 |            MOVE 1 TO X.
+    9 >            COMPUTE X = X / 0.
+   10 |            GOBACK.
 ])
 
 AT_CLEANUP

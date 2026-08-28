@@ -36,6 +36,10 @@ AT_DATA([prog.cob], [
 
 AT_CHECK([${COMPILE_ONLY} prog.cob], [1], ,
 [prog.cob:8: Error: The address of 'X' cannot be changed
+    6 |        01 X             PIC X.
+    7 |        PROCEDURE        DIVISION.
+    8 >            SET ADDRESS OF X TO NULL.
+    9 |            STOP RUN.
 ])
 
 AT_CLEANUP

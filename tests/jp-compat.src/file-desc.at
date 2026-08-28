@@ -21,6 +21,11 @@ AT_DATA([prog.cob], [
 
 AT_CHECK([${COMPILE} prog.cob], [1], [],
 [prog.cob:12: Error: Record size too large 'TEST-REC' (4)
+   10 |        FD TEST-FILE  RECORD CONTAINS 2.
+   11 |        01 TEST-REC      PIC X(4).
+   12 >        PROCEDURE        DIVISION.
+   13 |            OPEN OUTPUT TEST-FILE.
+   14 |            MOVE  ALL "A" TO TEST-REC.
 ])
 AT_CHECK([${COMPILE_JP_COMPAT} prog.cob])
 AT_CHECK([java prog], [0])

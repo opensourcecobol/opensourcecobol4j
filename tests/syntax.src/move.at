@@ -51,7 +51,16 @@ AT_DATA([prog.cob], [
 
 AT_CHECK([${COMPILE_ONLY} prog.cob], [1], ,
 [prog.cob:9: Error: Invalid MOVE statement
+    7 |        01 Y             PIC 09.
+    8 |        PROCEDURE        DIVISION.
+    9 >            MOVE SPACE TO X.
+   10 |            MOVE SPACE TO Y.
+   11 |            STOP RUN.
 prog.cob:10: Error: Invalid MOVE statement
+    8 |        PROCEDURE        DIVISION.
+    9 |            MOVE SPACE TO X.
+   10 >            MOVE SPACE TO Y.
+   11 |            STOP RUN.
 ])
 
 AT_CLEANUP
@@ -74,6 +83,10 @@ AT_DATA([prog.cob], [
 
 AT_CHECK([${COMPILE_ONLY} prog.cob], [1], ,
 [prog.cob:8: Error: Invalid MOVE statement
+    6 |        01 A             PIC A.
+    7 |        PROCEDURE        DIVISION.
+    8 >            MOVE ZERO TO A.
+    9 |            STOP RUN.
 ])
 
 AT_CLEANUP
@@ -108,7 +121,16 @@ AT_DATA([prog.cob], [
 
 AT_CHECK([${COMPILE_ONLY} prog.cob], [1], ,
 [prog.cob:16: Error: Invalid MOVE statement
+   14 |            MOVE X TO Y-X.
+   15 |            MOVE X TO Y-BX.
+   16 >            MOVE X TO Y-9.
+   17 |            MOVE X TO Y-09.
+   18 |            STOP RUN.
 prog.cob:17: Error: Invalid MOVE statement
+   15 |            MOVE X TO Y-BX.
+   16 |            MOVE X TO Y-9.
+   17 >            MOVE X TO Y-09.
+   18 |            STOP RUN.
 ])
 
 AT_CLEANUP
@@ -163,7 +185,16 @@ AT_DATA([prog.cob], [
 
 AT_CHECK([${COMPILE_ONLY} prog.cob], [1], ,
 [prog.cob:16: Error: Invalid MOVE statement
+   14 |            MOVE X TO Y-X.
+   15 |            MOVE X TO Y-BX.
+   16 >            MOVE X TO Y-9.
+   17 |            MOVE X TO Y-09.
+   18 |            STOP RUN.
 prog.cob:17: Error: Invalid MOVE statement
+   15 |            MOVE X TO Y-BX.
+   16 |            MOVE X TO Y-9.
+   17 >            MOVE X TO Y-09.
+   18 |            STOP RUN.
 ])
 
 AT_CLEANUP
@@ -192,6 +223,11 @@ AT_DATA([prog.cob], [
 
 AT_CHECK([${COMPILE_ONLY} prog.cob], [1], ,
 [prog.cob:13: Error: Invalid MOVE statement
+   11 |        01 Y-09          PIC 09.
+   12 |        PROCEDURE        DIVISION.
+   13 >            MOVE X TO Y-A.
+   14 |            MOVE X TO Y-X.
+   15 |            MOVE X TO Y-BX.
 ])
 
 AT_CLEANUP
@@ -220,8 +256,23 @@ AT_DATA([prog.cob], [
 
 AT_CHECK([${COMPILE_ONLY} prog.cob], [1], ,
 [prog.cob:13: Error: Invalid MOVE statement
+   11 |        01 Y-09          PIC 09.
+   12 |        PROCEDURE        DIVISION.
+   13 >            MOVE X TO Y-A.
+   14 |            MOVE X TO Y-X.
+   15 |            MOVE X TO Y-BX.
 prog.cob:14: Error: Invalid MOVE statement
+   12 |        PROCEDURE        DIVISION.
+   13 |            MOVE X TO Y-A.
+   14 >            MOVE X TO Y-X.
+   15 |            MOVE X TO Y-BX.
+   16 |            MOVE X TO Y-9.
 prog.cob:15: Error: Invalid MOVE statement
+   13 |            MOVE X TO Y-A.
+   14 |            MOVE X TO Y-X.
+   15 >            MOVE X TO Y-BX.
+   16 |            MOVE X TO Y-9.
+   17 |            MOVE X TO Y-09.
 ])
 
 AT_CLEANUP
@@ -250,6 +301,11 @@ AT_DATA([prog.cob], [
 
 AT_CHECK([${COMPILE_ONLY} prog.cob], [1], ,
 [prog.cob:13: Error: Invalid MOVE statement
+   11 |        01 Y-09          PIC 09.
+   12 |        PROCEDURE        DIVISION.
+   13 >            MOVE X TO Y-A.
+   14 |            MOVE X TO Y-X.
+   15 |            MOVE X TO Y-BX.
 ])
 
 AT_CLEANUP
@@ -281,9 +337,28 @@ AT_DATA([prog.cob], [
 
 AT_CHECK([${COMPILE_ONLY} prog.cob], [1], ,
 [prog.cob:11: Error: 'X' is not group name
+    9 |          02 Y           PIC X.
+   10 |        PROCEDURE        DIVISION.
+   11 >            MOVE CORR X TO G-1.
+   12 |            MOVE CORR G-1 TO X.
+   13 |            MOVE CORR G-1(1:1) TO G-2.
 prog.cob:12: Error: 'X' is not group name
+   10 |        PROCEDURE        DIVISION.
+   11 |            MOVE CORR X TO G-1.
+   12 >            MOVE CORR G-1 TO X.
+   13 |            MOVE CORR G-1(1:1) TO G-2.
+   14 |            MOVE CORR G-1 TO G-2(1:1).
 prog.cob:13: Error: 'G-1 (1:1)' is not group name
+   11 |            MOVE CORR X TO G-1.
+   12 |            MOVE CORR G-1 TO X.
+   13 >            MOVE CORR G-1(1:1) TO G-2.
+   14 |            MOVE CORR G-1 TO G-2(1:1).
+   15 |            STOP RUN.
 prog.cob:14: Error: 'G-2 (1:1)' is not group name
+   12 |            MOVE CORR G-1 TO X.
+   13 |            MOVE CORR G-1(1:1) TO G-2.
+   14 >            MOVE CORR G-1 TO G-2(1:1).
+   15 |            STOP RUN.
 ])
 
 AT_CLEANUP
@@ -309,6 +384,11 @@ AT_DATA([prog.cob], [
 
 AT_CHECK([${COMPILE_ONLY} prog.cob], [1], ,
 [prog.cob:6: Error: PICTURE clause required for 'INVALID-ITEM'
+    4 |        DATA             DIVISION.
+    5 |        WORKING-STORAGE  SECTION.
+    6 >        01 INVALID-ITEM.
+    7 |        01 I             PIC 9(3).
+    8 |        PROCEDURE        DIVISION.
 ])
 
 AT_CLEANUP
@@ -329,7 +409,16 @@ AT_DATA([prog.cob], [
 
 AT_CHECK([${COMPILE_JP_COMPAT} prog.cob], [1], ,
 [prog.cob:8: Error: Numeric value is expected
+    6 |        01 X-ABC         PIC 999.
+    7 |        PROCEDURE        DIVISION.
+    8 >            MOVE "abc" TO X-ABC.
+    9 |            STOP RUN.
 prog.cob:6: Error: 'X-ABC' defined here as PIC 999
+    4 |        DATA             DIVISION.
+    5 |        WORKING-STORAGE  SECTION.
+    6 >        01 X-ABC         PIC 999.
+    7 |        PROCEDURE        DIVISION.
+    8 |            MOVE "abc" TO X-ABC.
 ])
 
 AT_CLEANUP

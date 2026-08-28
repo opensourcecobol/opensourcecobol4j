@@ -21,15 +21,62 @@ AT_DATA([prog.cbl],
 
 AT_CHECK([${COBJ} -Wstrict-typing prog.cbl], [0], [],
 [prog.cbl:12: Warning: Alphanumeric value is expected
+   10 |        PROCEDURE DIVISION.
+   11 |        MAIN SECTION.
+   12 >          MOVE 12345 TO X.
+   13 |          MOVE 12345 TO X-EDIT.
+   14 |          MOVE 12345 TO N.
 prog.cbl:5: Warning: 'X' defined here as PIC X(5)
+    3 |        DATA DIVISION.
+    4 |        WORKING-STORAGE SECTION.
+    5 >        01 X PIC X(5).
+    6 |        01 X-EDIT PIC X(3),X(2).
+    7 |        01 N PIC N(5).
 prog.cbl:13: Warning: Alphanumeric value is expected
+   11 |        MAIN SECTION.
+   12 |          MOVE 12345 TO X.
+   13 >          MOVE 12345 TO X-EDIT.
+   14 |          MOVE 12345 TO N.
+   15 |          MOVE "12345" TO NUM.
 prog.cbl:6: Warning: 'X-EDIT' defined here as PIC X(3),X(2)
+    4 |        WORKING-STORAGE SECTION.
+    5 |        01 X PIC X(5).
+    6 >        01 X-EDIT PIC X(3),X(2).
+    7 |        01 N PIC N(5).
+    8 |        01 NUM PIC 9(5).
 prog.cbl:14: Warning: National value is expected
+   12 |          MOVE 12345 TO X.
+   13 |          MOVE 12345 TO X-EDIT.
+   14 >          MOVE 12345 TO N.
+   15 |          MOVE "12345" TO NUM.
+   16 |          MOVE "12345" TO NUM-EDIT.
 prog.cbl:7: Warning: 'N' defined here as PIC N(5)
+    5 |        01 X PIC X(5).
+    6 |        01 X-EDIT PIC X(3),X(2).
+    7 >        01 N PIC N(5).
+    8 |        01 NUM PIC 9(5).
+    9 |        01 NUM-EDIT PIC 9(3),9(2).
 prog.cbl:15: Warning: Numeric value is expected
+   13 |          MOVE 12345 TO X-EDIT.
+   14 |          MOVE 12345 TO N.
+   15 >          MOVE "12345" TO NUM.
+   16 |          MOVE "12345" TO NUM-EDIT.
 prog.cbl:8: Warning: 'NUM' defined here as PIC 9(5)
+    6 |        01 X-EDIT PIC X(3),X(2).
+    7 |        01 N PIC N(5).
+    8 >        01 NUM PIC 9(5).
+    9 |        01 NUM-EDIT PIC 9(3),9(2).
+   10 |        PROCEDURE DIVISION.
 prog.cbl:16: Warning: Numeric value is expected
+   14 |          MOVE 12345 TO N.
+   15 |          MOVE "12345" TO NUM.
+   16 >          MOVE "12345" TO NUM-EDIT.
 prog.cbl:9: Warning: 'NUM-EDIT' defined here as PIC 9(3),9(2)
+    7 |        01 N PIC N(5).
+    8 |        01 NUM PIC 9(5).
+    9 >        01 NUM-EDIT PIC 9(3),9(2).
+   10 |        PROCEDURE DIVISION.
+   11 |        MAIN SECTION.
 ])
 
 AT_CHECK([${COBJ} --help | grep '\-Wstrict-typing' > /dev/null], [0])

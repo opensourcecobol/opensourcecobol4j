@@ -17,6 +17,11 @@ AT_DATA([prog.cob], [
 
 AT_CHECK([${COMPILE} -x prog.cob], [1], [],
 [prog.cob:8: Error: Size of 'ｗｋ－０３' larger than size of 'wk-02'
+    6 |        01 wk-01.
+    7 |          03 wk-02  pic x(2).
+    8 >          03 ｗｋ－０３  redefines wk-02 pic n(2).
+    9 |        01 cnt  pic 9(1).
+   10 |        procedure division.
 ])
 
 AT_CLEANUP
@@ -34,6 +39,10 @@ AT_DATA([prog.cob], [
 
 AT_CHECK([${COMPILE} -x prog.cob], [1], [],
 [prog.cob:6: Error: 'A___82A0___A' undefined
+    4 |        DATA             DIVISION.
+    5 |        PROCEDURE DIVISION.
+    6 >            DISPLAY A___82A0___A.
+    7 |            STOP RUN.
 ])
 
 AT_CLEANUP
@@ -51,6 +60,10 @@ AT_DATA([prog.cob], [
 
 AT_CHECK([${COMPILE} -x prog.cob], [1], [],
 [prog.cob:6: Error: 'A___あ___A' undefined
+    4 |        DATA             DIVISION.
+    5 |        PROCEDURE DIVISION.
+    6 >            DISPLAY A___あ___A.
+    7 |            STOP RUN.
 ])
 
 AT_CLEANUP
@@ -71,8 +84,46 @@ AT_DATA([prog.cob], [
 AT_CHECK([${COMPILE} -x prog.cob], [1], [],
 [prog.cob: In section 'テスト':
 prog.cob:7: Error: '項目1' undefined
+    5 |        PROCEDURE        DIVISION.
+    6 |        テスト SECTION.
+    7 >            MOVE 1 TO 項目1.
+    8 |        テスト段落.
+    9 |            MOVE 1 TO 項目2.
 prog.cob: In paragraph 'テスト段落':
 prog.cob:9: Error: '項目2' undefined
+    7 |            MOVE 1 TO 項目1.
+    8 |        テスト段落.
+    9 >            MOVE 1 TO 項目2.
+])
+
+AT_CLEANUP
+
+AT_SETUP([source context of a one line source])
+
+dnl The source has nothing to show before or after the offending line.
+AT_DATA([prog.cob], [IDENTIFICATION DIVISION. PROGRAM-ID. prog. PROCEDURE DIVISION. DISPLAY UNDEF-A. GOBACK.
+])
+
+AT_CHECK([${COMPILE} -free prog.cob], [1], [],
+[prog.cob:1: Error: 'UNDEF-A' undefined
+    1 > IDENTIFICATION DIVISION. PROGRAM-ID. prog. PROCEDURE DIVISION. DISPLAY UNDEF-A. GOBACK.
+])
+
+AT_CLEANUP
+
+AT_SETUP([source context of an error on the first line])
+
+dnl The context starts at the offending line, there is nothing before it.
+AT_DATA([prog.cob], [IDENTIFICATION DIVISION. PROGRAM-ID. prog. PROCEDURE DIVISION. DISPLAY UNDEF-A.
+DISPLAY "OK".
+GOBACK.
+])
+
+AT_CHECK([${COMPILE} -free prog.cob], [1], [],
+[prog.cob:1: Error: 'UNDEF-A' undefined
+    1 > IDENTIFICATION DIVISION. PROGRAM-ID. prog. PROCEDURE DIVISION. DISPLAY UNDEF-A.
+    2 | DISPLAY "OK".
+    3 | GOBACK.
 ])
 
 AT_CLEANUP

@@ -45,7 +45,17 @@ AT_DATA([prog.cob], [
 
 AT_CHECK([${COMPILE_ONLY} prog.cob], [1], ,
 [prog.cob:10: Error: 'I' is not an integer value
+    8 |        01 I             PIC X.
+    9 |        PROCEDURE        DIVISION.
+   10 >            DISPLAY X(I)
+   11 |            END-DISPLAY.
+   12 |            DISPLAY X(I + 1)
 prog.cob:12: Error: 'I' is not a numeric value
+   10 |            DISPLAY X(I)
+   11 |            END-DISPLAY.
+   12 >            DISPLAY X(I + 1)
+   13 |            END-DISPLAY.
+   14 |            STOP RUN.
 ])
 
 AT_CLEANUP
@@ -85,9 +95,29 @@ AT_DATA([prog.cob], [
 
 AT_CHECK([${COMPILE_ONLY} prog.cob], [1], ,
 [prog.cob:10: Error: Subscript of 'X' out of bounds: 0
+    8 |            03 Y         PIC X OCCURS 3.
+    9 |        PROCEDURE        DIVISION.
+   10 >            DISPLAY X(0)
+   11 |            END-DISPLAY.
+   12 |            DISPLAY X(1)
 prog.cob:16: Error: Subscript of 'X' out of bounds: 3
+   14 |            DISPLAY X(2)
+   15 |            END-DISPLAY.
+   16 >            DISPLAY X(3)
+   17 |            END-DISPLAY.
+   18 |            DISPLAY Y(1, 0)
 prog.cob:18: Error: Subscript of 'Y' out of bounds: 0
+   16 |            DISPLAY X(3)
+   17 |            END-DISPLAY.
+   18 >            DISPLAY Y(1, 0)
+   19 |            END-DISPLAY.
+   20 |            DISPLAY Y(1, 1)
 prog.cob:24: Error: Subscript of 'Y' out of bounds: 4
+   22 |            DISPLAY Y(1, 3)
+   23 |            END-DISPLAY.
+   24 >            DISPLAY Y(1, 4)
+   25 |            END-DISPLAY.
+   26 |            STOP RUN.
 ])
 
 AT_CLEANUP
@@ -298,6 +328,11 @@ AT_DATA([prog.cob], [
 
 AT_CHECK([${COMPILE} prog.cob], [1], ,
 [prog.cob:10: Error: Subscript of 'X' out of bounds: 0
+    8 |        01 N             PIC 9 VALUE 4.
+    9 |        PROCEDURE        DIVISION.
+   10 >            DISPLAY X(0)
+   11 |            END-DISPLAY.
+   12 |            STOP RUN.
 ])
 
 AT_CLEANUP
@@ -321,6 +356,11 @@ AT_DATA([prog.cob], [
 
 AT_CHECK([${COMPILE} prog.cob], [1], ,
 [prog.cob:10: Error: Subscript of 'X' out of bounds: 7
+    8 |        01 N             PIC 9 VALUE 4.
+    9 |        PROCEDURE        DIVISION.
+   10 >            DISPLAY X(7)
+   11 |            END-DISPLAY.
+   12 |            STOP RUN.
 ])
 
 AT_CLEANUP
@@ -377,9 +417,6 @@ AT_CLEANUP
 
 AT_SETUP([Subscript out of bounds in MOVE (1)])
 
-dnl TODO: cobj.exe segfaults when compiling this test on Windows.
-AT_SKIP_IF([test -n "$IS_WINDOWS"])
-
 AT_DATA([prog.cob], [
        IDENTIFICATION   DIVISION.
        PROGRAM-ID.      prog.
@@ -403,9 +440,6 @@ AT_CLEANUP
 
 
 AT_SETUP([Subscript out of bounds in MOVE (2)])
-
-dnl TODO: cobj.exe segfaults when compiling this test on Windows.
-AT_SKIP_IF([test -n "$IS_WINDOWS"])
 
 AT_DATA([prog.cob], [
        IDENTIFICATION   DIVISION.

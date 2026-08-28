@@ -13,7 +13,17 @@ AT_DATA([prog.cob], [
 
 AT_CHECK([${COMPILE} prog.cob], [1], ,
 [prog.cob:6: Error: syntax error
+    4 |        DATA             DIVISION.
+    5 |        WORKING-STORAGE  SECTION.
+    6 >        01  Y  PIC 9 VALUE.
+    7 |        01  X.
+    8 |        01  Z  PIC 9.
 prog.cob:7: Error: PICTURE clause required for 'X'
+    5 |        WORKING-STORAGE  SECTION.
+    6 |        01  Y  PIC 9 VALUE.
+    7 >        01  X.
+    8 |        01  Z  PIC 9.
+    9 |        PROCEDURE        DIVISION.
 ])
 
 AT_CLEANUP
@@ -36,8 +46,22 @@ AT_DATA([prog.cob], [
 
 AT_CHECK([${COMPILE} prog.cob], [1], ,
 [prog.cob:8: Error: syntax error
+    6 |        01  Z  PIC 9.
+    7 |        PROCEDURE        DIVISION.
+    8 >        S00 SECTION SECTION
+    9 |            IF Z = 0 THEN
+   10 |                DISPLAY Z UPON NOWHERE
 prog.cob:10: Error: 'NOWHERE' undefined in SPECIAL-NAMES
+    8 |        S00 SECTION SECTION
+    9 |            IF Z = 0 THEN
+   10 >                DISPLAY Z UPON NOWHERE
+   11 |                DISPLAY ZZ UPON CONSOLE
+   12 |            END-IF.
 prog.cob:11: Error: 'ZZ' undefined
+    9 |            IF Z = 0 THEN
+   10 |                DISPLAY Z UPON NOWHERE
+   11 >                DISPLAY ZZ UPON CONSOLE
+   12 |            END-IF.
 ])
 
 AT_CLEANUP

@@ -482,7 +482,17 @@ AT_DATA([prog.cob], [
 AT_CHECK([${COMPILE_JP_COMPAT} prog.cob])
 AT_CHECK([${COMPILE} prog.cob], [1],[],
 [prog.cob:16: Error: INVALID KEY clause invalid with this file type
+   14 |            OPEN OUTPUT TEST-FILE.
+   15 |            MOVE  "AAAA" TO TEST-REC.
+   16 >            WRITE TEST-REC
+   17 |              INVALID KEY DISPLAY "INVALIDK".
+   18 |            CLOSE TEST-FILE.
 prog.cob:21: Error: INVALID KEY clause invalid with this file type
+   19 |            OPEN INPUT TEST-FILE.
+   20 |            READ  TEST-FILE
+   21 >              INVALID KEY DISPLAY "INVALIDK".
+   22 |            CLOSE TEST-FILE.
+   23 |            STOP RUN.
 ])
 
 AT_CLEANUP
@@ -511,6 +521,11 @@ AT_DATA([prog.cob], [
 
 AT_CHECK([${COMPILE} prog.cob], [0],[],
 [prog.cob:10: Warning: 'NOMINAL KEY' not implemented
+    8 |                         ORGANIZATION INDEXED
+    9 |                         RECORD  KEY RK01
+   10 >                         NOMINAL KEY K01.
+   11 |        DATA             DIVISION.
+   12 |        FILE             SECTION.
 ])
 
 AT_CLEANUP
@@ -536,6 +551,11 @@ AT_DATA([prog.cob], [
 
 AT_CHECK([${COMPILE} prog.cob], [0],[],
 [prog.cob:7: Warning: 'ASSIGN TO multiple external device names' not implemented
+    5 |        INPUT-OUTPUT     SECTION.
+    6 |        FILE-CONTROL.
+    7 >        SELECT SORT-FILE ASSIGN 2 FILE1 FILE2.
+    8 |        DATA             DIVISION.
+    9 |        FILE             SECTION.
 ])
 
 AT_CLEANUP
@@ -559,6 +579,11 @@ AT_DATA([prog.cob], [
 
 AT_CHECK([${COMPILE_JP_COMPAT} prog.cob], [0],[],
 [prog.cob:7: Warning: 'ASSIGN TO multiple external device names' not implemented
+    5 |        INPUT-OUTPUT     SECTION.
+    6 |        FILE-CONTROL.
+    7 >        SELECT SORT-FILE ASSIGN 2 FILE1 FILE2.
+    8 |        DATA             DIVISION.
+    9 |        FILE             SECTION.
 ])
 
 AT_CLEANUP
