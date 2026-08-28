@@ -661,7 +661,15 @@ i18n_sjis_DEPENDENCIES = \
 	i18n_sjis.src/error-print.at \
 	i18n_sjis.src/limits.at \
 	i18n_sjis.src/national.at \
-	i18n_sjis.src/mb-space.at
+	i18n_sjis.src/mb-space.at \
+	i18n_sjis.src/compare-national-diff-size.at \
+	i18n_sjis.src/compare-national.at \
+	i18n_sjis.src/file-handler-japanese.at \
+	i18n_sjis.src/japanese-char-section-var.at \
+	i18n_sjis.src/java-interface.at \
+	i18n_sjis.src/convert-string-concat.at \
+	i18n_sjis.src/fd-external.at \
+	i18n_sjis.src/copy-comments.at
 
 cobol_utf8_DEPENDENCIES = \
 	cobol_utf8.at \
@@ -677,7 +685,9 @@ cobol_utf8_DEPENDENCIES = \
 	cobol_utf8.src/compare-national.at \
 	cobol_utf8.src/file-handler-japanese.at \
 	cobol_utf8.src/japanese-char-section-var.at \
-	cobol_utf8.src/java-interface.at
+	cobol_utf8.src/java-interface.at \
+	cobol_utf8.src/convert-string-concat.at \
+	cobol_utf8.src/fd-external.at
 
 jp_compat_DEPENDENCIES = \
 	jp-compat.at \
@@ -843,7 +853,6 @@ esql_utf8_DEPENDENCIES = \
 misc_DEPENDENCIES = \
 	misc.src/signed-comp3.at \
 	misc.src/index-comp.at \
-	misc.src/compare-national.at \
 	misc.src/current-date.at \
 	misc.src/comp3-is-numeric.at \
 	misc.src/high-low-value.at \
@@ -853,7 +862,6 @@ misc_DEPENDENCIES = \
 	misc.src/env.at \
 	misc.src/exit-perform.at \
 	misc.src/comp-overflow.at \
-	misc.src/compare-national-diff-size.at \
 	misc.src/compare-9.at \
 	misc.src/comp3-overflow.at \
 	misc.src/cancel-hyphen.at \
@@ -868,12 +876,9 @@ misc_DEPENDENCIES = \
 	misc.src/compare-large-number.at \
 	misc.src/validate-indexed-file-keys.at \
 	misc.src/record-key-duplicates-error.at \
-	misc.src/copy-comments.at \
 	misc.src/read_prev_after_start.at \
-	misc.src/japanese-char-section-var.at \
 	misc.src/evaluate-switch.at \
 	misc.src/fserial-variable.at \
-	misc.src/file-handler-japanese.at \
 	misc.src/perform-until-div.at \
 	misc.src/search-occurs-depending.at \
 	misc.src/fix-subtract.at \
@@ -890,6 +895,7 @@ EXTRA_DIST = $(srcdir)/package.m4 \
 	$(data_rep_DEPENDENCIES) \
 	$(i18n_utf8_DEPENDENCIES) \
 	$(i18n_sjis_DEPENDENCIES) \
+	$(cobol_utf8_DEPENDENCIES) \
 	$(jp_compat_DEPENDENCIES) \
 	$(command_line_options_DEPENDENCIES) \
 	$(cobj_idx_DEPENDENCIES) \
