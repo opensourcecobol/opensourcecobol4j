@@ -582,6 +582,9 @@ SUBDIRS = cobol85
 @I18N_UTF8_FALSE@	cobj-idx \
 @I18N_UTF8_FALSE@	file-lock \
 @I18N_UTF8_FALSE@	file-lock2 \
+@I18N_UTF8_FALSE@	file-lock3 \
+@I18N_UTF8_FALSE@	file-lock4 \
+@I18N_UTF8_FALSE@	file-lock5 \
 @I18N_UTF8_FALSE@	misc
 
 @I18N_UTF8_TRUE@TESTS = syntax \
@@ -595,6 +598,9 @@ SUBDIRS = cobol85
 @I18N_UTF8_TRUE@	cobj-idx \
 @I18N_UTF8_TRUE@	file-lock \
 @I18N_UTF8_TRUE@	file-lock2 \
+@I18N_UTF8_TRUE@	file-lock3 \
+@I18N_UTF8_TRUE@	file-lock4 \
+@I18N_UTF8_TRUE@	file-lock5 \
 @I18N_UTF8_TRUE@	misc
 
 syntax_DEPENDENCIES = \
@@ -761,20 +767,29 @@ cobj_idx_DEPENDENCIES = \
 
 indexed_lock_DEPENDENCIES = \
 	file-lock.at \
-	file-lock.src/lock-file.at \
-	file-lock.src/access-same-record.at \
-	file-lock.src/access-different-record.at
+	file-lock.src/lock-file.at
 
 indexed_lock2_DEPENDENCIES = \
 	file-lock2.at \
+	file-lock2.src/lock-mode-automatic.at \
 	file-lock2.src/input-mode.at \
-	file-lock2.src/same-process.at \
-	file-lock2.src/open-start-write-rewrite.at \
-	file-lock2.src/release-lock.at \
-	file-lock2.src/open-input.at \
-	file-lock2.src/lock-mode-clause.at \
-	file-lock2.src/old-file.at \
-	file-lock2.src/lock-mode-automatic.at
+	file-lock2.src/release-lock.at
+
+indexed_lock3_DEPENDENCIES = \
+	file-lock3.at \
+	file-lock3.src/access-different-record.at \
+	file-lock3.src/open-input.at \
+	file-lock3.src/same-process.at
+
+indexed_lock4_DEPENDENCIES = \
+	file-lock4.at \
+	file-lock4.src/access-same-record.at \
+	file-lock4.src/open-start-write-rewrite.at \
+	file-lock4.src/old-file.at
+
+indexed_lock5_DEPENDENCIES = \
+	file-lock5.at \
+	file-lock5.src/lock-mode-clause.at
 
 
 # ESQL tests (require PostgreSQL, run separately in CI)
@@ -1263,6 +1278,27 @@ file-lock2.log: file-lock2
 	--log-file $$b.log --trs-file $$b.trs \
 	$(am__common_driver_flags) $(AM_LOG_DRIVER_FLAGS) $(LOG_DRIVER_FLAGS) -- $(LOG_COMPILE) \
 	"$$tst" $(AM_TESTS_FD_REDIRECT)
+file-lock3.log: file-lock3
+	@p='file-lock3'; \
+	b='file-lock3'; \
+	$(am__check_pre) $(LOG_DRIVER) --test-name "$$f" \
+	--log-file $$b.log --trs-file $$b.trs \
+	$(am__common_driver_flags) $(AM_LOG_DRIVER_FLAGS) $(LOG_DRIVER_FLAGS) -- $(LOG_COMPILE) \
+	"$$tst" $(AM_TESTS_FD_REDIRECT)
+file-lock4.log: file-lock4
+	@p='file-lock4'; \
+	b='file-lock4'; \
+	$(am__check_pre) $(LOG_DRIVER) --test-name "$$f" \
+	--log-file $$b.log --trs-file $$b.trs \
+	$(am__common_driver_flags) $(AM_LOG_DRIVER_FLAGS) $(LOG_DRIVER_FLAGS) -- $(LOG_COMPILE) \
+	"$$tst" $(AM_TESTS_FD_REDIRECT)
+file-lock5.log: file-lock5
+	@p='file-lock5'; \
+	b='file-lock5'; \
+	$(am__check_pre) $(LOG_DRIVER) --test-name "$$f" \
+	--log-file $$b.log --trs-file $$b.trs \
+	$(am__common_driver_flags) $(AM_LOG_DRIVER_FLAGS) $(LOG_DRIVER_FLAGS) -- $(LOG_COMPILE) \
+	"$$tst" $(AM_TESTS_FD_REDIRECT)
 misc.log: misc
 	@p='misc'; \
 	b='misc'; \
@@ -1512,6 +1548,9 @@ $(srcdir)/command-line-options: $(command_line_options_DEPENDENCIES)
 $(srcdir)/cobj-idx: $(cobj_idx_DEPENDENCIES)
 $(srcdir)/file-lock: $(indexed_lock_DEPENDENCIES)
 $(srcdir)/file-lock2: $(indexed_lock2_DEPENDENCIES)
+$(srcdir)/file-lock3: $(indexed_lock3_DEPENDENCIES)
+$(srcdir)/file-lock4: $(indexed_lock4_DEPENDENCIES)
+$(srcdir)/file-lock5: $(indexed_lock5_DEPENDENCIES)
 $(srcdir)/misc: $(misc_DEPENDENCIES)
 
 # Tell versions [3.59,3.63) of GNU make to not export all variables.

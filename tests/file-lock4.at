@@ -1,0 +1,5 @@
+AT_INIT([file-lock4])
+
+m4_include([access-same-record.at])
+m4_include([open-start-write-rewrite.at])
+m4_include([old-file.at])
