@@ -218,12 +218,22 @@ jobs:
     with:
       test-name: ${{ matrix.test_name }}
 
-  # TODO: Re-enable when Windows PostgreSQL setup is resolved.
-  # The pre-installed PostgreSQL on Windows runners requires initdb
-  # in RUNNER_TEMP, but cobj.exe segfaults with the new esql-scanner.
-  # windows-test-esql:
-  #   needs: [windows-build, windows-generate-test-scripts]
-  #   uses: ./.github/workflows/windows-test-esql.yml
+  # esql-utf8 is missing on purpose: it needs a compiler configured with
+  # --enable-utf8, and the Windows build is Shift_JIS only.
+  windows-test-esql:
+    needs: [windows-build, windows-generate-test-scripts]
+    strategy:
+      fail-fast: false
+      matrix:
+        test_name:
+          - "esql-basic"
+          - "esql-sqlca"
+          - "esql-cobol-data"
+          - "esql-misc"
+          - "esql-sql-data"
+    uses: ./.github/workflows/windows-test-esql.yml
+    with:
+      test-name: ${{ matrix.test_name }}
 
   static-analysis:
     needs: check-workflows

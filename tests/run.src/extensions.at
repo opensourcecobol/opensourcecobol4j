@@ -1351,7 +1351,10 @@ AT_CLEANUP
 
 AT_SETUP([Case independent PROGRAM-ID])
 
-dnl TODO: cobj.exe generates mismatched class/file names on case-insensitive filesystems.
+dnl Class files of programs whose IDs differ only in letter case cannot
+dnl coexist on a case-insensitive filesystem; cobj reports an explicit
+dnl error there (covered by the test "Case-colliding PROGRAM-IDs on a
+dnl case-insensitive filesystem").
 AT_SKIP_IF([test -n "$IS_WINDOWS"])
 
 AT_DATA([prog.cob], [
@@ -1377,7 +1380,10 @@ AT_CLEANUP
 
 AT_SETUP([PROGRAM-ID AS clause])
 
-dnl TODO: cobj.exe generates mismatched class/file names on case-insensitive filesystems.
+dnl Class files of programs whose IDs differ only in letter case cannot
+dnl coexist on a case-insensitive filesystem; cobj reports an explicit
+dnl error there (covered by the test "Case-colliding PROGRAM-IDs on a
+dnl case-insensitive filesystem").
 AT_SKIP_IF([test -n "$IS_WINDOWS"])
 
 AT_DATA([prog.cob], [
@@ -1398,6 +1404,34 @@ AT_DATA([prog.cob], [
 
 AT_CHECK([${COMPILE} prog.cob])
 AT_CHECK([java prog], [0], [OK])
+
+AT_CLEANUP
+
+AT_SETUP([Case-colliding PROGRAM-IDs on a case-insensitive filesystem])
+
+dnl On a case-insensitive filesystem cobj must reject programs whose
+dnl class files would differ only in letter case instead of silently
+dnl overwriting them.
+AT_SKIP_IF([test -z "$IS_WINDOWS"])
+
+AT_DATA([prog.cob], [
+       IDENTIFICATION   DIVISION.
+       PROGRAM-ID.      PROG.
+       PROCEDURE        DIVISION.
+           CALL "prog"
+           END-CALL.
+           STOP RUN.
+       PROGRAM-ID.      prog.
+       PROCEDURE        DIVISION.
+           DISPLAY "OK" NO ADVANCING
+           END-DISPLAY.
+           EXIT PROGRAM.
+       END PROGRAM prog.
+       END PROGRAM PROG.
+])
+
+AT_CHECK([${COMPILE} prog.cob 2> err.log], [1])
+AT_CHECK([grep "differ only in letter case" err.log], [0], [ignore])
 
 AT_CLEANUP
 
