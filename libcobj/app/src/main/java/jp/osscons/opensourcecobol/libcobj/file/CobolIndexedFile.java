@@ -48,7 +48,6 @@ import org.sqlite.SQLiteErrorCode;
  */
 public class CobolIndexedFile extends CobolFile {
     private Optional<IndexedCursor> cursor;
-    private boolean updateWhileReading = false;
     private boolean indexedFirstRead = true;
     private boolean callStart = false;
     private boolean commitOnModification = true;
@@ -532,7 +531,6 @@ public class CobolIndexedFile extends CobolFile {
         p.record_locked = false;
 
         p.key = DBT_SET(this.keys[0].getField());
-        this.updateWhileReading = false;
         this.indexedFirstRead = true;
         this.callStart = false;
 
@@ -578,8 +576,6 @@ public class CobolIndexedFile extends CobolFile {
     @Override
     public int close_(int opt) {
         IndexedFile p = this.filei;
-
-        this.closeCursor();
 
         previousLockedRecordKey = null;
 
@@ -878,19 +874,8 @@ public class CobolIndexedFile extends CobolFile {
                 return COB_STATUS_30_PERMANENT_ERROR;
             }
             this.cursor.get().moveToLast();
-        } else if (this.updateWhileReading) {
-            this.updateWhileReading = false;
-            if (!this.cursor.isPresent()) {
-                return COB_STATUS_30_PERMANENT_ERROR;
-            }
-            IndexedCursor oldCursor = this.cursor.get();
-            Optional<IndexedCursor> newCursor = oldCursor.reloadCursor();
-            if (!newCursor.isPresent()) {
-                this.cursor = Optional.of(oldCursor);
-            } else {
-                oldCursor.close();
-                this.cursor = newCursor;
-            }
+        } else if (!this.cursor.isPresent()) {
+            return COB_STATUS_30_PERMANENT_ERROR;
         }
 
         if (!this.cursor.isPresent()) {
@@ -979,14 +964,6 @@ public class CobolIndexedFile extends CobolFile {
         return COB_STATUS_00_SUCCESS;
     }
 
-    private void closeCursor() {
-        if (this.cursor != null) {
-            if (this.cursor.isPresent()) {
-                this.cursor.get().close();
-            }
-        }
-    }
-
     private boolean keyExistsInTable(IndexedFile p, int index, byte[] key) {
         String query = String.format("select * from %s where key = ?", getTableName(index));
         try (PreparedStatement selectStatement = p.connection.prepareStatement(query)) {
@@ -1020,7 +997,6 @@ public class CobolIndexedFile extends CobolFile {
 
     private int returnWith(IndexedFile p, boolean closeCursor, int index, int returnCode) {
         if (closeCursor) {
-            this.closeCursor();
             p.write_cursor_open = false;
         }
         return returnCode;
@@ -1103,8 +1079,6 @@ public class CobolIndexedFile extends CobolFile {
                 return returnWith(p, closeCursor, 0, COB_STATUS_51_RECORD_LOCKED);
             }
         }
-
-        this.updateWhileReading = true;
 
         return returnWith(p, closeCursor, 0, COB_STATUS_00_SUCCESS);
     }
@@ -1334,9 +1308,6 @@ public class CobolIndexedFile extends CobolFile {
                 return returnWith(p, closeCursor, 0, COB_STATUS_30_PERMANENT_ERROR);
             }
         }
-
-        this.updateWhileReading = true;
-
         return COB_STATUS_00_SUCCESS;
     }
 
