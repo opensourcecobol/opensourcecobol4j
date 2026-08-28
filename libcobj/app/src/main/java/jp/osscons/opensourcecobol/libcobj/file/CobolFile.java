@@ -1157,6 +1157,24 @@ public class CobolFile {
         // this.open_("", mode, sharing);
     }
 
+    /** 順編成ファイルの入出力バッファに割り当てるバイト数の上限。 */
+    private static final int MAX_SEQ_BUFFER_SIZE = 64 * 1024 * 1024;
+
+    /**
+     * 順編成ファイルの入出力バッファのバイト数を求める。<br>
+     * 環境変数で指定されたレコード数と最大レコード長の積が大きすぎる場合は、{@link #MAX_SEQ_BUFFER_SIZE}に切り詰める。
+     *
+     * @param recordCount 一度に入出力するレコード数
+     * @return バッファのバイト数。バッファを使用しない場合は0
+     */
+    private int seqBufferSize(int recordCount) {
+        if (recordCount <= 0 || this.record_max <= 0) {
+            return 0;
+        }
+        long size = (long) recordCount * (long) this.record_max;
+        return (int) Math.min(size, MAX_SEQ_BUFFER_SIZE);
+    }
+
     /**
      * TODO: 準備中
      *
@@ -1241,11 +1259,16 @@ public class CobolFile {
             Linage lingptr = this.getLinorkeyptr();
             lingptr.getLinageCtr().setInt(1);
         }
-        if ((this.organization == COB_ORG_SEQUENTIAL
-                        || this.organization == COB_ORG_LINE_SEQUENTIAL)
-                && (mode == COB_OPEN_OUTPUT || mode == COB_OPEN_EXTEND)
-                && CobolUtil.fileSeqWriteBufferSize > 0) {
-            this.file.prepareWriteBuffer(CobolUtil.fileSeqWriteBufferSize * this.record_max);
+        if (this.organization == COB_ORG_SEQUENTIAL
+                || this.organization == COB_ORG_LINE_SEQUENTIAL) {
+            if (mode == COB_OPEN_OUTPUT || mode == COB_OPEN_EXTEND) {
+                this.file.prepareWriteBuffer(this.seqBufferSize(CobolUtil.fileSeqWriteBufferSize));
+            }
+            // /dev/stdinなどは同じファイル記述子をACCEPTや後続のプロセスと共有しうる。
+            // 先読みするとそれらが読むはずの入力を消費してしまうためバッファを使用しない
+            if (mode == COB_OPEN_INPUT && !filename.startsWith("/dev/")) {
+                this.file.prepareReadBuffer(this.seqBufferSize(CobolUtil.fileSeqReadBufferSize));
+            }
         }
         return 0;
     }
