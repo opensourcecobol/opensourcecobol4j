@@ -4,6 +4,14 @@ All notable changes to this project will be documented in this file.
 
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 
+## [2.1.0] - 2026-08-31
+
+### New Features
+
+- **Abstracted classes to support multiple databases in embedded SQL** (#857)
+  - Consolidated shared logic and abstracted DB-specific parts so that the embedded SQL functionality can support databases other than PostgreSQL.
+  - opensource COBOL 4J provides an implementation for PostgreSQL. Support for other databases can now be added easily by creating a class that extends `AbstractCobolEsqlBackend`. The database to use is specified via the `OCDB_DB_TYPE` environment variable (PostgreSQL is used if unspecified).
+
 ## [2.0.0] - 2026-06-26
 
 ### New Features

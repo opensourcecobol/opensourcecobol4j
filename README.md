@@ -52,9 +52,9 @@ dnf install -y java-21-amazon-corretto-devel gcc make bison flex automake autoco
 
 ### Install opensource COBOL 4J
 ```
-curl -L -o opensourcecobol4j-v2.0.0.tar.gz https://github.com/opensourcecobol/opensourcecobol4j/archive/refs/tags/v2.0.0.tar.gz
-tar zxvf opensourcecobol4j-v2.0.0.tar.gz
-cd opensourcecobol4j-2.0.0
+curl -L -o opensourcecobol4j-v2.1.0.tar.gz https://github.com/opensourcecobol/opensourcecobol4j/archive/refs/tags/v2.1.0.tar.gz
+tar zxvf opensourcecobol4j-v2.1.0.tar.gz
+cd opensourcecobol4j-2.1.0
 ./configure --prefix=/usr/
 make
 sudo make install
@@ -63,9 +63,9 @@ sudo make install
 In order to install a compiler for UTF-8 encoded COBOL source code, run the following commands.
 
 ```
-curl -L -o opensourcecobol4j-v2.0.0.tar.gz https://github.com/opensourcecobol/opensourcecobol4j/archive/refs/tags/v2.0.0.tar.gz
-tar zxvf opensourcecobol4j-v2.0.0.tar.gz
-cd opensourcecobol4j-2.0.0
+curl -L -o opensourcecobol4j-v2.1.0.tar.gz https://github.com/opensourcecobol/opensourcecobol4j/archive/refs/tags/v2.1.0.tar.gz
+tar zxvf opensourcecobol4j-v2.1.0.tar.gz
+cd opensourcecobol4j-2.1.0
 ./configure --prefix=/usr/ --enable-utf8
 touch cobj/*.m4
 make
@@ -138,7 +138,7 @@ https://www.oracle.com/java/technologies/downloads/?er=221886#java8-windows
 The docker container for opensource COBOL 4J is available.
 
 ```bash
-docker pull opensourcecobol/opensourcecobol4j:2.0.0
+docker pull opensourcecobol/opensourcecobol4j:2.1.0
 ```
 
 Execute the following commands in order to run the "Hello World" COBOL program.
