@@ -529,8 +529,12 @@ static enum cb_string_category get_string_category(const unsigned char *s,
       }
 #else
     } else if ((0x81 <= c && c <= 0x9f) || (0xe0 <= c && c <= 0xef)) {
-      i += 2;
-      category = CB_STRING_CATEGORY_CONTAINS_NON_ASCII;
+      if (i + 1 < size) {
+        i += 2;
+        category = CB_STRING_CATEGORY_CONTAINS_NON_ASCII;
+      } else {
+        return CB_STRING_CATEGORY_CONTAINS_UNCOMMON;
+      }
 #endif
     } else {
       return CB_STRING_CATEGORY_CONTAINS_UNCOMMON;
