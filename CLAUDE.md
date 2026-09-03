@@ -54,7 +54,7 @@ misc.atのテストなら、テストの実行はmisc.dir/にて実施され、�
 
 ## サブエージェントの使い分け
 
-以下は`.claude/agents/`で定義している。**いずれも読み取り専用**で、報告するだけでコードは変更しない。調査やログ確認を自分の会話に抱え込まずに委譲することで、メインの文脈を実装そのものに使えるようにする。
+以下は`.claude/agents/`で定義している。`docs-sync-inspector`以外は**読み取り専用**で、報告するだけでコードは変更しない。調査やログ確認を自分の会話に抱え込まずに委譲することで、メインの文脈を実装そのものに使えるようにする。
 
 | エージェント | 使う場面 |
 |---|---|
@@ -62,15 +62,15 @@ misc.atのテストなら、テストの実行はmisc.dir/にて実施され、�
 | `ci-triage` | CIが失敗したとき。`gh`でログを取り、既知のフレークか本当の回帰かを判定する。**巨大なCIログを自分で読まない** |
 | `commit-preflight` | コミット/PRの直前。生成物の混入、CRLF・Shift_JISの事故、フォーマット漏れ、PMD違反を検査する |
 | `code-reviewer` | 実装が一段落したとき、コミット前 |
+| `docs-sync-inspector` | コード変更後にドキュメントの整合を取るとき。**これだけはドキュメントを実際に編集する**(コードは変更しない) |
 
 複数を同時に走らせられる場面(レビューとドキュメント更新など)では、1つのメッセージ内で複数のエージェントを呼び出して並行させること。
 
 ## git
 
-- **リモートに`origin`は存在しない**。`git push origin ...`は失敗する。pushやgh操作の前に`git remote -v`で宛先を確認すること。
-  - `safe` = yutaro-sakamoto/opensourcecobol4j（ユーザ自身のフォーク。自リポジトリ宛PRのソースブランチはここにpush）
-  - `org` = opensourcecobol/opensourcecobol4j（上流）
-  - `dev` = yutaro-sakamoto-dev/opensourcecobol4j、`hashimoto` = tsh-hashimoto/opensourcecobol4j
+- **リモート名は環境によって異なる**。`origin`が存在しない構成もあるので、pushや`gh`の操作の前に必ず`git remote -v`で宛先を確認すること。
+  - 上流は opensourcecobol/opensourcecobol4j。PRは上流の`develop`ブランチに出す(`/pr`)。
+  - 自分のフォークは上流へ出す前の確認用に使う。PRのソースブランチはそちらにpushし、必要ならフォーク内でDraft PRを出してCIを回す(`/local-pr`)。
 - **`git commit`は変更済みの追跡ファイルを全て巻き込む**: `.git/hooks/pre-commit`が`./format`を実行したあと`git add -u`をするため、明示的に`git add`したファイルだけをコミットすることはできない。生成物などを意図的に除外したい場合は`git commit --no-verify`を使う(この場合`./format`も走らないので必要なら手動で実行する)。またフックが`./format`経由でgradleを呼ぶため、**コミット自体もsandbox無効化が必要**。
 - **`CLAUDE.md`と`.claude/`はgit管理下**。`git worktree add`で自動的にチェックアウトされるので、worktreeにリンクを張る必要はない。ただし`.claude/settings.local.json`（通知フックなどマシン固有の個人設定）は`.gitignore`で除外しているので、worktreeで使いたい場合は各自でコピーする。
 
