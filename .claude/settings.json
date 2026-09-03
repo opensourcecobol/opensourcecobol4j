@@ -1,0 +1,59 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(ls:*)",
+      "Bash(cat:*)",
+      "Bash(find:*)",
+      "Bash(rg:*)",
+      "Bash(echo:*)",
+      "Bash(./configure:*)",
+      "Bash(make:*)",
+      "Bash(./format:*)",
+      "Bash(./gradlew:*)",
+      "Bash(javac:*)",
+      "Bash(java:*)",
+      "Bash(jar:*)",
+      "Bash(jar -tf:*)",
+      "Bash(. ../../atconfig)",
+      "Bash(. ../../atlocal)",
+      "Bash(./misc)",
+      "Bash(./misc:*)",
+      "Bash(git status:*)",
+      "Bash(git diff:*)",
+      "Bash(git log:*)",
+      "Bash(git show:*)",
+      "Bash(git branch:*)",
+      "Bash(git remote -v)",
+      "Bash(git worktree:*)",
+      "Bash(git commit:*)",
+      "Bash(gh run list:*)",
+      "Bash(gh run view:*)",
+      "Bash(gh run download:*)",
+      "Bash(gh pr list:*)",
+      "Bash(gh pr view:*)",
+      "Bash(gh pr checks:*)",
+      "Edit"
+    ],
+    "deny": []
+  },
+  "skillOverrides": {
+    "code-review": "user-invocable-only"
+  },
+  "hooks": {
+    "Stop": [
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": "bash \"$CLAUDE_PROJECT_DIR/.claude/hooks/format-on-stop.sh\"",
+            "timeout": 300
+          }
+        ]
+      }
+    ]
+  },
+  "sandbox": {
+    "enabled": true,
+    "autoAllowBashIfSandboxed": true
+  }
+}

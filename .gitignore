@@ -86,3 +86,8 @@ configure~
 *.gcda
 *.gcno
 report.html
+
+# Claude Code の個人設定（通知フックやマシン固有のパスなど）
+.claude/settings.local.json
+.claude/worktrees/
+.claude/.cc-writes/

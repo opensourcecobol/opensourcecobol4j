@@ -50,7 +50,7 @@ misc.atのテストなら、テストの実行はmisc.dir/にて実施され、�
 一通りコードの修正が完了したら、トップディレクトリで`./format`を実行してコードを整形すること。
 (Stopフックの`.claude/hooks/format-on-stop.sh`が変更のあったC/Javaソースを検出して自動実行するが、手動で実行しても構わない)
 また、`code-reviewer`と`docs-sync-inspector`のサブエージェントを**同一メッセージ内で同時に**呼び出して、コードレビューとドキュメントの更新を並行して実施すること。
-コードレビューに組み込みの`/code-review`スキルを使ってはいけない(トークン消費が大きいため`.claude/settings.local.json`の`skillOverrides`で非表示化済み。ユーザが明示的に`/code-review`と打った場合のみ動く)。レビューは常に`code-reviewer`サブエージェントで行う。
+コードレビューに組み込みの`/code-review`スキルを使ってはいけない(トークン消費が大きいため`.claude/settings.json`の`skillOverrides`で非表示化済み。ユーザが明示的に`/code-review`と打った場合のみ動く)。レビューは常に`code-reviewer`サブエージェントで行う。
 
 ## サブエージェントの使い分け
 
@@ -72,7 +72,7 @@ misc.atのテストなら、テストの実行はmisc.dir/にて実施され、�
   - `org` = opensourcecobol/opensourcecobol4j（上流）
   - `dev` = yutaro-sakamoto-dev/opensourcecobol4j、`hashimoto` = tsh-hashimoto/opensourcecobol4j
 - **`git commit`は変更済みの追跡ファイルを全て巻き込む**: `.git/hooks/pre-commit`が`./format`を実行したあと`git add -u`をするため、明示的に`git add`したファイルだけをコミットすることはできない。生成物などを意図的に除外したい場合は`git commit --no-verify`を使う(この場合`./format`も走らないので必要なら手動で実行する)。またフックが`./format`経由でgradleを呼ぶため、**コミット自体もsandbox無効化が必要**。
-- **`CLAUDE.md`と`.claude/`はgit管理外**（`.git/info/exclude`で除外）。worktreeにはチェックアウトされないため、`/wt`と`/setup-worktree`がシンボリックリンクで共有している。worktreeを手動で作る場合も同じリンクを張ること。
+- **`CLAUDE.md`と`.claude/`はgit管理下**。`git worktree add`で自動的にチェックアウトされるので、worktreeにリンクを張る必要はない。ただし`.claude/settings.local.json`（通知フックなどマシン固有の個人設定）は`.gitignore`で除外しているので、worktreeで使いたい場合は各自でコピーする。
 
 # フォルダ構成
 
