@@ -21,7 +21,7 @@ package jp.osscons.opensourcecobol.libcobj.data;
 import java.math.BigDecimal;
 import jp.osscons.opensourcecobol.libcobj.exceptions.CobolRuntimeException;
 
-/** PIC 文字列がX(5)やX(9)の変数を表現するクラス. */
+/** PIC 文字列がX(5)やX(9)の変数を表現するクラス。 */
 public class CobolAlphanumericField extends AbstractCobolField {
 
     /**
@@ -133,7 +133,7 @@ public class CobolAlphanumericField extends AbstractCobolField {
     }
 
     /**
-     * 英数字項目から英数字項目へMOVEの処理を行う.
+     * 英数字項目から英数字項目へMOVEの処理を行う。
      *
      * @param dst 転記先の英数字項目
      * @param src 転記元の英数字項目

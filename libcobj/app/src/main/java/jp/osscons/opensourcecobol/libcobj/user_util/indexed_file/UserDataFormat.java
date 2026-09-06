@@ -1,15 +1,9 @@
 package jp.osscons.opensourcecobol.libcobj.user_util.indexed_file;
 
-/** Enum to specify the format of the input and output data. */
+/** 入出力データの形式を表す列挙型。 */
 enum UserDataFormat {
-    /**
-     * This value means the line-sequential format of COBOL. Each records are separated by a newline
-     * character (0x20).
-     */
+    /** COBOLの行順（line-sequential）形式を表す。各レコードは改行文字（0x20）で区切られる。 */
     LINE_SEQUENTIAL,
-    /**
-     * This value means the sequential format of COBOL. Each records are concatenated without any
-     * separator.
-     */
+    /** COBOLの順（sequential）形式を表す。各レコードは区切り文字なしで連結される。 */
     SEQUENTIAL,
 }

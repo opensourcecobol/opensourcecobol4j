@@ -34,7 +34,7 @@ public interface CobolRunnable {
     void cancel();
 
     /**
-     * プログラムがCANCEL可能でない状態かどうかを返す。 {@link CobolResolve#cancel(String)}
+     * プログラムがCANCEL可能でない状態かどうかを返す。{@link CobolResolve#cancel(String)}
      * から呼び出され、falseの場合にCANCEL処理が実行される。
      *
      * @return プログラムが実行中などでCANCELできない場合はtrue、CANCEL可能な場合はfalse

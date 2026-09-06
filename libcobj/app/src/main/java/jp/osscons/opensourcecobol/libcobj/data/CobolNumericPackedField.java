@@ -21,7 +21,7 @@ package jp.osscons.opensourcecobol.libcobj.data;
 import java.math.BigDecimal;
 import jp.osscons.opensourcecobol.libcobj.exceptions.CobolRuntimeException;
 
-/** PIC 文字列が9(5) COMP-3などの変数を表現するクラス. */
+/** PIC 文字列が9(5) COMP-3などの変数を表現するクラス。 */
 public class CobolNumericPackedField extends AbstractCobolField {
     private static final byte[] packed_bytes = {
         0x00,
@@ -131,7 +131,7 @@ public class CobolNumericPackedField extends AbstractCobolField {
      *
      * @param size データを格納するバイト配列の長さ
      * @param dataStorage データを格納するバイト配列を扱うオブジェクト
-     * @param attribute 変数に関する様々な情報を保持するオブジェクト(符号付か,COMP-3指定かなど)
+     * @param attribute 変数に関する様々な情報を保持するオブジェクト(符号付か、COMP-3指定かなど)
      */
     public CobolNumericPackedField(
             int size, CobolDataStorage dataStorage, CobolFieldAttribute attribute) {
@@ -769,7 +769,7 @@ public class CobolNumericPackedField extends AbstractCobolField {
      * libcob/codegen.hのcob_cmp_packed_intの実装
      *
      * @param n 比較対象の整数値
-     * @return thisの数値がnより小さければ-1, 大きければ1, 等しければ0
+     * @return thisの数値がnより小さければ-1、大きければ1、等しければ0
      */
     private int cmpPackedInt(int n) {
         CobolDataStorage data = this.getDataStorage();
@@ -795,7 +795,7 @@ public class CobolNumericPackedField extends AbstractCobolField {
      * libcob/numeric.cのcob_cmp_packedの実装
      *
      * @param n 比較対象の整数値
-     * @return thisの数値がnより小さければ負の値, 大きければ正の値, 等しければ0
+     * @return thisの数値がnより小さければ負の値、大きければ正の値、等しければ0
      */
     private int cmpPacked(int n) {
         int sign = this.getSign();

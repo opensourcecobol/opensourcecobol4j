@@ -225,7 +225,7 @@ public class CobolIndexedFile extends CobolFile {
         this.commitOnModification = commitOnModification;
     }
 
-    /** Equivalent to DBT_SET in libcob/fileio.c */
+    /** libcob/fileio.cのDBT_SETに相当する。 */
     private byte[] DBT_SET(AbstractCobolField field) {
         return field.getDataStorage().getByteArray(0, field.getSize());
     }
@@ -1030,7 +1030,7 @@ public class CobolIndexedFile extends CobolFile {
         return this.indexed_write_internal(rewrite, null, opt);
     }
 
-    /** Equivalent to indexed_write_internal in libcob/fileio.c */
+    /** libcob/fileio.cのindexed_write_internalに相当する。 */
     private int indexed_write_internal(boolean rewrite, int[] dupNumbers, int opt) {
         IndexedFile p = this.filei;
 
@@ -1155,7 +1155,7 @@ public class CobolIndexedFile extends CobolFile {
         return ret;
     }
 
-    /** Equivalent to check_alt_keys in libcob/fileio.c */
+    /** libcob/fileio.cのcheck_alt_keysに相当する。 */
     private boolean check_alt_keys(boolean rewrite) {
         IndexedFile p = this.filei;
 
@@ -1194,7 +1194,7 @@ public class CobolIndexedFile extends CobolFile {
     }
 
     @Override
-    /** Equivalent to indexed_rewrite in libcob/fileio.c */
+    /** libcob/fileio.cのindexed_rewriteに相当する。 */
     public int rewrite_(int opt) {
         IndexedFile p = this.filei;
 
@@ -1278,7 +1278,7 @@ public class CobolIndexedFile extends CobolFile {
         return this.indexed_delete_internal(rewrite, null);
     }
 
-    /** Equivalent to indexed_delete_internal in libcob/fileio.c */
+    /** libcob/fileio.cのindexed_delete_internalに相当する。 */
     private int indexed_delete_internal(boolean rewrite, int[] dupNumbers) {
         IndexedFile p = this.filei;
         boolean closeCursor;
@@ -1408,9 +1408,9 @@ public class CobolIndexedFile extends CobolFile {
     }
 
     /**
-     * Delete all records in the file
+     * ファイル内のすべてのレコードを削除する。
      *
-     * @return true if all records are deleted successfully, otherwise false
+     * @return すべてのレコードの削除に成功した場合はtrue、そうでない場合はfalse
      */
     public boolean deleteAllRecords() {
         IndexedFile p = this.filei;
