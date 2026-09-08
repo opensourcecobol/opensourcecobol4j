@@ -23,8 +23,13 @@ SKIP_TESTを修正するための新しいworktree作業環境を作成する。
 ## 実行するコマンドの例
 
 ```bash
-# 開発ブランチからworktreeを作成（ベースブランチはリポジトリの構成に合わせる）
-git worktree add -b {ブランチ名} wt/{ブランチ名} {ベースブランチ}
+# デフォルトブランチからworktreeを作成する（ブランチ名は決め打ちにしない）
+BASE=$(git remote show {リモート名} | sed -n '/HEAD branch/s/.*: //p')
+# git remote show はリモートに問い合わせる。ローカルだけで済ませたい場合は
+#   BASE=$(git symbolic-ref --short refs/remotes/{リモート名}/HEAD | sed 's|^{リモート名}/||')
+# だが refs/remotes/<リモート名>/HEAD が未設定のcloneでは空になる（先に git remote set-head <リモート名> -a が要る）
+git fetch {リモート名} "$BASE"
+git worktree add -b {ブランチ名} wt/{ブランチ名} {リモート名}/"$BASE"
 
 # task.mdを作成（fix-skipped-testが自動で読み込む）
 mkdir -p wt/{ブランチ名}/.claude-work
@@ -42,7 +47,8 @@ cd wt/{ブランチ名}
 
 ## 注意事項
 
-- worktreeは開発ブランチ（`develop`。無ければ`main`）から作成する
+- worktreeは**デフォルトブランチ**から作成する。ブランチ名を決め打ちにせず、`git remote show <リモート名>` の `HEAD branch` から取得する
+  （`gh` が使えるなら `gh repo view <owner>/<repo> --json defaultBranchRef -q .defaultBranchRef.name` でもよい）
 - ブランチ名は `fix/` プレフィックスをつけることを推奨（例: `fix/pointer-display`）
 - ビルドエラーが発生した場合はユーザーに報告して確認する
 - `CLAUDE.md` と `.claude/` はgit管理下なので、`git worktree add` で自動的にチェックアウトされる。リンクを張る必要はない

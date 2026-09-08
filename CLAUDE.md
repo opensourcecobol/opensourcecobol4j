@@ -89,7 +89,8 @@ misc.atのテストなら、テストの実行はmisc.dir/にて実施され、�
 ## git
 
 - **リモート名は環境によって異なる**。`origin`が存在しない構成もあるので、pushや`gh`の操作の前に必ず`git remote -v`で宛先を確認すること。
-  - 上流は opensourcecobol/opensourcecobol4j。PRは上流の`develop`ブランチに出す(`/pr`)。
+  - 上流は opensourcecobol/opensourcecobol4j。PRは上流の**デフォルトブランチ**に出す(`/pr`)。
+    ブランチ名を決め打ちにせず、`git remote show <リモート名>`の`HEAD branch`か`gh repo view <owner>/<repo> --json defaultBranchRef`で取得すること。
   - 自分のフォークは上流へ出す前の確認用に使う。PRのソースブランチはそちらにpushし、必要ならフォーク内でDraft PRを出してCIを回す(`/local-pr`)。
 - **`git commit`は変更済みの追跡ファイルを全て巻き込む**: `.git/hooks/pre-commit`が`./format`を実行したあと`git add -u`をするため、明示的に`git add`したファイルだけをコミットすることはできない。生成物などを意図的に除外したい場合は`git commit --no-verify`を使う(この場合`./format`も走らないので必要なら手動で実行する)。またフックが`./format`経由でgradleを呼ぶため、**コミット自体もsandbox無効化が必要**。
 - **`CLAUDE.md`と`.claude/`はgit管理下**。`git worktree add`で自動的にチェックアウトされるので、worktreeにリンクを張る必要はない。ただし`.claude/settings.local.json`（通知フックなどマシン固有の個人設定）は`.gitignore`で除外しているので、worktreeで使いたい場合は各自でコピーする。
