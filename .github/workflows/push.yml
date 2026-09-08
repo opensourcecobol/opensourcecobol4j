@@ -29,7 +29,7 @@ jobs:
     needs: check-workflows
     strategy:
       matrix:
-        os: ["ubuntu:24.04"]
+        os: ["ubuntu:26.04"]
     uses: ./.github/workflows/build.yml
     with:
       os: ${{ matrix.os }}
@@ -38,7 +38,7 @@ jobs:
     needs: check-workflows
     strategy:
       matrix:
-        os: ["ubuntu:24.04"]
+        os: ["ubuntu:26.04"]
     uses: ./.github/workflows/build.yml
     with:
       os: ${{ matrix.os }}
@@ -65,7 +65,7 @@ jobs:
           - "file-lock"
           - "file-lock2"
           - "misc"
-        os: ["ubuntu:24.04"]
+        os: ["ubuntu:26.04"]
     uses: ./.github/workflows/test-other.yml
     with:
       test-name: ${{ matrix.test_name }}
@@ -87,7 +87,7 @@ jobs:
           - "cobj-idx"
           - "file-lock2"
           #- "misc"
-        os: ["ubuntu:24.04"]
+        os: ["ubuntu:26.04"]
     uses: ./.github/workflows/test-other.yml
     with:
       test-name: ${{ matrix.test_name }}
@@ -98,7 +98,7 @@ jobs:
     needs: build
     strategy:
       matrix:
-        os: ["ubuntu:24.04"]
+        os: ["ubuntu:26.04"]
     uses: ./.github/workflows/test-esql.yml
     with:
       os: ${{ matrix.os }}
@@ -107,7 +107,7 @@ jobs:
     needs: build-utf8
     strategy:
       matrix:
-        os: ["ubuntu:24.04"]
+        os: ["ubuntu:26.04"]
     uses: ./.github/workflows/test-esql-utf8.yml
     with:
       os: ${{ matrix.os }}
@@ -116,7 +116,7 @@ jobs:
     needs: build
     strategy:
       matrix:
-        os: ["ubuntu:24.04"]
+        os: ["ubuntu:26.04"]
     uses: ./.github/workflows/test-esql-examples.yml
     with:
       os: ${{ matrix.os }}
@@ -125,7 +125,7 @@ jobs:
     needs: build
     strategy:
       matrix:
-        os: ["ubuntu:24.04"]
+        os: ["ubuntu:26.04"]
     uses: ./.github/workflows/test-cobj-api.yml
     with:
       os: ${{ matrix.os }}
@@ -136,7 +136,7 @@ jobs:
       fail-fast: false
       matrix:
         test_name: ["IC", "IF", "IX", "NC", "OB", "RL", "SG", "SM", "SQ", "ST"]
-        os: ["ubuntu:24.04"]
+        os: ["ubuntu:26.04"]
     uses: ./.github/workflows/test-nist.yml
     with:
       test-name: ${{ matrix.test_name }}
@@ -149,7 +149,7 @@ jobs:
       fail-fast: false
       matrix:
         test_name: ["IC", "IF", "IX", "NC", "OB", "RL", "SG", "SM", "SQ", "ST"]
-        os: ["ubuntu:24.04"]
+        os: ["ubuntu:26.04"]
     uses: ./.github/workflows/test-nist.yml
     with:
       test-name: ${{ matrix.test_name }}
@@ -162,7 +162,7 @@ jobs:
     strategy:
       matrix:
         test_name: ["CM", "DB", "RW"]
-        os: ["ubuntu:24.04"]
+        os: ["ubuntu:26.04"]
     uses: ./.github/workflows/test-nist.yml
     with:
       test-name: ${{ matrix.test_name }}

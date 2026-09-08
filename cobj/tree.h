@@ -1039,7 +1039,7 @@ struct cb_intrinsic {
   cb_tree name;
   cb_tree args;
   cb_tree intr_field; /* Field to use */
-  struct cb_intrinsic_table *intr_tab;
+  const struct cb_intrinsic_table *intr_tab;
   cb_tree offset;
   cb_tree length;
 };
@@ -1047,8 +1047,8 @@ struct cb_intrinsic {
 #define CB_INTRINSIC(x) (CB_TREE_CAST(CB_TAG_INTRINSIC, struct cb_intrinsic, x))
 #define CB_INTRINSIC_P(x) (CB_TREE_TAG(x) == CB_TAG_INTRINSIC)
 
-extern struct cb_intrinsic_table *lookup_intrinsic(const char *name,
-                                                   const int checkres);
+extern const struct cb_intrinsic_table *lookup_intrinsic(const char *name,
+                                                         const int checkres);
 extern cb_tree cb_build_intrinsic(cb_tree name, cb_tree args, cb_tree refmod);
 extern cb_tree cb_build_any_intrinsic(cb_tree args);
 

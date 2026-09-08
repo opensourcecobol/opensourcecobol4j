@@ -354,7 +354,8 @@ static int cb_name_1(char *s, cb_tree x) {
   return strlen(orig);
 }
 
-static cb_tree make_intrinsic(cb_tree name, struct cb_intrinsic_table *cbp,
+static cb_tree make_intrinsic(cb_tree name,
+                              const struct cb_intrinsic_table *cbp,
                               cb_tree args, cb_tree field, cb_tree refmod) {
   struct cb_intrinsic *x;
 
@@ -2640,14 +2641,14 @@ struct cb_sql_host_var *cb_sql_host_var_list_add(struct cb_sql_host_var *list,
  */
 
 cb_tree cb_build_any_intrinsic(cb_tree args) {
-  struct cb_intrinsic_table *cbp;
+  const struct cb_intrinsic_table *cbp;
 
   cbp = lookup_intrinsic("LENGTH", 0);
   return make_intrinsic(NULL, cbp, args, NULL, NULL);
 }
 
 cb_tree cb_build_intrinsic(cb_tree name, cb_tree args, cb_tree refmod) {
-  struct cb_intrinsic_table *cbp;
+  const struct cb_intrinsic_table *cbp;
   cb_tree x;
   int numargs;
 

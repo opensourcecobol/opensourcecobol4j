@@ -10,7 +10,7 @@ jobs:
   generate:
     runs-on: ubuntu-latest
     container:
-      image: ubuntu:24.04
+      image: ubuntu:26.04
     steps:
       - name: Install dependencies
         run: |

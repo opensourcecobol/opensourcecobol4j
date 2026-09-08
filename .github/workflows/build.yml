@@ -21,7 +21,7 @@ jobs:
       image: ${{ inputs.os }}
     steps: 
       - uses: actions/setup-java@v5
-        if: inputs.os == 'ubuntu:24.04'
+        if: inputs.os == 'ubuntu:26.04'
         with:
           distribution: 'temurin'
           java-version: '21'
@@ -32,8 +32,8 @@ jobs:
           distribution: 'temurin'
           java-version: '11'
 
-      - name: Install dependencies on Ubuntu 24.04
-        if: inputs.os == 'ubuntu:24.04'
+      - name: Install dependencies on Ubuntu 26.04
+        if: inputs.os == 'ubuntu:26.04'
         run: |
           apt-get update -y
           apt-get install -y build-essential gettext autoconf bison flex

@@ -34,14 +34,14 @@ tasks {
 dependencies {
     implementation("com.google.guava:guava:33.5.0-jre")
     implementation("org.xerial:sqlite-jdbc:3.51.0.0")
-    implementation("commons-cli:commons-cli:1.10.0")
-    testImplementation("org.junit.jupiter:junit-jupiter:5.13.4")
+    implementation("commons-cli:commons-cli:1.11.0")
+    testImplementation("org.junit.jupiter:junit-jupiter:5.14.4")
     testRuntimeOnly("org.junit.platform:junit-platform-launcher")
     testImplementation("org.testcontainers:testcontainers:1.21.0")
     testImplementation("org.testcontainers:junit-jupiter:1.21.0")
     testImplementation("org.testcontainers:postgresql:1.21.0")
     implementation("org.json:json:20250517")
-    spotbugs("com.github.spotbugs:spotbugs:4.8.6")
+    spotbugs("com.github.spotbugs:spotbugs:4.10.3")
 
     implementation("org.slf4j:slf4j-api:2.0.17")
     runtimeOnly("org.slf4j:slf4j-simple:2.0.17")

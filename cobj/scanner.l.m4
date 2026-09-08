@@ -658,7 +658,7 @@ ifdef(M4.I18N_UTF8,>>>>>
 <<<<<)
 	struct cb_word			*word;
 	struct cb_level_78		*p78;
-	struct cb_intrinsic_table	*cbp;
+	const struct cb_intrinsic_table	*cbp;
 	cb_tree				x;
 	int				token;
 

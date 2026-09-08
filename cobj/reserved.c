@@ -834,7 +834,7 @@ cb_tree lookup_system_name(const char *name) {
 }
 
 int lookup_reserved_word(const char *name) {
-  struct reserved *p;
+  const struct reserved *p;
   struct noreserve *noresptr;
 
   p = bsearch(name, reserved_words, NUM_RESERVED_WORDS, sizeof(struct reserved),
@@ -854,9 +854,9 @@ int lookup_reserved_word(const char *name) {
   return 0;
 }
 
-struct cb_intrinsic_table *lookup_intrinsic(const char *name,
-                                            const int checkres) {
-  struct cb_intrinsic_table *cbp;
+const struct cb_intrinsic_table *lookup_intrinsic(const char *name,
+                                                  const int checkres) {
+  const struct cb_intrinsic_table *cbp;
   struct noreserve *noresptr;
 
   if (checkres) {
