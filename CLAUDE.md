@@ -2,6 +2,26 @@
 
 # 開発方法
 
+## 作業用ディレクトリ
+
+**Claudeの作業用ディレクトリはリポジトリルート直下の `.claude-work/` である。** 絶対パスは `$(git rev-parse --show-toplevel)/.claude-work`。
+`.claude/settings.json`の`env`で`CLAUDE_WORK_DIR`として宣言してあり、`.gitignore`で除外している。
+
+- タスク定義(`task.md`)、調査メモ、一時スクリプト、ログの退避、ESQLテスト用のPostgreSQLクラスタなど、
+  **成果物ではない一時ファイルは全てこの下に置く**。リポジトリのルートや`/tmp`に散らかさない。
+- **この配下は中身がいつ消えてもよい前提で使う**。逆に言えば、ここに残した情報を長期的な記録として当てにしない。
+- worktreeで作業する場合、`.claude-work/`はworktreeごとに独立する（本体とは共有しない）。
+
+一方、以下の2つは`.gitignore`で除外しているが**作業用ディレクトリではない。Claudeが勝手に消してはいけない**。
+
+| ディレクトリ | 中身 | 消すとどうなるか |
+|---|---|---|
+| `local/` | `make install`のインストール先。`bin/cobjrun`が実行時にこの下のjarを探す | 再ビルドが必要になる |
+| `wt/` | `git worktree`の実体。**未コミットの変更を含む本物のチェックアウト** | 作業が失われ、取り返しがつかない |
+
+なお、autotestが作る`tests/{テスト名}.dir/`は生成場所をautotestが決めるため移動できない。
+ESQLテストのUnix socketも、パスの107バイト制限を超えるおそれがあるため`.claude-work/`配下には置かない。
+
 ## ビルド方法
 
 トップディレクトリのconfigure.acや各フォルダのMakefile.amを修正したときは、トップディレクトリで以下のコマンドを実行する
@@ -89,6 +109,9 @@ misc.atのテストなら、テストの実行はmisc.dir/にて実施され、�
   - scanner.l - flex向けのCOBOLレキサー定義
   - scanner.l.m4 - m4マクロで、scanner.lを生成するためのファイル
 - libcobj/ - libcobj.jarのためのコードを格納する。libocobj.jarは、COBOLからJavaへの変換で生成されたJavaコードが依存するライブラリ
+- .claude-work/ - Claudeの作業用ディレクトリ(git管理外)。「作業用ディレクトリ」の節を参照
+- local/ - `make install`のインストール先(git管理外)
+- wt/ - `git worktree`の置き場(git管理外)
 
 # ファイル種別ごとの注意事項
 

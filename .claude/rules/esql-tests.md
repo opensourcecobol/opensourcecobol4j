@@ -13,8 +13,8 @@ sudoなしで私設クラスタを起動してローカル実行できる。バ�
 
 ```bash
 PGBIN=$(dirname "$(command -v initdb || echo /usr/lib/postgresql/16/bin/initdb)")
-PGDIR=<作業用ディレクトリ>/pgdata
-PGSOCK=/tmp/pgsock        # Unix socketのパスには107バイト制限がある。PGDIR配下に置くと超えることがある
+PGDIR=$(git rev-parse --show-toplevel)/.claude-work/pgdata   # Claudeの作業用ディレクトリ配下
+PGSOCK=/tmp/pgsock        # Unix socketのパスには107バイト制限がある。PGDIR配下に置くと超えるので/tmpに置く
 PGPORT=55432              # 既定の5432が塞がっていることがあるので空きポートを使う
 
 "$PGBIN/initdb" -D "$PGDIR" -U "$USER" --auth=trust -E UTF8

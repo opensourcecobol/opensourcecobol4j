@@ -27,5 +27,7 @@ git -C "$ROOT" worktree add -b "$BRANCH" "$ROOT/wt/$BRANCH"
 - `.claude/settings.local.json` は個人設定でgit管理外なので、worktreeには入らない。worktreeでも同じ個人設定を使いたい場合だけ、
   各worktreeにコピーするかシンボリックリンクを張る。
 - worktreeでビルドする場合は `./configure --prefix=$(pwd)/local && make && make install` を使う（インストール先は各worktreeの`local/`）。
+- Claudeの作業用ディレクトリ `.claude-work/` もworktreeごとに独立する。本体側の`.claude-work/`の内容は引き継がれない。
+- `wt/` 配下は`.gitignore`で除外しているが、**未コミットの変更を含む本物のチェックアウト**である。作業用ディレクトリと違い、消してはいけない。
 - `bin/cobjrun` は環境変数`CLASSPATH`を先頭に展開するため、worktree間でビルド結果を比較するときは
   `java -cp "<明示したlibcobj.jar>:." PROG` を直接使う（`.claude/rules/cobj-c-sources.md`参照）。

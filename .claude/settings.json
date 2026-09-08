@@ -1,6 +1,11 @@
 {
+  "env": {
+    "CLAUDE_WORK_DIR": ".claude-work"
+  },
   "permissions": {
     "allow": [
+      "Bash(mkdir:.claude-work/*)",
+      "Bash(rm:.claude-work/*)",
       "Bash(ls:*)",
       "Bash(cat:*)",
       "Bash(find:*)",

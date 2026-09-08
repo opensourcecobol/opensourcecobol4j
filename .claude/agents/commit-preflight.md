@@ -46,6 +46,8 @@ color: red
 ### 5. 消し忘れ
 
 - デバッグ用の`printf`/`System.out.println`、コメントアウトしたコード、`tests/`の一時的な書き換え(`tests/embed_db_info.sh`の`DB_PORT`など)が残っていないか。
+- Claudeの作業用ディレクトリ`.claude-work/`のファイルが差分に入っていないか。`.gitignore`で除外しているが、`git add -f`した場合は入る。
+  同様に、一時ファイルがリポジトリのルートに置き去りになっていないか(`git status`の未追跡ファイルを確認する)。
 
 ## 実行上の注意
 

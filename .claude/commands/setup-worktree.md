@@ -16,7 +16,7 @@ SKIP_TESTを修正するための新しいworktree作業環境を作成する。
 1. 引数から `--file` と `--test-title` を取得する。不足している場合はユーザーに確認する
 2. テスト名からブランチ名を自動生成する
 3. `wt/` ディレクトリ配下に `wt/{ブランチ名}` としてworktreeを作成する
-4. worktreeのディレクトリに `task.md` を作成し、修正すべきテストの情報を記載する
+4. worktreeの `.claude-work/task.md` を作成し、修正すべきテストの情報を記載する
 5. worktreeディレクトリで `./configure --prefix=$(pwd)/local && make && make install` を実行してビルドする
 6. 最後に、ユーザーにworktreeのパスを伝え、そのディレクトリで `claude` コマンドを実行して `/fix-skipped-test` コマンドを使うよう案内する
 
@@ -27,7 +27,8 @@ SKIP_TESTを修正するための新しいworktree作業環境を作成する。
 git worktree add -b {ブランチ名} wt/{ブランチ名} {ベースブランチ}
 
 # task.mdを作成（fix-skipped-testが自動で読み込む）
-cat > wt/{ブランチ名}/task.md << 'EOF'
+mkdir -p wt/{ブランチ名}/.claude-work
+cat > wt/{ブランチ名}/.claude-work/task.md << 'EOF'
 # 修正対象テスト
 
 - file: {--fileの値}
@@ -47,3 +48,4 @@ cd wt/{ブランチ名}
 - `CLAUDE.md` と `.claude/` はgit管理下なので、`git worktree add` で自動的にチェックアウトされる。リンクを張る必要はない
   （個人設定の `.claude/settings.local.json` だけはgit管理外なので、必要なら各自でコピーする）
 - `task.md` を作成することで、worktreeで `/fix-skipped-test` を引数なしで実行できる
+- `task.md` の置き場所はClaudeの作業用ディレクトリ `.claude-work/`（`.gitignore`で除外済み）。worktreeごとに独立する
