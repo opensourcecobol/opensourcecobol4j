@@ -10,7 +10,8 @@ ROOT=$(git rev-parse --show-toplevel 2>/dev/null) || exit 0
 cd "$ROOT" || exit 0
 [ -x ./format ] || exit 0
 
-STAMP="$(git rev-parse --git-path claude-format-stamp)"
+WORKDIR="$ROOT/.claude-work"
+STAMP="$WORKDIR/format-stamp"
 
 # 未コミットの変更があるC/Javaソース（削除されたものは除く）
 # --untracked-files=no: cobj/parser.tab.c や root の test__*.java など未追跡の生成物を対象外にする
@@ -29,7 +30,7 @@ fi
 
 echo "[format-on-stop] ${#files[@]} 個の変更ソースを検出、./format を実行します"
 if ./format >/dev/null 2>&1; then
-  touch "$STAMP"
+  mkdir -p "$WORKDIR" && touch "$STAMP"
   echo "[format-on-stop] 完了"
 else
   echo "[format-on-stop] ./format が失敗しました。手動で実行して確認してください" >&2

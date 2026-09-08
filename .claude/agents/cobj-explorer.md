@@ -25,6 +25,7 @@ EXEC SQL は別系統: `cobj/esql-scanner.l` / `cobj/esql-parser.y` / `cobj/esql
 - `cobj/parser.c` `cobj/scanner.c` `cobj/ppparse.c` `cobj/pplex.c` は**bison/flexの生成物**。grepのノイズになるので原則として`.y` `.l` `.l.m4` のほうを見る。生成物を見るのは「このトークン番号が何か」を確認するときだけ。
 - 機能名から入るときは、まず予約語を `cobj/reserved.c` で、次に`parser.y`のトークン定義で探す。
 - 生成されるJavaの実物を見たいときは、小さなCOBOLを書いて `local/bin/cobj` に通すのが速い。ビルド済みでなければその旨を報告して、推測で埋めない。
+  **書き捨てのCOBOLと生成されたJavaは`.claude-work/`配下に置く**(例: `cd .claude-work && ../local/bin/cobj sample.cbl`)。リポジトリのルートに残さない。
 - 挙動の裏取りには `tests/` のautotestが使える。`tests/*.src/*.at` に期待値が書かれている。**grepには必ず `-a` を付ける**(Shift_JISのファイルがあり、無いと黙って何も出ない)。
 
 ## 報告の形式

@@ -7,7 +7,8 @@
 **Claudeの作業用ディレクトリはリポジトリルート直下の `.claude-work/` である。** 絶対パスは `$(git rev-parse --show-toplevel)/.claude-work`。
 `.claude/settings.json`の`env`で`CLAUDE_WORK_DIR`として宣言してあり、`.gitignore`で除外している。
 
-- タスク定義(`task.md`)、調査メモ、一時スクリプト、ログの退避、ESQLテスト用のPostgreSQLクラスタなど、
+- タスク定義(`.claude-work/task.md`)、調査メモ、一時スクリプト、CIログやアーティファクトの退避、
+  ESQLテスト用のPostgreSQLクラスタ、動作確認用に書き捨てるCOBOLソースなど、
   **成果物ではない一時ファイルは全てこの下に置く**。リポジトリのルートや`/tmp`に散らかさない。
 - **この配下は中身がいつ消えてもよい前提で使う**。逆に言えば、ここに残した情報を長期的な記録として当てにしない。
 - worktreeで作業する場合、`.claude-work/`はworktreeごとに独立する（本体とは共有しない）。

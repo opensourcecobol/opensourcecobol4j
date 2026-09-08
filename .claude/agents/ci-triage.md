@@ -17,7 +17,9 @@ color: yellow
 
 1. `gh run list --branch <ブランチ> --limit 5` で対象のrunを特定する。
 2. `gh run view <run-id>` で失敗ジョブを一覧する。
-3. 失敗ジョブのログを取得する。`gh run view <run-id> --log-failed` が使えないほど巨大な場合は `gh run download <run-id> -n <artifact名>` でアーティファクトを取り、grepで絞る。
+3. 失敗ジョブのログを取得する。`gh run view <run-id> --log-failed` が使えないほど巨大な場合は
+   `gh run download <run-id> -n <artifact名> -D .claude-work/ci-logs/<run-id>` でアーティファクトを取り、grepで絞る。
+   **`-D`を省くとカレントディレクトリに展開されてリポジトリが汚れる**。ダウンロード先は必ずClaudeの作業用ディレクトリ`.claude-work/`配下にする。
 4. 下の「既知の問題」に当たらないか先に照合する。
 5. 当たらなければ、失敗したテスト名と、そのテストが検証している内容(`tests/*.src/*.at`)を突き合わせて、変更のどこが原因かを推定する。
 

@@ -31,7 +31,7 @@ BASE=$(git remote show {リモート名} | sed -n '/HEAD branch/s/.*: //p')
 git fetch {リモート名} "$BASE"
 git worktree add -b {ブランチ名} wt/{ブランチ名} {リモート名}/"$BASE"
 
-# task.mdを作成（fix-skipped-testが自動で読み込む）
+# .claude-work/task.mdを作成（fix-skipped-testが自動で読み込む）
 mkdir -p wt/{ブランチ名}/.claude-work
 cat > wt/{ブランチ名}/.claude-work/task.md << 'EOF'
 # 修正対象テスト
@@ -53,5 +53,5 @@ cd wt/{ブランチ名}
 - ビルドエラーが発生した場合はユーザーに報告して確認する
 - `CLAUDE.md` と `.claude/` はgit管理下なので、`git worktree add` で自動的にチェックアウトされる。リンクを張る必要はない
   （個人設定の `.claude/settings.local.json` だけはgit管理外なので、必要なら各自でコピーする）
-- `task.md` を作成することで、worktreeで `/fix-skipped-test` を引数なしで実行できる
-- `task.md` の置き場所はClaudeの作業用ディレクトリ `.claude-work/`（`.gitignore`で除外済み）。worktreeごとに独立する
+- `.claude-work/task.md` を作成することで、worktreeで `/fix-skipped-test` を引数なしで実行できる
+- `.claude-work/` はClaudeの作業用ディレクトリ（`.gitignore`で除外済み）で、worktreeごとに独立する
