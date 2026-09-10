@@ -41,7 +41,7 @@ dependencies {
     testImplementation("org.testcontainers:junit-jupiter:1.21.0")
     testImplementation("org.testcontainers:postgresql:1.21.0")
     implementation("org.json:json:20250517")
-    spotbugs("com.github.spotbugs:spotbugs:4.8.6")
+    spotbugs("com.github.spotbugs:spotbugs:4.10.4")
 
     implementation("org.slf4j:slf4j-api:2.0.17")
     runtimeOnly("org.slf4j:slf4j-simple:2.0.17")
