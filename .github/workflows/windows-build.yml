@@ -21,7 +21,7 @@ jobs:
           java-version: '21'
       
       - name: Add MSBuild to PATH
-        uses: microsoft/setup-msbuild@v2.0.0
+        uses: microsoft/setup-msbuild@v3.0.0
 
       - name: Checkout opensource COBOL 4J
         uses: actions/checkout@v7
