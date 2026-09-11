@@ -19,9 +19,15 @@
 
 package jp.osscons.opensourcecobol.libcobj;
 
-/** TODO: 準備中 */
+/**
+ * opensource COBOL 4Jのランタイムライブラリ(libcobj)全体で共有する定数を保持するクラス
+ */
 public class Const {
 
-    /** TODO: 準備中 */
+    /**
+     * opensource COBOL 4Jのバージョン番号<br>
+     * {@code cobj-idx --version}などのバージョン表示に用いられる。リリース時には{@code update-version.sh}によって
+     * {@code configure.ac}や{@code build.gradle.kts}などのバージョン番号とまとめて更新されるため、この値を単独で書き換えてはならない。
+     */
     public static final String version = "2.1.0";
 }
