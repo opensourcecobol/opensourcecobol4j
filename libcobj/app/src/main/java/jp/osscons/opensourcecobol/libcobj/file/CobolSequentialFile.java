@@ -23,37 +23,37 @@ import java.nio.ByteBuffer;
 import jp.osscons.opensourcecobol.libcobj.data.AbstractCobolField;
 import jp.osscons.opensourcecobol.libcobj.exceptions.CobolStopRunException;
 
-/** TODO: 準備中 */
+/** 順編成ファイル(SEQUENTIAL)のI/Oを実装するCobolFileのサブクラス. */
 public class CobolSequentialFile extends CobolFile {
 
     /**
-     * TODO: 準備中
+     * 順編成ファイルを表すインスタンスを生成する.
      *
-     * @param selectName TODO: 準備中
-     * @param fileStatus TODO: 準備中
-     * @param assign TODO: 準備中
-     * @param record TODO: 準備中
-     * @param recordSize TODO: 準備中
-     * @param recordMin TODO: 準備中
-     * @param recordMax TODO: 準備中
-     * @param nkeys TODO: 準備中
-     * @param keys TODO: 準備中
-     * @param organization TODO: 準備中
-     * @param accessMode TODO: 準備中
-     * @param lockMode TODO: 準備中
-     * @param openMode TODO: 準備中
-     * @param flagOptional TODO: 準備中
-     * @param lastOpenMode TODO: 準備中
-     * @param special TODO: 準備中
-     * @param flagNonexistent TODO: 準備中
-     * @param flagEndOfFile TODO: 準備中
-     * @param flagBeginOfFile TODO: 準備中
-     * @param flagFirstRead TODO: 準備中
-     * @param flagReadDone TODO: 準備中
-     * @param flagSelectFeatures TODO: 準備中
-     * @param flagNeedsNl TODO: 準備中
-     * @param flagNeedsTop TODO: 準備中
-     * @param fileVersion TODO: 準備中
+     * @param selectName SELECT句で指定されたファイルの内部名.
+     * @param fileStatus FILE STATUS句に対応するファイル状態コードを格納するバイト配列.
+     * @param assign ASSIGN句で指定された割り当て先(物理ファイル名等)を保持する変数.
+     * @param record レコード領域を表す変数.
+     * @param recordSize 実際のレコード長を格納する変数.
+     * @param recordMin 最小レコード長.
+     * @param recordMax 最大レコード長.
+     * @param nkeys キーの数.
+     * @param keys ファイルのキー情報の配列.
+     * @param organization ファイル編成を表す値.
+     * @param accessMode アクセスモード(順/動的/乱).
+     * @param lockMode ファイルのロック方式.
+     * @param openMode 現在のオープンモード.
+     * @param flagOptional SELECT句にOPTIONALが指定されているかどうかを表すフラグ.
+     * @param lastOpenMode 最後に開いたときのオープンモード.
+     * @param special 特殊ファイル(標準入出力等)の種別.
+     * @param flagNonexistent ファイルが存在しないかどうかを表すフラグ.
+     * @param flagEndOfFile ファイル終端に達したかどうかを表すフラグ.
+     * @param flagBeginOfFile ファイル先頭に達したかどうかを表すフラグ.
+     * @param flagFirstRead 最初の読み込みかどうかを表すフラグ.
+     * @param flagReadDone 読み込みが行われたかどうかを表すフラグ.
+     * @param flagSelectFeatures SELECT句で指定された機能(FILE STATUS/EXTERNAL/LINAGE/SPLIT KEY)の有無を表すビットフラグ.
+     * @param flagNeedsNl 次の書き込み前に改行の出力が必要かどうかを表すフラグ.
+     * @param flagNeedsTop 次の書き込み前にページ先頭の処理が必要かどうかを表すフラグ.
+     * @param fileVersion ファイル構造のバージョン.
      */
     public CobolSequentialFile(
             String selectName,
