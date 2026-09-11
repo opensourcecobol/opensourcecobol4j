@@ -21,6 +21,7 @@ package jp.osscons.opensourcecobol.libcobj.data;
 import java.math.BigDecimal;
 import java.nio.ByteBuffer;
 import java.nio.charset.Charset;
+import java.util.concurrent.ConcurrentHashMap;
 import jp.osscons.opensourcecobol.libcobj.common.CobolConstant;
 import jp.osscons.opensourcecobol.libcobj.common.CobolModule;
 import jp.osscons.opensourcecobol.libcobj.common.CobolUtil;
@@ -634,27 +635,39 @@ public abstract class AbstractCobolField {
     public abstract void moveFrom(byte[] bytes);
 
     /**
+     * 引数で与えられた String を ALPHANUMERIC な {@link AbstractCobolField} に変換した結果を
+     * 保持するキャッシュ。MOVE "literal" TO VAR. のように生成コードが繰り返し
+     * 同じ文字列で {@link #moveFrom(String)} を呼ぶケースに備えて、毎回フィールドと
+     * バイト列を生成し直さないようにする。文字列リテラルは不変であり、moveFrom の
+     * 転送元として読み取り専用にしか使わないので共有しても安全。
+     */
+    private static final ConcurrentHashMap<String, AbstractCobolField> moveFromStringCache =
+            new ConcurrentHashMap<>();
+
+    /**
      * 引数で与えらえられたデータからthisへの代入を行う
      *
      * @param s 代入元のデータ
      */
     public void moveFrom(String s) {
-        // The maximum number of digits of int type in decimal is 10
-
-        byte[] bytes = s.getBytes(charSetSJIS);
-
-        CobolDataStorage storage = new CobolDataStorage(bytes.length);
-        storage.memcpy(bytes);
-
-        CobolFieldAttribute attr =
-                new CobolFieldAttribute(
-                        CobolFieldAttribute.COB_TYPE_ALPHANUMERIC,
-                        bytes.length,
-                        0,
-                        0,
-                        String.format("X(%d)", bytes.length));
-
-        AbstractCobolField tmp = CobolFieldFactory.makeCobolField(bytes.length, storage, attr);
+        // 文字列に対応する ALPHANUMERIC の AbstractCobolField を組み立ててから
+        // {@link #moveFrom(AbstractCobolField)} に委譲する。コンパイル時に
+        // 生成されるリテラルフィールド (c_N) と同じ属性 (digits=0, pic=null) を
+        // 使うことで、c_N 経由のときと完全に等価な振る舞いになる。
+        AbstractCobolField tmp =
+                moveFromStringCache.computeIfAbsent(
+                        s,
+                        key -> {
+                            byte[] bytes = key.getBytes(charSetSJIS);
+                            CobolFieldAttribute attr =
+                                    new CobolFieldAttribute(
+                                            CobolFieldAttribute.COB_TYPE_ALPHANUMERIC,
+                                            0,
+                                            0,
+                                            CobolFieldAttribute.COB_FLAG_NOT_SPECIFIED,
+                                            null);
+                            return CobolFieldFactory.makeCobolField(bytes, attr);
+                        });
         this.moveFrom(tmp);
     }
 
