@@ -86,3 +86,15 @@ configure~
 *.gcda
 *.gcno
 report.html
+
+# Claude Code の個人設定（通知フックやマシン固有のパスなど）
+.claude/settings.local.json
+.claude/worktrees/
+.claude/.cc-writes/
+
+# Claude Code の作業用ディレクトリ（中身は再生成可能な一時ファイル）
+/.claude-work/
+
+# ローカルビルドのインストール先と git worktree の置き場
+/local/
+/wt/
