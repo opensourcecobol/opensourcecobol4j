@@ -44,7 +44,7 @@ AT_DATA([open_file_status.at], [
 
 AT_CHECK([${COBJ} open_file_status.at])
 AT_CHECK([cp ../../file-lock.src/indexed-file/old_indexed_file.dat indexed_file.dat])
-AT_CHECK([java -Xlog:perf+memops=off open_file_status], [0],
+AT_CHECK([java open_file_status], [0],
 [92
 92
 92

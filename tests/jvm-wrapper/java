@@ -1,0 +1,32 @@
+#!/bin/sh
+#
+# `java` wrapper used only while the autotest suites run.
+#
+# On start-up a JVM creates the file /tmp/hsperfdata_<user>/<pid>.  When
+# several JVMs start at nearly the same time one of them can find that file
+# still locked by another process, and it then writes
+#
+#   [warning][perf,memops] Cannot use file /tmp/hsperfdata_<user>/<pid>
+#                          because it is locked by another process (errno = 11)
+#
+# to its output.  Almost every autotest check requires the output to match
+# exactly, so the warning turns an unrelated test red.  -XX:-UsePerfData makes
+# the JVM skip the file entirely, so there is nothing left to contend for.
+# The only thing lost is that these JVMs no longer show up in jps/jstat, which
+# the tests never use.
+#
+# The wrappers cover the java, javac, javap and jar calls written in the test
+# sources as well as the javac and jar that cobj itself starts, because cobj
+# runs them through a shell and therefore resolves them from PATH.
+#
+# COB4J_REAL_JAVA is resolved in atlocal before this directory is put on PATH;
+# without it the wrapper would find itself again and loop forever.
+
+case "${COB4J_REAL_JAVA}" in
+"" | */jvm-wrapper/java)
+  echo "$0: COB4J_REAL_JAVA does not point at a real java" >&2
+  exit 127
+  ;;
+esac
+
+exec "${COB4J_REAL_JAVA}" -XX:-UsePerfData "$@"

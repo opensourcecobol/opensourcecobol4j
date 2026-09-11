@@ -134,12 +134,12 @@ function run_test() {
     rm -f playground-record-lock-*
 
     if test "$OPERATION2" == "$OPERATION_WRITE"; then
-        java -Xlog:perf+memops=off ${PROGRAM_ID_TABLE1_FOR_WRITE@<:@$OPERATION1@:>@} > prog1.log &
+        java ${PROGRAM_ID_TABLE1_FOR_WRITE@<:@$OPERATION1@:>@} > prog1.log &
     else
-        java -Xlog:perf+memops=off ${PROGRAM_ID_TABLE1@<:@$OPERATION1@:>@} > prog1.log &
+        java ${PROGRAM_ID_TABLE1@<:@$OPERATION1@:>@} > prog1.log &
     fi
     PID1=$!
-    java -Xlog:perf+memops=off ${PROGRAM_ID_TABLE2@<:@$OPERATION2@:>@} > prog2.log &
+    java ${PROGRAM_ID_TABLE2@<:@$OPERATION2@:>@} > prog2.log &
     PID2=$!
 
     wait $PID1 $PID2
