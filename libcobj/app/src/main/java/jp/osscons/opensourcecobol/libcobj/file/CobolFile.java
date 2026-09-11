@@ -30,8 +30,9 @@ import java.nio.file.StandardOpenOption;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
-import java.util.List;
+import java.util.LinkedHashSet;
 import java.util.Map;
+import java.util.Set;
 import jp.osscons.opensourcecobol.libcobj.common.CobolModule;
 import jp.osscons.opensourcecobol.libcobj.common.CobolUtil;
 import jp.osscons.opensourcecobol.libcobj.data.AbstractCobolField;
@@ -390,7 +391,13 @@ public class CobolFile {
     /** TODO: 準備中 */
     protected static int cob_do_sync = 0;
 
-    private static List<CobolFile> file_cache = new ArrayList<CobolFile>();
+    /**
+     * オープン中のファイルの集合。{@code COMMIT}/{@code ROLLBACK}文とプログラム終了時に、
+     * 後始末が必要なファイルを見つけるために使用する。オープン時に追加し、クローズに
+     * 成功した時点で取り除く。{@link CobolFile}は{@code equals}を上書きしていないため
+     * 同一性で判定される。反復順(＝オープン順)を保つためLinkedHashSetを使用する。
+     */
+    private static Set<CobolFile> file_cache = new LinkedHashSet<CobolFile>();
 
     /** TODO: 準備中 */
     protected static int[] status_exception = {
@@ -676,10 +683,18 @@ public class CobolFile {
      * @param f TODO: 準備中
      */
     protected static void cacheFile(CobolFile f) {
-        if (file_cache.contains(f)) {
-            return;
-        }
         file_cache.add(f);
+    }
+
+    /**
+     * クローズが完了したファイルをキャッシュから取り除く。<br>
+     * クローズに失敗した場合は呼び出してはならない。プログラム終了時の暗黙クローズで
+     * 再試行する機会が失われ、遅延中の書き込みが確定しなくなるためである。
+     *
+     * @param f 取り除くファイル
+     */
+    private static void uncacheFile(CobolFile f) {
+        file_cache.remove(f);
     }
 
     // libcob/fileio.cのcob_file_linage_checkの実装 TODO 実装
@@ -1266,6 +1281,7 @@ public class CobolFile {
         this.flag_read_done = false;
         if (this.special != 0) {
             this.open_mode = COB_OPEN_CLOSED;
+            uncacheFile(this);
             saveStatus(COB_STATUS_00_SUCCESS, fnstatus);
             return;
         }
@@ -1290,6 +1306,7 @@ public class CobolFile {
                     this.open_mode = COB_OPEN_CLOSED;
                     break;
             }
+            uncacheFile(this);
         }
         saveStatus(ret, fnstatus);
     }
@@ -1815,30 +1832,80 @@ public class CobolFile {
             return;
         }
         for (CobolFile l : file_cache) {
-            l.unlock_();
+            l.commit_();
         }
     }
 
-    /** TODO: 準備中 */
+    /**
+     * COBOLの{@code COMMIT}文によるファイルごとの処理。デフォルトでは{@link #unlock_}と同じ。
+     * 書き込みを遅延しているファイル実装（INDEXEDファイルのOUTPUTモード等）は、
+     * このメソッドをオーバーライドして遅延分を永続化する。
+     */
+    void commit_() {
+        this.unlock_();
+    }
+
+    /**
+     * COBOLの{@code ROLLBACK}文の処理。オープン中の全ファイルに対して{@link #rollback_}を実行する。
+     *
+     * <p>参照実装(opensource COBOL 1.xとGnuCOBOL 3.xのcob_rollback)は
+     * {@code COMMIT}文と同じくレコードロックの解放しか行わない。書き込みが常にその場で
+     * 永続化される実装では取り消せる変更が存在しないためである。本実装もそれに倣うが、
+     * INDEXEDファイルのOUTPUTモードのように実際に未コミットの書き込みを保持している場合は、
+     * {@link CobolIndexedFile#rollback_}がそれを取り消す。
+     */
     public static void rollback() {
         if (invokeFun(COB_IO_ROLLBACK, null, null, null, null, null, null, null) != 0) {
             return;
         }
         for (CobolFile l : file_cache) {
-            l.unlock_();
+            l.rollback_();
         }
     }
 
+    /**
+     * COBOLの{@code ROLLBACK}文によるファイルごとの処理。デフォルトでは{@link #unlock_}と同じ。
+     * 書き込みを遅延しているファイル実装（INDEXEDファイルのOUTPUTモード等）は、
+     * このメソッドをオーバーライドして遅延分を取り消す。
+     */
+    void rollback_() {
+        this.unlock_();
+    }
+
     /// libcob/fileio.cのcob_exit_fileioの実装 TODO 一部だけ実装したため残りを実装する
-    /** TODO: 準備中 */
+    /**
+     * プログラム終了時に、開いたままのファイルを警告を出力した上で暗黙的にクローズする。
+     * これによりバッファリングされた書き込み（順編成ファイルの書き込みバッファや、
+     * INDEXEDファイルのOUTPUTモードで遅延されたコミット）がフラッシュされる。
+     */
     public static void exitFileIO() {
-        for (CobolFile f : file_cache) {
+        // closeが成功するとキャッシュから取り除かれるため、反復中の変更を避けて複製を回す
+        for (CobolFile f : new ArrayList<CobolFile>(file_cache)) {
             if (f.open_mode != COB_OPEN_CLOSED && f.open_mode != COB_OPEN_LOCKED) {
                 String filename = f.assign.fieldToString();
                 System.err.print(
                         String.format(
                                 "WARNING - Implicit CLOSE of %s (\"%s\") %c",
                                 f.select_name, filename, '\n'));
+                try {
+                    f.close(COB_CLOSE_NORMAL, null);
+                    if (f.file_status[0] != '0' || f.file_status[1] != '0') {
+                        // 暗黙のクローズが失敗すると、遅延されていた書き込みが
+                        // 永続化されないままプログラムが正常終了してしまう。
+                        // 呼び出し元にステータスを返す先がないため警告を出力する
+                        System.err.print(
+                                String.format(
+                                        "WARNING - Implicit CLOSE of %s (\"%s\") failed with file"
+                                                + " status %c%c%c",
+                                        f.select_name,
+                                        filename,
+                                        (char) f.file_status[0],
+                                        (char) f.file_status[1],
+                                        '\n'));
+                    }
+                } catch (RuntimeException e) {
+                    System.err.println("Failed to close " + f.select_name);
+                }
             }
         }
     }
