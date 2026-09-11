@@ -45,7 +45,7 @@ dependencies {
 
     implementation("org.slf4j:slf4j-api:2.0.17")
     runtimeOnly("org.slf4j:slf4j-simple:2.0.17")
-    testImplementation("com.github.valfirst:slf4j-test:3.0.1")
+    testImplementation("com.github.valfirst:slf4j-test:3.0.3")
     implementation("org.postgresql:postgresql:42.7.5")
 }
 
