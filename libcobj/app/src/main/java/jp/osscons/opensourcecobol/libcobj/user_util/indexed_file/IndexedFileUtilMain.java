@@ -26,6 +26,7 @@ import jp.osscons.opensourcecobol.libcobj.file.CobolFile;
 import jp.osscons.opensourcecobol.libcobj.file.CobolFileFactory;
 import jp.osscons.opensourcecobol.libcobj.file.CobolFileKey;
 import jp.osscons.opensourcecobol.libcobj.file.CobolIndexedFile;
+import jp.osscons.opensourcecobol.libcobj.file.SqliteNativeLibrary;
 import org.apache.commons.cli.CommandLine;
 import org.apache.commons.cli.CommandLineParser;
 import org.apache.commons.cli.DefaultParser;
@@ -49,6 +50,7 @@ class IndexedFileUtilMain {
      * @param args コマンドラインから入力された引数の配列
      */
     public static void main(String[] args) {
+        SqliteNativeLibrary.prepare();
 
         // Build a command line parser
         Options options = new Options();

@@ -289,6 +289,7 @@ public class CobolIndexedFile extends CobolFile {
     }
 
     private int getConnection(String filename) {
+        SqliteNativeLibrary.prepare();
         IndexedFile p = this.filei;
         // Establishes a connection to the SQLite database using the provided filename.
         SQLiteConfig config = new SQLiteConfig();
