@@ -53,13 +53,13 @@ jobs:
         if: inputs.os == 'almalinux:9'
         run: |
           dnf -y update
-          dnf install -y gcc make perl
+          dnf install -y gcc make
 
       - name: Install dependencies on Amazon Linux 2023
         if: inputs.os == 'amazonlinux:2023'
         run: |
           dnf -y update
-          dnf install -y gcc make perl tar gzip
+          dnf install -y gcc make tar gzip
       
       - name: Install Java
         if: inputs.os == 'amazonlinux:2023'

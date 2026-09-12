@@ -3,10 +3,10 @@ $MODULES = "NC", "SM", "IC", "SQ", "IX", "ST", "SG", "OB", "IF", "RL"
 cd ../tests/cobol85;
 foreach ($MODULE in $MODULES){
     cd ./$MODULE;
-    perl ../report.pl
+    sh ../report.sh
     type report.txt
     cd ../
 }
-perl ./summary.pl $MODULES > summary.log
+sh ./summary.sh $MODULES > summary.log
 type summary.log
 cd ../../win
