@@ -1,0 +1,5 @@
+AT_INIT([file-lock3])
+
+m4_include([access-different-record.at])
+m4_include([open-input.at])
+m4_include([same-process.at])

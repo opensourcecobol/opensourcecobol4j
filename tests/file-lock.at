@@ -1,5 +1,3 @@
 AT_INIT([file-lock])
 
 m4_include([lock-file.at])
-m4_include([access-same-record.at])
-m4_include([access-different-record.at])

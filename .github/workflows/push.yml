@@ -64,6 +64,9 @@ jobs:
           - "cobj-idx"
           - "file-lock"
           - "file-lock2"
+          - "file-lock3"
+          - "file-lock4"
+          - "file-lock5"
           - "misc"
         os: ["ubuntu:24.04"]
     uses: ./.github/workflows/test-other.yml
@@ -85,7 +88,11 @@ jobs:
           - "run"
           - "syntax"
           - "cobj-idx"
+          - "file-lock"
           - "file-lock2"
+          - "file-lock3"
+          - "file-lock4"
+          - "file-lock5"
           #- "misc"
         os: ["ubuntu:24.04"]
     uses: ./.github/workflows/test-other.yml
@@ -213,6 +220,9 @@ jobs:
           - "syntax"
           - "file-lock"
           - "file-lock2"
+          - "file-lock3"
+          - "file-lock4"
+          - "file-lock5"
           - "misc"
     uses: ./.github/workflows/windows-test-other.yml
     with:
