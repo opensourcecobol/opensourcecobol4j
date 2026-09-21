@@ -1039,16 +1039,6 @@ public class CobolNationalField extends AbstractCobolField {
     }
 
     @Override
-    public void moveFrom(String string) {
-        byte[] bytes = string.getBytes(AbstractCobolField.charSetSJIS);
-        CobolDataStorage data = new CobolDataStorage(bytes);
-        CobolFieldAttribute a =
-                new CobolFieldAttribute(CobolFieldAttribute.COB_TYPE_ALPHANUMERIC, 0, 0, 0, null);
-        CobolAlphanumericField f = new CobolAlphanumericField(bytes.length, data, a);
-        this.moveFrom(f);
-    }
-
-    @Override
     public void moveFrom(int number) {}
 
     @Override

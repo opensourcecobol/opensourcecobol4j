@@ -1,0 +1,62 @@
+AT_SETUP([MOVE string literal is inlined as moveFrom("...")])
+
+# 文字列リテラルを含む MOVE 文が、生成 Java では
+#   <field>.moveFrom("リテラル原文")
+# の形に直接インライン化されることを確認する。
+# 改善前は各リテラルにつき
+#   private AbstractCobolField c_N;
+#   public static final byte[] str_N = CobolUtil.stringToBytes("...");
+# のような定数フィールド/バイト配列が生成され、MOVE は moveFrom(c_N) /
+# setBytes(str_N, len) を経由していた。本テストではこれらの c_ / str_
+# 定数が一切生成されないことを確認する。
+
+AT_DATA([prog.cbl], [
+       IDENTIFICATION DIVISION.
+       PROGRAM-ID. prog.
+       DATA DIVISION.
+       WORKING-STORAGE SECTION.
+      *  ALPHANUMERIC (long destination)
+       01 ALPHA-1   PIC X(40).
+       01 ALPHA-2   PIC X(40).
+      *  ALPHANUMERIC (short destination)
+       01 ALPHA-S   PIC X(8).
+      *  ALPHANUMERIC EDITED
+       01 ED-FLD    PIC X/XX/X.
+      *  JUSTIFIED RIGHT
+       01 JST-FLD   PIC X(30) JUSTIFIED RIGHT.
+      *  Group item
+       01 GRP-FLD.
+          02 G1     PIC X(15).
+          02 G2     PIC X(15).
+       PROCEDURE DIVISION.
+           MOVE "hello world literal value" TO ALPHA-1.
+           MOVE "shared literal" TO ALPHA-1 ALPHA-2.
+           MOVE "abc" TO ALPHA-S.
+           MOVE "ABCD" TO ED-FLD.
+           MOVE "A" TO JST-FLD.
+           MOVE "01234abcde" TO GRP-FLD.
+           STOP RUN.
+])
+
+# Java へ変換のみ実施（コンパイルはしない）
+AT_CHECK([${COBJ} -C prog.cbl])
+AT_CHECK([test -e prog.java], [0])
+
+# 各リテラルが moveFrom("...") として直接埋め込まれている
+AT_CHECK([grep 'moveFrom ("hello world literal value")' prog.java > /dev/null], [0])
+AT_CHECK([grep 'moveFrom ("abc")' prog.java > /dev/null], [0])
+AT_CHECK([grep 'moveFrom ("ABCD")' prog.java > /dev/null], [0])
+AT_CHECK([grep 'moveFrom ("A")' prog.java > /dev/null], [0])
+AT_CHECK([grep 'moveFrom ("01234abcde")' prog.java > /dev/null], [0])
+
+# 複数ターゲットの MOVE は宛先ごとに個別にインライン化される (2回出現)
+AT_CHECK([test "$(grep -c 'moveFrom ("shared literal")' prog.java)" -eq 2], [0])
+
+# c_ 定数フィールド / str_ バイト配列が一切生成されていない (改善点)。
+# このテストの MOVE は全てインライン化対象のリテラルのみなので、c_/str_ は
+# 1つも生成されないはず。インライン化対象外のリテラル (ALL リテラルや
+# NUMERIC リテラル等) を追加する場合はこの否定チェックの前提が崩れる点に注意。
+AT_CHECK([grep 'AbstractCobolField c_' prog.java], [1])
+AT_CHECK([grep 'byte\[\] str_' prog.java], [1])
+
+AT_CLEANUP

@@ -586,11 +586,6 @@ public class CobolNumericField extends AbstractCobolField {
     }
 
     @Override
-    public void moveFrom(String string) {
-        this.dataStorage.setData(string.getBytes(AbstractCobolField.charSetSJIS));
-    }
-
-    @Override
     public void moveFrom(int number) {
         int n = Math.abs(number);
         for (int i = 0; i < this.size; ++i) {
