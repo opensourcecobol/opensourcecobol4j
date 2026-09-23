@@ -18,67 +18,67 @@
  */
 package jp.osscons.opensourcecobol.libcobj.file;
 
-/** TODO: 準備中 */
+/** SORT/MERGE でメモリ上に読み込んだレコード(CobolItem)の連結リストを表す構造. 先頭・末尾・要素数を保持する. */
 class MemoryStruct {
     private CobolItem first;
     private CobolItem last;
     private int count;
 
-    /** TODO: 準備中 */
+    /** 空の連結リストとして初期化する. 先頭と末尾をnullにする. */
     MemoryStruct() {
         this.first = null;
         this.last = null;
     }
 
     /**
-     * TODO: 準備中
+     * 連結リストの先頭要素を取得する.
      *
-     * @return TODO: 準備中
+     * @return 連結リストの先頭のCobolItem
      */
     CobolItem getFirst() {
         return first;
     }
 
     /**
-     * TODO: 準備中
+     * 連結リストの先頭要素を設定する.
      *
-     * @param first TODO: 準備中
+     * @param first 連結リストの先頭とするCobolItem
      */
     void setFirst(CobolItem first) {
         this.first = first;
     }
 
     /**
-     * TODO: 準備中
+     * 連結リストの末尾要素を取得する.
      *
-     * @return TODO: 準備中
+     * @return 連結リストの末尾のCobolItem
      */
     CobolItem getLast() {
         return last;
     }
 
     /**
-     * TODO: 準備中
+     * 連結リストの末尾要素を設定する.
      *
-     * @param last TODO: 準備中
+     * @param last 連結リストの末尾とするCobolItem
      */
     void setLast(CobolItem last) {
         this.last = last;
     }
 
     /**
-     * TODO: 準備中
+     * 連結リストの要素数を取得する.
      *
-     * @return TODO: 準備中
+     * @return 連結リストに含まれる要素数
      */
     int getCount() {
         return count;
     }
 
     /**
-     * TODO: 準備中
+     * 連結リストの要素数を設定する.
      *
-     * @param count TODO: 準備中
+     * @param count 連結リストに含まれる要素数
      */
     void setCount(int count) {
         this.count = count;
