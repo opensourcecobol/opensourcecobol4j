@@ -1,0 +1,220 @@
+AT_SETUP([COB_FILE_SEQ_READ_BUFFER_SIZE])
+
+# Fixed length SEQUENTIAL and LINE SEQUENTIAL files.
+# The same file is read twice (OPEN INPUT ... CLOSE ... OPEN INPUT) so that
+# a stale read buffer would show up.  A truncated file (a record shorter than
+# the record length at the end of the file) and an empty file are read too.
+AT_DATA([prog.cbl],[
+       IDENTIFICATION   DIVISION.
+       PROGRAM-ID.      prog.
+       ENVIRONMENT      DIVISION.
+       INPUT-OUTPUT     SECTION.
+       FILE-CONTROL.
+           SELECT SEQ-FILE ASSIGN TO "seq.dat"
+               ORGANIZATION IS SEQUENTIAL
+               FILE STATUS IS FS1.
+           SELECT LS-FILE ASSIGN TO "ls.dat"
+               ORGANIZATION IS LINE SEQUENTIAL
+               FILE STATUS IS FS2.
+           SELECT TRUNC-FILE ASSIGN TO "trunc.dat"
+               ORGANIZATION IS SEQUENTIAL
+               FILE STATUS IS FS3.
+           SELECT EMPTY-FILE ASSIGN TO "empty.dat"
+               ORGANIZATION IS SEQUENTIAL
+               FILE STATUS IS FS4.
+       DATA             DIVISION.
+       FILE             SECTION.
+       FD  SEQ-FILE.
+       01  SEQ-REC      PIC X(6).
+       FD  LS-FILE.
+       01  LS-REC       PIC X(6).
+       FD  TRUNC-FILE.
+       01  TRUNC-REC    PIC X(6).
+       FD  EMPTY-FILE.
+       01  EMPTY-REC    PIC X(6).
+       WORKING-STORAGE  SECTION.
+       01  FS1          PIC XX.
+       01  FS2          PIC XX.
+       01  FS3          PIC XX.
+       01  FS4          PIC XX.
+       01  I            PIC 9(3).
+       01  PASS         PIC 9.
+       PROCEDURE        DIVISION.
+           OPEN OUTPUT SEQ-FILE LS-FILE.
+           PERFORM VARYING I FROM 1 BY 1 UNTIL I > 7
+             MOVE SPACE TO SEQ-REC
+             STRING "R" DELIMITED BY SIZE
+                    I   DELIMITED BY SIZE INTO SEQ-REC
+             WRITE SEQ-REC
+             MOVE SEQ-REC TO LS-REC
+             WRITE LS-REC
+           END-PERFORM.
+           CLOSE SEQ-FILE LS-FILE.
+
+           PERFORM VARYING PASS FROM 1 BY 1 UNTIL PASS > 2
+             MOVE "00" TO FS1
+             OPEN INPUT SEQ-FILE
+             PERFORM UNTIL FS1 NOT = "00"
+               READ SEQ-FILE
+                 AT END EXIT PERFORM
+               END-READ
+               DISPLAY "SEQ" PASS ":" SEQ-REC
+             END-PERFORM
+             CLOSE SEQ-FILE
+
+             MOVE "00" TO FS2
+             OPEN INPUT LS-FILE
+             PERFORM UNTIL FS2 NOT = "00"
+               READ LS-FILE
+                 AT END EXIT PERFORM
+               END-READ
+               DISPLAY "LS" PASS ":" LS-REC
+             END-PERFORM
+             CLOSE LS-FILE
+           END-PERFORM.
+
+           OPEN INPUT TRUNC-FILE.
+           PERFORM 4 TIMES
+             READ TRUNC-FILE
+             DISPLAY "TRUNC:" FS3 ":" TRUNC-REC
+           END-PERFORM.
+           CLOSE TRUNC-FILE.
+
+           OPEN INPUT EMPTY-FILE.
+           READ EMPTY-FILE.
+           DISPLAY "EMPTY:" FS4.
+           CLOSE EMPTY-FILE.
+           STOP RUN.
+])
+
+# Variable length records (a 4 byte record length precedes each record).
+AT_DATA([varlen.cbl],[
+       IDENTIFICATION   DIVISION.
+       PROGRAM-ID.      varlen.
+       ENVIRONMENT      DIVISION.
+       INPUT-OUTPUT     SECTION.
+       FILE-CONTROL.
+           SELECT VAR-FILE ASSIGN TO "var.dat"
+               ORGANIZATION IS SEQUENTIAL
+               FILE STATUS IS FS.
+       DATA             DIVISION.
+       FILE             SECTION.
+       FD  VAR-FILE
+           RECORD IS VARYING IN SIZE FROM 4 TO 12
+           DEPENDING ON REC-LEN.
+       01  VAR-REC.
+           05  VAR-SEQ  PIC 9(3).
+           05  VAR-PAD  PIC X(9).
+       WORKING-STORAGE  SECTION.
+       01  FS           PIC XX.
+       01  REC-LEN      PIC 9(4) COMP.
+       01  I            PIC 9(3).
+       PROCEDURE        DIVISION.
+           OPEN OUTPUT VAR-FILE.
+           PERFORM VARYING I FROM 1 BY 1 UNTIL I > 8
+             MOVE ALL "X" TO VAR-REC
+             COMPUTE REC-LEN = 4 + I
+             MOVE I TO VAR-SEQ
+             WRITE VAR-REC
+           END-PERFORM.
+           CLOSE VAR-FILE.
+
+      * レコード領域を"-"で埋めてからREADすることで、
+      * READがレコード長ちょうどのバイト数だけを書き込んだことを確認する。
+           OPEN INPUT VAR-FILE.
+           PERFORM UNTIL FS NOT = "00"
+             MOVE ALL "-" TO VAR-REC
+             READ VAR-FILE
+               AT END EXIT PERFORM
+             END-READ
+             DISPLAY "VAR:" REC-LEN ":" VAR-REC
+           END-PERFORM.
+           CLOSE VAR-FILE.
+           STOP RUN.
+])
+
+AT_CHECK([${COMPILE} prog.cbl])
+AT_CHECK([${COMPILE} varlen.cbl])
+
+# 14 bytes: two 6 byte records followed by an incomplete one.
+AT_CHECK([printf 'AAAAAABBBBBBCC' > trunc.dat])
+AT_CHECK([: > empty.dat])
+
+# Pin down the behavior with the default buffer size.
+AT_CHECK([${RUN_MODULE} prog], [0],
+[SEQ1:R001  @&t@
+SEQ1:R002  @&t@
+SEQ1:R003  @&t@
+SEQ1:R004  @&t@
+SEQ1:R005  @&t@
+SEQ1:R006  @&t@
+SEQ1:R007  @&t@
+LS1:R001  @&t@
+LS1:R002  @&t@
+LS1:R003  @&t@
+LS1:R004  @&t@
+LS1:R005  @&t@
+LS1:R006  @&t@
+LS1:R007  @&t@
+SEQ2:R001  @&t@
+SEQ2:R002  @&t@
+SEQ2:R003  @&t@
+SEQ2:R004  @&t@
+SEQ2:R005  @&t@
+SEQ2:R006  @&t@
+SEQ2:R007  @&t@
+LS2:R001  @&t@
+LS2:R002  @&t@
+LS2:R003  @&t@
+LS2:R004  @&t@
+LS2:R005  @&t@
+LS2:R006  @&t@
+LS2:R007  @&t@
+TRUNC:00:AAAAAA
+TRUNC:00:BBBBBB
+TRUNC:04:CCBBBB
+TRUNC:10:CCBBBB
+EMPTY:10
+])
+
+AT_CHECK([${RUN_MODULE} varlen], [0],
+[VAR:0005:001XX-------
+VAR:0006:002XXX------
+VAR:0007:003XXXX-----
+VAR:0008:004XXXXX----
+VAR:0009:005XXXXXX---
+VAR:0010:006XXXXXXX--
+VAR:0011:007XXXXXXXX-
+VAR:0012:008XXXXXXXXX
+])
+
+# The read buffer size must not change what READ returns, whichever value
+# (including 0, which disables buffering) is specified.
+AT_CHECK([${RUN_MODULE} prog > expected.txt])
+AT_CHECK([${RUN_MODULE} varlen > var-expected.txt])
+AT_CHECK([COB_FILE_SEQ_READ_BUFFER_SIZE=0 ${RUN_MODULE} prog > actual.txt])
+AT_CHECK([diff expected.txt actual.txt], [0], [ignore])
+AT_CHECK([COB_FILE_SEQ_READ_BUFFER_SIZE=0 ${RUN_MODULE} varlen > var-actual.txt])
+AT_CHECK([diff var-expected.txt var-actual.txt], [0], [ignore])
+AT_CHECK([COB_FILE_SEQ_READ_BUFFER_SIZE=1 ${RUN_MODULE} prog > actual.txt])
+AT_CHECK([diff expected.txt actual.txt], [0], [ignore])
+AT_CHECK([COB_FILE_SEQ_READ_BUFFER_SIZE=1 ${RUN_MODULE} varlen > var-actual.txt])
+AT_CHECK([diff var-expected.txt var-actual.txt], [0], [ignore])
+AT_CHECK([COB_FILE_SEQ_READ_BUFFER_SIZE=3 ${RUN_MODULE} prog > actual.txt])
+AT_CHECK([diff expected.txt actual.txt], [0], [ignore])
+AT_CHECK([COB_FILE_SEQ_READ_BUFFER_SIZE=3 ${RUN_MODULE} varlen > var-actual.txt])
+AT_CHECK([diff var-expected.txt var-actual.txt], [0], [ignore])
+AT_CHECK([COB_FILE_SEQ_READ_BUFFER_SIZE=1000 ${RUN_MODULE} prog > actual.txt])
+AT_CHECK([diff expected.txt actual.txt], [0], [ignore])
+
+# An invalid value is ignored and the default is used.
+AT_CHECK([COB_FILE_SEQ_READ_BUFFER_SIZE=xyz ${RUN_MODULE} prog > actual.txt],
+[0], [], [Warning: COB_FILE_SEQ_READ_BUFFER_SIZE format invalid, ignored.
+])
+AT_CHECK([diff expected.txt actual.txt], [0], [ignore])
+AT_CHECK([COB_FILE_SEQ_READ_BUFFER_SIZE=-1 ${RUN_MODULE} prog > actual.txt],
+[0], [], [Warning: COB_FILE_SEQ_READ_BUFFER_SIZE format invalid, ignored.
+])
+AT_CHECK([diff expected.txt actual.txt], [0], [ignore])
+
+AT_CLEANUP
