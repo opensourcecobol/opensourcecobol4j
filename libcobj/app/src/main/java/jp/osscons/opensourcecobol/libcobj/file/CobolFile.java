@@ -40,7 +40,7 @@ import jp.osscons.opensourcecobol.libcobj.exceptions.CobolExceptionId;
 import jp.osscons.opensourcecobol.libcobj.exceptions.CobolRuntimeException;
 import jp.osscons.opensourcecobol.libcobj.exceptions.CobolStopRunException;
 
-/** INDEXED, RELATIVE, SEQUENTIAL, LINE SEQUENTIAL等のCOBOLの ファイルを実装するための基底クラス */
+/** INDEXED、RELATIVE、SEQUENTIAL、LINE SEQUENTIAL等のCOBOLのファイルを実装するための基底クラス */
 public class CobolFile {
     /** TODO: 準備中 */
     protected static final int COB_ORG_SEQUENTIAL = 0;
@@ -286,8 +286,8 @@ public class CobolFile {
     protected static final int COB_STATUS_91_NOT_AVAILABLE = 91;
 
     /**
-     * File status 92: Version incompatibility.
-     * Indicates that the file operation failed due to a version mismatch between the file and the program.
+     * ファイルステータス92: バージョン非互換。
+     * ファイルとプログラムの間のバージョン不一致によりファイル操作が失敗したことを示す。
      */
     protected static final int COB_STATUS_92_VERSION_INCOMPATIBLE = 92;
 
@@ -908,9 +908,9 @@ public class CobolFile {
     }
 
     /**
-     * This method is mainly for unlocking the indexed files.
+     * 主に索引ファイルのロックを解除するためのメソッド。
      *
-     * @return true if post-processing is successful, false otherwise.
+     * @return 後処理が成功した場合はtrue、そうでない場合はfalse
      */
     protected boolean postProcess() {
         return true;

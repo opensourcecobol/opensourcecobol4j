@@ -6,7 +6,7 @@ import java.sql.ResultSet;
 import java.sql.Statement;
 import java.util.Optional;
 
-/** Represents a result of fetching a data from SQLite tables. */
+/** SQLiteのテーブルからデータをフェッチした結果を表す。 */
 class FetchResult {
     /** 取得した行のキー値（{@code key}列）。 */
     byte[] key;
@@ -55,16 +55,14 @@ enum CursorReadOption {
     LAST
 }
 
-/**
- * Represents a cursor for navigating through indexed data in a CobolIndexedFile.
- */
+/** CobolIndexedFile内の索引データを走査するためのカーソルを表す。 */
 enum CursorPosition {
     BEFORE_FIRST,
     AFTER_LAST,
     IN_TABLE,
 }
 
-/** Emulates a cursor in SQLite */
+/** SQLite上でカーソルをエミュレートする。 */
 final class IndexedCursor {
     private final Connection conn;
     private byte[] key;

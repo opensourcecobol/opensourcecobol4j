@@ -21,7 +21,7 @@ package jp.osscons.opensourcecobol.libcobj.data;
 import java.math.BigDecimal;
 import jp.osscons.opensourcecobol.libcobj.exceptions.CobolRuntimeException;
 
-/** PIC 文字列が COMP-2 などの倍精度浮動小数点の変数を表現するクラス. */
+/** PIC 文字列が COMP-2 などの倍精度浮動小数点の変数を表現するクラス。 */
 public class CobolNumericDoubleField extends AbstractCobolField {
 
     /**
