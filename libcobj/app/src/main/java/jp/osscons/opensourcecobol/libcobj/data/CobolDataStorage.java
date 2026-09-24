@@ -20,6 +20,7 @@ package jp.osscons.opensourcecobol.libcobj.data;
 
 import java.nio.ByteBuffer;
 import java.nio.ByteOrder;
+import java.util.Arrays;
 import jp.osscons.opensourcecobol.libcobj.common.CobolModule;
 
 /**
@@ -282,9 +283,7 @@ public class CobolDataStorage {
      * @param size コピーするバイト数
      */
     public void memcpy(CobolDataStorage buf, int size) {
-        for (int i = 0; i < size; ++i) {
-            this.setByte(i, buf.getByte(i));
-        }
+        System.arraycopy(buf.data, buf.index, this.data, this.index, size);
     }
 
     /**
@@ -294,9 +293,7 @@ public class CobolDataStorage {
      * @param size コピーするバイト数
      */
     public void memcpy(byte[] buf, int size) {
-        for (int i = 0; i < size; ++i) {
-            this.setByte(i, buf[i]);
-        }
+        System.arraycopy(buf, 0, this.data, this.index, size);
     }
 
     /**
@@ -317,9 +314,7 @@ public class CobolDataStorage {
      * @param size コピーするバイト数
      */
     public void memcpy(int offset, byte[] buf, int size) {
-        for (int i = 0; i < size; ++i) {
-            this.setByte(offset + i, buf[i]);
-        }
+        System.arraycopy(buf, 0, this.data, this.index + offset, size);
     }
 
     /**
@@ -330,16 +325,14 @@ public class CobolDataStorage {
      * @param size コピーするバイト数
      */
     public void memcpy(int offset, CobolDataStorage buf, int size) {
-        for (int i = 0; i < size; ++i) {
-            this.setByte(offset + i, buf.getByte(i));
-        }
+        System.arraycopy(buf.data, buf.index, this.data, this.index + offset, size);
     }
 
     /**
      * C言語のmemcpyに相当するメソッド
      *
      * @param buf コピー元のデータ
-     * @param offset コピー先のthis.indexからの相対位置
+     * @param offset コピー元bufの先頭からの相対位置
      * @param size コピーするバイト数
      */
     public void memcpy(byte[] buf, int offset, int size) {
@@ -362,9 +355,7 @@ public class CobolDataStorage {
      * @param size 代入先のバイト数
      */
     public void memset(byte ch, int size) {
-        for (int i = 0; i < size; ++i) {
-            this.setByte(i, ch);
-        }
+        Arrays.fill(this.data, this.index, this.index + size, ch);
     }
 
     /**
@@ -385,9 +376,7 @@ public class CobolDataStorage {
      * @param size 代入先のバイト数
      */
     public void memset(int offset, byte ch, int size) {
-        for (int i = 0; i < size; ++i) {
-            this.setByte(offset + i, ch);
-        }
+        Arrays.fill(this.data, this.index + offset, this.index + offset + size, ch);
     }
 
     /**
