@@ -1,0 +1,14 @@
+#!/bin/sh
+#
+# `javap` wrapper used only while the autotest suites run.
+# See tests/jvm-wrapper/java for why the flag is needed; javap is a JVM too,
+# and it takes runtime options through -J.
+
+case "${COB4J_REAL_JAVAP}" in
+"" | */jvm-wrapper/javap)
+  echo "$0: COB4J_REAL_JAVAP does not point at a real javap" >&2
+  exit 127
+  ;;
+esac
+
+exec "${COB4J_REAL_JAVAP}" -J-XX:-UsePerfData "$@"
