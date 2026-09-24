@@ -80,7 +80,6 @@ AT_CHECK([java prog | od -tx1 -An | sed -e 's/  */ /g' -e 's/ *$//'], [0], [ 8a 
 AT_CLEANUP
 
 AT_SETUP([Move with trunc and trimming 1])
-AT_CHECK([${SKIP_TEST}])
 
 AT_DATA([prog.cob], [
        IDENTIFICATION   DIVISION.
