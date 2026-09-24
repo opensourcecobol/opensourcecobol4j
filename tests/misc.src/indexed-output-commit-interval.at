@@ -1,0 +1,713 @@
+AT_SETUP([WRITE errors on an indexed file opened OUTPUT])
+
+# An indexed file opened with OUTPUT defers commits (controlled by
+# COB_FILE_IDX_COMMIT_INTERVAL), but WRITE must still report duplicate
+# keys (status 22) and out-of-order keys (status 21) immediately, and a
+# failed WRITE must not destroy previously written records.
+
+AT_DATA([prog.cbl],
+[       IDENTIFICATION DIVISION.
+       PROGRAM-ID. prog.
+       ENVIRONMENT DIVISION.
+       INPUT-OUTPUT SECTION.
+       FILE-CONTROL.
+           SELECT IDX-FILE ASSIGN TO "./IDX-FILE"
+               ORGANIZATION IS INDEXED
+               ACCESS MODE IS SEQUENTIAL
+               RECORD KEY IS IDX-KEY
+               ALTERNATE RECORD KEY IS ALT-DUP WITH DUPLICATES
+               ALTERNATE RECORD KEY IS ALT-UNIQ
+               FILE STATUS IS FS.
+       DATA DIVISION.
+       FILE SECTION.
+       FD IDX-FILE.
+       01 IDX-REC.
+          03 IDX-KEY PIC 9(3).
+          03 ALT-DUP PIC X(5).
+          03 ALT-UNIQ PIC 9(3).
+          03 IDX-DATA PIC X(5).
+       WORKING-STORAGE SECTION.
+       01 FS PIC XX.
+       01 CNT PIC 9(3) VALUE 0.
+       01 SHORT-DATA PIC X(5).
+       01 EOF-FLAG PIC X VALUE "N".
+       PROCEDURE DIVISION.
+           OPEN OUTPUT IDX-FILE.
+           DISPLAY "OPEN " FS.
+           MOVE "001AAAAA101REC01" TO IDX-REC.
+           WRITE IDX-REC.
+           DISPLAY "W01 " FS.
+           MOVE "002AAAAA102REC02" TO IDX-REC.
+           WRITE IDX-REC.
+           DISPLAY "W02 " FS.
+           MOVE "003BBBBB103REC03" TO IDX-REC.
+           WRITE IDX-REC.
+           DISPLAY "W03 " FS.
+      *> duplicate primary key -> 22
+           MOVE "003CCCCC104REC04" TO IDX-REC.
+           WRITE IDX-REC.
+           DISPLAY "W04 " FS.
+      *> duplicate unique alternate key -> 22
+           MOVE "004CCCCC101REC05" TO IDX-REC.
+           WRITE IDX-REC.
+           DISPLAY "W05 " FS.
+      *> descending primary key -> 21
+           MOVE "002DDDDD105REC06" TO IDX-REC.
+           WRITE IDX-REC.
+           DISPLAY "W06 " FS.
+      *> valid records after the errors
+           MOVE "005DDDDD105REC07" TO IDX-REC.
+           WRITE IDX-REC.
+           DISPLAY "W07 " FS.
+           MOVE "006AAAAA106REC08" TO IDX-REC.
+           WRITE IDX-REC.
+           DISPLAY "W08 " FS.
+           MOVE "007EEEEE107REC09" TO IDX-REC.
+           WRITE IDX-REC.
+           DISPLAY "W09 " FS.
+           MOVE "008FFFFF108REC10" TO IDX-REC.
+           WRITE IDX-REC.
+           DISPLAY "W10 " FS.
+           CLOSE IDX-FILE.
+           DISPLAY "CLOSE " FS.
+           OPEN INPUT IDX-FILE.
+           PERFORM UNTIL EOF-FLAG = "Y"
+               READ IDX-FILE NEXT RECORD
+                   AT END MOVE "Y" TO EOF-FLAG
+                   NOT AT END
+                       ADD 1 TO CNT
+                       MOVE IDX-DATA TO SHORT-DATA
+                       DISPLAY "R " IDX-KEY " " SHORT-DATA
+               END-READ
+           END-PERFORM.
+           CLOSE IDX-FILE.
+           DISPLAY "COUNT " CNT.
+           STOP RUN.
+])
+
+AT_CHECK([${COBJ} prog.cbl])
+
+AT_CHECK([${RUN_MODULE} prog], [0],
+[OPEN 00
+W01 00
+W02 00
+W03 00
+W04 22
+W05 22
+W06 21
+W07 00
+W08 00
+W09 00
+W10 00
+CLOSE 00
+R 001 REC01
+R 002 REC02
+R 003 REC03
+R 005 REC07
+R 006 REC08
+R 007 REC09
+R 008 REC10
+COUNT 007
+])
+
+# The same statuses and records must be produced when a commit happens
+# after every WRITE and when no intermediate commit happens at all.
+AT_CHECK([${RUN_MODULE} prog > expected.txt])
+AT_CHECK([COB_FILE_IDX_COMMIT_INTERVAL=1 ${RUN_MODULE} prog > actual.txt])
+AT_CHECK([diff expected.txt actual.txt], [0], [ignore])
+AT_CHECK([COB_FILE_IDX_COMMIT_INTERVAL=INF ${RUN_MODULE} prog > actual.txt])
+AT_CHECK([diff expected.txt actual.txt], [0], [ignore])
+
+AT_CLEANUP
+
+AT_SETUP([Status precedence of out-of-order and duplicate keys])
+
+# With ACCESS SEQUENTIAL the ordering check runs before the duplicate
+# check, matching opensource COBOL 1.x (indexed_write in libcob/fileio.c):
+# after writing 001 and 003, writing 002 is 21 (out of order, not a
+# duplicate), writing 001 is also 21 (a duplicate of an earlier record,
+# but the ordering violation takes precedence), and only a key equal to
+# the previous one (003) is 22.
+
+AT_DATA([prog.cbl],
+[       IDENTIFICATION DIVISION.
+       PROGRAM-ID. prog.
+       ENVIRONMENT DIVISION.
+       INPUT-OUTPUT SECTION.
+       FILE-CONTROL.
+           SELECT IDX-FILE ASSIGN TO "./IDX-FILE"
+               ORGANIZATION IS INDEXED
+               ACCESS MODE IS SEQUENTIAL
+               RECORD KEY IS IDX-KEY
+               FILE STATUS IS FS.
+       DATA DIVISION.
+       FILE SECTION.
+       FD IDX-FILE.
+       01 IDX-REC.
+          03 IDX-KEY PIC 9(3).
+          03 IDX-DATA PIC X(5).
+       WORKING-STORAGE SECTION.
+       01 FS PIC XX.
+       01 CNT PIC 9(3) VALUE 0.
+       01 EOF-FLAG PIC X VALUE "N".
+       PROCEDURE DIVISION.
+           OPEN OUTPUT IDX-FILE.
+           MOVE "001REC01" TO IDX-REC.
+           WRITE IDX-REC.
+           DISPLAY "W1 " FS.
+           MOVE "003REC02" TO IDX-REC.
+           WRITE IDX-REC.
+           DISPLAY "W2 " FS.
+      *> out of order, not a duplicate -> 21
+           MOVE "002REC03" TO IDX-REC.
+           WRITE IDX-REC.
+           DISPLAY "W3 " FS.
+      *> duplicate of an earlier record: ordering violation wins -> 21
+           MOVE "001REC04" TO IDX-REC.
+           WRITE IDX-REC.
+           DISPLAY "W4 " FS.
+      *> equal to the previous key -> 22
+           MOVE "003REC05" TO IDX-REC.
+           WRITE IDX-REC.
+           DISPLAY "W5 " FS.
+           MOVE "004REC06" TO IDX-REC.
+           WRITE IDX-REC.
+           DISPLAY "W6 " FS.
+           CLOSE IDX-FILE.
+           OPEN INPUT IDX-FILE.
+           PERFORM UNTIL EOF-FLAG = "Y"
+               READ IDX-FILE NEXT RECORD
+                   AT END MOVE "Y" TO EOF-FLAG
+                   NOT AT END
+                       ADD 1 TO CNT
+                       DISPLAY "R " IDX-KEY
+               END-READ
+           END-PERFORM.
+           CLOSE IDX-FILE.
+           DISPLAY "COUNT " CNT.
+           STOP RUN.
+])
+
+AT_CHECK([${COBJ} prog.cbl])
+
+AT_CHECK([${RUN_MODULE} prog], [0],
+[W1 00
+W2 00
+W3 21
+W4 21
+W5 22
+W6 00
+R 001
+R 003
+R 004
+COUNT 003
+])
+
+# The same statuses must be produced without intermediate commits.
+AT_CHECK([${RUN_MODULE} prog > expected.txt])
+AT_CHECK([COB_FILE_IDX_COMMIT_INTERVAL=INF ${RUN_MODULE} prog > actual.txt])
+AT_CHECK([diff expected.txt actual.txt], [0], [ignore])
+
+AT_CLEANUP
+
+AT_SETUP([COB_FILE_IDX_COMMIT_INTERVAL does not change WRITE results])
+
+# Writes 100 records with a duplicate-key error every 10 records, so
+# that with a small commit interval the errors fall before, on and
+# after commit boundaries. The file contents read back must be
+# identical whichever value (including 0, INF and invalid ones) is
+# specified.
+
+AT_DATA([prog.cbl],
+[       IDENTIFICATION DIVISION.
+       PROGRAM-ID. prog.
+       ENVIRONMENT DIVISION.
+       INPUT-OUTPUT SECTION.
+       FILE-CONTROL.
+           SELECT IDX-FILE ASSIGN TO "./IDX-FILE"
+               ORGANIZATION IS INDEXED
+               ACCESS MODE IS SEQUENTIAL
+               RECORD KEY IS IDX-KEY
+               FILE STATUS IS FS.
+       DATA DIVISION.
+       FILE SECTION.
+       FD IDX-FILE.
+       01 IDX-REC.
+          03 IDX-KEY PIC 9(5).
+          03 IDX-DATA PIC 9(5).
+       WORKING-STORAGE SECTION.
+       01 FS PIC XX.
+       01 I PIC 9(5).
+       01 CNT PIC 9(5) VALUE 0.
+       01 ERR-CNT PIC 9(5) VALUE 0.
+       01 EOF-FLAG PIC X VALUE "N".
+       PROCEDURE DIVISION.
+           OPEN OUTPUT IDX-FILE.
+           PERFORM VARYING I FROM 1 BY 1 UNTIL I > 100
+               MOVE I TO IDX-KEY
+               COMPUTE IDX-DATA = I * 3
+               WRITE IDX-REC
+               IF FS NOT = "00"
+                   DISPLAY "UNEXPECTED WRITE STATUS " FS
+               END-IF
+               IF FUNCTION MOD(I, 10) = 0
+      *>           duplicate key: must fail with 22 and change nothing
+                   MOVE I TO IDX-KEY
+                   MOVE 99999 TO IDX-DATA
+                   WRITE IDX-REC
+                   IF FS = "22"
+                       ADD 1 TO ERR-CNT
+                   ELSE
+                       DISPLAY "UNEXPECTED DUP STATUS " FS
+                   END-IF
+               END-IF
+           END-PERFORM.
+           CLOSE IDX-FILE.
+           DISPLAY "ERRORS " ERR-CNT.
+           OPEN INPUT IDX-FILE.
+           PERFORM UNTIL EOF-FLAG = "Y"
+               READ IDX-FILE NEXT RECORD
+                   AT END MOVE "Y" TO EOF-FLAG
+                   NOT AT END
+                       ADD 1 TO CNT
+                       DISPLAY IDX-REC
+               END-READ
+           END-PERFORM.
+           CLOSE IDX-FILE.
+           DISPLAY "COUNT " CNT.
+           STOP RUN.
+])
+
+AT_CHECK([${COBJ} prog.cbl])
+
+# Baseline with the default interval.
+AT_CHECK([${RUN_MODULE} prog > expected.txt])
+AT_CHECK([grep -c "^UNEXPECTED" expected.txt], [1], [0
+])
+AT_CHECK([grep "^ERRORS" expected.txt], [0], [ERRORS 00010
+])
+AT_CHECK([grep "^COUNT" expected.txt], [0], [COUNT 00100
+])
+
+# The commit interval must not change what is written, whichever value
+# (including 0 = commit per WRITE and INF = commit only at CLOSE) is
+# specified.
+AT_CHECK([COB_FILE_IDX_COMMIT_INTERVAL=0 ${RUN_MODULE} prog > actual.txt])
+AT_CHECK([diff expected.txt actual.txt], [0], [ignore])
+AT_CHECK([COB_FILE_IDX_COMMIT_INTERVAL=1 ${RUN_MODULE} prog > actual.txt])
+AT_CHECK([diff expected.txt actual.txt], [0], [ignore])
+AT_CHECK([COB_FILE_IDX_COMMIT_INTERVAL=3 ${RUN_MODULE} prog > actual.txt])
+AT_CHECK([diff expected.txt actual.txt], [0], [ignore])
+AT_CHECK([COB_FILE_IDX_COMMIT_INTERVAL=10 ${RUN_MODULE} prog > actual.txt])
+AT_CHECK([diff expected.txt actual.txt], [0], [ignore])
+AT_CHECK([COB_FILE_IDX_COMMIT_INTERVAL=1000000 ${RUN_MODULE} prog > actual.txt])
+AT_CHECK([diff expected.txt actual.txt], [0], [ignore])
+AT_CHECK([COB_FILE_IDX_COMMIT_INTERVAL=INF ${RUN_MODULE} prog > actual.txt])
+AT_CHECK([diff expected.txt actual.txt], [0], [ignore])
+AT_CHECK([COB_FILE_IDX_COMMIT_INTERVAL=inf ${RUN_MODULE} prog > actual.txt])
+AT_CHECK([diff expected.txt actual.txt], [0], [ignore])
+
+# An invalid value is ignored and the default is used.
+AT_CHECK([COB_FILE_IDX_COMMIT_INTERVAL=abc ${RUN_MODULE} prog > actual.txt],
+[0], [], [Warning: COB_FILE_IDX_COMMIT_INTERVAL format invalid, ignored.
+])
+AT_CHECK([diff expected.txt actual.txt], [0], [ignore])
+AT_CHECK([COB_FILE_IDX_COMMIT_INTERVAL=-1 ${RUN_MODULE} prog > actual.txt],
+[0], [], [Warning: COB_FILE_IDX_COMMIT_INTERVAL format invalid, ignored.
+])
+AT_CHECK([diff expected.txt actual.txt], [0], [ignore])
+
+AT_CLEANUP
+
+AT_SETUP([Indexed OUTPUT records survive STOP RUN without CLOSE])
+
+# When a program ends via STOP RUN while an indexed file opened OUTPUT
+# is still open, the implicit close must commit the deferred WRITEs so
+# no record is lost, even when intermediate commits are disabled.
+
+AT_DATA([writer.cbl],
+[       IDENTIFICATION DIVISION.
+       PROGRAM-ID. writer.
+       ENVIRONMENT DIVISION.
+       INPUT-OUTPUT SECTION.
+       FILE-CONTROL.
+           SELECT IDX-FILE ASSIGN TO "./IDX-FILE"
+               ORGANIZATION IS INDEXED
+               ACCESS MODE IS SEQUENTIAL
+               RECORD KEY IS IDX-KEY
+               FILE STATUS IS FS.
+       DATA DIVISION.
+       FILE SECTION.
+       FD IDX-FILE.
+       01 IDX-REC.
+          03 IDX-KEY PIC 9(5).
+          03 IDX-DATA PIC X(5).
+       WORKING-STORAGE SECTION.
+       01 FS PIC XX.
+       01 I PIC 9(5).
+       PROCEDURE DIVISION.
+           OPEN OUTPUT IDX-FILE.
+           PERFORM VARYING I FROM 1 BY 1 UNTIL I > 7
+               MOVE I TO IDX-KEY
+               MOVE "DATA" TO IDX-DATA
+               WRITE IDX-REC
+           END-PERFORM.
+      *> no CLOSE on purpose
+           STOP RUN.
+])
+
+AT_DATA([reader.cbl],
+[       IDENTIFICATION DIVISION.
+       PROGRAM-ID. reader.
+       ENVIRONMENT DIVISION.
+       INPUT-OUTPUT SECTION.
+       FILE-CONTROL.
+           SELECT IDX-FILE ASSIGN TO "./IDX-FILE"
+               ORGANIZATION IS INDEXED
+               ACCESS MODE IS SEQUENTIAL
+               RECORD KEY IS IDX-KEY
+               FILE STATUS IS FS.
+       DATA DIVISION.
+       FILE SECTION.
+       FD IDX-FILE.
+       01 IDX-REC.
+          03 IDX-KEY PIC 9(5).
+          03 IDX-DATA PIC X(5).
+       WORKING-STORAGE SECTION.
+       01 FS PIC XX.
+       01 CNT PIC 9(5) VALUE 0.
+       01 EOF-FLAG PIC X VALUE "N".
+       PROCEDURE DIVISION.
+           OPEN INPUT IDX-FILE.
+           PERFORM UNTIL EOF-FLAG = "Y"
+               READ IDX-FILE NEXT RECORD
+                   AT END MOVE "Y" TO EOF-FLAG
+                   NOT AT END ADD 1 TO CNT
+               END-READ
+           END-PERFORM.
+           CLOSE IDX-FILE.
+           DISPLAY "COUNT " CNT.
+           STOP RUN.
+])
+
+AT_CHECK([${COBJ} writer.cbl])
+AT_CHECK([${COBJ} reader.cbl])
+
+AT_CHECK([COB_FILE_IDX_COMMIT_INTERVAL=INF ${RUN_MODULE} writer], [0], [],
+[WARNING - Implicit CLOSE of IDX-FILE ("./IDX-FILE") @&t@
+])
+AT_CHECK([${RUN_MODULE} reader], [0], [COUNT 00007
+])
+
+AT_CLEANUP
+
+AT_SETUP([WRITE errors on an indexed file opened EXTEND])
+
+# EXTEND appends to existing records, so unlike OUTPUT the duplicate
+# checks must still consult the tables: a key equal to a pre-existing
+# record (primary or unique alternate) is status 22 even though this
+# session never wrote it.
+
+AT_DATA([prog.cbl],
+[       IDENTIFICATION DIVISION.
+       PROGRAM-ID. prog.
+       ENVIRONMENT DIVISION.
+       INPUT-OUTPUT SECTION.
+       FILE-CONTROL.
+           SELECT IDX-FILE ASSIGN TO "./IDX-FILE"
+               ORGANIZATION IS INDEXED
+               ACCESS MODE IS SEQUENTIAL
+               RECORD KEY IS IDX-KEY
+               ALTERNATE RECORD KEY IS ALT-UNIQ
+               FILE STATUS IS FS.
+       DATA DIVISION.
+       FILE SECTION.
+       FD IDX-FILE.
+       01 IDX-REC.
+          03 IDX-KEY PIC 9(3).
+          03 ALT-UNIQ PIC 9(3).
+          03 IDX-DATA PIC X(5).
+       WORKING-STORAGE SECTION.
+       01 FS PIC XX.
+       01 CNT PIC 9(3) VALUE 0.
+       01 EOF-FLAG PIC X VALUE "N".
+       PROCEDURE DIVISION.
+           OPEN OUTPUT IDX-FILE.
+           MOVE "001101REC01" TO IDX-REC.
+           WRITE IDX-REC.
+           MOVE "002102REC02" TO IDX-REC.
+           WRITE IDX-REC.
+           MOVE "003103REC03" TO IDX-REC.
+           WRITE IDX-REC.
+           CLOSE IDX-FILE.
+           OPEN EXTEND IDX-FILE.
+           DISPLAY "OPEN-EXTEND " FS.
+      *> duplicate of a pre-existing primary key -> 22
+           MOVE "003104REC04" TO IDX-REC.
+           WRITE IDX-REC.
+           DISPLAY "W1 " FS.
+      *> key lower than the last written key -> 21
+           MOVE "002105REC05" TO IDX-REC.
+           WRITE IDX-REC.
+           DISPLAY "W2 " FS.
+      *> duplicate of a pre-existing unique alternate key -> 22
+           MOVE "004101REC06" TO IDX-REC.
+           WRITE IDX-REC.
+           DISPLAY "W3 " FS.
+      *> valid appends
+           MOVE "004104REC07" TO IDX-REC.
+           WRITE IDX-REC.
+           DISPLAY "W4 " FS.
+           MOVE "005105REC08" TO IDX-REC.
+           WRITE IDX-REC.
+           DISPLAY "W5 " FS.
+           CLOSE IDX-FILE.
+           DISPLAY "CLOSE " FS.
+           OPEN INPUT IDX-FILE.
+           PERFORM UNTIL EOF-FLAG = "Y"
+               READ IDX-FILE NEXT RECORD
+                   AT END MOVE "Y" TO EOF-FLAG
+                   NOT AT END
+                       ADD 1 TO CNT
+                       DISPLAY "R " IDX-KEY
+               END-READ
+           END-PERFORM.
+           CLOSE IDX-FILE.
+           DISPLAY "COUNT " CNT.
+           STOP RUN.
+])
+
+AT_CHECK([${COBJ} prog.cbl])
+
+AT_CHECK([${RUN_MODULE} prog], [0],
+[OPEN-EXTEND 00
+W1 22
+W2 21
+W3 22
+W4 00
+W5 00
+CLOSE 00
+R 001
+R 002
+R 003
+R 004
+R 005
+COUNT 005
+])
+
+AT_CLEANUP
+
+AT_SETUP([ROLLBACK statement discards uncommitted indexed OUTPUT writes])
+
+# In OUTPUT mode the file is locked exclusively and the records written
+# so far are still uncommitted, so ROLLBACK really undoes them. The keys
+# can then be written again from the start.
+
+AT_DATA([prog.cbl],
+[       IDENTIFICATION DIVISION.
+       PROGRAM-ID. prog.
+       ENVIRONMENT DIVISION.
+       INPUT-OUTPUT SECTION.
+       FILE-CONTROL.
+           SELECT IDX-FILE ASSIGN TO "./IDX-FILE"
+               ORGANIZATION IS INDEXED
+               ACCESS MODE IS SEQUENTIAL
+               RECORD KEY IS IDX-KEY
+               FILE STATUS IS FS.
+       DATA DIVISION.
+       FILE SECTION.
+       FD IDX-FILE.
+       01 IDX-REC.
+          03 IDX-KEY PIC 9(3).
+          03 IDX-DATA PIC X(5).
+       WORKING-STORAGE SECTION.
+       01 FS PIC XX.
+       01 CNT PIC 9(3) VALUE 0.
+       01 EOF-FLAG PIC X VALUE "N".
+       PROCEDURE DIVISION.
+           OPEN OUTPUT IDX-FILE.
+           MOVE "001FIRST" TO IDX-REC.
+           WRITE IDX-REC.
+           MOVE "002FIRST" TO IDX-REC.
+           WRITE IDX-REC.
+           MOVE "003FIRST" TO IDX-REC.
+           WRITE IDX-REC.
+           ROLLBACK.
+      *> the same keys must be writable again after the rollback
+           MOVE "001AGAIN" TO IDX-REC.
+           WRITE IDX-REC.
+           DISPLAY "W1 " FS.
+           MOVE "002AGAIN" TO IDX-REC.
+           WRITE IDX-REC.
+           DISPLAY "W2 " FS.
+           CLOSE IDX-FILE.
+           DISPLAY "CLOSE " FS.
+           OPEN INPUT IDX-FILE.
+           PERFORM UNTIL EOF-FLAG = "Y"
+               READ IDX-FILE NEXT RECORD
+                   AT END MOVE "Y" TO EOF-FLAG
+                   NOT AT END
+                       ADD 1 TO CNT
+                       DISPLAY "R " IDX-REC
+               END-READ
+           END-PERFORM.
+           CLOSE IDX-FILE.
+           DISPLAY "COUNT " CNT.
+           STOP RUN.
+])
+
+AT_CHECK([${COBJ} prog.cbl])
+
+AT_CHECK([${RUN_MODULE} prog], [0],
+[W1 00
+W2 00
+CLOSE 00
+R 001AGAIN
+R 002AGAIN
+COUNT 002
+])
+
+AT_CLEANUP
+
+AT_SETUP([ROLLBACK statement does not undo committed indexed records])
+
+# Records that are already committed cannot be undone. In I-O mode every
+# WRITE/REWRITE/DELETE commits on the spot, so ROLLBACK only releases the
+# record locks, as in opensource COBOL 1.x and GnuCOBOL 3.x. The same
+# applies to records committed by an earlier COMMIT statement.
+
+AT_DATA([prog.cbl],
+[       IDENTIFICATION DIVISION.
+       PROGRAM-ID. prog.
+       ENVIRONMENT DIVISION.
+       INPUT-OUTPUT SECTION.
+       FILE-CONTROL.
+           SELECT IDX-FILE ASSIGN TO "./IDX-FILE"
+               ORGANIZATION IS INDEXED
+               ACCESS MODE IS SEQUENTIAL
+               RECORD KEY IS IDX-KEY
+               FILE STATUS IS FS.
+       DATA DIVISION.
+       FILE SECTION.
+       FD IDX-FILE.
+       01 IDX-REC.
+          03 IDX-KEY PIC 9(3).
+          03 IDX-DATA PIC X(5).
+       WORKING-STORAGE SECTION.
+       01 FS PIC XX.
+       01 CNT PIC 9(3) VALUE 0.
+       01 EOF-FLAG PIC X VALUE "N".
+       PROCEDURE DIVISION.
+           OPEN OUTPUT IDX-FILE.
+           MOVE "001KEEP1" TO IDX-REC.
+           WRITE IDX-REC.
+           MOVE "002KEEP2" TO IDX-REC.
+           WRITE IDX-REC.
+      *> COMMIT makes them durable, so the following ROLLBACK cannot undo them
+           COMMIT.
+           ROLLBACK.
+           CLOSE IDX-FILE.
+           DISPLAY "CLOSE " FS.
+      *> a REWRITE in I-O mode is committed on the spot
+           OPEN I-O IDX-FILE.
+           READ IDX-FILE NEXT RECORD.
+           MOVE "REWRT" TO IDX-DATA.
+           REWRITE IDX-REC.
+           DISPLAY "REWRITE " FS.
+           ROLLBACK.
+           CLOSE IDX-FILE.
+           OPEN INPUT IDX-FILE.
+           PERFORM UNTIL EOF-FLAG = "Y"
+               READ IDX-FILE NEXT RECORD
+                   AT END MOVE "Y" TO EOF-FLAG
+                   NOT AT END
+                       ADD 1 TO CNT
+                       DISPLAY "R " IDX-REC
+               END-READ
+           END-PERFORM.
+           CLOSE IDX-FILE.
+           DISPLAY "COUNT " CNT.
+           STOP RUN.
+])
+
+AT_CHECK([${COBJ} prog.cbl])
+
+AT_CHECK([${RUN_MODULE} prog], [0],
+[CLOSE 00
+REWRITE 00
+R 001REWRT
+R 002KEEP2
+COUNT 002
+])
+
+AT_CLEANUP
+
+AT_SETUP([COMMIT statement while writing an indexed OUTPUT file])
+
+# The COMMIT statement must commit the WRITEs deferred so far (even
+# with INF, which never commits in between on its own), and writing
+# must continue normally afterwards.
+
+AT_DATA([prog.cbl],
+[       IDENTIFICATION DIVISION.
+       PROGRAM-ID. prog.
+       ENVIRONMENT DIVISION.
+       INPUT-OUTPUT SECTION.
+       FILE-CONTROL.
+           SELECT IDX-FILE ASSIGN TO "./IDX-FILE"
+               ORGANIZATION IS INDEXED
+               ACCESS MODE IS SEQUENTIAL
+               RECORD KEY IS IDX-KEY
+               FILE STATUS IS FS.
+       DATA DIVISION.
+       FILE SECTION.
+       FD IDX-FILE.
+       01 IDX-REC.
+          03 IDX-KEY PIC 9(5).
+          03 IDX-DATA PIC X(5).
+       WORKING-STORAGE SECTION.
+       01 FS PIC XX.
+       01 I PIC 9(5).
+       01 CNT PIC 9(5) VALUE 0.
+       01 EOF-FLAG PIC X VALUE "N".
+       PROCEDURE DIVISION.
+           OPEN OUTPUT IDX-FILE.
+           PERFORM VARYING I FROM 1 BY 1 UNTIL I > 3
+               MOVE I TO IDX-KEY
+               MOVE "DATA" TO IDX-DATA
+               WRITE IDX-REC
+               IF FS NOT = "00"
+                   DISPLAY "WRITE1 I=" I " FS=" FS
+               END-IF
+           END-PERFORM.
+           COMMIT.
+           PERFORM VARYING I FROM 4 BY 1 UNTIL I > 6
+               MOVE I TO IDX-KEY
+               MOVE "DATA" TO IDX-DATA
+               WRITE IDX-REC
+               IF FS NOT = "00"
+                   DISPLAY "WRITE2 I=" I " FS=" FS
+               END-IF
+           END-PERFORM.
+           CLOSE IDX-FILE.
+           DISPLAY "CLOSE " FS.
+           OPEN INPUT IDX-FILE.
+           PERFORM UNTIL EOF-FLAG = "Y"
+               READ IDX-FILE NEXT RECORD
+                   AT END MOVE "Y" TO EOF-FLAG
+                   NOT AT END ADD 1 TO CNT
+               END-READ
+           END-PERFORM.
+           CLOSE IDX-FILE.
+           DISPLAY "COUNT " CNT.
+           STOP RUN.
+])
+
+AT_CHECK([${COBJ} prog.cbl])
+
+AT_CHECK([COB_FILE_IDX_COMMIT_INTERVAL=INF ${RUN_MODULE} prog], [0],
+[CLOSE 00
+COUNT 00006
+])
+
+AT_CLEANUP
