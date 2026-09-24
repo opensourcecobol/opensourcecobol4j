@@ -1,8 +1,5 @@
 AT_SETUP([SEARCH KEY IN RHS])
 
-dnl TODO: cobj.exe segfaults when compiling this test on Windows.
-AT_SKIP_IF([test -n "$IS_WINDOWS"])
-
 AT_DATA([prog.cob], [
        IDENTIFICATION   DIVISION.
        PROGRAM-ID.      prog.
