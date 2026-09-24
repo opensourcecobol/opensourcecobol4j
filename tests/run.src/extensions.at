@@ -1124,16 +1124,46 @@ AT_DATA([prog.cob], [
 AT_CHECK([${COMPILE} -std=mf prog.cob], [0], ,
 [prog.cob: In paragraph 'S-03':
 prog.cob:37: Warning: Move non-integer to alphanumeric
+   35 |        S-03.
+   36 |           MOVE SPACES TO ALPHA-FIELD.
+   37 >           MOVE NON-INTEGER TO ALPHA-FIELD.
+   38 |           DISPLAY  ALPHA-FIELD NO ADVANCING
+   39 |           END-DISPLAY.
 prog.cob: In paragraph 'S-10':
 prog.cob:42: Warning: Move non-integer to alphanumeric
+   40 |        S-10.
+   41 |           MOVE SPACES TO ALPHA-FIELD.
+   42 >           MOVE NON-INTEGER-2 TO ALPHA-FIELD.
+   43 |           DISPLAY  ALPHA-FIELD NO ADVANCING
+   44 |           END-DISPLAY.
 prog.cob: In paragraph 'S-20':
 prog.cob:47: Warning: Move non-integer to alphanumeric
+   45 |        S-20.
+   46 |           MOVE SPACES TO ALPHA-FIELD.
+   47 >           MOVE NON-INTEGER-3 TO ALPHA-FIELD.
+   48 |           DISPLAY  ALPHA-FIELD NO ADVANCING
+   49 |           END-DISPLAY.
 prog.cob: In paragraph 'S-30':
 prog.cob:52: Warning: Move non-integer to alphanumeric
+   50 |        S-30.
+   51 |           MOVE SPACES TO ALPHA-FIELD.
+   52 >           MOVE SIGNED-NON-INTEGER TO ALPHA-FIELD.
+   53 |           DISPLAY  ALPHA-FIELD NO ADVANCING
+   54 |           END-DISPLAY.
 prog.cob: In paragraph 'S-40':
 prog.cob:57: Warning: Move non-integer to alphanumeric
+   55 |        S-40.
+   56 |           MOVE SPACES TO ALPHA-FIELD.
+   57 >           MOVE SIGNED-NON-INTEGER-2 TO ALPHA-FIELD.
+   58 |           DISPLAY  ALPHA-FIELD NO ADVANCING
+   59 |           END-DISPLAY.
 prog.cob: In paragraph 'S-50':
 prog.cob:62: Warning: Move non-integer to alphanumeric
+   60 |        S-50.
+   61 |           MOVE SPACES TO ALPHA-FIELD.
+   62 >           MOVE SIGNED-NON-INTEGER-3 TO ALPHA-FIELD.
+   63 |           DISPLAY  ALPHA-FIELD NO ADVANCING
+   64 |           END-DISPLAY.
 ])
 AT_CHECK([java prog], [0], [12891289128912891289128912891289])
 
@@ -1351,7 +1381,10 @@ AT_CLEANUP
 
 AT_SETUP([Case independent PROGRAM-ID])
 
-dnl TODO: cobj.exe generates mismatched class/file names on case-insensitive filesystems.
+dnl Class files of programs whose IDs differ only in letter case cannot
+dnl coexist on a case-insensitive filesystem; cobj reports an explicit
+dnl error there (covered by the test "Case-colliding PROGRAM-IDs on a
+dnl case-insensitive filesystem").
 AT_SKIP_IF([test -n "$IS_WINDOWS"])
 
 AT_DATA([prog.cob], [
@@ -1377,7 +1410,10 @@ AT_CLEANUP
 
 AT_SETUP([PROGRAM-ID AS clause])
 
-dnl TODO: cobj.exe generates mismatched class/file names on case-insensitive filesystems.
+dnl Class files of programs whose IDs differ only in letter case cannot
+dnl coexist on a case-insensitive filesystem; cobj reports an explicit
+dnl error there (covered by the test "Case-colliding PROGRAM-IDs on a
+dnl case-insensitive filesystem").
 AT_SKIP_IF([test -n "$IS_WINDOWS"])
 
 AT_DATA([prog.cob], [
@@ -1398,6 +1434,34 @@ AT_DATA([prog.cob], [
 
 AT_CHECK([${COMPILE} prog.cob])
 AT_CHECK([java prog], [0], [OK])
+
+AT_CLEANUP
+
+AT_SETUP([Case-colliding PROGRAM-IDs on a case-insensitive filesystem])
+
+dnl On a case-insensitive filesystem cobj must reject programs whose
+dnl class files would differ only in letter case instead of silently
+dnl overwriting them.
+AT_SKIP_IF([test -z "$IS_WINDOWS"])
+
+AT_DATA([prog.cob], [
+       IDENTIFICATION   DIVISION.
+       PROGRAM-ID.      PROG.
+       PROCEDURE        DIVISION.
+           CALL "prog"
+           END-CALL.
+           STOP RUN.
+       PROGRAM-ID.      prog.
+       PROCEDURE        DIVISION.
+           DISPLAY "OK" NO ADVANCING
+           END-DISPLAY.
+           EXIT PROGRAM.
+       END PROGRAM prog.
+       END PROGRAM PROG.
+])
+
+AT_CHECK([${COMPILE} prog.cob 2> err.log], [1])
+AT_CHECK([grep "differ only in letter case" err.log], [0], [ignore])
 
 AT_CLEANUP
 
@@ -1453,6 +1517,11 @@ AT_DATA([prog.cob], [
 
 AT_CHECK([${COMPILE} -conf=test.conf prog.cob], [0], ,
 [prog.cob:12: Warning: 'FILENAME' will be implicitly defined
+   10 |        FD TEST-FILE.
+   11 |        01 TEST-REC      PIC X(4).
+   12 >        PROCEDURE        DIVISION.
+   13 |            MOVE "TEST-FILE" TO FILENAME.
+   14 |            OPEN OUTPUT TEST-FILE.
 ])
 AT_CHECK([java prog], [0])
 
@@ -2229,6 +2298,11 @@ AT_DATA([prog.cob], [
 AT_CHECK([${COMPILE} -Wunreachable prog.cob], [0], ,
 [prog.cob: In paragraph 'P01':
 prog.cob:9: Warning: Unreachable statement 'DISPLAY'
+    7 |        P01.
+    8 |            GO TO P02.
+    9 >            DISPLAY "INVALID"
+   10 |            END-DISPLAY.
+   11 |        P02.
 ])
 
 AT_CLEANUP

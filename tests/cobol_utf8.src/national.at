@@ -90,7 +90,17 @@ AT_DATA([prog.cob], [
 
 AT_CHECK([${COBJ} ${FLAGS_JP_COMPAT} prog.cob], [0], [],
 [prog.cob:9: Warning: Value size exceeds data size
+    7 |        01 O-STR    PIC X(10).
+    8 |        PROCEDURE        DIVISION.
+    9 >            MOVE "¥" TO I-STR.
+   10 |            MOVE FUNCTION NATIONAL(I-STR) TO O-STR.
+   11 |            DISPLAY O-STR WITH NO ADVANCING.
 prog.cob:6: Warning: 'I-STR' defined here as PIC X(1)
+    4 |        DATA             DIVISION.
+    5 |        WORKING-STORAGE  SECTION.
+    6 >        01 I-STR    PIC X(1).
+    7 |        01 O-STR    PIC X(10).
+    8 |        PROCEDURE        DIVISION.
 ])
 AT_CHECK([java prog > out1.txt])
 AT_CHECK([echo -n '￥        ' | nkf --ic=UTF-8 --oc=Shift_JIS > out2.txt])

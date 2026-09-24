@@ -12,6 +12,9 @@ AT_DATA([prog.cbl], [
 ])
 
 AT_CHECK([${COBJ} -Wunreachable prog.cbl 2>&1], [0], [prog.cbl:9: Warning: Unreachable statement 'DISPLAY'
+    7 |            DISPLAY "HELLO".
+    8 |            GOBACK.
+    9 >            DISPLAY "HELLO".
 ])
 
 AT_CHECK([java prog], [0],

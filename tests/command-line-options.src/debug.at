@@ -1,8 +1,5 @@
 AT_SETUP([-debug])
 
-dnl TODO: cobj.exe segfaults when passing -debug on Windows; skip until fixed.
-AT_SKIP_IF([test -n "$IS_WINDOWS"])
-
 AT_DATA([prog.cbl], [
        IDENTIFICATION              DIVISION.
        PROGRAM-ID.                 prog.

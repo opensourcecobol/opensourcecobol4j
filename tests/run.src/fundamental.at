@@ -102,6 +102,11 @@ AT_DATA([prog.cob], [
 
 AT_CHECK([${COMPILE} prog.cob], [1], [],
 [prog.cob:9: Error: Unknown statement '3'
+    7 |            DECIMAL-POINT    IS COMMA.
+    8 |        PROCEDURE        DIVISION.
+    9 >            DISPLAY  12.3
+   10 |            END-DISPLAY.
+   11 |            STOP RUN.
 ])
 
 AT_CLEANUP

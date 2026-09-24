@@ -12,6 +12,9 @@ AT_DATA([prog.cbl],
 
 AT_CHECK([${COBJ} -Wconstant prog.cbl], [0], [],
 [prog.cbl:7: Warning: Numeric literal exceeds data size
+    5 |        01  NUM   PIC   9(7) COMP-5.
+    6 |        PROCEDURE        DIVISION.
+    7 >            MOVE 10000000000 TO NUM.
 ])
 
 AT_DATA([prog.cbl],
@@ -26,6 +29,9 @@ AT_DATA([prog.cbl],
 
 AT_CHECK([${COBJ} -Wconstant prog.cbl], [0], [],
 [prog.cbl:7: Warning: Ignoring negative sign
+    5 |        01  NUM   PIC   9.
+    6 |        PROCEDURE        DIVISION.
+    7 >            MOVE -1 TO NUM.
 ])
 
 AT_CHECK([${COBJ} --help | grep '\-Wconstant' > /dev/null], [0])

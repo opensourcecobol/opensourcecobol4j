@@ -47,10 +47,35 @@ AT_DATA([prog.cob], [
 
 AT_CHECK([${COMPILE_ONLY} prog.cob], [0], [],
 [prog.cob:9: Warning: 'APPLY FORMS-OVERLAY' not implemented
+    7 |            SELECT FILE1  ASSIGN TO "file1".
+    8 |        I-O-CONTROL.
+    9 >            APPLY FORMS-OVERLAY TO FMS-OVL   ON FILE1.
+   10 |            APPLY CLOSE-NOFEED               ON FILE1.
+   11 |            APPLY COMMITMENT-CONTROL         ON FILE1.
 prog.cob:10: Warning: 'APPLY CLOSE-NOFEED' not implemented
+    8 |        I-O-CONTROL.
+    9 |            APPLY FORMS-OVERLAY TO FMS-OVL   ON FILE1.
+   10 >            APPLY CLOSE-NOFEED               ON FILE1.
+   11 |            APPLY COMMITMENT-CONTROL         ON FILE1.
+   12 |            APPLY CORE-INDEX    TO CORE-IDX  ON FILE1.
 prog.cob:11: Warning: 'APPLY COMMITMENT-CONTROL' not implemented
+    9 |            APPLY FORMS-OVERLAY TO FMS-OVL   ON FILE1.
+   10 |            APPLY CLOSE-NOFEED               ON FILE1.
+   11 >            APPLY COMMITMENT-CONTROL         ON FILE1.
+   12 |            APPLY CORE-INDEX    TO CORE-IDX  ON FILE1.
+   13 |            APPLY CYL-OVERFLOW  OF 10 TRACKS ON FILE1.
 prog.cob:12: Warning: 'APPLY CORE-INDEX' not implemented
+   10 |            APPLY CLOSE-NOFEED               ON FILE1.
+   11 |            APPLY COMMITMENT-CONTROL         ON FILE1.
+   12 >            APPLY CORE-INDEX    TO CORE-IDX  ON FILE1.
+   13 |            APPLY CYL-OVERFLOW  OF 10 TRACKS ON FILE1.
+   14 |        DATA                 DIVISION.
 prog.cob:13: Warning: 'APPLY CYL-OVERFLOW' not implemented
+   11 |            APPLY COMMITMENT-CONTROL         ON FILE1.
+   12 |            APPLY CORE-INDEX    TO CORE-IDX  ON FILE1.
+   13 >            APPLY CYL-OVERFLOW  OF 10 TRACKS ON FILE1.
+   14 |        DATA                 DIVISION.
+   15 |        WORKING-STORAGE      SECTION.
 ])
 
 AT_CLEANUP

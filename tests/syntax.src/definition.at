@@ -33,6 +33,11 @@ AT_DATA([prog.cob], [
 
 AT_CHECK([${COMPILE_ONLY} prog.cob], [1], ,
 [prog.cob:3: Error: PROGRAM-ID 'short' invalid
+    1 |
+    2 |        IDENTIFICATION   DIVISION.
+    3 >        PROGRAM-ID.      short.
+    4 |        PROCEDURE        DIVISION.
+    5 |            STOP RUN.
 ])
 
 AT_CLEANUP
@@ -48,6 +53,11 @@ AT_DATA([prog.cob], [
 
 AT_CHECK([${COMPILE_ONLY} prog.cob], [1], ,
 [prog.cob:3: Error: COMMON may only be used in a nested program
+    1 |
+    2 |        IDENTIFICATION   DIVISION.
+    3 >        PROGRAM-ID.      prog IS COMMON.
+    4 |        PROCEDURE        DIVISION.
+    5 |            STOP RUN.
 ])
 
 AT_CLEANUP
@@ -63,6 +73,11 @@ AT_DATA([prog.cob], [
 
 AT_CHECK([${COMPILE_ONLY} prog.cob], [1], ,
 [prog.cob:3: Error: syntax error
+    1 |
+    2 |        IDENTIFICATION   DIVISION.
+    3 >        PROGRAM-ID.      prog IS INITIAL RECURSIVE.
+    4 |        PROCEDURE        DIVISION.
+    5 |            STOP RUN.
 ])
 
 AT_CLEANUP
@@ -86,6 +101,11 @@ AT_DATA([prog.cob], [
 
 AT_CHECK([${COMPILE_ONLY} prog.cob], [1], ,
 [prog.cob:5: Error: 'X' undefined
+    3 |        PROGRAM-ID.      prog.
+    4 |        PROCEDURE        DIVISION.
+    5 >            DISPLAY X
+    6 |            END-DISPLAY.
+    7 |            STOP RUN.
 ])
 
 AT_CLEANUP
@@ -106,6 +126,11 @@ AT_DATA([prog.cob], [
 
 AT_CHECK([${COMPILE_ONLY} prog.cob], [1], ,
 [prog.cob:8: Error: 'X' in 'G' undefined
+    6 |        01 X             PIC X.
+    7 |        PROCEDURE        DIVISION.
+    8 >            DISPLAY X IN G
+    9 |            END-DISPLAY.
+   10 |            STOP RUN.
 ])
 
 AT_CLEANUP
@@ -128,6 +153,11 @@ AT_DATA([prog.cob], [
 
 AT_CHECK([${COMPILE_ONLY} prog.cob], [1], ,
 [prog.cob:10: Error: 'Y' in 'G' undefined
+    8 |        01 Y             PIC X.
+    9 |        PROCEDURE        DIVISION.
+   10 >            DISPLAY Y IN G
+   11 |            END-DISPLAY.
+   12 |            STOP RUN.
 ])
 
 AT_CLEANUP
@@ -148,6 +178,11 @@ AT_DATA([prog.cob], [
 
 AT_CHECK([${COMPILE_ONLY} prog.cob], [1], ,
 [prog.cob:8: Error: 'X' in 'X' undefined
+    6 |        01 X             PIC X.
+    7 |        PROCEDURE        DIVISION.
+    8 >            DISPLAY X IN X
+    9 |            END-DISPLAY.
+   10 |            STOP RUN.
 ])
 
 AT_CLEANUP
@@ -167,6 +202,9 @@ AT_DATA([prog.cob], [
 
 AT_CHECK([${COMPILE_ONLY} prog.cob], [1], ,
 [prog.cob:6: Error: PICTURE clause required for 'X'
+    4 |        DATA             DIVISION.
+    5 |        WORKING-STORAGE  SECTION.
+    6 >        01 X.
 ])
 
 AT_CLEANUP
@@ -211,7 +249,14 @@ AT_DATA([prog.cob], [
 
 AT_CHECK([${COMPILE_ONLY} prog.cob], [0], ,
 [prog.cob:7: Warning: Redefinition of 'X'
+    5 |        WORKING-STORAGE  SECTION.
+    6 |        01 X             PIC X.
+    7 >        01 X             PIC X.
 prog.cob:6: Warning: 'X' previously defined here
+    4 |        DATA             DIVISION.
+    5 |        WORKING-STORAGE  SECTION.
+    6 >        01 X             PIC X.
+    7 |        01 X             PIC X.
 ])
 
 AT_CLEANUP
@@ -229,7 +274,14 @@ AT_DATA([prog.cob], [
 
 AT_CHECK([${COMPILE_ONLY} prog.cob], [0], ,
 [prog.cob:7: Warning: Redefinition of 'X'
+    5 |        WORKING-STORAGE  SECTION.
+    6 |        01 X.
+    7 >          02 X           PIC X.
 prog.cob:6: Warning: 'X' previously defined here
+    4 |        DATA             DIVISION.
+    5 |        WORKING-STORAGE  SECTION.
+    6 >        01 X.
+    7 |          02 X           PIC X.
 ])
 
 AT_CLEANUP
@@ -248,7 +300,14 @@ AT_DATA([prog.cob], [
 
 AT_CHECK([${COMPILE_ONLY} prog.cob], [0], ,
 [prog.cob:8: Warning: Redefinition of 'X'
+    6 |        01 G.
+    7 |          02 X           PIC X.
+    8 >          02 X           PIC X.
 prog.cob:7: Warning: 'X' previously defined here
+    5 |        WORKING-STORAGE  SECTION.
+    6 |        01 G.
+    7 >          02 X           PIC X.
+    8 |          02 X           PIC X.
 ])
 
 AT_CLEANUP
@@ -266,7 +325,14 @@ AT_DATA([prog.cob], [
 
 AT_CHECK([${COMPILE_ONLY} prog.cob], [0], ,
 [prog.cob:7: Warning: Redefinition of 'X'
+    5 |        WORKING-STORAGE  SECTION.
+    6 |        77 X             PIC X.
+    7 >        77 X             PIC X.
 prog.cob:6: Warning: 'X' previously defined here
+    4 |        DATA             DIVISION.
+    5 |        WORKING-STORAGE  SECTION.
+    6 >        77 X             PIC X.
+    7 |        77 X             PIC X.
 ])
 
 AT_CLEANUP
@@ -284,7 +350,14 @@ AT_DATA([prog.cob], [
 
 AT_CHECK([${COMPILE_ONLY} prog.cob], [0], ,
 [prog.cob:7: Warning: Redefinition of 'X'
+    5 |        WORKING-STORAGE  SECTION.
+    6 |        01 X             PIC X.
+    7 >        77 X             PIC X.
 prog.cob:6: Warning: 'X' previously defined here
+    4 |        DATA             DIVISION.
+    5 |        WORKING-STORAGE  SECTION.
+    6 >        01 X             PIC X.
+    7 |        77 X             PIC X.
 ])
 
 AT_CLEANUP
@@ -303,7 +376,14 @@ AT_DATA([prog.cob], [
 
 AT_CHECK([${COMPILE_ONLY} prog.cob], [0], ,
 [prog.cob:8: Warning: Redefinition of 'A'
+    6 |        01 X             PIC X.
+    7 |          88 A           VALUE "A".
+    8 >          88 A           VALUE "B".
 prog.cob:7: Warning: 'A' previously defined here
+    5 |        WORKING-STORAGE  SECTION.
+    6 |        01 X             PIC X.
+    7 >          88 A           VALUE "A".
+    8 |          88 A           VALUE "B".
 ])
 
 AT_CLEANUP
@@ -327,8 +407,23 @@ AT_DATA([prog.cob], [
 
 AT_CHECK([${COMPILE_ONLY} prog.cob], [1], ,
 [prog.cob:11: Error: 'X' ambiguous; need qualification
+    9 |          02 X           PIC X.
+   10 |        PROCEDURE        DIVISION.
+   11 >            DISPLAY X
+   12 |            END-DISPLAY.
+   13 |            STOP RUN.
 prog.cob:7: Error: 'X' in 'G1' defined here
+    5 |        WORKING-STORAGE  SECTION.
+    6 |        01 G1.
+    7 >          02 X           PIC X.
+    8 |        01 G2.
+    9 |          02 X           PIC X.
 prog.cob:9: Error: 'X' in 'G2' defined here
+    7 |          02 X           PIC X.
+    8 |        01 G2.
+    9 >          02 X           PIC X.
+   10 |        PROCEDURE        DIVISION.
+   11 |            DISPLAY X
 ])
 
 AT_CLEANUP
@@ -351,8 +446,23 @@ AT_DATA([prog.cob], [
 
 AT_CHECK([${COMPILE_ONLY} prog.cob], [1], ,
 [prog.cob:10: Error: 'X' ambiguous; need qualification
+    8 |            03 X         PIC X.
+    9 |        PROCEDURE        DIVISION.
+   10 >            DISPLAY X
+   11 |            END-DISPLAY.
+   12 |            STOP RUN.
 prog.cob:7: Error: 'X' in 'G' defined here
+    5 |        WORKING-STORAGE  SECTION.
+    6 |        01 G.
+    7 >          02 X.
+    8 |            03 X         PIC X.
+    9 |        PROCEDURE        DIVISION.
 prog.cob:8: Error: 'X' in 'X' in 'G' defined here
+    6 |        01 G.
+    7 |          02 X.
+    8 >            03 X         PIC X.
+    9 |        PROCEDURE        DIVISION.
+   10 |            DISPLAY X
 ])
 
 AT_CLEANUP
@@ -378,8 +488,23 @@ AT_DATA([prog.cob], [
 
 AT_CHECK([${COMPILE_ONLY} prog.cob], [1], ,
 [prog.cob:13: Error: 'Y' in 'X' ambiguous; need qualification
+   11 |            03 Y         PIC X.
+   12 |        PROCEDURE        DIVISION.
+   13 >            DISPLAY Y OF X
+   14 |            END-DISPLAY.
+   15 |            STOP RUN.
 prog.cob:8: Error: 'Y' in 'X' in 'G1' defined here
+    6 |        01 G1.
+    7 |          02 X.
+    8 >            03 Y         PIC X.
+    9 |        01 G2.
+   10 |          02 X.
 prog.cob:11: Error: 'Y' in 'X' in 'G2' defined here
+    9 |        01 G2.
+   10 |          02 X.
+   11 >            03 Y         PIC X.
+   12 |        PROCEDURE        DIVISION.
+   13 |            DISPLAY Y OF X
 ])
 
 AT_CLEANUP
@@ -425,8 +550,22 @@ AT_DATA([prog.cob], [
 
 AT_CHECK([${COMPILE_ONLY} prog.cob], [1], ,
 [prog.cob:6: Error: 'L1' ambiguous; need qualification
+    4 |        DATA             DIVISION.
+    5 |        PROCEDURE        DIVISION.
+    6 >          L0. GO TO L1.
+    7 |          L1. GOBACK.
+    8 |          L1. GOBACK.
 prog.cob:7: Error: 'L1' in 'MAIN SECTION' defined here
+    5 |        PROCEDURE        DIVISION.
+    6 |          L0. GO TO L1.
+    7 >          L1. GOBACK.
+    8 |          L1. GOBACK.
+    9 |          L2. STOP RUN.
 prog.cob:8: Error: 'L1' in 'MAIN SECTION' defined here
+    6 |          L0. GO TO L1.
+    7 |          L1. GOBACK.
+    8 >          L1. GOBACK.
+    9 |          L2. STOP RUN.
 ])
 
 AT_CLEANUP
@@ -454,6 +593,10 @@ AT_DATA([prog.cob], [
 
 AT_CHECK([${COMPILE_ONLY} prog.cob], [1], ,
 [prog.cob:5: Error: 'END-OF-PROGRAM' undefined
+    3 |        PROGRAM-ID.      prog.
+    4 |        PROCEDURE        DIVISION.
+    5 >            GO TO END-OF-PROGRAM.
+    6 |            STOP RUN.
 ])
 
 AT_CLEANUP
@@ -475,7 +618,16 @@ AT_DATA([prog.cob], [
 AT_CHECK([${COMPILE_ONLY} prog.cob], [1], ,
 [prog.cob: In section 'L':
 prog.cob:6: Error: Redefinition of 'L'
+    4 |        PROCEDURE        DIVISION.
+    5 |        L SECTION.
+    6 >        L SECTION.
+    7 |            STOP RUN.
 prog.cob:5: Error: 'L' previously defined here
+    3 |        PROGRAM-ID.      prog.
+    4 |        PROCEDURE        DIVISION.
+    5 >        L SECTION.
+    6 |        L SECTION.
+    7 |            STOP RUN.
 ])
 
 AT_CLEANUP
@@ -494,7 +646,16 @@ AT_DATA([prog.cob], [
 AT_CHECK([${COMPILE_ONLY} prog.cob], [1], ,
 [prog.cob: In section 'L':
 prog.cob:6: Error: Redefinition of 'L'
+    4 |        PROCEDURE        DIVISION.
+    5 |        L SECTION.
+    6 >        L.
+    7 |            STOP RUN.
 prog.cob:5: Error: 'L' previously defined here
+    3 |        PROGRAM-ID.      prog.
+    4 |        PROCEDURE        DIVISION.
+    5 >        L SECTION.
+    6 |        L.
+    7 |            STOP RUN.
 ])
 
 AT_CLEANUP
@@ -536,49 +697,139 @@ AT_DATA([prog3.cob], [
 
 AT_CHECK([${COMPILE} -fsyntax-only prog1.cob], [1], ,
 [prog1.cob:8: Error: Duplicate paragraph 'L' in the default section
+    6 |        L.
+    7 |       *No Label
+    8 >        L.
+    9 |            STOP RUN.
 prog1.cob:6: Error: 'L' previously defined here
+    4 |        PROCEDURE        DIVISION.
+    5 |       *No Label
+    6 >        L.
+    7 |       *No Label
+    8 |        L.
 ])
 AT_CHECK([${COMPILE} -fsyntax-only prog2.cob], [1], ,
 [prog2.cob:8: Error: Duplicate paragraph 'L' in section 'SECTION-A'
+    6 |        L.
+    7 |       *No Label
+    8 >        L.
+    9 |            STOP RUN.
 prog2.cob:6: Error: 'L' previously defined here
+    4 |        PROCEDURE        DIVISION.
+    5 |        SECTION-A SECTION.
+    6 >        L.
+    7 |       *No Label
+    8 |        L.
 ])
 AT_CHECK([${COMPILE} -fsyntax-only prog3.cob])
 
 AT_CHECK([${COMPILE} prog1.cob], [1], ,
 [prog1.cob:8: Error: Duplicate paragraph 'L' in the default section
+    6 |        L.
+    7 |       *No Label
+    8 >        L.
+    9 |            STOP RUN.
 prog1.cob:6: Error: 'L' previously defined here
+    4 |        PROCEDURE        DIVISION.
+    5 |       *No Label
+    6 >        L.
+    7 |       *No Label
+    8 |        L.
 ])
 AT_CHECK([${COMPILE} prog2.cob], [1], ,
 [prog2.cob:8: Error: Duplicate paragraph 'L' in section 'SECTION-A'
+    6 |        L.
+    7 |       *No Label
+    8 >        L.
+    9 |            STOP RUN.
 prog2.cob:6: Error: 'L' previously defined here
+    4 |        PROCEDURE        DIVISION.
+    5 |        SECTION-A SECTION.
+    6 >        L.
+    7 |       *No Label
+    8 |        L.
 ])
 AT_CHECK([${COMPILE} prog3.cob])
 
 AT_CHECK([${COMPILE} prog1.cob prog3.cob], [1], ,
 [prog1.cob:8: Error: Duplicate paragraph 'L' in the default section
+    6 |        L.
+    7 |       *No Label
+    8 >        L.
+    9 |            STOP RUN.
 prog1.cob:6: Error: 'L' previously defined here
+    4 |        PROCEDURE        DIVISION.
+    5 |       *No Label
+    6 >        L.
+    7 |       *No Label
+    8 |        L.
 ])
 AT_CHECK([${COMPILE} prog2.cob prog3.cob], [1], ,
 [prog2.cob:8: Error: Duplicate paragraph 'L' in section 'SECTION-A'
+    6 |        L.
+    7 |       *No Label
+    8 >        L.
+    9 |            STOP RUN.
 prog2.cob:6: Error: 'L' previously defined here
+    4 |        PROCEDURE        DIVISION.
+    5 |        SECTION-A SECTION.
+    6 >        L.
+    7 |       *No Label
+    8 |        L.
 ])
 
 AT_CHECK([${COMPILE} prog3.cob prog1.cob], [1], ,
 [prog1.cob:8: Error: Duplicate paragraph 'L' in the default section
+    6 |        L.
+    7 |       *No Label
+    8 >        L.
+    9 |            STOP RUN.
 prog1.cob:6: Error: 'L' previously defined here
+    4 |        PROCEDURE        DIVISION.
+    5 |       *No Label
+    6 >        L.
+    7 |       *No Label
+    8 |        L.
 ])
 AT_CHECK([${COMPILE} prog3.cob prog2.cob], [1], ,
 [prog2.cob:8: Error: Duplicate paragraph 'L' in section 'SECTION-A'
+    6 |        L.
+    7 |       *No Label
+    8 >        L.
+    9 |            STOP RUN.
 prog2.cob:6: Error: 'L' previously defined here
+    4 |        PROCEDURE        DIVISION.
+    5 |        SECTION-A SECTION.
+    6 >        L.
+    7 |       *No Label
+    8 |        L.
 ])
 
 AT_CHECK([${COMPILE} prog1.cob prog2.cob], [1], ,
 [prog1.cob:8: Error: Duplicate paragraph 'L' in the default section
+    6 |        L.
+    7 |       *No Label
+    8 >        L.
+    9 |            STOP RUN.
 prog1.cob:6: Error: 'L' previously defined here
+    4 |        PROCEDURE        DIVISION.
+    5 |       *No Label
+    6 >        L.
+    7 |       *No Label
+    8 |        L.
 ])
 AT_CHECK([${COMPILE} prog2.cob prog1.cob], [1], ,
 [prog2.cob:8: Error: Duplicate paragraph 'L' in section 'SECTION-A'
+    6 |        L.
+    7 |       *No Label
+    8 >        L.
+    9 |            STOP RUN.
 prog2.cob:6: Error: 'L' previously defined here
+    4 |        PROCEDURE        DIVISION.
+    5 |        SECTION-A SECTION.
+    6 >        L.
+    7 |       *No Label
+    8 |        L.
 ])
 
 AT_CLEANUP
@@ -600,8 +851,22 @@ AT_DATA([prog.cob], [
 
 AT_CHECK([${COMPILE_ONLY} prog.cob], [1], ,
 [prog.cob:10: Error: 'L' ambiguous; need qualification
+    8 |        L.
+    9 |        S-3 SECTION.
+   10 >            GO TO L.
+   11 |            STOP RUN.
 prog.cob:6: Error: 'L' in 'S-1' defined here
+    4 |        PROCEDURE        DIVISION.
+    5 |        S-1 SECTION.
+    6 >        L.
+    7 |        S-2 SECTION.
+    8 |        L.
 prog.cob:8: Error: 'L' in 'S-2' defined here
+    6 |        L.
+    7 |        S-2 SECTION.
+    8 >        L.
+    9 |        S-3 SECTION.
+   10 |            GO TO L.
 ])
 
 AT_CLEANUP
@@ -629,6 +894,11 @@ AT_DATA([prog.cob], [
 
 AT_CHECK([${COMPILE_ONLY} -conf=test.conf prog.cob], [0], ,
 [prog.cob:9: Warning: No previous data item of level 04
+    7 |             05 B.
+    8 |                 10 C PIC X.
+    9 >            04 D.
+   10 |             05 E PIC X.
+   11 |        PROCEDURE        DIVISION.
 ])
 
 AT_CLEANUP

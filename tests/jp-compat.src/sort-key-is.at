@@ -28,6 +28,10 @@ AT_DATA([prog.cob], [
 
 AT_CHECK([${COMPILE} prog.cob], [1], [],
 [prog.cob:23: Error: syntax error
+   21 |        PROCEDURE        DIVISION.
+   22 |            SORT SF01 ASCENDING KEY IS A001
+   23 >                 USING IF01 GIVING OF01.
+   24 |            GOBACK.
 ])
 AT_CHECK([${COMPILE_JP_COMPAT} prog.cob], [0])
 AT_CLEANUP

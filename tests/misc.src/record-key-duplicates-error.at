@@ -24,6 +24,11 @@ AT_DATA([prog.cbl],
 
 AT_CHECK([${COBJ} prog.cbl], [1], [],
 [prog.cbl:8: Error: Record keys with duplicates are not yet supported
+    6 |        SELECT TEST-FILE ASSIGN TO "./TEST-FILE"
+    7 |                         ORGANIZATION IS  INDEXED
+    8 >                         RECORD KEY   IS  TEST-KEY1 WITH DUPLICATES
+    9 |                         ALTERNATE RECORD KEY IS ALT-KEY1
+   10 |                                                 ALT-KEY2.
 ])
 AT_CLEANUP
 
