@@ -2583,12 +2583,106 @@ cb_tree cb_build_cond(cb_tree x) {
  * ADD/SUBTRACT CORRESPONDING
  */
 
-static cb_tree cb_build_optim_add(cb_tree v, cb_tree n) {
+/*
+ * 加算/減算の第2オペランドの桁数を返す.
+ * 整数(スケール0)でない場合や桁数が分からない場合は-1を返す.
+ */
+static int optim_operand_digits(cb_tree n) {
+  cb_tree x = n;
+
+  if (CB_REFERENCE_P(x)) {
+    x = cb_ref(x);
+  }
+  if (CB_LITERAL_P(x)) {
+    return CB_LITERAL(x)->scale == 0 ? (int)CB_LITERAL(x)->size : -1;
+  }
+  if (CB_FIELD_P(x)) {
+    struct cb_field *f = CB_FIELD(x);
+    if (f->pic && f->pic->scale == 0) {
+      return f->pic->digits;
+    }
+  }
+  return -1;
+}
+
+/*
+ * 第2オペランドの値が, 常にPICTUREの桁数に収まっているかどうかを判定する.
+ * DISPLAY/COMP-3項目は桁数を超える値を保持できないが, 2進項目(特にCOMP-5)は
+ * 保持できるため, その場合に汎用パスが行う桁数への切り捨てを再現できない.
+ */
+static int optim_operand_fits_digits_p(cb_tree n) {
+  cb_tree x = n;
+
+  if (CB_REFERENCE_P(x)) {
+    x = cb_ref(x);
+  }
+  if (CB_LITERAL_P(x)) {
+    return 1;
+  }
+  if (CB_FIELD_P(x)) {
+    switch (CB_FIELD(x)->usage) {
+    case CB_USAGE_DISPLAY:
+    case CB_USAGE_PACKED:
+      return 1;
+    default:
+      return 0;
+    }
+  }
+  return 0;
+}
+
+/*
+ * 格納オプションがCOB_STORE_TRUNC_ON_OVERFLOW(binary-truncate有効時の既定)
+ * のときに,
+ * 高速パスが汎用パス(CobolDecimal経由)と同じ結果になるかどうかを判定する.
+ * 桁あふれ時の挙動まで一致する組み合わせに限って高速パスを許可する.
+ */
+static int optim_trunc_target_p(cb_tree v, cb_tree n) {
+  struct cb_field *f;
+  int digits;
+
+  if (!CB_REF_OR_FIELD_P(v)) {
+    return 0;
+  }
+  f = cb_field(v);
+  if (!f->pic || f->pic->scale) {
+    return 0;
+  }
+  digits = optim_operand_digits(n);
+  if (digits < 0) {
+    return 0;
+  }
+  switch (f->usage) {
+  case CB_USAGE_BINARY:
+    /* addIntTrunc/subIntTrunc が桁数での切り捨てまで行う */
+    return f->pic->digits <= 18;
+  case CB_USAGE_PACKED:
+    /* addPackedInt/subPackedInt
+       は格納先の桁数分しかオペランドを取り込まないため,
+       オペランドの桁数が格納先を超える場合は汎用パスに任せる */
+    return f->pic->digits < 10 && digits <= f->pic->digits;
+  case CB_USAGE_DISPLAY:
+    /* addInt/subInt は汎用パスであるCobolNumericField.addが短絡する先と
+       同じ実装だが, 汎用パスがオペランドをgetInt()でPICTUREの桁数に
+       切り捨てるのに対し, 高速パスは格納されている値をそのまま渡す */
+    return digits <= 9 && optim_operand_fits_digits_p(n);
+  default:
+    return 0;
+  }
+}
+
+static cb_tree cb_build_optim_add(cb_tree v, cb_tree n, const int trunc) {
   if (CB_REF_OR_FIELD_P(v)) {
     struct cb_field *f = cb_field(v);
     if (!f->pic->scale &&
         (f->usage == CB_USAGE_BINARY || f->usage == CB_USAGE_COMP_5 ||
          f->usage == CB_USAGE_COMP_X)) {
+      if (trunc) {
+        /* 単純な2進加算はPICTUREの桁数での切り捨てを行わないため,
+           切り捨てまで行う専用の高速パスを使う */
+        return cb_build_method_call_2("addIntTrunc", v,
+                                      cb_build_cast_integer(n));
+      }
       size_t z = (f->size - 1) + (8 * (f->pic->have_sign ? 1 : 0)) +
                  (16 * (f->flag_binary_swap ? 1 : 0));
       if (f->usage == CB_USAGE_COMP_5) {
@@ -2614,13 +2708,17 @@ static cb_tree cb_build_optim_add(cb_tree v, cb_tree n) {
   return cb_build_method_call_2("addInt", v, cb_build_cast_integer(n));
 }
 
-static cb_tree cb_build_optim_sub(cb_tree v, cb_tree n) {
+static cb_tree cb_build_optim_sub(cb_tree v, cb_tree n, const int trunc) {
 
   if (CB_REF_OR_FIELD_P(v)) {
     struct cb_field *f = cb_field(v);
     if (!f->pic->scale &&
         (f->usage == CB_USAGE_BINARY || f->usage == CB_USAGE_COMP_5 ||
          f->usage == CB_USAGE_COMP_X)) {
+      if (trunc) {
+        return cb_build_method_call_2("subIntTrunc", v,
+                                      cb_build_cast_integer(n));
+      }
       size_t z = (f->size - 1) + (8 * (f->pic->have_sign ? 1 : 0)) +
                  (16 * (f->flag_binary_swap ? 1 : 0));
       if (f->usage == CB_USAGE_COMP_5) {
@@ -2637,9 +2735,13 @@ static cb_tree cb_build_optim_sub(cb_tree v, cb_tree n) {
         return cb_build_method_call_2(s, cb_build_cast_address(v),
                                       cb_build_cast_integer(n));
       }
+    } else if (!f->pic->scale && f->usage == CB_USAGE_PACKED &&
+               f->pic->digits < 10) {
+      return cb_build_method_call_2("subPackedInt", v,
+                                    cb_build_cast_integer(n));
     }
   }
-  return cb_build_funcall_2("cob_sub_int", v, cb_build_cast_integer(n));
+  return cb_build_method_call_2("subInt", v, cb_build_cast_integer(n));
 }
 
 cb_tree cb_build_add(cb_tree v, cb_tree n, cb_tree round_opt) {
@@ -2660,14 +2762,20 @@ cb_tree cb_build_add(cb_tree v, cb_tree n, cb_tree round_opt) {
   }
   if (round_opt == cb_high) {
     if (cb_fits_int(n)) {
-      return cb_build_optim_add(v, n);
+      return cb_build_optim_add(v, n, 0);
     } else {
       return cb_build_method_call_3("add", v, n, cb_int0);
     }
   }
   opt = build_store_option(v, round_opt);
-  if (opt == cb_int0 && cb_fits_int(n)) {
-    return cb_build_optim_add(v, n);
+  if (cb_fits_int(n)) {
+    if (opt == cb_int0) {
+      return cb_build_optim_add(v, n, 0);
+    }
+    if (CB_INTEGER(opt)->val == COB_STORE_TRUNC_ON_OVERFLOW &&
+        optim_trunc_target_p(v, n)) {
+      return cb_build_optim_add(v, n, 1);
+    }
   }
   return cb_build_method_call_3("add", v, n, opt);
 }
@@ -2689,8 +2797,14 @@ cb_tree cb_build_sub(cb_tree v, cb_tree n, cb_tree round_opt) {
     f->count++;
   }
   opt = build_store_option(v, round_opt);
-  if (opt == cb_int0 && cb_fits_int(n)) {
-    return cb_build_optim_sub(v, n);
+  if (cb_fits_int(n)) {
+    if (opt == cb_int0) {
+      return cb_build_optim_sub(v, n, 0);
+    }
+    if (CB_INTEGER(opt)->val == COB_STORE_TRUNC_ON_OVERFLOW &&
+        optim_trunc_target_p(v, n)) {
+      return cb_build_optim_sub(v, n, 1);
+    }
   }
   return cb_build_method_call_3("sub", v, n, opt);
 }
