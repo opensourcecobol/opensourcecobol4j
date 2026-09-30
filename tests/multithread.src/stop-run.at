@@ -1,0 +1,74 @@
+AT_SETUP([STOP RUN on one thread does not stop the other threads])
+
+AT_DATA([prog.cbl], [
+       IDENTIFICATION DIVISION.
+       PROGRAM-ID. prog.
+       DATA DIVISION.
+       WORKING-STORAGE SECTION.
+       01 CNT  PIC 9(4) VALUE 0.
+       01 RC   PIC 9(4).
+       LINKAGE SECTION.
+       01 THREAD-ID PIC X(2).
+       PROCEDURE DIVISION USING THREAD-ID.
+           ADD 1 TO CNT.
+           MOVE THREAD-ID TO RC.
+           CALL "sub" USING THREAD-ID CNT.
+           DISPLAY "thread " THREAD-ID " after call " CNT.
+           IF CNT = 3
+              DISPLAY "thread " THREAD-ID " stop run in main"
+              MOVE RC TO RETURN-CODE
+              STOP RUN
+           END-IF.
+           GOBACK.
+])
+
+AT_DATA([sub.cbl], [
+       IDENTIFICATION DIVISION.
+       PROGRAM-ID. sub.
+       DATA DIVISION.
+       WORKING-STORAGE SECTION.
+       01 RC PIC 9(4).
+       LINKAGE SECTION.
+       01 THREAD-ID PIC X(2).
+       01 CNT       PIC 9(4).
+       PROCEDURE DIVISION USING THREAD-ID CNT.
+           IF CNT = 2
+              DISPLAY "thread " THREAD-ID " stop run in sub"
+              COMPUTE RC = 100 + FUNCTION NUMVAL(THREAD-ID)
+              MOVE RC TO RETURN-CODE
+              STOP RUN
+           END-IF.
+           EXIT PROGRAM.
+])
+
+AT_CHECK([cp ../../multithread.src/harness/ThreadHarness.java .])
+AT_CHECK([javac ThreadHarness.java])
+AT_CHECK([${COBJ} prog.cbl sub.cbl])
+dnl Each thread runs the program 3 times. The 2nd run stops inside the CALLed
+dnl program (return code 100+n), the 3rd run stops in the main program
+dnl (return code n). "after call" is therefore displayed only for runs 1 and 3.
+AT_CHECK([java ThreadHarness prog 4 3 2], [0],
+[1 thread 01 after call 0001
+1 thread 01 after call 0003
+1 thread 01 stop run in main
+1 thread 01 stop run in sub
+1 thread 02 after call 0001
+1 thread 02 after call 0003
+1 thread 02 stop run in main
+1 thread 02 stop run in sub
+1 thread 03 after call 0001
+1 thread 03 after call 0003
+1 thread 03 stop run in main
+1 thread 03 stop run in sub
+1 thread 04 after call 0001
+1 thread 04 after call 0003
+1 thread 04 stop run in main
+1 thread 04 stop run in sub
+return-code 1 x1
+return-code 2 x1
+return-code 3 x1
+return-code 4 x1
+alive
+])
+
+AT_CLEANUP

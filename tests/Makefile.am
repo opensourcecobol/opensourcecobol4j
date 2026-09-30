@@ -32,7 +32,8 @@ TESTS = syntax \
 	cobj-idx \
 	file-lock \
 	file-lock2 \
-	misc
+	misc \
+	multithread
 else
 TESTS = syntax \
 	run \
@@ -45,7 +46,8 @@ TESTS = syntax \
 	cobj-idx \
 	file-lock \
 	file-lock2 \
-	misc
+	misc \
+	multithread
 endif
 
 syntax_DEPENDENCIES = \
@@ -227,6 +229,20 @@ indexed_lock2_DEPENDENCIES = \
 	file-lock2.src/old-file.at \
 	file-lock2.src/lock-mode-automatic.at
 
+multithread_DEPENDENCIES = \
+	multithread.at \
+	multithread.src/arith-intrinsic.at \
+	multithread.src/call-working-storage.at \
+	multithread.src/stop-run.at \
+	multithread.src/io-error-in-called-program.at \
+	multithread.src/sequential-file.at \
+	multithread.src/file-sharing.at \
+	multithread.src/indexed-record-lock.at \
+	multithread.src/sort.at \
+	multithread.src/harness/ThreadHarness.java \
+	multithread.src/harness/PairHarness.java \
+	multithread.src/harness/SyncPoint.java
+
 # ESQL tests (require PostgreSQL, run separately in CI)
 esql_basic_DEPENDENCIES = \
 	esql-basic.at \
@@ -291,12 +307,18 @@ esql_utf8_DEPENDENCIES = \
 	esql-utf8.src/sql-convert.at \
 	esql-utf8.src/varying.at
 
+esql_multithread_DEPENDENCIES = \
+	esql-multithread.at \
+	esql-multithread.src/dml-isolation.at \
+	esql-multithread.src/cursor-isolation.at
+
 $(srcdir)/esql-basic: $(esql_basic_DEPENDENCIES)
 $(srcdir)/esql-sqlca: $(esql_sqlca_DEPENDENCIES)
 $(srcdir)/esql-cobol-data: $(esql_cobol_data_DEPENDENCIES)
 $(srcdir)/esql-misc: $(esql_misc_DEPENDENCIES)
 $(srcdir)/esql-sql-data: $(esql_sql_data_DEPENDENCIES)
 $(srcdir)/esql-utf8: $(esql_utf8_DEPENDENCIES)
+$(srcdir)/esql-multithread: $(esql_multithread_DEPENDENCIES)
 
 misc_DEPENDENCIES = \
 	misc.src/signed-comp3.at \
@@ -352,17 +374,19 @@ EXTRA_DIST = $(srcdir)/package.m4 \
 	$(command_line_options_DEPENDENCIES) \
 	$(cobj_idx_DEPENDENCIES) \
 	$(misc_DEPENDENCIES) \
+	$(multithread_DEPENDENCIES) \
 	$(esql_basic_DEPENDENCIES) \
 	$(esql_sqlca_DEPENDENCIES) \
 	$(esql_cobol_data_DEPENDENCIES) \
 	$(esql_misc_DEPENDENCIES) \
 	$(esql_sql_data_DEPENDENCIES) \
 	$(esql_utf8_DEPENDENCIES) \
+	$(esql_multithread_DEPENDENCIES) \
 	embed_db_info.sh
 
 DISTCLEANFILES = atconfig
 
-ESQL_TESTS = esql-basic esql-sqlca esql-cobol-data esql-misc esql-sql-data esql-utf8
+ESQL_TESTS = esql-basic esql-sqlca esql-cobol-data esql-misc esql-sql-data esql-multithread esql-utf8
 
 all: $(TESTS) $(ESQL_TESTS)
 
@@ -396,3 +420,4 @@ $(srcdir)/cobj-idx: $(cobj_idx_DEPENDENCIES)
 $(srcdir)/file-lock: $(indexed_lock_DEPENDENCIES)
 $(srcdir)/file-lock2: $(indexed_lock2_DEPENDENCIES)
 $(srcdir)/misc: $(misc_DEPENDENCIES)
+$(srcdir)/multithread: $(multithread_DEPENDENCIES)

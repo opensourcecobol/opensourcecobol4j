@@ -1,0 +1,106 @@
+name: Spring Boot smoke test
+
+# Builds samples/spring-boot-smoke, starts it, and sends many concurrent HTTP
+# requests that run COBOL programs on the servlet threads. Checks that every
+# response is correct, that each request thread has its own WORKING-STORAGE,
+# and that the application stays alive.
+
+on:
+  workflow_call:
+    inputs:
+      os:
+        required: true
+        type: string
+      configure-args:
+        required: false
+        type: string
+        default: ""
+
+permissions:
+  contents: read
+
+env:
+  CLASSPATH: ":/usr/lib/opensourcecobol4j/libcobj.jar"
+
+jobs:
+  spring-boot-smoke:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    container:
+      image: ${{ inputs.os }}
+    steps:
+      - name: Get the artifact name
+        run: echo "ARTIFACT_NAME=${{ inputs.os }}" | sed 's/:/-/g' >> "$GITHUB_ENV"
+
+      - uses: actions/download-artifact@v8
+        with:
+          name: opensourcecobol4j-${{ env.ARTIFACT_NAME }}-opt_${{ inputs.configure-args }}
+
+      - uses: actions/setup-java@v5
+        with:
+          distribution: 'temurin'
+          java-version: '21'
+
+      - name: Install dependencies on Ubuntu 24.04
+        if: inputs.os == 'ubuntu:24.04'
+        run: |
+          apt-get update -y
+          apt-get install -y build-essential curl python3
+
+      - name: Install opensource COBOL 4J
+        run: |
+          tar zxf opensourcecobol4j.tar.gz
+          mv opensourcecobol4j/* .
+          make install
+
+      - name: Setup Gradle
+        uses: gradle/actions/setup-gradle@v6
+        with:
+          gradle-version: wrapper
+
+      - name: Build the sample application
+        working-directory: samples/spring-boot-smoke
+        run: |
+          ../../libcobj/gradlew -p . bootJar \
+            -PcobjBin=/usr/bin/cobj \
+            -PlibcobjJar=/usr/lib/opensourcecobol4j/libcobj.jar
+
+      - name: Run the sample application and send concurrent requests
+        working-directory: samples/spring-boot-smoke
+        run: |
+          java -jar build/libs/spring-boot-smoke.jar > app.log 2>&1 &
+          APP_PID=$!
+          for _ in $(seq 1 90); do
+            if curl -sf 'http://localhost:18080/calc?num=1&txt=probe' > /dev/null; then
+              break
+            fi
+            if ! kill -0 $APP_PID 2> /dev/null; then
+              echo "the application exited"
+              cat app.log
+              exit 1
+            fi
+            sleep 1
+          done
+          seq 1 500 | xargs -P 32 -I{} curl -sf --max-time 30 "http://localhost:18080/calc?num={}&txt=banana" > responses.txt
+          python3 check-responses.py responses.txt 500
+          curl -sf http://localhost:18080/end
+          if ! kill -0 $APP_PID 2> /dev/null; then
+            echo "the application died during the test"
+            cat app.log
+            exit 1
+          fi
+          kill $APP_PID
+          if grep -E "Exception|^\s+at " app.log; then
+            echo "exceptions were logged"
+            cat app.log
+            exit 1
+          fi
+
+      - name: Upload logs if the test fails
+        if: failure()
+        uses: actions/upload-artifact@v7
+        with:
+          name: spring-boot-smoke-${{ env.ARTIFACT_NAME }}-log
+          path: |
+            samples/spring-boot-smoke/app.log
+            samples/spring-boot-smoke/responses.txt

@@ -24,7 +24,7 @@ package jp.osscons.opensourcecobol.libcobj.exceptions;
  */
 public class CobolExceptionTabCode {
     /** CobolExceptionIdの例外IDをインデックスとし、対応する16進数のCOBOLエラーコードを格納する配列 */
-    static int[] code = {
+    static final int[] code = {
         0, 0xFFFF, 0x0100, 0x0101, 0x0102, 0x0200, 0x0201, 0x0202, 0x0203, 0x0204, 0x0205, 0x0206,
         0x0207, 0x0208, 0x0300, 0x0301, 0x0302, 0x0303, 0x0304, 0x0305, 0x0306, 0x0307, 0x0308,
                 0x0400,

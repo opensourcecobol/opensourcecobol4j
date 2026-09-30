@@ -18,8 +18,8 @@
  */
 package jp.osscons.opensourcecobol.libcobj.common;
 
-import java.util.AbstractMap;
 import java.util.HashMap;
+import java.util.Map;
 import jp.osscons.opensourcecobol.libcobj.data.CobolDataStorage;
 import jp.osscons.opensourcecobol.libcobj.file.CobolFile;
 
@@ -36,9 +36,18 @@ public final class CobolExternal {
     /** このインスタンスが保持するEXTERNALデータ領域の実体 */
     private CobolDataStorage extAllocStorage;
 
-    /** EXTERNAL名から対応する{@link CobolExternal}インスタンスへの対応表 */
-    private static AbstractMap<String, CobolExternal> externalMap =
-            new HashMap<String, CobolExternal>();
+    /**
+     * EXTERNAL名から対応する{@link CobolExternal}インスタンスへの対応表。<br>
+     * EXTERNAL項目は実行単位内のプログラム間で共有されるものであり、実行単位はスレッドごとに独立しているため、
+     * スレッドごとに保持する。
+     */
+    private static final ThreadLocal<Map<String, CobolExternal>> externalMap =
+            ThreadLocal.withInitial(HashMap::new);
+
+    /** 現在のスレッドに紐づくEXTERNAL項目の対応表を破棄する。実行単位の終了時に呼び出す。 */
+    public static void resetThreadState() {
+        externalMap.remove();
+    }
 
     /**
      * EXTERNALファイルを保持するインスタンスを生成する。
@@ -67,12 +76,13 @@ public final class CobolExternal {
      * @return 名前に対応する共有ファイル
      */
     public static CobolFile getFileAddress(String name) {
-        if (externalMap.containsKey(name)) {
-            return externalMap.get(name).extAllocFile;
+        Map<String, CobolExternal> map = externalMap.get();
+        if (map.containsKey(name)) {
+            return map.get(name).extAllocFile;
         } else {
             CobolFile ret = new CobolFile();
             CobolExternal ext = new CobolExternal(ret);
-            externalMap.put(name, ext);
+            map.put(name, ext);
             return ret;
         }
     }
@@ -86,12 +96,13 @@ public final class CobolExternal {
      * @return 名前に対応する共有データ領域
      */
     public static CobolDataStorage getStorageAddress(String name, int size) {
-        if (externalMap.containsKey(name)) {
-            return externalMap.get(name).extAllocStorage;
+        Map<String, CobolExternal> map = externalMap.get();
+        if (map.containsKey(name)) {
+            return map.get(name).extAllocStorage;
         } else {
             CobolDataStorage ret = new CobolDataStorage(size);
             CobolExternal ext = new CobolExternal(ret, size);
-            externalMap.put(name, ext);
+            map.put(name, ext);
             return ret;
         }
     }

@@ -8,6 +8,12 @@ Under construction.
 
 ## Runtime Settings
 
+The runtime settings below are read once when the COBOL runtime is initialized in
+a JVM, and apply to every thread of that JVM; a setting cannot be given a
+different value per thread. The exception is `COB_SWITCH_1` through
+`COB_SWITCH_8`, which are read for each run unit, that is, once per thread. See
+[Calling generated programs from multi-threaded Java applications](./multithreading.md).
+
 ### General Settings
 
 #### COB_DATE

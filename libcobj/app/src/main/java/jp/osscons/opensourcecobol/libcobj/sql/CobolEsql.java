@@ -15,12 +15,16 @@ public final class CobolEsql {
     /** ユーティリティクラスのインスタンス化を防ぐための private コンストラクタ。 */
     private CobolEsql() {}
 
-    /** 環境変数から 1 度だけ解決する backend（遅延初期化）。 */
-    static CobolEsqlBackendInterface backend;
+    /**
+     * 実行単位(スレッド)ごとの backend（遅延初期化）。<br>
+     * 接続・カーソル・prepared statement は backend のインスタンスが保持しており、
+     * 実行単位はスレッドごとに独立しているため、backend もスレッドごとに生成する。
+     */
+    static final ThreadLocal<CobolEsqlBackendInterface> backend = new ThreadLocal<>();
 
     /**
-     * backend を遅延初期化して返す。{@code OCDB_DB_TYPE} の解決はプロセスで 1 回だけ行う。
-     * アクセスを synchronized で直列化し、初回同時アクセス時も生成は 1 回に保たれる。
+     * 現在のスレッドの backend を遅延初期化して返す。{@code OCDB_DB_TYPE} の解決は
+     * スレッドごとの初回アクセス時に行う。
      *
      * <p>{@code OCDB_DB_TYPE} に対応する実装が無いのは設定の誤りであり、SQL のエラーとして
      * 報告すると接続失敗などと区別がつかない。解決に失敗した場合は
@@ -29,11 +33,25 @@ public final class CobolEsql {
      * @throws jp.osscons.opensourcecobol.libcobj.exceptions.CobolRuntimeException
      *     {@code OCDB_DB_TYPE} に対応する実装が無い/生成できない場合
      */
-    private static synchronized CobolEsqlBackendInterface backend() {
-        if (backend == null) {
-            backend = CobolEsqlBackendFactory.resolve();
+    private static CobolEsqlBackendInterface backend() {
+        CobolEsqlBackendInterface b = backend.get();
+        if (b == null) {
+            b = CobolEsqlBackendFactory.resolve();
+            backend.set(b);
         }
-        return backend;
+        return b;
+    }
+
+    /**
+     * 現在のスレッドに紐づくESQLの状態を破棄する。実行単位の終了時に呼び出す。<br>
+     * DISCONNECTされずに残っている接続は、未確定の更新をロールバックしてクローズされる。
+     */
+    public static void resetThreadState() {
+        CobolEsqlBackendInterface b = backend.get();
+        if (b != null) {
+            b.endRunUnit();
+            backend.remove();
+        }
     }
 
     // -------------------------------------------------------

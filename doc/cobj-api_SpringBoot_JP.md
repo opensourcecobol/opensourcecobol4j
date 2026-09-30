@@ -168,7 +168,7 @@
     }
     ```
     * "spring-boot-starter-web"は、これまでの手順によりデフォルトで追加されている依存関係である。
-    * "spring-boot-starter-web"に含まれているプロバイダーが、libocbj.jarに含まれているプロバイダーと競合するため、`exclude group`で除外する必要がある。
+    * "spring-boot-starter-web"は"spring-boot-starter-logging"を通じてSLF4Jのプロバイダー(Logback)を持ち込むが、これがlibcobj.jarに同梱されているプロバイダー(slf4j-simple)と競合するため、`exclude group`で除外する必要がある。
 * Mavenの場合  
 pom.xmlに以下の依存関係を追加する。
     ```
@@ -197,3 +197,29 @@ pom.xmlに以下の依存関係を追加する。
    ```
    {"statuscode":200,"DATA1":1,"DATA2":2,"DATA3":3,"SUM_DATA":6}
    ```
+
+# リクエストのスレッド上でCOBOLプログラムを実行する
+
+Spring Bootは各リクエストをスレッドプールのスレッドで処理するため、
+複数のリクエストが同じCOBOLプログラムを同時に実行することがある。
+
+`libcobj`はCOBOLの実行単位(run unit)の状態をスレッドごとに保持しており、
+**リクエストを処理する各スレッドはそれぞれ独立した実行単位**として扱われる。
+`WORKING-STORAGE`、開いているファイル、`EXTERNAL`項目はスレッドごとに独立している。
+`cobj-api`が生成するコントローラはリクエストごとにCOBOLプログラムのインスタンスを生成するため、
+リクエスト間で共有されるものはない。
+
+注意すべき点は次の2つである。
+
+* `STOP RUN`はサーバを停止させない。
+  リクエストを処理しているスレッドの実行単位を終了し(開いたままのファイルはクローズされる)、
+  Javaの呼び出し元へ復帰する。`System.exit`を呼び出すのは、変換後のプログラムの
+  `main`メソッドだけである。
+* ファイルを開いたままにするプログラムや、`EXTERNAL`項目・`SWITCH`を使用するプログラムは、
+  その状態をプールされたスレッドに残す。
+  リクエストの処理の最後に
+  `jp.osscons.opensourcecobol.libcobj.common.CobolRunUnit.end()`を呼び出し、
+  ファイルをクローズしてスレッドの実行単位を破棄すること。
+
+本リポジトリの`samples/spring-boot-smoke/`が動作するサンプルである。
+詳細は[マルチスレッドのJavaアプリケーションから変換後のプログラムを呼び出す](./multithreading_JP.md)を参照。

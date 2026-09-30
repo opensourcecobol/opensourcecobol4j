@@ -681,21 +681,21 @@ public class CobolSystemRoutine {
             case 11:
                 for (int i = 0; i < 8; ++i) {
                     if (parm.getByte(i) == 0) {
-                        CobolUtil.cobSwitch[i] = false;
+                        CobolUtil.getSwitches()[i] = false;
                     } else if (parm.getByte(i) == 1) {
-                        CobolUtil.cobSwitch[i] = true;
+                        CobolUtil.getSwitches()[i] = true;
                     }
                 }
                 result.setByte(0, (byte) 0);
                 break;
             case 12:
                 for (int i = 0; i < 8; ++i) {
-                    parm.setByte(i, (byte) (CobolUtil.cobSwitch[i] ? 1 : 0));
+                    parm.setByte(i, (byte) (CobolUtil.getSwitches()[i] ? 1 : 0));
                 }
                 result.setByte(0, (byte) 0);
                 break;
             case 16:
-                parm.setByte(0, (byte) CobolUtil.cobSaveCallParams);
+                parm.setByte(0, (byte) CobolUtil.getSaveCallParams());
                 result.setByte(0, (byte) 0);
                 break;
             default:
@@ -871,12 +871,19 @@ public class CobolSystemRoutine {
         }
     }
 
-    private static List<Path> dirList = null;
+    /** C$LIST-DIRECTORYで走査中のディレクトリエントリ(スレッドごとに保持する) */
+    private static final ThreadLocal<List<Path>> dirListHolder = new ThreadLocal<>();
+
+    /** 現在のスレッドに紐づくディレクトリ走査の状態を破棄する。実行単位の終了時に呼び出す。 */
+    public static void resetThreadState() {
+        dirListHolder.remove();
+    }
 
     private static int listDirOpen(
             AbstractCobolField dirPathField, AbstractCobolField patternField) {
         // FIXME: now not use patternField.
         String dirPath = strFromField(dirPathField);
+        List<Path> dirList;
         try {
             dirList =
                     Files.list(Paths.get(dirPath))
@@ -888,12 +895,14 @@ public class CobolSystemRoutine {
         dirList.add(Paths.get("."));
         dirList.add(Paths.get(".."));
         Collections.sort(dirList);
+        dirListHolder.set(dirList);
         return 0;
     }
 
     private static int listDirNext(
             AbstractCobolField handleField, AbstractCobolField fileNameField) {
         // FIXME: now not use handleField.
+        List<Path> dirList = dirListHolder.get();
         if (dirList == null) {
             return -1;
         }
@@ -917,7 +926,7 @@ public class CobolSystemRoutine {
 
     private static int lsitDirClose(AbstractCobolField handleField) {
         // FIXME: now not use handleField
-        dirList = null;
+        dirListHolder.remove();
         return 0;
     }
 

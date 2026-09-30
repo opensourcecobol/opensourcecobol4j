@@ -1,0 +1,84 @@
+AT_SETUP([Arithmetic, intrinsic functions and INSPECT/STRING/UNSTRING on many threads])
+
+AT_DATA([prog.cbl], [
+       IDENTIFICATION DIVISION.
+       PROGRAM-ID. prog.
+       DATA DIVISION.
+       WORKING-STORAGE SECTION.
+       01 A        PIC S9(9)V99 COMP-3 VALUE 1234.56.
+       01 B        PIC S9(9)V99 VALUE -78.9.
+       01 C        PIC S9(9)V99.
+       01 D        PIC S9(9)V99.
+       01 Q        PIC S9(5).
+       01 R        PIC S9(5).
+       01 BIN      PIC S9(9) COMP VALUE 100000.
+       01 TXT      PIC X(30) VALUE "the quick brown fox".
+       01 UPP      PIC X(30).
+       01 CNT      PIC 9(4).
+       01 LEN      PIC 9(4).
+       01 STR      PIC X(40).
+       01 P1       PIC X(10).
+       01 P2       PIC X(10).
+       01 P3       PIC X(10).
+       01 NUM      PIC 9(8)V99.
+       01 I        PIC 9(4).
+       01 I2       PIC 9(7).
+       01 RND      PIC 9V9(9).
+       01 DT       PIC X(8).
+       PROCEDURE DIVISION.
+           COMPUTE C = (A * B) / 3 + BIN.
+           COMPUTE D ROUNDED = C / 7.
+           DIVIDE 1000 BY 7 GIVING Q REMAINDER R.
+           MOVE FUNCTION UPPER-CASE(TXT) TO UPP.
+           MOVE FUNCTION LENGTH(FUNCTION TRIM(TXT)) TO LEN.
+           MOVE 0 TO CNT.
+           INSPECT TXT TALLYING CNT FOR ALL "o".
+           INSPECT UPP REPLACING ALL "O" BY "0".
+           MOVE SPACES TO STR.
+           STRING "a," DELIMITED BY SIZE
+                  FUNCTION TRIM(TXT) DELIMITED BY SIZE
+                  ",z" DELIMITED BY SIZE
+                  INTO STR.
+           UNSTRING STR DELIMITED BY "," INTO P1 P2 P3.
+           MOVE FUNCTION NUMVAL("  1234.5 ") TO NUM.
+           MOVE FUNCTION MOD(-11 3) TO I.
+           COMPUTE RND = FUNCTION RANDOM(42).
+           MOVE FUNCTION INTEGER-OF-DATE(20240229) TO I2.
+           MOVE FUNCTION DATE-OF-INTEGER(I2) TO DT.
+           DISPLAY "C=" C " D=" D " Q=" Q " R=" R.
+           DISPLAY "UPP=" UPP " CNT=" CNT " LEN=" LEN.
+           DISPLAY "P1=" P1 " P2=" P2 " P3=" P3 "|".
+           DISPLAY "NUM=" NUM " I=" I " I2=" I2 " DT=" DT.
+           IF RND >= 0 AND RND < 1
+              DISPLAY "RND OK"
+           ELSE
+              DISPLAY "RND NG " RND
+           END-IF.
+           GOBACK.
+])
+
+AT_CHECK([cp ../../multithread.src/harness/ThreadHarness.java .])
+AT_CHECK([javac ThreadHarness.java])
+AT_CHECK([${COBJ} prog.cbl])
+AT_CHECK([java ThreadHarness prog 8 50], [0],
+[400 C=+000067531.07 D=+000009647.30 Q=+00142 R=+00006
+400 NUM=00001234.50 I=0001 I2=0154557 DT=20240229
+400 P1=a          P2=the quick  P3=z         |
+400 RND OK
+400 UPP=THE QUICK BR0WN F0X            CNT=0002 LEN=0019
+return-code 0 x8
+alive
+])
+
+AT_CHECK([${COMPILE} prog.cbl])
+AT_CHECK([java ThreadHarness prog 8 50], [0],
+[400 C=+000067531.07 D=+000009647.30 Q=+00142 R=+00006
+400 NUM=00001234.50 I=0001 I2=0154557 DT=20240229
+400 P1=a          P2=the quick  P3=z         |
+400 RND OK
+400 UPP=THE QUICK BR0WN F0X            CNT=0002 LEN=0019
+return-code 0 x8
+alive
+])
+
+AT_CLEANUP

@@ -1,0 +1,86 @@
+AT_SETUP([SORT on many threads])
+
+AT_DATA([prog.cbl], [
+       IDENTIFICATION DIVISION.
+       PROGRAM-ID. prog.
+       ENVIRONMENT DIVISION.
+       INPUT-OUTPUT SECTION.
+       FILE-CONTROL.
+           SELECT SF ASSIGN TO "sortwork".
+       DATA DIVISION.
+       FILE SECTION.
+       SD SF.
+       01 S-REC.
+          05 S-KEY PIC 9(4).
+          05 S-VAL PIC X(3).
+       WORKING-STORAGE SECTION.
+       01 I       PIC 9(4).
+       01 N       PIC 9(4).
+       01 PREV    PIC 9(4).
+       01 OK      PIC X VALUE "Y".
+       01 TBL.
+          05 ENT OCCURS 20 TIMES.
+             10 E-KEY PIC 9(4).
+             10 E-VAL PIC X(3).
+       LINKAGE SECTION.
+       01 THREAD-ID PIC X(3).
+       PROCEDURE DIVISION USING THREAD-ID.
+           MOVE "Y" TO OK.
+           MOVE 0 TO N.
+           SORT SF ON ASCENDING KEY S-KEY
+                INPUT PROCEDURE IS FILL
+                OUTPUT PROCEDURE IS DRAIN.
+           IF N NOT = 200 MOVE "N" TO OK END-IF.
+           DISPLAY "sort " THREAD-ID " ok=" OK " n=" N.
+           PERFORM VARYING I FROM 1 BY 1 UNTIL I > 20
+              COMPUTE E-KEY(I) = 21 - I
+              MOVE THREAD-ID TO E-VAL(I)
+           END-PERFORM.
+           SORT ENT ON ASCENDING KEY E-KEY.
+           MOVE "Y" TO OK.
+           PERFORM VARYING I FROM 1 BY 1 UNTIL I > 20
+              IF E-KEY(I) NOT = I OR E-VAL(I) NOT = THREAD-ID
+                 MOVE "N" TO OK
+              END-IF
+           END-PERFORM.
+           DISPLAY "table sort " THREAD-ID " ok=" OK.
+           GOBACK.
+       FILL.
+           PERFORM VARYING I FROM 200 BY -1 UNTIL I < 1
+              MOVE I TO S-KEY
+              MOVE THREAD-ID TO S-VAL
+              RELEASE S-REC
+           END-PERFORM.
+       DRAIN.
+           MOVE 0 TO PREV.
+           PERFORM UNTIL 1 = 2
+              RETURN SF AT END EXIT PERFORM END-RETURN
+              ADD 1 TO N
+              IF S-KEY NOT > PREV OR S-VAL NOT = THREAD-ID
+                 MOVE "N" TO OK
+              END-IF
+              MOVE S-KEY TO PREV
+           END-PERFORM.
+])
+
+AT_CHECK([cp ../../multithread.src/harness/ThreadHarness.java .])
+AT_CHECK([javac ThreadHarness.java])
+AT_CHECK([${COBJ} prog.cbl])
+AT_CHECK([java ThreadHarness prog 6 5 3], [0],
+[5 sort 001 ok=Y n=0200
+5 sort 002 ok=Y n=0200
+5 sort 003 ok=Y n=0200
+5 sort 004 ok=Y n=0200
+5 sort 005 ok=Y n=0200
+5 sort 006 ok=Y n=0200
+5 table sort 001 ok=Y
+5 table sort 002 ok=Y
+5 table sort 003 ok=Y
+5 table sort 004 ok=Y
+5 table sort 005 ok=Y
+5 table sort 006 ok=Y
+return-code 0 x6
+alive
+])
+
+AT_CLEANUP

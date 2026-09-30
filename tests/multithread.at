@@ -1,0 +1,10 @@
+AT_INIT([multithread])
+
+m4_include([arith-intrinsic.at])
+m4_include([call-working-storage.at])
+m4_include([stop-run.at])
+m4_include([io-error-in-called-program.at])
+m4_include([sequential-file.at])
+m4_include([file-sharing.at])
+m4_include([indexed-record-lock.at])
+m4_include([sort.at])

@@ -48,35 +48,49 @@ public class CobolInspect {
     /** 末尾から連続する一致のみを対象とする(INSPECT ... TRAILINGに対応) */
     private static final int INSPECT_TRAILING = 3;
 
-    /** INSPECTの対象となるフィールド */
-    private static AbstractCobolField inspectVar;
+    /**
+     * 実行単位(スレッド)ごとに保持する作業状態。<br>
+     * 文の処理は複数のメソッド呼び出しにまたがって状態を共有するため、スレッドごとに独立させる。
+     */
+    private static final class State {
+        /** INSPECTの対象となるフィールド */
+        AbstractCobolField inspectVar;
 
-    /** INSPECTの対象フィールドの記憶領域 */
-    private static CobolDataStorage inspectData;
+        /** INSPECTの対象フィールドの記憶領域 */
+        CobolDataStorage inspectData;
 
-    /** 走査範囲の開始位置(0始まり) */
-    private static int inspectStart;
+        /** 走査範囲の開始位置(0始まり) */
+        int inspectStart;
 
-    /** 走査範囲の終了位置(この位置は含まない) */
-    private static int inspectEnd;
+        /** 走査範囲の終了位置(この位置は含まない) */
+        int inspectEnd;
 
-    /** 各バイトの処理状況を保持する配列(-1:未処理、1:計数済み、その他:置換後のバイト値) */
-    private static int[] inspectMark = null;
+        /** 各バイトの処理状況を保持する配列(-1:未処理、1:計数済み、その他:置換後のバイト値) */
+        int[] inspectMark = null;
 
-    /** {@link #inspectMark}として確保済みの領域サイズ */
-    private static int lastsize = 0;
+        /** inspectMarkとして確保済みの領域サイズ */
+        int lastsize = 0;
 
-    /** INSPECTの対象フィールドのサイズ(バイト数) */
-    private static int inspectSize;
+        /** INSPECTの対象フィールドのサイズ(バイト数) */
+        int inspectSize;
 
-    /** REPLACING(置換)モードかどうかを表す(0以外で置換、0で計数) */
-    private static int inspectReplacing;
+        /** REPLACING(置換)モードかどうかを表す(0以外で置換、0で計数) */
+        int inspectReplacing;
 
-    /** 対象フィールドの元の符号(処理後に復元するために退避する) */
-    private static int inspectSign;
+        /** 対象フィールドの元の符号(処理後に復元するために退避する) */
+        int inspectSign;
 
-    /** INSPECTの対象フィールドの控え */
-    private static AbstractCobolField inspectVarCopy;
+        /** INSPECTの対象フィールドの控え */
+        AbstractCobolField inspectVarCopy;
+    }
+
+    /** 現在のスレッドの作業状態。実行単位はスレッドごとに独立しているため、スレッドごとに保持する。 */
+    private static final ThreadLocal<State> state = ThreadLocal.withInitial(State::new);
+
+    /** 現在のスレッドに紐づく作業状態を破棄する。実行単位の終了時に呼び出す。 */
+    public static void resetThreadState() {
+        state.remove();
+    }
 
     /**
      * 形象定数f1を、対象f2のサイズに合わせて繰り返し展開したフィールドを生成する。<br>
@@ -107,7 +121,7 @@ public class CobolInspect {
     /**
      * ALL/LEADING/FIRST/TRAILINGに共通する、文字列の照合・計数・置換処理を行う。<br>
      * 指定された種別に応じて走査範囲内でf2を検索し、計数モードでは出現回数をf1に加算し、
-     * 置換モードでは{@link #inspectMark}に置換後のバイト値を記録する。
+     * 置換モードではinspectMarkに置換後のバイト値を記録する。
      *
      * @param f1 計数モードでは計数結果を加算するフィールド、置換モードでは置換後の文字を表すフィールド
      * @param f2 検索対象となる文字または文字列を表すフィールド
@@ -116,6 +130,7 @@ public class CobolInspect {
      */
     private static void common(AbstractCobolField f1, AbstractCobolField f2, int type)
             throws CobolStopRunException {
+        State st = state.get();
         if (f1 == null) {
             f1 = CobolConstant.low;
         }
@@ -146,7 +161,7 @@ public class CobolInspect {
                 f2 = CobolConstant.zenZero;
             }
         }
-        if (inspectReplacing != 0 && f1.getSize() != f2.getSize()) {
+        if (st.inspectReplacing != 0 && f1.getSize() != f2.getSize()) {
             if (type1 == CobolFieldAttribute.COB_TYPE_ALPHANUMERIC_ALL) {
                 f1 = figurative(f1, f2);
             } else {
@@ -155,23 +170,24 @@ public class CobolInspect {
             }
         }
 
-        int mark = inspectStart;
-        int len = inspectEnd - inspectStart;
+        int mark = st.inspectStart;
+        int len = st.inspectEnd - st.inspectStart;
         int n = 0;
         if (type == INSPECT_TRAILING) {
             for (int i = len - f2.getSize(); i >= 0; i--) {
-                if (inspectData.memcmp(inspectStart + i, f2.getDataStorage(), f2.getSize()) == 0) {
+                if (st.inspectData.memcmp(st.inspectStart + i, f2.getDataStorage(), f2.getSize())
+                        == 0) {
                     int j;
                     for (j = 0; j < f2.getSize(); ++j) {
-                        if (inspectMark[mark + i + j] != -1) {
+                        if (st.inspectMark[mark + i + j] != -1) {
                             break;
                         }
                     }
                     if (j == f2.getSize()) {
                         CobolDataStorage f1Storage = f1.getDataStorage();
                         for (j = 0; j < f2.getSize(); ++j) {
-                            inspectMark[mark + i + j] =
-                                    inspectReplacing != 0 ? f1Storage.getByte(j) : 1;
+                            st.inspectMark[mark + i + j] =
+                                    st.inspectReplacing != 0 ? f1Storage.getByte(j) : 1;
                         }
                         i -= f2.getSize() - 1;
                         n++;
@@ -182,18 +198,19 @@ public class CobolInspect {
             }
         } else {
             for (int i = 0; i < (len - f2.getSize() + 1); ++i) {
-                if (inspectData.memcmp(inspectStart + i, f2.getDataStorage(), f2.getSize()) == 0) {
+                if (st.inspectData.memcmp(st.inspectStart + i, f2.getDataStorage(), f2.getSize())
+                        == 0) {
                     int j;
                     for (j = 0; j < f2.getSize(); ++j) {
-                        if (inspectMark[mark + i + j] != -1) {
+                        if (st.inspectMark[mark + i + j] != -1) {
                             break;
                         }
                     }
                     if (j == f2.getSize()) {
                         CobolDataStorage f1Storage = f1.getDataStorage();
                         for (j = 0; j < f2.getSize(); ++j) {
-                            inspectMark[mark + i + j] =
-                                    inspectReplacing != 0 ? f1Storage.getByte(j) : 1;
+                            st.inspectMark[mark + i + j] =
+                                    st.inspectReplacing != 0 ? f1Storage.getByte(j) : 1;
                         }
                         i += f2.getSize() - 1;
                         n++;
@@ -207,7 +224,7 @@ public class CobolInspect {
             }
         }
 
-        if (n > 0 && inspectReplacing == 0) {
+        if (n > 0 && st.inspectReplacing == 0) {
             f1.addInt(n);
         }
     }
@@ -220,25 +237,26 @@ public class CobolInspect {
      * @param replacing REPLACING(置換)を行う場合は0以外、TALLYING(計数)の場合は0
      */
     public static void init(AbstractCobolField var, int replacing) {
-        CobolInspect.inspectVarCopy = var;
-        CobolInspect.inspectVar = CobolInspect.inspectVarCopy;
-        CobolInspect.inspectSign = var.getSign();
+        State st = state.get();
+        st.inspectVarCopy = var;
+        st.inspectVar = st.inspectVarCopy;
+        st.inspectSign = var.getSign();
 
         if (var.getAttribute().isTypeNumericDisplay()) {
-            inspectVar.putSign(1);
+            st.inspectVar.putSign(1);
         }
 
-        CobolInspect.inspectReplacing = replacing;
-        CobolInspect.inspectSize = var.getFieldSize();
-        CobolInspect.inspectData = var.getDataStorage();
-        CobolInspect.inspectStart = -1;
-        CobolInspect.inspectEnd = -1;
-        if (inspectSize > lastsize) {
-            inspectMark = new int[inspectSize];
-            lastsize = inspectSize;
+        st.inspectReplacing = replacing;
+        st.inspectSize = var.getFieldSize();
+        st.inspectData = var.getDataStorage();
+        st.inspectStart = -1;
+        st.inspectEnd = -1;
+        if (st.inspectSize > st.lastsize) {
+            st.inspectMark = new int[st.inspectSize];
+            st.lastsize = st.inspectSize;
         }
-        for (int i = 0; i < inspectSize; ++i) {
-            inspectMark[i] = -1;
+        for (int i = 0; i < st.inspectSize; ++i) {
+            st.inspectMark[i] = -1;
         }
         CobolRuntimeException.setException(0);
     }
@@ -248,8 +266,9 @@ public class CobolInspect {
      * 走査範囲を対象フィールドの全体(先頭から末尾まで)に設定する。
      */
     public static void start() {
-        inspectStart = 0;
-        inspectEnd = inspectSize;
+        State st = state.get();
+        st.inspectStart = 0;
+        st.inspectEnd = st.inspectSize;
     }
 
     /**
@@ -259,6 +278,7 @@ public class CobolInspect {
      * @param str 走査範囲の終端を定める区切り文字(BEFORE INITIALの基準)を表すフィールド
      */
     public static void before(AbstractCobolField str) {
+        State st = state.get();
         CobolDataStorage p2 = null;
         int fig = 0;
 
@@ -290,9 +310,9 @@ public class CobolInspect {
                 break;
         }
 
-        for (int p = inspectStart; p < inspectEnd - fig + 1; ++p) {
-            if (inspectData.getSubDataStorage(p).memcmp(p2, fig) == 0) {
-                inspectEnd = p;
+        for (int p = st.inspectStart; p < st.inspectEnd - fig + 1; ++p) {
+            if (st.inspectData.getSubDataStorage(p).memcmp(p2, fig) == 0) {
+                st.inspectEnd = p;
                 break;
             }
         }
@@ -305,15 +325,16 @@ public class CobolInspect {
      * @param str 走査範囲の始端を定める区切り文字(AFTER INITIALの基準)を表すフィールド
      */
     public static void after(AbstractCobolField str) {
+        State st = state.get();
         CobolDataStorage data = str.getDataStorage();
         int size = str.getSize();
-        for (int p = inspectStart; p < inspectEnd - str.getSize() + 1; ++p) {
-            if (inspectData.getSubDataStorage(p).memcmp(data, size) == 0) {
-                inspectStart = p + size;
+        for (int p = st.inspectStart; p < st.inspectEnd - str.getSize() + 1; ++p) {
+            if (st.inspectData.getSubDataStorage(p).memcmp(data, size) == 0) {
+                st.inspectStart = p + size;
                 return;
             }
         }
-        inspectStart = inspectEnd;
+        st.inspectStart = st.inspectEnd;
     }
 
     /**
@@ -325,14 +346,15 @@ public class CobolInspect {
      * @throws CobolStopRunException 処理中にSTOP RUNが実行された場合
      */
     public static void characters(AbstractCobolField f1) throws CobolStopRunException {
-        int mark = inspectStart;
-        int len = inspectEnd - inspectStart;
-        if (inspectReplacing != 0) {
+        State st = state.get();
+        int mark = st.inspectStart;
+        int len = st.inspectEnd - st.inspectStart;
+        if (st.inspectReplacing != 0) {
             for (int i = 0; i < len; ++i) {
-                if (inspectMark[mark + i] == -1) {
+                if (st.inspectMark[mark + i] == -1) {
                     CobolDataStorage data = f1.getDataStorage();
                     for (int j = 0; j < f1.getSize(); ++j) {
-                        inspectMark[mark + i + j] = data.getByte(j);
+                        st.inspectMark[mark + i + j] = data.getByte(j);
                     }
                     i += f1.getSize() - 1;
                 }
@@ -340,13 +362,13 @@ public class CobolInspect {
         } else {
             int n = 0;
             for (int i = 0; i < len; ++i) {
-                if (inspectMark[mark + i] == -1) {
-                    inspectMark[mark + i] = 1;
+                if (st.inspectMark[mark + i] == -1) {
+                    st.inspectMark[mark + i] = 1;
                     n++;
                 }
             }
             if (n > 0) {
-                int type = inspectVar.getAttribute().getType();
+                int type = st.inspectVar.getAttribute().getType();
                 if (type == CobolFieldAttribute.COB_TYPE_NATIONAL
                         || type == CobolFieldAttribute.COB_TYPE_NATIONAL_EDITED) {
                     n = n / 2;
@@ -416,8 +438,9 @@ public class CobolInspect {
      * @param f2 変換先となる文字の集合を表すフィールド
      */
     public static void converting(AbstractCobolField f1, AbstractCobolField f2) {
+        State st = state.get();
         int type1 = f1.getAttribute().getType();
-        int len = inspectEnd - inspectStart;
+        int len = st.inspectEnd - st.inspectStart;
         CobolDataStorage data = f2.getDataStorage();
         if (type1 == CobolFieldAttribute.COB_TYPE_NATIONAL
                 || type1 == CobolFieldAttribute.COB_TYPE_NATIONAL_EDITED) {
@@ -430,35 +453,36 @@ public class CobolInspect {
             }
             for (int j = 0; j < f1.getSize(); j += 2) {
                 for (int i = 0; i < len; i += 2) {
-                    if (inspectMark[i] == -1
-                            && inspectMark[i + 1] == -1
+                    if (st.inspectMark[i] == -1
+                            && st.inspectMark[i + 1] == -1
                             && f1.getDataStorage()
                                             .getSubDataStorage(j)
                                             .memcmp(
-                                                    inspectData.getSubDataStorage(inspectStart + i),
+                                                    st.inspectData.getSubDataStorage(
+                                                            st.inspectStart + i),
                                                     2)
                                     == 0) {
-                        inspectData.setByte(inspectStart + i, data.getByte(0));
-                        inspectData.setByte(inspectStart + i + 1, data.getByte(1));
+                        st.inspectData.setByte(st.inspectStart + i, data.getByte(0));
+                        st.inspectData.setByte(st.inspectStart + i + 1, data.getByte(1));
                     }
-                    inspectMark[i] = 1;
-                    inspectMark[i + 1] = 1;
+                    st.inspectMark[i] = 1;
+                    st.inspectMark[i + 1] = 1;
                 }
             }
         } else {
             for (int j = 0; j < f1.getSize(); ++j) {
                 for (int i = 0; i < len; ++i) {
-                    if (inspectMark[i] == -1
-                            && inspectData.getByte(inspectStart + i)
+                    if (st.inspectMark[i] == -1
+                            && st.inspectData.getByte(st.inspectStart + i)
                                     == f1.getDataStorage().getByte(j)) {
                         if (f2 == CobolConstant.quote
                                 || f2 == CobolConstant.space
                                 || f2 == CobolConstant.zero) {
-                            inspectData.setByte(inspectStart + i, data.getByte(0));
+                            st.inspectData.setByte(st.inspectStart + i, data.getByte(0));
                         } else {
-                            inspectData.setByte(inspectStart + i, data.getByte(j));
+                            st.inspectData.setByte(st.inspectStart + i, data.getByte(j));
                         }
-                        inspectMark[i] = 1;
+                        st.inspectMark[i] = 1;
                     }
                 }
             }
@@ -467,23 +491,18 @@ public class CobolInspect {
 
     /**
      * libcob/strings.cのcob_inspect_finishの実装。<br>
-     * INSPECT文の処理を確定する。置換モードの場合は{@link #inspectMark}に記録した置換結果を対象フィールドへ書き戻し、
+     * INSPECT文の処理を確定する。置換モードの場合はinspectMarkに記録した置換結果を対象フィールドへ書き戻し、
      * 退避していた符号を復元する。
      */
     public static void finish() {
-        if (inspectReplacing != 0) {
-            for (int i = 0; i < inspectSize; ++i) {
-                if (inspectMark[i] != -1) {
-                    inspectData.setByte(i, (byte) inspectMark[i]);
+        State st = state.get();
+        if (st.inspectReplacing != 0) {
+            for (int i = 0; i < st.inspectSize; ++i) {
+                if (st.inspectMark[i] != -1) {
+                    st.inspectData.setByte(i, (byte) st.inspectMark[i]);
                 }
             }
         }
-        inspectVar.putSign(inspectSign);
-    }
-
-    /** 処理状況を記録する{@link #inspectMark}を既定サイズ({@link CobolConstant#COB_MEDIUM_BUFF})で初期化する。 */
-    public static void initString() {
-        CobolInspect.inspectMark = new int[CobolConstant.COB_MEDIUM_BUFF];
-        lastsize = CobolConstant.COB_MEDIUM_BUFF;
+        st.inspectVar.putSign(st.inspectSign);
     }
 }

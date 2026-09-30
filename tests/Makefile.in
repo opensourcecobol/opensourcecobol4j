@@ -582,7 +582,8 @@ SUBDIRS = cobol85
 @I18N_UTF8_FALSE@	cobj-idx \
 @I18N_UTF8_FALSE@	file-lock \
 @I18N_UTF8_FALSE@	file-lock2 \
-@I18N_UTF8_FALSE@	misc
+@I18N_UTF8_FALSE@	misc \
+@I18N_UTF8_FALSE@	multithread
 
 @I18N_UTF8_TRUE@TESTS = syntax \
 @I18N_UTF8_TRUE@	run \
@@ -595,7 +596,8 @@ SUBDIRS = cobol85
 @I18N_UTF8_TRUE@	cobj-idx \
 @I18N_UTF8_TRUE@	file-lock \
 @I18N_UTF8_TRUE@	file-lock2 \
-@I18N_UTF8_TRUE@	misc
+@I18N_UTF8_TRUE@	misc \
+@I18N_UTF8_TRUE@	multithread
 
 syntax_DEPENDENCIES = \
 	syntax.at \
@@ -776,6 +778,20 @@ indexed_lock2_DEPENDENCIES = \
 	file-lock2.src/old-file.at \
 	file-lock2.src/lock-mode-automatic.at
 
+multithread_DEPENDENCIES = \
+	multithread.at \
+	multithread.src/arith-intrinsic.at \
+	multithread.src/call-working-storage.at \
+	multithread.src/stop-run.at \
+	multithread.src/io-error-in-called-program.at \
+	multithread.src/sequential-file.at \
+	multithread.src/file-sharing.at \
+	multithread.src/indexed-record-lock.at \
+	multithread.src/sort.at \
+	multithread.src/harness/ThreadHarness.java \
+	multithread.src/harness/PairHarness.java \
+	multithread.src/harness/SyncPoint.java
+
 
 # ESQL tests (require PostgreSQL, run separately in CI)
 esql_basic_DEPENDENCIES = \
@@ -841,6 +857,11 @@ esql_utf8_DEPENDENCIES = \
 	esql-utf8.src/sql-convert.at \
 	esql-utf8.src/varying.at
 
+esql_multithread_DEPENDENCIES = \
+	esql-multithread.at \
+	esql-multithread.src/dml-isolation.at \
+	esql-multithread.src/cursor-isolation.at
+
 misc_DEPENDENCIES = \
 	misc.src/signed-comp3.at \
 	misc.src/index-comp.at \
@@ -895,16 +916,18 @@ EXTRA_DIST = $(srcdir)/package.m4 \
 	$(command_line_options_DEPENDENCIES) \
 	$(cobj_idx_DEPENDENCIES) \
 	$(misc_DEPENDENCIES) \
+	$(multithread_DEPENDENCIES) \
 	$(esql_basic_DEPENDENCIES) \
 	$(esql_sqlca_DEPENDENCIES) \
 	$(esql_cobol_data_DEPENDENCIES) \
 	$(esql_misc_DEPENDENCIES) \
 	$(esql_sql_data_DEPENDENCIES) \
 	$(esql_utf8_DEPENDENCIES) \
+	$(esql_multithread_DEPENDENCIES) \
 	embed_db_info.sh
 
 DISTCLEANFILES = atconfig
-ESQL_TESTS = esql-basic esql-sqlca esql-cobol-data esql-misc esql-sql-data esql-utf8
+ESQL_TESTS = esql-basic esql-sqlca esql-cobol-data esql-misc esql-sql-data esql-multithread esql-utf8
 all: all-recursive
 
 .SUFFIXES:
@@ -1271,6 +1294,13 @@ misc.log: misc
 	--log-file $$b.log --trs-file $$b.trs \
 	$(am__common_driver_flags) $(AM_LOG_DRIVER_FLAGS) $(LOG_DRIVER_FLAGS) -- $(LOG_COMPILE) \
 	"$$tst" $(AM_TESTS_FD_REDIRECT)
+multithread.log: multithread
+	@p='multithread'; \
+	b='multithread'; \
+	$(am__check_pre) $(LOG_DRIVER) --test-name "$$f" \
+	--log-file $$b.log --trs-file $$b.trs \
+	$(am__common_driver_flags) $(AM_LOG_DRIVER_FLAGS) $(LOG_DRIVER_FLAGS) -- $(LOG_COMPILE) \
+	"$$tst" $(AM_TESTS_FD_REDIRECT)
 cobol_utf8.log: cobol_utf8
 	@p='cobol_utf8'; \
 	b='cobol_utf8'; \
@@ -1481,6 +1511,7 @@ $(srcdir)/esql-cobol-data: $(esql_cobol_data_DEPENDENCIES)
 $(srcdir)/esql-misc: $(esql_misc_DEPENDENCIES)
 $(srcdir)/esql-sql-data: $(esql_sql_data_DEPENDENCIES)
 $(srcdir)/esql-utf8: $(esql_utf8_DEPENDENCIES)
+$(srcdir)/esql-multithread: $(esql_multithread_DEPENDENCIES)
 
 all: $(TESTS) $(ESQL_TESTS)
 
@@ -1514,6 +1545,7 @@ $(srcdir)/cobj-idx: $(cobj_idx_DEPENDENCIES)
 $(srcdir)/file-lock: $(indexed_lock_DEPENDENCIES)
 $(srcdir)/file-lock2: $(indexed_lock2_DEPENDENCIES)
 $(srcdir)/misc: $(misc_DEPENDENCIES)
+$(srcdir)/multithread: $(multithread_DEPENDENCIES)
 
 # Tell versions [3.59,3.63) of GNU make to not export all variables.
 # Otherwise a system limit (for SysV at least) may be exceeded.

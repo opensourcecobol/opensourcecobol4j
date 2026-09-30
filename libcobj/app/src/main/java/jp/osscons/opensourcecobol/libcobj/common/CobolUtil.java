@@ -22,6 +22,7 @@ import java.time.DateTimeException;
 import java.time.LocalDateTime;
 import java.util.Calendar;
 import java.util.Properties;
+import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import jp.osscons.opensourcecobol.libcobj.data.AbstractCobolField;
@@ -40,90 +41,110 @@ import jp.osscons.opensourcecobol.libcobj.file.CobolFile;
  */
 public class CobolUtil {
     /** I/O操作でREWRITEを暗黙的に行うとみなすかどうかのフラグ(環境変数COB_IO_ASSUME_REWRITEで設定)。 */
-    private static boolean cob_io_assume_rewrite = false;
+    @SuppressWarnings("PMD.AvoidUsingVolatile")
+    private static volatile boolean cob_io_assume_rewrite = false;
 
     /** 冗長出力を有効にするかどうかのフラグ(環境変数COB_VERBOSEで設定)。 */
-    private static boolean cob_verbose = false;
-
-    /** ランタイムエラー発生時に呼び出されるハンドラのリストの先頭。 */
-    private static HandlerList hdlrs = null;
-
-    /** ランタイムエラーメッセージの文字列。 */
-    private static String runtime_err_str = null;
-
-    /** 環境変数COB_DATEで指定された固定日付を保持する。指定がない場合はnull。 */
-    public static LocalDateTime cobLocalTm = null;
-
-    /** ロケール関連の環境変数の値を保持する。 */
-    public static String cobLocalEnv = null;
-
-    /** プログラムに渡されたコマンドライン引数(プログラム名を含まない)。 */
-    public static String[] commandLineArgs = null;
-
-    /** ACCEPT FROM ARGUMENT-VALUE等で参照される、現在のコマンドライン引数のインデックス(1始まり)。 */
-    public static int currentArgIndex = 1;
-
-    /** 符号なし数値のニブル定数Cの扱いを制御するフラグ(環境変数COB_NIBBLE_C_UNSIGNEDで設定)。 */
-    public static boolean nibbleCForUnsigned = false;
-
-    /** COBOLのプログラムスイッチ(SWITCH-1〜SWITCH-8)の状態。インデックス0が1番目に対応する。 */
-    public static boolean[] cobSwitch = new boolean[8];
-
-    /** CALL文で呼び出された際に渡されたパラメータ数を保存する。 */
-    public static int cobSaveCallParams = 0;
-
-    /** 冗長出力を有効にするかどうかのフラグ。 */
-    public static boolean verbose = false;
-
-    /** プログラム終了時にエラーが発生したことを示すフラグ。 */
-    public static boolean cobErrorOnExitFlag = false;
-
-    /** 現在日時を取得するためのCalendarインスタンス。 */
-    public static Calendar cal;
-
-    /** 順編成ファイルへの書き込みバッファサイズ(環境変数COB_FILE_SEQ_WRITE_BUFFER_SIZEで設定)。 */
-    public static int fileSeqWriteBufferSize = 10;
-
-    /** DISPLAY/ACCEPT文によるデータ出力時のエンコーディング */
-    public static CobolEncoding terminalEncoding = CobolEncoding.SHIFT_JIS;
-
-    /** 行トレース(READY TRACE)が有効かどうかのフラグ。 */
-    private static boolean lineTrace = false;
-
-    /** 現在実行中のソースファイル名。 */
-    private static String sourceFile;
-
-    /** 現在実行中のソース行番号。 */
-    private static int sourceLine;
-
-    /** 現在実行中のプログラムID。 */
-    private static String currProgramId;
-
-    /** 現在実行中のセクション名。 */
-    private static String currSection;
-
-    /** 現在実行中の段落(パラグラフ)名。 */
-    private static String currParagraph;
-
-    /** 現在実行中の文(ステートメント)の名称。 */
-    private static String sourceStatement;
+    @SuppressWarnings("PMD.AvoidUsingVolatile")
+    private static volatile boolean cob_verbose = false;
 
     /**
-     * ランタイムエラー発生時に呼び出されるハンドラを連結リストとして表す抽象クラス。<br>
-     * libcobのcob_runtime_error_handlerに相当する。
+     * 実行単位(スレッド)ごとに保持するランタイムの状態。<br>
+     * 実行位置、プログラムスイッチ、エラーハンドラなど、COBOLの実行単位に属する情報をまとめて保持する。
      */
-    abstract static class HandlerList {
-        /** リスト上の次のハンドラ。末尾の場合はnull。 */
-        public HandlerList next = null;
+    private static final class RunUnitState {
+        /** DISPLAY UPON ENVIRONMENT-NAMEで設定された環境変数名。 */
+        String cobLocalEnv = null;
 
-        /**
-         * エラーメッセージを処理する。
-         *
-         * @param s エラーメッセージ文字列
-         * @return ハンドラの処理結果
-         */
-        public abstract int proc(String s);
+        /** ACCEPT FROM ARGUMENT-VALUEで次に取得するコマンドライン引数のインデックス(1始まり)。 */
+        int currentArgIndex = 1;
+
+        /** プログラムスイッチ(SWITCH-1からSWITCH-8)の状態。環境変数COB_SWITCH_nで初期化される。 */
+        final boolean[] cobSwitch = new boolean[8];
+
+        /** CALL文の引数個数の退避値。 */
+        int cobSaveCallParams = 0;
+
+        /** 終了時にエラーが発生したことを示すフラグ。 */
+        boolean cobErrorOnExitFlag = false;
+
+        /** 行トレース(READY TRACE)が有効かどうか。 */
+        boolean lineTrace = false;
+
+        /** 現在実行中のソースファイル名。 */
+        String sourceFile;
+
+        /** 現在実行中のソース行番号。 */
+        int sourceLine;
+
+        /** 現在実行中のプログラムID。 */
+        String currProgramId;
+
+        /** 現在実行中のセクション名。 */
+        String currSection;
+
+        /** 現在実行中の段落(パラグラフ)名。 */
+        String currParagraph;
+
+        /** 現在実行中の文(ステートメント)の名称。 */
+        String sourceStatement;
+
+        /** SET ENVIRONMENTなどでプログラムが設定した環境変数のテーブル。 */
+        final Properties envVarTable = new Properties();
+
+        RunUnitState() {
+            for (int i = 0; i < 8; ++i) {
+                String envValue = System.getenv(String.format("COB_SWITCH_%d", i + 1));
+                cobSwitch[i] = envValue != null && "ON".equals(envValue);
+            }
+        }
     }
+
+    /** 実行単位ごとの状態。実行単位はスレッドごとに独立しているため、スレッドごとに保持する。 */
+    private static final ThreadLocal<RunUnitState> runUnitState =
+            ThreadLocal.withInitial(RunUnitState::new);
+
+    /** cob_initによるランタイム設定の初期化が完了しているかどうか。 */
+    private static final AtomicBoolean initialized = new AtomicBoolean(false);
+
+    /** cob_initの排他制御に使用するロック。 */
+    private static final Object INIT_LOCK = new Object();
+
+    /** 環境変数COB_DATEで指定された固定日付を保持する。指定がない場合はnull。 */
+    @SuppressWarnings("PMD.AvoidUsingVolatile")
+    public static volatile LocalDateTime cobLocalTm = null;
+
+    /** プログラムに渡されたコマンドライン引数(プログラム名を含まない)。 */
+    @SuppressWarnings("PMD.AvoidUsingVolatile")
+    public static volatile String[] commandLineArgs = new String[0];
+
+    /** 符号なし数値のニブル定数Cの扱いを制御するフラグ(環境変数COB_NIBBLE_C_UNSIGNEDで設定)。 */
+    @SuppressWarnings("PMD.AvoidUsingVolatile")
+    public static volatile boolean nibbleCForUnsigned = false;
+
+    /**
+     * 初期化時点の日時(環境変数COB_DATEが指定されていれば日付はその値)。FUNCTION CURRENT-DATEが使う。
+     * 共有してもよいよう、可変のCalendarではなく不変のLocalDateTimeで保持する。
+     */
+    @SuppressWarnings("PMD.AvoidUsingVolatile")
+    private static volatile LocalDateTime initDateTime;
+
+    /**
+     * 初期化時点の日時を返す。
+     *
+     * @return cob_initの時点の日時(COB_DATEが指定されていれば日付はその値)
+     */
+    static LocalDateTime getInitDateTime() {
+        return initDateTime;
+    }
+
+    /** 順編成ファイルへの書き込みバッファサイズ(環境変数COB_FILE_SEQ_WRITE_BUFFER_SIZEで設定)。 */
+    @SuppressWarnings("PMD.AvoidUsingVolatile")
+    public static volatile int fileSeqWriteBufferSize = 10;
+
+    /** DISPLAY/ACCEPT文によるデータ出力時のエンコーディング */
+    @SuppressWarnings("PMD.AvoidUsingVolatile")
+    public static volatile CobolEncoding terminalEncoding = CobolEncoding.SHIFT_JIS;
 
     /** 致命的エラー種別: cob_init()が呼び出されていない。 */
     public static final int FERROR_INITIALIZED = 0;
@@ -136,8 +157,6 @@ public class CobolUtil {
 
     /** 致命的エラー種別: スタックオーバーフロー(PERFORMの入れ子が深すぎる等)。 */
     public static final int FERROR_STACK = 3;
-
-    private static Properties envVarTable = new Properties();
 
     // libcob/common.cのcob_check_envの実装
     /**
@@ -314,26 +333,18 @@ public class CobolUtil {
      * @param cobInitialized すでに初期化済みかどうか。trueの場合はサブシステムの初期化をスキップする
      */
     public static void cob_init(String[] argv, boolean cobInitialized) {
-        // TODO 未完成
-        if (!cobInitialized) {
-            CobolUtil.commandLineArgs = argv;
-            CobolInspect.initString();
-            CobolFile.cob_init_fileio();
-            CobolIntrinsic.init();
-            CobolUtil.envVarTable = new Properties();
+        synchronized (INIT_LOCK) {
+            cobInitInternal(argv, cobInitialized);
+        }
+    }
 
-            for (int i = 0; i < 8; ++i) {
-                String envVariableName = String.format("COB_SWITCH_%d", i + 1);
-                String envValue = CobolUtil.getEnv(envVariableName);
-                if (envValue == null) {
-                    CobolUtil.cobSwitch[i] = false;
-                } else {
-                    CobolUtil.cobSwitch[i] = "ON".equals(envValue);
-                }
-            }
+    private static void cobInitInternal(String[] argv, boolean cobInitialized) {
+        if (!cobInitialized) {
+            CobolUtil.commandLineArgs = argv == null ? new String[0] : argv;
+            CobolFile.cob_init_fileio();
         }
 
-        cal = Calendar.getInstance();
+        Calendar calendar = Calendar.getInstance();
         String s = CobolUtil.getEnv("COB_DATE");
         if (s != null) {
             Pattern p = Pattern.compile("([0-9]{4})/([0-9]{2})/([0-9]{2})");
@@ -346,9 +357,9 @@ public class CobolUtil {
                     int year = Integer.parseInt(m.group(1));
                     int month = Integer.parseInt(m.group(2));
                     int dayOfMonth = Integer.parseInt(m.group(3));
-                    cal.set(Calendar.YEAR, year);
-                    cal.set(Calendar.MONTH, month - 1);
-                    cal.set(Calendar.DAY_OF_MONTH, dayOfMonth);
+                    calendar.set(Calendar.YEAR, year);
+                    calendar.set(Calendar.MONTH, month - 1);
+                    calendar.set(Calendar.DAY_OF_MONTH, dayOfMonth);
                     LocalDateTime tm;
                     try {
                         tm = LocalDateTime.of(year, month, dayOfMonth, 0, 0);
@@ -361,6 +372,18 @@ public class CobolUtil {
                 System.err.println("Warning: COB_DATE format invalid, ignored.");
             }
         }
+
+        // Calendarは可変でスレッドセーフでないため、日付の繰り上がり(2月30日→3月2日など)を
+        // Calendarで計算した結果を、不変のLocalDateTimeとして公開する
+        initDateTime =
+                LocalDateTime.of(
+                        calendar.get(Calendar.YEAR),
+                        calendar.get(Calendar.MONTH) + 1,
+                        calendar.get(Calendar.DAY_OF_MONTH),
+                        calendar.get(Calendar.HOUR_OF_DAY),
+                        calendar.get(Calendar.MINUTE),
+                        calendar.get(Calendar.SECOND),
+                        calendar.get(Calendar.MILLISECOND) * 1_000_000);
 
         s = CobolUtil.getEnv("COB_VERBOSE");
         if (s != null && s.length() > 0 && (s.charAt(0) == 'y' || s.charAt(0) == 'Y')) {
@@ -386,14 +409,131 @@ public class CobolUtil {
         }
 
         s = System.getenv("COB_TERMINAL_ENCODING");
-        CobolUtil.terminalEncoding = CobolEncoding.SHIFT_JIS;
+        // 他のスレッドが途中の値を観測しないよう、判定してから1回だけ代入する
+        CobolEncoding encoding = CobolEncoding.SHIFT_JIS;
         if (s != null) {
             Pattern p = Pattern.compile("[uU][tT][fF][_-]?8");
             Matcher m = p.matcher(s);
             if (m.matches()) {
-                CobolUtil.terminalEncoding = CobolEncoding.UTF8;
+                encoding = CobolEncoding.UTF8;
             }
         }
+        CobolUtil.terminalEncoding = encoding;
+        // 設定値をすべて読み込んでから初期化済みにする(他のスレッドが途中の値を観測しないように)
+        initialized.set(true);
+    }
+
+    /**
+     * ランタイム設定が未初期化であれば初期化する。<br>
+     * 生成されたmainメソッドを経由せず、Javaアプリケーション(Webアプリケーションなど)から
+     * COBOLプログラムを直接呼び出す場合の入口で使用する。
+     * 初期化は同一JVM内で1回だけ行われ、複数スレッドから同時に呼び出しても安全である。
+     */
+    public static void ensureInitialized() {
+        if (initialized.get()) {
+            return;
+        }
+        synchronized (INIT_LOCK) {
+            // 同時に呼び出した他のスレッドが先に初期化を終えていれば、再初期化しない
+            if (!initialized.get()) {
+                cobInitInternal(new String[0], false);
+            }
+        }
+    }
+
+    /**
+     * ランタイム設定が初期化済みかどうかを返す。
+     *
+     * @return cob_initが呼び出されていればtrue
+     */
+    public static boolean isInitialized() {
+        return initialized.get();
+    }
+
+    /** 現在のスレッドに紐づく実行単位の状態を破棄する。実行単位の終了時に呼び出す。 */
+    public static void resetThreadState() {
+        runUnitState.remove();
+    }
+
+    /**
+     * 現在のスレッドのプログラムスイッチの配列を取得する。
+     *
+     * @return SWITCH-1からSWITCH-8に対応する長さ8の配列(変更は現在のスレッドにのみ反映される)
+     */
+    public static boolean[] getSwitches() {
+        return runUnitState.get().cobSwitch;
+    }
+
+    /**
+     * 現在のスレッドのCALL文の引数個数の退避値を取得する。
+     *
+     * @return 退避されている引数個数
+     */
+    public static int getSaveCallParams() {
+        return runUnitState.get().cobSaveCallParams;
+    }
+
+    /**
+     * 現在のスレッドのCALL文の引数個数の退避値を設定する。
+     *
+     * @param n 退避する引数個数
+     */
+    public static void setSaveCallParams(int n) {
+        runUnitState.get().cobSaveCallParams = n;
+    }
+
+    /**
+     * 現在のスレッドの終了時エラーフラグを取得する。
+     *
+     * @return 終了時にエラーが発生していればtrue
+     */
+    public static boolean getErrorOnExitFlag() {
+        return runUnitState.get().cobErrorOnExitFlag;
+    }
+
+    /**
+     * 現在のスレッドの終了時エラーフラグを設定する。
+     *
+     * @param flag 設定する値
+     */
+    public static void setErrorOnExitFlag(boolean flag) {
+        runUnitState.get().cobErrorOnExitFlag = flag;
+    }
+
+    /**
+     * 現在のスレッドのACCEPT FROM ARGUMENT-VALUEの引数インデックスを取得する。
+     *
+     * @return 次に取得する引数のインデックス(1始まり)
+     */
+    public static int getCurrentArgIndex() {
+        return runUnitState.get().currentArgIndex;
+    }
+
+    /**
+     * 現在のスレッドのACCEPT FROM ARGUMENT-VALUEの引数インデックスを設定する。
+     *
+     * @param n 次に取得する引数のインデックス(1始まり)
+     */
+    public static void setCurrentArgIndex(int n) {
+        runUnitState.get().currentArgIndex = n;
+    }
+
+    /**
+     * 現在のスレッドのDISPLAY UPON ENVIRONMENT-NAMEで設定された環境変数名を取得する。
+     *
+     * @return 環境変数名。未設定の場合はnull
+     */
+    public static String getLocalEnvName() {
+        return runUnitState.get().cobLocalEnv;
+    }
+
+    /**
+     * 現在のスレッドのDISPLAY UPON ENVIRONMENT-NAMEで設定された環境変数名を設定する。
+     *
+     * @param name 環境変数名
+     */
+    public static void setLocalEnvName(String name) {
+        runUnitState.get().cobLocalEnv = name;
     }
 
     // libcob/common.cとcob_localtime
@@ -406,13 +546,14 @@ public class CobolUtil {
      */
     public static LocalDateTime localtime() {
         LocalDateTime rt = LocalDateTime.now();
-        if (CobolUtil.cobLocalTm != null) {
-            CobolUtil.cobLocalTm =
-                    CobolUtil.cobLocalTm
+        // 共有のcobLocalTmは書き換えず、ローカルに計算する(複数スレッドから同時に呼ばれるため)
+        LocalDateTime fixedDate = CobolUtil.cobLocalTm;
+        if (fixedDate != null) {
+            rt =
+                    fixedDate
                             .withHour(rt.getHour())
                             .withMinute(rt.getMinute())
                             .withSecond(rt.getSecond());
-            rt = CobolUtil.cobLocalTm;
         }
         return rt;
     }
@@ -433,33 +574,15 @@ public class CobolUtil {
     // libcob/fileio.cのcob_rintime_errorの実装
     /**
      * ランタイムエラーメッセージを出力する。<br>
-     * 登録済みのエラーハンドラ({@link HandlerList})がある場合は順に呼び出した上で解放し、<br>
      * ソースファイル名と行番号(判明している場合)を前置して、先頭に"libcobj: "を付けたメッセージを<br>
      * SHIFT_JISエンコードで標準エラー出力へ書き込む。
      *
      * @param s 出力するエラーメッセージ
      */
     public static void runtimeError(String s) {
-        if (hdlrs != null) {
-            HandlerList h = hdlrs;
-            if (runtime_err_str != null) {
-                if (sourceFile != null) {
-                    runtime_err_str = String.format("%s:%d: ", sourceFile, sourceLine);
-                }
-            }
-            while (h != null) {
-                if (runtime_err_str != null) {
-                    h.proc(runtime_err_str);
-                } else {
-                    h.proc("Malloc error");
-                }
-                h = h.next;
-            }
-            hdlrs = null;
-        }
-
-        if (sourceFile != null) {
-            System.err.print(String.format("%s:%d: ", sourceFile, sourceLine));
+        RunUnitState st = runUnitState.get();
+        if (st.sourceFile != null) {
+            System.err.print(String.format("%s:%d: ", st.sourceFile, st.sourceLine));
         }
         byte[] messageBytes = ("libcobj: " + s).getBytes(AbstractCobolField.charSetSJIS);
         System.err.write(messageBytes, 0, messageBytes.length);
@@ -502,7 +625,7 @@ public class CobolUtil {
      * @return スイッチがONの場合はtrue、OFFの場合はfalse
      */
     public static boolean getSwitch(int n) {
-        return CobolUtil.cobSwitch[n];
+        return runUnitState.get().cobSwitch[n];
     }
 
     // libcob/common.cのcob_set_switchの実装
@@ -514,9 +637,9 @@ public class CobolUtil {
      */
     public static void setSwitch(int n, int flag) {
         if (flag == 0) {
-            CobolUtil.cobSwitch[n] = false;
+            runUnitState.get().cobSwitch[n] = false;
         } else if (flag == 1) {
-            CobolUtil.cobSwitch[n] = true;
+            runUnitState.get().cobSwitch[n] = true;
         }
     }
 
@@ -579,12 +702,12 @@ public class CobolUtil {
 
     /** 行トレース(READY TRACE)を有効にする。以降の実行位置がトレース出力される。 */
     public static void readyTrace() {
-        CobolUtil.lineTrace = true;
+        runUnitState.get().lineTrace = true;
     }
 
     /** 行トレース(RESET TRACE)を無効にする。 */
     public static void resetTrace() {
-        CobolUtil.lineTrace = false;
+        runUnitState.get().lineTrace = false;
     }
 
     /**
@@ -630,16 +753,16 @@ public class CobolUtil {
      */
     public static void setLocation(
             String progId, String sfile, int sline, String csect, String cpara, String cstatement) {
-        CobolUtil.sourceFile = sfile;
-        CobolUtil.sourceLine = sline;
-        currProgramId = progId;
-        currSection = csect;
-        currParagraph = cpara;
-        sourceLine = sline;
+        RunUnitState st = runUnitState.get();
+        st.sourceFile = sfile;
+        st.sourceLine = sline;
+        st.currProgramId = progId;
+        st.currSection = csect;
+        st.currParagraph = cpara;
         if (cstatement != null) {
-            sourceStatement = cstatement;
+            st.sourceStatement = cstatement;
         }
-        if (CobolUtil.lineTrace) {
+        if (st.lineTrace) {
             System.err.println(
                     String.format(
                             "PROGRAM-ID: %s \tLine: %d \tStatement: %s",
@@ -656,7 +779,7 @@ public class CobolUtil {
      * @return 環境変数の値。存在しない場合はnull
      */
     public static String getEnv(String envVarName) {
-        String envVarInTable = CobolUtil.envVarTable.getProperty(envVarName);
+        String envVarInTable = runUnitState.get().envVarTable.getProperty(envVarName);
         if (envVarInTable != null) {
             return envVarInTable;
         } else {
@@ -671,7 +794,7 @@ public class CobolUtil {
      * @param envVarValue the value to be set to the environment variable.
      */
     public static void setEnv(String envVarName, String envVarValue) {
-        CobolUtil.envVarTable.setProperty(envVarName, envVarValue);
+        runUnitState.get().envVarTable.setProperty(envVarName, envVarValue);
     }
 
     /**
@@ -682,7 +805,10 @@ public class CobolUtil {
      * @param envVarValue the value of an environment variable to be set.
      */
     public static void setEnv(AbstractCobolField envVarName, AbstractCobolField envVarValue) {
-        CobolUtil.envVarTable.setProperty(envVarName.getString().trim(), envVarValue.getString());
+        runUnitState
+                .get()
+                .envVarTable
+                .setProperty(envVarName.getString().trim(), envVarValue.getString());
     }
 
     /**
@@ -711,7 +837,7 @@ public class CobolUtil {
      * @return 現在のプログラムID
      */
     public static String getCurrProgramId() {
-        return currProgramId;
+        return runUnitState.get().currProgramId;
     }
 
     /**
@@ -720,7 +846,7 @@ public class CobolUtil {
      * @return 現在のセクション名
      */
     public static String getCurrSection() {
-        return currSection;
+        return runUnitState.get().currSection;
     }
 
     /**
@@ -729,7 +855,7 @@ public class CobolUtil {
      * @return 現在の段落名
      */
     public static String getCurrParagraph() {
-        return currParagraph;
+        return runUnitState.get().currParagraph;
     }
 
     /**
@@ -738,7 +864,7 @@ public class CobolUtil {
      * @return 現在のソース行番号
      */
     public static int getSourceLine() {
-        return sourceLine;
+        return runUnitState.get().sourceLine;
     }
 
     /**
@@ -747,7 +873,7 @@ public class CobolUtil {
      * @return 現在の文の名称
      */
     public static String getSourceStatement() {
-        return sourceStatement;
+        return runUnitState.get().sourceStatement;
     }
 
     /**
@@ -774,7 +900,7 @@ public class CobolUtil {
         }
         // C版ではcob_call_params = cob_argc - 1 (プログラム名を除外)。
         // JavaではcommandLineArgs.lengthが既にプログラム名を除外した値になっている。
-        CobolCallParams.callParams =
-                (CobolUtil.commandLineArgs != null) ? CobolUtil.commandLineArgs.length : 0;
+        CobolCallParams.set(
+                (CobolUtil.commandLineArgs != null) ? CobolUtil.commandLineArgs.length : 0);
     }
 }

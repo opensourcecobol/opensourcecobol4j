@@ -822,35 +822,35 @@ public class CobolNumericPackedField extends AbstractCobolField {
         if (this.getAttribute().getDigits() % 2 == 0) {
             val1[20 - this.getSize()] &= 0x0F;
         }
-        if (n != CobolDecimal.packedValueInt) {
-            CobolDecimal.packedValueInt = n;
+        CobolDecimal.PackedCache cache = CobolDecimal.getPackedCache();
+        byte[] packedValue = cache.packedValue;
+        if (n != cache.packedValueInt) {
+            cache.packedValueInt = n;
             if (n < 0) {
                 n = -n;
             }
             for (int i = 0; i < 6; ++i) {
-                CobolDecimal.packedValue[14 + i] = 0;
+                packedValue[14 + i] = 0;
             }
             if (n != 0) {
                 p = 19;
-                CobolDecimal.packedValue[p] = (byte) ((n % 10) << 4);
+                packedValue[p] = (byte) ((n % 10) << 4);
                 p--;
                 n /= 10;
                 while (n != 0) {
                     size = n % 100;
-                    CobolDecimal.packedValue[p] = (byte) ((size % 10) | ((size / 10) << 4));
+                    packedValue[p] = (byte) ((size % 10) | ((size / 10) << 4));
                     n /= 100;
                     p--;
                 }
             }
         }
         for (size = 0; size < 20; size++) {
-            if (val1[size] != CobolDecimal.packedValue[size]) {
+            if (val1[size] != packedValue[size]) {
                 if (sign < 0) {
-                    return Byte.toUnsignedInt(CobolDecimal.packedValue[size])
-                            - Byte.toUnsignedInt(val1[size]);
+                    return Byte.toUnsignedInt(packedValue[size]) - Byte.toUnsignedInt(val1[size]);
                 } else {
-                    return Byte.toUnsignedInt(val1[size])
-                            - Byte.toUnsignedInt(CobolDecimal.packedValue[size]);
+                    return Byte.toUnsignedInt(val1[size]) - Byte.toUnsignedInt(packedValue[size]);
                 }
             }
         }

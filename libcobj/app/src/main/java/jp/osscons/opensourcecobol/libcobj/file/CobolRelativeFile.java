@@ -131,73 +131,67 @@ public class CobolRelativeFile extends CobolFile {
 
     @Override
     public int open_(String filename, int mode, int sharing) throws IOException {
-        FileChannel ch;
+        // ロックは実際にオープンするファイルに対して取得する
+        String dataPath = this.assign.fieldToString();
+        // 新しいファイルはローカル変数で開き、成功してからthis.fpに設定する。前回のOPENの
+        // RandomAccessFileは(他の実行単位のロックを保つため)台帳が預かっている場合があり、
+        // 失敗時にそれに触れてはならない
+        RandomAccessFile raf = null;
         try {
             switch (mode) {
                 case COB_OPEN_INPUT:
-                    this.fp = new RandomAccessFile(this.assign.fieldToString(), "r");
-                    this.fp.seek(0);
+                    raf = JvmFileLockRegistry.openRandomAccessFile(dataPath, "r");
+                    raf.seek(0);
                     break;
                 case COB_OPEN_OUTPUT:
-                    this.fp = new RandomAccessFile(this.assign.fieldToString(), "rw");
+                    raf = JvmFileLockRegistry.openRandomAccessFile(dataPath, "rw");
                     break;
                 case COB_OPEN_I_O:
-                    this.fp = new RandomAccessFile(this.assign.fieldToString(), "rw");
-                    this.fp.seek(0);
+                    raf = JvmFileLockRegistry.openRandomAccessFile(dataPath, "rw");
+                    raf.seek(0);
                     break;
                 case COB_OPEN_EXTEND:
-                    this.fp = new RandomAccessFile(this.assign.fieldToString(), "rw");
-                    this.fp.seek(0);
-                    this.fp.seek(this.fp.length());
+                    raf = JvmFileLockRegistry.openRandomAccessFile(dataPath, "rw");
+                    raf.seek(0);
+                    raf.seek(raf.length());
                     break;
                 default:
                     return EACCESS;
             }
         } catch (IOException e) {
-            if (this.fp != null) {
-                this.file.setRandomAccessFile(this.fp, null);
-            }
+            JvmFileLockRegistry.closeFor(dataPath, raf == null ? null : raf.getChannel());
             if (Files.notExists(Paths.get(filename))) {
                 return ENOENT;
             } else {
                 return EACCESS;
             }
         }
+        this.fp = raf;
 
-        ch = fp.getChannel();
-
-        FileLock fl = null;
-        if (!filename.startsWith("/dev/")) {
+        if (!dataPath.startsWith("/dev/")) {
+            boolean isSharedLock = sharing == 0 && mode != COB_OPEN_OUTPUT;
             try {
-                boolean isSharedLock;
-                if (sharing != 0 || mode == COB_OPEN_OUTPUT) {
-                    isSharedLock = false;
-                } else {
-                    isSharedLock = true;
-                }
-                fl = ch.tryLock(0L, Long.MAX_VALUE, isSharedLock);
+                this.lockLease = JvmFileLockRegistry.acquire(dataPath, isSharedLock);
             } catch (NonWritableChannelException e) {
-                this.fp.close();
+                JvmFileLockRegistry.closeFor(dataPath, this.fp.getChannel());
                 return EBADF;
             } catch (IOException e) {
-                this.fp.close();
+                JvmFileLockRegistry.closeFor(dataPath, this.fp.getChannel());
                 return COB_STATUS_61_FILE_SHARING;
             }
-
-            this.file.setRandomAccessFile(this.fp, fl);
-
-            if (fl == null || !fl.isValid()) {
-                this.fp.close();
+            if (this.lockLease == null) {
+                JvmFileLockRegistry.closeFor(dataPath, this.fp.getChannel());
                 return COB_STATUS_61_FILE_SHARING;
             }
         }
 
+        // 以降で例外が発生しても呼び出し元がロックの解放とチャネルのクローズを行えるよう、先に設定する
+        this.file.setRandomAccessFile(this.fp);
         if (mode == COB_OPEN_OUTPUT) {
             this.fp.setLength(0);
             this.fp.seek(0);
         }
 
-        this.file.setRandomAccessFile(this.fp, fl);
         if ((this.flag_select_features & COB_SELECT_LINAGE) != 0) {
             if (this.file_linage_check()) {
                 return COB_LINAGE_INVALID;
@@ -225,9 +219,8 @@ public class CobolRelativeFile extends CobolFile {
                         }
                     }
 
-                    this.file.releaseLock();
-                    this.fp.close();
-                    this.file.close();
+                    // RandomAccessFileのチャネルを閉じるとRandomAccessFileも閉じられる
+                    this.releaseLockLease(this.file.detachChannel());
 
                     if (opt == COB_CLOSE_NO_REWIND) {
                         this.open_mode = COB_OPEN_CLOSED;

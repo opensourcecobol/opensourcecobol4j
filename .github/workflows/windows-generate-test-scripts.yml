@@ -42,11 +42,13 @@ jobs:
             tests/file-lock
             tests/file-lock2
             tests/misc
+            tests/multithread
             tests/esql-basic
             tests/esql-sqlca
             tests/esql-cobol-data
             tests/esql-misc
             tests/esql-sql-data
+            tests/esql-multithread
             tests/esql-utf8
             tests/atconfig
             tests/package.m4

@@ -1,0 +1,49 @@
+AT_SETUP([An I/O error without FILE STATUS in a CALLed program stops the run unit])
+
+dnl abort-on-io-exception is enabled by default: an OPEN error of a file that
+dnl has no FILE STATUS clause runs the default error handler and STOP RUN.
+dnl The STOP RUN must unwind through the calling program, whether the run unit
+dnl was started by main() or by a Java caller.
+AT_DATA([mainp.cbl], [
+       IDENTIFICATION DIVISION.
+       PROGRAM-ID. mainp.
+       PROCEDURE DIVISION.
+           DISPLAY "before call".
+           CALL "subp".
+           DISPLAY "after call".
+           GOBACK.
+])
+
+AT_DATA([subp.cbl], [
+       IDENTIFICATION DIVISION.
+       PROGRAM-ID. subp.
+       ENVIRONMENT DIVISION.
+       INPUT-OUTPUT SECTION.
+       FILE-CONTROL.
+           SELECT F ASSIGN TO "no-such-file.txt"
+                  ORGANIZATION IS LINE SEQUENTIAL.
+       DATA DIVISION.
+       FILE SECTION.
+       FD F.
+       01 R PIC X(10).
+       PROCEDURE DIVISION.
+           DISPLAY "sub start".
+           OPEN INPUT F.
+           DISPLAY "sub after open".
+           EXIT PROGRAM.
+])
+
+AT_CHECK([cp ../../multithread.src/harness/ThreadHarness.java .])
+AT_CHECK([javac ThreadHarness.java])
+AT_CHECK([${COBJ} mainp.cbl subp.cbl])
+AT_CHECK([java mainp], [1], [before call
+sub start
+], [ignore])
+AT_CHECK([java ThreadHarness mainp 3 1 2>/dev/null], [0],
+[3 before call
+3 sub start
+return-code 1 x3
+alive
+])
+
+AT_CLEANUP

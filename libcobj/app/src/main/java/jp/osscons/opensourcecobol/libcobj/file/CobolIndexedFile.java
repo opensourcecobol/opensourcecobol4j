@@ -73,8 +73,29 @@ public class CobolIndexedFile extends CobolFile {
     /** {@code START}/{@code READ}の比較条件：キーが等しくない（{@code <>}）。 */
     public static final int COB_NE = 6;
 
-    private static String storedProcessUuid = null;
-    private static String storedProcessId = null;
+    /** このJVM(プロセス)を識別するUUID。クラス初期化時に1回だけ生成する。 */
+    private static final String PROCESS_UUID = java.util.UUID.randomUUID().toString();
+
+    /** このJVM(プロセス)のプロセスID。 */
+    private static final String PROCESS_ID =
+            String.valueOf(
+                    java.lang.management.ManagementFactory.getRuntimeMXBean()
+                            .getName()
+                            .split("@")[0]);
+
+    /**
+     * 実行単位(スレッド)を識別するID。<br>
+     * ファイルロックとレコードロックの所有者(locked_by列)はこのIDで区別する。
+     * 同一JVM内の別スレッドは別の実行単位であり、別プロセスと同じ規則でロックが競合する。
+     */
+    private static final ThreadLocal<String> runUnitUuid =
+            ThreadLocal.withInitial(
+                    () -> PROCESS_UUID + ":" + java.util.UUID.randomUUID().toString());
+
+    /** 現在のスレッドに紐づくロック所有者IDを破棄する。実行単位の終了時に呼び出す。 */
+    public static void resetRunUnitId() {
+        runUnitUuid.remove();
+    }
 
     /**
      * INDEXEDファイルのインスタンスを構築する。通常このコンストラクタは、生成されたJavaコードから{@link
@@ -162,22 +183,17 @@ public class CobolIndexedFile extends CobolFile {
                 fileVersion);
     }
 
+    /**
+     * ロックの所有者を識別するIDを取得する。プロセスのUUIDと実行単位(スレッド)のUUIDを連結したもの。
+     *
+     * @return 現在の実行単位のロック所有者ID
+     */
     private static String getProcessUuid() {
-        if (CobolIndexedFile.storedProcessUuid == null) {
-            CobolIndexedFile.storedProcessUuid = java.util.UUID.randomUUID().toString();
-        }
-        return CobolIndexedFile.storedProcessUuid;
+        return runUnitUuid.get();
     }
 
     private static String getProcessId() {
-        if (CobolIndexedFile.storedProcessId == null) {
-            CobolIndexedFile.storedProcessId =
-                    String.valueOf(
-                            java.lang.management.ManagementFactory.getRuntimeMXBean()
-                                    .getName()
-                                    .split("@")[0]);
-        }
-        return CobolIndexedFile.storedProcessId;
+        return PROCESS_ID;
     }
 
     private static String getIndexName(int index) {

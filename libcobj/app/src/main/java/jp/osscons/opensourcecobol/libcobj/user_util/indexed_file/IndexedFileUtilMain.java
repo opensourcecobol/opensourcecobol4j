@@ -566,10 +566,10 @@ class IndexedFileUtilMain {
         CobolModule.push(module);
 
         // Open the indexed file
-        CobolRuntimeException.code = 0;
+        CobolRuntimeException.clearExceptionCode();
         cobolIndexedFile.setCommitOnModification(false);
         cobolIndexedFile.open(CobolFile.COB_OPEN_EXTEND, 0, null);
-        if (CobolRuntimeException.code != 0) {
+        if (CobolRuntimeException.getExceptionCode() != 0) {
             return ErrorLib.errorIO();
         }
 
@@ -589,14 +589,14 @@ class IndexedFileUtilMain {
             }
 
             // Write the record to the indexed file
-            CobolRuntimeException.code = 0;
+            CobolRuntimeException.clearExceptionCode();
             try {
                 cobolIndexedFile.write(cobolIndexedFile.record, 0, null);
             } catch (CobolStopRunException e) {
                 loadResult = LoadResult.LoadResultOther;
                 break;
             }
-            if (CobolRuntimeException.code != 0) {
+            if (CobolRuntimeException.getExceptionCode() != 0) {
                 loadResult = LoadResult.LoadResultOther;
                 break;
             }
@@ -647,9 +647,9 @@ class IndexedFileUtilMain {
         CobolModule.push(module);
 
         // Open the indexed file
-        CobolRuntimeException.code = 0;
+        CobolRuntimeException.clearExceptionCode();
         cobolFile.open(CobolFile.COB_OPEN_INPUT, 0, null);
-        if (CobolRuntimeException.code != 0) {
+        if (CobolRuntimeException.getExceptionCode() != 0) {
             return ErrorLib.errorIO();
         }
 
@@ -657,9 +657,9 @@ class IndexedFileUtilMain {
         boolean isIndexedFileEmpty = true;
         try (OutputStream stream = getOutputStream(filePath)) {
             while (true) {
-                CobolRuntimeException.code = 0;
+                CobolRuntimeException.clearExceptionCode();
                 cobolFile.read(0, null, 1);
-                if (CobolRuntimeException.code == 0) {
+                if (CobolRuntimeException.getExceptionCode() == 0) {
                     isIndexedFileEmpty = false;
                     CobolDataStorage storage = cobolFile.record.getDataStorage();
                     stream.write(
@@ -667,7 +667,7 @@ class IndexedFileUtilMain {
                     if (userDataFormat == UserDataFormat.LINE_SEQUENTIAL) {
                         stream.write('\n');
                     }
-                } else if (CobolRuntimeException.code == 0x0501) {
+                } else if (CobolRuntimeException.getExceptionCode() == 0x0501) {
                     break;
                 } else {
                     return ErrorLib.errorIO();
@@ -922,7 +922,7 @@ class IndexedFileUtilMain {
                     new CobolModule(null, null, null, null, 0, '.', '$', ',', 1, 1, 1, 0, null);
             CobolModule.push(module);
             cobolIndexedFile.open(CobolFile.COB_OPEN_OUTPUT, 0, null);
-            if (CobolRuntimeException.code != 0) {
+            if (CobolRuntimeException.getExceptionCode() != 0) {
                 throw new IllegalArgumentException("failed to open the indexed file.");
             }
             cobolIndexedFile.close(0, null);

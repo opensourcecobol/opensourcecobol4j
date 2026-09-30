@@ -38,11 +38,8 @@ public abstract class AbstractCobolField {
     /** 変数に関する様々な情報を保持するオブジェクト(符号付か,COMP-3指定かなど) */
     protected CobolFieldAttribute attribute;
 
-    static int lastsize = 0;
-    static CobolDataStorage lastdata = null;
-
     /** 文字データの符号化に使用するShift_JIS文字セット */
-    public static Charset charSetSJIS = Charset.forName("SHIFT-JIS");
+    public static final Charset charSetSJIS = Charset.forName("SHIFT-JIS");
 
     static final int[] cobExp10 = {
         1, 10, 100, 1000, 10000, 100000, 1000000, 10000000, 100000000, 1000000000
@@ -368,11 +365,12 @@ public abstract class AbstractCobolField {
         AbstractCobolField dividend = this;
         CobolDecimal d1 = dividend.getDecimal();
         CobolDecimal d2 = divisor.getDecimal();
-        CobolDecimal.cobD3.set(d1);
+        CobolDecimal cobD3 = CobolDecimal.getRemainderDecimal();
+        cobD3.set(d1);
 
         d1.div(d2);
         if (d1.getScale() == CobolDecimal.DECIMAL_NAN) {
-            CobolDecimal.cobD3.setScale(CobolDecimal.DECIMAL_NAN);
+            cobD3.setScale(CobolDecimal.DECIMAL_NAN);
             // TODO 例外を投げるべきか?
             return 0;
         }
@@ -383,7 +381,7 @@ public abstract class AbstractCobolField {
         d4.shiftDecimal(quotient.getAttribute().getScale() - d4.getScale());
 
         d4.mul(d2);
-        CobolDecimal.cobD3.sub(d4);
+        cobD3.sub(d4);
 
         return ret;
     }
@@ -396,7 +394,7 @@ public abstract class AbstractCobolField {
      * @throws CobolStopRunException 実行を停止する状況が発生した場合にスローされる
      */
     public int divRemainder(int opt) throws CobolStopRunException {
-        return CobolDecimal.cobD3.getField(this, opt);
+        return CobolDecimal.getRemainderDecimal().getField(this, opt);
     }
 
     /**
@@ -526,7 +524,7 @@ public abstract class AbstractCobolField {
                         || srcAttr.isTypeAlphanum()
                         || srcAttr.isTypeAlphanumEdited()) {
                     pTmp = CobolNationalField.judge_hankakujpn_exist(src1);
-                    size = CobolNationalField.workReturnSize;
+                    size = pTmp == null ? 0 : pTmp.length;
                 }
                 if (pTmp != null) {
                     src1.setDataStorage(new CobolDataStorage(pTmp));
@@ -563,7 +561,8 @@ public abstract class AbstractCobolField {
             CobolDataStorage pTmp;
             byte[] pBytes = CobolNationalField.judge_hankakujpn_exist(src);
             pTmp = new CobolDataStorage(pBytes);
-            size = CobolNationalField.workReturnSize;
+            // 変換対象が空または先頭が0x00の場合はnullが返る
+            size = pBytes == null ? 0 : pBytes.length;
             tmpSrcStorage = pTmp;
             tmpSrcSize = size;
             xToN = true;
@@ -583,10 +582,7 @@ public abstract class AbstractCobolField {
         } else {
             digcount = this.size;
         }
-        if (digcount > AbstractCobolField.lastsize) {
-            AbstractCobolField.lastdata = new CobolDataStorage(digcount);
-            AbstractCobolField.lastsize = digcount;
-        }
+        CobolDataStorage lastdata = new CobolDataStorage(digcount);
 
         AbstractCobolField temp = CobolFieldFactory.makeCobolField(digcount, lastdata, attr);
 

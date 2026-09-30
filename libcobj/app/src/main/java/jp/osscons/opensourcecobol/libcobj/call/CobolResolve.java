@@ -20,10 +20,11 @@ package jp.osscons.opensourcecobol.libcobj.call;
 
 import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
-import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.CopyOnWriteArrayList;
 import jp.osscons.opensourcecobol.libcobj.common.CobolConstant;
 import jp.osscons.opensourcecobol.libcobj.common.CobolUtil;
 import jp.osscons.opensourcecobol.libcobj.data.AbstractCobolField;
@@ -34,182 +35,198 @@ import jp.osscons.opensourcecobol.libcobj.exceptions.CobolStopRunException;
 /** 動的にクラスファイルを読み込んでCALL文のような機能を実装するためのクラス */
 public class CobolResolve {
 
-    /** プログラム名とCobolRunnableインスタンスの対応表 */
-    private static Map<String, CobolRunnable> callTable;
+    /**
+     * プログラム名とCobolRunnableインスタンスの対応表。<br>
+     * CALLされたプログラムのインスタンス(とそのWORKING-STORAGE)は実行単位ごとに独立しているため、
+     * スレッドごとに保持する。
+     */
+    private static final ThreadLocal<Map<String, CobolRunnable>> callTable =
+            ThreadLocal.withInitial(HashMap::new);
 
-    /** 例外コードと例外名の対応を表現する */
-    public static Map<Integer, String> cobException;
+    /** 例外コードと例外名の対応を表現する(変更不可) */
+    public static final Map<Integer, String> cobException;
 
     /** 名前の変換方法(小文字か大文字)を示す変数 */
-    private static int name_convert;
+    @SuppressWarnings("PMD.AvoidUsingVolatile")
+    private static volatile int name_convert = 0;
 
     // TODO resolve_pathsの利用方法
     /** システムで設定された区切り文字で区切られた0個以上のパス 動的に読み込むクラスファイルを検索する場所を示す. */
-    private static List<String> resolve_paths;
+    private static final List<String> resolve_paths = new CopyOnWriteArrayList<String>();
 
     /** システムで設定された区切り文字で区切られた0個以上のパス 動的に読み込むクラスファイルを検索するパッケージ名を示す. */
-    private static List<String> package_paths;
+    private static final List<String> package_paths = new CopyOnWriteArrayList<String>();
 
     static {
-        callTable = new HashMap<>();
-        name_convert = 0;
-        resolve_paths = new ArrayList<String>();
-        package_paths = new ArrayList<String>();
-        cobException = new HashMap<>();
+        Map<Integer, String> exceptionNames = new HashMap<>();
 
-        cobException.put(0xFFFF, "EC-ALL");
-        cobException.put(0x0100, "EC-ARGUMENT");
-        cobException.put(0x0101, "EC-ARGUMENT-FUNCTION");
-        cobException.put(0x0102, "EC-ARGUMENT-IMP");
-        cobException.put(0x0200, "EC-BOUND");
-        cobException.put(0x0201, "EC-BOUND-IMP");
-        cobException.put(0x0202, "EC-BOUND-ODO");
-        cobException.put(0x0203, "EC-BOUND-OVERFLOW");
-        cobException.put(0x0204, "EC-BOUND-PTR");
-        cobException.put(0x0205, "EC-BOUND-REF-MOD");
-        cobException.put(0x0206, "EC-BOUND-SET");
-        cobException.put(0x0207, "EC-BOUND-SUBSCRIPT");
-        cobException.put(0x0208, "EC-BOUND-TABLE-LIMIT");
-        cobException.put(0x0300, "EC-DATA");
-        cobException.put(0x0301, "EC-DATA-CONVERSION");
-        cobException.put(0x0302, "EC-DATA-IMP");
-        cobException.put(0x0303, "EC-DATA-INCOMPATIBLE");
-        cobException.put(0x0304, "EC-DATA-INTEGRITY");
-        cobException.put(0x0305, "EC-DATA-PTR-NULL");
-        cobException.put(0x0306, "EC-DATA-INFINITY");
-        cobException.put(0x0307, "EC-DATA-NEGATIVE-INFINITY");
-        cobException.put(0x0308, "EC-DATA-NOT_A_NUMBER");
-        cobException.put(0x0400, "EC-FLOW");
-        cobException.put(0x0401, "EC-FLOW-GLOBAL-EXIT");
-        cobException.put(0x0402, "EC-FLOW-GLOBAL-GOBACK");
-        cobException.put(0x0403, "EC-FLOW-IMP");
-        cobException.put(0x0404, "EC-FLOW-RELEASE");
-        cobException.put(0x0405, "EC-FLOW-REPORT");
-        cobException.put(0x0406, "EC-FLOW-RETURN");
-        cobException.put(0x0407, "EC-FLOW-SEARCH");
-        cobException.put(0x0408, "EC-FLOW-USE");
-        cobException.put(0x0500, "EC-I-O");
-        cobException.put(0x0501, "EC-I-O-AT-END");
-        cobException.put(0x0502, "EC-I-O-EOP");
-        cobException.put(0x0503, "EC-I-O-EOP-OVERFLOW");
-        cobException.put(0x0504, "EC-I-O-FILE-SHARING");
-        cobException.put(0x0505, "EC-I-O-IMP");
-        cobException.put(0x0506, "EC-I-O-INVALID-KEY");
-        cobException.put(0x0507, "EC-I-O-LINAGE");
-        cobException.put(0x0508, "EC-I-O-LOGIC-ERROR");
-        cobException.put(0x0509, "EC-I-O-PERMANENT-ERROR");
-        cobException.put(0x050A, "EC-I-O-RECORD-OPERATION");
-        cobException.put(0x0600, "EC-IMP");
-        cobException.put(0x0601, "EC-IMP-ACCEPT");
-        cobException.put(0x0602, "EC-IMP-DISPLAY");
-        cobException.put(0x0700, "EC-LOCALE");
-        cobException.put(0x0701, "EC-LOCALE-IMP");
-        cobException.put(0x0702, "EC-LOCALE-INCOMPATIBLE");
-        cobException.put(0x0703, "EC-LOCALE-INVALID");
-        cobException.put(0x0704, "EC-LOCALE-INVALID-PTR");
-        cobException.put(0x0705, "EC-LOCALE-MISSING");
-        cobException.put(0x0706, "EC-LOCALE-SIZE");
-        cobException.put(0x0800, "EC-OO");
-        cobException.put(0x0801, "EC-OO-CONFORMANCE");
-        cobException.put(0x0802, "EC-OO-EXCEPTION");
-        cobException.put(0x0803, "EC-OO-IMP");
-        cobException.put(0x0804, "EC-OO-METHOD");
-        cobException.put(0x0805, "EC-OO-NULL");
-        cobException.put(0x0806, "EC-OO-RESOURCE");
-        cobException.put(0x0807, "EC-OO-UNIVERSAL");
-        cobException.put(0x0900, "EC-ORDER");
-        cobException.put(0x0901, "EC-ORDER-IMP");
-        cobException.put(0x0902, "EC-ORDER-NOT-SUPPORTED");
-        cobException.put(0x0A00, "EC-OVERFLOW");
-        cobException.put(0x0A01, "EC-OVERFLOW-IMP");
-        cobException.put(0x0A02, "EC-OVERFLOW-STRING");
-        cobException.put(0x0A03, "EC-OVERFLOW-UNSTRING");
-        cobException.put(0x0B00, "EC-PROGRAM");
-        cobException.put(0x0B01, "EC-PROGRAM-ARG-MISMATCH");
-        cobException.put(0x0B02, "EC-PROGRAM-ARG-OMITTED");
-        cobException.put(0x0B03, "EC-PROGRAM-CANCEL-ACTIVE");
-        cobException.put(0x0B04, "EC-PROGRAM-IMP");
-        cobException.put(0x0B05, "EC-PROGRAM-NOT-FOUND");
-        cobException.put(0x0B06, "EC-PROGRAM-PTR-NULL");
-        cobException.put(0x0B07, "EC-PROGRAM-RECURSIVE-CALL");
-        cobException.put(0x0B08, "EC-PROGRAM-RESOURCES");
-        cobException.put(0x0C00, "EC-RAISING");
-        cobException.put(0x0C01, "EC-RAISING-IMP");
-        cobException.put(0x0C02, "EC-RAISING-NOT-SPECIFIED");
-        cobException.put(0x0D00, "EC-RANGE");
-        cobException.put(0x0D01, "EC-RANGE-IMP");
-        cobException.put(0x0D02, "EC-RANGE-INDEX");
-        cobException.put(0x0D03, "EC-RANGE-INSPECT-SIZE");
-        cobException.put(0x0D04, "EC-RANGE-INVALID");
-        cobException.put(0x0D05, "EC-RANGE-PERFORM-VARYING");
-        cobException.put(0x0D06, "EC-RANGE-PTR");
-        cobException.put(0x0D07, "EC-RANGE-SEARCH-INDEX");
-        cobException.put(0x0D08, "EC-RANGE-SEARCH-NO-MATCH");
-        cobException.put(0x0E00, "EC-REPORT");
-        cobException.put(0x0E01, "EC-REPORT-ACTIVE");
-        cobException.put(0x0E02, "EC-REPORT-COLUMN-OVERLAP");
-        cobException.put(0x0E03, "EC-REPORT-FILE-MODE");
-        cobException.put(0x0E04, "EC-REPORT-IMP");
-        cobException.put(0x0E05, "EC-REPORT-INACTIVE");
-        cobException.put(0x0E06, "EC-REPORT-LINE-OVERLAP");
-        cobException.put(0x0E08, "EC-REPORT-NOT-TERMINATED");
-        cobException.put(0x0E09, "EC-REPORT-PAGE-LIMIT");
-        cobException.put(0x0E0A, "EC-REPORT-PAGE-WIDTH");
-        cobException.put(0x0E0B, "EC-REPORT-SUM-SIZE");
-        cobException.put(0x0E0C, "EC-REPORT-VARYING");
-        cobException.put(0x0F00, "EC-SCREEN");
-        cobException.put(0x0F01, "EC-SCREEN-FIELD-OVERLAP");
-        cobException.put(0x0F02, "EC-SCREEN-IMP");
-        cobException.put(0x0F03, "EC-SCREEN-ITEM-TRUNCATED");
-        cobException.put(0x0F04, "EC-SCREEN-LINE-NUMBER");
-        cobException.put(0x0F05, "EC-SCREEN-STARTING-COLUMN");
-        cobException.put(0x1000, "EC-SIZE");
-        cobException.put(0x1001, "EC-SIZE-ADDRESS");
-        cobException.put(0x1002, "EC-SIZE-EXPONENTIATION");
-        cobException.put(0x1003, "EC-SIZE-IMP");
-        cobException.put(0x1004, "EC-SIZE-OVERFLOW");
-        cobException.put(0x1005, "EC-SIZE-TRUNCATION");
-        cobException.put(0x1006, "EC-SIZE-UNDERFLOW");
-        cobException.put(0x1007, "EC-SIZE-ZERO-DIVIDE");
-        cobException.put(0x1100, "EC-SORT-MERGE");
-        cobException.put(0x1101, "EC-SORT-MERGE-ACTIVE");
-        cobException.put(0x1102, "EC-SORT-MERGE-FILE-OPEN");
-        cobException.put(0x1103, "EC-SORT-MERGE-IMP");
-        cobException.put(0x1104, "EC-SORT-MERGE-RELEASE");
-        cobException.put(0x1105, "EC-SORT-MERGE-RETURN");
-        cobException.put(0x1106, "EC-SORT-MERGE-SEQUENCE");
-        cobException.put(0x1200, "EC-STORAGE");
-        cobException.put(0x1201, "EC-STORAGE-IMP");
-        cobException.put(0x1202, "EC-STORAGE-NOT-ALLOC");
-        cobException.put(0x1203, "EC-STORAGE-NOT-AVAIL");
-        cobException.put(0x1300, "EC-USER");
-        cobException.put(0x1400, "EC-VALIDATE");
-        cobException.put(0x1401, "EC-VALIDATE-CONTENT");
-        cobException.put(0x1402, "EC-VALIDATE-FORMAT");
-        cobException.put(0x1403, "EC-VALIDATE-IMP");
-        cobException.put(0x1404, "EC-VALIDATE-RELATION");
-        cobException.put(0x1405, "EC-VALIDATE-VARYING");
-        cobException.put(0x1500, "EC-FUNCTION");
-        cobException.put(0x1501, "EC-FUNCTION-NOT-FOUND");
-        cobException.put(0x1502, "EC-FUNCTION-PTR-INVALID");
-        cobException.put(0x1503, "EC-FUNCTION-PTR-NULL");
-        cobException.put(0x1600, "EC-XML");
-        cobException.put(0x1601, "EC-XML-CODESET");
-        cobException.put(0x1602, "EC-XML-CODESET-CONVERSION");
-        cobException.put(0x1603, "EC-XML-COUNT");
-        cobException.put(0x1604, "EC-XML-DOCUMENT-TYPE");
-        cobException.put(0x1605, "EC-XML-IMPLICIT-CLOSE");
-        cobException.put(0x1606, "EC-XML-INVALID");
-        cobException.put(0x1607, "EC-XML-NAMESPACE");
-        cobException.put(0x1608, "EC-XML-STACKED-OPEN");
-        cobException.put(0x1609, "EC-XML-RANGE");
+        exceptionNames.put(0xFFFF, "EC-ALL");
+        exceptionNames.put(0x0100, "EC-ARGUMENT");
+        exceptionNames.put(0x0101, "EC-ARGUMENT-FUNCTION");
+        exceptionNames.put(0x0102, "EC-ARGUMENT-IMP");
+        exceptionNames.put(0x0200, "EC-BOUND");
+        exceptionNames.put(0x0201, "EC-BOUND-IMP");
+        exceptionNames.put(0x0202, "EC-BOUND-ODO");
+        exceptionNames.put(0x0203, "EC-BOUND-OVERFLOW");
+        exceptionNames.put(0x0204, "EC-BOUND-PTR");
+        exceptionNames.put(0x0205, "EC-BOUND-REF-MOD");
+        exceptionNames.put(0x0206, "EC-BOUND-SET");
+        exceptionNames.put(0x0207, "EC-BOUND-SUBSCRIPT");
+        exceptionNames.put(0x0208, "EC-BOUND-TABLE-LIMIT");
+        exceptionNames.put(0x0300, "EC-DATA");
+        exceptionNames.put(0x0301, "EC-DATA-CONVERSION");
+        exceptionNames.put(0x0302, "EC-DATA-IMP");
+        exceptionNames.put(0x0303, "EC-DATA-INCOMPATIBLE");
+        exceptionNames.put(0x0304, "EC-DATA-INTEGRITY");
+        exceptionNames.put(0x0305, "EC-DATA-PTR-NULL");
+        exceptionNames.put(0x0306, "EC-DATA-INFINITY");
+        exceptionNames.put(0x0307, "EC-DATA-NEGATIVE-INFINITY");
+        exceptionNames.put(0x0308, "EC-DATA-NOT_A_NUMBER");
+        exceptionNames.put(0x0400, "EC-FLOW");
+        exceptionNames.put(0x0401, "EC-FLOW-GLOBAL-EXIT");
+        exceptionNames.put(0x0402, "EC-FLOW-GLOBAL-GOBACK");
+        exceptionNames.put(0x0403, "EC-FLOW-IMP");
+        exceptionNames.put(0x0404, "EC-FLOW-RELEASE");
+        exceptionNames.put(0x0405, "EC-FLOW-REPORT");
+        exceptionNames.put(0x0406, "EC-FLOW-RETURN");
+        exceptionNames.put(0x0407, "EC-FLOW-SEARCH");
+        exceptionNames.put(0x0408, "EC-FLOW-USE");
+        exceptionNames.put(0x0500, "EC-I-O");
+        exceptionNames.put(0x0501, "EC-I-O-AT-END");
+        exceptionNames.put(0x0502, "EC-I-O-EOP");
+        exceptionNames.put(0x0503, "EC-I-O-EOP-OVERFLOW");
+        exceptionNames.put(0x0504, "EC-I-O-FILE-SHARING");
+        exceptionNames.put(0x0505, "EC-I-O-IMP");
+        exceptionNames.put(0x0506, "EC-I-O-INVALID-KEY");
+        exceptionNames.put(0x0507, "EC-I-O-LINAGE");
+        exceptionNames.put(0x0508, "EC-I-O-LOGIC-ERROR");
+        exceptionNames.put(0x0509, "EC-I-O-PERMANENT-ERROR");
+        exceptionNames.put(0x050A, "EC-I-O-RECORD-OPERATION");
+        exceptionNames.put(0x0600, "EC-IMP");
+        exceptionNames.put(0x0601, "EC-IMP-ACCEPT");
+        exceptionNames.put(0x0602, "EC-IMP-DISPLAY");
+        exceptionNames.put(0x0700, "EC-LOCALE");
+        exceptionNames.put(0x0701, "EC-LOCALE-IMP");
+        exceptionNames.put(0x0702, "EC-LOCALE-INCOMPATIBLE");
+        exceptionNames.put(0x0703, "EC-LOCALE-INVALID");
+        exceptionNames.put(0x0704, "EC-LOCALE-INVALID-PTR");
+        exceptionNames.put(0x0705, "EC-LOCALE-MISSING");
+        exceptionNames.put(0x0706, "EC-LOCALE-SIZE");
+        exceptionNames.put(0x0800, "EC-OO");
+        exceptionNames.put(0x0801, "EC-OO-CONFORMANCE");
+        exceptionNames.put(0x0802, "EC-OO-EXCEPTION");
+        exceptionNames.put(0x0803, "EC-OO-IMP");
+        exceptionNames.put(0x0804, "EC-OO-METHOD");
+        exceptionNames.put(0x0805, "EC-OO-NULL");
+        exceptionNames.put(0x0806, "EC-OO-RESOURCE");
+        exceptionNames.put(0x0807, "EC-OO-UNIVERSAL");
+        exceptionNames.put(0x0900, "EC-ORDER");
+        exceptionNames.put(0x0901, "EC-ORDER-IMP");
+        exceptionNames.put(0x0902, "EC-ORDER-NOT-SUPPORTED");
+        exceptionNames.put(0x0A00, "EC-OVERFLOW");
+        exceptionNames.put(0x0A01, "EC-OVERFLOW-IMP");
+        exceptionNames.put(0x0A02, "EC-OVERFLOW-STRING");
+        exceptionNames.put(0x0A03, "EC-OVERFLOW-UNSTRING");
+        exceptionNames.put(0x0B00, "EC-PROGRAM");
+        exceptionNames.put(0x0B01, "EC-PROGRAM-ARG-MISMATCH");
+        exceptionNames.put(0x0B02, "EC-PROGRAM-ARG-OMITTED");
+        exceptionNames.put(0x0B03, "EC-PROGRAM-CANCEL-ACTIVE");
+        exceptionNames.put(0x0B04, "EC-PROGRAM-IMP");
+        exceptionNames.put(0x0B05, "EC-PROGRAM-NOT-FOUND");
+        exceptionNames.put(0x0B06, "EC-PROGRAM-PTR-NULL");
+        exceptionNames.put(0x0B07, "EC-PROGRAM-RECURSIVE-CALL");
+        exceptionNames.put(0x0B08, "EC-PROGRAM-RESOURCES");
+        exceptionNames.put(0x0C00, "EC-RAISING");
+        exceptionNames.put(0x0C01, "EC-RAISING-IMP");
+        exceptionNames.put(0x0C02, "EC-RAISING-NOT-SPECIFIED");
+        exceptionNames.put(0x0D00, "EC-RANGE");
+        exceptionNames.put(0x0D01, "EC-RANGE-IMP");
+        exceptionNames.put(0x0D02, "EC-RANGE-INDEX");
+        exceptionNames.put(0x0D03, "EC-RANGE-INSPECT-SIZE");
+        exceptionNames.put(0x0D04, "EC-RANGE-INVALID");
+        exceptionNames.put(0x0D05, "EC-RANGE-PERFORM-VARYING");
+        exceptionNames.put(0x0D06, "EC-RANGE-PTR");
+        exceptionNames.put(0x0D07, "EC-RANGE-SEARCH-INDEX");
+        exceptionNames.put(0x0D08, "EC-RANGE-SEARCH-NO-MATCH");
+        exceptionNames.put(0x0E00, "EC-REPORT");
+        exceptionNames.put(0x0E01, "EC-REPORT-ACTIVE");
+        exceptionNames.put(0x0E02, "EC-REPORT-COLUMN-OVERLAP");
+        exceptionNames.put(0x0E03, "EC-REPORT-FILE-MODE");
+        exceptionNames.put(0x0E04, "EC-REPORT-IMP");
+        exceptionNames.put(0x0E05, "EC-REPORT-INACTIVE");
+        exceptionNames.put(0x0E06, "EC-REPORT-LINE-OVERLAP");
+        exceptionNames.put(0x0E08, "EC-REPORT-NOT-TERMINATED");
+        exceptionNames.put(0x0E09, "EC-REPORT-PAGE-LIMIT");
+        exceptionNames.put(0x0E0A, "EC-REPORT-PAGE-WIDTH");
+        exceptionNames.put(0x0E0B, "EC-REPORT-SUM-SIZE");
+        exceptionNames.put(0x0E0C, "EC-REPORT-VARYING");
+        exceptionNames.put(0x0F00, "EC-SCREEN");
+        exceptionNames.put(0x0F01, "EC-SCREEN-FIELD-OVERLAP");
+        exceptionNames.put(0x0F02, "EC-SCREEN-IMP");
+        exceptionNames.put(0x0F03, "EC-SCREEN-ITEM-TRUNCATED");
+        exceptionNames.put(0x0F04, "EC-SCREEN-LINE-NUMBER");
+        exceptionNames.put(0x0F05, "EC-SCREEN-STARTING-COLUMN");
+        exceptionNames.put(0x1000, "EC-SIZE");
+        exceptionNames.put(0x1001, "EC-SIZE-ADDRESS");
+        exceptionNames.put(0x1002, "EC-SIZE-EXPONENTIATION");
+        exceptionNames.put(0x1003, "EC-SIZE-IMP");
+        exceptionNames.put(0x1004, "EC-SIZE-OVERFLOW");
+        exceptionNames.put(0x1005, "EC-SIZE-TRUNCATION");
+        exceptionNames.put(0x1006, "EC-SIZE-UNDERFLOW");
+        exceptionNames.put(0x1007, "EC-SIZE-ZERO-DIVIDE");
+        exceptionNames.put(0x1100, "EC-SORT-MERGE");
+        exceptionNames.put(0x1101, "EC-SORT-MERGE-ACTIVE");
+        exceptionNames.put(0x1102, "EC-SORT-MERGE-FILE-OPEN");
+        exceptionNames.put(0x1103, "EC-SORT-MERGE-IMP");
+        exceptionNames.put(0x1104, "EC-SORT-MERGE-RELEASE");
+        exceptionNames.put(0x1105, "EC-SORT-MERGE-RETURN");
+        exceptionNames.put(0x1106, "EC-SORT-MERGE-SEQUENCE");
+        exceptionNames.put(0x1200, "EC-STORAGE");
+        exceptionNames.put(0x1201, "EC-STORAGE-IMP");
+        exceptionNames.put(0x1202, "EC-STORAGE-NOT-ALLOC");
+        exceptionNames.put(0x1203, "EC-STORAGE-NOT-AVAIL");
+        exceptionNames.put(0x1300, "EC-USER");
+        exceptionNames.put(0x1400, "EC-VALIDATE");
+        exceptionNames.put(0x1401, "EC-VALIDATE-CONTENT");
+        exceptionNames.put(0x1402, "EC-VALIDATE-FORMAT");
+        exceptionNames.put(0x1403, "EC-VALIDATE-IMP");
+        exceptionNames.put(0x1404, "EC-VALIDATE-RELATION");
+        exceptionNames.put(0x1405, "EC-VALIDATE-VARYING");
+        exceptionNames.put(0x1500, "EC-FUNCTION");
+        exceptionNames.put(0x1501, "EC-FUNCTION-NOT-FOUND");
+        exceptionNames.put(0x1502, "EC-FUNCTION-PTR-INVALID");
+        exceptionNames.put(0x1503, "EC-FUNCTION-PTR-NULL");
+        exceptionNames.put(0x1600, "EC-XML");
+        exceptionNames.put(0x1601, "EC-XML-CODESET");
+        exceptionNames.put(0x1602, "EC-XML-CODESET-CONVERSION");
+        exceptionNames.put(0x1603, "EC-XML-COUNT");
+        exceptionNames.put(0x1604, "EC-XML-DOCUMENT-TYPE");
+        exceptionNames.put(0x1605, "EC-XML-IMPLICIT-CLOSE");
+        exceptionNames.put(0x1606, "EC-XML-INVALID");
+        exceptionNames.put(0x1607, "EC-XML-NAMESPACE");
+        exceptionNames.put(0x1608, "EC-XML-STACKED-OPEN");
+        exceptionNames.put(0x1609, "EC-XML-RANGE");
+        cobException = Collections.unmodifiableMap(exceptionNames);
     }
 
-    /** コールスタックリストのヘッド */
-    private static CobolCallStackList callStackListHead = null;
+    /** 実行単位ごとのコールスタックの状態 */
+    private static final class CallStackState {
+        /** コールスタックリストのヘッド */
+        CobolCallStackList callStackListHead = null;
 
-    /** 現在のコールスタックリスト */
-    private static CobolCallStackList currentCallStackList = null;
+        /** 現在のコールスタックリスト */
+        CobolCallStackList currentCallStackList = null;
+    }
+
+    /** コールスタック。実行単位はスレッドごとに独立しているため、スレッドごとに保持する。 */
+    private static final ThreadLocal<CallStackState> callStack =
+            ThreadLocal.withInitial(CallStackState::new);
+
+    /** 現在のスレッドに紐づくCALLのキャッシュとコールスタックを破棄する。実行単位の終了時に呼び出す。 */
+    public static void resetThreadState() {
+        callTable.remove();
+        callStack.remove();
+    }
 
     /**
      * 下記の環境変数を読み込み、CobolResolve内で定義されたメソッドの動作が変わる。<br>
@@ -396,8 +413,9 @@ public class CobolResolve {
         name = name.replaceAll("-", "__");
 
         /* search the cache */
-        if (callTable.containsKey(name)) {
-            return callTable.get(name);
+        Map<String, CobolRunnable> table = callTable.get();
+        if (table.containsKey(name)) {
+            return table.get(name);
         }
 
         if (name_convert == 1) {
@@ -415,7 +433,7 @@ public class CobolResolve {
         /* search the main program */
         runnable = getInstance(fullName);
         if (runnable != null) {
-            callTable.put(name, runnable);
+            table.put(name, runnable);
             return runnable;
         }
 
@@ -424,7 +442,7 @@ public class CobolResolve {
             fullName = packagePath + "." + name;
             runnable = getInstance(fullName);
             if (runnable != null) {
-                callTable.put(name, runnable);
+                table.put(name, runnable);
                 return runnable;
             }
         }
@@ -447,8 +465,7 @@ public class CobolResolve {
             Class<?> c = Class.forName(name);
             Constructor<?> cons = c.getConstructor();
             runnable = (CobolRunnable) cons.newInstance();
-            runnable = (CobolRunnable) c.getDeclaredConstructor().newInstance();
-            callTable.put(name, runnable);
+            callTable.get().put(name, runnable);
             return runnable;
         } catch (NoSuchMethodException
                 | SecurityException
@@ -485,8 +502,8 @@ public class CobolResolve {
                     "NULL name parameter passed to 'cobcancel'");
         }
 
-        CobolRunnable runnable = callTable.get(name);
-        if (runnable.isActive() == false) {
+        CobolRunnable runnable = callTable.get().get(name);
+        if (runnable != null && runnable.isActive() == false) {
             runnable.cancel();
         }
     }
@@ -514,7 +531,7 @@ public class CobolResolve {
         }
 
         name = name.replaceAll("-", "__");
-        CobolRunnable runner = callTable.get(name);
+        CobolRunnable runner = callTable.get().get(name);
         if (runner != null) {
             runner.cancel();
         }
@@ -524,10 +541,11 @@ public class CobolResolve {
      * コールスタックリストを初期化する
      */
     private static void initCallStackList() {
-        if (callStackListHead == null) {
-            callStackListHead = new CobolCallStackList();
+        CallStackState st = callStack.get();
+        if (st.callStackListHead == null) {
+            st.callStackListHead = new CobolCallStackList();
         }
-        currentCallStackList = callStackListHead;
+        st.currentCallStackList = st.callStackListHead;
     }
 
     /**
@@ -537,9 +555,10 @@ public class CobolResolve {
      * @return 作成したコールスタックリスト
      */
     private static CobolCallStackList createCallStackList(String name) {
+        CallStackState st = callStack.get();
         CobolCallStackList newList = new CobolCallStackList(name);
-        newList.setParent(currentCallStackList);
-        currentCallStackList = newList;
+        newList.setParent(st.currentCallStackList);
+        st.currentCallStackList = newList;
         return newList;
     }
 
@@ -582,18 +601,19 @@ public class CobolResolve {
      * @param name プログラム名
      */
     public static void pushCallStackList(String name) {
-        if (currentCallStackList == null) {
+        CallStackState st = callStack.get();
+        if (st.currentCallStackList == null) {
             initCallStackList();
         }
 
-        CobolCallStackList p = currentCallStackList.getChildren();
+        CobolCallStackList p = st.currentCallStackList.getChildren();
         if (p == null) {
-            currentCallStackList.setChildren(createCallStackList(name));
+            st.currentCallStackList.setChildren(createCallStackList(name));
             return;
         }
 
         if (p.getName().equals(name)) {
-            currentCallStackList = p;
+            st.currentCallStackList = p;
             return;
         }
 
@@ -605,7 +625,7 @@ public class CobolResolve {
         p = p.getSister();
         while (true) {
             if (p.getName().equals(name)) {
-                currentCallStackList = p;
+                st.currentCallStackList = p;
                 return;
             }
             if (p.getSister() == null) {
@@ -621,8 +641,9 @@ public class CobolResolve {
      * コールスタックから一つ取り出す
      */
     public static void popCallStackList() {
-        if (currentCallStackList != null) {
-            currentCallStackList = currentCallStackList.getParent();
+        CallStackState st = callStack.get();
+        if (st.currentCallStackList != null) {
+            st.currentCallStackList = st.currentCallStackList.getParent();
         }
     }
 
@@ -632,12 +653,13 @@ public class CobolResolve {
      * @throws CobolRuntimeException 現在のスタックがnullの場合
      */
     public static void cancelAll() throws CobolRuntimeException {
-        if (currentCallStackList == null) {
+        CallStackState st = callStack.get();
+        if (st.currentCallStackList == null) {
             throw new CobolRuntimeException(
                     CobolRuntimeException.COBOL_FATAL_ERROR,
                     "Call to 'cancelAll' current stack is NULL");
         }
-        cancelCallStackList(currentCallStackList.getChildren());
-        currentCallStackList.setChildren(null);
+        cancelCallStackList(st.currentCallStackList.getChildren());
+        st.currentCallStackList.setChildren(null);
     }
 }

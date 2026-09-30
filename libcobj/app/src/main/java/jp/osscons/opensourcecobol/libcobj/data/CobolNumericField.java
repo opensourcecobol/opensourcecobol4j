@@ -668,7 +668,7 @@ public class CobolNumericField extends AbstractCobolField {
                 CobolRuntimeException.setException(CobolExceptionId.COB_EC_SIZE_OVERFLOW);
                 if ((opt & CobolDecimal.COB_STORE_KEEP_ON_OVERFLOW) > 0) {
                     this.putSign(sign);
-                    return CobolRuntimeException.code;
+                    return CobolRuntimeException.getExceptionCode();
                 }
             }
         } else if (n < 0) {

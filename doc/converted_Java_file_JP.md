@@ -339,6 +339,39 @@ CobolControl.perform(contList, l_SUB).run();
 
 ※ Javaコンパイラは明らかに到達不可能なコードをエラーとして扱う。上記のコードの`if(true)`はこのコンパイルエラーを回避するために生成されている。
 
+## 実行単位とスレッド
+
+変換後のJavaコードでは、`WORKING-STORAGE`等の変数は変換後のクラスのインスタンスが保持する。
+またlibcobj.jarは、モジュールスタック・例外コード・CALLの解決結果・オープン中のファイル・
+`EXTERNAL`項目といった実行単位(run unit)の状態をスレッドごとに保持する。
+このため、1つのJVM内の複数のスレッドが、それぞれ独立した実行単位として
+COBOLプログラムを同時に実行できる。
+
+変換後の各プログラムの`run_module`メソッドは、先頭で`CobolUtil.ensureInitialized()`を呼び出し、
+ランタイム設定が未初期化であれば初期化する。この初期化はJVM内で高々1回だけ実行される。
+
+`STOP RUN`の変換結果は`System.exit`を呼び出さない。
+`CobolStopRunException`または`CobolStopRunSignal`を捕捉した`run_module`は
+`CobolStopRunException.handleAtFrame`を呼び出し、
+実行単位のルートでなければ`CobolStopRunSignal`を送出して呼び出し元のCOBOLプログラムへ巻き戻す。
+ルートであれば実行単位を終了(オープン中のファイルをクローズし、スレッドの状態を破棄)して返り値を返す。
+
+```java
+} catch(CobolStopRunException e) {
+  return CobolStopRunException.handleAtFrame(e.getReturnCode());
+} catch(CobolStopRunSignal e) {
+  return CobolStopRunException.handleAtFrame(e.getReturnCode());
+}
+```
+
+プロセスを終了させるのは、変換後のプログラムの`main`メソッドが呼び出す
+`CobolStopRunException.exitMain`だけである。
+`STOP RUN`で終了していた場合はその返り値で`System.exit`し、
+それ以外の場合はSystem.exitを呼ばずに復帰する。
+
+Javaアプリケーションから変換後のプログラムを呼び出す場合の詳細は、
+[マルチスレッドのJavaアプリケーションから変換後のプログラムを呼び出す](./multithreading_JP.md)を参照。
+
 ## libcobj/の解説
 libcobj.jarはopensource COBOL 4Jのランタイムであり、
 `opensourcecobol4j/libcobj/src/jp/osscons/opensourcecobol/libcobj`に格納されているJavaソースコードよりビルドされる。
@@ -361,7 +394,7 @@ libcobj.jarはopensource COBOL 4Jのランタイムであり、
 
 | ファイル名 | 説明 |
 | --- | --- |
-| CobolCallParams.java | 未使用のクラス。 |
+| CobolCallParams.java | CALL文で渡された引数の個数を実行単位ごとに保持するクラス。 |
 | CobolCheck.java | 実行時チェックに関する処理を実装するクラス。 |
 | CobolConstant.java | 様々な定数を定義するクラス。 |
 | CobolControl.java | セクションやラベル等の制御構造を実装するクラス。 |
@@ -370,6 +403,7 @@ libcobj.jarはopensource COBOL 4Jのランタイムであり、
 | CobolInspect.java | INSPECT文向けの機能を実装するクラス。 |
 | CobolIntrinsic.java | 組み込み関数を定義するクラス。 |
 | CobolModule.java | 実行時に様々な情報を保持するクラス。 |
+| CobolRunUnit.java | 実行単位(run unit)のライフサイクルを扱うクラス。実行単位の状態はスレッドごとに保持され、`CobolRunUnit.end`で破棄する。 |
 | CobolString.java | STRING文やUNSTRING文に関する処理を定義するクラス。 |
 | CobolUtil.java | 雑多な処理を定義するクラス。 |
 | GetAbstractCobolField.java | AbstractCobolFieldを返すメソッドrunを実装したインターフェース。 |
@@ -410,7 +444,8 @@ libcobj.jarはopensource COBOL 4Jのランタイムであり、
 | CobolExceptionTabCode.java | 例外コードを管理するクラス。 |
 | CobolGoBackException.java | GO BACK実行時に使用する例外のためのクラス。 |
 | CobolRuntimeException.java | 実行時エラーに関するクラス。 |
-| CobolStopRunException.java | STOP RUN実行時に使用する例外のためのクラス。 |
+| CobolStopRunException.java | STOP RUN実行時に使用する例外のためのクラス。実行単位の終了処理もこのクラスが行う。 |
+| CobolStopRunSignal.java | CALLされたプログラムのSTOP RUNを実行単位のルートまで巻き戻すための非検査例外。 |
 | CobolUndefinedException.java | 未使用のクラス。 |
 | RuntimeErrorHandler.java | 例外発生時のハンドラのためのインターフェース。 |
 | RuntimeExitHandler.java | プログラム終了時のハンドラのためのインターフェース。 |
@@ -436,6 +471,7 @@ libcobj.jarはopensource COBOL 4Jのランタイムであり、
 | FileStruct.java | ファイルに関する情報を保持するクラス。 |
 | IndexedCursor.java | 索引ファイルの処理で使用するクラス。 |
 | IndexedFile.java | 索引ファイルに関する情報を保持するクラス。 |
+| JvmFileLockRegistry.java | 同一JVM内の複数の実行単位による順編成・行順編成・相対編成ファイルのロックを管理するクラス。 |
 | KeyComponent.java | ファイルのキーに関連するクラス。 |
 | Linage.java | LINAGEに関するクラス。 |
 | MemoryStruct.java | ソート処理で使用するクラス。 |
