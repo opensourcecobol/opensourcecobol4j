@@ -4,7 +4,7 @@
 // servlet container.
 //
 // Build (after `make install` of opensource COBOL 4J and a libcobj build):
-//   ../../libcobj/gradlew -p . bootJar
+//   gradle -p . bootJar   (Gradle 8.14 or later, which Spring Boot 3.4 needs)
 // Override the locations with -PcobjBin=... and -PlibcobjJar=...
 
 plugins {
