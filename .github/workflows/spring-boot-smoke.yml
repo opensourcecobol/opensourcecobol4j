@@ -45,7 +45,7 @@ jobs:
         if: inputs.os == 'ubuntu:24.04'
         run: |
           apt-get update -y
-          apt-get install -y build-essential curl python3
+          apt-get install -y build-essential curl python3 unzip
 
       - name: Install opensource COBOL 4J
         run: |
