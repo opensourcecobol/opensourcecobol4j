@@ -26,17 +26,22 @@ public class CobolRuntimeException extends RuntimeException {
     /**
      * 現在のエラーコード。16進数のエラーコードが格納される。
      * 通常はsetExceptionメソッドによりCobolExceptionTabCode.codeテーブルから設定されるが、
-     * CobolFileやCobolLineSequentialFile等から直接代入される場合もある。
-     * 主にファイルI/O操作や数値演算のエラー判定に使用される。
+     * CobolFileやCobolLineSequentialFile等からsetExceptionCodeで直接設定される場合もある。
+     * 主にファイルI/O操作や数値演算のエラー判定に使用される。 実行単位はスレッドごとに独立しているため、スレッドごとに保持する。
      */
-    public static int code;
+    private static final ThreadLocal<int[]> code = ThreadLocal.withInitial(() -> new int[1]);
 
-    private static int cobException = 0;
-    private static String origProgramId;
-    private static String origSection;
-    private static String origParagraph;
-    private static int origLine = 0;
-    private static String origStatement;
+    private static final ThreadLocal<Context> context = ThreadLocal.withInitial(Context::new);
+
+    /** スレッドごとに保持する例外の発生箇所情報 */
+    private static final class Context {
+        int cobException = 0;
+        String origProgramId;
+        String origSection;
+        String origParagraph;
+        int origLine = 0;
+        String origStatement;
+    }
 
     /** 重大なエラーを示すエラーコード */
     public static final int COBOL_FATAL_ERROR = 9000;
@@ -80,13 +85,34 @@ public class CobolRuntimeException extends RuntimeException {
      * @param id エラーID
      */
     public static void setException(int id) {
-        code = CobolExceptionTabCode.code[id];
-        cobException = 1;
-        origLine = CobolUtil.getSourceLine();
-        origProgramId = CobolUtil.getCurrProgramId();
-        origSection = CobolUtil.getCurrSection();
-        origParagraph = CobolUtil.getCurrParagraph();
-        origStatement = CobolUtil.getSourceStatement();
+        code.get()[0] = CobolExceptionTabCode.code[id];
+        Context c = context.get();
+        c.cobException = 1;
+        c.origLine = CobolUtil.getSourceLine();
+        c.origProgramId = CobolUtil.getCurrProgramId();
+        c.origSection = CobolUtil.getCurrSection();
+        c.origParagraph = CobolUtil.getCurrParagraph();
+        c.origStatement = CobolUtil.getSourceStatement();
+    }
+
+    /**
+     * 現在のスレッドのエラーコードを直接設定する。
+     *
+     * @param exceptionCode 設定するエラーコード
+     */
+    public static void setExceptionCode(int exceptionCode) {
+        code.get()[0] = exceptionCode;
+    }
+
+    /** 現在のスレッドのエラーコードを0にリセットする。 */
+    public static void clearExceptionCode() {
+        code.get()[0] = 0;
+    }
+
+    /** 現在のスレッドに紐づく例外情報を破棄する。実行単位の終了時に呼び出す。 */
+    public static void resetThreadState() {
+        code.remove();
+        context.remove();
     }
 
     /**
@@ -105,7 +131,7 @@ public class CobolRuntimeException extends RuntimeException {
      * @return エラーコード
      */
     public static int getExceptionCode() {
-        return code;
+        return code.get()[0];
     }
 
     /**
@@ -115,7 +141,7 @@ public class CobolRuntimeException extends RuntimeException {
      * @return setExceptionが呼ばれたことがある場合は1、一度も呼ばれていない場合は0
      */
     public static int getException() {
-        return cobException;
+        return context.get().cobException;
     }
 
     /**
@@ -124,7 +150,7 @@ public class CobolRuntimeException extends RuntimeException {
      * @return エラー発生時のプログラムID
      */
     public static String getOrigProgramId() {
-        return origProgramId;
+        return context.get().origProgramId;
     }
 
     /**
@@ -133,7 +159,7 @@ public class CobolRuntimeException extends RuntimeException {
      * @return エラー発生時のセクション名
      */
     public static String getOrigSection() {
-        return origSection;
+        return context.get().origSection;
     }
 
     /**
@@ -142,7 +168,7 @@ public class CobolRuntimeException extends RuntimeException {
      * @return エラー発生時のパラグラフ名
      */
     public static String getOrigParagraph() {
-        return origParagraph;
+        return context.get().origParagraph;
     }
 
     /**
@@ -151,7 +177,7 @@ public class CobolRuntimeException extends RuntimeException {
      * @return エラー発生時の行番号
      */
     public static int getOrigLine() {
-        return origLine;
+        return context.get().origLine;
     }
 
     /**
@@ -160,6 +186,6 @@ public class CobolRuntimeException extends RuntimeException {
      * @return エラー発生時のステートメント
      */
     public static String getOrigStatement() {
-        return origStatement;
+        return context.get().origStatement;
     }
 }

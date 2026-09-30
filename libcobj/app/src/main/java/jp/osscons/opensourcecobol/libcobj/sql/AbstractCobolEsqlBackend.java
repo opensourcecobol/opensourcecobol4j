@@ -8,6 +8,7 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Properties;
@@ -66,12 +67,9 @@ public abstract class AbstractCobolEsqlBackend implements CobolEsqlBackendInterf
      */
     protected static final byte[] EMPTY_RESULT = new byte[0];
 
-    // スレッドモデル: 生成 COBOL ランタイムは単一プロセス・単一スレッド実行を前提とする。
-    // このため下の connections/cursors/prepared と defaultConnId は同期せず素の
-    // HashMap/フィールドのまま扱う。
-    // マルチスレッド対応が必要になった場合は、ConcurrentHashMap 化と defaultConnId 更新を含む
-    // 同期、または public API 全体の直列化を別途検討する (stmtCache の ConcurrentHashMap 化も
-    // 同前提下の保守的な保護であり、これら全体を同期する意味ではない)。
+    // スレッドモデル: backend のインスタンスは実行単位(スレッド)ごとに生成される
+    // (CobolEsql が ThreadLocal で保持する)。このため下の connections/cursors/prepared と
+    // defaultConnId は単一スレッドからのみ触られ、同期せず素の HashMap/フィールドのまま扱う。
     final Map<String, Connection> connections = new HashMap<>();
     final Map<String, Cursor> cursors = new HashMap<>();
     final Map<String, String[]> prepared = new HashMap<>();
@@ -1178,6 +1176,39 @@ public abstract class AbstractCobolEsqlBackend implements CobolEsqlBackendInterf
         PreparedStatement pstmt = conn.prepareStatement(query);
         perConnection.put(query, pstmt);
         return pstmt;
+    }
+
+    @Override
+    public final void endRunUnit() {
+        for (Map.Entry<String, Connection> entry : new ArrayList<>(connections.entrySet())) {
+            Connection conn = entry.getValue();
+            try {
+                if (conn != null && !conn.isClosed()) {
+                    // DISCONNECTされずに残った接続の未確定の更新は取り消す。実行単位の終了は
+                    // STOP RUNのほか、実行時エラーによる異常終了でも起こるため、コミットしてはならない
+                    // (プロセスの終了で接続が切れた場合にデータベースが取り消すのと同じ結果にする)
+                    try {
+                        rollbackTransaction(conn);
+                    } catch (SQLException e) {
+                        CONN_LOG.warn(
+                                "ROLLBACK at the end of the run unit failed: {}", e.getMessage());
+                    }
+                    conn.close();
+                }
+            } catch (SQLException e) {
+                CONN_LOG.warn(
+                        "Closing a connection at the end of the run unit failed: {}",
+                        e.getMessage());
+            }
+            if (conn != null) {
+                closeCachedStatements(conn);
+            }
+        }
+        connections.clear();
+        cursors.clear();
+        prepared.clear();
+        defaultConnId = null;
+        stmtCache.clear();
     }
 
     /** 指定した接続でキャッシュした PreparedStatement をすべて閉じ、キャッシュから取り除く。 */

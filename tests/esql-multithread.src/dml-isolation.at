@@ -1,0 +1,157 @@
+AT_SETUP([ESQL DML and transactions are isolated per thread])
+
+dnl Four threads of one JVM run the same program: each thread CONNECTs on its
+dnl own (the ESQL backend is per thread), inserts rows tagged with its thread
+dnl id, rolls the first batch back, commits the second one, and reads its own
+dnl rows back with SELECT INTO and a cursor. The counts prove that the
+dnl connections, transactions and cursors of the threads do not interfere:
+dnl a ROLLBACK only discards the rows of its own thread, and every thread
+dnl sees exactly its own committed rows.
+
+AT_DATA([setup.cbl], [
+       IDENTIFICATION              DIVISION.
+       PROGRAM-ID.                 setup.
+       DATA                        DIVISION.
+       WORKING-STORAGE             SECTION.
+           EXEC SQL INCLUDE SQLCA END-EXEC.
+       01  DBNAME                  PIC  X(30) VALUE SPACE.
+       01  USERNAME                PIC  X(30) VALUE SPACE.
+       01  PASSWD                  PIC  X(10) VALUE SPACE.
+       PROCEDURE                   DIVISION.
+           MOVE  "<|DB_NAME|>@<|DB_HOST|>:<|DB_PORT|>" TO DBNAME.
+           MOVE  "<|DB_USER|>"                         TO USERNAME.
+           MOVE  "<|DB_PASSWORD|>"                     TO PASSWD.
+           EXEC SQL
+               CONNECT :USERNAME IDENTIFIED BY :PASSWD USING :DBNAME
+           END-EXEC.
+           EXEC SQL
+               DROP TABLE IF EXISTS MTTBL
+           END-EXEC.
+           EXEC SQL
+               CREATE TABLE MTTBL ( TID CHAR(3), SEQ NUMERIC(3,0) )
+           END-EXEC.
+           EXEC SQL COMMIT END-EXEC.
+           EXEC SQL DISCONNECT END-EXEC.
+           IF SQLCODE = ZERO
+               DISPLAY "setup ok"
+           ELSE
+               DISPLAY "setup NG " SQLCODE
+           END-IF.
+           STOP RUN.
+])
+
+AT_DATA([prog.cbl], [
+       IDENTIFICATION              DIVISION.
+       PROGRAM-ID.                 prog.
+       DATA                        DIVISION.
+       WORKING-STORAGE             SECTION.
+           EXEC SQL INCLUDE SQLCA END-EXEC.
+       01  DBNAME                  PIC  X(30) VALUE SPACE.
+       01  USERNAME                PIC  X(30) VALUE SPACE.
+       01  PASSWD                  PIC  X(10) VALUE SPACE.
+       01  WK-TID                  PIC  X(3).
+       01  I                       PIC  9(3).
+       01  CNT                     PIC  9(3).
+       01  SEQ-VAL                 PIC  9(3).
+       01  SEQ-SUM                 PIC  9(4).
+       LINKAGE                     SECTION.
+       01  THREAD-ID               PIC  X(3).
+       PROCEDURE                   DIVISION USING THREAD-ID.
+           MOVE  "<|DB_NAME|>@<|DB_HOST|>:<|DB_PORT|>" TO DBNAME.
+           MOVE  "<|DB_USER|>"                         TO USERNAME.
+           MOVE  "<|DB_PASSWORD|>"                     TO PASSWD.
+           MOVE  THREAD-ID TO WK-TID.
+           EXEC SQL
+               CONNECT :USERNAME IDENTIFIED BY :PASSWD USING :DBNAME
+           END-EXEC.
+           IF SQLCODE NOT = ZERO
+               DISPLAY "thread " WK-TID " connect failed " SQLCODE
+           END-IF.
+      *    the first batch is rolled back and must leave no trace
+           PERFORM VARYING I FROM 1 BY 1 UNTIL I > 5
+               EXEC SQL
+                   INSERT INTO MTTBL VALUES (:WK-TID, :I)
+               END-EXEC
+           END-PERFORM.
+           EXEC SQL ROLLBACK END-EXEC.
+      *    the second batch is committed
+           PERFORM VARYING I FROM 1 BY 1 UNTIL I > 5
+               EXEC SQL
+                   INSERT INTO MTTBL VALUES (:WK-TID, :I)
+               END-EXEC
+           END-PERFORM.
+           EXEC SQL COMMIT END-EXEC.
+      *    every thread sees exactly its own committed rows
+           EXEC SQL
+               SELECT COUNT(*) INTO :CNT FROM MTTBL
+                   WHERE TID = :WK-TID
+           END-EXEC.
+           DISPLAY "thread " WK-TID " count=" CNT.
+           MOVE ZERO TO SEQ-SUM.
+           EXEC SQL
+               DECLARE CUR CURSOR FOR
+                   SELECT SEQ FROM MTTBL WHERE TID = :WK-TID
+                       ORDER BY SEQ
+           END-EXEC.
+           EXEC SQL OPEN CUR END-EXEC.
+           PERFORM UNTIL SQLCODE NOT = ZERO
+               EXEC SQL FETCH CUR INTO :SEQ-VAL END-EXEC
+               IF SQLCODE = ZERO
+                   ADD SEQ-VAL TO SEQ-SUM
+               END-IF
+           END-PERFORM.
+           EXEC SQL CLOSE CUR END-EXEC.
+           DISPLAY "thread " WK-TID " sum=" SEQ-SUM.
+           EXEC SQL DISCONNECT END-EXEC.
+           GOBACK.
+])
+
+AT_DATA([verify.cbl], [
+       IDENTIFICATION              DIVISION.
+       PROGRAM-ID.                 verify.
+       DATA                        DIVISION.
+       WORKING-STORAGE             SECTION.
+           EXEC SQL INCLUDE SQLCA END-EXEC.
+       01  DBNAME                  PIC  X(30) VALUE SPACE.
+       01  USERNAME                PIC  X(30) VALUE SPACE.
+       01  PASSWD                  PIC  X(10) VALUE SPACE.
+       01  CNT                     PIC  9(3).
+       PROCEDURE                   DIVISION.
+           MOVE  "<|DB_NAME|>@<|DB_HOST|>:<|DB_PORT|>" TO DBNAME.
+           MOVE  "<|DB_USER|>"                         TO USERNAME.
+           MOVE  "<|DB_PASSWORD|>"                     TO PASSWD.
+           EXEC SQL
+               CONNECT :USERNAME IDENTIFIED BY :PASSWD USING :DBNAME
+           END-EXEC.
+           EXEC SQL
+               SELECT COUNT(*) INTO :CNT FROM MTTBL
+           END-EXEC.
+           DISPLAY "total=" CNT.
+           EXEC SQL DISCONNECT END-EXEC.
+           STOP RUN.
+])
+
+AT_CHECK([cp ../../multithread.src/harness/ThreadHarness.java .])
+AT_CHECK([javac ThreadHarness.java])
+AT_CHECK([${EMBED_DB_INFO} setup.cbl])
+AT_CHECK([${EMBED_DB_INFO} prog.cbl])
+AT_CHECK([${EMBED_DB_INFO} verify.cbl])
+AT_CHECK([${COMPILE_MODULE} setup.cbl prog.cbl verify.cbl])
+AT_CHECK([${RUN_MODULE} setup], [0], [setup ok
+])
+AT_CHECK([java ThreadHarness prog 4 1 3], [0],
+[1 thread 001 count=005
+1 thread 001 sum=0015
+1 thread 002 count=005
+1 thread 002 sum=0015
+1 thread 003 count=005
+1 thread 003 sum=0015
+1 thread 004 count=005
+1 thread 004 sum=0015
+return-code 0 x4
+alive
+])
+AT_CHECK([${RUN_MODULE} verify], [0], [total=020
+])
+
+AT_CLEANUP

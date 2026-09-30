@@ -1,0 +1,146 @@
+AT_SETUP([File sharing between threads follows the rules for separate processes])
+
+dnl prog1 holds "shared.txt" open in OUTPUT mode while prog2 tries to open it,
+dnl then both hold it open for INPUT. The two programs run on two threads of
+dnl one JVM and synchronise with CALL "SyncPoint" after every observation, so
+dnl the numbered output lines read exactly in execution order.
+AT_DATA([prog1.cbl], [
+       IDENTIFICATION DIVISION.
+       PROGRAM-ID. prog1.
+       ENVIRONMENT DIVISION.
+       INPUT-OUTPUT SECTION.
+       FILE-CONTROL.
+           SELECT F1 ASSIGN TO "shared.txt"
+                  ORGANIZATION IS LINE SEQUENTIAL
+                  FILE STATUS IS ST.
+           SELECT F2 ASSIGN TO "shared.rel"
+                  ORGANIZATION IS RELATIVE
+                  ACCESS MODE IS SEQUENTIAL
+                  FILE STATUS IS ST2.
+       DATA DIVISION.
+       FILE SECTION.
+       FD F1.
+       01 R1 PIC X(10).
+       FD F2.
+       01 R2 PIC X(10).
+       WORKING-STORAGE SECTION.
+       01 ST   PIC XX.
+       01 ST2  PIC XX.
+       01 SYNC-STEP PIC 9(2).
+       PROCEDURE DIVISION.
+           OPEN OUTPUT F1.
+           DISPLAY "01 prog1 open output seq " ST.
+           MOVE "hello" TO R1. WRITE R1.
+           OPEN OUTPUT F2.
+           DISPLAY "02 prog1 open output rel " ST2.
+           MOVE "world" TO R2. WRITE R2.
+           MOVE 1 TO SYNC-STEP. CALL "SyncPoint" USING SYNC-STEP.
+      *    prog2 tries to open the files while prog1 holds them
+           MOVE 2 TO SYNC-STEP. CALL "SyncPoint" USING SYNC-STEP.
+           CLOSE F1 F2.
+           DISPLAY "06 prog1 close " ST " " ST2.
+           MOVE 3 TO SYNC-STEP. CALL "SyncPoint" USING SYNC-STEP.
+      *    open the files for INPUT first; prog2 waits at step 4
+           OPEN INPUT F1.
+           DISPLAY "07 prog1 open input seq " ST.
+           OPEN INPUT F2.
+           DISPLAY "08 prog1 open input rel " ST2.
+           MOVE 4 TO SYNC-STEP. CALL "SyncPoint" USING SYNC-STEP.
+      *    prog2 opens and reads the files while prog1 holds them
+           MOVE 5 TO SYNC-STEP. CALL "SyncPoint" USING SYNC-STEP.
+      *    prog2 still holds INPUT: OUTPUT must be refused
+           CLOSE F1 F2.
+           OPEN OUTPUT F1.
+           DISPLAY "13 prog1 open output while shared " ST.
+      *    the refused OPEN OUTPUT must not have truncated the file
+           OPEN INPUT F1.
+           READ F1.
+           DISPLAY "14 prog1 read after refused output "
+                   ST " " R1 "|".
+           CLOSE F1.
+           MOVE 6 TO SYNC-STEP. CALL "SyncPoint" USING SYNC-STEP.
+           MOVE 7 TO SYNC-STEP. CALL "SyncPoint" USING SYNC-STEP.
+      *    prog2 closed: OUTPUT succeeds
+           OPEN OUTPUT F1.
+           DISPLAY "16 prog1 open output after close " ST.
+           CLOSE F1.
+           GOBACK.
+])
+
+AT_DATA([prog2.cbl], [
+       IDENTIFICATION DIVISION.
+       PROGRAM-ID. prog2.
+       ENVIRONMENT DIVISION.
+       INPUT-OUTPUT SECTION.
+       FILE-CONTROL.
+           SELECT F1 ASSIGN TO "shared.txt"
+                  ORGANIZATION IS LINE SEQUENTIAL
+                  FILE STATUS IS ST.
+           SELECT F2 ASSIGN TO "shared.rel"
+                  ORGANIZATION IS RELATIVE
+                  ACCESS MODE IS SEQUENTIAL
+                  FILE STATUS IS ST2.
+       DATA DIVISION.
+       FILE SECTION.
+       FD F1.
+       01 R1 PIC X(10).
+       FD F2.
+       01 R2 PIC X(10).
+       WORKING-STORAGE SECTION.
+       01 ST   PIC XX.
+       01 ST2  PIC XX.
+       01 SYNC-STEP PIC 9(2).
+       PROCEDURE DIVISION.
+           MOVE 1 TO SYNC-STEP. CALL "SyncPoint" USING SYNC-STEP.
+           OPEN INPUT F1.
+           DISPLAY "03 prog2 open input seq while output " ST.
+           OPEN INPUT F2.
+           DISPLAY "04 prog2 open input rel while output " ST2.
+           OPEN OUTPUT F1.
+           DISPLAY "05 prog2 open output seq while output " ST.
+           MOVE 2 TO SYNC-STEP. CALL "SyncPoint" USING SYNC-STEP.
+           MOVE 3 TO SYNC-STEP. CALL "SyncPoint" USING SYNC-STEP.
+           MOVE 4 TO SYNC-STEP. CALL "SyncPoint" USING SYNC-STEP.
+      *    prog1 holds the files for INPUT; open and read them too
+           OPEN INPUT F1.
+           DISPLAY "09 prog2 open input seq " ST.
+           READ F1.
+           DISPLAY "10 prog2 read seq " ST " " R1 "|".
+           OPEN INPUT F2.
+           DISPLAY "11 prog2 open input rel " ST2.
+           READ F2.
+           DISPLAY "12 prog2 read rel " ST2 " " R2 "|".
+           MOVE 5 TO SYNC-STEP. CALL "SyncPoint" USING SYNC-STEP.
+           MOVE 6 TO SYNC-STEP. CALL "SyncPoint" USING SYNC-STEP.
+           CLOSE F1 F2.
+           DISPLAY "15 prog2 close " ST " " ST2.
+           MOVE 7 TO SYNC-STEP. CALL "SyncPoint" USING SYNC-STEP.
+           GOBACK.
+])
+
+AT_CHECK([cp ../../multithread.src/harness/ThreadHarness.java ../../multithread.src/harness/PairHarness.java ../../multithread.src/harness/SyncPoint.java .])
+AT_CHECK([javac ThreadHarness.java PairHarness.java SyncPoint.java])
+AT_CHECK([${COBJ} prog1.cbl prog2.cbl])
+AT_CHECK([java PairHarness prog1 prog2], [0],
+[01 prog1 open output seq 00
+02 prog1 open output rel 00
+03 prog2 open input seq while output 61
+04 prog2 open input rel while output 61
+05 prog2 open output seq while output 61
+06 prog1 close 00 00
+07 prog1 open input seq 00
+08 prog1 open input rel 00
+09 prog2 open input seq 00
+10 prog2 read seq 00 hello     |
+11 prog2 open input rel 00
+12 prog2 read rel 00 world     |
+13 prog1 open output while shared 61
+14 prog1 read after refused output 00 hello     |
+15 prog2 close 00 00
+16 prog1 open output after close 00
+prog1 return-code 0
+prog2 return-code 0
+alive
+])
+
+AT_CLEANUP

@@ -19,13 +19,11 @@
 package jp.osscons.opensourcecobol.libcobj.data;
 
 import java.math.BigDecimal;
+import java.util.Arrays;
 import jp.osscons.opensourcecobol.libcobj.exceptions.CobolRuntimeException;
 
 /** PIC 文字列がN(5)やN(9)の変数を表現するクラス. */
 public class CobolNationalField extends AbstractCobolField {
-
-    /** 半角から全角への変換処理で生成されたバイト列のサイズを保持する作業用フィールド. */
-    public static int workReturnSize;
 
     /**
      * コンストラクタ
@@ -90,9 +88,8 @@ public class CobolNationalField extends AbstractCobolField {
 
         // HANKAKU TO ZENKAKU
         if (!src1.getAttribute().isTypeNational() && !src1.getAttribute().isTypeNationalEdited()) {
-            workReturnSize = 0;
             pTmp = judge_hankakujpn_exist(src1);
-            size = workReturnSize;
+            size = pTmp == null ? 0 : pTmp.length;
             CobolDataStorage pTmpStorage = new CobolDataStorage(size);
             pTmpStorage.setBytes(pTmp, size);
             CobolFieldAttribute attr =
@@ -180,7 +177,7 @@ public class CobolNationalField extends AbstractCobolField {
      *
      * @param str 変換対象の半角文字のバイト列
      * @param size 変換対象のバイト数
-     * @return 全角へ変換したバイト列.変換後のサイズは{@link #workReturnSize}に格納される
+     * @return 全角へ変換したバイト列.配列長が変換後のサイズとなる
      */
     public static byte[] han2zen(byte[] str, int size) {
         byte[] buf;
@@ -1025,9 +1022,7 @@ public class CobolNationalField extends AbstractCobolField {
             }
             d = c;
         }
-        buf[buIndex] = (byte) 0x00;
-        workReturnSize = buIndex;
-        return buf;
+        return Arrays.copyOf(buf, buIndex);
     }
 
     @Override

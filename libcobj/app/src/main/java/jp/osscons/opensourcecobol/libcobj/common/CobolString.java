@@ -50,53 +50,67 @@ public class CobolString {
     /** UNSTRING文の区切り文字リストの既定の確保数。 */
     private static final int DLM_DEFAULT_NUM = 8;
 
-    /** 現在確保している区切り文字リスト({@link #dlmList})の要素数。 */
-    private static int udlmCount = 0;
+    /**
+     * 実行単位(スレッド)ごとに保持する作業状態。<br>
+     * 文の処理は複数のメソッド呼び出しにまたがって状態を共有するため、スレッドごとに独立させる。
+     */
+    private static final class State {
+        /** 現在確保している区切り文字リスト(dlmList)の要素数。 */
+        int udlmCount = 0;
 
-    /** STRING文の連結先(INTO)フィールド。 */
-    private static AbstractCobolField stringDst;
+        /** STRING文の連結先(INTO)フィールド。 */
+        AbstractCobolField stringDst;
 
-    /** STRING文の文字位置(WITH POINTER)フィールド。指定されない場合はnull。 */
-    private static AbstractCobolField stringPtr;
+        /** STRING文の文字位置(WITH POINTER)フィールド。指定されない場合はnull。 */
+        AbstractCobolField stringPtr;
 
-    /** STRING文の現在の区切り文字(DELIMITED BY)フィールド。指定されない場合はnull。 */
-    private static AbstractCobolField stringDlm;
+        /** STRING文の現在の区切り文字(DELIMITED BY)フィールド。指定されない場合はnull。 */
+        AbstractCobolField stringDlm;
 
-    /** STRING文の連結先フィールドの保持用コピー。 */
-    private static AbstractCobolField stringDstCopy;
+        /** STRING文の連結先フィールドの保持用コピー。 */
+        AbstractCobolField stringDstCopy;
 
-    /** STRING文の文字位置フィールドの保持用コピー。 */
-    private static AbstractCobolField stringPtrCopy;
+        /** STRING文の文字位置フィールドの保持用コピー。 */
+        AbstractCobolField stringPtrCopy;
 
-    /** STRING文の区切り文字フィールドの保持用コピー。 */
-    private static AbstractCobolField stringDlmCopy;
+        /** STRING文の区切り文字フィールドの保持用コピー。 */
+        AbstractCobolField stringDlmCopy;
 
-    /** STRING文で次に書き込む連結先フィールド内のオフセット(バイト単位)。 */
-    private static int stringOffset;
+        /** STRING文で次に書き込む連結先フィールド内のオフセット(バイト単位)。 */
+        int stringOffset;
 
-    /** UNSTRING文で使用する区切り文字(DELIMITED BY)のリスト。 */
-    private static Dlm[] dlmList;
+        /** UNSTRING文で使用する区切り文字(DELIMITED BY)のリスト。 */
+        Dlm[] dlmList;
 
-    /** UNSTRING文の分解対象(送り出し元)フィールド。 */
-    private static AbstractCobolField unstringSrc;
+        /** UNSTRING文の分解対象(送り出し元)フィールド。 */
+        AbstractCobolField unstringSrc;
 
-    /** UNSTRING文の文字位置(WITH POINTER)フィールド。指定されない場合はnull。 */
-    private static AbstractCobolField unstringPtr;
+        /** UNSTRING文の文字位置(WITH POINTER)フィールド。指定されない場合はnull。 */
+        AbstractCobolField unstringPtr;
 
-    /** UNSTRING文の分解対象フィールドの保持用コピー。 */
-    private static AbstractCobolField unstringSrcCopy;
+        /** UNSTRING文の分解対象フィールドの保持用コピー。 */
+        AbstractCobolField unstringSrcCopy;
 
-    /** UNSTRING文の文字位置フィールドの保持用コピー。 */
-    private static AbstractCobolField unstringPtrCopy;
+        /** UNSTRING文の文字位置フィールドの保持用コピー。 */
+        AbstractCobolField unstringPtrCopy;
 
-    /** UNSTRING文で次に読み込む分解対象フィールド内のオフセット(バイト単位)。 */
-    private static int unstringOffset;
+        /** UNSTRING文で次に読み込む分解対象フィールド内のオフセット(バイト単位)。 */
+        int unstringOffset;
 
-    /** UNSTRING文で分解した部分文字列の個数(TALLYING IN用のカウンタ)。 */
-    private static int unstringCount;
+        /** UNSTRING文で分解した部分文字列の個数(TALLYING IN用のカウンタ)。 */
+        int unstringCount;
 
-    /** UNSTRING文で現在登録されている区切り文字の個数。 */
-    private static int unstringNdlms;
+        /** UNSTRING文で現在登録されている区切り文字の個数。 */
+        int unstringNdlms;
+    }
+
+    /** 現在のスレッドの作業状態。実行単位はスレッドごとに独立しているため、スレッドごとに保持する。 */
+    private static final ThreadLocal<State> state = ThreadLocal.withInitial(State::new);
+
+    /** 現在のスレッドに紐づく作業状態を破棄する。実行単位の終了時に呼び出す。 */
+    public static void resetThreadState() {
+        state.remove();
+    }
 
     /**
      * STRING文の処理を開始する。連結先フィールドが省略された場合のオーバーロード。<br>
@@ -143,27 +157,31 @@ public class CobolString {
      * @param ptr 文字位置(WITH POINTER)フィールド。省略時はnull
      */
     public static void stringInit(AbstractCobolField dst, AbstractCobolField ptr) {
-        stringDstCopy = dst;
-        stringDst = stringDstCopy;
-        stringPtr = null;
-        if (ptr != null) {
-            stringPtrCopy = ptr;
-            stringPtr = stringPtrCopy;
+        if (dst == null) {
+            throw new IllegalArgumentException("STRING statement requires an INTO field");
         }
-        stringOffset = 0;
+        State st = state.get();
+        st.stringDstCopy = dst;
+        st.stringDst = st.stringDstCopy;
+        st.stringPtr = null;
+        if (ptr != null) {
+            st.stringPtrCopy = ptr;
+            st.stringPtr = st.stringPtrCopy;
+        }
+        st.stringOffset = 0;
         CobolRuntimeException.setException(0);
 
-        if (stringPtr != null) {
-            stringOffset = stringPtr.getInt() - 1;
-            if (stringOffset < 0 || stringOffset >= stringDst.getSize()) {
+        if (st.stringPtr != null) {
+            st.stringOffset = st.stringPtr.getInt() - 1;
+            if (st.stringOffset < 0 || st.stringOffset >= st.stringDst.getSize()) {
                 CobolRuntimeException.setException(CobolExceptionId.COB_EC_OVERFLOW_STRING);
             }
         }
 
-        switch (stringDst.getAttribute().getType()) {
+        switch (st.stringDst.getAttribute().getType()) {
             case CobolFieldAttribute.COB_TYPE_NATIONAL:
             case CobolFieldAttribute.COB_TYPE_NATIONAL_EDITED:
-                stringOffset *= 2;
+                st.stringOffset *= 2;
                 break;
             default:
                 break;
@@ -188,7 +206,8 @@ public class CobolString {
      * @param dlm 区切り文字フィールド。区切り文字を指定しない(全体を連結する)場合はnull
      */
     public static void stringDelimited(AbstractCobolField dlm) {
-        switch (stringDst.getAttribute().getType()) {
+        State st = state.get();
+        switch (st.stringDst.getAttribute().getType()) {
             case CobolFieldAttribute.COB_TYPE_NATIONAL:
             case CobolFieldAttribute.COB_TYPE_NATIONAL_EDITED:
                 if (dlm == CobolConstant.quote) {
@@ -202,10 +221,10 @@ public class CobolString {
             default:
                 break;
         }
-        stringDlm = null;
+        st.stringDlm = null;
         if (dlm != null) {
-            stringDlmCopy = dlm;
-            stringDlm = stringDlmCopy;
+            st.stringDlmCopy = dlm;
+            st.stringDlm = st.stringDlmCopy;
         }
     }
 
@@ -221,23 +240,24 @@ public class CobolString {
 
     /**
      * STRING文の送り出し元フィールドを連結先へ連結する。<br>
-     * 区切り文字({@link #stringDlm})が設定されている場合は、送り出し元の先頭から区切り文字が現れる手前までを連結対象とする。<br>
+     * 区切り文字(stringDlm)が設定されている場合は、送り出し元の先頭から区切り文字が現れる手前までを連結対象とする。<br>
      * 連結先の残り領域に収まらない場合は収まる分だけ連結し、オーバーフロー例外を設定する。<br>
      * すでに例外が発生している場合は何も行わない。
      *
      * @param src 連結する送り出し元フィールド
      */
     public static void stringAppend(AbstractCobolField src) {
-        if (CobolRuntimeException.code != 0) {
+        State st = state.get();
+        if (CobolRuntimeException.getExceptionCode() != 0) {
             return;
         }
 
         int srcSize = src.getSize();
-        if (stringDlm != null) {
-            int size = srcSize - stringDlm.getSize() + 1;
+        if (st.stringDlm != null) {
+            int size = srcSize - st.stringDlm.getSize() + 1;
             CobolDataStorage srcData = src.getDataStorage();
-            CobolDataStorage dlmData = stringDlm.getDataStorage();
-            int dlmSize = stringDlm.getSize();
+            CobolDataStorage dlmData = st.stringDlm.getDataStorage();
+            int dlmSize = st.stringDlm.getSize();
             for (int i = 0; i < size; ++i) {
                 if (srcData.getSubDataStorage(i).memcmp(dlmData, dlmSize) == 0) {
                     srcSize = i;
@@ -246,19 +266,19 @@ public class CobolString {
             }
         }
 
-        if (srcSize <= stringDst.getSize() - stringOffset) {
-            stringDst
+        if (srcSize <= st.stringDst.getSize() - st.stringOffset) {
+            st.stringDst
                     .getDataStorage()
-                    .getSubDataStorage(stringOffset)
+                    .getSubDataStorage(st.stringOffset)
                     .memcpy(src.getDataStorage(), srcSize);
-            stringOffset += srcSize;
+            st.stringOffset += srcSize;
         } else {
-            int size = stringDst.getSize() - stringOffset;
-            stringDst
+            int size = st.stringDst.getSize() - st.stringOffset;
+            st.stringDst
                     .getDataStorage()
-                    .getSubDataStorage(stringOffset)
+                    .getSubDataStorage(st.stringOffset)
                     .memcpy(src.getDataStorage(), size);
-            stringOffset += size;
+            st.stringOffset += size;
             CobolRuntimeException.setException(CobolExceptionId.COB_EC_OVERFLOW_STRING);
         }
     }
@@ -269,14 +289,15 @@ public class CobolString {
      * 指定されていれば、次の文字位置(オフセット+1)を書き戻す。
      */
     public static void stringFinish() {
-        int type = stringDst.getAttribute().getType();
+        State st = state.get();
+        int type = st.stringDst.getAttribute().getType();
         if (type == CobolFieldAttribute.COB_TYPE_NATIONAL
                 || type == CobolFieldAttribute.COB_TYPE_NATIONAL_EDITED) {
 
-            stringOffset /= 2;
+            st.stringOffset /= 2;
         }
-        if (stringPtr != null) {
-            stringPtr.setInt(stringOffset + 1);
+        if (st.stringPtr != null) {
+            st.stringPtr.setInt(st.stringOffset + 1);
         }
     }
 
@@ -320,7 +341,7 @@ public class CobolString {
 
     /**
      * UNSTRING文の処理を開始する。<br>
-     * 分解対象フィールドと文字位置フィールドを保持して内部状態を初期化し、区切り文字を格納するリスト({@link #dlmList})を
+     * 分解対象フィールドと文字位置フィールドを保持して内部状態を初期化し、区切り文字を格納するリスト(dlmList)を
      * 必要な個数だけ確保する。文字位置が指定されている場合はその値から読み込み開始オフセットを設定し、
      * 開始位置が分解対象の範囲外であればオーバーフロー例外を設定する。<br>
      * 分解対象が日本語項目の場合はオフセットを2倍(バイト単位)に補正する。
@@ -330,49 +351,53 @@ public class CobolString {
      * @param numDlm 区切り文字(DELIMITED BY)の個数
      */
     public static void unstringInit(AbstractCobolField src, AbstractCobolField ptr, int numDlm) {
-        unstringSrcCopy = src;
-        unstringSrc = unstringSrcCopy;
-        unstringPtr = null;
+        if (src == null) {
+            throw new IllegalArgumentException("UNSTRING statement requires a source field");
+        }
+        State st = state.get();
+        st.unstringSrcCopy = src;
+        st.unstringSrc = st.unstringSrcCopy;
+        st.unstringPtr = null;
         if (ptr != null) {
-            unstringPtrCopy = ptr;
-            unstringPtr = unstringPtrCopy;
+            st.unstringPtrCopy = ptr;
+            st.unstringPtr = st.unstringPtrCopy;
         }
 
-        unstringOffset = 0;
-        unstringCount = 0;
-        unstringNdlms = 0;
+        st.unstringOffset = 0;
+        st.unstringCount = 0;
+        st.unstringNdlms = 0;
         CobolRuntimeException.setException(0);
 
-        if (dlmList == null) {
+        if (st.dlmList == null) {
             if (numDlm <= DLM_DEFAULT_NUM) {
-                dlmList = new Dlm[DLM_DEFAULT_NUM];
-                udlmCount = DLM_DEFAULT_NUM;
+                st.dlmList = new Dlm[DLM_DEFAULT_NUM];
+                st.udlmCount = DLM_DEFAULT_NUM;
             } else {
-                dlmList = new Dlm[numDlm];
-                udlmCount = numDlm;
+                st.dlmList = new Dlm[numDlm];
+                st.udlmCount = numDlm;
             }
         } else {
-            if (numDlm > udlmCount) {
-                dlmList = new Dlm[numDlm];
-                udlmCount = numDlm;
+            if (numDlm > st.udlmCount) {
+                st.dlmList = new Dlm[numDlm];
+                st.udlmCount = numDlm;
             }
         }
 
-        for (int i = 0; i < dlmList.length; ++i) {
-            dlmList[i] = new Dlm();
+        for (int i = 0; i < st.dlmList.length; ++i) {
+            st.dlmList[i] = new Dlm();
         }
 
-        if (unstringPtr != null) {
-            unstringOffset = unstringPtr.getInt() - 1;
-            if (unstringOffset < 0 || unstringOffset >= unstringSrc.getSize()) {
+        if (st.unstringPtr != null) {
+            st.unstringOffset = st.unstringPtr.getInt() - 1;
+            if (st.unstringOffset < 0 || st.unstringOffset >= st.unstringSrc.getSize()) {
                 CobolRuntimeException.setException(CobolExceptionId.COB_EC_OVERFLOW_UNSTRING);
             }
         }
 
-        switch (unstringSrc.getAttribute().getType()) {
+        switch (st.unstringSrc.getAttribute().getType()) {
             case CobolFieldAttribute.COB_TYPE_NATIONAL:
             case CobolFieldAttribute.COB_TYPE_NATIONAL_EDITED:
-                unstringOffset *= 2;
+                st.unstringOffset *= 2;
                 break;
             default:
                 break;
@@ -400,9 +425,10 @@ public class CobolString {
      * @param all DELIMITED BY ALL指定の有無を表す値
      */
     public static void unstringDelimited(AbstractCobolField dlm, int all) {
+        State st = state.get();
         AbstractCobolField addDlm = null;
 
-        switch (unstringSrc.getAttribute().getType()) {
+        switch (st.unstringSrc.getAttribute().getType()) {
             case CobolFieldAttribute.COB_TYPE_NATIONAL:
             case CobolFieldAttribute.COB_TYPE_NATIONAL_EDITED:
                 if (dlm == CobolConstant.quote) {
@@ -418,14 +444,14 @@ public class CobolString {
                 break;
         }
 
-        dlmList[unstringNdlms].dlm = dlm;
-        dlmList[unstringNdlms].all = all;
-        unstringNdlms++;
+        st.dlmList[st.unstringNdlms].dlm = dlm;
+        st.dlmList[st.unstringNdlms].all = all;
+        st.unstringNdlms++;
 
         if (addDlm != null) {
-            dlmList[unstringNdlms].dlm = addDlm;
-            dlmList[unstringNdlms].all = all;
-            unstringNdlms++;
+            st.dlmList[st.unstringNdlms].dlm = addDlm;
+            st.dlmList[st.unstringNdlms].all = all;
+            st.unstringNdlms++;
         }
     }
 
@@ -535,35 +561,36 @@ public class CobolString {
      */
     public static void unstringInto(
             AbstractCobolField dst, AbstractCobolField dlm, AbstractCobolField cnt) {
-        if (CobolExceptionInfo.code != 0) {
+        State st = state.get();
+        if (CobolExceptionInfo.getExceptionCode() != 0) {
             return;
         }
-        if (unstringOffset >= unstringSrc.getSize()) {
+        if (st.unstringOffset >= st.unstringSrc.getSize()) {
             return;
         }
 
-        CobolDataStorage srcData = unstringSrc.getDataStorage();
-        int start = unstringOffset;
+        CobolDataStorage srcData = st.unstringSrc.getDataStorage();
+        int start = st.unstringOffset;
         int matchSize = 0;
         int dlmSize = 0;
         CobolDataStorage dlmData = null;
-        if (unstringNdlms == 0) {
-            matchSize = Math.min(dst.getFieldSize(), unstringSrc.getSize() - unstringOffset);
+        if (st.unstringNdlms == 0) {
+            matchSize = Math.min(dst.getFieldSize(), st.unstringSrc.getSize() - st.unstringOffset);
             dst.moveFrom(
                     CobolFieldFactory.makeCobolField(
                             matchSize,
-                            srcData.getSubDataStorage(unstringOffset),
+                            srcData.getSubDataStorage(st.unstringOffset),
                             new CobolFieldAttribute(
                                     CobolFieldAttribute.COB_TYPE_ALPHANUMERIC, 0, 0, 0, null)));
-            unstringOffset += matchSize;
+            st.unstringOffset += matchSize;
         } else {
-            int srSize = unstringSrc.getSize();
+            int srSize = st.unstringSrc.getSize();
             int s = srSize;
             boolean brkpt = false;
             for (int p = start; p < s; ++p) {
-                for (int i = 0; i < unstringNdlms; ++i) {
-                    int dlsize = dlmList[i].dlm.getSize();
-                    CobolDataStorage dp = dlmList[i].dlm.getDataStorage();
+                for (int i = 0; i < st.unstringNdlms; ++i) {
+                    int dlsize = st.dlmList[i].dlm.getSize();
+                    CobolDataStorage dp = st.dlmList[i].dlm.getDataStorage();
                     if (p + dlsize > s) {
                         continue;
                     }
@@ -579,10 +606,10 @@ public class CobolString {
                                                 0,
                                                 0,
                                                 null)));
-                        unstringOffset += matchSize + dlsize;
+                        st.unstringOffset += matchSize + dlsize;
                         dlmData = dp;
                         dlmSize = dlsize;
-                        if (dlmList[i].all != 0) {
+                        if (st.dlmList[i].all != 0) {
                             for (p += dlsize; p < s; p += dlsize) {
                                 if (p + dlsize > s) {
                                     break;
@@ -590,14 +617,14 @@ public class CobolString {
                                 if (srcData.getSubDataStorage(p).memcmp(dp, dlsize) != 0) {
                                     break;
                                 }
-                                unstringOffset += dlsize;
+                                st.unstringOffset += dlsize;
                             }
                         }
                         brkpt = true;
                         break;
                     }
                 }
-                switch (unstringSrc.getAttribute().getType()) {
+                switch (st.unstringSrc.getAttribute().getType()) {
                     case CobolFieldAttribute.COB_TYPE_NATIONAL:
                     case CobolFieldAttribute.COB_TYPE_NATIONAL_EDITED:
                         p++;
@@ -611,18 +638,18 @@ public class CobolString {
                 }
             }
             if (!brkpt) {
-                matchSize = unstringSrc.getSize() - unstringOffset;
+                matchSize = st.unstringSrc.getSize() - st.unstringOffset;
                 dst.moveFrom(
                         CobolFieldFactory.makeCobolField(
                                 matchSize,
                                 srcData.getSubDataStorage(start),
                                 new CobolFieldAttribute(
                                         CobolFieldAttribute.COB_TYPE_ALPHANUMERIC, 0, 0, 0, null)));
-                unstringOffset = unstringSrc.getSize();
+                st.unstringOffset = st.unstringSrc.getSize();
                 dlmData = null;
             }
         }
-        unstringCount++;
+        st.unstringCount++;
 
         if (dlm != null) {
             if (dlmData != null) {
@@ -639,7 +666,7 @@ public class CobolString {
             }
         }
 
-        switch (unstringSrc.getAttribute().getType()) {
+        switch (st.unstringSrc.getAttribute().getType()) {
             case CobolFieldAttribute.COB_TYPE_NATIONAL:
             case CobolFieldAttribute.COB_TYPE_NATIONAL_EDITED:
                 matchSize /= 2;
@@ -664,13 +691,13 @@ public class CobolString {
 
     /**
      * UNSTRING文のTALLYING IN処理を行う。<br>
-     * これまでに分解した部分文字列の個数({@link #unstringCount})を、集計先フィールドへ加算する。
+     * これまでに分解した部分文字列の個数(unstringCount)を、集計先フィールドへ加算する。
      *
      * @param f 分解した部分文字列の個数を加算する(TALLYING IN)フィールド
      * @throws CobolStopRunException 実行が停止された場合
      */
     public static void unstringTallying(AbstractCobolField f) throws CobolStopRunException {
-        f.addInt(unstringCount);
+        f.addInt(state.get().unstringCount);
     }
 
     /**
@@ -680,21 +707,22 @@ public class CobolString {
      * 指定されていれば、次の文字位置(オフセット+1)を書き戻す。
      */
     public static void unstringFinish() {
-        if (unstringOffset < unstringSrc.getSize()) {
+        State st = state.get();
+        if (st.unstringOffset < st.unstringSrc.getSize()) {
             CobolRuntimeException.setException(CobolExceptionId.COB_EC_OVERFLOW_UNSTRING);
         }
 
-        switch (unstringSrc.getAttribute().getType()) {
+        switch (st.unstringSrc.getAttribute().getType()) {
             case CobolFieldAttribute.COB_TYPE_NATIONAL:
             case CobolFieldAttribute.COB_TYPE_NATIONAL_EDITED:
-                unstringOffset /= 2;
+                st.unstringOffset /= 2;
                 break;
             default:
                 break;
         }
 
-        if (unstringPtr != null) {
-            unstringPtr.setInt(unstringOffset + 1);
+        if (st.unstringPtr != null) {
+            st.unstringPtr.setInt(st.unstringOffset + 1);
         }
     }
 }

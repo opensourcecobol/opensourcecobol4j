@@ -4,6 +4,12 @@ All notable changes to this project will be documented in this file.
 
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 
+## [Unreleased]
+
+### New Features
+
+- **Multi-threading support.** Generated programs and `libcobj` can now run COBOL programs from several threads of one JVM, such as the request threads of a Tomcat or Spring Boot server. See [doc/multithreading.md](./doc/multithreading.md) for details. Programs compiled by an earlier version of `cobj` must be recompiled to run with this `libcobj.jar`.
+
 ## [2.1.0] - 2026-08-31
 
 ### New Features

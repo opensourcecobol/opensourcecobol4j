@@ -31,19 +31,29 @@ import jp.osscons.opensourcecobol.libcobj.data.CobolDataStorage;
  */
 public class CobolModule {
 
-    /** モジュールの呼び出し階層を表すスタック */
-    private static List<CobolModule> moduleStack = new ArrayList<CobolModule>();
-
-    /** 現在実行中のモジュール */
-    private static CobolModule currentModule;
+    /**
+     * モジュールの呼び出し階層を表すスタック。<br>
+     * 実行単位(run unit)はスレッドごとに独立しているため、スタックはスレッドごとに保持する。
+     */
+    private static final ThreadLocal<List<CobolModule>> moduleStack =
+            ThreadLocal.withInitial(ArrayList::new);
 
     /**
-     * 現在実行中のモジュールを取得する。
+     * 直近にスタックから取り除かれたモジュール。<br>
+     * プログラムの実行が終わった後にJavaアプリケーションから結果を参照する場合(CobolResultSetなど)に、
+     * 小数点文字などのモジュール情報を引き続き参照できるようにするために保持する。
+     */
+    private static final ThreadLocal<CobolModule> lastModule = new ThreadLocal<>();
+
+    /**
+     * 現在実行中のモジュールを取得する。<br>
+     * このスレッドで実行中のモジュールがない場合は、直近に実行を終えたモジュールを返す。
      *
-     * @return 現在実行中のモジュール
+     * @return 現在実行中のモジュール。このスレッドでモジュールが一度も実行されていない場合はnull
      */
     public static CobolModule getCurrentModule() {
-        return currentModule;
+        List<CobolModule> stack = moduleStack.get();
+        return stack.isEmpty() ? lastModule.get() : stack.get(stack.size() - 1);
     }
 
     /**
@@ -52,13 +62,30 @@ public class CobolModule {
      * @param module キューに追加するモジュール
      */
     public static void push(CobolModule module) {
-        currentModule = module;
-        moduleStack.add(module);
+        moduleStack.get().add(module);
     }
 
     /** モジュールスタックからモジュールを取り除く */
     public static void pop() {
-        currentModule = moduleStack.remove(moduleStack.size() - 1);
+        List<CobolModule> stack = moduleStack.get();
+        if (!stack.isEmpty()) {
+            lastModule.set(stack.remove(stack.size() - 1));
+        }
+    }
+
+    /**
+     * 現在のスレッドのモジュールスタックの深さを返す。
+     *
+     * @return スタックに積まれているモジュールの数
+     */
+    public static int getStackDepth() {
+        return moduleStack.get().size();
+    }
+
+    /** 現在のスレッドに紐づくモジュールスタックを破棄する。実行単位の終了時に呼び出す。 */
+    public static void resetThreadState() {
+        moduleStack.remove();
+        lastModule.remove();
     }
 
     /**
@@ -73,8 +100,9 @@ public class CobolModule {
     public static int calledBy(CobolDataStorage data) {
         AbstractCobolField param = CobolModule.getCurrentModule().cob_procedure_parameters.get(0);
         if (param != null) {
-            if (moduleStack.size() >= 2) {
-                String calledProgramName = moduleStack.get(moduleStack.size() - 2).program_id;
+            List<CobolModule> stack = moduleStack.get();
+            if (stack.size() >= 2) {
+                String calledProgramName = stack.get(stack.size() - 2).program_id;
                 if (calledProgramName == null) {
                     return -1;
                 }
@@ -94,7 +122,7 @@ public class CobolModule {
      * @return モジュールスタックが空の場合はtrue、そうでない場合はfalse
      */
     public static boolean isQueueEmpty() {
-        return moduleStack.isEmpty();
+        return moduleStack.get().isEmpty();
     }
 
     /** スタック上の次の(呼び出し元の)モジュール */
@@ -216,6 +244,7 @@ public class CobolModule {
      * @return 現在のモジュールの小数点文字
      */
     public static int getDecimalPoint() {
-        return currentModule.decimal_point;
+        CobolModule module = getCurrentModule();
+        return module == null ? '.' : module.decimal_point;
     }
 }

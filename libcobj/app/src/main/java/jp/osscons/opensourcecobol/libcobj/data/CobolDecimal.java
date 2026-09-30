@@ -47,56 +47,65 @@ public class CobolDecimal {
     /** 2進数フィールドで扱うことのできる最大桁数 */
     public static final int COB_MAX_BINARY = 36;
 
-    private static BigDecimal cobMexp = BigDecimal.ZERO;
+    /**
+     * 計算用に使用する作業用のCobolDecimalインスタンス。<br>
+     * DIVIDE文のREMAINDER句のために、divQuotientからdivRemainderまで剰余を保持する。
+     * 実行単位はスレッドごとに独立しているため、スレッドごとに保持する。
+     */
+    private static final ThreadLocal<CobolDecimal> cobD3 =
+            ThreadLocal.withInitial(CobolDecimal::new);
 
-    /** 計算用に使用する作業用のCobolDecimalインスタンス */
-    static CobolDecimal cobD1 = new CobolDecimal();
+    /** 10のべき乗の値をあらかじめ計算して保持する配列(変更不可) */
+    private static final BigDecimal[] cobMpze10 = new BigDecimal[COB_MAX_BINARY];
 
-    /** 計算用に使用する作業用のCobolDecimalインスタンス */
-    static CobolDecimal cobD2 = new CobolDecimal();
+    /** パック10進数の比較に使用する作業用バッファ(スレッドごとに保持する) */
+    static final class PackedCache {
+        /** パック10進数の値を保持する作業用バッファ */
+        final byte[] packedValue = new byte[20];
 
-    /** 計算用に使用する作業用のCobolDecimalインスタンス */
-    static CobolDecimal cobD3 = new CobolDecimal();
-
-    /** 計算用に使用する作業用のCobolDecimalインスタンス */
-    static CobolDecimal cobD4 = new CobolDecimal();
-
-    /** 10のべき乗の値をあらかじめ計算して保持する配列 */
-    private static BigDecimal[] cobMpze10 = new BigDecimal[COB_MAX_BINARY];
-
-    /** パック10進数の値を保持する作業用バッファ */
-    static byte[] packedValue = new byte[20];
-
-    /** パック10進数の処理に使用する作業用の整数値 */
-    static int packedValueInt = 0;
-
-    /** 数値演算で使用する静的フィールドや10のべき乗テーブルなどを初期化する */
-    public static void cobInitNumeric() {
-        cobD1 = new CobolDecimal();
-        cobD2 = new CobolDecimal();
-        cobD3 = new CobolDecimal();
-        cobD4 = new CobolDecimal();
-        cobMexp = BigDecimal.ZERO;
-        for (int i = 0; i < COB_MAX_BINARY; ++i) {
-            cobMpze10[i] = BigDecimal.ZERO;
-            cobMpze10[i] = BigDecimal.TEN.pow(i);
-        }
-        for (int i = 0; i < packedValue.length; ++i) {
-            packedValue[i] = 0;
-        }
-        packedValueInt = 0;
+        /** packedValueに展開済みの整数値 */
+        int packedValueInt = 0;
     }
 
-    // TODO cob_init_numeric周辺の初期化処理を正しく実装出来たら消す。
+    private static final ThreadLocal<PackedCache> packedCache =
+            ThreadLocal.withInitial(PackedCache::new);
+
+    /**
+     * 現在のスレッドのパック10進数比較用バッファを取得する
+     *
+     * @return 作業用バッファ
+     */
+    static PackedCache getPackedCache() {
+        return packedCache.get();
+    }
+
+    /**
+     * 現在のスレッドの剰余保持用のCobolDecimalを取得する
+     *
+     * @return 剰余保持用のCobolDecimal
+     */
+    static CobolDecimal getRemainderDecimal() {
+        return cobD3.get();
+    }
+
+    /**
+     * 数値演算で使用するスレッドごとの作業領域を初期化する。<br>
+     * 10のべき乗テーブルはクラス初期化時に構築済みのため、ここでは作業領域のリセットのみを行う。
+     */
+    public static void cobInitNumeric() {
+        cobD3.remove();
+        packedCache.remove();
+    }
+
+    /** 現在のスレッドに紐づく作業領域を破棄する。実行単位の終了時に呼び出す。 */
+    public static void resetThreadState() {
+        cobInitNumeric();
+    }
+
     static {
         for (int i = 0; i < COB_MAX_BINARY; ++i) {
-            cobMpze10[i] = BigDecimal.ZERO;
             cobMpze10[i] = BigDecimal.TEN.pow(i);
         }
-        for (int i = 0; i < packedValue.length; ++i) {
-            packedValue[i] = 0;
-        }
-        packedValueInt = 0;
     }
 
     /** 保持する数値データ */
@@ -359,7 +368,7 @@ public class CobolDecimal {
         }
         if (decimal.getValue().signum() == 0) {
             this.setScale(DECIMAL_NAN);
-            if (CobolUtil.cobErrorOnExitFlag) {
+            if (CobolUtil.getErrorOnExitFlag()) {
                 CobolUtil.runtimeError("Detected division by zero.");
                 CobolStopRunException.stopRunAndThrow(1);
                 ;
@@ -439,7 +448,7 @@ public class CobolDecimal {
     public int getField(AbstractCobolField f, int opt) throws CobolStopRunException {
         if (this.getScale() == CobolDecimal.DECIMAL_NAN) {
             CobolRuntimeException.setException(CobolExceptionId.COB_EC_SIZE_OVERFLOW);
-            return CobolRuntimeException.code;
+            return CobolRuntimeException.getExceptionCode();
         }
 
         CobolDecimal d = new CobolDecimal(this);
@@ -490,7 +499,7 @@ public class CobolDecimal {
                 if (d.getField(displayField, opt) == 0) {
                     f.moveFrom(displayField);
                 }
-                return CobolExceptionInfo.code;
+                return CobolExceptionInfo.getExceptionCode();
         }
     }
 
@@ -527,11 +536,9 @@ public class CobolDecimal {
             return;
         }
         if (n > 0) {
-            cobMexp = BigDecimal.TEN.pow(n);
-            this.value = this.value.multiply(cobMexp);
+            this.value = this.value.multiply(BigDecimal.TEN.pow(n));
         } else {
-            cobMexp = BigDecimal.TEN.pow(-n);
-            this.value = this.value.divide(cobMexp, RoundingMode.DOWN);
+            this.value = this.value.divide(BigDecimal.TEN.pow(-n), RoundingMode.DOWN);
         }
         this.setScale(this.getScale() + n);
     }
@@ -593,7 +600,7 @@ public class CobolDecimal {
         if (diff < 0) {
             CobolRuntimeException.setException(CobolExceptionId.COB_EC_SIZE_OVERFLOW);
             if ((opt & CobolDecimal.COB_STORE_KEEP_ON_OVERFLOW) > 0) {
-                return CobolRuntimeException.code;
+                return CobolRuntimeException.getExceptionCode();
             }
         }
 
@@ -641,7 +648,7 @@ public class CobolDecimal {
         if (diff < 0) {
             CobolRuntimeException.setException(CobolExceptionId.COB_EC_SIZE_OVERFLOW);
             if ((opt & CobolDecimal.COB_STORE_KEEP_ON_OVERFLOW) > 0) {
-                return CobolRuntimeException.code;
+                return CobolRuntimeException.getExceptionCode();
             }
         }
         data.fillBytes(0, f.getSize());
@@ -740,7 +747,7 @@ public class CobolDecimal {
             }
         }
         CobolRuntimeException.setException(CobolExceptionId.COB_EC_SIZE_OVERFLOW);
-        return CobolExceptionInfo.code;
+        return CobolExceptionInfo.getExceptionCode();
     }
 
     // libcob/numeric.cのnum_byte_memcpyの実装

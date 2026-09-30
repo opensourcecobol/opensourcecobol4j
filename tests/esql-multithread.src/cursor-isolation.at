@@ -1,0 +1,158 @@
+AT_SETUP([Cursors of the same name advance independently on two threads])
+
+dnl Two programs on two threads of one JVM open a cursor of the same name
+dnl over the same table and fetch from it alternately (synchronised with
+dnl CALL "SyncPoint" after every observation, so the numbered output lines
+dnl read exactly in execution order). Each program sees the rows from its
+dnl own cursor position: the interleaved fetches of the other thread, which
+dnl runs on its own connection and backend, do not advance it.
+
+AT_DATA([setup.cbl], [
+       IDENTIFICATION              DIVISION.
+       PROGRAM-ID.                 setup.
+       DATA                        DIVISION.
+       WORKING-STORAGE             SECTION.
+           EXEC SQL INCLUDE SQLCA END-EXEC.
+       01  DBNAME                  PIC  X(30) VALUE SPACE.
+       01  USERNAME                PIC  X(30) VALUE SPACE.
+       01  PASSWD                  PIC  X(10) VALUE SPACE.
+       01  I                       PIC  9(2).
+       PROCEDURE                   DIVISION.
+           MOVE  "<|DB_NAME|>@<|DB_HOST|>:<|DB_PORT|>" TO DBNAME.
+           MOVE  "<|DB_USER|>"                         TO USERNAME.
+           MOVE  "<|DB_PASSWORD|>"                     TO PASSWD.
+           EXEC SQL
+               CONNECT :USERNAME IDENTIFIED BY :PASSWD USING :DBNAME
+           END-EXEC.
+           EXEC SQL
+               DROP TABLE IF EXISTS CURTBL
+           END-EXEC.
+           EXEC SQL
+               CREATE TABLE CURTBL ( SEQ NUMERIC(2,0) )
+           END-EXEC.
+           PERFORM VARYING I FROM 1 BY 1 UNTIL I > 4
+               EXEC SQL
+                   INSERT INTO CURTBL VALUES (:I)
+               END-EXEC
+           END-PERFORM.
+           EXEC SQL COMMIT END-EXEC.
+           EXEC SQL DISCONNECT END-EXEC.
+           IF SQLCODE = ZERO
+               DISPLAY "setup ok"
+           ELSE
+               DISPLAY "setup NG " SQLCODE
+           END-IF.
+           STOP RUN.
+])
+
+AT_DATA([prog1.cbl], [
+       IDENTIFICATION              DIVISION.
+       PROGRAM-ID.                 prog1.
+       DATA                        DIVISION.
+       WORKING-STORAGE             SECTION.
+           EXEC SQL INCLUDE SQLCA END-EXEC.
+       01  DBNAME                  PIC  X(30) VALUE SPACE.
+       01  USERNAME                PIC  X(30) VALUE SPACE.
+       01  PASSWD                  PIC  X(10) VALUE SPACE.
+       01  SEQ-VAL                 PIC  9(2).
+       01  SYNC-STEP               PIC  9(2).
+       PROCEDURE                   DIVISION.
+           MOVE  "<|DB_NAME|>@<|DB_HOST|>:<|DB_PORT|>" TO DBNAME.
+           MOVE  "<|DB_USER|>"                         TO USERNAME.
+           MOVE  "<|DB_PASSWORD|>"                     TO PASSWD.
+           EXEC SQL
+               CONNECT :USERNAME IDENTIFIED BY :PASSWD USING :DBNAME
+           END-EXEC.
+           EXEC SQL
+               DECLARE C CURSOR FOR
+                   SELECT SEQ FROM CURTBL ORDER BY SEQ
+           END-EXEC.
+           EXEC SQL OPEN C END-EXEC.
+           DISPLAY "01 prog1 open " SQLCODE.
+           MOVE 1 TO SYNC-STEP. CALL "SyncPoint" USING SYNC-STEP.
+      *    prog2 opens its own cursor of the same name
+           MOVE 2 TO SYNC-STEP. CALL "SyncPoint" USING SYNC-STEP.
+           EXEC SQL FETCH C INTO :SEQ-VAL END-EXEC.
+           DISPLAY "03 prog1 first fetch seq=" SEQ-VAL.
+           MOVE 3 TO SYNC-STEP. CALL "SyncPoint" USING SYNC-STEP.
+      *    prog2 fetches its first row
+           MOVE 4 TO SYNC-STEP. CALL "SyncPoint" USING SYNC-STEP.
+           EXEC SQL FETCH C INTO :SEQ-VAL END-EXEC.
+           DISPLAY "05 prog1 second fetch seq=" SEQ-VAL.
+           MOVE 5 TO SYNC-STEP. CALL "SyncPoint" USING SYNC-STEP.
+      *    prog2 fetches its second row
+           MOVE 6 TO SYNC-STEP. CALL "SyncPoint" USING SYNC-STEP.
+           EXEC SQL CLOSE C END-EXEC.
+           EXEC SQL DISCONNECT END-EXEC.
+           DISPLAY "07 prog1 close " SQLCODE.
+           MOVE 7 TO SYNC-STEP. CALL "SyncPoint" USING SYNC-STEP.
+           GOBACK.
+])
+
+AT_DATA([prog2.cbl], [
+       IDENTIFICATION              DIVISION.
+       PROGRAM-ID.                 prog2.
+       DATA                        DIVISION.
+       WORKING-STORAGE             SECTION.
+           EXEC SQL INCLUDE SQLCA END-EXEC.
+       01  DBNAME                  PIC  X(30) VALUE SPACE.
+       01  USERNAME                PIC  X(30) VALUE SPACE.
+       01  PASSWD                  PIC  X(10) VALUE SPACE.
+       01  SEQ-VAL                 PIC  9(2).
+       01  SYNC-STEP               PIC  9(2).
+       PROCEDURE                   DIVISION.
+           MOVE  "<|DB_NAME|>@<|DB_HOST|>:<|DB_PORT|>" TO DBNAME.
+           MOVE  "<|DB_USER|>"                         TO USERNAME.
+           MOVE  "<|DB_PASSWORD|>"                     TO PASSWD.
+           MOVE 1 TO SYNC-STEP. CALL "SyncPoint" USING SYNC-STEP.
+           EXEC SQL
+               CONNECT :USERNAME IDENTIFIED BY :PASSWD USING :DBNAME
+           END-EXEC.
+           EXEC SQL
+               DECLARE C CURSOR FOR
+                   SELECT SEQ FROM CURTBL ORDER BY SEQ
+           END-EXEC.
+           EXEC SQL OPEN C END-EXEC.
+           DISPLAY "02 prog2 open " SQLCODE.
+           MOVE 2 TO SYNC-STEP. CALL "SyncPoint" USING SYNC-STEP.
+      *    prog1 fetches its first row
+           MOVE 3 TO SYNC-STEP. CALL "SyncPoint" USING SYNC-STEP.
+           EXEC SQL FETCH C INTO :SEQ-VAL END-EXEC.
+           DISPLAY "04 prog2 first fetch seq=" SEQ-VAL.
+           MOVE 4 TO SYNC-STEP. CALL "SyncPoint" USING SYNC-STEP.
+      *    prog1 fetches its second row
+           MOVE 5 TO SYNC-STEP. CALL "SyncPoint" USING SYNC-STEP.
+           EXEC SQL FETCH C INTO :SEQ-VAL END-EXEC.
+           DISPLAY "06 prog2 second fetch seq=" SEQ-VAL.
+           MOVE 6 TO SYNC-STEP. CALL "SyncPoint" USING SYNC-STEP.
+      *    prog1 closes and disconnects
+           MOVE 7 TO SYNC-STEP. CALL "SyncPoint" USING SYNC-STEP.
+           EXEC SQL CLOSE C END-EXEC.
+           EXEC SQL DISCONNECT END-EXEC.
+           DISPLAY "08 prog2 close " SQLCODE.
+           GOBACK.
+])
+
+AT_CHECK([cp ../../multithread.src/harness/ThreadHarness.java ../../multithread.src/harness/PairHarness.java ../../multithread.src/harness/SyncPoint.java .])
+AT_CHECK([javac ThreadHarness.java PairHarness.java SyncPoint.java])
+AT_CHECK([${EMBED_DB_INFO} setup.cbl])
+AT_CHECK([${EMBED_DB_INFO} prog1.cbl])
+AT_CHECK([${EMBED_DB_INFO} prog2.cbl])
+AT_CHECK([${COMPILE_MODULE} setup.cbl prog1.cbl prog2.cbl])
+AT_CHECK([${RUN_MODULE} setup], [0], [setup ok
+])
+AT_CHECK([java PairHarness prog1 prog2], [0],
+[01 prog1 open +000000000
+02 prog2 open +000000000
+03 prog1 first fetch seq=01
+04 prog2 first fetch seq=01
+05 prog1 second fetch seq=02
+06 prog2 second fetch seq=02
+07 prog1 close +000000000
+08 prog2 close +000000000
+prog1 return-code 0
+prog2 return-code 0
+alive
+])
+
+AT_CLEANUP

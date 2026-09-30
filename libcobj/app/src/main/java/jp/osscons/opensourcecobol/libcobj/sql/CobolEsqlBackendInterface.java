@@ -230,4 +230,10 @@ public interface CobolEsqlBackendInterface {
      * @param sqlca ステータス報告用の SQLCA データストレージ
      */
     void rollback(CobolDataStorage sqlca);
+
+    /**
+     * 実行単位の終了時に呼び出される。DISCONNECTされずに残っている接続のロールバックとクローズなど、
+     * バックエンドが保持している資源を解放する。既定では何もしない。
+     */
+    default void endRunUnit() {}
 }

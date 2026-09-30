@@ -236,9 +236,9 @@ public class CobolLineSequentialFile extends CobolFile {
             this.flag_needs_nl = false;
         }
 
-        if (eop_status != 0) {
-            eop_status = 0;
-            CobolRuntimeException.code = 0x0502;
+        if (getEopStatus() != 0) {
+            setEopStatus(0);
+            CobolRuntimeException.setExceptionCode(0x0502);
             return COB_STATUS_52_EOP;
         }
         return COB_STATUS_00_SUCCESS;

@@ -20,7 +20,6 @@ package jp.osscons.opensourcecobol.libcobj.call;
 
 import static org.junit.jupiter.api.Assertions.*;
 
-import java.lang.reflect.Field;
 import jp.osscons.opensourcecobol.libcobj.data.CobolDataStorage;
 import jp.osscons.opensourcecobol.libcobj.exceptions.CobolRuntimeException;
 import org.junit.jupiter.api.BeforeEach;
@@ -29,14 +28,8 @@ import org.junit.jupiter.api.Test;
 class CobolResolveTest {
 
     @BeforeEach
-    void resetCallStackState() throws Exception {
-        Field headField = CobolResolve.class.getDeclaredField("callStackListHead");
-        headField.setAccessible(true);
-        headField.set(null, null);
-
-        Field currentField = CobolResolve.class.getDeclaredField("currentCallStackList");
-        currentField.setAccessible(true);
-        currentField.set(null, null);
+    void resetCallStackState() {
+        CobolResolve.resetThreadState();
     }
 
     @Test

@@ -49,7 +49,7 @@ class CobolEsqlTest {
     void setUp() {
         sqlca = new CobolDataStorage(136);
         // 環境変数からの解決を経ずに backend を据える（このテストは PostgreSQL 実装を対象にする）。
-        CobolEsql.backend = new CobolEsqlBackendPostgresql();
+        CobolEsql.backend.set(new CobolEsqlBackendPostgresql());
         // 先読み件数を既定 (1) に戻す（テスト間で N をリークさせない）。
         BulkFetchConfig.setFetchRecords(1);
     }
@@ -58,12 +58,12 @@ class CobolEsqlTest {
     void tearDown() {
         BulkFetchConfig.setFetchRecords(1);
         closeRegisteredConnections();
-        CobolEsql.backend = null;
+        CobolEsql.backend.remove();
     }
 
     /** このテストが据えた backend を返す（内部状態の作り込みと検証に使う）。 */
     private AbstractCobolEsqlBackend backend() {
-        return (AbstractCobolEsqlBackend) CobolEsql.backend;
+        return (AbstractCobolEsqlBackend) CobolEsql.backend.get();
     }
 
     /** 登録済みの全接続を閉じて登録簿を空にする（Testcontainers 接続のリーク防止）。 */

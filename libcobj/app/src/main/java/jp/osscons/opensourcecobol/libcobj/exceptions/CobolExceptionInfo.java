@@ -25,7 +25,7 @@ public class CobolExceptionInfo {
      * CobolRuntimeExceptionとは異なりコンテキスト情報は保持せず、エラーコードのみを管理する。
      * 主にACCEPT文やDISPLAY文の実装固有エラーの判定に使用される。
      */
-    public static int code = 0;
+    private static final ThreadLocal<int[]> code = ThreadLocal.withInitial(() -> new int[1]);
 
     /**
      * エラーコードを設定する。指定された例外IDに対応するエラーコードをCobolExceptionTabCode.codeテーブルから取得し、codeフィールドに設定する。
@@ -33,6 +33,20 @@ public class CobolExceptionInfo {
      * @param id CobolExceptionIdで定義された例外ID
      */
     public static void setException(int id) {
-        CobolExceptionInfo.code = CobolExceptionTabCode.code[id];
+        code.get()[0] = CobolExceptionTabCode.code[id];
+    }
+
+    /**
+     * 現在のスレッドのエラーコードを取得する。
+     *
+     * @return エラーコード
+     */
+    public static int getExceptionCode() {
+        return code.get()[0];
+    }
+
+    /** 現在のスレッドに紐づくエラーコードを破棄する。実行単位の終了時に呼び出す。 */
+    public static void resetThreadState() {
+        code.remove();
     }
 }

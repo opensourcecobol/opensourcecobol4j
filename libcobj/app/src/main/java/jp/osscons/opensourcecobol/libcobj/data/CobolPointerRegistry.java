@@ -29,18 +29,24 @@ import java.util.Map;
  * エンコードする。これにより SET PTR UP/DOWN BY n のポインタ演算が自然に動作する。
  */
 public final class CobolPointerRegistry {
-    /** 次に割り当てるバイト配列IDのカウンタ */
-    private static int nextId = 1;
+    /** 実行単位(スレッド)ごとに保持するポインタの登録情報 */
+    private static final class State {
+        /** 次に割り当てるバイト配列IDのカウンタ */
+        int nextId = 1;
 
-    /** バイト配列ID → バイト配列の逆引きマップ (resolveで使用) */
-    private static final Map<Integer, byte[]> idToByteArray = new HashMap<>();
+        /** バイト配列ID → バイト配列の逆引きマップ (resolveで使用) */
+        final Map<Integer, byte[]> idToByteArray = new HashMap<>();
 
-    /** バイト配列 → バイト配列IDの正引きマップ (registerで使用、IdentityHashMapで参照同一性を比較) */
-    private static final IdentityHashMap<byte[], Integer> byteArrayToId = new IdentityHashMap<>();
+        /** バイト配列 → バイト配列IDの正引きマップ (registerで使用、IdentityHashMapで参照同一性を比較) */
+        final IdentityHashMap<byte[], Integer> byteArrayToId = new IdentityHashMap<>();
 
-    /** バイト配列 → (インデックス → CobolDataStorage) のキャッシュ。同じ配列・同じオフセットのインスタンスを再利用する */
-    private static final IdentityHashMap<byte[], Map<Integer, CobolDataStorage>>
-            cobolDataStorageCache = new IdentityHashMap<>();
+        /** バイト配列 → (インデックス → CobolDataStorage) のキャッシュ。同じ配列・同じオフセットのインスタンスを再利用する */
+        final IdentityHashMap<byte[], Map<Integer, CobolDataStorage>> cobolDataStorageCache =
+                new IdentityHashMap<>();
+    }
+
+    /** 現在のスレッドのポインタ登録情報。実行単位はスレッドごとに独立しているため、スレッドごとに保持する。 */
+    private static final ThreadLocal<State> state = ThreadLocal.withInitial(State::new);
 
     private CobolPointerRegistry() {}
 
@@ -54,6 +60,7 @@ public final class CobolPointerRegistry {
      * @return アドレス値
      */
     public static long register(CobolDataStorage s) {
+        State st = state.get();
         if (s == null) {
             // NULLポインタは0Lで表現する
             return 0L;
@@ -63,16 +70,16 @@ public final class CobolPointerRegistry {
         int index = s.getIndex();
 
         // バイト配列が未登録であれば新しいIDを割り当てて双方向マップに登録する
-        Integer byteArrayId = byteArrayToId.get(data);
+        Integer byteArrayId = st.byteArrayToId.get(data);
         if (byteArrayId == null) {
-            byteArrayId = nextId++;
-            idToByteArray.put(byteArrayId, data);
-            byteArrayToId.put(data, byteArrayId);
+            byteArrayId = st.nextId++;
+            st.idToByteArray.put(byteArrayId, data);
+            st.byteArrayToId.put(data, byteArrayId);
         }
 
         // CobolDataStorageインスタンスをキャッシュに登録する (同じ配列・オフセットは初回のみ)
         Map<Integer, CobolDataStorage> indexCache =
-                cobolDataStorageCache.computeIfAbsent(data, k -> new HashMap<>());
+                st.cobolDataStorageCache.computeIfAbsent(data, k -> new HashMap<>());
         indexCache.putIfAbsent(index, s);
 
         // 上位32ビット: バイト配列ID、下位32ビット: オフセット にエンコードして返す
@@ -90,6 +97,7 @@ public final class CobolPointerRegistry {
      * @throws IllegalArgumentException 未登録のバイト配列IDが指定された場合
      */
     public static CobolDataStorage resolve(long id) {
+        State st = state.get();
         if (id == 0L) {
             // NULLポインタ
             return null;
@@ -100,7 +108,7 @@ public final class CobolPointerRegistry {
         int index = (int) (0x00000000ffffffffL & id);
 
         // バイト配列IDから元のバイト配列を取得する
-        byte[] data = idToByteArray.get(byteArrayId);
+        byte[] data = st.idToByteArray.get(byteArrayId);
         if (data == null) {
             throw new IllegalArgumentException(
                     "Invalid pointer id "
@@ -111,7 +119,7 @@ public final class CobolPointerRegistry {
         }
 
         // キャッシュに既存のCobolDataStorageがあればそれを返す
-        Map<Integer, CobolDataStorage> indexCache = cobolDataStorageCache.get(data);
+        Map<Integer, CobolDataStorage> indexCache = st.cobolDataStorageCache.get(data);
         if (indexCache != null) {
             CobolDataStorage cached = indexCache.get(index);
             if (cached != null) {
@@ -124,7 +132,7 @@ public final class CobolPointerRegistry {
         CobolDataStorage created = new CobolDataStorage(data, index);
         if (indexCache == null) {
             indexCache = new HashMap<>();
-            cobolDataStorageCache.put(data, indexCache);
+            st.cobolDataStorageCache.put(data, indexCache);
         }
         indexCache.put(index, created);
         return created;
@@ -136,9 +144,11 @@ public final class CobolPointerRegistry {
      * <p>STOP RUN 時に呼び出し、登録済みのポインタ情報をすべて解放してメモリリークを防止する。
      */
     public static void clear() {
-        idToByteArray.clear();
-        byteArrayToId.clear();
-        cobolDataStorageCache.clear();
-        nextId = 1;
+        state.remove();
+    }
+
+    /** 現在のスレッドに紐づくポインタ登録情報を破棄する。実行単位の終了時に呼び出す。 */
+    public static void resetThreadState() {
+        state.remove();
     }
 }

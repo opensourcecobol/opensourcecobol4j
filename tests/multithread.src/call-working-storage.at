@@ -1,0 +1,85 @@
+AT_SETUP([WORKING-STORAGE of a CALLed program is private to each thread])
+
+AT_DATA([prog.cbl], [
+       IDENTIFICATION DIVISION.
+       PROGRAM-ID. prog.
+       DATA DIVISION.
+       WORKING-STORAGE SECTION.
+       01 MAIN-CNT  PIC 9(4) VALUE 0.
+       01 SUB-CNT   PIC 9(4).
+       01 SUB-ID    PIC X(3).
+       LINKAGE SECTION.
+       01 THREAD-ID PIC X(3).
+       PROCEDURE DIVISION USING THREAD-ID.
+           ADD 1 TO MAIN-CNT.
+           CALL "sub" USING THREAD-ID SUB-CNT SUB-ID.
+           IF MAIN-CNT = 50
+              DISPLAY "thread " THREAD-ID " main=" MAIN-CNT
+                      " sub=" SUB-CNT " sub-id=" SUB-ID
+           END-IF.
+           IF SUB-CNT NOT = MAIN-CNT
+              DISPLAY "MISMATCH " THREAD-ID " " MAIN-CNT " " SUB-CNT
+           END-IF.
+           IF SUB-ID NOT = THREAD-ID
+              DISPLAY "FOREIGN SUB " THREAD-ID " " SUB-ID
+           END-IF.
+           GOBACK.
+])
+
+AT_DATA([sub.cbl], [
+       IDENTIFICATION DIVISION.
+       PROGRAM-ID. sub.
+       DATA DIVISION.
+       WORKING-STORAGE SECTION.
+       01 CNT    PIC 9(4) VALUE 0.
+       01 OWNER  PIC X(3) VALUE SPACES.
+       01 SUB2-CNT PIC 9(4).
+       LINKAGE SECTION.
+       01 THREAD-ID PIC X(3).
+       01 RESULT    PIC 9(4).
+       01 RESULT-ID PIC X(3).
+       PROCEDURE DIVISION USING THREAD-ID RESULT RESULT-ID.
+           IF OWNER = SPACES
+              MOVE THREAD-ID TO OWNER
+           END-IF.
+           ADD 1 TO CNT.
+           CALL "sub2" USING SUB2-CNT.
+           IF SUB2-CNT NOT = CNT
+              DISPLAY "MISMATCH sub2 " THREAD-ID " " CNT " " SUB2-CNT
+           END-IF.
+           MOVE CNT TO RESULT.
+           MOVE OWNER TO RESULT-ID.
+           EXIT PROGRAM.
+])
+
+AT_DATA([sub2.cbl], [
+       IDENTIFICATION DIVISION.
+       PROGRAM-ID. sub2.
+       DATA DIVISION.
+       WORKING-STORAGE SECTION.
+       01 CNT PIC 9(4) VALUE 0.
+       LINKAGE SECTION.
+       01 RESULT PIC 9(4).
+       PROCEDURE DIVISION USING RESULT.
+           ADD 1 TO CNT.
+           MOVE CNT TO RESULT.
+           EXIT PROGRAM.
+])
+
+AT_CHECK([cp ../../multithread.src/harness/ThreadHarness.java .])
+AT_CHECK([javac ThreadHarness.java])
+AT_CHECK([${COBJ} prog.cbl sub.cbl sub2.cbl])
+AT_CHECK([java ThreadHarness prog 8 50 3], [0],
+[1 thread 001 main=0050 sub=0050 sub-id=001
+1 thread 002 main=0050 sub=0050 sub-id=002
+1 thread 003 main=0050 sub=0050 sub-id=003
+1 thread 004 main=0050 sub=0050 sub-id=004
+1 thread 005 main=0050 sub=0050 sub-id=005
+1 thread 006 main=0050 sub=0050 sub-id=006
+1 thread 007 main=0050 sub=0050 sub-id=007
+1 thread 008 main=0050 sub=0050 sub-id=008
+return-code 0 x8
+alive
+])
+
+AT_CLEANUP

@@ -40,11 +40,16 @@ import jp.osscons.opensourcecobol.libcobj.exceptions.CobolExceptionInfo;
 /** DISPLAY文やACCEPT文に関するメソッドを実装するクラス */
 public class CobolTerminal {
 
-    /** DISPLAY文で設定されたコマンドラインデータのバイト数 */
-    private static int commlncnt = 0;
+    /**
+     * DISPLAY UPON COMMAND-LINE文で設定されたコマンドラインデータ。<br>
+     * 実行単位はスレッドごとに独立しているため、スレッドごとに保持する。設定されていない場合はnull。
+     */
+    private static final ThreadLocal<byte[]> commandLineData = new ThreadLocal<>();
 
-    /** DISPLAY文で設定されたコマンドラインデータのバイト配列 */
-    private static byte[] commlnptr = null;
+    /** 現在のスレッドに紐づくコマンドラインデータを破棄する。実行単位の終了時に呼び出す。 */
+    public static void resetThreadState() {
+        commandLineData.remove();
+    }
 
     /**
      * 標準出力または標準エラー出力にデータを出力する
@@ -55,19 +60,34 @@ public class CobolTerminal {
      */
     public static void display(boolean dispStdout, boolean newline, AbstractCobolField... fields) {
         PrintStream stream = dispStdout ? System.out : System.err;
-        for (AbstractCobolField field : fields) {
-            CobolFieldAttribute attr = field.getAttribute();
-            if (attr.isTypeNumericBinary()
-                    && CobolModule.getCurrentModule().flag_pretty_display == 0) {
-                stream.print(field);
-            } else if (attr.isTypeNumeric()) {
-                stream.print(field);
-            } else {
-                displayAlnum(field, stream);
+        displayFields(stream, newline, fields);
+    }
+
+    /**
+     * 1つのDISPLAY文の出力をストリームへ書き出す。<br>
+     * 複数のスレッドが同じストリームへ出力しても1文分の出力が混ざらないよう、 ストリームのロックを保持したまま書き出す。
+     *
+     * @param stream 出力先
+     * @param newline trueなら出力後に改行する
+     * @param fields 出力するCOBOL変数
+     */
+    private static void displayFields(
+            PrintStream stream, boolean newline, AbstractCobolField... fields) {
+        synchronized (stream) {
+            for (AbstractCobolField field : fields) {
+                CobolFieldAttribute attr = field.getAttribute();
+                if (attr.isTypeNumericBinary()
+                        && CobolModule.getCurrentModule().flag_pretty_display == 0) {
+                    stream.print(field);
+                } else if (attr.isTypeNumeric()) {
+                    stream.print(field);
+                } else {
+                    displayAlnum(field, stream);
+                }
             }
-        }
-        if (newline) {
-            stream.println("");
+            if (newline) {
+                stream.println("");
+            }
         }
     }
 
@@ -94,23 +114,32 @@ public class CobolTerminal {
     public static void display(
             int outorerr, int newline, int varcnt, AbstractCobolField... fields) {
         PrintStream stream = outorerr == 0 ? System.out : System.err;
-        for (AbstractCobolField field : fields) {
-            CobolFieldAttribute attr = field.getAttribute();
-            if (attr.isTypeNumericBinary()
-                    && CobolModule.getCurrentModule().flag_pretty_display == 0) {
-                stream.print(field);
-            } else if (attr.isTypeNumeric()) {
-                stream.print(field);
-            } else {
-                displayAlnum(field, stream);
-            }
-        }
-        if (newline == 1) {
-            stream.println("");
-        }
+        displayFields(stream, newline == 1, fields);
     }
 
     private static Scanner scan = null;
+
+    /**
+     * 標準入力を読み込むScannerを取得する(初回呼び出し時に生成する)。
+     *
+     * @return 標準入力を読み込むScanner
+     */
+    private static synchronized Scanner getStdinScanner() {
+        if (scan == null) {
+            if (CobolUtil.terminalEncoding == CobolEncoding.UTF8) {
+                scan = new Scanner(new InputStreamReader(System.in, StandardCharsets.UTF_8));
+            } else {
+                try {
+                    scan =
+                            new Scanner(
+                                    new InputStreamReader(System.in, Charset.forName("Shift_JIS")));
+                } catch (UnsupportedCharsetException e) {
+                    scan = new Scanner(System.in);
+                }
+            }
+        }
+        return scan;
+    }
 
     /**
      * 標準入力からデータを受け取る
@@ -119,22 +148,7 @@ public class CobolTerminal {
      */
     public static void accept(AbstractCobolField f) {
         try {
-            if (scan == null) {
-                if (CobolUtil.terminalEncoding == CobolEncoding.UTF8) {
-                    scan = new Scanner(new InputStreamReader(System.in, StandardCharsets.UTF_8));
-                } else {
-                    try {
-                        scan =
-                                new Scanner(
-                                        new InputStreamReader(
-                                                System.in, Charset.forName("Shift_JIS")));
-                    } catch (UnsupportedCharsetException e) {
-                        scan = new Scanner(System.in);
-                    }
-                }
-            }
-
-            String input = scan.nextLine();
+            String input = getStdinScanner().nextLine();
 
             // PIC X(n)型のデータに変換
             AbstractCobolField field = CobolFieldFactory.makeCobolField(input);
@@ -244,7 +258,7 @@ public class CobolTerminal {
      * @param f 環境変数名を保持するCOBOL変数
      */
     public static void displayEnvironment(AbstractCobolField f) {
-        CobolUtil.cobLocalEnv = f.fieldToString();
+        CobolUtil.setLocalEnvName(f.fieldToString());
     }
 
     /**
@@ -255,11 +269,12 @@ public class CobolTerminal {
      * @param f 設定する環境変数の値を保持するCOBOL変数
      */
     public static void displayEnvValue(AbstractCobolField f) {
-        if (CobolUtil.cobLocalEnv == null || CobolUtil.cobLocalEnv.equals("")) {
+        String localEnv = CobolUtil.getLocalEnvName();
+        if (localEnv == null || localEnv.equals("")) {
             CobolExceptionInfo.setException(CobolExceptionId.COB_EC_IMP_DISPLAY);
             return;
         }
-        CobolUtil.setEnv(CobolUtil.cobLocalEnv, f.getString());
+        CobolUtil.setEnv(localEnv, f.getString());
     }
 
     /**
@@ -271,8 +286,9 @@ public class CobolTerminal {
      */
     public static void acceptEnvironment(AbstractCobolField f) {
         String p = null;
-        if (CobolUtil.cobLocalEnv != null) {
-            p = CobolUtil.getEnv(CobolUtil.cobLocalEnv);
+        String localEnv = CobolUtil.getLocalEnvName();
+        if (localEnv != null) {
+            p = CobolUtil.getEnv(localEnv);
         }
 
         if (p == null) {
@@ -293,11 +309,11 @@ public class CobolTerminal {
      * @param f コマンドラインとして設定するデータを保持するCOBOL変数
      */
     public static void displayCommandLine(AbstractCobolField f) {
-        CobolTerminal.commlnptr = new byte[f.getSize()];
-        CobolTerminal.commlncnt = f.getSize();
-        for (int i = 0; i < CobolTerminal.commlncnt; ++i) {
-            CobolTerminal.commlnptr[i] = f.getDataStorage().getByte(i);
+        byte[] data = new byte[f.getSize()];
+        for (int i = 0; i < data.length; ++i) {
+            data[i] = f.getDataStorage().getByte(i);
         }
+        commandLineData.set(data);
     }
 
     /**
@@ -308,8 +324,9 @@ public class CobolTerminal {
      * @param f コマンドラインデータを格納するCOBOL変数
      */
     public static void acceptCommandLine(AbstractCobolField f) {
-        if (CobolTerminal.commlncnt != 0) {
-            f.memcpy(CobolTerminal.commlnptr, CobolTerminal.commlncnt);
+        byte[] data = commandLineData.get();
+        if (data != null && data.length != 0) {
+            f.memcpy(data, data.length);
             return;
         }
 
@@ -335,7 +352,7 @@ public class CobolTerminal {
             CobolExceptionInfo.setException(CobolExceptionId.COB_EC_IMP_DISPLAY);
             return;
         }
-        CobolUtil.currentArgIndex = n;
+        CobolUtil.setCurrentArgIndex(n);
     }
 
     /**
@@ -361,11 +378,12 @@ public class CobolTerminal {
      * @param f 引数の値を格納するCOBOL変数
      */
     public static void acceptArgValue(AbstractCobolField f) {
-        if (CobolUtil.currentArgIndex > CobolUtil.commandLineArgs.length) {
+        int argIndex = CobolUtil.getCurrentArgIndex();
+        if (argIndex > CobolUtil.commandLineArgs.length) {
             CobolExceptionInfo.setException(CobolExceptionId.COB_EC_IMP_ACCEPT);
             return;
         }
-        f.memcpy(CobolUtil.commandLineArgs[CobolUtil.currentArgIndex - 1]);
-        CobolUtil.currentArgIndex++;
+        f.memcpy(CobolUtil.commandLineArgs[argIndex - 1]);
+        CobolUtil.setCurrentArgIndex(argIndex + 1);
     }
 }

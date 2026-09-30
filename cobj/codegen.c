@@ -50,10 +50,6 @@
 #define BUF_SIZE 1024
 #define MAX_LITERAL_SIZE 64
 
-#ifndef __GNUC__
-static int inside_check = 0;
-static int inside_stack[64];
-#endif
 static int param_id = 0;
 static int stack_id = 0;
 static int num_cob_fields = 0;
@@ -1625,12 +1621,6 @@ static void joutput_param(cb_tree x, int id) {
 
     if (CB_FILE_P(r->value)) {
       joutput("%s%s", CB_PREFIX_FILE, CB_FILE(r->value)->cname);
-      if (r->check) {
-#ifdef __GNUC__
-#else
-        --inside_check;
-#endif
-      }
       break;
     }
     if (CB_ALPHABET_NAME_P(r->value)) {
@@ -1662,10 +1652,6 @@ static void joutput_param(cb_tree x, int id) {
         break;
       }
       if (r->check) {
-#ifdef __GNUC__
-#else
-        --inside_check;
-#endif
         joutput(";");
         joutput_newline();
         joutput_indent_level -= 2;
@@ -1764,14 +1750,6 @@ static void joutput_param(cb_tree x, int id) {
         num_cob_fields = stack_id + 1;
       }
       sprintf(fname, "f%d", stack_id++);
-#ifndef __GNUC__
-      if (inside_check != 0) {
-        if (inside_stack[inside_check - 1] != 0) {
-          inside_stack[inside_check - 1] = 0;
-          joutput(",\n");
-        }
-      }
-#endif
       joutput("CobolFieldFactory.makeCobolField(");
       if (!(CB_LITERAL_P(x) &&
             (CB_TREE_CATEGORY(x) == CB_CATEGORY_ALPHANUMERIC ||
@@ -1786,11 +1764,6 @@ static void joutput_param(cb_tree x, int id) {
     }
 
     if (r->check) {
-#ifdef __GNUC__
-#else
-      --inside_check;
-#endif
-
       joutput(";");
       joutput_newline();
       joutput_indent_level -= 2;
@@ -3000,7 +2973,7 @@ static void joutput_call(struct cb_call *p) {
     }
   }
   joutput(");\n");
-  joutput_line("CobolCallParams.callParams = %d;", (int)n);
+  joutput_line("CobolCallParams.set(%d);", (int)n);
 
   if (!dynamic_link) {
     if (CB_REFERENCE_P(p->name) && CB_FIELD_P(CB_REFERENCE(p->name)->value) &&
@@ -3562,14 +3535,16 @@ static void joutput_file_error(struct cb_file *pfile) {
  */
 
 static void joutput_ferror_stmt(struct cb_statement *p, int code) {
-  joutput_line("if (CobolRuntimeException.code != 0)");
+  joutput_line("if (CobolRuntimeException.getExceptionCode() != 0)");
   joutput_indent("{");
   if (p->handler1) {
     if ((code & 0x00ff) == 0) {
-      joutput_line("if ((CobolRuntimeException.code & 0xff00) == 0x%04x)",
-                   code);
+      joutput_line(
+          "if ((CobolRuntimeException.getExceptionCode() & 0xff00) == 0x%04x)",
+          code);
     } else {
-      joutput_line("if (CobolRuntimeException.code == 0x%04x)", code);
+      joutput_line("if (CobolRuntimeException.getExceptionCode() == 0x%04x)",
+                   code);
     }
     joutput_indent("{");
     joutput_stmt(p->handler1, JOUTPUT_STMT_DEFAULT);
@@ -4086,7 +4061,6 @@ static void joutput_stmt(cb_tree x, enum joutput_stmt_type output_type) {
   struct cb_label *lp;
   struct cb_assign *ap;
   struct cb_if *ip;
-  int code;
   int putParen = 0;
 
   stack_id = 0;
@@ -4094,14 +4068,6 @@ static void joutput_stmt(cb_tree x, enum joutput_stmt_type output_type) {
     joutput_line(";");
     return;
   }
-#ifndef __GNUC__
-  if (inside_check != 0) {
-    if (inside_stack[inside_check - 1] != 0) {
-      inside_stack[inside_check - 1] = 0;
-      joutput(",\n");
-    }
-  }
-#endif
   switch (CB_TREE_TAG(x)) {
   case CB_TAG_STATEMENT:
     p = CB_STATEMENT(x);
@@ -4166,14 +4132,14 @@ static void joutput_stmt(cb_tree x, enum joutput_stmt_type output_type) {
     if (p->handler1 || p->handler2 ||
         (p->file && CB_EXCEPTION_ENABLE(COB_EC_I_O))) {
 
-      joutput_line("CobolRuntimeException.code = 0;");
+      joutput_line("CobolRuntimeException.clearExceptionCode();");
     }
 
     if (cb_enable_zero_division_error && p->name &&
         ((strcmp(p->name, "DIVIDE") == 0) ||
          (strcmp(p->name, "COMPUTE") == 0)) &&
         (!p->handler1 && !p->handler2)) {
-      joutput_line("CobolUtil.cobErrorOnExitFlag = true;");
+      joutput_line("CobolUtil.setErrorOnExitFlag(true);");
     }
 
     if (p->null_check) {
@@ -4186,16 +4152,19 @@ static void joutput_stmt(cb_tree x, enum joutput_stmt_type output_type) {
 
     if (p->handler1 || p->handler2 ||
         (p->file && CB_EXCEPTION_ENABLE(COB_EC_I_O))) {
-      code = CB_EXCEPTION_CODE(p->handler_id);
+      int code = CB_EXCEPTION_CODE(p->handler_id);
       if (p->file) {
         joutput_ferror_stmt(p, code);
       } else {
         if (p->handler1) {
           if ((code & 0x00ff) == 0) {
-            joutput_line("if ((CobolRuntimeException.code & 0xff00) == 0x%04x)",
+            joutput_line("if ((CobolRuntimeException.getExceptionCode() & "
+                         "0xff00) == 0x%04x)",
                          code);
           } else {
-            joutput_line("if (CobolRuntimeException.code == 0x%04x)", code);
+            joutput_line(
+                "if (CobolRuntimeException.getExceptionCode() == 0x%04x)",
+                code);
           }
           joutput_indent("{");
           joutput_stmt(p->handler1, output_type);
@@ -4206,7 +4175,7 @@ static void joutput_stmt(cb_tree x, enum joutput_stmt_type output_type) {
         }
         if (p->handler2) {
           if (p->handler1 == NULL) {
-            joutput_line("if (CobolRuntimeException.code == 0)");
+            joutput_line("if (CobolRuntimeException.getExceptionCode() == 0)");
           }
           joutput_indent("{");
           joutput_stmt(p->handler2, output_type);
@@ -4989,6 +4958,7 @@ static void joutput_internal_function(struct cb_program *prog,
 
   joutput_line("int run_module (int entry) {");
   joutput_indent_level += 2;
+  joutput_line("CobolUtil.ensureInitialized();");
   // if (!prog->flag_chained) {
   //	for (l = parameter_list; l; l = CB_CHAIN (l)) {
   //		joutput_line ("if (fields.length > %d) {", parmnum);
@@ -5333,7 +5303,7 @@ static void joutput_internal_function(struct cb_program *prog,
     joutput_line("/* Initialize number of call params */");
     joutput_prefix();
     joutput_param(current_prog->cb_call_params, -1);
-    joutput(".setInt(CobolCallParams.callParams);");
+    joutput(".setInt(CobolCallParams.get());");
     joutput_newline();
   }
   // output_line ("cob_save_call_params = cob_call_params;");
@@ -5420,8 +5390,11 @@ static void joutput_internal_function(struct cb_program *prog,
 
   joutput_indent_level -= 2;
   joutput_line("} catch(CobolStopRunException e) {");
-  joutput_line("  CobolStopRunException.stopRun();");
-  joutput_line("  System.exit(e.getReturnCode());");
+  joutput_line(
+      "  return CobolStopRunException.handleAtFrame(e.getReturnCode());");
+  joutput_line("} catch(CobolStopRunSignal e) {");
+  joutput_line(
+      "  return CobolStopRunException.handleAtFrame(e.getReturnCode());");
   joutput_line("}");
 
   /* PROCEDURE DIVISION */
@@ -6202,7 +6175,8 @@ static void joutput_alphabet_name_definition(struct cb_alphabet_name *p) {
   }
 
   /* Output the table */
-  joutput("static byte[] %s_byte_array_%s = {\n", CB_PREFIX_SEQUENCE, p->cname);
+  joutput("static final byte[] %s_byte_array_%s = {\n", CB_PREFIX_SEQUENCE,
+          p->cname);
   for (i = 0; i < 256; i++) {
     if (i == 255) {
       joutput(" (byte)%d", table[i]);
@@ -6370,8 +6344,7 @@ static void joutput_declare_member_variables(struct cb_program *prog,
     joutput_line("/* End of fields */\n\n");
   }
 
-  joutput_line("private static AbstractCobolField %snative;\n",
-               CB_PREFIX_FIELD);
+  joutput_line("private AbstractCobolField %snative;\n", CB_PREFIX_FIELD);
 
   /* AbstractCobolField型変数の宣言(定数) */
   if (literal_cache) {
@@ -6654,7 +6627,7 @@ static void joutput_execution_list(struct cb_program *prog) {
     joutput_stmt(cb_standard_error_handler, JOUTPUT_STMT_DEFAULT);
     joutput_newline();
     if (seen) {
-      joutput_line("switch (CobolFile.errorFile.last_open_mode)");
+      joutput_line("switch (CobolFile.getErrorFile().last_open_mode)");
       joutput_indent("{");
       for (i = COB_OPEN_INPUT; i <= COB_OPEN_EXTEND; i++) {
         struct handler_struct *hstr = &prog->global_handler[i];
@@ -6687,7 +6660,7 @@ static void joutput_execution_list(struct cb_program *prog) {
       joutput_line("default:");
       joutput_indent("{");
     }
-    joutput_line("if ((CobolFile.errorFile.flag_select_features & "
+    joutput_line("if ((CobolFile.getErrorFile().flag_select_features & "
                  "CobolFile.COB_SELECT_FILE_STATUS) == 0) {");
     switch (cb_abort_on_io_exception) {
     case CB_ABORT_ON_IO_ANY:
@@ -6695,9 +6668,10 @@ static void joutput_execution_list(struct cb_program *prog) {
       joutput_line("	CobolStopRunException.stopRunAndThrow (1);");
       break;
     case CB_ABORT_ON_IO_FATAL:
-      joutput_line("	if (CobolFile.errorFile.file_status[0] == '3'");
-      joutput_line("	    || CobolFile.errorFile.file_status[0] == '4'");
-      joutput_line("	    || CobolFile.errorFile.file_status[0] == '9') {");
+      joutput_line("	if (CobolFile.getErrorFile().file_status[0] == '3'");
+      joutput_line("	    || CobolFile.getErrorFile().file_status[0] == '4'");
+      joutput_line(
+          "	    || CobolFile.getErrorFile().file_status[0] == '9') {");
       joutput_line("		CobolFile.defaultErrorHandle ();");
       joutput_line("		CobolStopRunException.stopRunAndThrow (1);");
       joutput_line("	}");
@@ -6987,13 +6961,12 @@ void codegen(struct cb_program *prog, const int nested, char **program_id_list,
   if (cb_enable_program_status_register) {
     joutput_line("%s $module$ = new %s();", prog->program_id, prog->program_id);
     joutput_line("$module$.%s_(0);", prog->program_id);
+    joutput_line("int $returnCode$ = $module$.b_RETURN_CODE.intValue();");
+    joutput_line("CobolStopRunException.exitMain();");
+    joutput_line("System.exit($returnCode$);");
   } else {
     joutput_line("new %s().%s_(0);", prog->program_id, prog->program_id);
-  }
-  joutput_line("CobolStopRunException.stopRun();");
-
-  if (cb_enable_program_status_register) {
-    joutput_line("System.exit($module$.b_RETURN_CODE.intValue());");
+    joutput_line("CobolStopRunException.exitMain();");
   }
 
   joutput_indent_level -= 2;
@@ -7035,7 +7008,7 @@ void codegen(struct cb_program *prog, const int nested, char **program_id_list,
       i += joutput_file_allocation(CB_FILE(CB_VALUE(l)));
     }
     if (i) {
-      joutput_line("\nprivate static Linage lingptr;\n");
+      joutput_line("\nprivate Linage lingptr;\n");
     }
   }
   joutput("\n");
@@ -7306,7 +7279,7 @@ void codegen(struct cb_program *prog, const int nested, char **program_id_list,
 
     i = lookup_attr(COB_TYPE_ALPHANUMERIC, 0, 0, 0, NULL, 0);
     joutput("  ");
-    joutput("private static AbstractCobolField %sebcdic = "
+    joutput("private static final AbstractCobolField %sebcdic = "
             "CobolFieldFactory.makeField(256, new "
             "CobolDataStorage(cob_ebcdic), %s%d%s);\n",
             CB_PREFIX_FIELD, CB_PREFIX_ATTR, i, lookup_attr_suffix(i));
@@ -7386,7 +7359,7 @@ void codegen(struct cb_program *prog, const int nested, char **program_id_list,
 
     i = lookup_attr(COB_TYPE_ALPHANUMERIC, 0, 0, 0, NULL, 0);
     joutput("  ");
-    joutput("private static AbstractCobolField %sebcdic_ascii = "
+    joutput("private static final AbstractCobolField %sebcdic_ascii = "
             "CobolFieldFactory.makeField(256, new "
             "CobolDataStorage(cob_ebcdic_ascii), %s%d%s);\n",
             CB_PREFIX_FIELD, CB_PREFIX_ATTR, i, lookup_attr_suffix(i));

@@ -1,0 +1,153 @@
+AT_SETUP([Record locks of an indexed file work between threads])
+
+AT_DATA([setup.cbl], [
+       IDENTIFICATION DIVISION.
+       PROGRAM-ID. setup.
+       ENVIRONMENT DIVISION.
+       INPUT-OUTPUT SECTION.
+       FILE-CONTROL.
+           SELECT F ASSIGN TO "shared-idx"
+                  ORGANIZATION IS INDEXED
+                  ACCESS MODE IS DYNAMIC
+                  RECORD KEY IS K
+                  FILE STATUS IS ST.
+       DATA DIVISION.
+       FILE SECTION.
+       FD F.
+       01 R.
+          05 K PIC 9(2).
+          05 V PIC X(8).
+       WORKING-STORAGE SECTION.
+       01 ST PIC XX.
+       PROCEDURE DIVISION.
+           OPEN OUTPUT F.
+           MOVE 1 TO K. MOVE "one" TO V. WRITE R.
+           MOVE 2 TO K. MOVE "two" TO V. WRITE R.
+           MOVE 3 TO K. MOVE "three" TO V. WRITE R.
+           CLOSE F.
+           DISPLAY "setup " ST.
+           STOP RUN.
+])
+
+AT_DATA([prog1.cbl], [
+       IDENTIFICATION DIVISION.
+       PROGRAM-ID. prog1.
+       ENVIRONMENT DIVISION.
+       INPUT-OUTPUT SECTION.
+       FILE-CONTROL.
+           SELECT F ASSIGN TO "shared-idx"
+                  ORGANIZATION IS INDEXED
+                  ACCESS MODE IS DYNAMIC
+                  RECORD KEY IS K
+                  LOCK MODE IS MANUAL
+                  FILE STATUS IS ST.
+       DATA DIVISION.
+       FILE SECTION.
+       FD F.
+       01 R.
+          05 K PIC 9(2).
+          05 V PIC X(8).
+       WORKING-STORAGE SECTION.
+       01 ST   PIC XX.
+       01 SYNC-STEP PIC 9(2).
+       PROCEDURE DIVISION.
+           OPEN I-O F.
+           DISPLAY "01 prog1 open i-o " ST.
+           MOVE 1 TO K.
+           READ F WITH LOCK.
+           DISPLAY "02 prog1 read with lock 1 " ST " " V "|".
+           MOVE 1 TO SYNC-STEP. CALL "SyncPoint" USING SYNC-STEP.
+      *    prog2 tries the locked record and locks another record
+           MOVE 2 TO SYNC-STEP. CALL "SyncPoint" USING SYNC-STEP.
+      *    locking record 2 releases the lock on record 1
+           MOVE 2 TO K.
+           READ F WITH LOCK.
+           DISPLAY "06 prog1 read with lock 2 " ST " " V "|".
+           MOVE 3 TO SYNC-STEP. CALL "SyncPoint" USING SYNC-STEP.
+      *    prog2 locks record 1; prog1 must see it
+           MOVE 4 TO SYNC-STEP. CALL "SyncPoint" USING SYNC-STEP.
+           MOVE 1 TO K.
+           READ F WITH LOCK.
+           DISPLAY "08 prog1 read with lock 1 while locked " ST.
+           MOVE 5 TO SYNC-STEP. CALL "SyncPoint" USING SYNC-STEP.
+      *    prog2 closed the file, releasing its locks
+           MOVE 6 TO SYNC-STEP. CALL "SyncPoint" USING SYNC-STEP.
+           MOVE 1 TO K.
+           READ F WITH LOCK.
+           DISPLAY "10 prog1 read with lock 1 after close "
+                   ST " " V "|".
+           CLOSE F.
+           DISPLAY "11 prog1 close " ST.
+           GOBACK.
+])
+
+AT_DATA([prog2.cbl], [
+       IDENTIFICATION DIVISION.
+       PROGRAM-ID. prog2.
+       ENVIRONMENT DIVISION.
+       INPUT-OUTPUT SECTION.
+       FILE-CONTROL.
+           SELECT F ASSIGN TO "shared-idx"
+                  ORGANIZATION IS INDEXED
+                  ACCESS MODE IS DYNAMIC
+                  RECORD KEY IS K
+                  LOCK MODE IS MANUAL
+                  FILE STATUS IS ST.
+       DATA DIVISION.
+       FILE SECTION.
+       FD F.
+       01 R.
+          05 K PIC 9(2).
+          05 V PIC X(8).
+       WORKING-STORAGE SECTION.
+       01 ST   PIC XX.
+       01 SYNC-STEP PIC 9(2).
+       PROCEDURE DIVISION.
+           MOVE 1 TO SYNC-STEP. CALL "SyncPoint" USING SYNC-STEP.
+           OPEN I-O F.
+           DISPLAY "03 prog2 open i-o " ST.
+           MOVE 1 TO K.
+           READ F WITH LOCK.
+           DISPLAY "04 prog2 read with lock 1 while locked " ST.
+           MOVE 3 TO K.
+           READ F WITH LOCK.
+           DISPLAY "05 prog2 read with lock 3 " ST " " V "|".
+           MOVE 2 TO SYNC-STEP. CALL "SyncPoint" USING SYNC-STEP.
+      *    prog1 moves its lock from record 1 to record 2
+           MOVE 3 TO SYNC-STEP. CALL "SyncPoint" USING SYNC-STEP.
+           MOVE 1 TO K.
+           READ F WITH LOCK.
+           DISPLAY "07 prog2 read with lock 1 after release "
+                   ST " " V "|".
+           MOVE 4 TO SYNC-STEP. CALL "SyncPoint" USING SYNC-STEP.
+      *    prog1 tries record 1 while prog2 holds it
+           MOVE 5 TO SYNC-STEP. CALL "SyncPoint" USING SYNC-STEP.
+           CLOSE F.
+           DISPLAY "09 prog2 close " ST.
+           MOVE 6 TO SYNC-STEP. CALL "SyncPoint" USING SYNC-STEP.
+           GOBACK.
+])
+
+AT_CHECK([cp ../../multithread.src/harness/ThreadHarness.java ../../multithread.src/harness/PairHarness.java ../../multithread.src/harness/SyncPoint.java .])
+AT_CHECK([javac ThreadHarness.java PairHarness.java SyncPoint.java])
+AT_CHECK([${COBJ} setup.cbl prog1.cbl prog2.cbl])
+AT_CHECK([java setup], [0], [setup 00
+])
+AT_CHECK([java PairHarness prog1 prog2], [0],
+[01 prog1 open i-o 00
+02 prog1 read with lock 1 00 one     |
+03 prog2 open i-o 00
+04 prog2 read with lock 1 while locked 51
+05 prog2 read with lock 3 00 three   |
+06 prog1 read with lock 2 00 two     |
+07 prog2 read with lock 1 after release 00 one     |
+08 prog1 read with lock 1 while locked 51
+09 prog2 close 00
+10 prog1 read with lock 1 after close 00 one     |
+11 prog1 close 00
+prog1 return-code 0
+prog2 return-code 0
+alive
+])
+
+AT_CLEANUP

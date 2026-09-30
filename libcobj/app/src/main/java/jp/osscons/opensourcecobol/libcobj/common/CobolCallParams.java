@@ -24,6 +24,29 @@ package jp.osscons.opensourcecobol.libcobj.common;
  * 呼び出されたプログラム側でこの値を参照することで、省略された引数の判定などに利用する。
  */
 public class CobolCallParams {
-    /** CALL文で渡された引数の個数 */
-    public static int callParams = 0;
+    /** CALL文で渡された引数の個数(スレッドごとに保持する) */
+    private static final ThreadLocal<int[]> callParams = ThreadLocal.withInitial(() -> new int[1]);
+
+    /**
+     * 現在のスレッドのCALL文で渡された引数の個数を取得する。
+     *
+     * @return 引数の個数
+     */
+    public static int get() {
+        return callParams.get()[0];
+    }
+
+    /**
+     * 現在のスレッドのCALL文で渡された引数の個数を設定する。
+     *
+     * @param n 引数の個数
+     */
+    public static void set(int n) {
+        callParams.get()[0] = n;
+    }
+
+    /** 現在のスレッドに紐づく値を破棄する。実行単位の終了時に呼び出す。 */
+    public static void resetThreadState() {
+        callParams.remove();
+    }
 }

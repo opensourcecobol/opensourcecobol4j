@@ -1,0 +1,4 @@
+AT_INIT([esql-multithread])
+
+m4_include([dml-isolation.at])
+m4_include([cursor-isolation.at])

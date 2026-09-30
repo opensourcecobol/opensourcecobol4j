@@ -1,0 +1,136 @@
+AT_SETUP([Each thread writes and reads its own sequential and indexed file])
+
+AT_DATA([prog.cbl], [
+       IDENTIFICATION DIVISION.
+       PROGRAM-ID. prog.
+       ENVIRONMENT DIVISION.
+       INPUT-OUTPUT SECTION.
+       FILE-CONTROL.
+           SELECT SEQF ASSIGN TO SEQ-NAME
+                  ORGANIZATION IS LINE SEQUENTIAL
+                  FILE STATUS IS SEQ-STATUS.
+           SELECT IDXF ASSIGN TO IDX-NAME
+                  ORGANIZATION IS INDEXED
+                  ACCESS MODE IS DYNAMIC
+                  RECORD KEY IS IDX-KEY
+                  FILE STATUS IS IDX-STATUS.
+       DATA DIVISION.
+       FILE SECTION.
+       FD SEQF.
+       01 SEQ-REC.
+          05 SEQ-ID   PIC X(3).
+          05 SEQ-NO   PIC 9(4).
+       FD IDXF.
+       01 IDX-REC.
+          05 IDX-KEY  PIC 9(4).
+          05 IDX-ID   PIC X(3).
+       WORKING-STORAGE SECTION.
+       01 SEQ-NAME   PIC X(20).
+       01 IDX-NAME   PIC X(20).
+       01 SEQ-STATUS PIC XX.
+       01 IDX-STATUS PIC XX.
+       01 I          PIC 9(4).
+       01 CNT        PIC 9(4).
+       01 SUM-NO     PIC 9(8).
+       01 RUN-CNT    PIC 9(4) VALUE 0.
+       LINKAGE SECTION.
+       01 THREAD-ID  PIC X(3).
+       PROCEDURE DIVISION USING THREAD-ID.
+           ADD 1 TO RUN-CNT.
+           STRING "seq-" THREAD-ID ".txt" DELIMITED BY SIZE
+                  INTO SEQ-NAME.
+           STRING "idx-" THREAD-ID DELIMITED BY SIZE
+                  INTO IDX-NAME.
+           OPEN OUTPUT SEQF.
+           IF SEQ-STATUS NOT = "00"
+              DISPLAY "SEQ OPEN OUTPUT " SEQ-STATUS
+           END-IF.
+           OPEN OUTPUT IDXF.
+           IF IDX-STATUS NOT = "00"
+              DISPLAY "IDX OPEN OUTPUT " IDX-STATUS
+           END-IF.
+           PERFORM VARYING I FROM 1 BY 1 UNTIL I > 100
+              MOVE THREAD-ID TO SEQ-ID
+              MOVE I TO SEQ-NO
+              WRITE SEQ-REC
+              IF SEQ-STATUS NOT = "00"
+                 DISPLAY "SEQ WRITE " SEQ-STATUS
+              END-IF
+              MOVE I TO IDX-KEY
+              MOVE THREAD-ID TO IDX-ID
+              WRITE IDX-REC
+              IF IDX-STATUS NOT = "00"
+                 DISPLAY "IDX WRITE " IDX-STATUS
+              END-IF
+           END-PERFORM.
+           CLOSE SEQF IDXF.
+           OPEN INPUT SEQF.
+           MOVE 0 TO CNT SUM-NO.
+           PERFORM UNTIL SEQ-STATUS NOT = "00"
+              READ SEQF
+              IF SEQ-STATUS = "00"
+                 ADD 1 TO CNT
+                 ADD SEQ-NO TO SUM-NO
+                 IF SEQ-ID NOT = THREAD-ID
+                    DISPLAY "FOREIGN SEQ RECORD " THREAD-ID " " SEQ-ID
+                 END-IF
+              END-IF
+           END-PERFORM.
+           CLOSE SEQF.
+           DISPLAY "seq " THREAD-ID " count=" CNT " sum=" SUM-NO.
+           OPEN I-O IDXF.
+           MOVE 0 TO CNT SUM-NO.
+           MOVE 1 TO IDX-KEY.
+           START IDXF KEY IS >= IDX-KEY.
+           PERFORM UNTIL IDX-STATUS NOT = "00"
+              READ IDXF NEXT RECORD
+              IF IDX-STATUS = "00"
+                 ADD 1 TO CNT
+                 ADD IDX-KEY TO SUM-NO
+                 IF IDX-ID NOT = THREAD-ID
+                    DISPLAY "FOREIGN IDX RECORD " THREAD-ID " " IDX-ID
+                 END-IF
+              END-IF
+           END-PERFORM.
+           MOVE 50 TO IDX-KEY.
+           READ IDXF.
+           IF IDX-STATUS NOT = "00"
+              DISPLAY "IDX READ " IDX-STATUS
+           END-IF.
+           DELETE IDXF.
+           IF IDX-STATUS NOT = "00"
+              DISPLAY "IDX DELETE " IDX-STATUS
+           END-IF.
+           MOVE 60 TO IDX-KEY.
+           READ IDXF.
+           MOVE "zzz" TO IDX-ID.
+           REWRITE IDX-REC.
+           IF IDX-STATUS NOT = "00"
+              DISPLAY "IDX REWRITE " IDX-STATUS
+           END-IF.
+           CLOSE IDXF.
+           DISPLAY "idx " THREAD-ID " count=" CNT " sum=" SUM-NO.
+           GOBACK.
+])
+
+AT_CHECK([cp ../../multithread.src/harness/ThreadHarness.java .])
+AT_CHECK([javac ThreadHarness.java])
+AT_CHECK([${COBJ} prog.cbl])
+AT_CHECK([java ThreadHarness prog 6 3 3], [0],
+[3 idx 001 count=0100 sum=00005050
+3 idx 002 count=0100 sum=00005050
+3 idx 003 count=0100 sum=00005050
+3 idx 004 count=0100 sum=00005050
+3 idx 005 count=0100 sum=00005050
+3 idx 006 count=0100 sum=00005050
+3 seq 001 count=0100 sum=00005050
+3 seq 002 count=0100 sum=00005050
+3 seq 003 count=0100 sum=00005050
+3 seq 004 count=0100 sum=00005050
+3 seq 005 count=0100 sum=00005050
+3 seq 006 count=0100 sum=00005050
+return-code 0 x6
+alive
+])
+
+AT_CLEANUP
