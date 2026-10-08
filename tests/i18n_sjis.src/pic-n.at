@@ -458,3 +458,92 @@ AT_CHECK([${COBJ} prog.cob], [0])
 AT_CHECK([java prog], [0], [゜ポンデリング])
 
 AT_CLEANUP
+
+AT_SETUP([PIC N Move from group without half-width conv.])
+
+AT_DATA([prog.cob], [
+       IDENTIFICATION   DIVISION.
+       PROGRAM-ID.      prog.
+       DATA             DIVISION.
+       WORKING-STORAGE  SECTION.
+       01 G0.
+         03 G0-A PIC X(2) VALUE "AB".
+         03 G0-B PIC X(2) VALUE SPACE.
+         03 G0-C PIC X(2) VALUE "CD".
+       01 F0 PIC N(3).
+       PROCEDURE        DIVISION.
+           MOVE G0 TO F0.
+           DISPLAY "@<:@" F0 "@:>@" WITH NO ADVANCING.
+           STOP RUN.
+])
+
+AT_CHECK([${COBJ} prog.cob], [0])
+AT_CHECK([java prog], [0], [@<:@AB  CD@:>@])
+
+AT_CLEANUP
+
+AT_SETUP([PIC N Move from group including PIC N])
+
+AT_DATA([prog.cob], [
+       IDENTIFICATION   DIVISION.
+       PROGRAM-ID.      prog.
+       DATA             DIVISION.
+       WORKING-STORAGE  SECTION.
+       01 G0.
+         03 G0-A PIC N(2) VALUE "日本".
+         03 G0-B PIC X(2) VALUE SPACE.
+       01 F0 PIC N(3).
+       PROCEDURE        DIVISION.
+           MOVE G0 TO F0.
+           DISPLAY "@<:@" F0 "@:>@" WITH NO ADVANCING.
+           STOP RUN.
+])
+
+AT_CHECK([${COBJ} prog.cob], [0])
+AT_CHECK([java prog], [0], [@<:@日本  @:>@])
+
+AT_CLEANUP
+
+AT_SETUP([PIC N Move from group with padding by half-width SPC])
+
+AT_DATA([prog.cob], [
+       IDENTIFICATION   DIVISION.
+       PROGRAM-ID.      prog.
+       DATA             DIVISION.
+       WORKING-STORAGE  SECTION.
+       01 G0.
+         03 G0-A PIC X(2) VALUE "AB".
+         03 G0-B PIC X(2) VALUE "CD".
+       01 F0 PIC N(4).
+       PROCEDURE        DIVISION.
+           MOVE G0 TO F0.
+           DISPLAY "@<:@" F0 "@:>@" WITH NO ADVANCING.
+           STOP RUN.
+])
+
+AT_CHECK([${COBJ} prog.cob], [0])
+AT_CHECK([java prog], [0], [@<:@ABCD    @:>@])
+
+AT_CLEANUP
+
+AT_SETUP([PIC N Move from group with justify])
+
+AT_DATA([prog.cob], [
+       IDENTIFICATION   DIVISION.
+       PROGRAM-ID.      prog.
+       DATA             DIVISION.
+       WORKING-STORAGE  SECTION.
+       01 G0.
+         03 G0-A PIC X(2) VALUE "AB".
+         03 G0-B PIC X(2) VALUE "CD".
+       01 F0 PIC N(4) JUSTIFIED RIGHT.
+       PROCEDURE        DIVISION.
+           MOVE G0 TO F0.
+           DISPLAY "@<:@" F0 "@:>@" WITH NO ADVANCING.
+           STOP RUN.
+])
+
+AT_CHECK([${COBJ} prog.cob], [0])
+AT_CHECK([java prog], [0], [@<:@    ABCD@:>@])
+
+AT_CLEANUP

@@ -557,3 +557,104 @@ AT_CHECK([echo -n '縄文弥生古墳飛鳥奈良平安鎌倉室町江戸
 AT_CHECK([diff out1.txt out2.txt])
 
 AT_CLEANUP
+
+AT_SETUP([PIC N Move from group without half-width conv.])
+export LC_ALL=''
+
+AT_DATA([prog.cob], [
+       IDENTIFICATION   DIVISION.
+       PROGRAM-ID.      prog.
+       DATA             DIVISION.
+       WORKING-STORAGE  SECTION.
+       01 G0.
+         03 G0-A PIC X(2) VALUE "AB".
+         03 G0-B PIC X(2) VALUE SPACE.
+         03 G0-C PIC X(2) VALUE "CD".
+       01 F0 PIC N(3).
+       PROCEDURE        DIVISION.
+           MOVE G0 TO F0.
+           DISPLAY "@<:@" F0 "@:>@" WITH NO ADVANCING.
+           STOP RUN.
+])
+
+AT_CHECK([${COBJ} prog.cob])
+AT_CHECK([java prog > out1.txt])
+AT_CHECK([echo -n '@<:@AB  CD@:>@' | nkf --ic=UTF-8 --oc=Shift_JIS > out2.txt])
+AT_CHECK([diff out1.txt out2.txt])
+
+AT_CLEANUP
+
+AT_SETUP([PIC N Move from group including PIC N])
+export LC_ALL=''
+
+AT_DATA([prog.cob], [
+       IDENTIFICATION   DIVISION.
+       PROGRAM-ID.      prog.
+       DATA             DIVISION.
+       WORKING-STORAGE  SECTION.
+       01 G0.
+         03 G0-A PIC N(2) VALUE "日本".
+         03 G0-B PIC X(2) VALUE SPACE.
+       01 F0 PIC N(3).
+       PROCEDURE        DIVISION.
+           MOVE G0 TO F0.
+           DISPLAY "@<:@" F0 "@:>@" WITH NO ADVANCING.
+           STOP RUN.
+])
+
+AT_CHECK([${COBJ} prog.cob])
+AT_CHECK([java prog > out1.txt])
+AT_CHECK([echo -n '@<:@日本  @:>@' | nkf --ic=UTF-8 --oc=Shift_JIS > out2.txt])
+AT_CHECK([diff out1.txt out2.txt])
+
+AT_CLEANUP
+
+AT_SETUP([PIC N Move from group with padding by half-width SPC])
+export LC_ALL=''
+
+AT_DATA([prog.cob], [
+       IDENTIFICATION   DIVISION.
+       PROGRAM-ID.      prog.
+       DATA             DIVISION.
+       WORKING-STORAGE  SECTION.
+       01 G0.
+         03 G0-A PIC X(2) VALUE "AB".
+         03 G0-B PIC X(2) VALUE "CD".
+       01 F0 PIC N(4).
+       PROCEDURE        DIVISION.
+           MOVE G0 TO F0.
+           DISPLAY "@<:@" F0 "@:>@" WITH NO ADVANCING.
+           STOP RUN.
+])
+
+AT_CHECK([${COBJ} prog.cob])
+AT_CHECK([java prog > out1.txt])
+AT_CHECK([echo -n '@<:@ABCD    @:>@' | nkf --ic=UTF-8 --oc=Shift_JIS > out2.txt])
+AT_CHECK([diff out1.txt out2.txt])
+
+AT_CLEANUP
+
+AT_SETUP([PIC N Move from group with justify])
+export LC_ALL=''
+
+AT_DATA([prog.cob], [
+       IDENTIFICATION   DIVISION.
+       PROGRAM-ID.      prog.
+       DATA             DIVISION.
+       WORKING-STORAGE  SECTION.
+       01 G0.
+         03 G0-A PIC X(2) VALUE "AB".
+         03 G0-B PIC X(2) VALUE "CD".
+       01 F0 PIC N(4) JUSTIFIED RIGHT.
+       PROCEDURE        DIVISION.
+           MOVE G0 TO F0.
+           DISPLAY "@<:@" F0 "@:>@" WITH NO ADVANCING.
+           STOP RUN.
+])
+
+AT_CHECK([${COBJ} prog.cob])
+AT_CHECK([java prog > out1.txt])
+AT_CHECK([echo -n '@<:@    ABCD@:>@' | nkf --ic=UTF-8 --oc=Shift_JIS > out2.txt])
+AT_CHECK([diff out1.txt out2.txt])
+
+AT_CLEANUP
