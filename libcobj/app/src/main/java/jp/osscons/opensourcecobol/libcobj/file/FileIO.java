@@ -29,7 +29,7 @@ import java.nio.channels.NonReadableChannelException;
 import java.nio.channels.NonWritableChannelException;
 import jp.osscons.opensourcecobol.libcobj.data.CobolDataStorage;
 
-/** TODO: 準備中 */
+/** FileChannelや標準入出力をラップし,COBOLファイルの低水準な読み書き・バッファ処理・ロックを担うクラス. */
 class FileIO {
 
     private FileChannel fc;
@@ -48,7 +48,7 @@ class FileIO {
     private int writeBufferEndIndex = 0;
     private byte[] writeBuffer;
 
-    /** TODO: 準備中 */
+    /** 標準入出力を利用する状態でインスタンスを生成し,読み込みバッファを初期化する. */
     FileIO() {
         this.useStdOut = true;
         this.useStdIn = true;
@@ -59,19 +59,19 @@ class FileIO {
     }
 
     /**
-     * TODO: 準備中
+     * 直前の読み込みでファイル終端に達したかどうかを返す.
      *
-     * @return TODO: 準備中
+     * @return ファイル終端に達している場合はtrue.
      */
     boolean isAtEnd() {
         return this.atEnd;
     }
 
     /**
-     * TODO: 準備中
+     * 読み書き対象のFileChannelとファイルロックを設定し,標準入出力の使用を無効にする.
      *
-     * @param fc TODO: 準備中
-     * @param fl TODO: 準備中
+     * @param fc 読み書きに使用するFileChannel.
+     * @param fl ファイルに対して取得したロック(不要な場合はnull).
      */
     void setChannel(FileChannel fc, FileLock fl) {
         this.fc = fc;
@@ -81,10 +81,10 @@ class FileIO {
     }
 
     /**
-     * TODO: 準備中
+     * RandomAccessFileから得たFileChannelとファイルロックを設定し,標準入出力の使用を無効にする.
      *
-     * @param ra TODO: 準備中
-     * @param fl TODO: 準備中
+     * @param ra 読み書きに使用するRandomAccessFile.
+     * @param fl ファイルに対して取得したロック(不要な場合はnull).
      */
     void setRandomAccessFile(RandomAccessFile ra, FileLock fl) {
         this.useStdOut = false;
@@ -94,27 +94,27 @@ class FileIO {
     }
 
     /**
-     * TODO: 準備中
+     * 標準出力を使用する状態に設定する.
      *
-     * @param out TODO: 準備中
+     * @param out 出力先のPrintStream.
      */
     void setOut(PrintStream out) {
         this.useStdOut = true;
     }
 
     /**
-     * TODO: 準備中
+     * 標準入力を使用する状態に設定する.
      *
-     * @param in TODO: 準備中
+     * @param in 入力元のInputStream.
      */
     void setIn(InputStream in) {
         this.useStdIn = true;
     }
 
     /**
-     * TODO: 準備中
+     * 指定したサイズの書き込みバッファを確保し初期化する.
      *
-     * @param bufferSize TODO: 準備中
+     * @param bufferSize 確保する書き込みバッファのサイズ(バイト数).
      */
     void prepareWriteBuffer(int bufferSize) {
         if (bufferSize > 0) {
@@ -132,11 +132,11 @@ class FileIO {
     }
 
     /**
-     * TODO: 準備中
+     * FileChannelからbytesにデータを読み込む(標準入力使用時は未実装).
      *
-     * @param bytes TODO: 準備中
-     * @param size TODO: 準備中
-     * @return TODO: 準備中
+     * @param bytes 読み込んだデータを格納するバイト配列.
+     * @param size 読み込むバイト数.
+     * @return 読み込みに成功した場合は1,ファイル終端または失敗の場合は0.
      */
     int read(byte[] bytes, int size) {
         if (useStdIn) {
@@ -161,12 +161,12 @@ class FileIO {
     }
 
     /**
-     * TODO: 準備中
+     * FileChannelから1バイトずつsizeバイトをstorageに読み込む.
      *
-     * @param storage TODO: 準備中
-     * @param size TODO: 準備中
-     * @return TODO: 準備中
-     * @throws IOException TODO: 準備中
+     * @param storage 読み込んだデータを格納する領域.
+     * @param size 読み込むバイト数.
+     * @return 実際に読み込めたバイト数.
+     * @throws IOException FileChannelが未設定の場合,または読み込みに失敗した場合.
      */
     int read(CobolDataStorage storage, int size) throws IOException {
         if (useStdIn) {
@@ -213,11 +213,12 @@ class FileIO {
     }
 
     /**
-     * TODO: 準備中
+     * bytesの先頭sizeバイトをファイルに書き込む.
+     * 書き込みバッファに空きがあればバッファに蓄積し,空きがなければバッファを出力してから書き込む.
      *
-     * @param bytes TODO: 準備中
-     * @param size TODO: 準備中
-     * @return TODO: 準備中
+     * @param bytes 書き込むデータを格納したバイト配列.
+     * @param size 書き込むバイト数.
+     * @return 書き込みに成功した場合はtrue.
      */
     boolean write(byte[] bytes, int size) {
         if (this.fc == null) {
@@ -241,11 +242,12 @@ class FileIO {
     }
 
     /**
-     * TODO: 準備中
+     * storageの先頭sizeバイトをファイルに書き込む.
+     * 書き込みバッファに空きがあればバッファに蓄積し,空きがなければバッファを出力してから書き込む.
      *
-     * @param storage TODO: 準備中
-     * @param size TODO: 準備中
-     * @return TODO: 準備中
+     * @param storage 書き込むデータを格納した領域.
+     * @param size 書き込むバイト数.
+     * @return 書き込みに成功した場合はtrue.
      */
     boolean write(CobolDataStorage storage, int size) {
         if (this.fc == null) {
@@ -273,10 +275,10 @@ class FileIO {
     }
 
     /**
-     * TODO: 準備中
+     * 1バイトをファイルに書き込む.書き込みバッファに空きがあればバッファに蓄積する.
      *
-     * @param val TODO: 準備中
-     * @return TODO: 準備中
+     * @param val 書き込むバイト値.
+     * @return 成功した場合は書き込んだバイト値,FileChannelが未設定の場合は0,失敗した場合は-1.
      */
     byte putc(byte val) {
         if (this.fc == null) {
@@ -302,9 +304,9 @@ class FileIO {
     }
 
     /**
-     * TODO: 準備中
+     * ファイルから1バイトを読み込む.
      *
-     * @return TODO: 準備中
+     * @return 読み込んだバイト値,FileChannelが未設定の場合は0,ファイル終端または失敗の場合は-1.
      */
     int getc() {
         if (this.fc == null) {
@@ -347,7 +349,7 @@ class FileIO {
         }
     }
 
-    /** TODO: 準備中 */
+    /** 書き込みバッファの内容を出力してからファイルを閉じる. */
     void close() {
         if (!useStdOut && !useStdIn && this.fc != null) {
             try {
@@ -360,7 +362,7 @@ class FileIO {
         }
     }
 
-    /** TODO: 準備中 */
+    /** 書き込みバッファの内容を出力し,ファイルの内容をディスクへ強制的に反映する. */
     void flush() {
         if (!useStdOut) {
             try {
@@ -372,18 +374,18 @@ class FileIO {
         }
     }
 
-    /** TODO: 準備中 */
+    /** seekの起点をファイル先頭とすることを表す定数. */
     static final int SEEK_SET = 0;
 
-    /** TODO: 準備中 */
+    /** seekの起点を現在の読み書き位置とすることを表す定数. */
     static final int SEEK_CUR = 1;
 
     /**
-     * TODO: 準備中
+     * 指定した起点からoffsetバイトの位置へファイルの読み書き位置を移動する.
      *
-     * @param offset TODO: 準備中
-     * @param origin TODO: 準備中
-     * @return TODO: 準備中
+     * @param offset 起点からの移動量(バイト数).
+     * @param origin 移動の起点(SEEK_SETまたはSEEK_CUR).
+     * @return 移動に成功した場合はtrue.
      */
     boolean seek(long offset, int origin) {
         if (!useStdOut && !useStdIn) {
@@ -405,10 +407,10 @@ class FileIO {
         return true;
     }
 
-    /** TODO: 準備中 */
+    /** シークに関する初期化を行う(現在の実装では何も行わない). */
     void seekInit() {}
 
-    /** TODO: 準備中 */
+    /** ファイルの読み書き位置を先頭に戻す. */
     void rewind() {
         if (!useStdOut && !useStdIn) {
             try {
@@ -419,7 +421,7 @@ class FileIO {
         }
     }
 
-    /** TODO: 準備中 */
+    /** ファイルに対して取得したロックを解放する. */
     void releaseLock() {
         if ((!useStdOut || !useStdIn) && this.fl != null) {
             try {

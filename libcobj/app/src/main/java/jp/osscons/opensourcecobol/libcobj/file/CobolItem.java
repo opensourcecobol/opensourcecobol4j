@@ -20,7 +20,7 @@ package jp.osscons.opensourcecobol.libcobj.file;
 
 import jp.osscons.opensourcecobol.libcobj.data.CobolDataStorage;
 
-/** TODO: 準備中 */
+/** SORT/MERGE でメモリ上に読み込んだ 1 レコードを表す連結リストの要素. */
 class CobolItem {
     private CobolItem next;
     private int endOfBlock;
@@ -29,115 +29,115 @@ class CobolItem {
     private CobolDataStorage unique = new CobolDataStorage(new byte[8]);
     private CobolDataStorage item;
 
-    /** TODO: 準備中 */
+    /** 連結リストの次要素をnull,ブロック終端フラグを0にして初期化する. */
     CobolItem() {
         this.next = null;
         this.endOfBlock = 0;
     }
 
     /**
-     * TODO: 準備中
+     * 連結リスト上で次に位置する要素を取得する.
      *
-     * @return TODO: 準備中
+     * @return 次のCobolItem. 末尾の場合はnull
      */
     CobolItem getNext() {
         return next;
     }
 
     /**
-     * TODO: 準備中
+     * 連結リスト上で次に位置する要素を設定する.
      *
-     * @param next TODO: 準備中
+     * @param next 次のCobolItem
      */
     void setNext(CobolItem next) {
         this.next = next;
     }
 
     /**
-     * TODO: 準備中
+     * このレコードがブロックの終端であるかを表すフラグを取得する.
      *
-     * @return TODO: 準備中
+     * @return ブロックの終端なら1,そうでなければ0
      */
     int getEndOfBlock() {
         return endOfBlock;
     }
 
     /**
-     * TODO: 準備中
+     * このレコードがブロックの終端であるかを表すフラグを設定する.
      *
-     * @param endOfBlock TODO: 準備中
+     * @param endOfBlock ブロックの終端なら1,そうでなければ0
      */
     void setEndOfBlock(int endOfBlock) {
         this.endOfBlock = endOfBlock;
     }
 
     /**
-     * TODO: 準備中
+     * このレコードの実際のサイズ(可変長レコードの長さ)を取得する.
      *
-     * @return TODO: 準備中
+     * @return レコードのサイズ(バイト数)
      */
     int getRecordSize() {
         return recordSize;
     }
 
     /**
-     * TODO: 準備中
+     * このレコードの実際のサイズ(可変長レコードの長さ)を設定する.
      *
-     * @param recordSize TODO: 準備中
+     * @param recordSize レコードのサイズ(バイト数)
      */
     void setRecordSize(int recordSize) {
         this.recordSize = recordSize;
     }
 
     /**
-     * TODO: 準備中
+     * 一時ファイルへ書き込む際に各レコードの先頭へ付加するブロック区切り用のバイトを取得する.
      *
-     * @return TODO: 準備中
+     * @return ブロック区切り用のバイト
      */
     byte getBlockByte() {
         return blockByte;
     }
 
     /**
-     * TODO: 準備中
+     * 一時ファイルへ書き込む際に各レコードの先頭へ付加するブロック区切り用のバイトを設定する.
      *
-     * @param blockByte TODO: 準備中
+     * @param blockByte ブロック区切り用のバイト
      */
     void setBlockByte(byte blockByte) {
         this.blockByte = blockByte;
     }
 
     /**
-     * TODO: 準備中
+     * レコードの投入順を表す一意な番号(安定ソートのために使うキー)を取得する.
      *
-     * @return TODO: 準備中
+     * @return 8バイトで表現された一意な番号を保持するCobolDataStorage
      */
     CobolDataStorage getUnique() {
         return unique;
     }
 
     /**
-     * TODO: 準備中
+     * レコードの投入順を表す一意な番号(安定ソートのために使うキー)を設定する.
      *
-     * @param unique TODO: 準備中
+     * @param unique 8バイトで表現された一意な番号を保持するCobolDataStorage
      */
     void setUnique(CobolDataStorage unique) {
         this.unique = unique;
     }
 
     /**
-     * TODO: 準備中
+     * レコードのデータ本体を取得する.
      *
-     * @return TODO: 準備中
+     * @return レコードのデータ本体を保持するCobolDataStorage
      */
     CobolDataStorage getItem() {
         return item;
     }
 
     /**
-     * TODO: 準備中
+     * レコードのデータ本体を設定する.
      *
-     * @param item TODO: 準備中
+     * @param item レコードのデータ本体を保持するCobolDataStorage
      */
     void setItem(CobolDataStorage item) {
         this.item = item;
