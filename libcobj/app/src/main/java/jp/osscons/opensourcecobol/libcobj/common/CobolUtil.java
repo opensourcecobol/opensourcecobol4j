@@ -81,8 +81,14 @@ public class CobolUtil {
     /** 現在日時を取得するためのCalendarインスタンス。 */
     public static Calendar cal;
 
+    /** 順編成ファイルの入出力バッファサイズ(レコード数)のデフォルト値。 */
+    private static final int DEFAULT_FILE_SEQ_BUFFER_SIZE = 10;
+
     /** 順編成ファイルへの書き込みバッファサイズ(環境変数COB_FILE_SEQ_WRITE_BUFFER_SIZEで設定)。 */
-    public static int fileSeqWriteBufferSize = 10;
+    public static int fileSeqWriteBufferSize = DEFAULT_FILE_SEQ_BUFFER_SIZE;
+
+    /** 順編成ファイルからの読み込みバッファサイズ(環境変数COB_FILE_SEQ_READ_BUFFER_SIZEで設定)。 */
+    public static int fileSeqReadBufferSize = DEFAULT_FILE_SEQ_BUFFER_SIZE;
 
     /** DISPLAY/ACCEPT文によるデータ出力時のエンコーディング */
     public static CobolEncoding terminalEncoding = CobolEncoding.SHIFT_JIS;
@@ -304,11 +310,38 @@ public class CobolUtil {
     }
 
     /**
+     * ファイルI/Oのバッファサイズを指定する環境変数を読み込む。<br>
+     * 環境変数が設定されていない場合や、0以上の整数として解釈できない場合はデフォルト値を返す。
+     *
+     * @param envVariableName 環境変数名
+     * @param defaultValue 環境変数が指定されていない場合に使用する値
+     * @return バッファサイズ(レコード数)
+     */
+    private static int bufferSizeFromEnv(String envVariableName, int defaultValue) {
+        String s = CobolUtil.getEnv(envVariableName);
+        if (s == null) {
+            return defaultValue;
+        }
+        int size;
+        try {
+            size = Integer.parseInt(s.trim());
+        } catch (NumberFormatException e) {
+            size = -1;
+        }
+        if (size < 0) {
+            System.err.println("Warning: " + envVariableName + " format invalid, ignored.");
+            return defaultValue;
+        }
+        return size;
+    }
+
+    /**
      * COBOLランタイムを初期化する。<br>
      * 未初期化の場合は、コマンドライン引数の保存、各サブシステム(INSPECT/ファイルI/O/組み込み関数)の初期化、<br>
      * およびCOB_SWITCH_1〜COB_SWITCH_8環境変数によるスイッチ設定を行う。<br>
      * その後、COB_DATE、COB_VERBOSE、COB_IO_ASSUME_REWRITE、COB_NIBBLE_C_UNSIGNED、<br>
-     * COB_FILE_SEQ_WRITE_BUFFER_SIZE、COB_TERMINAL_ENCODINGなどの環境変数を読み込んでランタイム設定を反映する。
+     * COB_FILE_SEQ_WRITE_BUFFER_SIZE、COB_FILE_SEQ_READ_BUFFER_SIZE、COB_TERMINAL_ENCODINGなどの<br>
+     * 環境変数を読み込んでランタイム設定を反映する。
      *
      * @param argv コマンドライン引数(プログラム名を含まない)
      * @param cobInitialized すでに初期化済みかどうか。trueの場合はサブシステムの初期化をスキップする
@@ -377,13 +410,10 @@ public class CobolUtil {
             CobolUtil.nibbleCForUnsigned = true;
         }
 
-        s = System.getenv("COB_FILE_SEQ_WRITE_BUFFER_SIZE");
-        if (s != null) {
-            int size = Integer.parseInt(s);
-            if (size >= 0) {
-                CobolUtil.fileSeqWriteBufferSize = size;
-            }
-        }
+        CobolUtil.fileSeqWriteBufferSize =
+                bufferSizeFromEnv("COB_FILE_SEQ_WRITE_BUFFER_SIZE", DEFAULT_FILE_SEQ_BUFFER_SIZE);
+        CobolUtil.fileSeqReadBufferSize =
+                bufferSizeFromEnv("COB_FILE_SEQ_READ_BUFFER_SIZE", DEFAULT_FILE_SEQ_BUFFER_SIZE);
 
         s = System.getenv("COB_TERMINAL_ENCODING");
         CobolUtil.terminalEncoding = CobolEncoding.SHIFT_JIS;
