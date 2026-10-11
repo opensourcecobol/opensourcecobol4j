@@ -253,12 +253,17 @@ public class CobolString {
                     .memcpy(src.getDataStorage(), srcSize);
             stringOffset += srcSize;
         } else {
+            // 連結先が日本語項目の場合、stringInitがバイト数との比較を2倍補正の前に行うため、
+            // stringOffsetが連結先のバイト数を超えている(=残り領域が負になる)ことがある。
+            // その場合は何も連結せずオーバーフローとして扱う。
             int size = stringDst.getSize() - stringOffset;
-            stringDst
-                    .getDataStorage()
-                    .getSubDataStorage(stringOffset)
-                    .memcpy(src.getDataStorage(), size);
-            stringOffset += size;
+            if (size > 0) {
+                stringDst
+                        .getDataStorage()
+                        .getSubDataStorage(stringOffset)
+                        .memcpy(src.getDataStorage(), size);
+            }
+            stringOffset = stringDst.getSize();
             CobolRuntimeException.setException(CobolExceptionId.COB_EC_OVERFLOW_STRING);
         }
     }
