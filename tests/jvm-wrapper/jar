@@ -1,0 +1,14 @@
+#!/bin/sh
+#
+# `jar` wrapper used only while the autotest suites run.
+# See tests/jvm-wrapper/java for why the flag is needed; jar is a JVM too,
+# and it takes runtime options through -J.
+
+case "${COB4J_REAL_JAR}" in
+"" | */jvm-wrapper/jar)
+  echo "$0: COB4J_REAL_JAR does not point at a real jar" >&2
+  exit 127
+  ;;
+esac
+
+exec "${COB4J_REAL_JAR}" -J-XX:-UsePerfData "$@"
