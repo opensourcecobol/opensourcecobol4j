@@ -454,6 +454,18 @@ Specifies the write buffer size for sequential files.
 - **Example**: `COB_FILE_SEQ_WRITE_BUFFER_SIZE=100`
 - **Purpose**: Adjusts write performance.
 
+#### COB_FILE_IDX_COMMIT_INTERVAL
+
+Specifies how often WRITEs to an indexed file opened with `OUTPUT` are committed.
+
+- **Value**: Integer >= 0 or `INF` (default: `INF`)
+- **Example**: `COB_FILE_IDX_COMMIT_INTERVAL=100000`
+- **Purpose**: Bounds how many records a crash can lose while writing an indexed file.
+
+An indexed file opened with `OUTPUT` is locked exclusively and only `WRITE` statements run until `CLOSE`, so the backing SQLite transaction does not need to be committed after every `WRITE`. By default (`INF`, case-insensitive) no intermediate commit is issued at all: the records become durable when the program executes a `COMMIT` statement and when the file is closed, which is what the COBOL `COMMIT` statement is for. Setting an integer makes the runtime commit on its own each time that many `WRITE` statements have succeeded, which bounds the loss if the process is killed or crashes before `CLOSE` at that number of records, at the cost of one fsync per interval. `0` is treated as `1`, which commits after every `WRITE`. A value that is neither an integer >= 0 nor `INF` is reported on standard error and the default is used instead.
+
+A program that reaches `STOP RUN` without `CLOSE` does not lose records: files left open are implicitly closed (with a warning), which commits them. A `ROLLBACK` statement discards the records written since the last commit. Files opened with `INPUT`, `I-O` or `EXTEND` are not affected. Duplicate-key detection (file status 21/22) is not affected either; it still happens on every `WRITE`.
+
 #### COB_IO_ASSUME_REWRITE
 
 Controls whether READ is required before REWRITE.
