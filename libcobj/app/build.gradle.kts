@@ -1,4 +1,6 @@
 import com.github.jengelman.gradle.plugins.shadow.tasks.ShadowJar
+import org.cyclonedx.Version as CycloneDxVersion
+import org.cyclonedx.model.Component
 
 plugins {
     application
@@ -9,6 +11,7 @@ plugins {
     pmd
     id("com.github.spotbugs") version "6.4.5"
     jacoco
+    id("org.cyclonedx.bom") version "3.4.1"
 }
 
 repositories {
@@ -75,6 +78,25 @@ spotless {
   java {
     googleJavaFormat("1.17.0").aosp().reflowLongStrings().skipJavadocFormatting()
   }
+}
+
+// SBOM of libcobj.jar, attached to every GitHub release.
+// libcobj.jar is a shadow jar, so the third-party libraries it bundles are not
+// visible from the jar itself. The SBOM lists them instead.
+tasks.cyclonedxDirectBom {
+    // Only the runtime classpath ends up in the shadow jar. Build-time and
+    // test-only dependencies are not part of the released artifact.
+    includeConfigs.set(listOf("runtimeClasspath"))
+    projectType.set(Component.Type.LIBRARY)
+    componentGroup.set("jp.osscons.opensourcecobol")
+    componentName.set("libcobj")
+    componentVersion.set("2.0.0")
+    schemaVersion.set(CycloneDxVersion.VERSION_16)
+    // The plugin always writes both formats, and both are published as release
+    // assets. Keep them next to each other instead of in the plugin's default
+    // directory.
+    jsonOutput.set(layout.buildDirectory.file("reports/libcobj-sbom.json"))
+    xmlOutput.set(layout.buildDirectory.file("reports/libcobj-sbom.xml"))
 }
 
 publishing {
