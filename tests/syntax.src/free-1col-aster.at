@@ -24,6 +24,10 @@ AT_DATA([prog.cob], [
 
 AT_CHECK([${COMPILE} -free_1col_aster prog.cob], [1], [],
 [prog.cob:6: Error: 'A' undefined
+    4 |        PROCEDURE DIVISION.
+    5 | *
+    6 >            DISPLAY A.
+    7 |            STOP RUN.
 ])
 
 AT_CLEANUP

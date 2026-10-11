@@ -198,7 +198,8 @@ command_line_options_DEPENDENCIES = \
 	command-line-options.src/jar.at \
 	command-line-options.src/std.at \
 	command-line-options.src/conf.at \
-	command-line-options.src/Wimplicit-define.at
+	command-line-options.src/Wimplicit-define.at \
+	command-line-options.src/diagnostics-show-caret.at
 
 cobj_idx_DEPENDENCIES = \
 	cobj-idx.at \

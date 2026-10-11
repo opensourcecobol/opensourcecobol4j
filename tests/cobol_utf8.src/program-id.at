@@ -88,6 +88,11 @@ AT_DATA([prog.cob], [
 
 AT_CHECK([${COMPILE} prog.cob], [1], [],
 [prog.cob:3: Error: User defined name must be less than 32 characters
+    1 |
+    2 |        IDENTIFICATION   DIVISION.
+    3 >        PROGRAM-ID.      あいうえおかきくけこさしすせそ
+    4 |       -たちつてとなにぬねのはひふへほまみ.
+    5 |        DATA             DIVISION.
 ])
 
 AT_CLEANUP

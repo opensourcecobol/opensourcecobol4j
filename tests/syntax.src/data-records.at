@@ -17,6 +17,11 @@ AT_DATA([prog.cob], [
 
 AT_CHECK([${COMPILE_ONLY} -std=cobol85 prog.cob], [0], [],
 [prog.cob:11: Warning: DATA RECORDS is obsolete in COBOL 85
+    9 |        FILE             SECTION.
+   10 |        FD TEST-FILE
+   11 >           DATA RECORD IS MISSING-REF.
+   12 |        01 TEST-RECORD.
+   13 |          03 TEST-KEY    PIC 9(10).
 ])
 
 AT_CLEANUP

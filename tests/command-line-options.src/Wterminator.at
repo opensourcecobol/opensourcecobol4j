@@ -22,12 +22,44 @@ AT_DATA([prog.cbl], [
 AT_CHECK([${COBJ} -Wterminator prog.cbl], [0], [],
 [prog.cbl: In paragraph 'MAIN-RTN':
 prog.cbl:10: Warning: DISPLAY statement not terminated by END-DISPLAY
+    8 |        PROCEDURE                   DIVISION.
+    9 |        MAIN-RTN.
+   10 >            DISPLAY "AA".
+   11 |            IF 1 = 1 THEN
+   12 |                   DISPLAY "hello" END-DISPLAY.
 prog.cbl:11: Warning: IF statement not terminated by END-IF
+    9 |        MAIN-RTN.
+   10 |            DISPLAY "AA".
+   11 >            IF 1 = 1 THEN
+   12 |                   DISPLAY "hello" END-DISPLAY.
+   13 |            ADD 1 TO I.
 prog.cbl:13: Warning: ADD statement not terminated by END-ADD
+   11 |            IF 1 = 1 THEN
+   12 |                   DISPLAY "hello" END-DISPLAY.
+   13 >            ADD 1 TO I.
+   14 |            SUBTRACT 1 FROM I.
+   15 |            MULTIPLY 1 BY I.
 prog.cbl:14: Warning: SUBTRACT statement not terminated by END-SUBTRACT
+   12 |                   DISPLAY "hello" END-DISPLAY.
+   13 |            ADD 1 TO I.
+   14 >            SUBTRACT 1 FROM I.
+   15 |            MULTIPLY 1 BY I.
+   16 |            DIVIDE I INTO J.
 prog.cbl:15: Warning: MULTIPLY statement not terminated by END-MULTIPLY
+   13 |            ADD 1 TO I.
+   14 |            SUBTRACT 1 FROM I.
+   15 >            MULTIPLY 1 BY I.
+   16 |            DIVIDE I INTO J.
+   17 |            CALL "AA".
 prog.cbl:16: Warning: DIVIDE statement not terminated by END-DIVIDE
+   14 |            SUBTRACT 1 FROM I.
+   15 |            MULTIPLY 1 BY I.
+   16 >            DIVIDE I INTO J.
+   17 |            CALL "AA".
 prog.cbl:17: Warning: CALL statement not terminated by END-CALL
+   15 |            MULTIPLY 1 BY I.
+   16 |            DIVIDE I INTO J.
+   17 >            CALL "AA".
 ])
 
 AT_CHECK([${COBJ} --help | grep '\-Wterminator' > /dev/null], [0])

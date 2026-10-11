@@ -37,7 +37,17 @@ AT_DATA([prog.cob], [
 
 AT_CHECK([${COMPILE_ONLY} prog.cob], [0], ,
 [prog.cob:6: Warning: Suggest parentheses around AND within OR
+    4 |        PROCEDURE        DIVISION.
+    5 |            IF 3 = 1 AND 2 OR 3
+    6 >                DISPLAY "OK"
+    7 |                END-DISPLAY
+    8 |            END-IF.
 prog.cob:10: Warning: Suggest parentheses around AND within OR
+    8 |            END-IF.
+    9 |            IF 3 = 1 OR 2 AND 3
+   10 >                DISPLAY "NO"
+   11 |                END-DISPLAY
+   12 |            END-IF.
 ])
 
 AT_CLEANUP
@@ -66,6 +76,11 @@ AT_DATA([prog.cob], [
 
 AT_CHECK([${COMPILE_ONLY} prog.cob], [1], ,
 [prog.cob:16: Error: START not allowed on SEQUENTIAL files
+   14 |            OPEN  INPUT TEST-FILE.
+   15 |            START TEST-FILE KEY EQUAL TEST-REC
+   16 >            END-START.
+   17 |            CLOSE TEST-FILE.
+   18 |            STOP RUN.
 ])
 
 AT_CLEANUP

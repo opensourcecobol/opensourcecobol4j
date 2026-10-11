@@ -12,10 +12,16 @@ AT_DATA([prog.cbl],
 
 AT_CHECK([${COBJ} -Wobsolete -conf=../../command-line-options.src/stop-literal-statement-obsolete.conf prog.cbl], [0], [],
 [prog.cbl:7: Warning: STOP literal is obsolete in OpenCOBOL
+    5 |        PROCEDURE        DIVISION.
+    6 |            DISPLAY "HELLO".
+    7 >            STOP "hello".
 ])
 
 AT_CHECK([${COBJ} -Warchaic -conf=../../command-line-options.src/stop-literal-statement-archaic.conf prog.cbl], [0], [],
 [prog.cbl:7: Warning: STOP literal is archaic in OpenCOBOL
+    5 |        PROCEDURE        DIVISION.
+    6 |            DISPLAY "HELLO".
+    7 >            STOP "hello".
 ])
 
 AT_CHECK([${COBJ} --help | grep '\-Warchaic' > /dev/null], [0])

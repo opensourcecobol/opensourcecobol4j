@@ -39,6 +39,9 @@ AT_DATA([prog.cob], [
 
 AT_CHECK([${COMPILE_ONLY} prog.cob], [1], ,
 [prog.cob:7: Error: REDEFINES clause must follow entry-name
+    5 |        WORKING-STORAGE  SECTION.
+    6 |        01 X             PIC X.
+    7 >        01 Y             PIC 9 REDEFINES X.
 ])
 
 AT_CLEANUP
@@ -63,6 +66,11 @@ AT_DATA([prog.cob], [
 
 AT_CHECK([${COMPILE_ONLY} prog.cob], [1], ,
 [prog.cob:8: Error: Level number of REDEFINES entries must be identical
+    6 |        01 G.
+    7 |          02 X           PIC X.
+    8 >        01 Y             REDEFINES X PIC 9.
+    9 |        PROCEDURE        DIVISION.
+   10 |            STOP RUN.
 ])
 
 AT_CLEANUP
@@ -85,6 +93,11 @@ AT_DATA([prog.cob], [
 
 AT_CHECK([${COMPILE_ONLY} prog.cob], [1], ,
 [prog.cob:9: Error: 'X' undefined in 'G1'
+    7 |          02 G2.
+    8 |            03 X         PIC X.
+    9 >          02 Y           REDEFINES X PIC 9.
+   10 |        PROCEDURE        DIVISION.
+   11 |            STOP RUN.
 ])
 
 AT_CLEANUP
@@ -107,6 +120,11 @@ AT_DATA([prog.cob], [
 
 AT_CHECK([${COMPILE_ONLY} prog.cob], [1], ,
 [prog.cob:9: Error: Level number of REDEFINES entry cannot be 66 or 88
+    7 |          02 X           PIC X.
+    8 |          66 A           RENAMES X.
+    9 >          66 B           REDEFINES A PIC 9.
+   10 |        PROCEDURE        DIVISION.
+   11 |            STOP RUN.
 prog.cob:9: Error: Level 66 item 'B' requires RENAMES clause
 ])
 
@@ -129,6 +147,11 @@ AT_DATA([prog.cob], [
 
 AT_CHECK([${COMPILE_ONLY} prog.cob], [1], ,
 [prog.cob:8: Error: syntax error
+    6 |        01 X             PIC X.
+    7 |          88 A           VALUE "A".
+    8 >          88 B           REDEFINES A VALUE "B".
+    9 |        PROCEDURE        DIVISION.
+   10 |            STOP RUN.
 ])
 
 AT_CLEANUP
@@ -160,6 +183,11 @@ AT_DATA([prog.cob], [
 
 AT_CHECK([${COMPILE_ONLY} prog.cob], [1], ,
 [prog.cob:10: Error: 'X' undefined in 'G3'
+    8 |            03 X         PIC X.
+    9 |          02 G3.
+   10 >            03 A         REDEFINES X PIC 9.
+   11 |        PROCEDURE        DIVISION.
+   12 |            STOP RUN.
 ])
 
 AT_CLEANUP
@@ -184,6 +212,11 @@ AT_DATA([prog.cob], [
 
 AT_CHECK([${COMPILE_ONLY} prog.cob], [0], ,
 [prog.cob:8: Warning: The original definition 'X' should not have OCCURS
+    6 |        01 G.
+    7 |          02 X           PIC X OCCURS 2.
+    8 >          02 Y           REDEFINES X PIC XX.
+    9 |        PROCEDURE        DIVISION.
+   10 |            STOP RUN.
 ])
 
 AT_CLEANUP
@@ -206,6 +239,11 @@ AT_DATA([prog.cob], [
 
 AT_CHECK([${COMPILE_ONLY} prog.cob], [1], ,
 [prog.cob:9: Error: 'X' cannot be subscripted here
+    7 |          02 G2          OCCURS 2.
+    8 |            03 X         PIC X.
+    9 >            03 Y         REDEFINES X(1) PIC X.
+   10 |        PROCEDURE        DIVISION.
+   11 |            STOP RUN.
 ])
 
 AT_CLEANUP
@@ -236,8 +274,23 @@ AT_DATA([prog.cob], [
 
 AT_CHECK([${COMPILE_ONLY} prog.cob], [1], ,
 [prog.cob:8: Error: 'Y' cannot be variable length
+    6 |        01 G1.
+    7 |          02 X           PIC XX.
+    8 >          02 Y           REDEFINES X PIC X OCCURS 1 TO 2 DEPENDING ON I.
+    9 |        01 G2.
+   10 |          02 X           PIC XX.
 prog.cob:11: Error: 'Y' cannot be variable length
+    9 |        01 G2.
+   10 |          02 X           PIC XX.
+   11 >          02 Y           REDEFINES X.
+   12 |            03 A         PIC X OCCURS 1 TO 2 DEPENDING ON I.
+   13 |        01 G3.
 prog.cob:16: Error: The original definition 'X' cannot be variable length
+   14 |          02 X.
+   15 |            03 A         PIC X OCCURS 1 TO 2 DEPENDING ON I.
+   16 >          02 Y           REDEFINES X PIC X.
+   17 |        01 I             PIC 9.
+   18 |        PROCEDURE        DIVISION.
 ])
 
 AT_CLEANUP
@@ -264,6 +317,11 @@ AT_DATA([prog.cob], [
 
 AT_CHECK([${COMPILE_ONLY} prog.cob], [1], ,
 [prog.cob:10: Error: 'X' cannot be qualified here
+    8 |        01 G2.
+    9 |          02 X           PIC X.
+   10 >          02 A           REDEFINES X IN G1.
+   11 |        PROCEDURE        DIVISION.
+   12 |            STOP RUN.
 prog.cob:10: Error: PICTURE clause required for 'A'
 ])
 
@@ -291,6 +349,11 @@ AT_DATA([prog.cob], [
 
 AT_CHECK([${COMPILE_ONLY} prog.cob], [1], ,
 [prog.cob:10: Error: 'B' not the original definition
+    8 |          02 A           REDEFINES X PIC 9.
+    9 |          02 B           REDEFINES X PIC 9.
+   10 >          02 C           REDEFINES B PIC 9.
+   11 |        PROCEDURE        DIVISION.
+   12 |            STOP RUN.
 ])
 
 AT_CHECK([${COMPILE_ONLY} -std=mvs prog.cob], [0])
@@ -324,8 +387,23 @@ AT_DATA([prog.cob], [
 
 AT_CHECK([${COMPILE_ONLY} prog.cob], [1], ,
 [prog.cob:8: Error: Size of 'A' larger than size of 'X'
+    6 |        01 G1.
+    7 |          02 X           PIC X.
+    8 >          02 A           REDEFINES X PIC 99.
+    9 |        01 G2.
+   10 |          02 X           PIC X.
 prog.cob:11: Error: Size of 'A' larger than size of 'X'
+    9 |        01 G2.
+   10 |          02 X           PIC X.
+   11 >          02 A           REDEFINES X PIC 9 OCCURS 2.
+   12 |        01 WRK-X         PIC X.
+   13 |        01 WRK-X-REDEF   REDEFINES WRK-X PIC 99.
 prog.cob:15: Error: Size of 'EXT-X-REDEF' larger than size of 'EXT-X'
+   13 |        01 WRK-X-REDEF   REDEFINES WRK-X PIC 99.
+   14 |        01 EXT-X         PIC X EXTERNAL.
+   15 >        01 EXT-X-REDEF   REDEFINES EXT-X PIC 99.
+   16 |        PROCEDURE        DIVISION.
+   17 |            STOP RUN.
 ])
 
 AT_CLEANUP
@@ -353,7 +431,17 @@ AT_DATA([prog.cob], [
 
 AT_CHECK([${COMPILE_ONLY} prog.cob], [1], ,
 [prog.cob:7: Error: Entries under REDEFINES cannot have VALUE clause
+    5 |        WORKING-STORAGE  SECTION.
+    6 |        01 X             PIC X.
+    7 >        01 A             REDEFINES X PIC X VALUE "A".
+    8 |        01 G             REDEFINES X.
+    9 |          02 B           PIC X VALUE "A".
 prog.cob:9: Error: Entries under REDEFINES cannot have VALUE clause
+    7 |        01 A             REDEFINES X PIC X VALUE "A".
+    8 |        01 G             REDEFINES X.
+    9 >          02 B           PIC X VALUE "A".
+   10 |        01 Y             REDEFINES X PIC X.
+   11 |          88 C           VALUE "A".
 ])
 
 AT_CLEANUP
@@ -382,7 +470,17 @@ AT_DATA([prog.cob], [
 
 AT_CHECK([${COMPILE_ONLY} prog.cob], [1], ,
 [prog.cob:8: Error: REDEFINES must follow the original definition
+    6 |        01 X             PIC X.
+    7 |        01 Y             PIC X.
+    8 >        01 A             REDEFINES X PIC X.
+    9 |        01 G.
+   10 |          02 G-X         PIC X.
 prog.cob:12: Error: REDEFINES must follow the original definition
+   10 |          02 G-X         PIC X.
+   11 |          02 G-Y         PIC X.
+   12 >          02 G-A         REDEFINES G-X PIC X.
+   13 |        PROCEDURE        DIVISION.
+   14 |            STOP RUN.
 ])
 
 AT_CLEANUP

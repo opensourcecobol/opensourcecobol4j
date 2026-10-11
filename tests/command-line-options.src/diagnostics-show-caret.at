@@ -1,0 +1,164 @@
+AT_SETUP([source context is displayed by default])
+
+AT_DATA([prog.cbl], [
+       IDENTIFICATION              DIVISION.
+       PROGRAM-ID.                 prog.
+       DATA                        DIVISION.
+       WORKING-STORAGE             SECTION.
+       PROCEDURE                   DIVISION.
+           DISPLAY UNDEFINED-ITEM.
+           GOBACK.
+])
+
+AT_CHECK([${COBJ} -fsyntax-only prog.cbl], [1], [],
+[prog.cbl:7: Error: 'UNDEFINED-ITEM' undefined
+    5 |        WORKING-STORAGE             SECTION.
+    6 |        PROCEDURE                   DIVISION.
+    7 >            DISPLAY UNDEFINED-ITEM.
+    8 |            GOBACK.
+])
+
+AT_CLEANUP
+
+AT_SETUP([-fno-diagnostics-show-caret])
+
+AT_DATA([prog.cbl], [
+       IDENTIFICATION              DIVISION.
+       PROGRAM-ID.                 prog.
+       DATA                        DIVISION.
+       WORKING-STORAGE             SECTION.
+       PROCEDURE                   DIVISION.
+           DISPLAY UNDEFINED-ITEM.
+           GOBACK.
+])
+
+AT_CHECK([${COBJ} -fno-diagnostics-show-caret -fsyntax-only prog.cbl], [1], [],
+[prog.cbl:7: Error: 'UNDEFINED-ITEM' undefined
+])
+
+AT_CHECK([${COBJ} --help | grep '\-fdiagnostics-show-caret' > /dev/null], [0])
+
+AT_CLEANUP
+
+AT_SETUP([-fno-diagnostics-show-line-numbers])
+
+AT_DATA([prog.cbl], [
+       IDENTIFICATION              DIVISION.
+       PROGRAM-ID.                 prog.
+       DATA                        DIVISION.
+       WORKING-STORAGE             SECTION.
+       PROCEDURE                   DIVISION.
+           DISPLAY UNDEFINED-ITEM.
+           GOBACK.
+])
+
+AT_CHECK([${COBJ} -fno-diagnostics-show-line-numbers -fsyntax-only prog.cbl], [1], [],
+[prog.cbl:7: Error: 'UNDEFINED-ITEM' undefined
+          WORKING-STORAGE             SECTION.
+          PROCEDURE                   DIVISION.
+ >            DISPLAY UNDEFINED-ITEM.
+              GOBACK.
+])
+
+AT_CHECK([${COBJ} --help | grep '\-fdiagnostics-show-line-numbers' > /dev/null], [0])
+
+AT_CLEANUP
+
+AT_SETUP([a long source line is displayed in full])
+
+AT_DATA([prog.cbl], [
+       IDENTIFICATION              DIVISION.
+       PROGRAM-ID.                 prog.
+      *XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
+       PROCEDURE                   DIVISION.
+           DISPLAY UNDEFINED-ITEM.
+           GOBACK.
+])
+
+AT_CHECK([${COBJ} -fsyntax-only prog.cbl], [1], [],
+[prog.cbl:6: Error: 'UNDEFINED-ITEM' undefined
+    4 |       *XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
+    5 |        PROCEDURE                   DIVISION.
+    6 >            DISPLAY UNDEFINED-ITEM.
+    7 |            GOBACK.
+])
+
+AT_CLEANUP
+
+AT_SETUP([source context of a record with a sequence number])
+
+dnl The trailing whitespace of a source line is dropped, the sequence number
+dnl in the columns 73 to 80 is not.
+AT_CHECK([
+for line in "       IDENTIFICATION              DIVISION." \
+            "       PROGRAM-ID.                 prog." \
+            "       PROCEDURE                   DIVISION." \
+            "           DISPLAY UNDEFINED-ITEM." \
+            "           GOBACK."
+do
+  printf '%-72s%s\n' "$line" "SEQ00010"
+done > prog.cbl
+])
+
+AT_CHECK([${COBJ} -fsyntax-only prog.cbl], [1], [],
+[prog.cbl:4: Error: 'UNDEFINED-ITEM' undefined
+    2 |        PROGRAM-ID.                 prog.                                SEQ00010
+    3 |        PROCEDURE                   DIVISION.                            SEQ00010
+    4 >            DISPLAY UNDEFINED-ITEM.                                      SEQ00010
+    5 |            GOBACK.                                                      SEQ00010
+])
+
+AT_CLEANUP
+
+AT_SETUP([source context is displayed once per source location])
+
+AT_DATA([prog.cbl], [
+       IDENTIFICATION              DIVISION.
+       PROGRAM-ID.                 prog.
+       DATA                        DIVISION.
+       WORKING-STORAGE             SECTION.
+       PROCEDURE                   DIVISION.
+           DISPLAY UNDEF-A UNDEF-B.
+           GOBACK.
+])
+
+dnl Both diagnostics point at line 7, so the context is displayed only once.
+AT_CHECK([${COBJ} -fsyntax-only prog.cbl], [1], [],
+[prog.cbl:7: Error: 'UNDEF-A' undefined
+    5 |        WORKING-STORAGE             SECTION.
+    6 |        PROCEDURE                   DIVISION.
+    7 >            DISPLAY UNDEF-A UNDEF-B.
+    8 |            GOBACK.
+prog.cbl:7: Error: 'UNDEF-B' undefined
+])
+
+AT_CLEANUP
+
+AT_SETUP([source context of a diagnostic pointing at another line])
+
+AT_DATA([prog.cbl], [
+       IDENTIFICATION              DIVISION.
+       PROGRAM-ID.                 prog.
+       DATA                        DIVISION.
+       WORKING-STORAGE             SECTION.
+       01 X PIC X(5).
+       PROCEDURE                   DIVISION.
+           MOVE 12345678 TO X.
+           GOBACK.
+])
+
+AT_CHECK([${COBJ} -fsyntax-only -Wall prog.cbl], [0], [],
+[prog.cbl:8: Warning: Alphanumeric value is expected
+    6 |        01 X PIC X(5).
+    7 |        PROCEDURE                   DIVISION.
+    8 >            MOVE 12345678 TO X.
+    9 |            GOBACK.
+prog.cbl:6: Warning: 'X' defined here as PIC X(5)
+    4 |        DATA                        DIVISION.
+    5 |        WORKING-STORAGE             SECTION.
+    6 >        01 X PIC X(5).
+    7 |        PROCEDURE                   DIVISION.
+    8 |            MOVE 12345678 TO X.
+])
+
+AT_CLEANUP
