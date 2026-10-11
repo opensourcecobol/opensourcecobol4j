@@ -1767,6 +1767,8 @@ extern void cobc_tree_cast_error(cb_tree x, const char *filen,
 extern void codegen(struct cb_program *prog, const int nested,
                     char **program_id_list, char *java_source_dir,
                     char *source_file);
+extern int cb_literal_is_java_string_inlineable(const unsigned char *data,
+                                                int size);
 
 /* scanner.l */
 extern void cb_set_in_procedure(void);

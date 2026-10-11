@@ -306,11 +306,6 @@ public class CobolNumericPackedField extends AbstractCobolField {
     }
 
     @Override
-    public void moveFrom(String string) {
-        this.dataStorage.setData(string.getBytes(AbstractCobolField.charSetSJIS));
-    }
-
-    @Override
     public void moveFrom(int val) {
         int n;
         int sign = 0;

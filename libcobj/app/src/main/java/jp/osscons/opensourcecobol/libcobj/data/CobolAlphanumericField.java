@@ -178,20 +178,6 @@ public class CobolAlphanumericField extends AbstractCobolField {
     }
 
     @Override
-    public void moveFrom(String string) {
-        byte[] bytes = string.getBytes(AbstractCobolField.charSetSJIS);
-        int length = Math.min(bytes.length, this.getSize());
-        CobolDataStorage data = this.getDataStorage();
-        // ' '埋め
-        for (int i = 0; i < this.getSize(); ++i) {
-            data.setByte(i, (byte) 0x20);
-        }
-        for (int i = 0; i < length; ++i) {
-            data.setByte(i, bytes[i]);
-        }
-    }
-
-    @Override
     public CobolNumericField getNumericField() {
         int size = 36;
         int scale = 18;
