@@ -82,7 +82,7 @@ public final class CobolPointerRegistry {
     /**
      * アドレス値から CobolDataStorage を取得する。
      *
-     * <p>ポインタ演算 (SET PTR UP/DOWN BY n) された値にも対応する。 上位32ビットからバイト配列IDを、下位32ビットからオフセットを取り出し、
+     * <p>ポインタ演算 (SET PTR UP/DOWN BY n) された値にも対応する。上位32ビットからバイト配列IDを、下位32ビットからオフセットを取り出し、
      * 対応する CobolDataStorage を返す。キャッシュにヒットした場合は既存インスタンスを再利用する。
      *
      * @param id アドレス値 (0L の場合は null を返す)
