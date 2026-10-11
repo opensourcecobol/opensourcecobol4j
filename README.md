@@ -19,7 +19,6 @@ opensource COBOL 4J is tested with the following platforms and dependencies:
 
 * Ubuntu 24.04 and OpenJDK 21
 * AlmaLinux 9 and OpenJDK 11
-* Amazon Linux 2023 and OpenJDK 21
 
 If you want to check requirements of older versions, see [doc/requirements-all.md](./doc/requirements-all.md).
 
@@ -41,13 +40,6 @@ sudo apt-get install -y default-jdk build-essential bison flex gettext texinfo l
 ```
 dnf -y update
 dnf install -y java-11-openjdk-devel gcc make bison flex automake autoconf diffutils gettext
-```
-
-#### Amazon Linux 2023
-
-```
-dnf -y update
-dnf install -y java-21-amazon-corretto-devel gcc make bison flex automake autoconf diffutils gettext tar gzip
 ```
 
 ### Install opensource COBOL 4J

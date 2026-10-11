@@ -44,12 +44,6 @@ jobs:
           dnf -y update
           dnf install -y gcc make autoconf diffutils gettext bison flex
 
-      - name: Install dependencies on Amazon Linux 2023
-        if: inputs.os == 'amazonlinux:2023'
-        run: |
-          dnf -y update
-          dnf install -y java-21-amazon-corretto-devel gcc make autoconf diffutils gettext tar gzip bison flex
-
       - name: Checkout opensource COBOL 4J
         uses: actions/checkout@v7
       
