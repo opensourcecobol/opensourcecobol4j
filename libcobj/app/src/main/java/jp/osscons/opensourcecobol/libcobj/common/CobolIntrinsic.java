@@ -2146,7 +2146,7 @@ public class CobolIntrinsic {
             xqtyear = fields[2].getInt();
         } else {
             timeptr = CobolUtil.localtime();
-            xqtyear = 1900 + timeptr.getDayOfYear();
+            xqtyear = timeptr.getYear();
         }
         if (year < 0 || year > 999999) {
             CobolRuntimeException.setException(CobolExceptionId.COB_EC_ARGUMENT_FUNCTION);
@@ -2211,7 +2211,7 @@ public class CobolIntrinsic {
             xqtyear = fields[2].getInt();
         } else {
             timeptr = CobolUtil.localtime();
-            xqtyear = 1900 + timeptr.getDayOfYear();
+            xqtyear = timeptr.getYear();
         }
 
         if (year < 0 || year > 999999) {
