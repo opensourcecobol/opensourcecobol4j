@@ -590,6 +590,10 @@ public class CobolNumericPackedField extends AbstractCobolField {
         if (val == 0) {
             return 0;
         }
+        if (val == Integer.MIN_VALUE) {
+            // -val がintに収まらないため桁ごとに計算するaddIntに任せる
+            return this.addInt(val);
+        }
 
         int p = this.getSize() - 1;
         CobolDataStorage data = this.getDataStorage();
@@ -621,6 +625,12 @@ public class CobolNumericPackedField extends AbstractCobolField {
             n /= 100;
             inc %= 100;
             data.setByte(p, (byte) (((inc / 10) << 4) | (inc % 10)));
+        }
+
+        if (this.getAttribute().getDigits() % 2 == 0) {
+            // 桁数が偶数のときは先頭バイトの上位ニブルが未使用なので,
+            // そこへ繰り上がった桁あふれ分を捨てる
+            data.setByte(0, (byte) (data.getByte(0) & 0x0F));
         }
         return 0;
     }
@@ -703,12 +713,13 @@ public class CobolNumericPackedField extends AbstractCobolField {
 
         if (sign != 0) {
             p = this.getSize() - 1;
-            byte x = data.getByte(p);
             if (origdigs == zeroes) {
-                data.setByte(p, (byte) ((x & 0xF0) | 0x0C));
+                data.setByte(p, (byte) ((data.getByte(p) & 0xF0) | 0x0C));
             } else if (subtr != 0 && carry != 0) {
                 complementPacked();
                 sign = -sign;
+                // complementPackedがdata[p]の上位ニブルを書き換えるため,補数を取った後に読み直す
+                byte x = data.getByte(p);
                 if (sign < 0) {
                     data.setByte(p, (byte) ((x & 0xF0) | 0x0D));
                 } else {
