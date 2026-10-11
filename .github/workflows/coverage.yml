@@ -43,7 +43,11 @@ jobs:
         run: |
           tests=("command-line-options" "data-rep" "i18n_sjis" "jp-compat" "run" "syntax" "cobj-idx" "file-lock" "file-lock2" "misc")
           for test in "${tests[@]}"; do
-            ./"$test" || true
+            if [ "$test" = "file-lock" ] || [ "$test" = "file-lock2" ] || [ "$test" = "cobj-idx" ]; then
+              ./"$test" || true
+            else
+              ./"$test" -j || true
+            fi
           done
 
       - name: Generate a coverage report

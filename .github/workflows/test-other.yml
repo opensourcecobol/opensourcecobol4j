@@ -75,8 +75,12 @@ jobs:
       
       - name: Run tests ${{ inputs.test-name }}
         working-directory: tests/
-        run:
-          ./${{ inputs.test-name }}
+        run: |
+          if [ "${{ inputs.test-name }}" = "file-lock" ] || [ "${{ inputs.test-name }}" = "file-lock2" ] || [ "${{ inputs.test-name }}" = "cobj-idx" ]; then
+            ./${{ inputs.test-name }}
+          else
+            ./${{ inputs.test-name }} -j
+          fi
       
       - name: Upload log files if tests fail
         if: failure()
