@@ -7,7 +7,6 @@ import jp.osscons.opensourcecobol.libcobj.termio.*;
 import jp.osscons.opensourcecobol.libcobj.call.*;
 import jp.osscons.opensourcecobol.libcobj.file.*;
 import jp.osscons.opensourcecobol.libcobj.ui.*;
-import java.util.Optional;
 import java.io.BufferedReader;
 import java.io.FileInputStream;
 import java.io.IOException;

@@ -267,7 +267,7 @@ public CobolControl[] contList = {
         // A-01の処理
         //...
     },
-    new CobolControl(l_SUB__A_01, CobolControl.LabelType.label) {
+    new CobolControl(l_SUB__A_02, CobolControl.LabelType.label) {
         // A-02の処理
         //...
     },
@@ -275,7 +275,7 @@ public CobolControl[] contList = {
         // LAST-PROC SECTIONの処理
         //...
     },
-    new CobolControl(l_LAST_PROC__LAST_MESSAGE, CobolControl.LabelType.paragraph) {
+    new CobolControl(l_LAST_PROC__LAST_MESSAGE, CobolControl.LabelType.label) {
         // LAST-MESSAGEの処理
         //...
     }
@@ -287,7 +287,7 @@ public CobolControl[] contList = {
 
 ```java
 new CobolControl(l_SUB__A_01, CobolControl.LabelType.label) {
-  public Optional<CobolControl> run() throws CobolRuntimeException, CobolGoBackException, CobolStopRunException {
+  public CobolControl run() throws CobolRuntimeException, CobolStopRunException {
     /* prog.cbl:13: DISPLAY */
     {
       CobolTerminal.display (0, 1, 1, c_1);
@@ -297,7 +297,7 @@ new CobolControl(l_SUB__A_01, CobolControl.LabelType.label) {
       CobolTerminal.display (0, 1, 1, c_2);
     }
 
-    return Optional.of(contList[l_SUB__A_02]);
+    return contList[l_SUB__A_02];
   }
 }
 ```
@@ -306,13 +306,13 @@ A-02の処理は以下のように変換される。
 
 ```java
 new CobolControl(l_SUB__A_02, CobolControl.LabelType.label) {
-  public Optional<CobolControl> run() throws CobolRuntimeException, CobolGoBackException, CobolStopRunException {
+  public CobolControl run() throws CobolRuntimeException, CobolStopRunException {
     /* prog.cbl:16: DISPLAY */
     {
       CobolTerminal.display (0, 1, 1, c_3);
     }
 
-    return Optional.of(contList[l_LAST_PROC]);
+    return contList[l_LAST_PROC];
   }
 }
 ```
@@ -320,19 +320,35 @@ new CobolControl(l_SUB__A_02, CobolControl.LabelType.label) {
 CobolControlクラスは、opensource COBOL 4Jが提供するランタイムであるlibcobj.jarに含まれるクラスである。
 runメソッドに、実際の処理が記述され、その他必要な情報はメンバ変数に格納される。
 
+runメソッドの戻り値は、その段落・節の実行後に続けて実行すべきCobolControlである。
+続けて実行すべき処理が無い場合(手続き部の末尾に到達した場合等)は`null`を返す。
+生成されたコードでは、この戻り値が`null`になるまでrunメソッドを繰り返し呼び出すことで、
+段落・節の連続実行(フォールスルー)を実現している。
+
+```java
+public void execEntry(int start) throws CobolRuntimeException, CobolStopRunException {
+  CobolControl nextLabel = contList[start];
+  while(nextLabel != null) {
+    nextLabel = nextLabel.run();
+  }
+}
+```
+
 CobolControlの配列contListを使って、PROCEDURE DIVISION内の処理を実行する。
 
 opensource COBOL 4Jでは、PERFORM文やGO TO文はCobolControlクラスの機能を利用して呼び出しやジャンプを実現するメソッドを用意している。
 PERFORM文やGO TO文はこれらのメソッドを呼び出すコードへと変換される。
+`CobolControl.perform`はその場で指定された段落・節を実行するstaticメソッドであり、
+`PERFORM ... THRU ...`文の場合は`CobolControl.performThrough`が使用される。
 ```java
-CobolControl.perform(contList, l_SUB__A_01).run();
+CobolControl.perform(contList, l_SUB__A_01);
 
-CobolControl.perform(contList, l_SUB__A_02).run();
+CobolControl.perform(contList, l_SUB__A_02);
 
-CobolControl.perform(contList, l_SUB).run();
+CobolControl.perform(contList, l_SUB);
 
 {
-  if(true) return Optional.of(contList[l_LAST_PROC          ]);
+  if(true) return contList[l_LAST_PROC          ];
 
 }
 ```
