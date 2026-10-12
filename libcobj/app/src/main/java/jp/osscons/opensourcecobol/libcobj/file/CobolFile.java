@@ -987,6 +987,13 @@ public class CobolFile {
             file_open_name = this.assign.fieldToString();
         }
 
+        /* Canonicalize the file path to prevent directory traversal */
+        try {
+            file_open_name = new java.io.File(file_open_name).getCanonicalPath();
+        } catch (java.io.IOException e) {
+            return COB_STATUS_30_PERMANENT_ERROR;
+        }
+
         byte[] src;
         byte[] dst;
         boolean simple;

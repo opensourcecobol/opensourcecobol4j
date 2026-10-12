@@ -290,6 +290,12 @@ public class CobolIndexedFile extends CobolFile {
 
     private int getConnection(String filename) {
         IndexedFile p = this.filei;
+        // Canonicalize the filename to prevent path traversal attacks.
+        try {
+            filename = new java.io.File(filename).getCanonicalPath();
+        } catch (java.io.IOException e) {
+            return COB_STATUS_30_PERMANENT_ERROR;
+        }
         // Establishes a connection to the SQLite database using the provided filename.
         SQLiteConfig config = new SQLiteConfig();
         config.setReadOnly(false);
