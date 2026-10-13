@@ -1209,10 +1209,22 @@ static int process_command_line(const int argc, char *argv[]) {
         fflush(stderr);
       }
 #ifdef _MSC_VER
+      if (strlen(cob_define_flags) + strlen(optarg) + 6 >=
+          sizeof(cob_define_flags)) {
+        fprintf(stderr, "Error: cob_define_flags buffer overflow with -D %s\n",
+                optarg);
+        exit(1);
+      }
       strcat(cob_define_flags, "/D \"");
       strcat(cob_define_flags, optarg);
       strcat(cob_define_flags, "\" ");
 #else
+      if (strlen(cob_define_flags) + strlen(optarg) + 4 >=
+          sizeof(cob_define_flags)) {
+        fprintf(stderr, "Error: cob_define_flags buffer overflow with -D %s\n",
+                optarg);
+        exit(1);
+      }
       strcat(cob_define_flags, "-D");
       strcat(cob_define_flags, optarg);
       strcat(cob_define_flags, " ");
@@ -1234,8 +1246,20 @@ static int process_command_line(const int argc, char *argv[]) {
 
     case 'I':
 #ifdef _MSC_VER
+      if (strlen(cob_define_flags) + strlen(optarg) + 6 >=
+          sizeof(cob_define_flags)) {
+        fprintf(stderr, "Error: cob_define_flags buffer overflow with -I %s\n",
+                optarg);
+        exit(1);
+      }
       strcat(cob_define_flags, "/I ");
 #else
+      if (strlen(cob_define_flags) + strlen(optarg) + 5 >=
+          sizeof(cob_define_flags)) {
+        fprintf(stderr, "Error: cob_define_flags buffer overflow with -I %s\n",
+                optarg);
+        exit(1);
+      }
       strcat(cob_define_flags, "-I");
 #endif
       strcat(cob_define_flags, "\"");
