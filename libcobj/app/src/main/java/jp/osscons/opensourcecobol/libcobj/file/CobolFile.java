@@ -991,7 +991,8 @@ public class CobolFile {
         try {
             file_open_name = new java.io.File(file_open_name).getCanonicalPath();
         } catch (java.io.IOException e) {
-            return COB_STATUS_30_PERMANENT_ERROR;
+            saveStatus(COB_STATUS_30_PERMANENT_ERROR, fnstatus);
+            return;
         }
 
         byte[] src;
