@@ -18,12 +18,16 @@
  */
 package jp.osscons.opensourcecobol.libcobj.call;
 
-import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import jp.osscons.opensourcecobol.libcobj.common.CobolConstant;
 import jp.osscons.opensourcecobol.libcobj.common.CobolUtil;
 import jp.osscons.opensourcecobol.libcobj.data.AbstractCobolField;
@@ -440,13 +444,42 @@ public class CobolResolve {
      * @param name 読み込むクラスファイルのパス
      * @return 読み込みに失敗したときはnull,其れ以外は読み込んだCobolRunnbableのインスタンス
      */
+    private static final Logger RESOLVE_LOG = Logger.getLogger(CobolResolve.class.getName());
+
+    private static final Set<String> BLOCKED_PACKAGES =
+            new HashSet<>(Arrays.asList("java.", "javax.", "sun.", "jdk.", "com.sun."));
+
+    /**
+     * Validate that a class name is safe to load via Class.forName().
+     * Blocks JDK internal packages and path traversal attempts.
+     */
+    private static boolean isAllowedClass(String name) {
+        if (name == null || name.isEmpty()) {
+            return false;
+        }
+        if (name.contains("..") || name.contains("/") || name.contains("\\")) {
+            return false;
+        }
+        for (String blocked : BLOCKED_PACKAGES) {
+            if (name.startsWith(blocked)) {
+                return false;
+            }
+        }
+        return true;
+    }
+
     private static CobolRunnable getInstance(String name) {
         CobolRunnable runnable = null;
 
+        if (!isAllowedClass(name)) {
+            if (RESOLVE_LOG.isLoggable(Level.WARNING)) {
+                RESOLVE_LOG.warning("Blocked attempt to load restricted class: " + name);
+            }
+            return null;
+        }
+
         try {
             Class<?> c = Class.forName(name);
-            Constructor<?> cons = c.getConstructor();
-            runnable = (CobolRunnable) cons.newInstance();
             runnable = (CobolRunnable) c.getDeclaredConstructor().newInstance();
             callTable.put(name, runnable);
             return runnable;
@@ -457,7 +490,6 @@ public class CobolResolve {
                 | IllegalArgumentException
                 | InvocationTargetException
                 | ClassNotFoundException e) {
-            // TODO 自動生成された catch ブロック
             return null;
         }
     }
