@@ -768,8 +768,8 @@ public abstract class AbstractCobolEsqlBackend implements CobolEsqlBackendInterf
                 return;
             }
             if (!VALID_CURSOR_NAME.matcher(cursorName).matches()) {
-                SqlCA.setError(sqlca, SqlCA.ECPG_PGSQL, "42602",
-                        "Invalid cursor name: " + cursorName);
+                SqlCA.setError(
+                        sqlca, SqlCA.ECPG_PGSQL, "42602", "Invalid cursor name: " + cursorName);
                 return;
             }
             if (LOG.isDebugEnabled()) {
