@@ -26,6 +26,7 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import java.util.logging.Level;
 import java.util.logging.Logger;
 import jp.osscons.opensourcecobol.libcobj.common.CobolConstant;
 import jp.osscons.opensourcecobol.libcobj.common.CobolUtil;
@@ -471,7 +472,9 @@ public class CobolResolve {
         CobolRunnable runnable = null;
 
         if (!isAllowedClass(name)) {
-            RESOLVE_LOG.warning("Blocked attempt to load restricted class: " + name);
+            if (RESOLVE_LOG.isLoggable(Level.WARNING)) {
+                RESOLVE_LOG.warning("Blocked attempt to load restricted class: " + name);
+            }
             return null;
         }
 
