@@ -47,8 +47,8 @@ public abstract class AbstractCobolField {
      * Configurable via OPENSOURCECOBOL4J_CHARSET environment variable.
      * Defaults to SHIFT-JIS for backward compatibility.
      */
-    public static Charset charSetSJIS = Charset.forName(
-            System.getenv().getOrDefault("OPENSOURCECOBOL4J_CHARSET", "SHIFT-JIS"));
+    public static Charset charSetSJIS =
+            Charset.forName(System.getenv().getOrDefault("OPENSOURCECOBOL4J_CHARSET", "SHIFT-JIS"));
 
     static final int[] cobExp10 = {
         1, 10, 100, 1000, 10000, 100000, 1000000, 10000000, 100000000, 1000000000
