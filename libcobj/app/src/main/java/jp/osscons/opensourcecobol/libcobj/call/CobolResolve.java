@@ -18,16 +18,15 @@
  */
 package jp.osscons.opensourcecobol.libcobj.call;
 
-import java.lang.reflect.Constructor;
-import java.util.Arrays;
-import java.util.HashSet;
-import java.util.Set;
-import java.util.logging.Logger;
 import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
+import java.util.logging.Logger;
 import jp.osscons.opensourcecobol.libcobj.common.CobolConstant;
 import jp.osscons.opensourcecobol.libcobj.common.CobolUtil;
 import jp.osscons.opensourcecobol.libcobj.data.AbstractCobolField;
@@ -446,8 +445,8 @@ public class CobolResolve {
      */
     private static final Logger RESOLVE_LOG = Logger.getLogger(CobolResolve.class.getName());
 
-    private static final Set<String> BLOCKED_PACKAGES = new HashSet<>(Arrays.asList(
-            "java.", "javax.", "sun.", "jdk.", "com.sun."));
+    private static final Set<String> BLOCKED_PACKAGES =
+            new HashSet<>(Arrays.asList("java.", "javax.", "sun.", "jdk.", "com.sun."));
 
     /**
      * Validate that a class name is safe to load via Class.forName().
