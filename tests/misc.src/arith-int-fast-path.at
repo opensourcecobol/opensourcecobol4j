@@ -1,0 +1,233 @@
+AT_SETUP([ADD/SUBTRACT integer fast path (binary-truncate)])
+
+AT_DATA([prog.cbl], [
+       IDENTIFICATION DIVISION.
+       PROGRAM-ID. prog.
+       DATA DIVISION.
+       WORKING-STORAGE SECTION.
+       01 BU   PIC 9(4) COMP.
+       01 BS   PIC S9(4) COMP.
+       01 BL   PIC S9(18) COMP.
+       01 PU   PIC 9(4) COMP-3.
+       01 PS   PIC S9(5) COMP-3.
+       01 DU   PIC 9(4).
+       01 DS   PIC S9(4).
+       01 N3   PIC S9(4) COMP VALUE 3.
+       PROCEDURE DIVISION.
+      *    桁あふれした結果はPICTUREの桁数で切り捨てられる
+           MOVE 9999 TO BU
+           ADD 1 TO BU
+           DISPLAY "BU-OVF " BU
+           MOVE 9999 TO BU
+           ADD 3 TO BU
+           DISPLAY "BU-OVF2 " BU
+           MOVE 9999 TO PU
+           ADD 5 TO PU
+           DISPLAY "PU-OVF " PU
+      *    符号なし項目に負の値を格納すると絶対値になる
+           MOVE 0 TO BU
+           SUBTRACT 1 FROM BU
+           DISPLAY "BU-NEG " BU
+           MOVE 0 TO PU
+           SUBTRACT 1 FROM PU
+           DISPLAY "PU-NEG " PU
+      *    符号あり項目は符号付きのまま格納される
+           MOVE 0 TO BS
+           SUBTRACT 1 FROM BS
+           DISPLAY "BS-NEG " BS
+           MOVE 0 TO PS
+           SUBTRACT 1 FROM PS
+           DISPLAY "PS-NEG " PS
+           MOVE 1 TO PS
+           SUBTRACT 12345 FROM PS
+           DISPLAY "PS-NEG2 " PS
+           MOVE 0 TO PS
+           SUBTRACT N3 FROM PS
+           DISPLAY "PS-NEG3 " PS
+      *    DISPLAY項目は桁あふれ時に元の値を保持する
+           MOVE 9999 TO DU
+           ADD 1 TO DU
+           DISPLAY "DU-OVF " DU
+           MOVE 0 TO DS
+           SUBTRACT 1 FROM DS
+           DISPLAY "DS-NEG " DS
+      *    18桁の2進項目
+           MOVE 999999999999999999 TO BL
+           ADD 1 TO BL
+           DISPLAY "BL-OVF " BL
+      *    ON SIZE ERRORを指定した場合は元の値が保持される
+           MOVE 9999 TO BU
+           ADD 1 TO BU
+               ON SIZE ERROR DISPLAY "BU-SIZEERR " BU
+           END-ADD
+      *    項目をオペランドに指定した場合
+           MOVE 9999 TO BU
+           ADD N3 TO BU
+           DISPLAY "BU-FLD " BU
+           MOVE 9999 TO PU
+           SUBTRACT N3 FROM PU
+           DISPLAY "PU-FLD " PU
+           STOP RUN.
+])
+
+AT_CHECK([${COBJ} prog.cbl])
+AT_CHECK([java prog], [0],
+[BU-OVF 0000
+BU-OVF2 0002
+PU-OVF 0004
+BU-NEG 0001
+PU-NEG 0001
+BS-NEG -0001
+PS-NEG -00001
+PS-NEG2 -12344
+PS-NEG3 -00003
+DU-OVF 9999
+DS-NEG -0001
+BL-OVF +000000000000000000
+BU-SIZEERR 9999
+BU-FLD 0002
+PU-FLD 9996
+])
+
+AT_CLEANUP
+
+
+AT_SETUP([ADD/SUBTRACT integer fast path (stored representation)])
+
+AT_DATA([prog.cbl], [
+       IDENTIFICATION DIVISION.
+       PROGRAM-ID. prog.
+       DATA DIVISION.
+       WORKING-STORAGE SECTION.
+      *    偶数桁のCOMP-3項目は先頭バイトの上位ニブルが未使用であり,
+      *    桁あふれ分がそこへ残らないことを桁数の多い再定義で確認する
+       01 PU   PIC 9(4) COMP-3.
+       01 PURAW REDEFINES PU PIC 9(5) COMP-3.
+       01 PS   PIC S9(4) COMP-3.
+       01 PSRAW REDEFINES PS PIC S9(5) COMP-3.
+       01 P6U  PIC 9(6) COMP-3.
+       01 P6RAW REDEFINES P6U PIC 9(7) COMP-3.
+       01 N3   PIC S9(4) COMP VALUE 5.
+       PROCEDURE DIVISION.
+           MOVE 9999 TO PU
+           ADD 5 TO PU
+           DISPLAY "PU " PU " RAW " PURAW
+           MOVE 9999 TO PU
+           ADD N3 TO PU
+           DISPLAY "PU-FLD " PU " RAW " PURAW
+           MOVE 9999 TO PS
+           ADD 5 TO PS
+           DISPLAY "PS " PS " RAW " PSRAW
+           MOVE 999999 TO P6U
+           ADD 5 TO P6U
+           DISPLAY "P6U " P6U " RAW " P6RAW
+           MOVE 0 TO PU
+           SUBTRACT 5 FROM PU
+           DISPLAY "PU-NEG " PU " RAW " PURAW
+           STOP RUN.
+])
+
+AT_CHECK([${COBJ} prog.cbl])
+AT_CHECK([java prog], [0],
+[PU 0004 RAW 00004
+PU-FLD 0004 RAW 00004
+PS +0004 RAW +00004
+P6U 000004 RAW 0000004
+PU-NEG 0005 RAW 00005
+])
+
+AT_CLEANUP
+
+
+AT_SETUP([ADD/SUBTRACT integer fast path (COMP-5 operand)])
+
+AT_DATA([prog.cbl], [
+       IDENTIFICATION DIVISION.
+       PROGRAM-ID. prog.
+       DATA DIVISION.
+       WORKING-STORAGE SECTION.
+      *    COMP-5はPICTUREの桁数を超える値を保持できるため,
+      *    オペランドに指定したときの結果が汎用パスと一致することを確認する
+       01 C5   PIC S9(9) COMP-5.
+       01 CMIN PIC S9(9) COMP-5.
+       01 DS   PIC S9(9).
+       01 PS   PIC S9(9) COMP-3.
+       01 BS   PIC S9(9) COMP.
+       PROCEDURE DIVISION.
+           COMPUTE C5 = 1234567890
+           COMPUTE CMIN = -2147483647 - 1
+           MOVE 0 TO DS
+           ADD C5 TO DS
+           DISPLAY "DS " DS
+           MOVE 0 TO PS
+           ADD C5 TO PS
+           DISPLAY "PS " PS
+           MOVE 0 TO BS
+           ADD C5 TO BS
+           DISPLAY "BS " BS
+           MOVE 100 TO PS
+           SUBTRACT CMIN FROM PS
+           DISPLAY "PS-MIN " PS
+           MOVE 100 TO DS
+           SUBTRACT CMIN FROM DS
+           DISPLAY "DS-MIN " DS
+           MOVE 100 TO BS
+           SUBTRACT CMIN FROM BS
+           DISPLAY "BS-MIN " BS
+           STOP RUN.
+])
+
+AT_CHECK([${COBJ} prog.cbl])
+AT_CHECK([java prog], [0],
+[DS +234567890
+PS +234567890
+BS +234567890
+PS-MIN +147483748
+DS-MIN +147483748
+BS-MIN +147483748
+])
+
+AT_CLEANUP
+
+
+AT_SETUP([ADD/SUBTRACT integer fast path (-fnotrunc)])
+
+AT_DATA([prog.cbl], [
+       IDENTIFICATION DIVISION.
+       PROGRAM-ID. prog.
+       DATA DIVISION.
+       WORKING-STORAGE SECTION.
+       01 DS   PIC S9(4).
+       01 DV   PIC S9(4)V99.
+       01 PS   PIC S9(5) COMP-3.
+       01 PL   PIC S9(12) COMP-3.
+       01 N3   PIC S9(4) COMP VALUE 3.
+       PROCEDURE DIVISION.
+           MOVE 10 TO DS
+           SUBTRACT 1 FROM DS
+           DISPLAY "DS " DS
+           MOVE 10 TO DS
+           SUBTRACT N3 FROM DS
+           DISPLAY "DS-FLD " DS
+           MOVE 10 TO DV
+           SUBTRACT 1 FROM DV
+           DISPLAY "DV " DV
+           MOVE 10 TO PS
+           SUBTRACT 1 FROM PS
+           DISPLAY "PS " PS
+           MOVE 10 TO PL
+           SUBTRACT 1 FROM PL
+           DISPLAY "PL " PL
+           STOP RUN.
+])
+
+AT_CHECK([${COBJ} -fnotrunc prog.cbl])
+AT_CHECK([java prog], [0],
+[DS +0009
+DS-FLD +0007
+DV +0009.00
+PS +00009
+PL +000000000009
+])
+
+AT_CLEANUP

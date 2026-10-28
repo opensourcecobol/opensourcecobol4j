@@ -309,6 +309,7 @@ misc_DEPENDENCIES = \
 	misc.src/java-interface.at \
 	misc.src/comp3-int.at \
 	misc.src/env.at \
+	misc.src/arith-int-fast-path.at \
 	misc.src/exit-perform.at \
 	misc.src/comp-overflow.at \
 	misc.src/compare-national-diff-size.at \

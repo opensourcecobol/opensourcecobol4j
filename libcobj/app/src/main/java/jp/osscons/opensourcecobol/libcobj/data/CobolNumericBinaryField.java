@@ -22,7 +22,9 @@ import java.math.BigDecimal;
 import java.nio.ByteBuffer;
 import jp.osscons.opensourcecobol.libcobj.common.CobolConstant;
 import jp.osscons.opensourcecobol.libcobj.common.CobolModule;
+import jp.osscons.opensourcecobol.libcobj.exceptions.CobolExceptionId;
 import jp.osscons.opensourcecobol.libcobj.exceptions.CobolRuntimeException;
+import jp.osscons.opensourcecobol.libcobj.exceptions.CobolStopRunException;
 
 /** PIC 文字列が9(5) COMPなどの2進数の変数を表現するクラス. */
 public class CobolNumericBinaryField extends AbstractCobolField {
@@ -73,6 +75,59 @@ public class CobolNumericBinaryField extends AbstractCobolField {
         } else {
             storage.set((long) n);
         }
+    }
+
+    @Override
+    public int addIntTrunc(int n) throws CobolStopRunException {
+        return this.canAddLongTrunc() ? this.addLongTrunc(n) : super.addIntTrunc(n);
+    }
+
+    @Override
+    public int subIntTrunc(int n) throws CobolStopRunException {
+        return this.canAddLongTrunc() ? this.addLongTrunc(-(long) n) : super.subIntTrunc(n);
+    }
+
+    /** addLongTruncによる高速パスが使えるかどうかを判定する */
+    private boolean canAddLongTrunc() {
+        CobolFieldAttribute attr = this.getAttribute();
+        int digits = attr.getDigits();
+        return attr.getScale() == 0 && digits > 0 && digits < CobolConstant.exp10LL.length;
+    }
+
+    /**
+     * 保持する2進数データにnを加算し,結果をPICTUREの桁数に収まるように切り捨てる. CobolDecimalを経由せずに同じ結果を得るための高速パスであり,
+     * CobolDecimal.getBinaryFieldにCOB_STORE_TRUNC_ON_OVERFLOWを指定した場合と同じ値を格納する
+     *
+     * @param n 加算する値
+     * @return 桁あふれが発生しなかった場合は0,発生した場合は対応する例外コード
+     */
+    private int addLongTrunc(long n) {
+        CobolFieldAttribute attr = this.getAttribute();
+        int digits = attr.getDigits();
+        if (n == 0) {
+            return 0;
+        }
+
+        long val = this.getBinaryValue() + n;
+        if (!attr.isFlagHaveSign() && val < 0) {
+            val = -val;
+        }
+
+        long limit = CobolConstant.exp10LL[digits];
+        boolean overflow = val <= -limit || val >= limit;
+        if (overflow) {
+            val %= limit;
+        }
+        if (val == 0) {
+            this.getDataStorage().fillBytes(0, this.getSize());
+        } else {
+            this.setBinaryValue(val);
+        }
+        if (overflow) {
+            CobolRuntimeException.setException(CobolExceptionId.COB_EC_SIZE_OVERFLOW);
+            return CobolRuntimeException.code;
+        }
+        return 0;
     }
 
     @Override
