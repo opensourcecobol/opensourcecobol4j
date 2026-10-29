@@ -20,7 +20,10 @@ package jp.osscons.opensourcecobol.libcobj.file;
 
 import jp.osscons.opensourcecobol.libcobj.data.AbstractCobolField;
 
-/** TODO: 準備中 */
+/**
+ * COBOLのLINAGE句に関する情報を保持するクラス.
+ * 帳票の1ページの本体行数,フッタ・上下余白の行数,およびLINAGE-COUNTERの状態を保持する.
+ */
 public class Linage {
     private AbstractCobolField linage;
     private AbstractCobolField linageCtr;
@@ -33,162 +36,162 @@ public class Linage {
     private int linBot;
 
     /**
-     * TODO: 準備中
+     * 1ページの本体行数(LINAGE句のLINES)を表すCOBOLデータ項目を取得する.
      *
-     * @return TODO: 準備中
+     * @return 1ページの本体行数を表すCOBOLデータ項目
      */
     AbstractCobolField getLinage() {
         return linage;
     }
 
     /**
-     * TODO: 準備中
+     * 1ページの本体行数(LINAGE句のLINES)を表すCOBOLデータ項目を設定する.
      *
-     * @param linage TODO: 準備中
+     * @param linage 1ページの本体行数を表すCOBOLデータ項目
      */
     public void setLinage(AbstractCobolField linage) {
         this.linage = linage;
     }
 
     /**
-     * TODO: 準備中
+     * 現在のページ内行位置を表すLINAGE-COUNTERのCOBOLデータ項目を取得する.
      *
-     * @return TODO: 準備中
+     * @return LINAGE-COUNTERを表すCOBOLデータ項目
      */
     AbstractCobolField getLinageCtr() {
         return linageCtr;
     }
 
     /**
-     * TODO: 準備中
+     * 現在のページ内行位置を表すLINAGE-COUNTERのCOBOLデータ項目を設定する.
      *
-     * @param linageCtr TODO: 準備中
+     * @param linageCtr LINAGE-COUNTERを表すCOBOLデータ項目
      */
     public void setLinageCtr(AbstractCobolField linageCtr) {
         this.linageCtr = linageCtr;
     }
 
     /**
-     * TODO: 準備中
+     * フッタ開始行(FOOTING AT)を表すCOBOLデータ項目を取得する.
      *
-     * @return TODO: 準備中
+     * @return フッタ開始行を表すCOBOLデータ項目
      */
     AbstractCobolField getLatfoot() {
         return latfoot;
     }
 
     /**
-     * TODO: 準備中
+     * フッタ開始行(FOOTING AT)を表すCOBOLデータ項目を設定する.
      *
-     * @param latfoot TODO: 準備中
+     * @param latfoot フッタ開始行を表すCOBOLデータ項目
      */
     public void setLatfoot(AbstractCobolField latfoot) {
         this.latfoot = latfoot;
     }
 
     /**
-     * TODO: 準備中
+     * ページ上部の余白行数(LINES AT TOP)を表すCOBOLデータ項目を取得する.
      *
-     * @return TODO: 準備中
+     * @return ページ上部の余白行数を表すCOBOLデータ項目
      */
     AbstractCobolField getLattop() {
         return lattop;
     }
 
     /**
-     * TODO: 準備中
+     * ページ上部の余白行数(LINES AT TOP)を表すCOBOLデータ項目を設定する.
      *
-     * @param lattop TODO: 準備中
+     * @param lattop ページ上部の余白行数を表すCOBOLデータ項目
      */
     public void setLattop(AbstractCobolField lattop) {
         this.lattop = lattop;
     }
 
     /**
-     * TODO: 準備中
+     * ページ下部の余白行数(LINES AT BOTTOM)を表すCOBOLデータ項目を取得する.
      *
-     * @return TODO: 準備中
+     * @return ページ下部の余白行数を表すCOBOLデータ項目
      */
     AbstractCobolField getLatbot() {
         return latbot;
     }
 
     /**
-     * TODO: 準備中
+     * ページ下部の余白行数(LINES AT BOTTOM)を表すCOBOLデータ項目を設定する.
      *
-     * @param latbot TODO: 準備中
+     * @param latbot ページ下部の余白行数を表すCOBOLデータ項目
      */
     public void setLatbot(AbstractCobolField latbot) {
         this.latbot = latbot;
     }
 
     /**
-     * TODO: 準備中
+     * 1ページの本体行数の現在値(整数)を取得する.
      *
-     * @return TODO: 準備中
+     * @return 1ページの本体行数
      */
     int getLinLines() {
         return linLines;
     }
 
     /**
-     * TODO: 準備中
+     * 1ページの本体行数の現在値(整数)を設定する.
      *
-     * @param linLines TODO: 準備中
+     * @param linLines 1ページの本体行数
      */
     public void setLinLines(int linLines) {
         this.linLines = linLines;
     }
 
     /**
-     * TODO: 準備中
+     * フッタ開始行の現在値(整数)を取得する.
      *
-     * @return TODO: 準備中
+     * @return フッタ開始行
      */
     int getLinFoot() {
         return linFoot;
     }
 
     /**
-     * TODO: 準備中
+     * フッタ開始行の現在値(整数)を設定する.
      *
-     * @param linFoot TODO: 準備中
+     * @param linFoot フッタ開始行
      */
     public void setLinFoot(int linFoot) {
         this.linFoot = linFoot;
     }
 
     /**
-     * TODO: 準備中
+     * ページ上部の余白行数の現在値(整数)を取得する.
      *
-     * @return TODO: 準備中
+     * @return ページ上部の余白行数
      */
     int getLinTop() {
         return linTop;
     }
 
     /**
-     * TODO: 準備中
+     * ページ上部の余白行数の現在値(整数)を設定する.
      *
-     * @param linTop TODO: 準備中
+     * @param linTop ページ上部の余白行数
      */
     public void setLinTop(int linTop) {
         this.linTop = linTop;
     }
 
     /**
-     * TODO: 準備中
+     * ページ下部の余白行数の現在値(整数)を取得する.
      *
-     * @return TODO: 準備中
+     * @return ページ下部の余白行数
      */
     int getLinBot() {
         return linBot;
     }
 
     /**
-     * TODO: 準備中
+     * ページ下部の余白行数の現在値(整数)を設定する.
      *
-     * @param linBot TODO: 準備中
+     * @param linBot ページ下部の余白行数
      */
     public void setLinBot(int linBot) {
         this.linBot = linBot;
