@@ -367,11 +367,17 @@ char *cb_encode_program_id(const char *name) {
   unsigned char *p;
   const unsigned char *s;
   unsigned char buff[COB_SMALL_BUFF];
+  unsigned char *buff_end = buff + COB_SMALL_BUFF - 1;
 
   p = buff;
   s = (const unsigned char *)name;
   /* encode the initial digit */
   if (isdigit(*s)) {
+    if (p + 4 >= buff_end) {
+      cb_error("PROGRAM-ID '%s' too long to encode", name);
+      *p = 0;
+      return strdup((char *)buff);
+    }
     p += sprintf((char *)p, "_%02X", *s++);
   }
   /* encode invalid letters */
@@ -379,29 +385,57 @@ char *cb_encode_program_id(const char *name) {
   int n, i;
 
   for (; *s; s++) {
+    if (p + 1 >= buff_end) {
+      cb_error("PROGRAM-ID '%s' too long to encode", name);
+      break;
+    }
     if (isalnum(*s) || *s == '_') {
       *p++ = *s;
     } else if (*s == '-') {
+      if (p + 2 >= buff_end) {
+        cb_error("PROGRAM-ID '%s' too long to encode", name);
+        break;
+      }
       *p++ = '_';
       *p++ = '_';
     } else if ((n = COB_U8BYTE_1(*s))) {
+      if (p + 1 + n * 2 >= buff_end) {
+        cb_error("PROGRAM-ID '%s' too long to encode", name);
+        break;
+      }
       p += sprintf((char *)p, "_");
       for (i = 0; i < n; i++) {
         p += sprintf((char *)p, "%02X", s[i]);
       }
       s += n - 1;
     } else {
+      if (p + 3 >= buff_end) {
+        cb_error("PROGRAM-ID '%s' too long to encode", name);
+        break;
+      }
       p += sprintf((char *)p, "_%02X", *s);
     }
   }
 #else /*!I18N_UTF8*/
   for (; *s; s++) {
+    if (p + 1 >= buff_end) {
+      cb_error("PROGRAM-ID '%s' too long to encode", name);
+      break;
+    }
     if (isalnum(*s) || *s == '_') {
       *p++ = *s;
     } else if (*s == '-') {
+      if (p + 2 >= buff_end) {
+        cb_error("PROGRAM-ID '%s' too long to encode", name);
+        break;
+      }
       *p++ = '_';
       *p++ = '_';
     } else {
+      if (p + 3 >= buff_end) {
+        cb_error("PROGRAM-ID '%s' too long to encode", name);
+        break;
+      }
       p += sprintf((char *)p, "_%02X", *s);
     }
   }
