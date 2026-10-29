@@ -987,6 +987,12 @@ public class CobolFile {
             file_open_name = this.assign.fieldToString();
         }
 
+        /* Reject file paths containing null bytes to prevent null byte injection */
+        if (file_open_name.contains("\0")) {
+            saveStatus(COB_STATUS_30_PERMANENT_ERROR, fnstatus);
+            return;
+        }
+
         byte[] src;
         byte[] dst;
         boolean simple;
