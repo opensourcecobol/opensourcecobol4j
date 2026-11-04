@@ -133,9 +133,9 @@ function run_test() {
 
     rm -f playground-record-lock-* f.dat pro1.log prog2.log
 
-    java -Xlog:perf+memops=off ${PROGRAM_ID_TABLE1@<:@$OPERATION1@:>@} > prog1.log &
+    java ${PROGRAM_ID_TABLE1@<:@$OPERATION1@:>@} > prog1.log &
     PID1=$!
-    java -Xlog:perf+memops=off ${PROGRAM_ID_TABLE2@<:@$OPERATION2@:>@} > prog2.log &
+    java ${PROGRAM_ID_TABLE2@<:@$OPERATION2@:>@} > prog2.log &
     PID2=$!
 
     wait $PID1 $PID2
@@ -435,9 +435,9 @@ AT_DATA([p2.cbl], [
 ])
 
 AT_DATA([run.sh], [
-    java -Xlog:perf+memops=off p1 > p1.log &
+    java p1 > p1.log &
     PID1=$!
-    java -Xlog:perf+memops=off p2 > p2.log &
+    java p2 > p2.log &
     PID2=$!
     wait $PID1 $PID2
 ])
@@ -570,9 +570,9 @@ AT_DATA([p2.cbl], [
 ])
 
 AT_DATA([run.sh], [
-    java -Xlog:perf+memops=off p1 > p1.log &
+    java p1 > p1.log &
     PID1=$!
-    java -Xlog:perf+memops=off p2 > p2.log &
+    java p2 > p2.log &
     PID2=$!
     wait $PID1 $PID2
 ])
