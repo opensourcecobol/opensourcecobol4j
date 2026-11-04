@@ -75,8 +75,11 @@ jobs:
       
       - name: Run tests ${{ inputs.test-name }}
         working-directory: tests/
-        run:
-          ./${{ inputs.test-name }}
+        run: |
+          # Autotest gives every test group its own working directory, so the
+          # groups do not interfere with each other and the suites can run
+          # their groups in parallel. The runners have 4 cores.
+          ./${{ inputs.test-name }} -j4
       
       - name: Upload log files if tests fail
         if: failure()
