@@ -756,11 +756,20 @@ public abstract class AbstractCobolEsqlBackend implements CobolEsqlBackendInterf
      * カーソルを宣言して {@code cursors} に登録する（パラメータ有無の共通処理）。{@code params} が
      * {@code null} の場合はパラメータなしの DECLARE と同じ（nParams=0・params 未バインド）。
      */
+    /** Valid SQL identifier pattern: Unicode letter or underscore, then Unicode alphanumerics/underscores, max 63 chars. */
+    private static final java.util.regex.Pattern VALID_CURSOR_NAME =
+            java.util.regex.Pattern.compile("^[\\p{L}_][\\p{L}\\p{N}_]{0,62}$");
+
     private void declareCursorInternal(
             CobolDataStorage sqlca, String cursorName, String query, AbstractCobolField[] params) {
         try {
             if (cursorName == null || cursorName.isEmpty() || query == null || query.isEmpty()) {
                 SqlCA.setError(sqlca, SqlCA.ECPG_EMPTY, "YE002", "Empty cursor name or query");
+                return;
+            }
+            if (!VALID_CURSOR_NAME.matcher(cursorName).matches()) {
+                SqlCA.setError(
+                        sqlca, SqlCA.ECPG_PGSQL, "42602", "Invalid cursor name: " + cursorName);
                 return;
             }
             if (LOG.isDebugEnabled()) {
