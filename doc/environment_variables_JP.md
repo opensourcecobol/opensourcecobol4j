@@ -17,6 +17,9 @@ opensource COBOL 4J で使用される環境変数について説明します。
 - **形式**: `YYYY/MM/DD`
 - **例**: `COB_DATE=2024/01/15`
 - **用途**: `CURRENT-DATE` などの組み込み関数が返す日付を固定できます。テストや再現性のある実行に便利です。
+- **注意**: 固定されるのは日付のみです。`FUNCTION CURRENT-DATE` が返す時刻部分とGMTオフセットは評価のたびにシステムクロックから取得されるため、プログラムの実行中も進み続けます。したがってGMTオフセットは、固定した日付の当時のものではなく現在有効なものになります。たとえば `TZ=Asia/Tokyo` かつ `COB_DATE=1880/01/01` の場合、`FUNCTION CURRENT-DATE` が返すのは1880年当時の `+0918` ではなく `+0900` です。
+- **日付の正規化**: 指定した月に存在しない日は、opensource COBOL と同様に翌月へ繰り越されます。`COB_DATE=2026/02/30` は 2026/03/02 として扱われ、2026年は平年であるため `COB_DATE=2026/02/29` は 2026/03/01 として扱われます。`COB_DATE=2024/02/29` は実在する日付なのでそのまま使用されます。
+- **不正な値**: `YYYY/MM/DD` の形式に合致しない値、1〜12の範囲外の月、1〜31の範囲外の日、および年 `0000` を指定した場合は、標準エラー出力に `Warning: COB_DATE format invalid, ignored.` を出力し、実際の日付を使用します。`COB_DATE=2026/13/01`, `COB_DATE=2026/99/99`, `COB_DATE=2026/00/00` はいずれもこの扱いになります。
 
 **サンプルプログラム**
 
@@ -59,6 +62,17 @@ CURRENT-DATE:     20260227
 $ COB_DATE=1970/01/02 java cobdate
 ACCEPT FROM DATE: 19700102
 CURRENT-DATE:     19700102
+
+# 存在しない日は翌月に繰り越される
+$ COB_DATE=2026/02/30 java cobdate
+ACCEPT FROM DATE: 20260302
+CURRENT-DATE:     20260302
+
+# 範囲外の値は警告を出力して無視される（今日の日付が表示される）
+$ COB_DATE=2026/13/01 java cobdate
+Warning: COB_DATE format invalid, ignored.
+ACCEPT FROM DATE: 20260227
+CURRENT-DATE:     20260227
 ```
 
 #### COB_VERBOSE
