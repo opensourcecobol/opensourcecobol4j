@@ -77,6 +77,11 @@ AT_DATA([prog.cob], [
 
 AT_CHECK([${COMPILE_JP_COMPAT} prog.cob], [1], [],
 [prog.cob:10: Error: syntax error
+    8 |        02
+    9 |        03.
+   10 >        01 X-02 PIC 9
+   11 |        01 X-03 PIC 9
+   12 |           88 V-03 VALUES 01 02 03
 ])
 AT_CLEANUP
 

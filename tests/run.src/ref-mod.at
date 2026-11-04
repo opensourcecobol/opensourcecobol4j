@@ -89,9 +89,6 @@ AT_CLEANUP
 
 AT_SETUP([Dynamic reference modification])
 
-dnl TODO: cobj.exe segfaults when compiling this test on Windows.
-AT_SKIP_IF([test -n "$IS_WINDOWS"])
-
 AT_DATA([prog.cob], [
        IDENTIFICATION   DIVISION.
        PROGRAM-ID.      prog.
@@ -143,9 +140,29 @@ AT_DATA([prog.cob], [
 
 AT_CHECK([${COMPILE_ONLY} prog.cob], [1], ,
 [prog.cob:8: Error: Offset of 'X' out of bounds: 0
+    6 |        01 X             PIC X(4).
+    7 |        PROCEDURE        DIVISION.
+    8 >            DISPLAY X(0:1)
+    9 |            END-DISPLAY.
+   10 |            DISPLAY X(5:1)
 prog.cob:10: Error: Offset of 'X' out of bounds: 5
+    8 |            DISPLAY X(0:1)
+    9 |            END-DISPLAY.
+   10 >            DISPLAY X(5:1)
+   11 |            END-DISPLAY.
+   12 |            DISPLAY X(1:0)
 prog.cob:12: Error: Length of 'X' out of bounds: 0
+   10 |            DISPLAY X(5:1)
+   11 |            END-DISPLAY.
+   12 >            DISPLAY X(1:0)
+   13 |            END-DISPLAY.
+   14 |            DISPLAY X(1:5)
 prog.cob:14: Error: Length of 'X' out of bounds: 5
+   12 |            DISPLAY X(1:0)
+   13 |            END-DISPLAY.
+   14 >            DISPLAY X(1:5)
+   15 |            END-DISPLAY.
+   16 |            STOP RUN.
 ])
 
 AT_CLEANUP
@@ -243,9 +260,6 @@ AT_CLEANUP
 
 AT_SETUP([Offset out of bounds in MOVE (1)])
 
-dnl TODO: cobj.exe segfaults when compiling this test on Windows.
-AT_SKIP_IF([test -n "$IS_WINDOWS"])
-
 AT_DATA([prog.cob], [
        IDENTIFICATION   DIVISION.
        PROGRAM-ID.      prog.
@@ -268,9 +282,6 @@ AT_CLEANUP
 
 
 AT_SETUP([Offset out of bounds in MOVE (2)])
-
-dnl TODO: cobj.exe segfaults when compiling this test on Windows.
-AT_SKIP_IF([test -n "$IS_WINDOWS"])
 
 AT_DATA([prog.cob], [
        IDENTIFICATION   DIVISION.

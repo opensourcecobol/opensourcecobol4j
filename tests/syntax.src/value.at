@@ -58,9 +58,29 @@ AT_DATA([prog.cob], [
 
 AT_CHECK([${COMPILE_ONLY} prog.cob], [1], ,
 [prog.cob:6: Error: Invalid VALUE clause
+    4 |        DATA             DIVISION.
+    5 |        WORKING-STORAGE  SECTION.
+    6 >        01 X-SPACE       PIC 999 VALUE SPACE.
+    7 |        01 X-ABC         PIC 999 VALUE "abc".
+    8 |        01 X-12-3        PIC 999 VALUE 12.3.
 prog.cob:7: Warning: Numeric value is expected
+    5 |        WORKING-STORAGE  SECTION.
+    6 |        01 X-SPACE       PIC 999 VALUE SPACE.
+    7 >        01 X-ABC         PIC 999 VALUE "abc".
+    8 |        01 X-12-3        PIC 999 VALUE 12.3.
+    9 |        01 X-123         PIC 999 VALUE 123.
 prog.cob:8: Warning: Value size exceeds data size
+    6 |        01 X-SPACE       PIC 999 VALUE SPACE.
+    7 |        01 X-ABC         PIC 999 VALUE "abc".
+    8 >        01 X-12-3        PIC 999 VALUE 12.3.
+    9 |        01 X-123         PIC 999 VALUE 123.
+   10 |        01 X-1234        PIC 999 VALUE 1234.
 prog.cob:10: Warning: Value size exceeds data size
+    8 |        01 X-12-3        PIC 999 VALUE 12.3.
+    9 |        01 X-123         PIC 999 VALUE 123.
+   10 >        01 X-1234        PIC 999 VALUE 1234.
+   11 |        PROCEDURE        DIVISION.
+   12 |            STOP RUN.
 ])
 
 AT_CLEANUP
@@ -82,7 +102,17 @@ AT_DATA([prog.cob], [
 
 AT_CHECK([${COMPILE_ONLY} prog.cob], [0], ,
 [prog.cob:7: Warning: Value size exceeds data size
+    5 |        WORKING-STORAGE  SECTION.
+    6 |        01 X-12          PIC 99V9 VALUE 12.
+    7 >        01 X-123         PIC 99V9 VALUE 123.
+    8 |        01 X-12-3        PIC 99V9 VALUE 12.3.
+    9 |        01 X-12-34       PIC 99V9 VALUE 12.34.
 prog.cob:9: Warning: Value size exceeds data size
+    7 |        01 X-123         PIC 99V9 VALUE 123.
+    8 |        01 X-12-3        PIC 99V9 VALUE 12.3.
+    9 >        01 X-12-34       PIC 99V9 VALUE 12.34.
+   10 |        PROCEDURE        DIVISION.
+   11 |            STOP RUN.
 ])
 
 AT_CLEANUP
@@ -108,9 +138,29 @@ AT_DATA([prog.cob], [
 
 AT_CHECK([${COMPILE_ONLY} prog.cob], [0], ,
 [prog.cob:8: Warning: Value does not fit the picture string
+    6 |        01 X-99PP-0      PIC 99PP VALUE 0.
+    7 |        01 X-99PP-1200   PIC 99PP VALUE 1200.
+    8 >        01 X-99PP-1230   PIC 99PP VALUE 1230.
+    9 |        01 X-99PP-10000  PIC 99PP VALUE 10000.
+   10 |        01 X-PP99--0     PIC PP99 VALUE .0.
 prog.cob:9: Warning: Value size exceeds data size
+    7 |        01 X-99PP-1200   PIC 99PP VALUE 1200.
+    8 |        01 X-99PP-1230   PIC 99PP VALUE 1230.
+    9 >        01 X-99PP-10000  PIC 99PP VALUE 10000.
+   10 |        01 X-PP99--0     PIC PP99 VALUE .0.
+   11 |        01 X-PP99--0012  PIC PP99 VALUE .0012.
 prog.cob:12: Warning: Value does not fit the picture string
+   10 |        01 X-PP99--0     PIC PP99 VALUE .0.
+   11 |        01 X-PP99--0012  PIC PP99 VALUE .0012.
+   12 >        01 X-PP99--0123  PIC PP99 VALUE .0123.
+   13 |        01 X-PP99--00001 PIC PP99 VALUE .00001.
+   14 |        PROCEDURE        DIVISION.
 prog.cob:13: Warning: Value size exceeds data size
+   11 |        01 X-PP99--0012  PIC PP99 VALUE .0012.
+   12 |        01 X-PP99--0123  PIC PP99 VALUE .0123.
+   13 >        01 X-PP99--00001 PIC PP99 VALUE .00001.
+   14 |        PROCEDURE        DIVISION.
+   15 |            STOP RUN.
 ])
 
 AT_CLEANUP
@@ -135,7 +185,17 @@ AT_DATA([prog.cob], [
 
 AT_CHECK([${COMPILE_ONLY} prog.cob], [1], ,
 [prog.cob:6: Error: Data item not signed
+    4 |        DATA             DIVISION.
+    5 |        WORKING-STORAGE  SECTION.
+    6 >        01 X-9P          PIC 9  VALUE +1.
+    7 |        01 X-9N          PIC 9  VALUE -1.
+    8 |        01 X-S9P         PIC S9 VALUE +1.
 prog.cob:7: Error: Data item not signed
+    5 |        WORKING-STORAGE  SECTION.
+    6 |        01 X-9P          PIC 9  VALUE +1.
+    7 >        01 X-9N          PIC 9  VALUE -1.
+    8 |        01 X-S9P         PIC S9 VALUE +1.
+    9 |        01 X-S9N         PIC S9 VALUE -1.
 ])
 
 AT_CLEANUP
@@ -161,9 +221,29 @@ AT_DATA([prog.cob], [
 
 AT_CHECK([${COMPILE_ONLY} prog.cob], [1], ,
 [prog.cob:6: Warning: Alphanumeric value is expected
+    4 |        DATA             DIVISION.
+    5 |        WORKING-STORAGE  SECTION.
+    6 >        01 X-123         PIC AAA VALUE 123.
+    7 |        01 X-ZERO        PIC AAA VALUE ZERO.
+    8 |        01 X-AB1         PIC AAA VALUE "ab1".
 prog.cob:7: Error: Invalid VALUE clause
+    5 |        WORKING-STORAGE  SECTION.
+    6 |        01 X-123         PIC AAA VALUE 123.
+    7 >        01 X-ZERO        PIC AAA VALUE ZERO.
+    8 |        01 X-AB1         PIC AAA VALUE "ab1".
+    9 |        01 X-ABC         PIC AAA VALUE "abc".
 prog.cob:8: Warning: Value does not fit the picture string
+    6 |        01 X-123         PIC AAA VALUE 123.
+    7 |        01 X-ZERO        PIC AAA VALUE ZERO.
+    8 >        01 X-AB1         PIC AAA VALUE "ab1".
+    9 |        01 X-ABC         PIC AAA VALUE "abc".
+   10 |        01 X-ABCD        PIC AAA VALUE "abcd".
 prog.cob:10: Warning: Value size exceeds data size
+    8 |        01 X-AB1         PIC AAA VALUE "ab1".
+    9 |        01 X-ABC         PIC AAA VALUE "abc".
+   10 >        01 X-ABCD        PIC AAA VALUE "abcd".
+   11 |        PROCEDURE        DIVISION.
+   12 |            STOP RUN.
 ])
 
 AT_CLEANUP
@@ -184,7 +264,17 @@ AT_DATA([prog.cob], [
 
 AT_CHECK([${COMPILE_ONLY} prog.cob], [0], ,
 [prog.cob:6: Warning: Alphanumeric value is expected
+    4 |        DATA             DIVISION.
+    5 |        WORKING-STORAGE  SECTION.
+    6 >        01 X-123         PIC XXX VALUE 123.
+    7 |        01 X-ABC         PIC XXX VALUE "abc".
+    8 |        01 X-ABCD        PIC XXX VALUE "abcd".
 prog.cob:8: Warning: Value size exceeds data size
+    6 |        01 X-123         PIC XXX VALUE 123.
+    7 |        01 X-ABC         PIC XXX VALUE "abc".
+    8 >        01 X-ABCD        PIC XXX VALUE "abcd".
+    9 |        PROCEDURE        DIVISION.
+   10 |            STOP RUN.
 ])
 
 AT_CLEANUP
@@ -208,7 +298,17 @@ AT_DATA([prog.cob], [
 
 AT_CHECK([${COMPILE_ONLY} prog.cob], [0], ,
 [prog.cob:6: Warning: Alphanumeric value is expected
+    4 |        DATA             DIVISION.
+    5 |        WORKING-STORAGE  SECTION.
+    6 >        01 G-1           VALUE 123.
+    7 |          02 X           PIC XXX.
+    8 |        01 G-2           VALUE "abc".
 prog.cob:10: Warning: Value size exceeds data size
+    8 |        01 G-2           VALUE "abc".
+    9 |          02 X           PIC XXX.
+   10 >        01 G-3           VALUE "abcd".
+   11 |          02 X           PIC XXX.
+   12 |        PROCEDURE        DIVISION.
 ])
 
 AT_CLEANUP
@@ -241,7 +341,17 @@ AT_DATA([prog.cob], [
 
 AT_CHECK([${COMPILE_ONLY} prog.cob], [0], ,
 [prog.cob:7: Warning: Alphanumeric value is expected
+    5 |        WORKING-STORAGE  SECTION.
+    6 |        01 X-SPACE       PIC **99.00 VALUE SPACE.
+    7 >        01 X-123         PIC **99.00 VALUE 123.
+    8 |        01 X-ABC         PIC **99.00 VALUE "abc".
+    9 |        01 X-MATCH       PIC **99.00 VALUE "*123.00".
 prog.cob:10: Warning: Value size exceeds data size
+    8 |        01 X-ABC         PIC **99.00 VALUE "abc".
+    9 |        01 X-MATCH       PIC **99.00 VALUE "*123.00".
+   10 >        01 X-OVERFLOW    PIC **99.00 VALUE "*123.000".
+   11 |        PROCEDURE        DIVISION.
+   12 |            STOP RUN.
 ])
 
 AT_CLEANUP
@@ -263,7 +373,17 @@ AT_DATA([prog.cob], [
 
 AT_CHECK([${COMPILE_ONLY} prog.cob], [0], ,
 [prog.cob:6: Warning: Alphanumeric value is expected
+    4 |        DATA             DIVISION.
+    5 |        WORKING-STORAGE  SECTION.
+    6 >        01 X-123         PIC BXX VALUE 123.
+    7 |        01 X-ABC         PIC BXX VALUE "abc".
+    8 |        01 X-MATCH       PIC BXX VALUE " ab".
 prog.cob:9: Warning: Value size exceeds data size
+    7 |        01 X-ABC         PIC BXX VALUE "abc".
+    8 |        01 X-MATCH       PIC BXX VALUE " ab".
+    9 >        01 X-OVERFLOW    PIC BXX VALUE " abc".
+   10 |        PROCEDURE        DIVISION.
+   11 |            STOP RUN.
 ])
 
 AT_CLEANUP

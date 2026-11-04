@@ -47,7 +47,17 @@ AT_DATA([prog.cob], [
 
 AT_CHECK([${COMPILE_ONLY} prog.cob], [1], ,
 [prog.cob:9: Error: 'G' cannot be subscripted
+    7 |          02 X           PIC X.
+    8 |        PROCEDURE        DIVISION.
+    9 >            DISPLAY G(1)
+   10 |            END-DISPLAY.
+   11 |            DISPLAY X(1)
 prog.cob:11: Error: 'X' cannot be subscripted
+    9 |            DISPLAY G(1)
+   10 |            END-DISPLAY.
+   11 >            DISPLAY X(1)
+   12 |            END-DISPLAY.
+   13 |            STOP RUN.
 ])
 
 AT_CLEANUP
@@ -83,9 +93,29 @@ AT_DATA([prog.cob], [
 
 AT_CHECK([${COMPILE_ONLY} prog.cob], [1], ,
 [prog.cob:10: Error: 'X' requires 1 subscript
+    8 |            03 Y         PIC X OCCURS 3.
+    9 |        PROCEDURE        DIVISION.
+   10 >            DISPLAY X
+   11 |            END-DISPLAY.
+   12 |            DISPLAY X(1)
 prog.cob:14: Error: 'X' requires 1 subscript
+   12 |            DISPLAY X(1)
+   13 |            END-DISPLAY.
+   14 >            DISPLAY X(1, 2)
+   15 |            END-DISPLAY.
+   16 |            DISPLAY Y(1)
 prog.cob:16: Error: 'Y' requires 2 subscripts
+   14 |            DISPLAY X(1, 2)
+   15 |            END-DISPLAY.
+   16 >            DISPLAY Y(1)
+   17 |            END-DISPLAY.
+   18 |            DISPLAY Y(1, 2)
 prog.cob:20: Error: 'Y' requires 2 subscripts
+   18 |            DISPLAY Y(1, 2)
+   19 |            END-DISPLAY.
+   20 >            DISPLAY Y(1, 2, 3)
+   21 |            END-DISPLAY.
+   22 |            STOP RUN.
 ])
 
 AT_CLEANUP

@@ -64,6 +64,11 @@ AT_DATA([prog2.cbl], [
 
 AT_CHECK([${COBJ} -variable prog2.cbl], [1], [],
 [prog2.cbl:5: Error: Invalid indicator 'P' at column 7
+    3 | 000002 PROGRAM-ID.                 prog2.
+    4 | 000003 DATA                        DIVISION.
+    5 > 000004 WORKING-STORAGE             SECTION.
+    6 | 000005PROCEDURE                   DIVISION.
+    7 | 000006     STOP RUN.
 ])
 
 AT_DATA([prog3.cbl], [

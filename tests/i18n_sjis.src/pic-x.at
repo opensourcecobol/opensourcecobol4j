@@ -395,6 +395,11 @@ AT_DATA([prog.cob], [
 
 AT_CHECK([${COBJ} prog.cob], [0], [],
 [prog.cob:12: Warning: F0 and 'Å¢' and FF have not same national type!
+   10 |        PROCEDURE        DIVISION.
+   11 |            STRING F0 F1 F2 DELIMITED BY "Å¢"
+   12 >              INTO FF.
+   13 |            DISPLAY FF WITH NO ADVANCING.
+   14 |            STOP RUN.
 prog.cob:12: Warning: F1 and 'Å¢' and FF have not same national type!
 prog.cob:12: Warning: F2 and 'Å¢' and FF have not same national type!
 ])

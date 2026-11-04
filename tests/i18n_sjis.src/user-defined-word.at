@@ -137,7 +137,17 @@ AT_DATA([prog.cob], [
 
 AT_CHECK([${COMPILE} prog.cob], [1], [],
 [prog.cob:7: Error: User defined name must be less than 32 characters
+    5 |        WORKING-STORAGE  SECTION.
+    6 |        PROCEDURE        DIVISION.
+    7 >        PERFORM sÇPÇQÇRÇSÇTÇUÇVÇWÇXÇO123456789012345678901.
+    8 |        PERFORM    ÇrÅ|èIóπ.
+    9 |        sÇPÇQÇRÇSÇTÇUÇVÇWÇXÇO123456789012345678901 SECTION.
 prog.cob:9: Error: User defined name must be less than 32 characters
+    7 |        PERFORM sÇPÇQÇRÇSÇTÇUÇVÇWÇXÇO123456789012345678901.
+    8 |        PERFORM    ÇrÅ|èIóπ.
+    9 >        sÇPÇQÇRÇSÇTÇUÇVÇWÇXÇO123456789012345678901 SECTION.
+   10 |            DISPLAY "Hello, " WITH NO ADVANCING.
+   11 |        ÇrÅ|èIóπ         SECTION.
 ])
 
 AT_CLEANUP
@@ -495,16 +505,68 @@ AT_DATA([prog.cob], [
 
 AT_CHECK([${COMPILE} -debug prog.cob], [1], [],
 [prog.cob:9: Error: 'NO-FLD' undefined
+    7 |           03 AçÄñ⁄ PIC X.
+    8 |        PROCEDURE        DIVISION.
+    9 > 001009     DISPLAY NO-FLD.
+   10 | 001010     DISPLAY NO-FLD IN G-GRP.
+   11 | 001011     DISPLAY NO-FLD IN NO-GRP.
 prog.cob:10: Error: 'NO-FLD' in 'G-GRP' undefined
+    8 |        PROCEDURE        DIVISION.
+    9 | 001009     DISPLAY NO-FLD.
+   10 > 001010     DISPLAY NO-FLD IN G-GRP.
+   11 | 001011     DISPLAY NO-FLD IN NO-GRP.
+   12 | 001012     DISPLAY NOçÄñ⁄.
 prog.cob:11: Error: 'NO-FLD' in 'NO-GRP' undefined
+    9 | 001009     DISPLAY NO-FLD.
+   10 | 001010     DISPLAY NO-FLD IN G-GRP.
+   11 > 001011     DISPLAY NO-FLD IN NO-GRP.
+   12 | 001012     DISPLAY NOçÄñ⁄.
+   13 | 001013     DISPLAY NOçÄñ⁄ IN GèWícçÄñ⁄.
 prog.cob:12: Error: 'NOçÄñ⁄' undefined
+   10 | 001010     DISPLAY NO-FLD IN G-GRP.
+   11 | 001011     DISPLAY NO-FLD IN NO-GRP.
+   12 > 001012     DISPLAY NOçÄñ⁄.
+   13 | 001013     DISPLAY NOçÄñ⁄ IN GèWícçÄñ⁄.
+   14 | 001014     DISPLAY NOçÄñ⁄ IN NOèWícçÄñ⁄.
 prog.cob:13: Error: 'NOçÄñ⁄' in 'GèWícçÄñ⁄' undefined
+   11 | 001011     DISPLAY NO-FLD IN NO-GRP.
+   12 | 001012     DISPLAY NOçÄñ⁄.
+   13 > 001013     DISPLAY NOçÄñ⁄ IN GèWícçÄñ⁄.
+   14 | 001014     DISPLAY NOçÄñ⁄ IN NOèWícçÄñ⁄.
+   15 | 001015     DISPLAY NO-FLD IN GèWícçÄñ⁄.
 prog.cob:14: Error: 'NOçÄñ⁄' in 'NOèWícçÄñ⁄' undefined
+   12 | 001012     DISPLAY NOçÄñ⁄.
+   13 | 001013     DISPLAY NOçÄñ⁄ IN GèWícçÄñ⁄.
+   14 > 001014     DISPLAY NOçÄñ⁄ IN NOèWícçÄñ⁄.
+   15 | 001015     DISPLAY NO-FLD IN GèWícçÄñ⁄.
+   16 | 001016     DISPLAY NO-FLD IN NOèWícçÄñ⁄.
 prog.cob:15: Error: 'NO-FLD' in 'GèWícçÄñ⁄' undefined
+   13 | 001013     DISPLAY NOçÄñ⁄ IN GèWícçÄñ⁄.
+   14 | 001014     DISPLAY NOçÄñ⁄ IN NOèWícçÄñ⁄.
+   15 > 001015     DISPLAY NO-FLD IN GèWícçÄñ⁄.
+   16 | 001016     DISPLAY NO-FLD IN NOèWícçÄñ⁄.
+   17 | 001017     DISPLAY NOçÄñ⁄ IN G-GRP.
 prog.cob:16: Error: 'NO-FLD' in 'NOèWícçÄñ⁄' undefined
+   14 | 001014     DISPLAY NOçÄñ⁄ IN NOèWícçÄñ⁄.
+   15 | 001015     DISPLAY NO-FLD IN GèWícçÄñ⁄.
+   16 > 001016     DISPLAY NO-FLD IN NOèWícçÄñ⁄.
+   17 | 001017     DISPLAY NOçÄñ⁄ IN G-GRP.
+   18 | 001018     DISPLAY NOçÄñ⁄ IN NO-GRP.
 prog.cob:17: Error: 'NOçÄñ⁄' in 'G-GRP' undefined
+   15 | 001015     DISPLAY NO-FLD IN GèWícçÄñ⁄.
+   16 | 001016     DISPLAY NO-FLD IN NOèWícçÄñ⁄.
+   17 > 001017     DISPLAY NOçÄñ⁄ IN G-GRP.
+   18 | 001018     DISPLAY NOçÄñ⁄ IN NO-GRP.
+   19 | 001019     DISPLAY NOçÄñ⁄ IN GèWícçÄñ⁄ IN NOèWícçÄñ⁄.
 prog.cob:18: Error: 'NOçÄñ⁄' in 'NO-GRP' undefined
+   16 | 001016     DISPLAY NO-FLD IN NOèWícçÄñ⁄.
+   17 | 001017     DISPLAY NOçÄñ⁄ IN G-GRP.
+   18 > 001018     DISPLAY NOçÄñ⁄ IN NO-GRP.
+   19 | 001019     DISPLAY NOçÄñ⁄ IN GèWícçÄñ⁄ IN NOèWícçÄñ⁄.
 prog.cob:19: Error: 'NOçÄñ⁄' in 'GèWícçÄñ⁄' in 'NOèWícçÄñ⁄' undefined
+   17 | 001017     DISPLAY NOçÄñ⁄ IN G-GRP.
+   18 | 001018     DISPLAY NOçÄñ⁄ IN NO-GRP.
+   19 > 001019     DISPLAY NOçÄñ⁄ IN GèWícçÄñ⁄ IN NOèWícçÄñ⁄.
 ])
 
 AT_CLEANUP
@@ -531,16 +593,70 @@ AT_DATA([prog.cob], [
 
 AT_CHECK([${COMPILE_ONLY} prog.cob], [1], [],
 [prog.cob:8: Warning: Redefinition of 'AçÄñ⁄'
+    6 |        01 AçÄñ⁄ PIC X.
+    7 |        01 G1èWíc.
+    8 >           03 AçÄñ⁄ PIC X.
+    9 |           03 BçÄñ⁄ PIC X.
+   10 |           03 G2èWíc.
 prog.cob:6: Warning: 'AçÄñ⁄' previously defined here
+    4 |        DATA             DIVISION.
+    5 |        WORKING-STORAGE  SECTION.
+    6 >        01 AçÄñ⁄ PIC X.
+    7 |        01 G1èWíc.
+    8 |           03 AçÄñ⁄ PIC X.
 prog.cob:11: Warning: Redefinition of 'AçÄñ⁄'
+    9 |           03 BçÄñ⁄ PIC X.
+   10 |           03 G2èWíc.
+   11 >              05 AçÄñ⁄ PIC X.
+   12 |              05 BçÄñ⁄ PIC X.
+   13 |        PROCEDURE        DIVISION.
 prog.cob:6: Warning: 'AçÄñ⁄' previously defined here
+    4 |        DATA             DIVISION.
+    5 |        WORKING-STORAGE  SECTION.
+    6 >        01 AçÄñ⁄ PIC X.
+    7 |        01 G1èWíc.
+    8 |           03 AçÄñ⁄ PIC X.
 prog.cob:14: Error: 'AçÄñ⁄' ambiguous; need qualification
+   12 |              05 BçÄñ⁄ PIC X.
+   13 |        PROCEDURE        DIVISION.
+   14 > 001014     DISPLAY AçÄñ⁄.
+   15 | 001015     DISPLAY BçÄñ⁄ IN G1èWíc.
+   16 |            GOBACK.
 prog.cob:6: Error: 'AçÄñ⁄' defined here
+    4 |        DATA             DIVISION.
+    5 |        WORKING-STORAGE  SECTION.
+    6 >        01 AçÄñ⁄ PIC X.
+    7 |        01 G1èWíc.
+    8 |           03 AçÄñ⁄ PIC X.
 prog.cob:8: Error: 'AçÄñ⁄' in 'G1èWíc' defined here
+    6 |        01 AçÄñ⁄ PIC X.
+    7 |        01 G1èWíc.
+    8 >           03 AçÄñ⁄ PIC X.
+    9 |           03 BçÄñ⁄ PIC X.
+   10 |           03 G2èWíc.
 prog.cob:11: Error: 'AçÄñ⁄' in 'G2èWíc' in 'G1èWíc' defined here
+    9 |           03 BçÄñ⁄ PIC X.
+   10 |           03 G2èWíc.
+   11 >              05 AçÄñ⁄ PIC X.
+   12 |              05 BçÄñ⁄ PIC X.
+   13 |        PROCEDURE        DIVISION.
 prog.cob:15: Error: 'BçÄñ⁄' in 'G1èWíc' ambiguous; need qualification
+   13 |        PROCEDURE        DIVISION.
+   14 | 001014     DISPLAY AçÄñ⁄.
+   15 > 001015     DISPLAY BçÄñ⁄ IN G1èWíc.
+   16 |            GOBACK.
 prog.cob:9: Error: 'BçÄñ⁄' in 'G1èWíc' defined here
+    7 |        01 G1èWíc.
+    8 |           03 AçÄñ⁄ PIC X.
+    9 >           03 BçÄñ⁄ PIC X.
+   10 |           03 G2èWíc.
+   11 |              05 AçÄñ⁄ PIC X.
 prog.cob:12: Error: 'BçÄñ⁄' in 'G2èWíc' in 'G1èWíc' defined here
+   10 |           03 G2èWíc.
+   11 |              05 AçÄñ⁄ PIC X.
+   12 >              05 BçÄñ⁄ PIC X.
+   13 |        PROCEDURE        DIVISION.
+   14 | 001014     DISPLAY AçÄñ⁄.
 ])
 
 AT_CLEANUP
@@ -564,11 +680,38 @@ AT_DATA([prog.cob], [
 
 AT_CHECK([${COMPILE_ONLY} prog.cob], [1], [],
 [prog.cob:7: Error: 'L1å©èoÇµ' ambiguous; need qualification
+    5 |        PROCEDURE        DIVISION.
+    6 | 001006   L0å©èoÇµ.
+    7 > 001007     GO TO L1å©èoÇµ.
+    8 | 001008     GO TO L2å©èoÇµ IN S1êﬂ.
+    9 | 001009   L1å©èoÇµ. GOBACK.
 prog.cob:9: Error: 'L1å©èoÇµ' in 'MAIN SECTION' defined here
+    7 | 001007     GO TO L1å©èoÇµ.
+    8 | 001008     GO TO L2å©èoÇµ IN S1êﬂ.
+    9 > 001009   L1å©èoÇµ. GOBACK.
+   10 | 001010   L1å©èoÇµ. GOBACK.
+   11 | 001011 S1êﬂ             SECTION.
 prog.cob:10: Error: 'L1å©èoÇµ' in 'MAIN SECTION' defined here
+    8 | 001008     GO TO L2å©èoÇµ IN S1êﬂ.
+    9 | 001009   L1å©èoÇµ. GOBACK.
+   10 > 001010   L1å©èoÇµ. GOBACK.
+   11 | 001011 S1êﬂ             SECTION.
+   12 | 001012   L2å©èoÇµ. GOBACK.
 prog.cob:8: Error: 'L2å©èoÇµ' in 'S1êﬂ' ambiguous; need qualification
+    6 | 001006   L0å©èoÇµ.
+    7 | 001007     GO TO L1å©èoÇµ.
+    8 > 001008     GO TO L2å©èoÇµ IN S1êﬂ.
+    9 | 001009   L1å©èoÇµ. GOBACK.
+   10 | 001010   L1å©èoÇµ. GOBACK.
 prog.cob:12: Error: 'L2å©èoÇµ' in 'S1êﬂ' defined here
+   10 | 001010   L1å©èoÇµ. GOBACK.
+   11 | 001011 S1êﬂ             SECTION.
+   12 > 001012   L2å©èoÇµ. GOBACK.
+   13 | 001013   L2å©èoÇµ. GOBACK.
 prog.cob:13: Error: 'L2å©èoÇµ' in 'S1êﬂ' defined here
+   11 | 001011 S1êﬂ             SECTION.
+   12 | 001012   L2å©èoÇµ. GOBACK.
+   13 > 001013   L2å©èoÇµ. GOBACK.
 ])
 
 AT_CLEANUP

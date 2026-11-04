@@ -15,7 +15,17 @@ AT_DATA([prog.cbl], [
 
 AT_CHECK([${COBJ} prog.cbl], [1], [],
 [prog.cbl:8: Error: COMP-1 not implemented
+    6 |        data                        division.
+    7 |        WORKING-STORAGE SECTION.
+    8 >        01 H COMP-1.
+    9 |        01 I COMP-2.
+   10 |        PROCEDURE DIVISION.
 prog.cbl:9: Error: COMP-2 not implemented
+    7 |        WORKING-STORAGE SECTION.
+    8 |        01 H COMP-1.
+    9 >        01 I COMP-2.
+   10 |        PROCEDURE DIVISION.
+   11 |        STOP RUN.
 ])
 
 AT_CLEANUP

@@ -176,6 +176,11 @@ AT_DATA([prog.cbl], [
 
 AT_CHECK([${COMPILE} prog.cbl], [0], [],
 [prog.cbl:9: Warning: Value size exceeds data size
+    7 |        01 WS-EXACT PIC X(4) VALUE ALL "AB".
+    8 |        01 WS-LONG  PIC X(5) VALUE ALL "AB".
+    9 >        01 WS-GE1   PIC X(3) VALUE ALL "ABCDE".
+   10 |        01 WS-GE2   PIC X(5) VALUE ALL "ABCDE".
+   11 |        PROCEDURE DIVISION.
 ])
 AT_CHECK([java prog], [0], [[[ABA]]
 [[ABAB]]

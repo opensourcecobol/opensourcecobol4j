@@ -144,7 +144,17 @@ AT_DATA([prog.cob], [
 
 AT_CHECK([${COMPILE} prog.cob], [1], [],
 [prog.cob:7: Error: User defined name must be less than 32 characters
+    5 |        WORKING-STORAGE  SECTION.
+    6 |        PROCEDURE        DIVISION.
+    7 >        PERFORM s１２３４５６７８９０123456789012345678901.
+    8 |        PERFORM    Ｓ−終了.
+    9 |        s１２３４５６７８９０123456789012345678901 SECTION.
 prog.cob:9: Error: User defined name must be less than 32 characters
+    7 |        PERFORM s１２３４５６７８９０123456789012345678901.
+    8 |        PERFORM    Ｓ−終了.
+    9 >        s１２３４５６７８９０123456789012345678901 SECTION.
+   10 |            DISPLAY "Hello, " WITH NO ADVANCING.
+   11 |        Ｓ−終了         SECTION.
 ])
 
 AT_CLEANUP
@@ -452,16 +462,68 @@ AT_DATA([prog.cob], [
 
 AT_CHECK([${COMPILE} -debug prog.cob], [1], [],
 [prog.cob:9: Error: 'NO-FLD' undefined
+    7 |           03 A項目 PIC X.
+    8 |        PROCEDURE        DIVISION.
+    9 > 001009     DISPLAY NO-FLD.
+   10 | 001010     DISPLAY NO-FLD IN G-GRP.
+   11 | 001011     DISPLAY NO-FLD IN NO-GRP.
 prog.cob:10: Error: 'NO-FLD' in 'G-GRP' undefined
+    8 |        PROCEDURE        DIVISION.
+    9 | 001009     DISPLAY NO-FLD.
+   10 > 001010     DISPLAY NO-FLD IN G-GRP.
+   11 | 001011     DISPLAY NO-FLD IN NO-GRP.
+   12 | 001012     DISPLAY NO項目.
 prog.cob:11: Error: 'NO-FLD' in 'NO-GRP' undefined
+    9 | 001009     DISPLAY NO-FLD.
+   10 | 001010     DISPLAY NO-FLD IN G-GRP.
+   11 > 001011     DISPLAY NO-FLD IN NO-GRP.
+   12 | 001012     DISPLAY NO項目.
+   13 | 001013     DISPLAY NO項目 IN G集団項目.
 prog.cob:12: Error: 'NO項目' undefined
+   10 | 001010     DISPLAY NO-FLD IN G-GRP.
+   11 | 001011     DISPLAY NO-FLD IN NO-GRP.
+   12 > 001012     DISPLAY NO項目.
+   13 | 001013     DISPLAY NO項目 IN G集団項目.
+   14 | 001014     DISPLAY NO項目 IN NO集団項目.
 prog.cob:13: Error: 'NO項目' in 'G集団項目' undefined
+   11 | 001011     DISPLAY NO-FLD IN NO-GRP.
+   12 | 001012     DISPLAY NO項目.
+   13 > 001013     DISPLAY NO項目 IN G集団項目.
+   14 | 001014     DISPLAY NO項目 IN NO集団項目.
+   15 | 001015     DISPLAY NO-FLD IN G集団項目.
 prog.cob:14: Error: 'NO項目' in 'NO集団項目' undefined
+   12 | 001012     DISPLAY NO項目.
+   13 | 001013     DISPLAY NO項目 IN G集団項目.
+   14 > 001014     DISPLAY NO項目 IN NO集団項目.
+   15 | 001015     DISPLAY NO-FLD IN G集団項目.
+   16 | 001016     DISPLAY NO-FLD IN NO集団項目.
 prog.cob:15: Error: 'NO-FLD' in 'G集団項目' undefined
+   13 | 001013     DISPLAY NO項目 IN G集団項目.
+   14 | 001014     DISPLAY NO項目 IN NO集団項目.
+   15 > 001015     DISPLAY NO-FLD IN G集団項目.
+   16 | 001016     DISPLAY NO-FLD IN NO集団項目.
+   17 | 001017     DISPLAY NO項目 IN G-GRP.
 prog.cob:16: Error: 'NO-FLD' in 'NO集団項目' undefined
+   14 | 001014     DISPLAY NO項目 IN NO集団項目.
+   15 | 001015     DISPLAY NO-FLD IN G集団項目.
+   16 > 001016     DISPLAY NO-FLD IN NO集団項目.
+   17 | 001017     DISPLAY NO項目 IN G-GRP.
+   18 | 001018     DISPLAY NO項目 IN NO-GRP.
 prog.cob:17: Error: 'NO項目' in 'G-GRP' undefined
+   15 | 001015     DISPLAY NO-FLD IN G集団項目.
+   16 | 001016     DISPLAY NO-FLD IN NO集団項目.
+   17 > 001017     DISPLAY NO項目 IN G-GRP.
+   18 | 001018     DISPLAY NO項目 IN NO-GRP.
+   19 | 001019     DISPLAY NO項目 IN G集団項目 IN NO集団項目.
 prog.cob:18: Error: 'NO項目' in 'NO-GRP' undefined
+   16 | 001016     DISPLAY NO-FLD IN NO集団項目.
+   17 | 001017     DISPLAY NO項目 IN G-GRP.
+   18 > 001018     DISPLAY NO項目 IN NO-GRP.
+   19 | 001019     DISPLAY NO項目 IN G集団項目 IN NO集団項目.
 prog.cob:19: Error: 'NO項目' in 'G集団項目' in 'NO集団項目' undefined
+   17 | 001017     DISPLAY NO項目 IN G-GRP.
+   18 | 001018     DISPLAY NO項目 IN NO-GRP.
+   19 > 001019     DISPLAY NO項目 IN G集団項目 IN NO集団項目.
 ])
 
 AT_CLEANUP
@@ -489,16 +551,70 @@ AT_DATA([prog.cob], [
 
 AT_CHECK([${COMPILE_ONLY} prog.cob], [1], [],
 [prog.cob:8: Warning: Redefinition of 'A項目'
+    6 |        01 A項目 PIC X.
+    7 |        01 G1集団.
+    8 >           03 A項目 PIC X.
+    9 |           03 B項目 PIC X.
+   10 |           03 G2集団.
 prog.cob:6: Warning: 'A項目' previously defined here
+    4 |        DATA             DIVISION.
+    5 |        WORKING-STORAGE  SECTION.
+    6 >        01 A項目 PIC X.
+    7 |        01 G1集団.
+    8 |           03 A項目 PIC X.
 prog.cob:11: Warning: Redefinition of 'A項目'
+    9 |           03 B項目 PIC X.
+   10 |           03 G2集団.
+   11 >              05 A項目 PIC X.
+   12 |              05 B項目 PIC X.
+   13 |        PROCEDURE        DIVISION.
 prog.cob:6: Warning: 'A項目' previously defined here
+    4 |        DATA             DIVISION.
+    5 |        WORKING-STORAGE  SECTION.
+    6 >        01 A項目 PIC X.
+    7 |        01 G1集団.
+    8 |           03 A項目 PIC X.
 prog.cob:14: Error: 'A項目' ambiguous; need qualification
+   12 |              05 B項目 PIC X.
+   13 |        PROCEDURE        DIVISION.
+   14 > 001014     DISPLAY A項目.
+   15 | 001015     DISPLAY B項目 IN G1集団.
+   16 |            GOBACK.
 prog.cob:6: Error: 'A項目' defined here
+    4 |        DATA             DIVISION.
+    5 |        WORKING-STORAGE  SECTION.
+    6 >        01 A項目 PIC X.
+    7 |        01 G1集団.
+    8 |           03 A項目 PIC X.
 prog.cob:8: Error: 'A項目' in 'G1集団' defined here
+    6 |        01 A項目 PIC X.
+    7 |        01 G1集団.
+    8 >           03 A項目 PIC X.
+    9 |           03 B項目 PIC X.
+   10 |           03 G2集団.
 prog.cob:11: Error: 'A項目' in 'G2集団' in 'G1集団' defined here
+    9 |           03 B項目 PIC X.
+   10 |           03 G2集団.
+   11 >              05 A項目 PIC X.
+   12 |              05 B項目 PIC X.
+   13 |        PROCEDURE        DIVISION.
 prog.cob:15: Error: 'B項目' in 'G1集団' ambiguous; need qualification
+   13 |        PROCEDURE        DIVISION.
+   14 | 001014     DISPLAY A項目.
+   15 > 001015     DISPLAY B項目 IN G1集団.
+   16 |            GOBACK.
 prog.cob:9: Error: 'B項目' in 'G1集団' defined here
+    7 |        01 G1集団.
+    8 |           03 A項目 PIC X.
+    9 >           03 B項目 PIC X.
+   10 |           03 G2集団.
+   11 |              05 A項目 PIC X.
 prog.cob:12: Error: 'B項目' in 'G2集団' in 'G1集団' defined here
+   10 |           03 G2集団.
+   11 |              05 A項目 PIC X.
+   12 >              05 B項目 PIC X.
+   13 |        PROCEDURE        DIVISION.
+   14 | 001014     DISPLAY A項目.
 ])
 
 AT_CLEANUP
@@ -523,11 +639,38 @@ AT_DATA([prog.cob], [
 
 AT_CHECK([${COMPILE_ONLY} prog.cob], [1], [],
 [prog.cob:7: Error: 'L1見出し' ambiguous; need qualification
+    5 |        PROCEDURE        DIVISION.
+    6 | 001006   L0見出し.
+    7 > 001007     GO TO L1見出し.
+    8 | 001008     GO TO L2見出し IN S1節.
+    9 | 001009   L1見出し. GOBACK.
 prog.cob:9: Error: 'L1見出し' in 'MAIN SECTION' defined here
+    7 | 001007     GO TO L1見出し.
+    8 | 001008     GO TO L2見出し IN S1節.
+    9 > 001009   L1見出し. GOBACK.
+   10 | 001010   L1見出し. GOBACK.
+   11 | 001011 S1節             SECTION.
 prog.cob:10: Error: 'L1見出し' in 'MAIN SECTION' defined here
+    8 | 001008     GO TO L2見出し IN S1節.
+    9 | 001009   L1見出し. GOBACK.
+   10 > 001010   L1見出し. GOBACK.
+   11 | 001011 S1節             SECTION.
+   12 | 001012   L2見出し. GOBACK.
 prog.cob:8: Error: 'L2見出し' in 'S1節' ambiguous; need qualification
+    6 | 001006   L0見出し.
+    7 | 001007     GO TO L1見出し.
+    8 > 001008     GO TO L2見出し IN S1節.
+    9 | 001009   L1見出し. GOBACK.
+   10 | 001010   L1見出し. GOBACK.
 prog.cob:12: Error: 'L2見出し' in 'S1節' defined here
+   10 | 001010   L1見出し. GOBACK.
+   11 | 001011 S1節             SECTION.
+   12 > 001012   L2見出し. GOBACK.
+   13 | 001013   L2見出し. GOBACK.
 prog.cob:13: Error: 'L2見出し' in 'S1節' defined here
+   11 | 001011 S1節             SECTION.
+   12 | 001012   L2見出し. GOBACK.
+   13 > 001013   L2見出し. GOBACK.
 ])
 
 AT_CLEANUP
