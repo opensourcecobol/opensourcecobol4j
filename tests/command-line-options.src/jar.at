@@ -1,8 +1,5 @@
 AT_SETUP([-jar, -single-jar and -o])
 
-dnl TODO: cobj.exe generates malformed jar paths with -java-package on Windows.
-AT_SKIP_IF([test -n "$IS_WINDOWS"])
-
 AT_DATA([prog.cbl], [
        IDENTIFICATION              DIVISION.	
        PROGRAM-ID.                 prog.	

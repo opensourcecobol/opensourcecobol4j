@@ -436,6 +436,7 @@ libcobj.jarはopensource COBOL 4Jのランタイムであり、
 | FileStruct.java | ファイルに関する情報を保持するクラス。 |
 | IndexedCursor.java | 索引ファイルの処理で使用するクラス。 |
 | IndexedFile.java | 索引ファイルに関する情報を保持するクラス。 |
+| IndexedStatementCache.java | 索引ファイルで発行するSQL文のPreparedStatementをキャッシュするクラス。 |
 | KeyComponent.java | ファイルのキーに関連するクラス。 |
 | Linage.java | LINAGEに関するクラス。 |
 | MemoryStruct.java | ソート処理で使用するクラス。 |

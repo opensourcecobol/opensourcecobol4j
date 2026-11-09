@@ -50,8 +50,17 @@ class IndexedFile {
     /** キーごとの読み込み管理用に予約されているが、現在の実装では実際には使用されていない。 */
     byte[][] last_readkey;
 
-    /** キーごとの重複番号（{@code dupNo}）状態として予約されているが、オープン時に確保されるのみで現在の実装では読み取られない。 */
+    /**
+     * キーごとの次の重複番号（{@code dupNo}）。OUTPUTモード（遅延コミット中）のWRITEでは、{@code select
+     * max(dupNo)}の代わりにこの配列で採番する。それ以外のモードでは確保されるのみで使用されない。
+     */
     int[] last_dupno;
+
+    /**
+     * この接続で発行するSQL文のPreparedStatementキャッシュ。接続確立時に生成され、
+     * CLOSE時に解放される。
+     */
+    IndexedStatementCache statementCache;
 
     /** REWRITE用のキーごとの状態として予約されているが、オープン時に確保されるのみで、現在の実装では代わりにローカル配列で重複番号を受け渡しており、実際には使用されていない。 */
     int[] rewrite_sec_key;

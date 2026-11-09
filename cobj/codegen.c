@@ -50,10 +50,6 @@
 #define BUF_SIZE 1024
 #define MAX_LITERAL_SIZE 64
 
-#ifndef __GNUC__
-static int inside_check = 0;
-static int inside_stack[64];
-#endif
 static int param_id = 0;
 static int stack_id = 0;
 static int num_cob_fields = 0;
@@ -1625,12 +1621,6 @@ static void joutput_param(cb_tree x, int id) {
 
     if (CB_FILE_P(r->value)) {
       joutput("%s%s", CB_PREFIX_FILE, CB_FILE(r->value)->cname);
-      if (r->check) {
-#ifdef __GNUC__
-#else
-        --inside_check;
-#endif
-      }
       break;
     }
     if (CB_ALPHABET_NAME_P(r->value)) {
@@ -1662,10 +1652,6 @@ static void joutput_param(cb_tree x, int id) {
         break;
       }
       if (r->check) {
-#ifdef __GNUC__
-#else
-        --inside_check;
-#endif
         joutput(";");
         joutput_newline();
         joutput_indent_level -= 2;
@@ -1764,14 +1750,6 @@ static void joutput_param(cb_tree x, int id) {
         num_cob_fields = stack_id + 1;
       }
       sprintf(fname, "f%d", stack_id++);
-#ifndef __GNUC__
-      if (inside_check != 0) {
-        if (inside_stack[inside_check - 1] != 0) {
-          inside_stack[inside_check - 1] = 0;
-          joutput(",\n");
-        }
-      }
-#endif
       joutput("CobolFieldFactory.makeCobolField(");
       if (!(CB_LITERAL_P(x) &&
             (CB_TREE_CATEGORY(x) == CB_CATEGORY_ALPHANUMERIC ||
@@ -1786,11 +1764,6 @@ static void joutput_param(cb_tree x, int id) {
     }
 
     if (r->check) {
-#ifdef __GNUC__
-#else
-      --inside_check;
-#endif
-
       joutput(";");
       joutput_newline();
       joutput_indent_level -= 2;
@@ -4086,7 +4059,6 @@ static void joutput_stmt(cb_tree x, enum joutput_stmt_type output_type) {
   struct cb_label *lp;
   struct cb_assign *ap;
   struct cb_if *ip;
-  int code;
   int putParen = 0;
 
   stack_id = 0;
@@ -4094,14 +4066,6 @@ static void joutput_stmt(cb_tree x, enum joutput_stmt_type output_type) {
     joutput_line(";");
     return;
   }
-#ifndef __GNUC__
-  if (inside_check != 0) {
-    if (inside_stack[inside_check - 1] != 0) {
-      inside_stack[inside_check - 1] = 0;
-      joutput(",\n");
-    }
-  }
-#endif
   switch (CB_TREE_TAG(x)) {
   case CB_TAG_STATEMENT:
     p = CB_STATEMENT(x);
@@ -4186,7 +4150,7 @@ static void joutput_stmt(cb_tree x, enum joutput_stmt_type output_type) {
 
     if (p->handler1 || p->handler2 ||
         (p->file && CB_EXCEPTION_ENABLE(COB_EC_I_O))) {
-      code = CB_EXCEPTION_CODE(p->handler_id);
+      int code = CB_EXCEPTION_CODE(p->handler_id);
       if (p->file) {
         joutput_ferror_stmt(p, code);
       } else {
