@@ -454,6 +454,18 @@ Specifies the write buffer size for sequential files.
 - **Example**: `COB_FILE_SEQ_WRITE_BUFFER_SIZE=100`
 - **Purpose**: Adjusts write performance.
 
+The value is the number of records buffered at once; the buffer size in bytes is this value multiplied by the maximum record length, capped at 64MB per opened file. `0` disables buffering, and records are written one by one. A value that is not an integer >= 0 is reported on standard error and the default is used instead. The buffer is used when a `SEQUENTIAL` or `LINE SEQUENTIAL` file is opened with `OUTPUT` or `EXTEND`. Increasing the value reduces the number of system calls and speeds up `WRITE`, at the cost of more memory per opened file.
+
+#### COB_FILE_SEQ_READ_BUFFER_SIZE
+
+Specifies the read buffer size for sequential files.
+
+- **Value**: Integer >= 0 (default: 10)
+- **Example**: `COB_FILE_SEQ_READ_BUFFER_SIZE=100`
+- **Purpose**: Adjusts read performance.
+
+The value is the number of records read at once; the buffer size in bytes is this value multiplied by the maximum record length, capped at 64MB per opened file. It is therefore a rough guide rather than an exact record count, because a line sequential record also carries a line terminator and a variable length sequential record carries a 4 byte record length. `0` disables buffering, and records are read one by one. A value that is not an integer >= 0 is reported on standard error and the default is used instead. The buffer is used when a `SEQUENTIAL` or `LINE SEQUENTIAL` file is opened with `INPUT`, except for a file under `/dev/`, which is read unbuffered so that reading ahead does not consume input meant for `ACCEPT` or for another process sharing the same file descriptor. Increasing the value reduces the number of system calls and speeds up `READ`, at the cost of more memory per opened file.
+
 #### COB_IO_ASSUME_REWRITE
 
 Controls whether READ is required before REWRITE.
