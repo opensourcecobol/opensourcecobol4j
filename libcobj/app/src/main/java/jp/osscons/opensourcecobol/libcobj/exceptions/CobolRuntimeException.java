@@ -74,7 +74,7 @@ public class CobolRuntimeException extends RuntimeException {
     }
 
     /**
-     * 実行時例外を設定する。 エラーIDをベースに、CobolExceptionTabCode.codeテーブルを参照して、対応するエラーコードが設定される。
+     * 実行時例外を設定する。エラーIDをベースに、CobolExceptionTabCode.codeテーブルを参照して、対応するエラーコードが設定される。
      * また、エラー発生時のプログラムID、セクション名、パラグラフ名、行番号、ステートメントを取得し、このクラスの静的変数に保持する。
      *
      * @param id エラーID
@@ -109,7 +109,7 @@ public class CobolRuntimeException extends RuntimeException {
     }
 
     /**
-     * 例外が設定されたことがあるかどうかを返す。 setExceptionが一度でも呼ばれると1を返し、以降0に戻ることはない。
+     * 例外が設定されたことがあるかどうかを返す。setExceptionが一度でも呼ばれると1を返し、以降0に戻ることはない。
      * setException(0)を呼ぶとcodeは0にリセットされるが、cobExceptionは1のまま変わらない。
      *
      * @return setExceptionが呼ばれたことがある場合は1、一度も呼ばれていない場合は0

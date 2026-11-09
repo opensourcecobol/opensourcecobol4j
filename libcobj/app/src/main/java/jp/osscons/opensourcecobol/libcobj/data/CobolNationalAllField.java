@@ -18,7 +18,7 @@
  */
 package jp.osscons.opensourcecobol.libcobj.data;
 
-/** ALL指定の日本語項目(PIC Nの全桁繰り返し)を表現するクラス. */
+/** ALL指定の日本語項目(PIC Nの全桁繰り返し)を表現するクラス。 */
 public class CobolNationalAllField extends CobolNationalField {
     /**
      * コンストラクタ

@@ -347,7 +347,7 @@ public class CobolFileSort {
      * @param fp TODO: 準備中
      * @param q TODO: 準備中
      * @param hp TODO: 準備中
-     * @return 書き込み失敗時true,それ以外はfalse
+     * @return 書き込み失敗時true、それ以外はfalse
      */
     private static boolean writeItem(FileIO fp, CobolItem q, CobolSort hp) {
         byte[] blockByteData = new byte[1];
