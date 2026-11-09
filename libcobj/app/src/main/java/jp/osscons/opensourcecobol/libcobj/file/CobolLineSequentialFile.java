@@ -109,12 +109,26 @@ public class CobolLineSequentialFile extends CobolFile {
                 fileVersion);
     }
 
+    /**
+     * 行順編成ファイルでは位置付けの下位処理は未実装. デバッグ用のメッセージを標準出力に出力し, 何もせずに0を返す.
+     *
+     * @param cond 位置付けの比較条件(使用しない)
+     * @param key 位置付けに用いるキー項目(使用しない)
+     * @return 常に0
+     */
     @Override
     public int start_(int cond, AbstractCobolField key) {
         System.out.println("LineSeq.start");
         return 0;
     }
 
+    /**
+     * 行順編成ファイルではキーを指定した読み込みの下位処理は未実装. デバッグ用のメッセージを標準出力に出力し, 何もせずに0を返す.
+     *
+     * @param key 読み込みに用いるキー項目(使用しない)
+     * @param readOpts READ文のオプション(使用しない)
+     * @return 常に0
+     */
     @Override
     public int read_(AbstractCobolField key, int readOpts) {
         System.out.println("LineSeq.read");
@@ -244,12 +258,23 @@ public class CobolLineSequentialFile extends CobolFile {
         return COB_STATUS_00_SUCCESS;
     }
 
+    /**
+     * 行順編成ファイルではレコードの書き換えの下位処理は未実装. デバッグ用のメッセージを標準出力に出力し, 何もせずに0を返す.
+     *
+     * @param opt REWRITE文のオプション(使用しない)
+     * @return 常に0
+     */
     @Override
     public int rewrite_(int opt) {
         System.out.println("LineSeq.rewrite");
         return 0;
     }
 
+    /**
+     * 行順編成ファイルではレコードの削除の下位処理は未実装. デバッグ用のメッセージを標準出力に出力し, 何もせずに0を返す.
+     *
+     * @return 常に0
+     */
     @Override
     public int delete_() {
         System.out.println("LineSeq.delete");
