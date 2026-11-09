@@ -21,8 +21,8 @@ package jp.osscons.opensourcecobol.libcobj.file;
 import jp.osscons.opensourcecobol.libcobj.data.AbstractCobolField;
 
 /**
- * COBOLのLINAGE句に関する情報を保持するクラス.
- * 帳票の1ページの本体行数,フッタ・上下余白の行数,およびLINAGE-COUNTERの状態を保持する.
+ * COBOLのLINAGE句に関する情報を保持するクラス。
+ * 帳票の1ページの本体行数、フッタ・上下余白の行数、およびLINAGE-COUNTERの状態を保持する。
  */
 public class Linage {
     private AbstractCobolField linage;
@@ -36,7 +36,7 @@ public class Linage {
     private int linBot;
 
     /**
-     * 1ページの本体行数(LINAGE句のLINES)を表すCOBOLデータ項目を取得する.
+     * 1ページの本体行数(LINAGE句のLINES)を表すCOBOLデータ項目を取得する。
      *
      * @return 1ページの本体行数を表すCOBOLデータ項目
      */
@@ -45,7 +45,7 @@ public class Linage {
     }
 
     /**
-     * 1ページの本体行数(LINAGE句のLINES)を表すCOBOLデータ項目を設定する.
+     * 1ページの本体行数(LINAGE句のLINES)を表すCOBOLデータ項目を設定する。
      *
      * @param linage 1ページの本体行数を表すCOBOLデータ項目
      */
@@ -54,7 +54,7 @@ public class Linage {
     }
 
     /**
-     * 現在のページ内行位置を表すLINAGE-COUNTERのCOBOLデータ項目を取得する.
+     * 現在のページ内行位置を表すLINAGE-COUNTERのCOBOLデータ項目を取得する。
      *
      * @return LINAGE-COUNTERを表すCOBOLデータ項目
      */
@@ -63,7 +63,7 @@ public class Linage {
     }
 
     /**
-     * 現在のページ内行位置を表すLINAGE-COUNTERのCOBOLデータ項目を設定する.
+     * 現在のページ内行位置を表すLINAGE-COUNTERのCOBOLデータ項目を設定する。
      *
      * @param linageCtr LINAGE-COUNTERを表すCOBOLデータ項目
      */
@@ -72,7 +72,7 @@ public class Linage {
     }
 
     /**
-     * フッタ開始行(FOOTING AT)を表すCOBOLデータ項目を取得する.
+     * フッタ開始行(FOOTING AT)を表すCOBOLデータ項目を取得する。
      *
      * @return フッタ開始行を表すCOBOLデータ項目
      */
@@ -81,7 +81,7 @@ public class Linage {
     }
 
     /**
-     * フッタ開始行(FOOTING AT)を表すCOBOLデータ項目を設定する.
+     * フッタ開始行(FOOTING AT)を表すCOBOLデータ項目を設定する。
      *
      * @param latfoot フッタ開始行を表すCOBOLデータ項目
      */
@@ -90,7 +90,7 @@ public class Linage {
     }
 
     /**
-     * ページ上部の余白行数(LINES AT TOP)を表すCOBOLデータ項目を取得する.
+     * ページ上部の余白行数(LINES AT TOP)を表すCOBOLデータ項目を取得する。
      *
      * @return ページ上部の余白行数を表すCOBOLデータ項目
      */
@@ -99,7 +99,7 @@ public class Linage {
     }
 
     /**
-     * ページ上部の余白行数(LINES AT TOP)を表すCOBOLデータ項目を設定する.
+     * ページ上部の余白行数(LINES AT TOP)を表すCOBOLデータ項目を設定する。
      *
      * @param lattop ページ上部の余白行数を表すCOBOLデータ項目
      */
@@ -108,7 +108,7 @@ public class Linage {
     }
 
     /**
-     * ページ下部の余白行数(LINES AT BOTTOM)を表すCOBOLデータ項目を取得する.
+     * ページ下部の余白行数(LINES AT BOTTOM)を表すCOBOLデータ項目を取得する。
      *
      * @return ページ下部の余白行数を表すCOBOLデータ項目
      */
@@ -117,7 +117,7 @@ public class Linage {
     }
 
     /**
-     * ページ下部の余白行数(LINES AT BOTTOM)を表すCOBOLデータ項目を設定する.
+     * ページ下部の余白行数(LINES AT BOTTOM)を表すCOBOLデータ項目を設定する。
      *
      * @param latbot ページ下部の余白行数を表すCOBOLデータ項目
      */
@@ -126,7 +126,7 @@ public class Linage {
     }
 
     /**
-     * 1ページの本体行数の現在値(整数)を取得する.
+     * 1ページの本体行数の現在値(整数)を取得する。
      *
      * @return 1ページの本体行数
      */
@@ -135,7 +135,7 @@ public class Linage {
     }
 
     /**
-     * 1ページの本体行数の現在値(整数)を設定する.
+     * 1ページの本体行数の現在値(整数)を設定する。
      *
      * @param linLines 1ページの本体行数
      */
@@ -144,7 +144,7 @@ public class Linage {
     }
 
     /**
-     * フッタ開始行の現在値(整数)を取得する.
+     * フッタ開始行の現在値(整数)を取得する。
      *
      * @return フッタ開始行
      */
@@ -153,7 +153,7 @@ public class Linage {
     }
 
     /**
-     * フッタ開始行の現在値(整数)を設定する.
+     * フッタ開始行の現在値(整数)を設定する。
      *
      * @param linFoot フッタ開始行
      */
@@ -162,7 +162,7 @@ public class Linage {
     }
 
     /**
-     * ページ上部の余白行数の現在値(整数)を取得する.
+     * ページ上部の余白行数の現在値(整数)を取得する。
      *
      * @return ページ上部の余白行数
      */
@@ -171,7 +171,7 @@ public class Linage {
     }
 
     /**
-     * ページ上部の余白行数の現在値(整数)を設定する.
+     * ページ上部の余白行数の現在値(整数)を設定する。
      *
      * @param linTop ページ上部の余白行数
      */
@@ -180,7 +180,7 @@ public class Linage {
     }
 
     /**
-     * ページ下部の余白行数の現在値(整数)を取得する.
+     * ページ下部の余白行数の現在値(整数)を取得する。
      *
      * @return ページ下部の余白行数
      */
@@ -189,7 +189,7 @@ public class Linage {
     }
 
     /**
-     * ページ下部の余白行数の現在値(整数)を設定する.
+     * ページ下部の余白行数の現在値(整数)を設定する。
      *
      * @param linBot ページ下部の余白行数
      */

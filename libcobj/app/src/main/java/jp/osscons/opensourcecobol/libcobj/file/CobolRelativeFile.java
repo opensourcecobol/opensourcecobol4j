@@ -25,55 +25,55 @@ import java.nio.file.Files;
 import java.nio.file.Paths;
 import jp.osscons.opensourcecobol.libcobj.data.AbstractCobolField;
 
-/** 相対編成ファイル(RELATIVE)のI/Oを実装するCobolFileのサブクラス. */
+/** 相対編成ファイル(RELATIVE)のI/Oを実装するCobolFileのサブクラス。 */
 public class CobolRelativeFile extends CobolFile {
 
-    /** START文でキーと相対レコード番号を等値(=)で比較することを表す定数. */
+    /** START文でキーと相対レコード番号を等値(=)で比較することを表す定数。 */
     protected static final int COB_EQ = 1;
 
-    /** START文でキーと相対レコード番号を小なり(&lt;)で比較することを表す定数. */
+    /** START文でキーと相対レコード番号を小なり(&lt;)で比較することを表す定数。 */
     protected static final int COB_LT = 2;
 
-    /** START文でキーと相対レコード番号を以下(&lt;=)で比較することを表す定数. */
+    /** START文でキーと相対レコード番号を以下(&lt;=)で比較することを表す定数。 */
     protected static final int COB_LE = 3;
 
-    /** START文でキーと相対レコード番号を大なり(&gt;)で比較することを表す定数. */
+    /** START文でキーと相対レコード番号を大なり(&gt;)で比較することを表す定数。 */
     protected static final int COB_GT = 4;
 
-    /** START文でキーと相対レコード番号を以上(&gt;=)で比較することを表す定数. */
+    /** START文でキーと相対レコード番号を以上(&gt;=)で比較することを表す定数。 */
     protected static final int COB_GE = 5;
 
     RandomAccessFile fp;
     byte[] size = new byte[8];
 
     /**
-     * 相対編成ファイルを表すインスタンスを生成する.
+     * 相対編成ファイルを表すインスタンスを生成する。
      *
-     * @param selectName SELECT句で指定されたファイルの内部名.
-     * @param fileStatus FILE STATUS句に対応するファイル状態コードを格納するバイト配列.
-     * @param assign ASSIGN句で指定された割り当て先(物理ファイル名等)を保持する変数.
-     * @param record レコード領域を表す変数.
-     * @param recordSize 実際のレコード長を格納する変数.
-     * @param recordMin 最小レコード長.
-     * @param recordMax 最大レコード長.
-     * @param nkeys キーの数.
-     * @param keys ファイルのキー情報の配列.
-     * @param organization ファイル編成を表す値.
-     * @param accessMode アクセスモード(順/動的/乱).
-     * @param lockMode ファイルのロック方式.
-     * @param openMode 現在のオープンモード.
-     * @param flagOptional SELECT句にOPTIONALが指定されているかどうかを表すフラグ.
-     * @param lastOpenMode 最後に開いたときのオープンモード.
-     * @param special 特殊ファイル(標準入出力等)の種別.
-     * @param flagNonexistent ファイルが存在しないかどうかを表すフラグ.
-     * @param flagEndOfFile ファイル終端に達したかどうかを表すフラグ.
-     * @param flagBeginOfFile ファイル先頭に達したかどうかを表すフラグ.
-     * @param flagFirstRead 最初の読み込みかどうかを表すフラグ.
-     * @param flagReadDone 読み込みが行われたかどうかを表すフラグ.
-     * @param flagSelectFeatures SELECT句で指定された機能(FILE STATUS/EXTERNAL/LINAGE/SPLIT KEY)の有無を表すビットフラグ.
-     * @param flagNeedsNl 次の書き込み前に改行の出力が必要かどうかを表すフラグ.
-     * @param flagNeedsTop 次の書き込み前にページ先頭の処理が必要かどうかを表すフラグ.
-     * @param fileVersion ファイル構造のバージョン.
+     * @param selectName SELECT句で指定されたファイルの内部名。
+     * @param fileStatus FILE STATUS句に対応するファイル状態コードを格納するバイト配列。
+     * @param assign ASSIGN句で指定された割り当て先(物理ファイル名等)を保持する変数。
+     * @param record レコード領域を表す変数。
+     * @param recordSize 実際のレコード長を格納する変数。
+     * @param recordMin 最小レコード長。
+     * @param recordMax 最大レコード長。
+     * @param nkeys キーの数。
+     * @param keys ファイルのキー情報の配列。
+     * @param organization ファイル編成を表す値。
+     * @param accessMode アクセスモード(順/動的/乱)。
+     * @param lockMode ファイルのロック方式。
+     * @param openMode 現在のオープンモード。
+     * @param flagOptional SELECT句にOPTIONALが指定されているかどうかを表すフラグ。
+     * @param lastOpenMode 最後に開いたときのオープンモード。
+     * @param special 特殊ファイル(標準入出力等)の種別。
+     * @param flagNonexistent ファイルが存在しないかどうかを表すフラグ。
+     * @param flagEndOfFile ファイル終端に達したかどうかを表すフラグ。
+     * @param flagBeginOfFile ファイル先頭に達したかどうかを表すフラグ。
+     * @param flagFirstRead 最初の読み込みかどうかを表すフラグ。
+     * @param flagReadDone 読み込みが行われたかどうかを表すフラグ。
+     * @param flagSelectFeatures SELECT句で指定された機能(FILE STATUS/EXTERNAL/LINAGE/SPLIT KEY)の有無を表すビットフラグ。
+     * @param flagNeedsNl 次の書き込み前に改行の出力が必要かどうかを表すフラグ。
+     * @param flagNeedsTop 次の書き込み前にページ先頭の処理が必要かどうかを表すフラグ。
+     * @param fileVersion ファイル構造のバージョン。
      */
     public CobolRelativeFile(
             String selectName,

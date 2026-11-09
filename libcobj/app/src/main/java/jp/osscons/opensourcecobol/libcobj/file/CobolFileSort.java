@@ -36,32 +36,32 @@ import jp.osscons.opensourcecobol.libcobj.data.CobolFieldFactory;
 import jp.osscons.opensourcecobol.libcobj.exceptions.CobolStopRunException;
 
 /**
- * COBOL の SORT/MERGE 文の本体アルゴリズムを実装するクラス. メモリ上のキューと一時ファイルを用いた
- * 外部マージソート,および表(TABLE)のソートを提供する.
+ * COBOL の SORT/MERGE 文の本体アルゴリズムを実装するクラス。メモリ上のキューと一時ファイルを用いた
+ * 外部マージソート、および表(TABLE)のソートを提供する。
  */
 public class CobolFileSort {
-    /** SORT/MERGE で取り出せるレコードが無くなったことを表す戻り値. */
+    /** SORT/MERGE で取り出せるレコードが無くなったことを表す戻り値。 */
     protected static final int COBSORTEND = 1;
 
-    /** SORT/MERGE 処理が中断されたことを表す戻り値. */
+    /** SORT/MERGE 処理が中断されたことを表す戻り値。 */
     protected static final int COBSORTABORT = 2;
 
-    /** 一時ファイルの入出力でエラーが発生したことを表す戻り値. */
+    /** 一時ファイルの入出力でエラーが発生したことを表す戻り値。 */
     protected static final int COBSORTFILEERR = 3;
 
-    /** SORT/MERGE が初期化されていないことを表す戻り値. */
+    /** SORT/MERGE が初期化されていないことを表す戻り値。 */
     protected static final int COBSORTNOTOPEN = 4;
 
-    /** キーを昇順で扱うことを表す定数. */
+    /** キーを昇順で扱うことを表す定数。 */
     protected static final int COB_ASCENDING = 0;
 
-    /** キーを降順で扱うことを表す定数. */
+    /** キーを降順で扱うことを表す定数。 */
     protected static final int COB_DESCENDING = 1;
 
     private static String cob_process_id = "";
     private static int cob_iteration = 0;
 
-    /** SORT/MERGE でメモリ上に保持するレコード群に割り当てる最大バイト数. */
+    /** SORT/MERGE でメモリ上に保持するレコード群に割り当てる最大バイト数。 */
     protected static int cob_sort_memory = 128 * 1024 * 1024;
 
     // Javaの標準ライブラリでソートするならtrue
@@ -74,8 +74,8 @@ public class CobolFileSort {
      * @param s1 比較する 1 つ目のバイト列
      * @param s2 比較する 2 つ目のバイト列
      * @param size 比較するバイト数
-     * @param col 文字の照合順序. nullの場合はバイト値をそのまま比較する
-     * @return s1がs2より小さいとき負,等しいとき0,大きいとき正の値
+     * @param col 文字の照合順序。nullの場合はバイト値をそのまま比較する
+     * @return s1がs2より小さいとき負、等しいとき0、大きいとき正の値
      */
     private static int sortCmps(
             CobolDataStorage s1, CobolDataStorage s2, int size, CobolDataStorage col) {
@@ -109,7 +109,7 @@ public class CobolFileSort {
      * @param k1 比較する 1 つ目のレコード
      * @param k2 比較する 2 つ目のレコード
      * @param pointer 比較キーの定義(keys)と照合順序を保持するCobolFile
-     * @return k1がk2より前に並ぶとき負,後に並ぶとき正の値. すべてのキーが等しい場合は投入順(一意番号)で比較する
+     * @return k1がk2より前に並ぶとき負、後に並ぶとき正の値。すべてのキーが等しい場合は投入順(一意番号)で比較する
      */
     private static int sortCompare(CobolItem k1, CobolItem k2, CobolFile pointer) {
         CobolFile f = pointer;
@@ -167,7 +167,7 @@ public class CobolFileSort {
      * libcob/fileio.cのcob_new_itemの実装
      *
      * @param hp SORT/MERGE の実行状態
-     * @return フリーリストから再利用した,または新規生成したCobolItem
+     * @return フリーリストから再利用した、または新規生成したCobolItem
      */
     private static CobolItem newItem(CobolSort hp) {
         CobolItem q;
@@ -183,7 +183,7 @@ public class CobolFileSort {
     /**
      * libcob/fileio.cのcob_tmpfileの実装
      *
-     * @return 生成した一時ファイルのFileIO. 生成に失敗した場合はnull
+     * @return 生成した一時ファイルのFileIO。生成に失敗した場合はnull
      */
     private static FileIO tmpfile() {
         FileIO fp = new FileIO();
@@ -232,7 +232,7 @@ public class CobolFileSort {
      *
      * @param hp SORT/MERGE の実行状態
      * @param n 対象とする一時ファイルの番号
-     * @return 一時ファイルが利用できない(fpがnull)場合true,利用できる場合false
+     * @return 一時ファイルが利用できない(fpがnull)場合true、利用できる場合false
      */
     private static boolean getTempFile(CobolSort hp, int n) {
         if (hp.getFile()[n].getFp() == null) {
@@ -322,7 +322,7 @@ public class CobolFileSort {
      *
      * @param hp SORT/MERGE の実行状態
      * @param n 読み込み元の一時ファイル/キューの番号
-     * @return 読み込みに失敗した場合1,成功またはブロック終端に達した場合0
+     * @return 読み込みに失敗した場合1、成功またはブロック終端に達した場合0
      */
     private static int readItem(CobolSort hp, int n) {
         FileIO fp = hp.getFile()[n].getFp();
@@ -350,7 +350,7 @@ public class CobolFileSort {
      * @param fp 書き込み先の一時ファイル
      * @param q 書き込む 1 レコード
      * @param hp SORT/MERGE の実行状態
-     * @return 書き込み失敗時true,それ以外はfalse
+     * @return 書き込み失敗時true、それ以外はfalse
      */
     private static boolean writeItem(FileIO fp, CobolItem q, CobolSort hp) {
         byte[] blockByteData = new byte[1];
@@ -369,7 +369,7 @@ public class CobolFileSort {
      *
      * @param hp SORT/MERGE の実行状態
      * @param n 書き出すキューの番号
-     * @return 書き込みに失敗した場合1,成功した場合0
+     * @return 書き込みに失敗した場合1、成功した場合0
      */
     private static int writeBlock(CobolSort hp, int n) {
         FileIO fp = hp.getFile()[hp.getDestinationFile()].getFp();
@@ -395,8 +395,8 @@ public class CobolFileSort {
     }
 
     /**
-     * libcob/fileio.cのcob_copy_checkの実装. fromのレコードをtoのレコードへコピーし,
-     * toの方が大きい場合は不足分を空白で埋める.
+     * libcob/fileio.cのcob_copy_checkの実装。fromのレコードをtoのレコードへコピーし、
+     * toの方が大きい場合は不足分を空白で埋める。
      *
      * @param from コピー元のCobolFile
      */
@@ -420,11 +420,11 @@ public class CobolFileSort {
     }
 
     /**
-     * libcob/fileio.cのcob_file_sort_processの実装. メモリ上でソートし,一時ファイルを使用した場合は
-     * 各ブロックを繰り返しマージして最終的なソート結果を得る.
+     * libcob/fileio.cのcob_file_sort_processの実装。メモリ上でソートし、一時ファイルを使用した場合は
+     * 各ブロックを繰り返しマージして最終的なソート結果を得る。
      *
      * @param hp SORT/MERGE の実行状態
-     * @return 正常に完了した場合0,一時ファイルの入出力に失敗した場合COBSORTFILEERR
+     * @return 正常に完了した場合0、一時ファイルの入出力に失敗した場合COBSORTFILEERR
      */
     private static int sortProcess(CobolSort hp) {
         hp.setRetrieving(1);
@@ -514,10 +514,10 @@ public class CobolFileSort {
     }
 
     /**
-     * libcob/fileio.cのcob_file_sort_submitの実装. 1 レコードをソート対象として投入する.
+     * libcob/fileio.cのcob_file_sort_submitの実装。1 レコードをソート対象として投入する。
      *
      * @param p 投入するレコードのデータ
-     * @return 正常に投入できた場合0,エラーの場合はCOBSORTNOTOPEN等のエラーコード
+     * @return 正常に投入できた場合0、エラーの場合はCOBSORTNOTOPEN等のエラーコード
      */
     private static int sortSubmit(CobolFile f, CobolDataStorage p) {
 
@@ -584,10 +584,10 @@ public class CobolFileSort {
     }
 
     /**
-     * libcob/fileio.cのcob_file_sort_retrieveの実装. ソート済みのレコードを 1 件取り出す.
+     * libcob/fileio.cのcob_file_sort_retrieveの実装。ソート済みのレコードを 1 件取り出す。
      *
      * @param p 取り出したレコードを格納する領域
-     * @return 正常に取り出せた場合0,全レコードを取り出し終えた場合COBSORTEND,エラーの場合はエラーコード
+     * @return 正常に取り出せた場合0、全レコードを取り出し終えた場合COBSORTEND、エラーの場合はエラーコード
      */
     private static int sortRetrieve(CobolFile f, CobolDataStorage p) {
         CobolSort hp = f.filex;
@@ -705,11 +705,11 @@ public class CobolFileSort {
 
     // libcob/fileio.cのcob_file_sort_initの実装
     /**
-     * SORT/MERGE を初期化する. CobolSortの実行状態を生成してファイルに関連付け,キー配列と照合順序を準備する.
+     * SORT/MERGE を初期化する。CobolSortの実行状態を生成してファイルに関連付け、キー配列と照合順序を準備する。
      *
      * @param f SORT/MERGE の対象となる整列用ファイル
      * @param nkeys 比較キーの数
-     * @param collatingSequence 文字の照合順序. nullの場合は現在のモジュールの照合順序を用いる
+     * @param collatingSequence 文字の照合順序。nullの場合は現在のモジュールの照合順序を用いる
      * @param sortReturn SORT-RETURN 特殊レジスタ相当の結果コードを格納する領域
      * @param fnstatus FILE STATUS を格納する項目
      */
@@ -747,11 +747,11 @@ public class CobolFileSort {
 
     // libcob/fileio.cのcob_file_sort_initの実装
     /**
-     * SORT/MERGE を初期化する. 照合順序を指定しない場合に用いる多重定義で,常に現在のモジュールの照合順序を使用する.
+     * SORT/MERGE を初期化する。照合順序を指定しない場合に用いる多重定義で、常に現在のモジュールの照合順序を使用する。
      *
      * @param f SORT/MERGE の対象となる整列用ファイル
      * @param nkeys 比較キーの数
-     * @param collatingSequence 照合順序を表す整数(この多重定義では無視され,常にnullとして扱われる)
+     * @param collatingSequence 照合順序を表す整数(この多重定義では無視され、常にnullとして扱われる)
      * @param sortReturn SORT-RETURN 特殊レジスタ相当の結果コードを格納する領域
      * @param fnstatus FILE STATUS を格納する項目
      */
@@ -766,7 +766,7 @@ public class CobolFileSort {
 
     // libcob/fileio.cのcob_file_sort_init_keyの実装
     /**
-     * SORT/MERGE の比較キーを 1 つ登録する.
+     * SORT/MERGE の比較キーを 1 つ登録する。
      *
      * @param f SORT/MERGE の対象となる整列用ファイル
      * @param flag 昇順(COB_ASCENDING)か降順(COB_DESCENDING)かを表すフラグ
@@ -782,7 +782,7 @@ public class CobolFileSort {
 
     // libcob/fileio.cのcob_file_sort_usingの実装
     /**
-     * USING 指定の入力ファイルを順に読み,全レコードをソート対象として投入する.
+     * USING 指定の入力ファイルを順に読み、全レコードをソート対象として投入する。
      *
      * @param sortFile レコードを投入する整列用ファイル
      * @param dataFile USING で指定された入力ファイル
@@ -805,7 +805,7 @@ public class CobolFileSort {
 
     // libcob/fileio.cのcob_file_sort_givingの実装
     /**
-     * ソート済みのレコードを順に取り出し,GIVING 指定の出力ファイル群へ書き出す.
+     * ソート済みのレコードを順に取り出し、GIVING 指定の出力ファイル群へ書き出す。
      *
      * @param sortFile ソート済みレコードの取り出し元となる整列用ファイル
      * @param varcnt 出力ファイルの数
@@ -886,7 +886,7 @@ public class CobolFileSort {
 
     // libcob/fileio.cのcob_file_sort_closeの実装
     /**
-     * SORT/MERGE を終了し,使用したメモリと一時ファイルを解放する.
+     * SORT/MERGE を終了し、使用したメモリと一時ファイルを解放する。
      *
      * @param f 後始末を行う整列用ファイル
      */
@@ -910,7 +910,7 @@ public class CobolFileSort {
 
     // libcob/fileio.cのcob_file_releaseの実装
     /**
-     * RELEASE 文の処理を行い,ファイルの現レコードをソート対象として投入する.
+     * RELEASE 文の処理を行い、ファイルの現レコードをソート対象として投入する。
      *
      * @param f RELEASE 文の対象となる整列用ファイル
      */
@@ -937,7 +937,7 @@ public class CobolFileSort {
 
     // libcob/fileio.cのcob_file_returnの実装
     /**
-     * RETURN 文の処理を行い,ソート済みレコードを 1 件ファイルの現レコードへ取り出す.
+     * RETURN 文の処理を行い、ソート済みレコードを 1 件ファイルの現レコードへ取り出す。
      *
      * @param f RETURN 文の対象となる整列用ファイル
      */
@@ -992,20 +992,20 @@ public class CobolFileSort {
                             CobolFieldAttribute.COB_TYPE_ALPHANUMERIC, 0, 0, 0, null));
 
     /**
-     * 表(TABLE)のソートを初期化する. 照合順序を指定しない場合に用いる多重定義で,常に現在のモジュールの照合順序を使用する.
+     * 表(TABLE)のソートを初期化する。照合順序を指定しない場合に用いる多重定義で、常に現在のモジュールの照合順序を使用する。
      *
      * @param nkeys 比較キーの数
-     * @param collatingSequence 照合順序を表す整数(この多重定義では無視され,常にnullとして扱われる)
+     * @param collatingSequence 照合順序を表す整数(この多重定義では無視され、常にnullとして扱われる)
      */
     public static void sortTableInit(int nkeys, int collatingSequence) {
         sortTableInit(nkeys, null);
     }
 
     /**
-     * 表(TABLE)のソートを初期化する. キー配列と照合順序を準備する.
+     * 表(TABLE)のソートを初期化する。キー配列と照合順序を準備する。
      *
      * @param nkeys 比較キーの数
-     * @param collatingSequence 文字の照合順序. nullの場合は現在のモジュールの照合順序を用いる
+     * @param collatingSequence 文字の照合順序。nullの場合は現在のモジュールの照合順序を用いる
      */
     public static void sortTableInit(int nkeys, CobolDataStorage collatingSequence) {
         sortNKeys = 0;
@@ -1020,7 +1020,7 @@ public class CobolFileSort {
     }
 
     /**
-     * 表(TABLE)ソートの比較キーを 1 つ登録する.
+     * 表(TABLE)ソートの比較キーを 1 つ登録する。
      *
      * @param flag 昇順(COB_ASCENDING)か降順(COB_DESCENDING)かを表すフラグ
      * @param field キーとなる項目
@@ -1039,8 +1039,8 @@ public class CobolFileSort {
     }
 
     /**
-     * 表(TABLE)を登録済みのキーに従ってソートする. 添字の配列に対してクイックソートを行い,
-     * その結果に従って表の要素を並べ替える.
+     * 表(TABLE)を登録済みのキーに従ってソートする。添字の配列に対してクイックソートを行い、
+     * その結果に従って表の要素を並べ替える。
      *
      * @param f ソート対象の表の先頭要素を表す項目
      * @param n 表の要素数

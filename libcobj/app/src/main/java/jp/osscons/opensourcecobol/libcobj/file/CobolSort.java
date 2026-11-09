@@ -21,7 +21,7 @@ package jp.osscons.opensourcecobol.libcobj.file;
 import jp.osscons.opensourcecobol.libcobj.data.AbstractCobolField;
 import jp.osscons.opensourcecobol.libcobj.data.CobolDataStorage;
 
-/** SORT/MERGE の実行状態(入出力ファイル,比較キー,マージ用のキューと一時ファイル等)を保持するクラス. */
+/** SORT/MERGE の実行状態(入出力ファイル、比較キー、マージ用のキューと一時ファイル等)を保持するクラス。 */
 class CobolSort {
     private CobolFile pointer;
     private CobolItem empty;
@@ -39,7 +39,7 @@ class CobolSort {
     private MemoryStruct[] queue = new MemoryStruct[4];
     private FileStruct[] file = new FileStruct[4];
 
-    /** マージ用の 4 本のキュー(MemoryStruct)と 4 本の一時ファイル(FileStruct)を生成して初期化する. */
+    /** マージ用の 4 本のキュー(MemoryStruct)と 4 本の一時ファイル(FileStruct)を生成して初期化する。 */
     CobolSort() {
         for (int i = 0; i < 4; ++i) {
             this.queue[i] = new MemoryStruct();
@@ -48,7 +48,7 @@ class CobolSort {
     }
 
     /**
-     * SORT/MERGE の対象となるCobolFileを取得する.
+     * SORT/MERGE の対象となるCobolFileを取得する。
      *
      * @return SORT/MERGE の対象となるCobolFile
      */
@@ -57,7 +57,7 @@ class CobolSort {
     }
 
     /**
-     * SORT/MERGE の対象となるCobolFileを設定する.
+     * SORT/MERGE の対象となるCobolFileを設定する。
      *
      * @param pointer SORT/MERGE の対象となるCobolFile
      */
@@ -66,7 +66,7 @@ class CobolSort {
     }
 
     /**
-     * 再利用可能な空きCobolItemを繋いだフリーリストの先頭を取得する.
+     * 再利用可能な空きCobolItemを繋いだフリーリストの先頭を取得する。
      *
      * @return 空きCobolItemのフリーリストの先頭
      */
@@ -75,7 +75,7 @@ class CobolSort {
     }
 
     /**
-     * 再利用可能な空きCobolItemを繋いだフリーリストの先頭を設定する.
+     * 再利用可能な空きCobolItemを繋いだフリーリストの先頭を設定する。
      *
      * @param empty 空きCobolItemのフリーリストの先頭
      */
@@ -84,7 +84,7 @@ class CobolSort {
     }
 
     /**
-     * SORT/MERGE の結果コード(SORT-RETURN 特殊レジスタ相当. エラー時に16が設定される)を保持する領域を取得する.
+     * SORT/MERGE の結果コード(SORT-RETURN 特殊レジスタ相当。エラー時に16が設定される)を保持する領域を取得する。
      *
      * @return SORT-RETURN 特殊レジスタ相当の領域
      */
@@ -93,7 +93,7 @@ class CobolSort {
     }
 
     /**
-     * SORT/MERGE の結果コード(SORT-RETURN 特殊レジスタ相当. エラー時に16が設定される)を保持する領域を設定する.
+     * SORT/MERGE の結果コード(SORT-RETURN 特殊レジスタ相当。エラー時に16が設定される)を保持する領域を設定する。
      *
      * @param sortReturn SORT-RETURN 特殊レジスタ相当の領域
      */
@@ -102,7 +102,7 @@ class CobolSort {
     }
 
     /**
-     * ファイル状態(FILE STATUS)を格納する項目を取得する.
+     * ファイル状態(FILE STATUS)を格納する項目を取得する。
      *
      * @return FILE STATUS を格納する項目
      */
@@ -111,7 +111,7 @@ class CobolSort {
     }
 
     /**
-     * ファイル状態(FILE STATUS)を格納する項目を設定する.
+     * ファイル状態(FILE STATUS)を格納する項目を設定する。
      *
      * @param fnstatus FILE STATUS を格納する項目
      */
@@ -120,7 +120,7 @@ class CobolSort {
     }
 
     /**
-     * 次に投入するレコードへ割り当てる一意番号(レコード投入ごとに増加し,安定ソートに用いる)を取得する.
+     * 次に投入するレコードへ割り当てる一意番号(レコード投入ごとに増加し、安定ソートに用いる)を取得する。
      *
      * @return 次に割り当てる一意番号
      */
@@ -129,7 +129,7 @@ class CobolSort {
     }
 
     /**
-     * 次に投入するレコードへ割り当てる一意番号(レコード投入ごとに増加し,安定ソートに用いる)を設定する.
+     * 次に投入するレコードへ割り当てる一意番号(レコード投入ごとに増加し、安定ソートに用いる)を設定する。
      *
      * @param unique 次に割り当てる一意番号
      */
@@ -138,43 +138,43 @@ class CobolSort {
     }
 
     /**
-     * ソートが完了し取り出し(RETURN)フェーズに入っているかを表すフラグを取得する.
+     * ソートが完了し取り出し(RETURN)フェーズに入っているかを表すフラグを取得する。
      *
-     * @return 取り出しフェーズに入っていれば0以外,そうでなければ0
+     * @return 取り出しフェーズに入っていれば0以外、そうでなければ0
      */
     int getRetrieving() {
         return retrieving;
     }
 
     /**
-     * ソートが完了し取り出し(RETURN)フェーズに入っているかを表すフラグを設定する.
+     * ソートが完了し取り出し(RETURN)フェーズに入っているかを表すフラグを設定する。
      *
-     * @param retrieving 取り出しフェーズに入っていれば0以外,そうでなければ0
+     * @param retrieving 取り出しフェーズに入っていれば0以外、そうでなければ0
      */
     void setRetrieving(int retrieving) {
         this.retrieving = retrieving;
     }
 
     /**
-     * メモリに収まらず一時ファイルを用いた外部マージソートを行っているかを表すフラグを取得する.
+     * メモリに収まらず一時ファイルを用いた外部マージソートを行っているかを表すフラグを取得する。
      *
-     * @return 一時ファイルを使用していれば0以外,そうでなければ0
+     * @return 一時ファイルを使用していれば0以外、そうでなければ0
      */
     int getFilesUsed() {
         return filesUsed;
     }
 
     /**
-     * メモリに収まらず一時ファイルを用いた外部マージソートを行っているかを表すフラグを設定する.
+     * メモリに収まらず一時ファイルを用いた外部マージソートを行っているかを表すフラグを設定する。
      *
-     * @param filesUsed 一時ファイルを使用していれば0以外,そうでなければ0
+     * @param filesUsed 一時ファイルを使用していれば0以外、そうでなければ0
      */
     void setFilesUsed(int filesUsed) {
         this.filesUsed = filesUsed;
     }
 
     /**
-     * ソート対象レコード 1 件のサイズ(バイト数)を取得する.
+     * ソート対象レコード 1 件のサイズ(バイト数)を取得する。
      *
      * @return レコード 1 件のサイズ(バイト数)
      */
@@ -183,7 +183,7 @@ class CobolSort {
     }
 
     /**
-     * ソート対象レコード 1 件のサイズ(バイト数)を設定する.
+     * ソート対象レコード 1 件のサイズ(バイト数)を設定する。
      *
      * @param size レコード 1 件のサイズ(バイト数)
      */
@@ -192,7 +192,7 @@ class CobolSort {
     }
 
     /**
-     * 一時ファイルからの読み込み単位のサイズ(レコードサイズ + 一意番号 8 バイト)を取得する.
+     * 一時ファイルからの読み込み単位のサイズ(レコードサイズ + 一意番号 8 バイト)を取得する。
      *
      * @return 読み込み単位のサイズ(バイト数)
      */
@@ -201,7 +201,7 @@ class CobolSort {
     }
 
     /**
-     * 一時ファイルからの読み込み単位のサイズ(レコードサイズ + 一意番号 8 バイト)を設定する.
+     * 一時ファイルからの読み込み単位のサイズ(レコードサイズ + 一意番号 8 バイト)を設定する。
      *
      * @param rSize 読み込み単位のサイズ(バイト数)
      */
@@ -210,7 +210,7 @@ class CobolSort {
     }
 
     /**
-     * 一時ファイルへの書き込み単位のサイズ(レコードサイズ + 一意番号 8 バイト + ブロックバイト 1 バイト)を取得する.
+     * 一時ファイルへの書き込み単位のサイズ(レコードサイズ + 一意番号 8 バイト + ブロックバイト 1 バイト)を取得する。
      *
      * @return 書き込み単位のサイズ(バイト数)
      */
@@ -219,7 +219,7 @@ class CobolSort {
     }
 
     /**
-     * 一時ファイルへの書き込み単位のサイズ(レコードサイズ + 一意番号 8 バイト + ブロックバイト 1 バイト)を設定する.
+     * 一時ファイルへの書き込み単位のサイズ(レコードサイズ + 一意番号 8 バイト + ブロックバイト 1 バイト)を設定する。
      *
      * @param wSize 書き込み単位のサイズ(バイト数)
      */
@@ -228,7 +228,7 @@ class CobolSort {
     }
 
     /**
-     * 一時ファイルへ書き出す前にメモリ上に保持できるレコード数の上限を取得する.
+     * 一時ファイルへ書き出す前にメモリ上に保持できるレコード数の上限を取得する。
      *
      * @return メモリ上に保持できるレコード数の上限
      */
@@ -237,7 +237,7 @@ class CobolSort {
     }
 
     /**
-     * 一時ファイルへ書き出す前にメモリ上に保持できるレコード数の上限を設定する.
+     * 一時ファイルへ書き出す前にメモリ上に保持できるレコード数の上限を設定する。
      *
      * @param memory メモリ上に保持できるレコード数の上限
      */
@@ -246,7 +246,7 @@ class CobolSort {
     }
 
     /**
-     * ソート済みブロックの書き込み先となる一時ファイルの番号を取得する.
+     * ソート済みブロックの書き込み先となる一時ファイルの番号を取得する。
      *
      * @return 書き込み先の一時ファイルの番号
      */
@@ -255,7 +255,7 @@ class CobolSort {
     }
 
     /**
-     * ソート済みブロックの書き込み先となる一時ファイルの番号を設定する.
+     * ソート済みブロックの書き込み先となる一時ファイルの番号を設定する。
      *
      * @param destinationFile 書き込み先の一時ファイルの番号
      */
@@ -264,7 +264,7 @@ class CobolSort {
     }
 
     /**
-     * 取り出し(RETURN)時にソート済みレコードを読み出す元となるキュー/一時ファイルの番号を取得する.
+     * 取り出し(RETURN)時にソート済みレコードを読み出す元となるキュー/一時ファイルの番号を取得する。
      *
      * @return 取り出し元のキュー/一時ファイルの番号
      */
@@ -273,7 +273,7 @@ class CobolSort {
     }
 
     /**
-     * 取り出し(RETURN)時にソート済みレコードを読み出す元となるキュー/一時ファイルの番号を設定する.
+     * 取り出し(RETURN)時にソート済みレコードを読み出す元となるキュー/一時ファイルの番号を設定する。
      *
      * @param retrievalQueue 取り出し元のキュー/一時ファイルの番号
      */
@@ -282,7 +282,7 @@ class CobolSort {
     }
 
     /**
-     * マージ処理で用いるメモリ上のキュー(4 本)の配列を取得する.
+     * マージ処理で用いるメモリ上のキュー(4 本)の配列を取得する。
      *
      * @return メモリ上のキュー(MemoryStruct)の配列
      */
@@ -291,7 +291,7 @@ class CobolSort {
     }
 
     /**
-     * マージ処理で用いるメモリ上のキュー(4 本)の配列を設定する.
+     * マージ処理で用いるメモリ上のキュー(4 本)の配列を設定する。
      *
      * @param queue メモリ上のキュー(MemoryStruct)の配列
      */
@@ -300,7 +300,7 @@ class CobolSort {
     }
 
     /**
-     * マージ処理で用いる一時ファイル(4 本)の配列を取得する.
+     * マージ処理で用いる一時ファイル(4 本)の配列を取得する。
      *
      * @return 一時ファイル(FileStruct)の配列
      */
@@ -309,7 +309,7 @@ class CobolSort {
     }
 
     /**
-     * マージ処理で用いる一時ファイル(4 本)の配列を設定する.
+     * マージ処理で用いる一時ファイル(4 本)の配列を設定する。
      *
      * @param file 一時ファイル(FileStruct)の配列
      */

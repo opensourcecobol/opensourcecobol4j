@@ -40,254 +40,254 @@ import jp.osscons.opensourcecobol.libcobj.exceptions.CobolExceptionId;
 import jp.osscons.opensourcecobol.libcobj.exceptions.CobolRuntimeException;
 import jp.osscons.opensourcecobol.libcobj.exceptions.CobolStopRunException;
 
-/** INDEXED, RELATIVE, SEQUENTIAL, LINE SEQUENTIAL等のCOBOLの ファイルを実装するための基底クラス */
+/** INDEXED、RELATIVE、SEQUENTIAL、LINE SEQUENTIAL等のCOBOLの ファイルを実装するための基底クラス */
 public class CobolFile {
-    /** 順編成(SEQUENTIAL)のファイル編成を表す定数. */
+    /** 順編成(SEQUENTIAL)のファイル編成を表す定数。 */
     protected static final int COB_ORG_SEQUENTIAL = 0;
 
-    /** 行順編成(LINE SEQUENTIAL)のファイル編成を表す定数. */
+    /** 行順編成(LINE SEQUENTIAL)のファイル編成を表す定数。 */
     protected static final int COB_ORG_LINE_SEQUENTIAL = 1;
 
-    /** 相対編成(RELATIVE)のファイル編成を表す定数. */
+    /** 相対編成(RELATIVE)のファイル編成を表す定数。 */
     protected static final int COB_ORG_RELATIVE = 2;
 
-    /** 索引編成(INDEXED)のファイル編成を表す定数. */
+    /** 索引編成(INDEXED)のファイル編成を表す定数。 */
     protected static final int COB_ORG_INDEXED = 3;
 
-    /** 整列(SORT)用のファイル編成を表す定数. */
+    /** 整列(SORT)用のファイル編成を表す定数。 */
     protected static final int COB_ORG_SORT = 4;
 
-    /** ファイル編成を表す定数の個数(上限値). */
+    /** ファイル編成を表す定数の個数(上限値)。 */
     protected static final int COB_ORG_MAX = 5;
 
-    /** 順アクセス(SEQUENTIAL)のアクセス方式を表す定数. */
+    /** 順アクセス(SEQUENTIAL)のアクセス方式を表す定数。 */
     protected static final int COB_ACCESS_SEQUENTIAL = 1;
 
-    /** 動的アクセス(DYNAMIC)のアクセス方式を表す定数. */
+    /** 動的アクセス(DYNAMIC)のアクセス方式を表す定数。 */
     protected static final int COB_ACCESS_DYNAMIC = 2;
 
-    /** 乱アクセス(RANDOM)のアクセス方式を表す定数. */
+    /** 乱アクセス(RANDOM)のアクセス方式を表す定数。 */
     protected static final int COB_ACCESS_RANDOM = 3;
 
-    /** OPEN操作を表すI/O操作種別の定数. */
+    /** OPEN操作を表すI/O操作種別の定数。 */
     protected static final int COB_IO_OPEN = 0;
 
-    /** READ操作を表すI/O操作種別の定数. */
+    /** READ操作を表すI/O操作種別の定数。 */
     protected static final int COB_IO_READ = 1;
 
-    /** WRITE操作を表すI/O操作種別の定数. */
+    /** WRITE操作を表すI/O操作種別の定数。 */
     protected static final int COB_IO_WRITE = 2;
 
-    /** CLOSE操作を表すI/O操作種別の定数. */
+    /** CLOSE操作を表すI/O操作種別の定数。 */
     protected static final int COB_IO_CLOSE = 3;
 
-    /** DELETE操作を表すI/O操作種別の定数. */
+    /** DELETE操作を表すI/O操作種別の定数。 */
     protected static final int COB_IO_DELETE = 4;
 
-    /** REWRITE操作を表すI/O操作種別の定数. */
+    /** REWRITE操作を表すI/O操作種別の定数。 */
     protected static final int COB_IO_REWRITE = 5;
 
-    /** START操作を表すI/O操作種別の定数. */
+    /** START操作を表すI/O操作種別の定数。 */
     protected static final int COB_IO_START = 6;
 
-    /** COMMIT操作を表すI/O操作種別の定数. */
+    /** COMMIT操作を表すI/O操作種別の定数。 */
     protected static final int COB_IO_COMMIT = 7;
 
-    /** ROLLBACK操作を表すI/O操作種別の定数. */
+    /** ROLLBACK操作を表すI/O操作種別の定数。 */
     protected static final int COB_IO_ROLLBACK = 8;
 
-    /** UNLOCK操作を表すI/O操作種別の定数. */
+    /** UNLOCK操作を表すI/O操作種別の定数。 */
     protected static final int COB_IO_UNLOCK = 9;
 
-    /** ファイル削除(DELETE FILE)操作を表すI/O操作種別の定数. */
+    /** ファイル削除(DELETE FILE)操作を表すI/O操作種別の定数。 */
     protected static final int COB_IO_DELETE_FILE = 10;
 
-    /** ファイルが閉じている状態を表すオープンモード. */
+    /** ファイルが閉じている状態を表すオープンモード。 */
     public static final int COB_OPEN_CLOSED = 0;
 
-    /** INPUTモードで開いている状態を表すオープンモード. */
+    /** INPUTモードで開いている状態を表すオープンモード。 */
     public static final int COB_OPEN_INPUT = 1;
 
-    /** OUTPUTモードで開いている状態を表すオープンモード. */
+    /** OUTPUTモードで開いている状態を表すオープンモード。 */
     public static final int COB_OPEN_OUTPUT = 2;
 
-    /** I-Oモードで開いている状態を表すオープンモード. */
+    /** I-Oモードで開いている状態を表すオープンモード。 */
     public static final int COB_OPEN_I_O = 3;
 
-    /** EXTENDモードで開いている状態を表すオープンモード. */
+    /** EXTENDモードで開いている状態を表すオープンモード。 */
     public static final int COB_OPEN_EXTEND = 4;
 
-    /** ロックされて閉じている状態を表すオープンモード. */
+    /** ロックされて閉じている状態を表すオープンモード。 */
     public static final int COB_OPEN_LOCKED = 5;
 
-    /** 通常のCLOSE(オプション指定なし)を表すCLOSE文のオプション定数. */
+    /** 通常のCLOSE(オプション指定なし)を表すCLOSE文のオプション定数。 */
     public static final int COB_CLOSE_NORMAL = 0;
 
-    /** CLOSE後にファイルをロックする(WITH LOCK)ことを表すCLOSE文のオプション定数. */
+    /** CLOSE後にファイルをロックする(WITH LOCK)ことを表すCLOSE文のオプション定数。 */
     public static final int COB_CLOSE_LOCK = 1;
 
-    /** 巻き戻しを行わない(NO REWIND)ことを表すCLOSE文のオプション定数. */
+    /** 巻き戻しを行わない(NO REWIND)ことを表すCLOSE文のオプション定数。 */
     public static final int COB_CLOSE_NO_REWIND = 2;
 
-    /** ユニット単位のCLOSE(REEL/UNIT)を表すCLOSE文のオプション定数. */
+    /** ユニット単位のCLOSE(REEL/UNIT)を表すCLOSE文のオプション定数。 */
     public static final int COB_CLOSE_UNIT = 3;
 
-    /** ユニットの取り外しを伴うCLOSE(REEL/UNIT FOR REMOVAL)を表すCLOSE文のオプション定数. */
+    /** ユニットの取り外しを伴うCLOSE(REEL/UNIT FOR REMOVAL)を表すCLOSE文のオプション定数。 */
     public static final int COB_CLOSE_UNIT_REMOVAL = 4;
 
-    /** WRITE文のオプションから行数などの値部分を取り出すためのビットマスク. */
+    /** WRITE文のオプションから行数などの値部分を取り出すためのビットマスク。 */
     public static final int COB_WRITE_MASK = 0x0000ffff;
 
-    /** 指定行数だけ改行する(ADVANCING LINES)ことを表すWRITE文のビットフラグ. */
+    /** 指定行数だけ改行する(ADVANCING LINES)ことを表すWRITE文のビットフラグ。 */
     public static final int COB_WRITE_LINES = 0x00010000;
 
-    /** 改ページする(ADVANCING PAGE)ことを表すWRITE文のビットフラグ. */
+    /** 改ページする(ADVANCING PAGE)ことを表すWRITE文のビットフラグ。 */
     public static final int COB_WRITE_PAGE = 0x00020000;
 
-    /** チャネル指定の書き込み(ADVANCING CHANNEL)を表すWRITE文のビットフラグ. */
+    /** チャネル指定の書き込み(ADVANCING CHANNEL)を表すWRITE文のビットフラグ。 */
     public static final int COB_WRITE_CHANNEL = 0x00040000;
 
-    /** 書き込みの後に改行する(AFTER ADVANCING)ことを表すWRITE文のビットフラグ. */
+    /** 書き込みの後に改行する(AFTER ADVANCING)ことを表すWRITE文のビットフラグ。 */
     public static final int COB_WRITE_AFTER = 0x00100000;
 
-    /** 書き込みの前に改行する(BEFORE ADVANCING)ことを表すWRITE文のビットフラグ. */
+    /** 書き込みの前に改行する(BEFORE ADVANCING)ことを表すWRITE文のビットフラグ。 */
     public static final int COB_WRITE_BEFORE = 0x00200000;
 
-    /** ページ末尾(END-OF-PAGE)条件の検出を表すWRITE文のビットフラグ. */
+    /** ページ末尾(END-OF-PAGE)条件の検出を表すWRITE文のビットフラグ。 */
     public static final int COB_WRITE_EOP = 0x00400000;
 
-    /** 書き込み時にレコードをロックすることを表すWRITE文のビットフラグ. */
+    /** 書き込み時にレコードをロックすることを表すWRITE文のビットフラグ。 */
     public static final int COB_WRITE_LOCK = 0x00800000;
 
-    /** 次のレコードを読む(READ NEXT)ことを表すREAD文のビットフラグ. */
+    /** 次のレコードを読む(READ NEXT)ことを表すREAD文のビットフラグ。 */
     public static final int COB_READ_NEXT = 0x01;
 
-    /** 前のレコードを読む(READ PREVIOUS)ことを表すREAD文のビットフラグ. */
+    /** 前のレコードを読む(READ PREVIOUS)ことを表すREAD文のビットフラグ。 */
     public static final int COB_READ_PREVIOUS = 0x2;
 
-    /** 先頭のレコードを読む(READ FIRST)ことを表すREAD文のビットフラグ. */
+    /** 先頭のレコードを読む(READ FIRST)ことを表すREAD文のビットフラグ。 */
     public static final int COB_READ_FIRST = 0x04;
 
-    /** 末尾のレコードを読む(READ LAST)ことを表すREAD文のビットフラグ. */
+    /** 末尾のレコードを読む(READ LAST)ことを表すREAD文のビットフラグ。 */
     public static final int COB_READ_LAST = 0x08;
 
-    /** 読み込んだレコードをロックすることを表すREAD文のビットフラグ. */
+    /** 読み込んだレコードをロックすることを表すREAD文のビットフラグ。 */
     public static final int COB_READ_LOCK = 0x10;
 
-    /** 読み込んだレコードをロックしないことを表すREAD文のビットフラグ. */
+    /** 読み込んだレコードをロックしないことを表すREAD文のビットフラグ。 */
     public static final int COB_READ_NO_LOCK = 0x20;
 
-    /** 既存のロックを保持することを表すREAD文のビットフラグ. */
+    /** 既存のロックを保持することを表すREAD文のビットフラグ。 */
     public static final int COB_READ_KEPT_LOCK = 0x40;
 
-    /** ロックが取得できるまで待機することを表すREAD文のビットフラグ. */
+    /** ロックが取得できるまで待機することを表すREAD文のビットフラグ。 */
     public static final int COB_READ_WAIT_LOCK = 0x80;
 
-    /** 他プロセスのロックを無視して読むことを表すREAD文のビットフラグ. */
+    /** 他プロセスのロックを無視して読むことを表すREAD文のビットフラグ。 */
     public static final int COB_READ_IGNORE_LOCK = 0x100;
 
-    /** ユーザ定義のファイルハンドラを指定する環境変数の名前. */
+    /** ユーザ定義のファイルハンドラを指定する環境変数の名前。 */
     protected static final String TIS_DEFINE_USERFH = "OC_USERFH";
 
-    /** I-Oモードで開く際に存在しないファイルを作成するかを指定する環境変数の名前. */
+    /** I-Oモードで開く際に存在しないファイルを作成するかを指定する環境変数の名前。 */
     protected static final String COB_IO_CREATES = "OC_IO_CREATES";
 
-    /** EXTENDモードで開く際に存在しないファイルを作成するかを指定する環境変数の名前. */
+    /** EXTENDモードで開く際に存在しないファイルを作成するかを指定する環境変数の名前。 */
     protected static final String COB_EXTEND_CREATES = "OC_EXTEND_CREATES";
 
-    /** 正常終了を表すCOBOLのファイル状態コード(0). */
+    /** 正常終了を表すCOBOLのファイル状態コード(0)。 */
     protected static final int COB_STATUS_00_SUCCESS = 0;
 
-    /** 重複キーを許して正常終了したことを表すCOBOLのファイル状態コード(2). */
+    /** 重複キーを許して正常終了したことを表すCOBOLのファイル状態コード(2)。 */
     protected static final int COB_STATUS_02_SUCCESS_DUPLICATE = 2;
 
-    /** レコード長が一致しないが正常終了したことを表すCOBOLのファイル状態コード(4). */
+    /** レコード長が一致しないが正常終了したことを表すCOBOLのファイル状態コード(4)。 */
     protected static final int COB_STATUS_04_SUCCESS_INCOMPLETE = 4;
 
-    /** 省略可能ファイルが存在せずに正常終了したことを表すCOBOLのファイル状態コード(5). */
+    /** 省略可能ファイルが存在せずに正常終了したことを表すCOBOLのファイル状態コード(5)。 */
     protected static final int COB_STATUS_05_SUCCESS_OPTIONAL = 5;
 
-    /** リール/ユニットでないファイルに対するREEL/UNIT付き操作が正常終了したことを表すCOBOLのファイル状態コード(7). */
+    /** リール/ユニットでないファイルに対するREEL/UNIT付き操作が正常終了したことを表すCOBOLのファイル状態コード(7)。 */
     protected static final int COB_STATUS_07_SUCCESS_NO_UNIT = 7;
 
-    /** ファイル終了(end of file)を表すCOBOLのファイル状態コード(10). */
+    /** ファイル終了(end of file)を表すCOBOLのファイル状態コード(10)。 */
     protected static final int COB_STATUS_10_END_OF_FILE = 10;
 
-    /** 相対キーがキー項目の範囲を超えていることを表すCOBOLのファイル状態コード(14). */
+    /** 相対キーがキー項目の範囲を超えていることを表すCOBOLのファイル状態コード(14)。 */
     protected static final int COB_STATUS_14_OUT_OF_KEY_RANGE = 14;
 
-    /** キーの順序が不正(昇順でない)であることを表すCOBOLのファイル状態コード(21). */
+    /** キーの順序が不正(昇順でない)であることを表すCOBOLのファイル状態コード(21)。 */
     protected static final int COB_STATUS_21_KEY_INVALID = 21;
 
-    /** 既に同じキーのレコードが存在することを表すCOBOLのファイル状態コード(22). */
+    /** 既に同じキーのレコードが存在することを表すCOBOLのファイル状態コード(22)。 */
     protected static final int COB_STATUS_22_KEY_EXISTS = 22;
 
-    /** 該当するキーのレコードが存在しないことを表すCOBOLのファイル状態コード(23). */
+    /** 該当するキーのレコードが存在しないことを表すCOBOLのファイル状態コード(23)。 */
     protected static final int COB_STATUS_23_KEY_NOT_EXISTS = 23;
 
-    /** 回復不能な入出力エラー(永続的エラー)を表すCOBOLのファイル状態コード(30). */
+    /** 回復不能な入出力エラー(永続的エラー)を表すCOBOLのファイル状態コード(30)。 */
     protected static final int COB_STATUS_30_PERMANENT_ERROR = 30;
 
-    /** ファイル名が矛盾していることを表すCOBOLのファイル状態コード(31). */
+    /** ファイル名が矛盾していることを表すCOBOLのファイル状態コード(31)。 */
     protected static final int COB_STATUS_31_INCONSISTENT_FILENAME = 31;
 
-    /** ファイル領域の境界を超えたことを表すCOBOLのファイル状態コード(34). */
+    /** ファイル領域の境界を超えたことを表すCOBOLのファイル状態コード(34)。 */
     protected static final int COB_STATUS_34_BOUNDARY_VIOLATION = 34;
 
-    /** ファイルが存在しないことを表すCOBOLのファイル状態コード(35). */
+    /** ファイルが存在しないことを表すCOBOLのファイル状態コード(35)。 */
     protected static final int COB_STATUS_35_NOT_EXISTS = 35;
 
-    /** ファイルへのアクセス権がないことを表すCOBOLのファイル状態コード(37). */
+    /** ファイルへのアクセス権がないことを表すCOBOLのファイル状態コード(37)。 */
     protected static final int COB_STATUS_37_PERMISSION_DENIED = 37;
 
-    /** ロック付きでCLOSEされたファイルを開こうとしたことを表すCOBOLのファイル状態コード(38). */
+    /** ロック付きでCLOSEされたファイルを開こうとしたことを表すCOBOLのファイル状態コード(38)。 */
     protected static final int COB_STATUS_38_CLOSED_WITH_LOCK = 38;
 
-    /** ファイル属性が矛盾していることを表すCOBOLのファイル状態コード(39). */
+    /** ファイル属性が矛盾していることを表すCOBOLのファイル状態コード(39)。 */
     protected static final int COB_STATUS_39_CONFLICT_ATTRIBUTE = 39;
 
-    /** 既に開いているファイルを開こうとしたことを表すCOBOLのファイル状態コード(41). */
+    /** 既に開いているファイルを開こうとしたことを表すCOBOLのファイル状態コード(41)。 */
     protected static final int COB_STATUS_41_ALREADY_OPEN = 41;
 
-    /** 開いていないファイルを操作しようとしたことを表すCOBOLのファイル状態コード(42). */
+    /** 開いていないファイルを操作しようとしたことを表すCOBOLのファイル状態コード(42)。 */
     protected static final int COB_STATUS_42_NOT_OPEN = 42;
 
-    /** 直前にREADが実行されていないことを表すCOBOLのファイル状態コード(43). */
+    /** 直前にREADが実行されていないことを表すCOBOLのファイル状態コード(43)。 */
     protected static final int COB_STATUS_43_READ_NOT_DONE = 43;
 
-    /** レコード長が許容範囲を超えていることを表すCOBOLのファイル状態コード(44). */
+    /** レコード長が許容範囲を超えていることを表すCOBOLのファイル状態コード(44)。 */
     protected static final int COB_STATUS_44_RECORD_OVERFLOW = 44;
 
-    /** READに失敗したことを表すCOBOLのファイル状態コード(46). */
+    /** READに失敗したことを表すCOBOLのファイル状態コード(46)。 */
     protected static final int COB_STATUS_46_READ_ERROR = 46;
 
-    /** READ/STARTが許可されていないことを表すCOBOLのファイル状態コード(47). */
+    /** READ/STARTが許可されていないことを表すCOBOLのファイル状態コード(47)。 */
     protected static final int COB_STATUS_47_INPUT_DENIED = 47;
 
-    /** WRITEが許可されていないことを表すCOBOLのファイル状態コード(48). */
+    /** WRITEが許可されていないことを表すCOBOLのファイル状態コード(48)。 */
     protected static final int COB_STATUS_48_OUTPUT_DENIED = 48;
 
-    /** DELETE/REWRITEが許可されていないことを表すCOBOLのファイル状態コード(49). */
+    /** DELETE/REWRITEが許可されていないことを表すCOBOLのファイル状態コード(49)。 */
     protected static final int COB_STATUS_49_I_O_DENIED = 49;
 
-    /** レコードが他のプロセスによってロックされていることを表すCOBOLのファイル状態コード(51). */
+    /** レコードが他のプロセスによってロックされていることを表すCOBOLのファイル状態コード(51)。 */
     protected static final int COB_STATUS_51_RECORD_LOCKED = 51;
 
-    /** ページ末尾(end of page)条件が発生したことを表すCOBOLのファイル状態コード(52). */
+    /** ページ末尾(end of page)条件が発生したことを表すCOBOLのファイル状態コード(52)。 */
     protected static final int COB_STATUS_52_EOP = 52;
 
-    /** LINAGEの指定値が不正であることを表すCOBOLのファイル状態コード(57). */
+    /** LINAGEの指定値が不正であることを表すCOBOLのファイル状態コード(57)。 */
     protected static final int COB_STATUS_57_I_O_LINAGE = 57;
 
-    /** ファイル共有の競合が発生したことを表すCOBOLのファイル状態コード(61). */
+    /** ファイル共有の競合が発生したことを表すCOBOLのファイル状態コード(61)。 */
     protected static final int COB_STATUS_61_FILE_SHARING = 61;
 
-    /** 実行時ライブラリがこの操作に対応していないことを表すCOBOLのファイル状態コード(91). */
+    /** 実行時ライブラリがこの操作に対応していないことを表すCOBOLのファイル状態コード(91)。 */
     protected static final int COB_STATUS_91_NOT_AVAILABLE = 91;
 
     /**
-     * ファイルとプログラムの間でバージョンが一致しないためにファイル操作が失敗したことを表す.
-     * COBOLのファイル状態コード(92).
+     * ファイルとプログラムの間でバージョンが一致しないためにファイル操作が失敗したことを表す。
+     * COBOLのファイル状態コード(92)。
      */
     protected static final int COB_STATUS_92_VERSION_INCOMPATIBLE = 92;
 
@@ -295,104 +295,104 @@ public class CobolFile {
     // The following constants must not be equal
     // to any of the above constants `COB_STATUS_*`
 
-    /** ファイルが存在しないことを表すエラー種別(POSIXのENOENT相当). */
+    /** ファイルが存在しないことを表すエラー種別(POSIXのENOENT相当)。 */
     protected static final int ENOENT = 1002;
 
-    /** 不正なファイルディスクリプタを表すエラー種別(POSIXのEBADF相当). */
+    /** 不正なファイルディスクリプタを表すエラー種別(POSIXのEBADF相当)。 */
     protected static final int EBADF = 1009;
 
-    /** アクセス権がないことを表すエラー種別(POSIXのEACCES相当). */
+    /** アクセス権がないことを表すエラー種別(POSIXのEACCES相当)。 */
     protected static final int EACCESS = 1013;
 
-    /** 対象がディレクトリであることを表すエラー種別(POSIXのEISDIR相当). */
+    /** 対象がディレクトリであることを表すエラー種別(POSIXのEISDIR相当)。 */
     protected static final int EISDIR = 1021;
 
-    /** 読み取り専用ファイルシステムであることを表すエラー種別(POSIXのEROFS相当). */
+    /** 読み取り専用ファイルシステムであることを表すエラー種別(POSIXのEROFS相当)。 */
     protected static final int EROFS = 1030;
 
-    /** 資源が一時的に利用できないことを表すエラー種別(POSIXのEAGAIN相当). */
+    /** 資源が一時的に利用できないことを表すエラー種別(POSIXのEAGAIN相当)。 */
     protected static final int EAGAIN = 1011;
 
     // ==============================================
 
-    /** LINAGEの指定値が不正であることを表す内部コード. */
+    /** LINAGEの指定値が不正であることを表す内部コード。 */
     protected static final int COB_LINAGE_INVALID = 16384;
 
-    /** 機能が構成されていないことを表す内部コード. */
+    /** 機能が構成されていないことを表す内部コード。 */
     protected static final int COB_NOT_CONFIGURED = 32768;
 
-    /** SELECT句でFILE STATUSが指定されていることを表すビットフラグ. */
+    /** SELECT句でFILE STATUSが指定されていることを表すビットフラグ。 */
     public static final int COB_SELECT_FILE_STATUS = 0x01;
 
-    /** SELECT句でEXTERNALが指定されていることを表すビットフラグ. */
+    /** SELECT句でEXTERNALが指定されていることを表すビットフラグ。 */
     public static final int COB_SELECT_EXTERNAL = 0x02;
 
-    /** SELECT句でLINAGEが指定されていることを表すビットフラグ. */
+    /** SELECT句でLINAGEが指定されていることを表すビットフラグ。 */
     public static final int COB_SELECT_LINAGE = 0x04;
 
-    /** SELECT句で分割キー(SPLIT KEY)が指定されていることを表すビットフラグ. */
+    /** SELECT句で分割キー(SPLIT KEY)が指定されていることを表すビットフラグ。 */
     public static final int COB_SELECT_SPLITKEY = 0x08;
 
-    /** ファイル状態(FILE STATUS)領域のサイズ(バイト数). */
+    /** ファイル状態(FILE STATUS)領域のサイズ(バイト数)。 */
     protected static final int FNSTATUSSIZE = 3;
 
-    /** 直近に入出力操作(saveStatusの呼び出し)を行ったファイルを保持する静的フィールド. */
+    /** 直近に入出力操作(saveStatusの呼び出し)を行ったファイルを保持する静的フィールド。 */
     public static CobolFile errorFile;
 
-    /** 各種処理で用いる小さめのバッファのサイズ. */
+    /** 各種処理で用いる小さめのバッファのサイズ。 */
     protected static int COB_SMALL_BUFF = 1024;
 
-    /** 小さめのバッファに格納できる最大長(COB_SMALL_BUFF - 1). */
+    /** 小さめのバッファに格納できる最大長(COB_SMALL_BUFF - 1)。 */
     protected static int COB_SMALL_MAX = COB_SMALL_BUFF - 1;
 
-    /** 排他ロック(EXCLUSIVE)を表すロック方式のビット. */
+    /** 排他ロック(EXCLUSIVE)を表すロック方式のビット。 */
     protected static final int COB_LOCK_EXCLUSIVE = 1;
 
-    /** 手動ロック(MANUAL)を表すロック方式のビット. */
+    /** 手動ロック(MANUAL)を表すロック方式のビット。 */
     protected static final int COB_LOCK_MANUAL = 2;
 
-    /** 自動ロック(AUTOMATIC)を表すロック方式のビット. */
+    /** 自動ロック(AUTOMATIC)を表すロック方式のビット。 */
     protected static final int COB_LOCK_AUTOMATIC = 4;
 
-    /** 複数ロック(MULTIPLE)を表すロック方式のビット. */
+    /** 複数ロック(MULTIPLE)を表すロック方式のビット。 */
     protected static final int COB_LOCK_MULTIPLE = 8;
 
-    /** ロック方式のビットを取り出すためのビットマスク. */
+    /** ロック方式のビットを取り出すためのビットマスク。 */
     protected static final int COB_LOCK_MASK = 0x7;
 
-    /** ファイルを探索する既定のディレクトリパス(環境変数COB_FILE_PATHの値). */
+    /** ファイルを探索する既定のディレクトリパス(環境変数COB_FILE_PATHの値)。 */
     protected static String cob_file_path = null;
 
-    /** 行順編成でNULL文字を扱うかどうかの設定(環境変数COB_LS_NULLSの値). */
+    /** 行順編成でNULL文字を扱うかどうかの設定(環境変数COB_LS_NULLSの値)。 */
     protected static String cob_ls_nulls = null;
 
-    /** 行順編成で固定長として扱うかどうかの設定(環境変数COB_LS_FIXEDの値). */
+    /** 行順編成で固定長として扱うかどうかの設定(環境変数COB_LS_FIXEDの値)。 */
     protected static String cob_ls_fixed = null;
 
-    /** ファイル名マッピング時に環境変数名を組み立てるための作業用バッファ. */
+    /** ファイル名マッピング時に環境変数名を組み立てるための作業用バッファ。 */
     protected static byte[] file_open_env = new byte[1024];
 
-    /** 実際に開くファイルの名前を保持する作業用フィールド. */
+    /** 実際に開くファイルの名前を保持する作業用フィールド。 */
     protected static String file_open_name;
 
-    /** ファイル名マッピング時に生成したファイル名を保持する作業用バッファ. */
+    /** ファイル名マッピング時に生成したファイル名を保持する作業用バッファ。 */
     protected static byte[] file_open_buff = new byte[1024];
 
-    /** ファイル名を環境変数として解決する際に試みる接頭辞の一覧. */
+    /** ファイル名を環境変数として解決する際に試みる接頭辞の一覧。 */
     protected static final String[] prefix = {"DD_", "dd_", ""};
 
-    /** prefixの要素数. */
+    /** prefixの要素数。 */
     protected static final int NUM_PREFIX = prefix.length;
 
-    /** ページ末尾(end of page)条件が発生したかどうかを表すフラグ. */
+    /** ページ末尾(end of page)条件が発生したかどうかを表すフラグ。 */
     protected static int eop_status = 0;
 
-    /** 書き込み後に同期(sync)を行うかどうかの設定(環境変数COB_SYNCの値に対応). */
+    /** 書き込み後に同期(sync)を行うかどうかの設定(環境変数COB_SYNCの値に対応)。 */
     protected static int cob_do_sync = 0;
 
     private static List<CobolFile> file_cache = new ArrayList<CobolFile>();
 
-    /** ファイル状態コードの十の位に対応するCOBOL例外IDの対応表. */
+    /** ファイル状態コードの十の位に対応するCOBOL例外IDの対応表。 */
     protected static int[] status_exception = {
         0,
         CobolExceptionId.COB_EC_I_O_AT_END,
@@ -406,110 +406,110 @@ public class CobolFile {
         CobolExceptionId.COB_EC_I_O_IMP
     };
 
-    /** SELECT句で指定されたファイルの名前. */
+    /** SELECT句で指定されたファイルの名前。 */
     public String select_name;
 
-    /** 直近の入出力操作の結果を表す2バイトのファイル状態(FILE STATUS)領域. */
+    /** 直近の入出力操作の結果を表す2バイトのファイル状態(FILE STATUS)領域。 */
     public byte[] file_status;
 
-    /** ASSIGN句で指定されたファイル名を表すデータ項目. */
+    /** ASSIGN句で指定されたファイル名を表すデータ項目。 */
     protected AbstractCobolField assign;
 
-    /** レコード領域を表すデータ項目. */
+    /** レコード領域を表すデータ項目。 */
     public AbstractCobolField record;
 
-    /** 可変長レコードの実際の長さを保持するデータ項目. */
+    /** 可変長レコードの実際の長さを保持するデータ項目。 */
     protected AbstractCobolField record_size;
 
-    /** 索引編成ファイルのキー情報の配列. */
+    /** 索引編成ファイルのキー情報の配列。 */
     protected CobolFileKey[] keys;
 
-    /** ファイルの低水準な読み書きを担うFileIOインスタンス. */
+    /** ファイルの低水準な読み書きを担うFileIOインスタンス。 */
     public FileIO file;
 
-    /** SORT/MERGE実行時の状態を保持するCobolSortインスタンス. */
+    /** SORT/MERGE実行時の状態を保持するCobolSortインスタンス。 */
     protected CobolSort filex;
 
-    /** 索引編成ファイルの内部状態を保持するIndexedFileインスタンス. */
+    /** 索引編成ファイルの内部状態を保持するIndexedFileインスタンス。 */
     protected IndexedFile filei;
 
-    /** LINAGE句に関する情報を保持するLinageインスタンス. */
+    /** LINAGE句に関する情報を保持するLinageインスタンス。 */
     protected Linage linorkeyptr;
 
-    /** SORT/MERGEで用いる照合順序(COLLATING SEQUENCE)を表すデータ領域. */
+    /** SORT/MERGEで用いる照合順序(COLLATING SEQUENCE)を表すデータ領域。 */
     protected CobolDataStorage sort_collating;
 
-    /** 外部ファイルハンドラ(EXTFH)用のポインタ. */
+    /** 外部ファイルハンドラ(EXTFH)用のポインタ。 */
     protected Object extfh_ptr;
 
-    /** レコードの最小長. */
+    /** レコードの最小長。 */
     protected int record_min;
 
-    /** レコードの最大長. */
+    /** レコードの最大長。 */
     public int record_max;
 
-    /** 索引編成ファイルのキーの個数. */
+    /** 索引編成ファイルのキーの個数。 */
     protected int nkeys;
 
-    /** ファイル編成(COB_ORG_*). */
+    /** ファイル編成(COB_ORG_*)。 */
     protected char organization;
 
-    /** アクセス方式(COB_ACCESS_*). */
+    /** アクセス方式(COB_ACCESS_*)。 */
     protected char access_mode;
 
-    /** ロック方式(COB_LOCK_*). */
+    /** ロック方式(COB_LOCK_*)。 */
     protected char lock_mode;
 
-    /** 現在のオープンモード(COB_OPEN_*). */
+    /** 現在のオープンモード(COB_OPEN_*)。 */
     protected char open_mode;
 
-    /** ファイルが省略可能(OPTIONAL)かどうかを表すフラグ. */
+    /** ファイルが省略可能(OPTIONAL)かどうかを表すフラグ。 */
     protected boolean flag_optional;
 
-    /** 直近にOPENした際のオープンモード. */
+    /** 直近にOPENした際のオープンモード。 */
     public char last_open_mode;
 
-    /** 標準入力/標準出力などの特殊ファイルの種別. */
+    /** 標準入力/標準出力などの特殊ファイルの種別。 */
     protected char special;
 
-    /** ファイルが存在しない状態で開かれたかどうかを表すフラグ. */
+    /** ファイルが存在しない状態で開かれたかどうかを表すフラグ。 */
     protected boolean flag_nonexistent;
 
-    /** ファイル終了に達したかどうかを表すフラグ. */
+    /** ファイル終了に達したかどうかを表すフラグ。 */
     protected boolean flag_end_of_file;
 
-    /** ファイル先頭に達したかどうかを表すフラグ. */
+    /** ファイル先頭に達したかどうかを表すフラグ。 */
     protected boolean flag_begin_of_file;
 
-    /** 最初のREADかどうかを表すフラグ. */
+    /** 最初のREADかどうかを表すフラグ。 */
     protected char flag_first_read;
 
-    /** 直前にREADが実行されたかどうかを表すフラグ. */
+    /** 直前にREADが実行されたかどうかを表すフラグ。 */
     protected boolean flag_read_done;
 
-    /** SELECT句で指定された機能(COB_SELECT_*)を表すビットフラグ. */
+    /** SELECT句で指定された機能(COB_SELECT_*)を表すビットフラグ。 */
     public char flag_select_features;
 
-    /** 次の書き込み前に改行の出力が必要かどうかを表すフラグ. */
+    /** 次の書き込み前に改行の出力が必要かどうかを表すフラグ。 */
     protected boolean flag_needs_nl;
 
-    /** 次の書き込み前にページ先頭の処理が必要かどうかを表すフラグ. */
+    /** 次の書き込み前にページ先頭の処理が必要かどうかを表すフラグ。 */
     protected boolean flag_needs_top;
 
-    /** ファイルのバージョン. */
+    /** ファイルのバージョン。 */
     protected char file_version;
 
-    /** 実行時に用いる作業用バッファ. */
+    /** 実行時に用いる作業用バッファ。 */
     protected static String runtime_buffer;
 
-    /** 作業用のファイル名を保持する静的フィールド. */
+    /** 作業用のファイル名を保持する静的フィールド。 */
     protected static String name;
 
-    /** 作業用のファイル状態を保持する静的フィールド. */
+    /** 作業用のファイル状態を保持する静的フィールド。 */
     protected static byte[] status;
 
     /**
-     * LINAGE句に関する情報を保持するLinageインスタンスを取得する.
+     * LINAGE句に関する情報を保持するLinageインスタンスを取得する。
      *
      * @return linorkeyptrに保持されたLinageインスタンス
      */
@@ -518,7 +518,7 @@ public class CobolFile {
     }
 
     /**
-     * LINAGE句に関する情報を保持するLinageインスタンスを設定する.
+     * LINAGE句に関する情報を保持するLinageインスタンスを設定する。
      *
      * @param ptr 設定するLinageインスタンス
      */
@@ -526,11 +526,11 @@ public class CobolFile {
         this.linorkeyptr = ptr;
     }
 
-    /** 引数を取らないコンストラクタ. */
+    /** 引数を取らないコンストラクタ。 */
     public CobolFile() {}
 
     /**
-     * 各フィールドの値を指定してCobolFileを生成するコンストラクタ.
+     * 各フィールドの値を指定してCobolFileを生成するコンストラクタ。
      *
      * @param selectName SELECT句で指定されたファイルの名前
      * @param fileStatus ファイル状態(FILE STATUS)を格納する2バイトの領域
@@ -614,8 +614,8 @@ public class CobolFile {
 
     // libcob/fileio.cのsave_statusの実装 RETURN_STATUSマクロは実装できないため,本メソッドの呼び出し後の次の文はreturn;を書くこと.
     /**
-     * 入出力操作の結果をファイル状態(FILE STATUS)領域に保存し, 0以外の場合は対応するCOBOL例外を設定する.
-     * libcob/fileio.cのsave_statusの実装.
+     * 入出力操作の結果をファイル状態(FILE STATUS)領域に保存し、0以外の場合は対応するCOBOL例外を設定する。
+     * libcob/fileio.cのsave_statusの実装。
      *
      * @param status 保存するファイル状態コード
      * @param fnstatus FILE STATUS句で指定されたデータ項目(nullの場合は設定しない)
@@ -646,8 +646,8 @@ public class CobolFile {
 
     // libcob/fileio.のcob_invoke_funの実装
     /**
-     * ユーザ定義のファイルハンドラを呼び出す. 現在は常に0を返す(未実装).
-     * libcob/fileio.cのcob_invoke_funの実装.
+     * ユーザ定義のファイルハンドラを呼び出す。現在は常に0を返す(未実装)。
+     * libcob/fileio.cのcob_invoke_funの実装。
      *
      * @param operate I/O操作の種別(COB_IO_*)
      * @param f 操作対象のファイル
@@ -673,8 +673,8 @@ public class CobolFile {
 
     // libcob/cob_cache_fileのj実装
     /**
-     * 指定されたファイルをファイルキャッシュに登録する(既に登録されている場合は何もしない).
-     * libcob/fileio.cのcob_cache_fileの実装.
+     * 指定されたファイルをファイルキャッシュに登録する(既に登録されている場合は何もしない)。
+     * libcob/fileio.cのcob_cache_fileの実装。
      *
      * @param f キャッシュに登録するファイル
      */
@@ -687,10 +687,10 @@ public class CobolFile {
 
     // libcob/fileio.cのcob_file_linage_checkの実装 TODO 実装
     /**
-     * LINAGE句の各値(1ページの行数, フッタ, 上下の余白)を検査し, 妥当なら各フィールドに設定する.
-     * libcob/fileio.cのcob_file_linage_checkの実装.
+     * LINAGE句の各値(1ページの行数、フッタ、上下の余白)を検査し、妥当なら各フィールドに設定する。
+     * libcob/fileio.cのcob_file_linage_checkの実装。
      *
-     * @return LINAGEの指定値が不正な場合はtrue, 正常な場合はfalse
+     * @return LINAGEの指定値が不正な場合はtrue、正常な場合はfalse
      */
     protected boolean file_linage_check() {
         Linage lingptr = getLinorkeyptr();
@@ -734,8 +734,8 @@ public class CobolFile {
 
     // libcob/fileio.cのcob_linage_write_optの実装 TODO 実装
     /**
-     * LINAGE句を持つファイルに対して, WRITE文のオプションに応じた改ページ・改行処理を行う.
-     * libcob/fileio.cのcob_linage_write_optの実装.
+     * LINAGE句を持つファイルに対して、WRITE文のオプションに応じた改ページ・改行処理を行う。
+     * libcob/fileio.cのcob_linage_write_optの実装。
      *
      * @param opt WRITE文のオプション(COB_WRITE_*)
      * @return ファイル状態コード
@@ -803,7 +803,7 @@ public class CobolFile {
     }
 
     /**
-     * JIS文字を16進表記でエンコードしたファイル名を元の文字列に復元する.
+     * JIS文字を16進表記でエンコードしたファイル名を元の文字列に復元する。
      *
      * @param name 変換対象のファイル名のバイト配列
      * @param jbuf 変換結果の格納先バッファ(nullの場合は新たに確保する)
@@ -913,9 +913,9 @@ public class CobolFile {
     }
 
     /**
-     * 主に索引編成ファイルのロックを解除するための後処理を行う.
+     * 主に索引編成ファイルのロックを解除するための後処理を行う。
      *
-     * @return 後処理に成功した場合はtrue, そうでない場合はfalse
+     * @return 後処理に成功した場合はtrue、そうでない場合はfalse
      */
     protected boolean postProcess() {
         return true;
@@ -931,7 +931,7 @@ public class CobolFile {
     }
 
     /**
-     * ファイルを開く(OPEN文の実装). ファイル名の解決やファイルの存在確認を行い, 結果をファイル状態に保存する.
+     * ファイルを開く(OPEN文の実装)。ファイル名の解決やファイルの存在確認を行い、結果をファイル状態に保存する。
      *
      * @param mode オープンモード(COB_OPEN_*)
      * @param sharing 共有指定
@@ -1152,7 +1152,7 @@ public class CobolFile {
     // protected long end;
 
     /**
-     * ファイルを開く処理の拡張版(現在は未実装).
+     * ファイルを開く処理の拡張版(現在は未実装)。
      *
      * @param mode オープンモード(COB_OPEN_*)
      * @param sharing 共有指定
@@ -1163,12 +1163,12 @@ public class CobolFile {
     }
 
     /**
-     * 指定したモードでファイルを実際に開き, 必要に応じてロックの取得と書き込みバッファの準備を行う.
+     * 指定したモードでファイルを実際に開き、必要に応じてロックの取得と書き込みバッファの準備を行う。
      *
      * @param filename 開くファイルの名前
      * @param mode オープンモード(COB_OPEN_*)
      * @param sharing 共有指定
-     * @return 成功時は0, 失敗時はエラーを表すコード(ENOENT等またはファイル状態コード)
+     * @return 成功時は0、失敗時はエラーを表すコード(ENOENT等またはファイル状態コード)
      * @throws IOException 入出力エラーが発生した場合
      */
     public int open_(String filename, int mode, int sharing) throws IOException {
@@ -1256,7 +1256,7 @@ public class CobolFile {
     }
 
     /**
-     * ファイルを閉じる(CLOSE文の実装). オプションに応じてロックや巻き戻しの扱いを決め, 結果をファイル状態に保存する.
+     * ファイルを閉じる(CLOSE文の実装)。オプションに応じてロックや巻き戻しの扱いを決め、結果をファイル状態に保存する。
      *
      * @param opt CLOSE文のオプション(COB_CLOSE_*)
      * @param fnstatus FILE STATUS句で指定されたデータ項目
@@ -1304,7 +1304,7 @@ public class CobolFile {
     // }
 
     /**
-     * ファイルを実際に閉じる下位処理. 行順編成では必要に応じて末尾に改行を出力し, ロックを解除する.
+     * ファイルを実際に閉じる下位処理。行順編成では必要に応じて末尾に改行を出力し、ロックを解除する。
      *
      * @param opt CLOSE文のオプション(COB_CLOSE_*)
      * @return ファイル状態コード
@@ -1337,7 +1337,7 @@ public class CobolFile {
     }
 
     /**
-     * 索引編成/相対編成ファイルで, 指定した比較条件とキーに合致する位置にレコードを位置付ける(START文の実装).
+     * 索引編成/相対編成ファイルで、指定した比較条件とキーに合致する位置にレコードを位置付ける(START文の実装)。
      *
      * @param cond 位置付けの比較条件
      * @param key 位置付けに用いるキー項目
@@ -1377,7 +1377,7 @@ public class CobolFile {
     }
 
     /**
-     * START処理の拡張版. 位置付けの下位処理を直接呼び出す.
+     * START処理の拡張版。位置付けの下位処理を直接呼び出す。
      *
      * @param cond 位置付けの比較条件
      * @param key 位置付けに用いるキー項目
@@ -1388,7 +1388,7 @@ public class CobolFile {
     }
 
     /**
-     * 位置付けを行う下位処理. ファイル編成ごとにサブクラスで実装される.
+     * 位置付けを行う下位処理。ファイル編成ごとにサブクラスで実装される。
      *
      * @param cond 位置付けの比較条件
      * @param key 位置付けに用いるキー項目
@@ -1400,7 +1400,7 @@ public class CobolFile {
     }
 
     /**
-     * レコードを読み込む(READ文の実装). キーが指定された場合はキー読み込み, nullの場合は順次読み込みを行い, 結果をファイル状態に保存する.
+     * レコードを読み込む(READ文の実装)。キーが指定された場合はキー読み込み、nullの場合は順次読み込みを行い、結果をファイル状態に保存する。
      *
      * @param key 読み込みに用いるキー項目(順次読み込みの場合はnull)
      * @param fnstatus FILE STATUS句で指定されたデータ項目
@@ -1505,7 +1505,7 @@ public class CobolFile {
     }
 
     /**
-     * レコードを順次読み込む(READ文の実装)のオーバーロード. キー引数を整数で受け取り, 内部的には順次読み込みを行う.
+     * レコードを順次読み込む(READ文の実装)のオーバーロード。キー引数を整数で受け取り、内部的には順次読み込みを行う。
      *
      * @param key 読み込みに用いるキー番号(この多重定義では使用されない)
      * @param fnstatus FILE STATUS句で指定されたデータ項目
@@ -1516,7 +1516,7 @@ public class CobolFile {
     }
 
     /**
-     * READ処理の拡張版. キー読み込みの下位処理を直接呼び出す.
+     * READ処理の拡張版。キー読み込みの下位処理を直接呼び出す。
      *
      * @param key 読み込みに用いるキー項目
      * @param fnstatus FILE STATUS句で指定されたデータ項目
@@ -1527,7 +1527,7 @@ public class CobolFile {
     }
 
     /**
-     * キーを指定してレコードを読み込む下位処理. ファイル編成ごとにサブクラスで実装される.
+     * キーを指定してレコードを読み込む下位処理。ファイル編成ごとにサブクラスで実装される。
      *
      * @param key 読み込みに用いるキー項目
      * @param readOpts READ文のオプション(COB_READ_*)
@@ -1539,7 +1539,7 @@ public class CobolFile {
     }
 
     /**
-     * 次(またはオプションに応じて前)のレコードを順次読み込む下位処理. ファイル編成ごとにサブクラスで実装される.
+     * 次(またはオプションに応じて前)のレコードを順次読み込む下位処理。ファイル編成ごとにサブクラスで実装される。
      *
      * @param readOpts READ文のオプション(COB_READ_*)
      * @return ファイル状態コード
@@ -1550,7 +1550,7 @@ public class CobolFile {
     }
 
     /**
-     * レコードを書き込む(WRITE文の実装). レコード長を検査し, 状況に応じてREWRITEに委譲した上で結果をファイル状態に保存する.
+     * レコードを書き込む(WRITE文の実装)。レコード長を検査し、状況に応じてREWRITEに委譲した上で結果をファイル状態に保存する。
      *
      * @param rec 書き込むレコード
      * @param opt WRITE文のオプション(COB_WRITE_*)
@@ -1623,7 +1623,7 @@ public class CobolFile {
     }
 
     /**
-     * WRITE処理の拡張版. 書き込みの下位処理を直接呼び出す.
+     * WRITE処理の拡張版。書き込みの下位処理を直接呼び出す。
      *
      * @param rec 書き込むレコード
      * @param opt WRITE文のオプション(COB_WRITE_*)
@@ -1636,7 +1636,7 @@ public class CobolFile {
     }
 
     /**
-     * レコードを実際に書き込む下位処理. ファイル編成ごとにサブクラスで実装される.
+     * レコードを実際に書き込む下位処理。ファイル編成ごとにサブクラスで実装される。
      *
      * @param opt WRITE文のオプション(COB_WRITE_*)
      * @return ファイル状態コード
@@ -1649,8 +1649,8 @@ public class CobolFile {
 
     // libcob/fileio.cのcob_file_write_optの実装
     /**
-     * WRITE文のオプションに応じた改行・改ページ処理を行う. LINAGE句がある場合はその専用処理へ委譲する.
-     * libcob/fileio.cのcob_file_write_optの実装.
+     * WRITE文のオプションに応じた改行・改ページ処理を行う。LINAGE句がある場合はその専用処理へ委譲する。
+     * libcob/fileio.cのcob_file_write_optの実装。
      *
      * @param opt WRITE文のオプション(COB_WRITE_*)
      * @return ファイル状態コード
@@ -1671,7 +1671,7 @@ public class CobolFile {
     }
 
     /**
-     * 直前に読み込んだレコードを書き換える(REWRITE文の実装). オープンモードやレコード長を検査し, 結果をファイル状態に保存する.
+     * 直前に読み込んだレコードを書き換える(REWRITE文の実装)。オープンモードやレコード長を検査し、結果をファイル状態に保存する。
      *
      * @param rec 書き換えるレコード
      * @param opt REWRITE文のオプション
@@ -1720,7 +1720,7 @@ public class CobolFile {
     }
 
     /**
-     * REWRITE処理の拡張版. 書き換えの下位処理を直接呼び出す.
+     * REWRITE処理の拡張版。書き換えの下位処理を直接呼び出す。
      *
      * @param rec 書き換えるレコード
      * @param opt REWRITE文のオプション
@@ -1731,7 +1731,7 @@ public class CobolFile {
     }
 
     /**
-     * レコードを実際に書き換える下位処理. ファイル編成ごとにサブクラスで実装される.
+     * レコードを実際に書き換える下位処理。ファイル編成ごとにサブクラスで実装される。
      *
      * @param opt REWRITE文のオプション
      * @return ファイル状態コード
@@ -1742,7 +1742,7 @@ public class CobolFile {
     }
 
     /**
-     * 現在のレコードを削除する(DELETE文の実装). オープンモード等を検査し, 結果をファイル状態に保存する.
+     * 現在のレコードを削除する(DELETE文の実装)。オープンモード等を検査し、結果をファイル状態に保存する。
      *
      * @param fnstatus FILE STATUS句で指定されたデータ項目
      */
@@ -1776,7 +1776,7 @@ public class CobolFile {
     }
 
     /**
-     * DELETE処理の拡張版. 削除の下位処理を直接呼び出す.
+     * DELETE処理の拡張版。削除の下位処理を直接呼び出す。
      *
      * @param fnstatus FILE STATUS句で指定されたデータ項目
      */
@@ -1785,7 +1785,7 @@ public class CobolFile {
     }
 
     /**
-     * レコードを実際に削除する下位処理. ファイル編成ごとにサブクラスで実装される.
+     * レコードを実際に削除する下位処理。ファイル編成ごとにサブクラスで実装される。
      *
      * @return ファイル状態コード
      */
@@ -1795,7 +1795,7 @@ public class CobolFile {
     }
 
     /**
-     * ファイルのロックを解除する(UNLOCK文の実装). 結果をファイル状態に保存する.
+     * ファイルのロックを解除する(UNLOCK文の実装)。結果をファイル状態に保存する。
      *
      * @param fnstatus FILE STATUS句で指定されたデータ項目
      */
@@ -1808,14 +1808,14 @@ public class CobolFile {
         saveStatus(COB_STATUS_00_SUCCESS, fnstatus);
     }
 
-    /** ファイルのロックを解除する下位処理. 開いている場合は書き込みバッファをフラッシュする. */
+    /** ファイルのロックを解除する下位処理。開いている場合は書き込みバッファをフラッシュする。 */
     public void unlock_() {
         if (this.open_mode != COB_OPEN_CLOSED && this.open_mode != COB_OPEN_LOCKED) {
             this.file.flush();
         }
     }
 
-    /** COMMITを実行し, キャッシュされているすべてのファイルのロックを解除する. */
+    /** COMMITを実行し、キャッシュされているすべてのファイルのロックを解除する。 */
     public static void commit() {
         if (invokeFun(COB_IO_COMMIT, null, null, null, null, null, null, null) != 0) {
             return;
@@ -1825,7 +1825,7 @@ public class CobolFile {
         }
     }
 
-    /** ROLLBACKを実行し, キャッシュされているすべてのファイルのロックを解除する. */
+    /** ROLLBACKを実行し、キャッシュされているすべてのファイルのロックを解除する。 */
     public static void rollback() {
         if (invokeFun(COB_IO_ROLLBACK, null, null, null, null, null, null, null) != 0) {
             return;
@@ -1836,7 +1836,7 @@ public class CobolFile {
     }
 
     /// libcob/fileio.cのcob_exit_fileioの実装 TODO 一部だけ実装したため残りを実装する
-    /** ファイル入出力処理の終了時に, 閉じられていないファイルについて暗黙的なCLOSEの警告を出力する. libcob/fileio.cのcob_exit_fileioの実装. */
+    /** ファイル入出力処理の終了時に、閉じられていないファイルについて暗黙的なCLOSEの警告を出力する。libcob/fileio.cのcob_exit_fileioの実装。 */
     public static void exitFileIO() {
         for (CobolFile f : file_cache) {
             if (f.open_mode != COB_OPEN_CLOSED && f.open_mode != COB_OPEN_LOCKED) {
@@ -1851,7 +1851,7 @@ public class CobolFile {
 
     // libcob/fileio.cのcob_syncの実装
     /**
-     * ファイルの内容をディスクに同期(フラッシュ)する. libcob/fileio.cのcob_syncの実装.
+     * ファイルの内容をディスクに同期(フラッシュ)する。libcob/fileio.cのcob_syncの実装。
      *
      * @param f 同期対象のファイル
      * @param mode 同期の方式(2の場合はより強い同期を行う)
@@ -1870,7 +1870,7 @@ public class CobolFile {
     }
 
     // libcob/fileio.cのcob_init_fileioの実装
-    /** ファイル入出力処理を初期化し, COB_SYNCやCOB_FILE_PATH等の関連する環境変数を読み込む. libcob/fileio.cのcob_init_fileioの実装. */
+    /** ファイル入出力処理を初期化し、COB_SYNCやCOB_FILE_PATH等の関連する環境変数を読み込む。libcob/fileio.cのcob_init_fileioの実装。 */
     public static void cob_init_fileio() {
         String s = CobolUtil.getEnv("COB_SYNC");
         if (s != null) {
@@ -1897,7 +1897,7 @@ public class CobolFile {
         file_open_buff = new byte[COB_SMALL_BUFF];
     }
 
-    /** 直近に発生した入出力エラーのファイル状態に応じたエラーメッセージを出力する, 既定のエラーハンドラ. */
+    /** 直近に発生した入出力エラーのファイル状態に応じたエラーメッセージを出力する、既定のエラーハンドラ。 */
     public static void defaultErrorHandle() {
         byte[] fileStatus = CobolFile.errorFile.file_status;
         int status = (fileStatus[0] - '0') * 10 + (fileStatus[1] - '0');
@@ -1976,7 +1976,7 @@ public class CobolFile {
     }
 
     /**
-     * ファイルそのものを削除する(DELETE FILEの実装). ファイル名を解決した上でファイルを削除し, 結果をファイル状態に保存する.
+     * ファイルそのものを削除する(DELETE FILEの実装)。ファイル名を解決した上でファイルを削除し、結果をファイル状態に保存する。
      *
      * @param fnstatus FILE STATUS句で指定されたデータ項目
      */
@@ -2131,7 +2131,7 @@ public class CobolFile {
     }
 
     /**
-     * SELECT句で指定されたファイルの名前を取得する.
+     * SELECT句で指定されたファイルの名前を取得する。
      *
      * @return ファイルの名前
      */
@@ -2141,7 +2141,7 @@ public class CobolFile {
     }
 
     /**
-     * ファイル状態(FILE STATUS)領域を取得する.
+     * ファイル状態(FILE STATUS)領域を取得する。
      *
      * @return 2バイトのファイル状態領域
      */
@@ -2153,7 +2153,7 @@ public class CobolFile {
     private static Map<String, byte[]> externalFileStatusTable = new HashMap<String, byte[]>();
 
     /**
-     * 外部(EXTERNAL)ファイルのファイル状態領域を取得する. 未登録の場合は新たに確保して登録する.
+     * 外部(EXTERNAL)ファイルのファイル状態領域を取得する。未登録の場合は新たに確保して登録する。
      *
      * @param key 外部ファイルを識別するキー
      * @return 2バイトのファイル状態領域
@@ -2172,7 +2172,7 @@ public class CobolFile {
     private static Map<String, CobolFile> externalFileTable = new HashMap<String, CobolFile>();
 
     /**
-     * 指定したキーに対応する外部(EXTERNAL)ファイルを取得する.
+     * 指定したキーに対応する外部(EXTERNAL)ファイルを取得する。
      *
      * @param key 外部ファイルを識別するキー
      * @return 対応するCobolFile(存在しない場合はnull)
@@ -2182,7 +2182,7 @@ public class CobolFile {
     }
 
     /**
-     * 指定したキーで外部(EXTERNAL)ファイルを登録する.
+     * 指定したキーで外部(EXTERNAL)ファイルを登録する。
      *
      * @param key 外部ファイルを識別するキー
      * @param value 登録するCobolFile

@@ -18,20 +18,20 @@
  */
 package jp.osscons.opensourcecobol.libcobj.file;
 
-/** SORT/MERGE でメモリ上に読み込んだレコード(CobolItem)の連結リストを表す構造. 先頭・末尾・要素数を保持する. */
+/** SORT/MERGE でメモリ上に読み込んだレコード(CobolItem)の連結リストを表す構造。先頭・末尾・要素数を保持する。 */
 class MemoryStruct {
     private CobolItem first;
     private CobolItem last;
     private int count;
 
-    /** 空の連結リストとして初期化する. 先頭と末尾をnullにする. */
+    /** 空の連結リストとして初期化する。先頭と末尾をnullにする。 */
     MemoryStruct() {
         this.first = null;
         this.last = null;
     }
 
     /**
-     * 連結リストの先頭要素を取得する.
+     * 連結リストの先頭要素を取得する。
      *
      * @return 連結リストの先頭のCobolItem
      */
@@ -40,7 +40,7 @@ class MemoryStruct {
     }
 
     /**
-     * 連結リストの先頭要素を設定する.
+     * 連結リストの先頭要素を設定する。
      *
      * @param first 連結リストの先頭とするCobolItem
      */
@@ -49,7 +49,7 @@ class MemoryStruct {
     }
 
     /**
-     * 連結リストの末尾要素を取得する.
+     * 連結リストの末尾要素を取得する。
      *
      * @return 連結リストの末尾のCobolItem
      */
@@ -58,7 +58,7 @@ class MemoryStruct {
     }
 
     /**
-     * 連結リストの末尾要素を設定する.
+     * 連結リストの末尾要素を設定する。
      *
      * @param last 連結リストの末尾とするCobolItem
      */
@@ -67,7 +67,7 @@ class MemoryStruct {
     }
 
     /**
-     * 連結リストの要素数を取得する.
+     * 連結リストの要素数を取得する。
      *
      * @return 連結リストに含まれる要素数
      */
@@ -76,7 +76,7 @@ class MemoryStruct {
     }
 
     /**
-     * 連結リストの要素数を設定する.
+     * 連結リストの要素数を設定する。
      *
      * @param count 連結リストに含まれる要素数
      */

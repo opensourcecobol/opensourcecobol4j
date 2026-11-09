@@ -20,17 +20,17 @@ package jp.osscons.opensourcecobol.libcobj.file;
 
 import jp.osscons.opensourcecobol.libcobj.data.AbstractCobolField;
 
-/** ファイル編成に応じた適切なCobolFileのサブクラスを生成するファクトリクラス. */
+/** ファイル編成に応じた適切なCobolFileのサブクラスを生成するファクトリクラス。 */
 public final class CobolFileFactory {
 
     /** ユーティリティクラスのインスタンス化を防ぐための private コンストラクタ。 */
     private CobolFileFactory() {}
 
     /**
-     * ファイル編成(organization)に応じて適切なCobolFileのサブクラスを生成する.
-     * 順編成ならCobolSequentialFile,行順編成ならCobolLineSequentialFile,相対編成なら
-     * CobolRelativeFile,索引編成ならCobolIndexedFileを生成し,いずれにも該当しない場合は
-     * 基底クラスCobolFileを生成する.
+     * ファイル編成(organization)に応じて適切なCobolFileのサブクラスを生成する。
+     * 順編成ならCobolSequentialFile、行順編成ならCobolLineSequentialFile、相対編成なら
+     * CobolRelativeFile、索引編成ならCobolIndexedFileを生成し、いずれにも該当しない場合は
+     * 基底クラスCobolFileを生成する。
      *
      * @param selectName SELECT句で指定されたファイル名
      * @param fileStatus FILE STATUSのファイル状態コードを格納するバイト配列

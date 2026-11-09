@@ -18,13 +18,13 @@
  */
 package jp.osscons.opensourcecobol.libcobj.file;
 
-/** SORT/MERGE のマージ処理で用いる 1 つの一時ファイルと,そこに残っているブロック数を束ねる構造. */
+/** SORT/MERGE のマージ処理で用いる 1 つの一時ファイルと、そこに残っているブロック数を束ねる構造。 */
 class FileStruct {
     private FileIO fp;
     private int count;
 
     /**
-     * 一時ファイルへの入出力を行うFileIOを取得する.
+     * 一時ファイルへの入出力を行うFileIOを取得する。
      *
      * @return この一時ファイルの入出力を担うFileIO
      */
@@ -33,7 +33,7 @@ class FileStruct {
     }
 
     /**
-     * 一時ファイルへの入出力を行うFileIOを設定する.
+     * 一時ファイルへの入出力を行うFileIOを設定する。
      *
      * @param fp この一時ファイルの入出力を担うFileIO
      */
@@ -42,7 +42,7 @@ class FileStruct {
     }
 
     /**
-     * この一時ファイルに残っているブロック数を取得する.
+     * この一時ファイルに残っているブロック数を取得する。
      *
      * @return 一時ファイルに残っているブロック数
      */
@@ -51,7 +51,7 @@ class FileStruct {
     }
 
     /**
-     * この一時ファイルに残っているブロック数を設定する.
+     * この一時ファイルに残っているブロック数を設定する。
      *
      * @param count 一時ファイルに残っているブロック数
      */

@@ -20,7 +20,7 @@ package jp.osscons.opensourcecobol.libcobj.file;
 
 import jp.osscons.opensourcecobol.libcobj.data.CobolDataStorage;
 
-/** SORT/MERGE でメモリ上に読み込んだ 1 レコードを表す連結リストの要素. */
+/** SORT/MERGE でメモリ上に読み込んだ 1 レコードを表す連結リストの要素。 */
 class CobolItem {
     private CobolItem next;
     private int endOfBlock;
@@ -29,23 +29,23 @@ class CobolItem {
     private CobolDataStorage unique = new CobolDataStorage(new byte[8]);
     private CobolDataStorage item;
 
-    /** 連結リストの次要素をnull,ブロック終端フラグを0にして初期化する. */
+    /** 連結リストの次要素をnull、ブロック終端フラグを0にして初期化する。 */
     CobolItem() {
         this.next = null;
         this.endOfBlock = 0;
     }
 
     /**
-     * 連結リスト上で次に位置する要素を取得する.
+     * 連結リスト上で次に位置する要素を取得する。
      *
-     * @return 次のCobolItem. 末尾の場合はnull
+     * @return 次のCobolItem。末尾の場合はnull
      */
     CobolItem getNext() {
         return next;
     }
 
     /**
-     * 連結リスト上で次に位置する要素を設定する.
+     * 連結リスト上で次に位置する要素を設定する。
      *
      * @param next 次のCobolItem
      */
@@ -54,25 +54,25 @@ class CobolItem {
     }
 
     /**
-     * このレコードがブロックの終端であるかを表すフラグを取得する.
+     * このレコードがブロックの終端であるかを表すフラグを取得する。
      *
-     * @return ブロックの終端なら1,そうでなければ0
+     * @return ブロックの終端なら1、そうでなければ0
      */
     int getEndOfBlock() {
         return endOfBlock;
     }
 
     /**
-     * このレコードがブロックの終端であるかを表すフラグを設定する.
+     * このレコードがブロックの終端であるかを表すフラグを設定する。
      *
-     * @param endOfBlock ブロックの終端なら1,そうでなければ0
+     * @param endOfBlock ブロックの終端なら1、そうでなければ0
      */
     void setEndOfBlock(int endOfBlock) {
         this.endOfBlock = endOfBlock;
     }
 
     /**
-     * このレコードの実際のサイズ(可変長レコードの長さ)を取得する.
+     * このレコードの実際のサイズ(可変長レコードの長さ)を取得する。
      *
      * @return レコードのサイズ(バイト数)
      */
@@ -81,7 +81,7 @@ class CobolItem {
     }
 
     /**
-     * このレコードの実際のサイズ(可変長レコードの長さ)を設定する.
+     * このレコードの実際のサイズ(可変長レコードの長さ)を設定する。
      *
      * @param recordSize レコードのサイズ(バイト数)
      */
@@ -90,7 +90,7 @@ class CobolItem {
     }
 
     /**
-     * 一時ファイルへ書き込む際に各レコードの先頭へ付加するブロック区切り用のバイトを取得する.
+     * 一時ファイルへ書き込む際に各レコードの先頭へ付加するブロック区切り用のバイトを取得する。
      *
      * @return ブロック区切り用のバイト
      */
@@ -99,7 +99,7 @@ class CobolItem {
     }
 
     /**
-     * 一時ファイルへ書き込む際に各レコードの先頭へ付加するブロック区切り用のバイトを設定する.
+     * 一時ファイルへ書き込む際に各レコードの先頭へ付加するブロック区切り用のバイトを設定する。
      *
      * @param blockByte ブロック区切り用のバイト
      */
@@ -108,7 +108,7 @@ class CobolItem {
     }
 
     /**
-     * レコードの投入順を表す一意な番号(安定ソートのために使うキー)を取得する.
+     * レコードの投入順を表す一意な番号(安定ソートのために使うキー)を取得する。
      *
      * @return 8バイトで表現された一意な番号を保持するCobolDataStorage
      */
@@ -117,7 +117,7 @@ class CobolItem {
     }
 
     /**
-     * レコードの投入順を表す一意な番号(安定ソートのために使うキー)を設定する.
+     * レコードの投入順を表す一意な番号(安定ソートのために使うキー)を設定する。
      *
      * @param unique 8バイトで表現された一意な番号を保持するCobolDataStorage
      */
@@ -126,7 +126,7 @@ class CobolItem {
     }
 
     /**
-     * レコードのデータ本体を取得する.
+     * レコードのデータ本体を取得する。
      *
      * @return レコードのデータ本体を保持するCobolDataStorage
      */
@@ -135,7 +135,7 @@ class CobolItem {
     }
 
     /**
-     * レコードのデータ本体を設定する.
+     * レコードのデータ本体を設定する。
      *
      * @param item レコードのデータ本体を保持するCobolDataStorage
      */
