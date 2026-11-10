@@ -41,6 +41,9 @@ jobs:
             tests/cobj-idx
             tests/file-lock
             tests/file-lock2
+            tests/file-lock3
+            tests/file-lock4
+            tests/file-lock5
             tests/misc
             tests/esql-basic
             tests/esql-sqlca

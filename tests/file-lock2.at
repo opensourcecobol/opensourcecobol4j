@@ -1,10 +1,5 @@
 AT_INIT([file-lock2])
 
-m4_include([input-mode.at])
-m4_include([same-process.at])
-m4_include([open-start-write-rewrite.at])
-m4_include([release-lock.at])
-m4_include([open-input.at])
-m4_include([lock-mode-clause.at])
 m4_include([lock-mode-automatic.at])
-m4_include([old-file.at])
+m4_include([input-mode.at])
+m4_include([release-lock.at])
