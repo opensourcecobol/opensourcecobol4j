@@ -169,10 +169,6 @@ jobs:
       check-result: false
       os: ${{ matrix.os }}
 
-  build-gcc9:
-    needs: check-workflows
-    uses: ./.github/workflows/build-gcc9.yml
-
   javadoc:
     needs: check-workflows
     uses: ./.github/workflows/javadoc.yml
