@@ -8,21 +8,26 @@ import java.util.Optional;
 
 /** Represents a result of fetching a data from SQLite tables. */
 class FetchResult {
-    /** TODO: 準備中 */
+    /** 取得した行のキー値（{@code key}列）。 */
     byte[] key;
 
-    /** TODO: 準備中 */
+    /**
+     * 取得した行の{@code value}列。
+     *
+     * <p>この値の意味は、結果を生成したクエリによって異なる。主テーブルに対するクエリ、および副キーテーブルを走査する際に使用されるJOINベースのクエリでは、レコード本体（{@code
+     * table0.value}由来）を保持する。副テーブルに対する直接（JOINなし）のクエリでは、主キーへの参照を保持する。
+     */
     byte[] value;
 
-    /** TODO: 準備中 */
+    /** 重複を許可するキーにおける取得行の重複番号。それ以外の場合は{@code 0}。 */
     int dupNo;
 
     /**
-     * TODO: 準備中
+     * 重複を許可するキー向けのフェッチ結果を構築する。
      *
-     * @param key TODO: 準備中
-     * @param value TODO: 準備中
-     * @param dupNo TODO: 準備中
+     * @param key 取得した行のキー値
+     * @param value 取得した行の値
+     * @param dupNo 取得した行の重複番号
      */
     FetchResult(byte[] key, byte[] value, int dupNo) {
         this.key = key;
@@ -31,10 +36,10 @@ class FetchResult {
     }
 
     /**
-     * TODO: 準備中
+     * 重複番号を{@code 0}としてフェッチ結果を構築する。
      *
-     * @param key TODO: 準備中
-     * @param value TODO: 準備中
+     * @param key 取得した行のキー値
+     * @param value 取得した行の値
      */
     FetchResult(byte[] key, byte[] value) {
         this.key = key;

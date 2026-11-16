@@ -2,6 +2,28 @@ NEWS - user visible changes				-*- outline -*-
 
 -----------------------------------------------------------------------
 
+* opensource COBOL 4J 2.1.0-hotfix1
+
+** Bug Fixes
+
+(1) Fix `MOVE` from group items to `PIC N` items
+  * In older versions, moving a group item to a `PIC N` item converted the half-width characters in the group item (including half-width spaces) into full-width characters.
+  * A group item is now moved to a `PIC N` item byte by byte, without any conversion, like other group moves. If the source is shorter than the receiving item, the remaining bytes are filled with half-width spaces. `JUSTIFIED RIGHT` is supported.
+
+-----------------------------------------------------------------------
+
+* opensource COBOL 4J 2.1.0
+
+** New Features
+
+(1) Abstracted classes to support multiple databases in embedded SQL
+  * Consolidated shared logic and abstracted DB-specific parts so that the embedded SQL functionality can support databases other than PostgreSQL.
+  * opensource COBOL 4J provides an implementation for PostgreSQL. Support for other databases can now be added easily by creating a class that extends `AbstractCobolEsqlBackend`. The database to use is specified via the `OCDB_DB_TYPE` environment variable (PostgreSQL is used if unspecified).
+
+-----------------------------------------------------------------------
+
+* opensource COBOL 4J 2.0.0
+
 ** New Features
 
 (1) Embedded SQL (EXEC SQL) support for PostgreSQL — a full port of Open COBOL ESQL 4J into `cobj` and `libcobj.jar`. COBOL programs can now run `EXEC SQL ... END-EXEC` statements directly, with no separate precompiler or runtime.
@@ -16,7 +38,7 @@ NEWS - user visible changes				-*- outline -*-
 
 -----------------------------------------------------------------------
 
-* opensource COBOL 4J 1.1.19
+* opensource COBOL 4J 1.1.20
 
 ** Bug Fixes
 

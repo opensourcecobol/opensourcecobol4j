@@ -68,15 +68,15 @@ jobs:
           cd ../
           mv opensourcecobol4j/* .
           mv libcobj/* opensourcecobol4j
-      - uses: actions/setup-java@v5
+      - uses: actions/setup-java@v6
         with:
           java-version: '11'
           distribution: 'temurin'
-      - name: Validate Gradle wrapper
-        uses: gradle/wrapper-validation-action@v3
-      - name: Publish package
-        uses: gradle/gradle-build-action@v3
+      - name: Setup Gradle
+        uses: gradle/actions/setup-gradle@v6
         with:
-          arguments: publish
+          gradle-version: wrapper
+      - name: Publish package
+        run: ./gradlew publish
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}

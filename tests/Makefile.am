@@ -265,6 +265,7 @@ esql_cobol_data_DEPENDENCIES = \
 
 esql_misc_DEPENDENCIES = \
 	esql-misc.at \
+	esql-misc.src/db-type-env.at \
 	esql-misc.src/long-sql.at \
 	esql-misc.src/include.at \
 	esql-misc.src/fetch-sqlca.at \

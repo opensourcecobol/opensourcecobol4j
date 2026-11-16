@@ -459,10 +459,10 @@ java -Dorg.slf4j.simpleLogger.log.jp.osscons.opensourcecobol.libcobj.sql=trace Y
 ```
 
 > [!NOTE]
-> The `...libcobj.sql` namespace covers both the `CobolSql` logger (EXEC SQL execution) and the
+> The `...libcobj.sql` namespace covers both the `CobolEsql` logger (EXEC SQL execution) and the
 > `SqlConnection` logger (connect/disconnect), so the settings above enable all ESQL logs. To target
 > a single logger instead, append its class name, e.g.
-> `-Dorg.slf4j.simpleLogger.log.jp.osscons.opensourcecobol.libcobj.sql.CobolSql=debug`.
+> `-Dorg.slf4j.simpleLogger.log.jp.osscons.opensourcecobol.libcobj.sql.CobolEsql=debug`.
 
 ## Limitations
 

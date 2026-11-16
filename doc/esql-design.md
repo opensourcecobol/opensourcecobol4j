@@ -22,7 +22,7 @@ ESQL support is split into two layers:
 | `cobj/esql-parser.y` | bison parser. Builds host-variable lists and a `cb_exec_sql` node. |
 | `cobj/esql-common.h` | Shared types and prototypes between `esql-parser.y` / `esql-scanner.l` and `esql.c`. Deliberately does NOT include `tree.h` (its `YYSTYPE` would collide with the ESQL parser's). |
 | `cobj/esql.c` | Provides `esql_build_and_resolve()` (host-var type resolution, GROUP expansion for SELECT INTO / FETCH OCCURS, and thin wrappers that build `cb_tree`s without exposing `tree.h` to the ESQL parser) and `esql_inject_sqlca()` (auto-injects `01 SQLCA GLOBAL.` on the first embedded SQL statement). |
-| `cobj/codegen.c` (around `joutput_exec_sql`) | Expands a `cb_exec_sql` node into Java calls like `CobolSql.exec(...)`. |
+| `cobj/codegen.c` (around `joutput_exec_sql`) | Expands a `cb_exec_sql` node into Java calls like `CobolEsql.exec(...)`. |
 
 ### Parsing pipeline
 
@@ -75,7 +75,7 @@ typeck.c / codegen.c
         │  yielding AbstractCobolField arguments that include
         │  b_X.getSubDataStorage(...) for subscripted hosts.
         ▼
-Java source (CobolSql.exec / .selectInto / .fetchCursor / ...)
+Java source (CobolEsql.exec / .selectInto / .fetchCursor / ...)
 ```
 
 ### Host variable AST representation
@@ -125,7 +125,7 @@ For `SELECT INTO` / `FETCH`, `esql_build_and_resolve()` checks whether the leaf 
 
 | Class | Visibility | Role |
 |---|---|---|
-| `CobolSql` | `public` | The single public API called from generated Java. Provides `connect`, `disconnect`, `exec`, `execWithParams`, `execWhereCurrentOf`, `execWithParamsWhereCurrentOf`, `selectInto`, `selectIntoOccurs`, `declareCursor`, `declareCursorWithParams`, `openCursor`, `openCursorWithParams`, `fetchCursor`, `fetchCursorOccurs`, `closeCursor`, `prepare`, `executePrepared`, `commit`, `rollback`. `execWhereCurrentOf` / `execWithParamsWhereCurrentOf` are dedicated to statements containing `WHERE CURRENT OF`; they rewind the cursor position advanced by pre-reading before running. |
+| `CobolEsql` | `public` | The single public API called from generated Java. Provides `connect`, `disconnect`, `exec`, `execWithParams`, `execWhereCurrentOf`, `execWithParamsWhereCurrentOf`, `selectInto`, `selectIntoOccurs`, `declareCursor`, `declareCursorWithParams`, `openCursor`, `openCursorWithParams`, `fetchCursor`, `fetchCursorOccurs`, `closeCursor`, `prepare`, `executePrepared`, `commit`, `rollback`. `execWhereCurrentOf` / `execWithParamsWhereCurrentOf` are dedicated to statements containing `WHERE CURRENT OF`; they rewind the cursor position advanced by pre-reading before running. |
 | `SqlState` | package-private | Internal state: connection table (`addConnection`/`getConnection`), prepared-statement table, cursor table. `clearCursors()` marks every cursor closed and discards its pre-read buffer; it is called on COMMIT / ROLLBACK. |
 | `SqlConnection` | package-private | Wraps a JDBC `Connection`; parses connection strings of the form `dbname@host:port`; falls back to the `OCDB_DB_NAME` / `OCDB_DB_USER` / `OCDB_DB_PASS` environment variables when a value is empty; sets the connection encoding from `OCDB_DB_CHAR` (default `UTF-8`); strips each value's trailing spaces — the COBOL fixed-length padding — while preserving embedded spaces (`stripTrailingSpaces`); runs in autocommit mode with an explicit `BEGIN` per transaction (`beginTransaction`). |
 | `SqlCursor` | package-private | Holds cursor state (open/closed), `ResultSet`, `PreparedStatement`. Also holds the pre-read (bulk fetch) buffer and the `overFetch` flag. A cursor may be DECLAREd from either an inline `SELECT` or a previously PREPAREd statement name. |
@@ -133,9 +133,9 @@ For `SELECT INTO` / `FETCH`, `esql_build_and_resolve()` checks whether the leaf 
 | `SqlCA` | package-private | Writes SQLCA fields (`SQLCODE`, `SQLSTATE`, `SQLERRMC`, `SQLERRD`, ...) back into the corresponding `CobolDataStorage`. Maps a JDBC `SQLState` to an ECPG code via `sqlStateToCode`. |
 | `CobolDataConverter` | package-private | Converts between `AbstractCobolField` and JDBC `PreparedStatement.setXxx` / `ResultSet.getXxx`. Dispatches on the COBOL field type: numeric (display), packed decimal (COMP-3, signed/unsigned), native binary (COMP-5), float/double, alphanumeric / group, national (`PIC N`), and alphanumeric / Japanese `VARYING` (4-byte big-endian length header + data). National and Japanese values are converted through SHIFT-JIS. Note that native binary (COMP-5) and float/double are implemented only for the send direction (COBOL→SQL, `cobolToString`); the receive direction (SQL→COBOL, `stringToCobol`) has no dedicated write-back and falls back to copying the bytes as alphanumeric (correct binary write-back is not supported). |
 
-All classes except `CobolSql` are package-private. They appear as SLF4J logger names but are not part of the external API.
+All classes except `CobolEsql` are package-private. They appear as SLF4J logger names but are not part of the external API.
 
-### CobolSql signatures
+### CobolEsql signatures
 
 Host variables arrive from generated Java as `AbstractCobolField[]`. Because the compiler has already resolved subscripts and qualifications, the runtime is **subscript- and qualification-agnostic**: it simply binds each array element to a JDBC parameter or result column via `CobolDataConverter`.
 
@@ -145,13 +145,13 @@ Host variables arrive from generated Java as `AbstractCobolField[]`. Because the
 
 ### NULL column notification (`ECPG_MISSING_INDICATOR`)
 
-Compatible with ECPG, the runtime returns `SQLCODE = -213` / `SQLSTATE = 22002` (`ECPG_MISSING_INDICATOR`) when a NULL column is read into a host variable without an indicator variable. In `SqlCA.java`, `ECPG_MISSING_INDICATOR = -213` and `setMissingIndicator()` sets the state to `22002`. The COBOL field itself is still written (zero-filled), so the row counts as processed. The JUnit suites `CobolSqlTest` and `SqlCATest` cover the relevant cases.
+Compatible with ECPG, the runtime returns `SQLCODE = -213` / `SQLSTATE = 22002` (`ECPG_MISSING_INDICATOR`) when a NULL column is read into a host variable without an indicator variable. In `SqlCA.java`, `ECPG_MISSING_INDICATOR = -213` and `setMissingIndicator()` sets the state to `22002`. The COBOL field itself is still written (zero-filled), so the row counts as processed. The JUnit suites `CobolEsqlTest` and `SqlCATest` cover the relevant cases.
 
 ### Bulk fetch (pre-read) and WHERE CURRENT OF position correction
 
 `SqlCursor.fetch` pulls the number of rows given by the `OCESQL4J_FETCH_RECORDS` environment variable (cached by `BulkFetchConfig`, default 1) in a single `FETCH FORWARD N FROM <cursor>` and keeps them in `fetchBuffer`. Subsequent `fetchCursor` calls serve one buffered row at a time without hitting the database until the buffer is exhausted, at which point the next N rows are pre-read. This collapses N COBOL FETCHes into one database round trip. With the default value of 1, rows are fetched one at a time as before. The buffer is cleared on COMMIT / ROLLBACK / CLOSE (`clearBuffer`).
 
-Because pre-reading advances the server-side cursor past the actual current row, positioned UPDATE/DELETE using `WHERE CURRENT OF` would target the wrong row. To correct this, `SqlCursor` records the over-advanced state in the `overFetch` flag, and `CobolSql.execWhereCurrentOf` / `execWithParamsWhereCurrentOf` rewind the cursor with `FETCH BACKWARD` before issuing the SQL, then invalidate the pre-read buffer (same behavior as Open COBOL ESQL 4J's overFetch correction). `joutput_exec_sql` in `codegen.c` dispatches statements containing `WHERE CURRENT OF` to these dedicated APIs.
+Because pre-reading advances the server-side cursor past the actual current row, positioned UPDATE/DELETE using `WHERE CURRENT OF` would target the wrong row. To correct this, `SqlCursor` records the over-advanced state in the `overFetch` flag, and `CobolEsql.execWhereCurrentOf` / `execWithParamsWhereCurrentOf` rewind the cursor with `FETCH BACKWARD` before issuing the SQL, then invalidate the pre-read buffer (same behavior as Open COBOL ESQL 4J's overFetch correction). `joutput_exec_sql` in `codegen.c` dispatches statements containing `WHERE CURRENT OF` to these dedicated APIs.
 
 ### Transaction model
 
@@ -165,7 +165,7 @@ For parameterized statements, the JDBC Describe (`getParameterMetaData`) runs in
 
 ### Prepared-statement cache (`stmtCache`)
 
-`CobolSql` keeps `PreparedStatement`s in a nested `ConcurrentHashMap` (`stmtCache`) keyed by `Connection` and, within that, by the SQL string. Connections are matched by object identity and queries by exact string equality, so there is no risk of a hash collision returning the wrong statement. `getOrCreatePreparedStatement` reuses a cached `PreparedStatement` for a repeated `(connection, query)` pair instead of re-preparing it on every `execWithParams` / `selectInto`.
+`CobolEsql` keeps `PreparedStatement`s in a nested `ConcurrentHashMap` (`stmtCache`) keyed by `Connection` and, within that, by the SQL string. Connections are matched by object identity and queries by exact string equality, so there is no risk of a hash collision returning the wrong statement. `getOrCreatePreparedStatement` reuses a cached `PreparedStatement` for a repeated `(connection, query)` pair instead of re-preparing it on every `execWithParams` / `selectInto`.
 
 ### Cursor name qualification
 
@@ -202,7 +202,7 @@ Each suite is generated by `make <name>` and runnable locally with `./<name>` (r
 
 ### libcobj unit tests (`libcobj/app/src/test/.../sql/`)
 
-`CobolSqlTest`, `SqlStateTest`, `SqlCursorTest`, `SqlConnectionTest`, `CobolDataConverterTest`, `CobolDataConverterPureTest`, `CobolSqlLoggingTest`, `SqlCATest` provide unit coverage. Those needing a database use the testcontainers PostgreSQL image, while others — such as `CobolDataConverterPureTest` — verify data conversion without a database.
+`CobolEsqlTest`, `SqlStateTest`, `SqlCursorTest`, `SqlConnectionTest`, `CobolDataConverterTest`, `CobolDataConverterPureTest`, `CobolEsqlLoggingTest`, `SqlCATest` provide unit coverage. Those needing a database use the testcontainers PostgreSQL image, while others — such as `CobolDataConverterPureTest` — verify data conversion without a database.
 
 ## Design decisions
 
@@ -210,7 +210,7 @@ Each suite is generated by `make <name>` and runnable locally with `./<name>` (r
 - **State-machine isolation for subscripts**: subscript and qualification parsing is contained in `ESQL_HOSTSUB_STATE`, which by construction never appends to the SQL body string. There is no way for a stray `(` or identifier to leak into a placeholder slot.
 - **Drop dblibj**: the Open-COBOL-ESQL Scala dependency (dblibj) is removed; the runtime is pure Java, bundled inside `libcobj.jar` together with the PostgreSQL JDBC driver.
 - **No `OF` qualification**: COBOL itself accepts `X OF Y`, but ESQL only accepts dotted qualification (`:Y.X`). This keeps the scanner state count small and avoids reserved-word collisions with `OF` inside SQL clauses.
-- **Wrap host-variable lists in the generated Java**: the host variables passed to `CobolSql.*` calls are emitted by `joutput_sql_host_list_newline` (argument lists) and `joutput_sql_field_array` (`new AbstractCobolField[]{...}` literals) in `codegen.c`. Both insert a line break every `SQL_HOST_VAR_WRAP` (= 5) host variables instead of putting them all on one line, so a statement with many host variables stays readable in the generated source. This is purely cosmetic and does not change the arguments passed.
+- **Wrap host-variable lists in the generated Java**: the host variables passed to `CobolEsql.*` calls are emitted by `joutput_sql_host_list_newline` (argument lists) and `joutput_sql_field_array` (`new AbstractCobolField[]{...}` literals) in `codegen.c`. Both insert a line break every `SQL_HOST_VAR_WRAP` (= 5) host variables instead of putting them all on one line, so a statement with many host variables stays readable in the generated source. This is purely cosmetic and does not change the arguments passed.
 
 ## Related documents
 

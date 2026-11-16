@@ -20,11 +20,18 @@ package jp.osscons.opensourcecobol.libcobj.file;
 
 import jp.osscons.opensourcecobol.libcobj.data.AbstractCobolField;
 
-/** TODO: 準備中 */
+/**
+ * INDEXEDファイルのSPLIT KEYを構成する1つの要素を表す。
+ *
+ * <p>COBOLでは、レコードキーを連続しない複数のフィールドから構成できる（SPLIT KEY。例：{@code RECORD KEY IS K = F1 F2
+ * ...}）。その構成フィールド1つ1つが{@code KeyComponent}で表現される。コンパイラ（{@code
+ * cobj}）は、2つ以上の要素を持つキーごとに{@code KeyComponent}の配列を生成し、{@link
+ * CobolFileKey#setComponent(KeyComponent[])}を通じて所有者である{@link CobolFileKey}に格納する。
+ */
 public class KeyComponent {
-    /** TODO: 準備中 */
+    /** このキー要素を構成するCOBOLフィールド。 */
     public AbstractCobolField field;
 
-    /** TODO: 準備中 */
+    /** レコード先頭からのこの要素の0始まりのバイトオフセット。 */
     public int rb;
 }

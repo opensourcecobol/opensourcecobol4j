@@ -1,6 +1,7 @@
 AT_INIT(ESQL misc test)
 
 m4_include([logging.at])
+m4_include([db-type-env.at])
 m4_include([long-sql.at])
 m4_include([include.at])
 m4_include([fetch-sqlca.at])

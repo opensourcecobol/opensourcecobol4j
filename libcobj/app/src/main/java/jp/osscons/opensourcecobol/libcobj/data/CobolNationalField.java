@@ -76,6 +76,12 @@ public class CobolNationalField extends AbstractCobolField {
             return;
         }
 
+        // non-elementary move
+        if (src1.getAttribute().isTypeGroup()) {
+            CobolAlphanumericField.moveAlphanumToAlphanum(this, src1);
+            return;
+        }
+
         // Convert Numeric
         switch (src1.getAttribute().getType()) {
             case CobolFieldAttribute.COB_TYPE_NUMERIC_PACKED:

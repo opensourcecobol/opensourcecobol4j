@@ -75,7 +75,7 @@ EMBED_DB_INFO="sh ${abs_srcdir}/embed_db_info.sh"
 COMPILE_MODULE_ESQL="${COBJ} ${FLAGS} -I ${abs_top_srcdir}/copy"
 
 # Run module with SLF4J DEBUG logging to stderr
-RUN_MODULE_LOG="java -Dorg.slf4j.simpleLogger.log.jp.osscons.opensourcecobol.libcobj.sql.CobolSql=debug -Dorg.slf4j.simpleLogger.showDateTime=false -Dorg.slf4j.simpleLogger.showThreadName=false -Dorg.slf4j.simpleLogger.showLogName=false -Dorg.slf4j.simpleLogger.levelInBrackets=false"
+RUN_MODULE_LOG="java -Dorg.slf4j.simpleLogger.log.jp.osscons.opensourcecobol.libcobj.sql.CobolEsql=debug -Dorg.slf4j.simpleLogger.showDateTime=false -Dorg.slf4j.simpleLogger.showThreadName=false -Dorg.slf4j.simpleLogger.showLogName=false -Dorg.slf4j.simpleLogger.levelInBrackets=false"
 export RUN_MODULE_LOG
 
 # Ensure local build's libcobj.jar is on CLASSPATH

@@ -21,50 +21,56 @@ package jp.osscons.opensourcecobol.libcobj.file;
 import java.sql.Connection;
 import jp.osscons.opensourcecobol.libcobj.data.CobolDataStorage;
 
-/** TODO: 準備中 */
+/**
+ * オープン中の1つのINDEXEDファイルの実行時状態を保持する。
+ *
+ * <p>インスタンスは{@link CobolIndexedFile#open_(String, int, int)}で生成され、オープンの間{@code
+ * CobolFile.filei}に保持される。バックエンドのSQLiteデータベースへのJDBC接続に加え、現在のキー／レコードバッファや、COBOLのI/O文を実行する際に使用するその他の管理情報をまとめて保持する。これはパッケージプライベートな単純なデータ保持クラスであり、実際のロジックは{@link
+ * CobolIndexedFile}に存在する。
+ */
 class IndexedFile {
-    /** TODO: 準備中 */
+    /** 直近に使用されたキー（例：{@code START}で使用）を示すキー配列へのインデックス。 */
     int key_index;
 
-    /** TODO: 準備中 */
+    /** 直前の{@code WRITE}で書き込まれた主キー値。順次書き込み時の順序チェックに使用する。 */
     CobolDataStorage last_key;
 
-    /** TODO: 準備中 */
+    /** 最大のキーを格納できる大きさのスクラッチバッファ。オープン時にサイズが決定される。 */
     CobolDataStorage temp_key;
 
-    /** TODO: 準備中 */
+    /** このファイルのバックエンドであるSQLiteデータベースへのJDBC接続。 */
     Connection connection;
 
-    /** TODO: 準備中 */
+    /** 読み書き中の現在のキー値（生のバイト列）。 */
     byte[] key;
 
-    /** TODO: 準備中 */
+    /** 読み書き中の現在のレコード値（生のバイト列）。 */
     byte[] data;
 
-    /** TODO: 準備中 */
+    /** キーごとの読み込み管理用に予約されているが、現在の実装では実際には使用されていない。 */
     byte[][] last_readkey;
 
-    /** TODO: 準備中 */
+    /** キーごとの重複番号（{@code dupNo}）状態として予約されているが、オープン時に確保されるのみで現在の実装では読み取られない。 */
     int[] last_dupno;
 
-    /** TODO: 準備中 */
+    /** REWRITE用のキーごとの状態として予約されているが、オープン時に確保されるのみで、現在の実装では代わりにローカル配列で重複番号を受け渡しており、実際には使用されていない。 */
     int[] rewrite_sec_key;
 
-    /** TODO: 準備中 */
+    /** 解決済みのSQLiteデータベースファイルのパス。 */
     String filename;
 
-    /** TODO: 準備中 */
+    /** レコードロックの管理用に予約されている。 */
     Object record_lock;
 
-    /** TODO: 準備中 */
+    /** WRITE/REWRITE/DELETE操作中に書き込みカーソルがオープンしている間は{@code true}。 */
     boolean write_cursor_open;
 
-    /** TODO: 準備中 */
+    /** 予約済みのロック識別子。 */
     int lock_id;
 
-    /** TODO: 準備中 */
+    /** 現在未使用。予約済み。 */
     boolean record_locked;
 
-    /** TODO: 準備中 */
+    /** {@link #filename}の文字数。 */
     int filenamelen;
 }
