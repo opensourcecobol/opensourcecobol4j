@@ -2,6 +2,13 @@ name: Windows ESQL tests
 
 on:
   workflow_call:
+    inputs:
+      test-name:
+        required: true
+        type: string
+
+permissions:
+  contents: read
 
 jobs:
   test:
@@ -9,6 +16,7 @@ jobs:
 
     env:
       CLASSPATH: ".;C:/opensourcecobol4j/lib/libcobj.jar"
+      PG_LOG: "postgresql.log"
 
     steps:
     - uses: actions/checkout@v7
@@ -44,14 +52,7 @@ jobs:
 
     - name: Start PostgreSQL
       shell: pwsh
-      run: |
-        $pgDir = (Get-ChildItem "C:\Program Files\PostgreSQL" -Directory | Sort-Object Name -Descending | Select-Object -First 1).FullName
-        $pgBin = "$pgDir\bin"
-        $pgData = "$env:RUNNER_TEMP\pgdata"
-        & "$pgBin\initdb.exe" -D "$pgData" -U main_user --auth=trust --encoding=UTF8
-        & "$pgBin\pg_ctl.exe" start -D "$pgData" -l "$env:RUNNER_TEMP\pglog.txt" -w
-        & "$pgBin\createdb.exe" -U main_user testdb
-        echo "$pgBin" >> $env:GITHUB_PATH
+      run: ./win/start-test-postgresql.ps1 -LogFile "$env:RUNNER_TEMP/$env:PG_LOG"
 
     - name: Set up test environment
       shell: bash
@@ -65,48 +66,35 @@ jobs:
         sed -i "s|abs_top_builddir=.*|abs_top_builddir='${WORKSPACE}'|" atconfig
         sed -i "s|SHELL=.*|SHELL='$(which bash)'|" atconfig
 
-        cat > embed_db_info.sh << 'DBEOF'
-        DB_NAME=testdb
-        DB_HOST=localhost
-        DB_PORT=5432
-        DB_USER=main_user
-        DB_PASSWORD=password
-        TEMP_FILE=$(mktemp)
-        cat $1 |
-        sed -e "s/<|DB_NAME|>/${DB_NAME}/g" |
-        sed -e "s/<|DB_HOST|>/${DB_HOST}/g" |
-        sed -e "s/<|DB_PORT|>/${DB_PORT}/g" |
-        sed -e "s/<|DB_USER|>/${DB_USER}/g" |
-        sed -e "s/<|DB_PASSWORD|>/${DB_PASSWORD}/g" > ${TEMP_FILE}
-        mv ${TEMP_FILE} $1
-        DBEOF
+        # ${EMBED_DB_INFO} substitutes these connection settings into every
+        # COBOL source before it is compiled.
+        cp ../.github/workflows/db-settings/embed_db_info_windows.sh embed_db_info.sh
 
-        # Create diff wrapper that strips trailing CR
+    - name: Run tests ${{ inputs.test-name }}
+      shell: bash
+      run: |
+        # Create a diff wrapper that strips trailing CR so CRLF output from
+        # Windows binaries compares equal to LF expected outputs.
         mkdir -p /tmp/diff-wrapper
         printf '%s\n' '#!/bin/bash' 'exec /usr/bin/diff --strip-trailing-cr "$@"' > /tmp/diff-wrapper/diff
         chmod +x /tmp/diff-wrapper/diff
-
-    - name: Run ESQL tests
-      shell: bash
-      run: |
         export PATH="/tmp/diff-wrapper:$PATH"
         cd tests
-        ./esql-basic
-        ./esql-sqlca
-        ./esql-cobol-data
-        ./esql-misc
-        ./esql-sql-data
-        ./esql-utf8
+        # The groups of a suite share the tables they create, so the suite has
+        # to run its groups one at a time.  The suites are separate jobs, and
+        # each job gets a cluster of its own, so they do not collide.
+        ./${{ inputs.test-name }}
+
+    - name: Show the PostgreSQL log if tests fail
+      if: failure()
+      shell: pwsh
+      run: |
+        $log = "$env:RUNNER_TEMP/$env:PG_LOG"
+        if (Test-Path $log) { Get-Content $log }
 
     - name: Upload log files if tests fail
       if: failure()
       uses: actions/upload-artifact@v7
       with:
-        name: windows-esql-test-log
-        path: |
-          tests/esql-basic.dir/
-          tests/esql-sqlca.dir/
-          tests/esql-cobol-data.dir/
-          tests/esql-misc.dir/
-          tests/esql-sql-data.dir/
-          tests/esql-utf8.dir/
+        name: windows-${{ inputs.test-name }}-log
+        path: tests/${{ inputs.test-name }}.dir/
