@@ -23,37 +23,37 @@ import jp.osscons.opensourcecobol.libcobj.data.CobolDataStorage;
 import jp.osscons.opensourcecobol.libcobj.exceptions.CobolRuntimeException;
 import jp.osscons.opensourcecobol.libcobj.exceptions.CobolStopRunException;
 
-/** TODO: 準備中 */
+/** 行順編成ファイル(LINE SEQUENTIAL)のI/Oを実装するCobolFileのサブクラス。 */
 public class CobolLineSequentialFile extends CobolFile {
 
     /**
-     * TODO: 準備中
+     * 行順編成ファイルを表すインスタンスを生成する。
      *
-     * @param selectName TODO: 準備中
-     * @param fileStatus TODO: 準備中
-     * @param assign TODO: 準備中
-     * @param record TODO: 準備中
-     * @param recordSize TODO: 準備中
-     * @param recordMin TODO: 準備中
-     * @param recordMax TODO: 準備中
-     * @param nkeys TODO: 準備中
-     * @param keys TODO: 準備中
-     * @param organization TODO: 準備中
-     * @param accessMode TODO: 準備中
-     * @param lockMode TODO: 準備中
-     * @param openMode TODO: 準備中
-     * @param flagOptional TODO: 準備中
-     * @param lastOpenMode TODO: 準備中
-     * @param special TODO: 準備中
-     * @param flagNonexistent TODO: 準備中
-     * @param flagEndOfFile TODO: 準備中
-     * @param flagBeginOfFile TODO: 準備中
-     * @param flagFirstRead TODO: 準備中
-     * @param flagReadDone TODO: 準備中
-     * @param flagSelectFeatures TODO: 準備中
-     * @param flagNeedsNl TODO: 準備中
-     * @param flagNeedsTop TODO: 準備中
-     * @param fileVersion TODO: 準備中
+     * @param selectName SELECT句で指定されたファイルの内部名。
+     * @param fileStatus FILE STATUS句に対応するファイル状態コードを格納するバイト配列。
+     * @param assign ASSIGN句で指定された割り当て先(物理ファイル名等)を保持する変数。
+     * @param record レコード領域を表す変数。
+     * @param recordSize 実際のレコード長を格納する変数。
+     * @param recordMin 最小レコード長。
+     * @param recordMax 最大レコード長。
+     * @param nkeys キーの数。
+     * @param keys ファイルのキー情報の配列。
+     * @param organization ファイル編成を表す値。
+     * @param accessMode アクセスモード(順/動的/乱)。
+     * @param lockMode ファイルのロック方式。
+     * @param openMode 現在のオープンモード。
+     * @param flagOptional SELECT句にOPTIONALが指定されているかどうかを表すフラグ。
+     * @param lastOpenMode 最後に開いたときのオープンモード。
+     * @param special 特殊ファイル(標準入出力等)の種別。
+     * @param flagNonexistent ファイルが存在しないかどうかを表すフラグ。
+     * @param flagEndOfFile ファイル終端に達したかどうかを表すフラグ。
+     * @param flagBeginOfFile ファイル先頭に達したかどうかを表すフラグ。
+     * @param flagFirstRead 最初の読み込みかどうかを表すフラグ。
+     * @param flagReadDone 読み込みが行われたかどうかを表すフラグ。
+     * @param flagSelectFeatures SELECT句で指定された機能(FILE STATUS/EXTERNAL/LINAGE/SPLIT KEY)の有無を表すビットフラグ。
+     * @param flagNeedsNl 次の書き込み前に改行の出力が必要かどうかを表すフラグ。
+     * @param flagNeedsTop 次の書き込み前にページ先頭の処理が必要かどうかを表すフラグ。
+     * @param fileVersion ファイル構造のバージョン。
      */
     public CobolLineSequentialFile(
             String selectName,
@@ -109,12 +109,26 @@ public class CobolLineSequentialFile extends CobolFile {
                 fileVersion);
     }
 
+    /**
+     * 行順編成ファイルでは位置付けの下位処理は未実装。デバッグ用のメッセージを標準出力に出力し、何もせずに0を返す。
+     *
+     * @param cond 位置付けの比較条件(使用しない)
+     * @param key 位置付けに用いるキー項目(使用しない)
+     * @return 常に0
+     */
     @Override
     public int start_(int cond, AbstractCobolField key) {
         System.out.println("LineSeq.start");
         return 0;
     }
 
+    /**
+     * 行順編成ファイルではキーを指定した読み込みの下位処理は未実装。デバッグ用のメッセージを標準出力に出力し、何もせずに0を返す。
+     *
+     * @param key 読み込みに用いるキー項目(使用しない)
+     * @param readOpts READ文のオプション(使用しない)
+     * @return 常に0
+     */
     @Override
     public int read_(AbstractCobolField key, int readOpts) {
         System.out.println("LineSeq.read");
@@ -244,12 +258,23 @@ public class CobolLineSequentialFile extends CobolFile {
         return COB_STATUS_00_SUCCESS;
     }
 
+    /**
+     * 行順編成ファイルではレコードの書き換えの下位処理は未実装。デバッグ用のメッセージを標準出力に出力し、何もせずに0を返す。
+     *
+     * @param opt REWRITE文のオプション(使用しない)
+     * @return 常に0
+     */
     @Override
     public int rewrite_(int opt) {
         System.out.println("LineSeq.rewrite");
         return 0;
     }
 
+    /**
+     * 行順編成ファイルではレコードの削除の下位処理は未実装。デバッグ用のメッセージを標準出力に出力し、何もせずに0を返す。
+     *
+     * @return 常に0
+     */
     @Override
     public int delete_() {
         System.out.println("LineSeq.delete");
