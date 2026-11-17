@@ -22,8 +22,21 @@ AT_DATA([12345.cpy], [
 
 AT_CHECK([${COBJ} -Wcolumn-overflow prog.cbl], [0], [],
 [prog.cbl:1: Warning: Source text after column 72
+    1 >
+    2 |        IDENTIFICATION              DIVISION.                            test
+    3 |        PROGRAM-ID.                 prog.
 prog.cbl:8: Warning: Source text after column 72
+    6 |        01 I PIC 9.
+    7 |        PROCEDURE                   DIVISION.
+    8 >        MAIN-RTN.
+    9 |       ***************************************************************************
+   10 | *********************************************************************************
 prog.cbl:11: Warning: Source text after column 72
+    9 |       ***************************************************************************
+   10 | *********************************************************************************
+   11 >                                                          DISPLAY"hello".world
+   12 |                                                                         1
+   13 |                                                                         1234567890123456789012345678901234567890
 ])
 
 AT_CHECK([${COBJ} --help | grep '\-Wcolumn-overflow' > /dev/null], [0])

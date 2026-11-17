@@ -51,11 +51,36 @@ AT_DATA([prog.cob], [
 
 AT_CHECK([${COMPILE_ONLY} prog.cob], [1], ,
 [prog.cob:10: Error: '456' is not a numeric name
+    8 |        01 X-09          PIC 09.
+    9 |        PROCEDURE        DIVISION.
+   10 >            MULTIPLY 123  BY 456
+   11 |            END-MULTIPLY.
+   12 |            MULTIPLY "a"  BY "b"
 prog.cob:12: Error: '"a"' is not a numeric value
+   10 |            MULTIPLY 123  BY 456
+   11 |            END-MULTIPLY.
+   12 >            MULTIPLY "a"  BY "b"
+   13 |            END-MULTIPLY.
+   14 |            MULTIPLY X-X  BY X-9
 prog.cob:12: Error: '"b"' is not a numeric name
 prog.cob:14: Error: 'X-X' is not a numeric value
+   12 |            MULTIPLY "a"  BY "b"
+   13 |            END-MULTIPLY.
+   14 >            MULTIPLY X-X  BY X-9
+   15 |            END-MULTIPLY.
+   16 |            MULTIPLY X-9  BY X-09
 prog.cob:16: Error: 'X-09' is not a numeric name
+   14 |            MULTIPLY X-X  BY X-9
+   15 |            END-MULTIPLY.
+   16 >            MULTIPLY X-9  BY X-09
+   17 |            END-MULTIPLY.
+   18 |            MULTIPLY X-09 BY X-X
 prog.cob:18: Error: 'X-09' is not a numeric value
+   16 |            MULTIPLY X-9  BY X-09
+   17 |            END-MULTIPLY.
+   18 >            MULTIPLY X-09 BY X-X
+   19 |            END-MULTIPLY.
+   20 |            STOP RUN.
 prog.cob:18: Error: 'X-X' is not a numeric name
 ])
 
@@ -89,13 +114,38 @@ AT_DATA([prog.cob], [
 
 AT_CHECK([${COMPILE_ONLY} prog.cob], [1], ,
 [prog.cob:10: Error: '789' is not numeric or numeric-edited name
+    8 |        01 X-09          PIC 09.
+    9 |        PROCEDURE        DIVISION.
+   10 >            MULTIPLY 123  BY 456  GIVING 789
+   11 |            END-MULTIPLY.
+   12 |            MULTIPLY "a"  BY "b"  GIVING "c"
 prog.cob:12: Error: '"a"' is not a numeric value
+   10 |            MULTIPLY 123  BY 456  GIVING 789
+   11 |            END-MULTIPLY.
+   12 >            MULTIPLY "a"  BY "b"  GIVING "c"
+   13 |            END-MULTIPLY.
+   14 |            MULTIPLY X-X  BY X-9  GIVING X-09
 prog.cob:12: Error: '"b"' is not a numeric value
 prog.cob:12: Error: '"c"' is not numeric or numeric-edited name
 prog.cob:14: Error: 'X-X' is not a numeric value
+   12 |            MULTIPLY "a"  BY "b"  GIVING "c"
+   13 |            END-MULTIPLY.
+   14 >            MULTIPLY X-X  BY X-9  GIVING X-09
+   15 |            END-MULTIPLY.
+   16 |            MULTIPLY X-9  BY X-09 GIVING X-X
 prog.cob:16: Error: 'X-09' is not a numeric value
+   14 |            MULTIPLY X-X  BY X-9  GIVING X-09
+   15 |            END-MULTIPLY.
+   16 >            MULTIPLY X-9  BY X-09 GIVING X-X
+   17 |            END-MULTIPLY.
+   18 |            MULTIPLY X-09 BY X-X  GIVING X-9
 prog.cob:16: Error: 'X-X' is not numeric or numeric-edited name
 prog.cob:18: Error: 'X-09' is not a numeric value
+   16 |            MULTIPLY X-9  BY X-09 GIVING X-X
+   17 |            END-MULTIPLY.
+   18 >            MULTIPLY X-09 BY X-X  GIVING X-9
+   19 |            END-MULTIPLY.
+   20 |            STOP RUN.
 prog.cob:18: Error: 'X-X' is not a numeric value
 ])
 
@@ -125,7 +175,17 @@ AT_DATA([prog.cob], [
 
 AT_CHECK([${COMPILE_ONLY} prog.cob], [1], ,
 [prog.cob:10: Error: '"a"' is not a numeric value
+    8 |            MULTIPLY 123  BY X
+    9 |            END-MULTIPLY.
+   10 >            MULTIPLY "a"  BY X
+   11 |            END-MULTIPLY.
+   12 |            MULTIPLY 123  BY 456 GIVING X
 prog.cob:14: Error: '"a"' is not a numeric value
+   12 |            MULTIPLY 123  BY 456 GIVING X
+   13 |            END-MULTIPLY.
+   14 >            MULTIPLY "a"  BY "b" GIVING X
+   15 |            END-MULTIPLY.
+   16 |            STOP RUN.
 prog.cob:14: Error: '"b"' is not a numeric value
 ])
 

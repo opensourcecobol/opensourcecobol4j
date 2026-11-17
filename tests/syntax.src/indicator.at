@@ -131,6 +131,11 @@ AT_DATA([prog.cob], [
 
 AT_CHECK([${COMPILE} prog.cob], [1], [], 
 [prog.cob:4: Error: Invalid indicator '1' at column 7
+    2 |        IDENTIFICATION   DIVISION.
+    3 |        PROGRAM-ID.      prog.
+    4 >        DATA             DIVISION.
+    5 |       1WORKING-STORAGE  SECTION.
+    6 |        PROCEDURE        DIVISION.
 ])
 
 AT_CLEANUP

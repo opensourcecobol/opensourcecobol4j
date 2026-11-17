@@ -17,6 +17,10 @@ AT_DATA([prog.cbl],
 
 AT_CHECK([${COBJ} -Wimplicit-define prog.cbl], [0], [],
 [prog.cbl:11: Warning: 'TEST-FILE-PATH' will be implicitly defined
+    9 |        FD TEST-FILE  RECORD CONTAINS 8.
+   10 |        01 TEST-REC      PIC X(7).
+   11 >        PROCEDURE        DIVISION.
+   12 |            STOP RUN.
 ])
 
 AT_CHECK([${COBJ} --help | grep '\-Wimplicit-define' > /dev/null])

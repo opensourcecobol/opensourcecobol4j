@@ -17,7 +17,17 @@ AT_DATA([prog.cbl], [
 
 AT_CHECK([${COBJ} -Wredefinition prog.cbl], [0], [],
 [prog.cbl:10: Warning: Redefinition of 'C'
+    8 |        01 B redefines GRP.
+    9 |          05 C PIC X(5).
+   10 >        01 C  PIC X(5).
+   11 |        PROCEDURE                   DIVISION.
+   12 |        MAIN-RTN.
 prog.cbl:9: Warning: 'C' previously defined here
+    7 |          03 A PIC X(5).
+    8 |        01 B redefines GRP.
+    9 >          05 C PIC X(5).
+   10 |        01 C  PIC X(5).
+   11 |        PROCEDURE                   DIVISION.
 ])
 
 AT_CHECK([${COBJ} --help | grep '\-Wredefinition' > /dev/null], [0])

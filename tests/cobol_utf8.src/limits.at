@@ -30,6 +30,11 @@ AT_DATA([prog.cob], [
 
 AT_CHECK([${COMPILE_LIMIT_TEST} prog.cob], [1], [],
 [prog.cob:6: Error: Alphabetic field cannot be larger than 16777216 digits
+    4 |        DATA             DIVISION.
+    5 |        WORKING-STORAGE  SECTION.
+    6 >        01 VALID-X       PIC A(16777217).
+    7 |        PROCEDURE        DIVISION.
+    8 |            STOP RUN.
 ])
 
 AT_CLEANUP
@@ -66,6 +71,11 @@ AT_DATA([prog.cob], [
 
 AT_CHECK([${COMPILE_LIMIT_TEST} prog.cob], [1], [],
 [prog.cob:6: Error: AlphaNumeric field cannot be larger than 16777216 digits
+    4 |        DATA             DIVISION.
+    5 |        WORKING-STORAGE  SECTION.
+    6 >        01 VALID-X       PIC X(16777217).
+    7 |        PROCEDURE        DIVISION.
+    8 |            STOP RUN.
 ])
 
 AT_CLEANUP
@@ -102,6 +112,11 @@ AT_DATA([prog.cob], [
 
 AT_CHECK([${COMPILE_LIMIT_TEST} prog.cob], [1], [],
 [prog.cob:6: Error: NumericEdit field cannot be larger than 160 digits
+    4 |        DATA             DIVISION.
+    5 |        WORKING-STORAGE  SECTION.
+    6 >        01 VALID-X       PIC B9(160).
+    7 |        PROCEDURE        DIVISION.
+    8 |            STOP RUN.
 ])
 
 AT_CLEANUP
@@ -139,6 +154,11 @@ AT_DATA([prog.cob], [
 AT_CHECK([${COMPILE_LIMIT_TEST} prog.cob], [1], [],
 
 [prog.cob:6: Error: AlphaNumericEdit field cannot be larger than 16777216 digits
+    4 |        DATA             DIVISION.
+    5 |        WORKING-STORAGE  SECTION.
+    6 >        01 VALID-X       PIC B(16777217).
+    7 |        PROCEDURE        DIVISION.
+    8 |            STOP RUN.
 ])
 
 AT_CLEANUP
@@ -175,6 +195,11 @@ AT_DATA([prog.cob], [
 
 AT_CHECK([${COMPILE_LIMIT_TEST} prog.cob], [1], [],
 [prog.cob:6: Error: AlphaNumericEdit field cannot be larger than 16777216 digits
+    4 |        DATA             DIVISION.
+    5 |        WORKING-STORAGE  SECTION.
+    6 >        01 VALID-X       PIC BA(16777216).
+    7 |        PROCEDURE        DIVISION.
+    8 |            STOP RUN.
 ])
 
 AT_CLEANUP
@@ -211,6 +236,11 @@ AT_DATA([prog.cob], [
 
 AT_CHECK([${COMPILE_LIMIT_TEST} prog.cob], [1], [],
 [prog.cob:6: Error: AlphaNumericEdit field cannot be larger than 16777216 digits
+    4 |        DATA             DIVISION.
+    5 |        WORKING-STORAGE  SECTION.
+    6 >        01 VALID-X       PIC BX(16777216).
+    7 |        PROCEDURE        DIVISION.
+    8 |            STOP RUN.
 ])
 
 AT_CLEANUP
@@ -247,6 +277,11 @@ AT_DATA([prog.cob], [
 
 AT_CHECK([${COMPILE_LIMIT_TEST} prog.cob], [1], [],
 [prog.cob:6: Error: National field cannot be larger than 5592405 digits
+    4 |        DATA             DIVISION.
+    5 |        WORKING-STORAGE  SECTION.
+    6 >        01 INVALID-N     PIC N(5592406).
+    7 |        PROCEDURE        DIVISION.
+    8 |            STOP RUN.
 ])
 
 AT_CLEANUP
@@ -283,6 +318,11 @@ AT_DATA([prog.cob], [
 
 AT_CHECK([${COMPILE_LIMIT_TEST} prog.cob], [1], [],
 [prog.cob:6: Error: NationalEdit field cannot be larger than 5592405 digits
+    4 |        DATA             DIVISION.
+    5 |        WORKING-STORAGE  SECTION.
+    6 >        01 INVALID-BN    PIC BN(5592405).
+    7 |        PROCEDURE        DIVISION.
+    8 |            STOP RUN.
 ])
 
 AT_CLEANUP

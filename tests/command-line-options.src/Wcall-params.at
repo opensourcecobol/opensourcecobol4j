@@ -17,6 +17,10 @@ AT_DATA([callee.cbl],
 
 AT_CHECK([${COBJ} -Wcall-params callee.cbl], [1], [],
 [callee.cbl:11: Error: 'P1' not level 01 or 77
+    9 |          03 P2 PIC X(5).
+   10 |        77 P3 PIC X(5).
+   11 >        PROCEDURE        DIVISION USING P1 GRP2 P3.
+   12 |            DISPLAY P1.
 ])
 
 AT_CHECK([${COBJ} --help | grep '\-Wcall-params' > /dev/null], [0])
