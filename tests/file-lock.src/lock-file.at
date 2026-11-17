@@ -189,12 +189,12 @@ function run_test() {
 
     ${COBJ} ${PROGRAM_NAME_1}.cbl ${PROGRAM_NAME_2}.cbl make_indexed_file${TEST_ID}.cbl
 
-    java -Xlog:perf+memops=off make_indexed_file${TEST_ID}
+    java make_indexed_file${TEST_ID}
 
-    java -Xlog:perf+memops=off $PROGRAM_NAME_1 &
+    java $PROGRAM_NAME_1 &
     PID1=$!
 
-    java -Xlog:perf+memops=off $PROGRAM_NAME_2 > ${TEST_ID}.log &
+    java $PROGRAM_NAME_2 > ${TEST_ID}.log &
     PID2=$!
 
     wait $PID1 $PID2
@@ -365,7 +365,7 @@ AT_DATA([run.sh], [
 set -e
 
 COMPILER="${COBJ}"
-RUNNER="java -Xlog:perf+memops=off"
+RUNNER="java"
 
 rm -f file.dat shared1.dat shared2.dat
 

@@ -358,7 +358,11 @@ EXTRA_DIST = $(srcdir)/package.m4 \
 	$(esql_misc_DEPENDENCIES) \
 	$(esql_sql_data_DEPENDENCIES) \
 	$(esql_utf8_DEPENDENCIES) \
-	embed_db_info.sh
+	embed_db_info.sh \
+	jvm-wrapper/java \
+	jvm-wrapper/javac \
+	jvm-wrapper/javap \
+	jvm-wrapper/jar
 
 DISTCLEANFILES = atconfig
 

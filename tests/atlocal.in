@@ -27,6 +27,26 @@ COB_BIGENDIAN="@COB_BIGENDIAN@"
 COB_SPLITKEY_FLAGS="@COB_SPLITKEY_FLAGS@"
 COB_HAS_ISAM="@COB_HAS_ISAM@"
 PATH="${abs_top_builddir}/cobj:${abs_top_builddir}/bin:${abs_top_builddir}/libcob/.libs:${PATH}"
+
+# Run every JVM the tests start with -XX:-UsePerfData, so that concurrent
+# start-ups cannot collide over /tmp/hsperfdata_<user>/<pid> and print a
+# warning that breaks unrelated tests.  See tests/jvm-wrapper/java.
+# The real tools have to be resolved before the wrappers go on PATH,
+# otherwise the wrappers would find themselves.  Reading this file a second
+# time in the same shell would do exactly that, so it is done only once.
+case ":${PATH}:" in
+*":${abs_srcdir}/jvm-wrapper:"*)
+  ;;
+*)
+  COB4J_REAL_JAVA=`command -v java`
+  COB4J_REAL_JAVAC=`command -v javac`
+  COB4J_REAL_JAVAP=`command -v javap`
+  COB4J_REAL_JAR=`command -v jar`
+  export COB4J_REAL_JAVA COB4J_REAL_JAVAC COB4J_REAL_JAVAP COB4J_REAL_JAR
+  PATH="${abs_srcdir}/jvm-wrapper:${PATH}"
+  ;;
+esac
+
 CONF_JP_COMPAT="-conf=${abs_top_builddir}/config/jp-compat.conf"
 CONF_LIMIT_TEST="-conf=${abs_top_builddir}/config/boundary-limit.conf"
 COBJ="${abs_top_builddir}/cobj/cobj"
