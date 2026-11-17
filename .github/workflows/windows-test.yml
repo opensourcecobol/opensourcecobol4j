@@ -32,20 +32,18 @@ jobs:
         distribution: 'temurin'
         java-version: '11'
     
-    - name: Install perl
-      uses: shogo82148/actions-setup-perl@v1
-      with:
-        perl-version: "5.32"
-        distribution: strawberry
-    
-    - name: Run tests ${{ inputs.test-name }}
+    - name: Install opensource COBOL 4J
       run: |
         cd win
         ./make-install.ps1
-        $env:CLASSPATH="C:\opensourcecobol4j\lib\libcobj.jar"
-        $env:PATH+=";C:\opensourcecobol4j\bin\;C:\opensourcecobol4j\config\"
-        cd ../tests/cobol85/${{ inputs.test-name }}
-        perl ../report.pl
-        type report.txt
-        findstr "Successfully executed:" ./report.txt > ./result-check
-        findstr "100.00%" ./result-check
+
+    - name: Run tests ${{ inputs.test-name }}
+      shell: bash
+      run: |
+        export CLASSPATH='C:\opensourcecobol4j\lib\libcobj.jar'
+        export PATH="$PATH:/c/opensourcecobol4j/bin:/c/opensourcecobol4j/config"
+        cd tests/cobol85/${{ inputs.test-name }}
+        sh ../report.sh
+        cat report.txt
+        grep "Successfully executed:" report.txt > result-check
+        grep "100.00%" result-check

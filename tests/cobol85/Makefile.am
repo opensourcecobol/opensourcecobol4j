@@ -9,7 +9,7 @@ MODULES_MAKEFILES = NC/Makefile SM/Makefile IC/Makefile SQ/Makefile IX/Makefile 
 EXTRA_MODULES = CM DB RW
 EXTRA_MODULES_MAKEFILES = CM/Makefile DB/Makefile RW/Makefile
 
-EXTRA_DIST = EXEC85.conf.in expand.pl report.pl summary.pl summary.txt \
+EXTRA_DIST = EXEC85.conf.in expand.sh report.sh summary.sh summary.txt \
 	NC.txt SM.txt IC.txt SQ.txt RL.txt IX.txt ST.txt SG.txt OB.txt IF.txt CM.txt DB.txt RW.txt ifedit.sh
 CLEANFILES = EXEC85 summary.log
 
@@ -23,7 +23,7 @@ test: $(MODULES_MAKEFILES)
 	@for m in $(MODULES); do \
 	  (cd $$m && make test) \
 	done
-	perl $(srcdir)/summary.pl $(MODULES) > summary.log
+	sh $(srcdir)/summary.sh $(MODULES) > summary.log
 	@for MODULE in $(MODULES); do\
 		(cat $$MODULE/report.txt) \
 	done
@@ -34,7 +34,7 @@ test-extra: $(EXTRA_MODULES_MAKEFILES)
 	@for m in $(EXTRA_MODULES); do \
 	  (cd $$m && make test) \
 	done
-	perl $(srcdir)/summary.pl $(EXTRA_MODULES) > summary.log
+	sh $(srcdir)/summary.sh $(EXTRA_MODULES) > summary.log
 	@for MODULE in $(EXTRA_MODULES); do\
 		(cat $$MODULE/report.txt) \
 	done
@@ -63,10 +63,10 @@ clean-all:
 
 $(MODULES_MAKEFILES):
 	@echo "test:"               > $@
-	@echo "	. ../../atconfig; . ../../atlocal; export PATH; perl $(COB85DIR)/report.pl" >> $@
+	@echo "	. ../../atconfig; . ../../atlocal; export PATH; sh $(COB85DIR)/report.sh" >> $@
 	@echo "	@cat report.txt" >> $@
 
 $(EXTRA_MODULES_MAKEFILES):
 	@echo "test:"               > $@
-	@echo "	. ../../atconfig; . ../../atlocal; export PATH; perl $(COB85DIR)/report.pl" >> $@
+	@echo "	. ../../atconfig; . ../../atlocal; export PATH; sh $(COB85DIR)/report.sh" >> $@
 	@echo "	@cat report.txt" >> $@

@@ -2,7 +2,8 @@
 
 **NOTE** It is expected that WARNING messages appear when running the test.
 
-**NOTE** The language interpreter "perl" is required to run these tests.
+**NOTE** The test driver is written in POSIX shell, so a POSIX shell (`sh`) and `awk` are required to run these tests.
+On Windows, run the driver from a POSIX shell environment such as Git Bash or MSYS2.
 
 **NOTE** This test can take a long time depending on your hardware.
 
@@ -28,6 +29,18 @@ ie. diff summary.txt summary.log.
 - `make save`: save test reports in *.txt
 - `make diff`: diff from *.txt to the last reports
 - `make clean`: remove built files
+
+# Test Driver Scripts
+
+The test suite is driven by the following POSIX shell scripts.
+
+- `report.sh`: run the test programs of one module directory and write the result table to `report.txt`.
+  It is invoked by `make test` in each module directory (`sh ../report.sh`).
+  All COBOL sources of the module are compiled with a single `cobj` invocation so that `javac` runs only once.
+  If the batch compilation fails, the sources are compiled one by one so that a compile error is still reported per program.
+  Extra options given to the script (`sh ../report.sh [extra-cobj-options]`) are passed through to `cobj`.
+- `summary.sh`: print the summary table of the given modules. Used as `sh summary.sh MODULE... > summary.log`.
+- `expand.sh`: expand the NIST test suite archive into the per-module directories. Used as `sh expand.sh newcob.val`.
 
 # Test Modules
 
