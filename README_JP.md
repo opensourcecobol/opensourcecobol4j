@@ -187,6 +187,21 @@ opensource COBOL 4Jは、PostgreSQL向けのEmbedded SQL (`EXEC SQL`) をサポ�
 * [INDEXEDファイルのロックの仕様](./doc/specification-locking-indexed-file_JP.md)
 * [環境変数リファレンス](./doc/environment_variables_JP.md)
 
+## SBOM
+
+各[リリース](https://github.com/opensourcecobol/opensourcecobol4j/releases)には、`libcobj.jar`の[CycloneDX](https://cyclonedx.org/) 1.6形式のSBOMが、`libcobj-sbom.json`と`libcobj-sbom.xml`の2つの形式で添付されます。
+
+`libcobj.jar`はshadow jar(fat jar)であるため、同梱されているサードパーティ製ライブラリをjar自体から特定することはできません。
+SBOMにはそれらのライブラリがバージョン・ライセンスとともに記載されており、Trivy・Grype・Dependency-Track等の脆弱性スキャナに読み込ませることができます。
+
+ソースツリーから生成する場合は、下記のコマンドを実行します。
+
+```bash
+cd libcobj
+./gradlew cyclonedxDirectBom
+# app/build/reports/libcobj-sbom.json および libcobj-sbom.xml
+```
+
 ## 実装状況
 実装済み機能：
 * 基本的なデータ操作 (MOVE, COMPUTEなど)

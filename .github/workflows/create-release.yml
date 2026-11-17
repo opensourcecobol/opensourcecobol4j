@@ -49,10 +49,22 @@ jobs:
       with:
         name: libcobj.jar
 
+    - name: Download libcobj-sbom.json
+      uses: actions/download-artifact@v8
+      with:
+        name: libcobj-sbom.json
+
+    - name: Download libcobj-sbom.xml
+      uses: actions/download-artifact@v8
+      with:
+        name: libcobj-sbom.xml
+
     - name: Publish artifacts
-      run: | 
+      run: |
         gh release upload ${{ github.ref_name }} cobj.exe --clobber
         gh release upload ${{ github.ref_name }} libcobj.jar --clobber
+        gh release upload ${{ github.ref_name }} libcobj-sbom.json --clobber
+        gh release upload ${{ github.ref_name }} libcobj-sbom.xml --clobber
         gh release upload ${{ github.ref_name }} config/default.conf --clobber
 
   # publish libcobj.jar to GitHub Packages

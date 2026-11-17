@@ -38,6 +38,15 @@ jobs:
         working-directory: libcobj
         run: ./gradlew shadowJar
 
+      # Generate the SBOM from the same checkout and Gradle configuration that
+      # produce libcobj.jar, so the two always describe each other.
+      # Deliberately not guarded by
+      # upload-artifacts: running it on every push and pull request is what
+      # keeps a broken SBOM configuration from surfacing only at release time.
+      - name: Generate the SBOM of libcobj.jar
+        working-directory: libcobj
+        run: ./gradlew cyclonedxDirectBom
+
       - name: Build cobj.exe
         run: msbuild /p:Configuration=Release /p:AdditionalIncludePaths=./:./cobj/:./win:./lib win/opensourcecobol4j.sln
       
@@ -54,3 +63,17 @@ jobs:
         with:
           name: cobj.exe
           path: win/x64/Release/cobj.exe
+
+      - name: Upload libcobj-sbom.json
+        if: ${{inputs.upload-artifacts}}
+        uses: actions/upload-artifact@v7
+        with:
+          name: libcobj-sbom.json
+          path: libcobj/app/build/reports/libcobj-sbom.json
+
+      - name: Upload libcobj-sbom.xml
+        if: ${{inputs.upload-artifacts}}
+        uses: actions/upload-artifact@v7
+        with:
+          name: libcobj-sbom.xml
+          path: libcobj/app/build/reports/libcobj-sbom.xml
