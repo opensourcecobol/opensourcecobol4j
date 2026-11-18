@@ -18,16 +18,61 @@ on:
         required: false
       DOCKERHUB_TOKEN:
         required: false
+  # Mirror the workflow_call inputs so a failed release push can be retried
+  # manually without re-running the whole release workflow.
   workflow_dispatch:
+    inputs:
+      push-to-dockerhub:
+        description: "Push the built images to Docker Hub"
+        required: false
+        type: boolean
+        default: false
+      release-tag:
+        description: "Release git tag (e.g. v1.1.20). Required when push-to-dockerhub is true."
+        required: false
+        type: string
+        default: ""
 
 permissions:
   contents: read
 
 env:
   IMAGE_NAME: opensourcecobol/opensourcecobol4j
+  # Keep in sync with the build job's matrix. The push job uses this list to
+  # verify that no variant's image is missing before pushing anything; a
+  # variant present in the matrix but missing here is still pushed (the push
+  # job pushes every image it finds), it just loses this extra check.
+  IMAGE_VARIANTS: "default utf8"
 
 jobs:
+  # Resolve the image version once, before the expensive builds: the git tag
+  # without the leading "v" is the image version. Builds that do not push fall
+  # back to a placeholder version; pushing requires a real release tag, so a
+  # placeholder is never published to Docker Hub and a missing tag fails here
+  # instead of after the builds.
+  resolve-version:
+    runs-on: ubuntu-latest
+    outputs:
+      version: ${{ steps.resolve.outputs.version }}
+    steps:
+      - name: Resolve the image version
+        id: resolve
+        env:
+          RELEASE_TAG: ${{ inputs.release-tag }}
+          PUSH_TO_DOCKERHUB: ${{ inputs.push-to-dockerhub }}
+        run: |
+          version="${RELEASE_TAG#v}"
+          if [ -z "$version" ]; then
+            if [ "$PUSH_TO_DOCKERHUB" = "true" ]; then
+              echo "a non-empty release-tag is required when push-to-dockerhub is true" >&2
+              exit 1
+            fi
+            version="dev"
+          fi
+          echo "version=$version" >> "$GITHUB_OUTPUT"
+
   build:
+    needs: resolve-version
     runs-on: ubuntu-latest
     strategy:
       fail-fast: false
@@ -36,28 +81,15 @@ jobs:
           - variant: default
             configure-args: ""
             tag-suffix: ""
-            push-latest: true
           - variant: utf8
             configure-args: "--enable-utf8"
             tag-suffix: "-utf8"
-            push-latest: false
+    env:
+      IMAGE_TAG: ${{ needs.resolve-version.outputs.version }}${{ matrix.tag-suffix }}
 
     steps:
       - name: Checkout
         uses: actions/checkout@v7
-
-      - name: Resolve the image tag
-        env:
-          RELEASE_TAG: ${{ inputs.release-tag }}
-        run: |
-          # On release the git tag (without the leading "v") is the image
-          # version. PR / dispatch builds only verify the image and never push,
-          # so they fall back to a placeholder tag.
-          version="${RELEASE_TAG#v}"
-          if [ -z "$version" ]; then
-            version="dev"
-          fi
-          echo "IMAGE_TAG=${version}${{ matrix.tag-suffix }}" >> "$GITHUB_ENV"
 
       - name: Build a docker image
         run: |
@@ -86,18 +118,88 @@ jobs:
           echo "$output"
           echo "$output" | grep -q "HELLO WORLD!"
 
-      - name: Login to Docker Hub
+      # The push job needs both images at once to control the push order, so
+      # hand them over as artifacts instead of pushing from the build jobs.
+      # "docker save" embeds the image tag in the tarball, so the push job
+      # derives every tag to push from the artifacts themselves. The tarball
+      # is uploaded uncompressed: upload-artifact compresses it anyway.
+      - name: Save the docker image
         if: inputs.push-to-dockerhub
+        run: |
+          docker save "$IMAGE_NAME:$IMAGE_TAG" -o "image-${{ matrix.variant }}.tar"
+
+      - name: Upload the docker image
+        if: inputs.push-to-dockerhub
+        uses: actions/upload-artifact@v7
+        with:
+          name: docker-image-${{ matrix.variant }}
+          path: image-${{ matrix.variant }}.tar
+          retention-days: 1
+          if-no-files-found: error
+          # Keep "Re-run all jobs" working: artifacts are immutable per
+          # workflow run, so a re-run would otherwise fail to upload.
+          overwrite: true
+
+  # Push the images to Docker Hub in a fixed order: the variant images (e.g.
+  # UTF-8) first, then the versioned default image, and "latest" at the end.
+  push:
+    if: inputs.push-to-dockerhub
+    needs: [resolve-version, build]
+    runs-on: ubuntu-latest
+    env:
+      IMAGE_VERSION: ${{ needs.resolve-version.outputs.version }}
+
+    steps:
+      # Login first so that bad credentials fail the job before the large
+      # artifact download.
+      - name: Login to Docker Hub
         uses: docker/login-action@v4
         with:
           username: ${{ secrets.DOCKERHUB_USERNAME }}
           password: ${{ secrets.DOCKERHUB_TOKEN }}
 
-      - name: Push the image to Docker Hub
-        if: inputs.push-to-dockerhub
+      - name: Download the docker images
+        uses: actions/download-artifact@v8
+        with:
+          pattern: docker-image-*
+
+      - name: Load the docker images
         run: |
-          docker push "$IMAGE_NAME:$IMAGE_TAG"
-          if [ "${{ matrix.push-latest }}" = "true" ]; then
-            docker tag "$IMAGE_NAME:$IMAGE_TAG" "$IMAGE_NAME:latest"
-            docker push "$IMAGE_NAME:latest"
+          # Fail with a clear message when any variant's artifact is missing
+          # (e.g. expired after retention-days on a late re-run), so a partial
+          # artifact set can never publish a partial release.
+          read -ra variants <<< "$IMAGE_VARIANTS"
+          for variant in "${variants[@]}"; do
+            tarball="docker-image-${variant}/image-${variant}.tar"
+            if [ ! -f "$tarball" ]; then
+              echo "artifact for variant '$variant' not found: $tarball (expired or not uploaded?)" >&2
+              exit 1
+            fi
+          done
+          # Load everything that was downloaded, not just the listed
+          # variants, so a variant missing from IMAGE_VARIANTS is still
+          # loaded and pushed.
+          for tarball in docker-image-*/image-*.tar; do
+            docker load < "$tarball"
+          done
+
+      - name: Push the images to Docker Hub
+        run: |
+          # Push every tag loaded from the artifacts, so an image added to
+          # the build matrix can never be silently left unpushed: variant
+          # images first, the versioned default image next, and "latest" at
+          # the very end.
+          listed_tags="$(docker image ls "$IMAGE_NAME" --format '{{.Tag}}')"
+          mapfile -t tags <<< "$listed_tags"
+          if ! printf '%s\n' "${tags[@]}" | grep -Fqx "$IMAGE_VERSION"; then
+            echo "the loaded images do not contain $IMAGE_NAME:$IMAGE_VERSION" >&2
+            exit 1
           fi
+          for tag in "${tags[@]}"; do
+            if [ "$tag" != "$IMAGE_VERSION" ]; then
+              docker push "$IMAGE_NAME:$tag"
+            fi
+          done
+          docker push "$IMAGE_NAME:$IMAGE_VERSION"
+          docker tag "$IMAGE_NAME:$IMAGE_VERSION" "$IMAGE_NAME:latest"
+          docker push "$IMAGE_NAME:latest"
