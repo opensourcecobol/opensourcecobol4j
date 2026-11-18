@@ -22,6 +22,7 @@ import java.math.BigDecimal;
 import java.text.DateFormat;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
+import java.time.OffsetDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.Arrays;
 import java.util.Calendar;
@@ -445,9 +446,10 @@ public class CobolIntrinsic {
 
     /**
      * COBOLの組み込み関数FUNCTION CURRENT-DATEに対応する。<br>
-     * 現在の日付と時刻を「YYYYMMDDHHMMSScc+ZZZZ」形式の21文字の文字列として返す。<br>
-     * ここでccは1/100秒(ミリ秒の上位2桁)を表す。<br>
-     * なおタイムゾーンは未実装のため、末尾の「+ZZZZ」(GMTオフセット)は常にハードコードされた「00000」となる。
+     * 現在の日付と時刻を「YYYYMMDDHHMMSSccsHHMM」形式の21文字の文字列として返す。<br>
+     * ここでccは1/100秒、sHHMMはグリニッジ標準時からのオフセット(符号+時+分)を表す。<br>
+     * 環境変数COB_DATEで固定日付が指定されている場合は、日付部分にその値が反映される。<br>
+     * 時刻とオフセットは常に実行時のシステムクロックから取得する。
      *
      * @param offset 結果に対する部分参照の開始位置(1始まり)。0以下の場合は部分参照を行わない
      * @param length 結果に対する部分参照の長さ
@@ -459,18 +461,31 @@ public class CobolIntrinsic {
         AbstractCobolField field =
                 CobolFieldFactory.makeCobolField(21, (CobolDataStorage) null, attr);
         makeFieldEntry(field);
-        // TODO Time Zoneを表示する機能を取り入れる
+
+        // COB_DATEで置き換えるのは日付だけであり、時刻もオフセットも実行時のシステムクロックに由来する。
+        // これはGnuCOBOL 3.2(OSSC patch)と同じ挙動である。opensource COBOL 1.5は
+        // COB_DATEの日付に対するmktimeのtm_gmtoffをそのまま使うため、COB_DATE指定時に限り
+        // オフセットが異なりうる(TZ=America/New_York, COB_DATE=2026/01/15を夏に実行すると
+        // 1.5は-0500、こちらは-0400)。
+        OffsetDateTime now = CobolUtil.localtime();
+        int offsetInMinutes = now.getOffset().getTotalSeconds() / 60;
+        char offsetSign = offsetInMinutes < 0 ? '-' : '+';
+        int absOffsetInMinutes = Math.abs(offsetInMinutes);
 
         String dateString =
                 String.format(
-                        "%4d%02d%02d%02d%02d%02d%02d00000",
-                        CobolUtil.cal.get(Calendar.YEAR),
-                        CobolUtil.cal.get(Calendar.MONTH) + 1,
-                        CobolUtil.cal.get(Calendar.DAY_OF_MONTH),
-                        CobolUtil.cal.get(Calendar.HOUR_OF_DAY),
-                        CobolUtil.cal.get(Calendar.MINUTE),
-                        CobolUtil.cal.get(Calendar.SECOND),
-                        CobolUtil.cal.get(Calendar.MILLISECOND) / 10);
+                        Locale.ROOT,
+                        "%04d%02d%02d%02d%02d%02d%02d%c%02d%02d",
+                        now.getYear(),
+                        now.getMonthValue(),
+                        now.getDayOfMonth(),
+                        now.getHour(),
+                        now.getMinute(),
+                        now.getSecond(),
+                        now.getNano() / 10000000,
+                        offsetSign,
+                        absOffsetInMinutes / 60,
+                        absOffsetInMinutes % 60);
         currField.getDataStorage().memcpy(dateString.getBytes(AbstractCobolField.charSetSJIS));
 
         if (offset > 0) {
@@ -2127,7 +2142,7 @@ public class CobolIntrinsic {
         int interval;
         int xqtyear;
         int maxyear;
-        LocalDateTime timeptr;
+        OffsetDateTime timeptr;
 
         CobolFieldAttribute attr =
                 new CobolFieldAttribute(CobolFieldAttribute.COB_TYPE_NUMERIC_BINARY, 8, 0, 0, null);
@@ -2192,7 +2207,7 @@ public class CobolIntrinsic {
         int interval;
         int xqtyear;
         int maxyear;
-        LocalDateTime timeptr;
+        OffsetDateTime timeptr;
 
         CobolFieldAttribute attr =
                 new CobolFieldAttribute(CobolFieldAttribute.COB_TYPE_NUMERIC_BINARY, 8, 0, 0, null);
