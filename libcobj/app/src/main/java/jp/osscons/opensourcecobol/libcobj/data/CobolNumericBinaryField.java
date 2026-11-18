@@ -24,7 +24,7 @@ import jp.osscons.opensourcecobol.libcobj.common.CobolConstant;
 import jp.osscons.opensourcecobol.libcobj.common.CobolModule;
 import jp.osscons.opensourcecobol.libcobj.exceptions.CobolRuntimeException;
 
-/** PIC 文字列が9(5) COMPなどの2進数の変数を表現するクラス. */
+/** PIC 文字列が9(5) COMPなどの2進数の変数を表現するクラス。 */
 public class CobolNumericBinaryField extends AbstractCobolField {
 
     /**

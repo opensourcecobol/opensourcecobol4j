@@ -1,13 +1,13 @@
 package jp.osscons.opensourcecobol.libcobj.user_util.indexed_file;
 
-/** Enum to specify the result of the load operation. */
+/** ロード操作の結果を表す列挙型。 */
 enum LoadResult {
-    /** The load operation succeeded. */
+    /** ロード操作が成功した。 */
     LoadResultSuccess,
-    /** The load operation failed because there exists a record whose size is invalid. */
+    /** サイズが不正なレコードが存在するため、ロード操作が失敗した。 */
     LoadResultDataSizeMismatch,
-    /** The load operation failed because duplicate keys are detected or other error occurs. */
+    /** キーの重複が検出された、またはその他のエラーが発生したため、ロード操作が失敗した。 */
     LoadResultOther,
-    /** Reach the end of input data */
+    /** 入力データの終端に達した。 */
     AtEnd,
 };

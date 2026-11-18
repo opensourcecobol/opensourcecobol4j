@@ -56,7 +56,7 @@ public final class CobolStopRunException extends Exception {
     }
 
     /**
-     * CobolStopRunExceptionを例外としてスローする。 COBOLプログラム終了時のデフォルトの終了処理は実行されない。
+     * CobolStopRunExceptionを例外としてスローする。COBOLプログラム終了時のデフォルトの終了処理は実行されない。
      *
      * @param returnCode STOP RUNの返り値
      * @throws CobolStopRunException 常にスローされる
@@ -66,7 +66,7 @@ public final class CobolStopRunException extends Exception {
     }
 
     /**
-     * CobolStopRunExceptionを例外としてスローする。 COBOLプログラム終了時のデフォルトの終了処理は実行されない。
+     * CobolStopRunExceptionを例外としてスローする。COBOLプログラム終了時のデフォルトの終了処理は実行されない。
      *
      * @param storage STOP RUNの返り値
      * @throws CobolStopRunException 常にスローされる

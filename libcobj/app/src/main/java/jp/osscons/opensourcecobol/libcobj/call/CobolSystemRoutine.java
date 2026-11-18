@@ -179,7 +179,7 @@ public class CobolSystemRoutine {
     }
 
     /**
-     * 組み込み関数CBL_ANDの実装。1バイトごとに論理積を取る。 先頭lengthバイトのデータについて論理積を計算し、計算結果を2番目の引数の先頭に格納する。
+     * 組み込み関数CBL_ANDの実装。1バイトごとに論理積を取る。先頭lengthバイトのデータについて論理積を計算し、計算結果を2番目の引数の先頭に格納する。
      *
      * @param data1 計算対象の1番目のCOBOL変数のバイト列。
      * @param data2 計算対象の2番目のCOBOL変数のバイト列。先頭lengthバイトに計算結果が格納される。
@@ -201,7 +201,7 @@ public class CobolSystemRoutine {
     }
 
     /**
-     * 組み込み関数CBL_ANDの実装。1バイトごとに論理積を取る。 先頭lengthバイトのデータについて論理積を計算し、計算結果を2番目の引数の先頭に格納する。
+     * 組み込み関数CBL_ANDの実装。1バイトごとに論理積を取る。先頭lengthバイトのデータについて論理積を計算し、計算結果を2番目の引数の先頭に格納する。
      *
      * @param data1 計算対象の1番目のCOBOL変数。
      * @param data2 計算対象の2番目の引数のバイト列。先頭lengthバイトに計算結果が格納される。
@@ -213,7 +213,7 @@ public class CobolSystemRoutine {
     }
 
     /**
-     * 組み込み関数CBL_ANDの実装。1バイトごとに論理積を取る。 先頭lengthバイトのデータについて論理積を計算し、計算結果を2番目の引数の先頭に格納する。
+     * 組み込み関数CBL_ANDの実装。1バイトごとに論理積を取る。先頭lengthバイトのデータについて論理積を計算し、計算結果を2番目の引数の先頭に格納する。
      *
      * @param data1 計算対象の1番目のCOBOL変数のバイト列。
      * @param data2 計算対象の2番目のCOBOL変数のバイト列。その変数のバイト列の先頭lengthバイトに計算結果が格納される。
@@ -225,7 +225,7 @@ public class CobolSystemRoutine {
     }
 
     /**
-     * 組み込み関数CBL_ANDの実装。1バイトごとに論理積を取る。 先頭lengthバイトのデータについて論理積を計算し、計算結果を2番目の引数の先頭に格納する。
+     * 組み込み関数CBL_ANDの実装。1バイトごとに論理積を取る。先頭lengthバイトのデータについて論理積を計算し、計算結果を2番目の引数の先頭に格納する。
      *
      * @param data1 計算対象の1番目のCOBOL変数。
      * @param data2 計算対象の2番目のCOBOL変数。その変数のバイト列の先頭lengthバイトに計算結果が格納される。
@@ -237,7 +237,7 @@ public class CobolSystemRoutine {
     }
 
     /**
-     * 組み込み関数CBL_ORの実装。1バイトごとに論理和を取る。 先頭lengthバイトのデータについて論理和を計算し、計算結果を2番目の引数の先頭に格納する。
+     * 組み込み関数CBL_ORの実装。1バイトごとに論理和を取る。先頭lengthバイトのデータについて論理和を計算し、計算結果を2番目の引数の先頭に格納する。
      *
      * @param data1 計算対象の1番目のCOBOL変数のバイト列。
      * @param data2 計算対象の2番目のCOBOL変数のバイト列。先頭lengthバイトに計算結果が格納される。
@@ -259,7 +259,7 @@ public class CobolSystemRoutine {
     }
 
     /**
-     * 組み込み関数CBL_ORの実装。1バイトごとに論理和を取る。 先頭lengthバイトのデータについて論理和を計算し、計算結果を2番目の引数の先頭に格納する。
+     * 組み込み関数CBL_ORの実装。1バイトごとに論理和を取る。先頭lengthバイトのデータについて論理和を計算し、計算結果を2番目の引数の先頭に格納する。
      *
      * @param data1 計算対象の1番目のCOBOL変数のバイト列。
      * @param data2 計算対象の2番目のCOBOL変数。そのバイト列の先頭lengthバイトに計算結果が格納される。
@@ -271,7 +271,7 @@ public class CobolSystemRoutine {
     }
 
     /**
-     * 組み込み関数CBL_ORの実装。1バイトごとに論理和を取る。 先頭lengthバイトのデータについて論理和を計算し、計算結果を2番目の引数の先頭に格納する。
+     * 組み込み関数CBL_ORの実装。1バイトごとに論理和を取る。先頭lengthバイトのデータについて論理和を計算し、計算結果を2番目の引数の先頭に格納する。
      *
      * @param data1 計算対象の1番目のCOBOL変数のバイト列。
      * @param data2 計算対象の2番目のCOBOL変数。先頭lengthバイトに計算結果が格納される。
@@ -283,7 +283,7 @@ public class CobolSystemRoutine {
     }
 
     /**
-     * 組み込み関数CBL_ORの実装。1バイトごとに論理和を取る。 先頭lengthバイトのデータについて論理和を計算し、計算結果を2番目の引数の先頭に格納する。
+     * 組み込み関数CBL_ORの実装。1バイトごとに論理和を取る。先頭lengthバイトのデータについて論理和を計算し、計算結果を2番目の引数の先頭に格納する。
      *
      * @param data1 計算対象の1番目のCOBOL変数。
      * @param data2 計算対象の2番目のCOBOL変数。その変数のバイト列の先頭lengthバイトに計算結果が格納される。
@@ -303,7 +303,7 @@ public class CobolSystemRoutine {
     }
 
     /**
-     * 組み込み関数CBL_NORの実装。1バイトごとに否定論理和(NOR)を取る。 先頭lengthバイトのデータについてNOR演算を計算し、計算結果を2番目の引数の先頭に格納する。
+     * 組み込み関数CBL_NORの実装。1バイトごとに否定論理和(NOR)を取る。先頭lengthバイトのデータについてNOR演算を計算し、計算結果を2番目の引数の先頭に格納する。
      *
      * @param data1 計算対象の1番目のCOBOL変数のバイト列。
      * @param data2 計算対象の2番目のCOBOL変数のバイト列。先頭lengthバイトに計算結果が格納される。
@@ -325,7 +325,7 @@ public class CobolSystemRoutine {
     }
 
     /**
-     * 組み込み関数CBL_NORの実装。1バイトごとに否定論理和(NOR)を取る。 先頭lengthバイトのデータについてNOR演算を計算し、計算結果を2番目の引数の先頭に格納する。
+     * 組み込み関数CBL_NORの実装。1バイトごとに否定論理和(NOR)を取る。先頭lengthバイトのデータについてNOR演算を計算し、計算結果を2番目の引数の先頭に格納する。
      *
      * @param data1 計算対象の1番目のCOBOL変数。
      * @param data2 計算対象の2番目のCOBOL変数のバイト列。先頭lengthバイトに計算結果が格納される。
@@ -337,7 +337,7 @@ public class CobolSystemRoutine {
     }
 
     /**
-     * 組み込み関数CBL_NORの実装。1バイトごとに否定論理和(NOR)を取る。 先頭lengthバイトのデータについてNOR演算を計算し、計算結果を2番目の引数の先頭に格納する。
+     * 組み込み関数CBL_NORの実装。1バイトごとに否定論理和(NOR)を取る。先頭lengthバイトのデータについてNOR演算を計算し、計算結果を2番目の引数の先頭に格納する。
      *
      * @param data1 計算対象の1番目のCOBOL変数のバイト列。
      * @param data2 計算対象の2番目のCOBOL変数。そのバイト列の先頭lengthバイトに計算結果が格納される。
@@ -349,7 +349,7 @@ public class CobolSystemRoutine {
     }
 
     /**
-     * 組み込み関数CBL_NORの実装。1バイトごとに否定論理和(NOR)を取る。 先頭lengthバイトのデータについてNOR演算を計算し、計算結果を2番目の引数の先頭に格納する。
+     * 組み込み関数CBL_NORの実装。1バイトごとに否定論理和(NOR)を取る。先頭lengthバイトのデータについてNOR演算を計算し、計算結果を2番目の引数の先頭に格納する。
      *
      * @param data1 計算対象の1番目のCOBOL変数。
      * @param data2 計算対象の2番目のCOBOL変数。その変数のバイト列の先頭lengthバイトに計算結果が格納される。
@@ -361,7 +361,7 @@ public class CobolSystemRoutine {
     }
 
     /**
-     * 組み込み関数CBL_XORの実装。1バイトごとに排他的論理和を取る。 先頭lengthバイトのデータについて排他的論理和を計算し、計算結果を2番目の引数の先頭に格納する。
+     * 組み込み関数CBL_XORの実装。1バイトごとに排他的論理和を取る。先頭lengthバイトのデータについて排他的論理和を計算し、計算結果を2番目の引数の先頭に格納する。
      *
      * @param data1 計算対象の1番目のCOBOL変数のバイト列。
      * @param data2 計算対象の2番目のCOBOL変数のバイト列。先頭lengthバイトに計算結果が格納される。
@@ -383,7 +383,7 @@ public class CobolSystemRoutine {
     }
 
     /**
-     * 組み込み関数CBL_XORの実装。1バイトごとに排他的論理和を取る。 先頭lengthバイトのデータについて排他的論理和を計算し、計算結果を2番目の引数の先頭に格納する。
+     * 組み込み関数CBL_XORの実装。1バイトごとに排他的論理和を取る。先頭lengthバイトのデータについて排他的論理和を計算し、計算結果を2番目の引数の先頭に格納する。
      *
      * @param data1 計算対象の1番目のCOBOL変数。
      * @param data2 計算対象の2番目のCOBOL変数のバイト列。先頭lengthバイトに計算結果が格納される。
@@ -395,7 +395,7 @@ public class CobolSystemRoutine {
     }
 
     /**
-     * 組み込み関数CBL_XORの実装。1バイトごとに排他的論理和を取る。 先頭lengthバイトのデータについて排他的論理和を計算し、計算結果を2番目の引数の先頭に格納する。
+     * 組み込み関数CBL_XORの実装。1バイトごとに排他的論理和を取る。先頭lengthバイトのデータについて排他的論理和を計算し、計算結果を2番目の引数の先頭に格納する。
      *
      * @param data1 計算対象の1番目のCOBOL変数のバイト列。
      * @param data2 計算対象の2番目のCOBOL変数。そのバイト列の先頭lengthバイトに計算結果が格納される。
@@ -407,7 +407,7 @@ public class CobolSystemRoutine {
     }
 
     /**
-     * 組み込み関数CBL_XORの実装。1バイトごとに排他的論理和を取る。 先頭lengthバイトのデータについて排他的論理和を計算し、計算結果を2番目の引数の先頭に格納する。
+     * 組み込み関数CBL_XORの実装。1バイトごとに排他的論理和を取る。先頭lengthバイトのデータについて排他的論理和を計算し、計算結果を2番目の引数の先頭に格納する。
      *
      * @param data1 計算対象の1番目のCOBOL変数。
      * @param data2 計算対象の2番目のCOBOL変数。その変数のバイト列の先頭lengthバイトに計算結果が格納される。
@@ -419,7 +419,7 @@ public class CobolSystemRoutine {
     }
 
     /**
-     * 組み込み関数CBL_NIMPの実装。1バイトごとに非含意演算(data1 AND NOT data2)を行う。 先頭lengthバイトのデータについて非含意演算を計算し、計算結果を2番目の引数の先頭に格納する。
+     * 組み込み関数CBL_NIMPの実装。1バイトごとに非含意演算(data1 AND NOT data2)を行う。先頭lengthバイトのデータについて非含意演算を計算し、計算結果を2番目の引数の先頭に格納する。
      *
      * @param data1 計算対象の1番目のCOBOL変数のバイト列。
      * @param data2 計算対象の2番目のCOBOL変数のバイト列。先頭lengthバイトに計算結果が格納される。
@@ -441,7 +441,7 @@ public class CobolSystemRoutine {
     }
 
     /**
-     * 組み込み関数CBL_NIMPの実装。1バイトごとに非含意演算(data1 AND NOT data2)を行う。 先頭lengthバイトのデータについて非含意演算を計算し、計算結果を2番目の引数の先頭に格納する。
+     * 組み込み関数CBL_NIMPの実装。1バイトごとに非含意演算(data1 AND NOT data2)を行う。先頭lengthバイトのデータについて非含意演算を計算し、計算結果を2番目の引数の先頭に格納する。
      *
      * @param data1 計算対象の1番目のCOBOL変数。
      * @param data2 計算対象の2番目のCOBOL変数のバイト列。先頭lengthバイトに計算結果が格納される。
@@ -453,7 +453,7 @@ public class CobolSystemRoutine {
     }
 
     /**
-     * 組み込み関数CBL_NIMPの実装。1バイトごとに非含意演算(data1 AND NOT data2)を行う。 先頭lengthバイトのデータについて非含意演算を計算し、計算結果を2番目の引数の先頭に格納する。
+     * 組み込み関数CBL_NIMPの実装。1バイトごとに非含意演算(data1 AND NOT data2)を行う。先頭lengthバイトのデータについて非含意演算を計算し、計算結果を2番目の引数の先頭に格納する。
      *
      * @param data1 計算対象の1番目のCOBOL変数のバイト列。
      * @param data2 計算対象の2番目のCOBOL変数。そのバイト列の先頭lengthバイトに計算結果が格納される。
@@ -465,7 +465,7 @@ public class CobolSystemRoutine {
     }
 
     /**
-     * 組み込み関数CBL_NIMPの実装。1バイトごとに非含意演算(data1 AND NOT data2)を行う。 先頭lengthバイトのデータについて非含意演算を計算し、計算結果を2番目の引数の先頭に格納する。
+     * 組み込み関数CBL_NIMPの実装。1バイトごとに非含意演算(data1 AND NOT data2)を行う。先頭lengthバイトのデータについて非含意演算を計算し、計算結果を2番目の引数の先頭に格納する。
      *
      * @param data1 計算対象の1番目のCOBOL変数。
      * @param data2 計算対象の2番目のCOBOL変数。その変数のバイト列の先頭lengthバイトに計算結果が格納される。
@@ -477,7 +477,7 @@ public class CobolSystemRoutine {
     }
 
     /**
-     * 組み込み関数CBL_EQの実装。1バイトごとに等価演算(XNOR)を行う。 先頭lengthバイトのデータについて等価演算を計算し、計算結果を2番目の引数の先頭に格納する。
+     * 組み込み関数CBL_EQの実装。1バイトごとに等価演算(XNOR)を行う。先頭lengthバイトのデータについて等価演算を計算し、計算結果を2番目の引数の先頭に格納する。
      *
      * @param data1 計算対象の1番目のCOBOL変数のバイト列。
      * @param data2 計算対象の2番目のCOBOL変数のバイト列。先頭lengthバイトに計算結果が格納される。
@@ -499,7 +499,7 @@ public class CobolSystemRoutine {
     }
 
     /**
-     * 組み込み関数CBL_EQの実装。1バイトごとに等価演算(XNOR)を行う。 先頭lengthバイトのデータについて等価演算を計算し、計算結果を2番目の引数の先頭に格納する。
+     * 組み込み関数CBL_EQの実装。1バイトごとに等価演算(XNOR)を行う。先頭lengthバイトのデータについて等価演算を計算し、計算結果を2番目の引数の先頭に格納する。
      *
      * @param data1 計算対象の1番目のCOBOL変数。
      * @param data2 計算対象の2番目のCOBOL変数のバイト列。先頭lengthバイトに計算結果が格納される。
@@ -511,7 +511,7 @@ public class CobolSystemRoutine {
     }
 
     /**
-     * 組み込み関数CBL_EQの実装。1バイトごとに等価演算(XNOR)を行う。 先頭lengthバイトのデータについて等価演算を計算し、計算結果を2番目の引数の先頭に格納する。
+     * 組み込み関数CBL_EQの実装。1バイトごとに等価演算(XNOR)を行う。先頭lengthバイトのデータについて等価演算を計算し、計算結果を2番目の引数の先頭に格納する。
      *
      * @param data1 計算対象の1番目のCOBOL変数のバイト列。
      * @param data2 計算対象の2番目のCOBOL変数。そのバイト列の先頭lengthバイトに計算結果が格納される。
@@ -523,7 +523,7 @@ public class CobolSystemRoutine {
     }
 
     /**
-     * 組み込み関数CBL_EQの実装。1バイトごとに等価演算(XNOR)を行う。 先頭lengthバイトのデータについて等価演算を計算し、計算結果を2番目の引数の先頭に格納する。
+     * 組み込み関数CBL_EQの実装。1バイトごとに等価演算(XNOR)を行う。先頭lengthバイトのデータについて等価演算を計算し、計算結果を2番目の引数の先頭に格納する。
      *
      * @param data1 計算対象の1番目のCOBOL変数。
      * @param data2 計算対象の2番目のCOBOL変数。その変数のバイト列の先頭lengthバイトに計算結果が格納される。
@@ -535,7 +535,7 @@ public class CobolSystemRoutine {
     }
 
     /**
-     * 組み込み関数CBL_NOTの実装。1バイトごとに論理否定(NOT)を行う。 先頭lengthバイトのデータについて論理否定を計算し、計算結果をdataに格納する。
+     * 組み込み関数CBL_NOTの実装。1バイトごとに論理否定(NOT)を行う。先頭lengthバイトのデータについて論理否定を計算し、計算結果をdataに格納する。
      *
      * @param data 計算対象のCOBOL変数のバイト列。先頭lengthバイトに計算結果が格納される。
      * @param length 計算するバイト数
@@ -554,7 +554,7 @@ public class CobolSystemRoutine {
     }
 
     /**
-     * 組み込み関数CBL_NOTの実装。1バイトごとに論理否定(NOT)を行う。 先頭lengthバイトのデータについて論理否定を計算し、計算結果をdataに格納する。
+     * 組み込み関数CBL_NOTの実装。1バイトごとに論理否定(NOT)を行う。先頭lengthバイトのデータについて論理否定を計算し、計算結果をdataに格納する。
      *
      * @param data 計算対象のCOBOL変数。そのバイト列の先頭lengthバイトに計算結果が格納される。
      * @param length 計算するバイト数
