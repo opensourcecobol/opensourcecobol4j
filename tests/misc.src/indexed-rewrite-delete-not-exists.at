@@ -1,0 +1,83 @@
+AT_SETUP([REWRITE/DELETE a non-existent key of an INDEXED file returns 23])
+
+AT_DATA([prog.cbl],
+[       IDENTIFICATION   DIVISION.
+       PROGRAM-ID.      prog.
+       ENVIRONMENT      DIVISION.
+       INPUT-OUTPUT     SECTION.
+       FILE-CONTROL.
+           SELECT IDX-FILE ASSIGN TO "./IDXMISS"
+               ORGANIZATION IS INDEXED
+               ACCESS MODE  IS DYNAMIC
+               RECORD KEY   IS IDX-KEY
+               FILE STATUS  IS IDX-STATUS.
+       DATA             DIVISION.
+       FILE             SECTION.
+       FD  IDX-FILE.
+       01  IDX-REC.
+           03  IDX-KEY      PIC X(4).
+           03  IDX-DATA     PIC X(6).
+       WORKING-STORAGE  SECTION.
+       01  IDX-STATUS       PIC XX.
+       PROCEDURE        DIVISION.
+           OPEN OUTPUT IDX-FILE.
+           MOVE "K001" TO IDX-KEY.
+           MOVE "AAAAAA" TO IDX-DATA.
+           WRITE IDX-REC.
+           DISPLAY "WRITE K001: " IDX-STATUS.
+           CLOSE IDX-FILE.
+
+           OPEN I-O IDX-FILE.
+           DISPLAY "OPEN I-O: " IDX-STATUS.
+
+           MOVE "K009" TO IDX-KEY.
+           MOVE "BBBBBB" TO IDX-DATA.
+           REWRITE IDX-REC
+               INVALID KEY DISPLAY "REWRITE K009: INVALID KEY"
+               NOT INVALID KEY DISPLAY "REWRITE K009: NOT INVALID KEY"
+           END-REWRITE.
+           DISPLAY "REWRITE K009: " IDX-STATUS.
+
+           MOVE "K009" TO IDX-KEY.
+           DELETE IDX-FILE
+               INVALID KEY DISPLAY "DELETE K009: INVALID KEY"
+               NOT INVALID KEY DISPLAY "DELETE K009: NOT INVALID KEY"
+           END-DELETE.
+           DISPLAY "DELETE K009: " IDX-STATUS.
+
+           MOVE "K009" TO IDX-KEY.
+           READ IDX-FILE
+               INVALID KEY CONTINUE
+           END-READ.
+           DISPLAY "READ K009: " IDX-STATUS.
+
+      * The existing record must still be updatable after the misses.
+           MOVE "K001" TO IDX-KEY.
+           MOVE "CCCCCC" TO IDX-DATA.
+           REWRITE IDX-REC.
+           DISPLAY "REWRITE K001: " IDX-STATUS.
+           MOVE "K001" TO IDX-KEY.
+           READ IDX-FILE.
+           DISPLAY "READ K001: " IDX-STATUS " " IDX-DATA.
+           MOVE "K001" TO IDX-KEY.
+           DELETE IDX-FILE.
+           DISPLAY "DELETE K001: " IDX-STATUS.
+           CLOSE IDX-FILE.
+           STOP RUN.
+])
+
+AT_CHECK([${COMPILE} prog.cbl])
+AT_CHECK([${RUN_MODULE} prog], [0],
+[WRITE K001: 00
+OPEN I-O: 00
+REWRITE K009: INVALID KEY
+REWRITE K009: 23
+DELETE K009: INVALID KEY
+DELETE K009: 23
+READ K009: 23
+REWRITE K001: 00
+READ K001: 00 CCCCCC
+DELETE K001: 00
+])
+
+AT_CLEANUP

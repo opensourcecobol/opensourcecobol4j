@@ -722,6 +722,42 @@ public class CobolIndexedFile extends CobolFile {
         }
     }
 
+    /**
+     * 主キーのテーブルに指定したキーのレコードが存在するかを調べる。
+     *
+     * <p>{@link #keyExistsInTable}とは異なり、SQLの実行に失敗した場合はfalseを返さずに例外を投げる。
+     * DBのエラーを「キーが存在しない」と取り違えないようにするためである。
+     *
+     * @param key 主キーの値
+     * @return レコードが存在すればtrue
+     * @throws SQLException SQLの実行に失敗した場合
+     */
+    private boolean primaryKeyExists(byte[] key) throws SQLException {
+        IndexedFile p = this.filei;
+        String query =
+                String.format("select exists(select 1 from %s where key = ?)", getTableName(0));
+        try (PreparedStatement selectStatement = p.connection.prepareStatement(query)) {
+            selectStatement.setBytes(1, key);
+            try (ResultSet rs = selectStatement.executeQuery()) {
+                return rs.next() && rs.getInt(1) == 1;
+            }
+        }
+    }
+
+    /**
+     * REWRITE/DELETEで{@link #lockRecord}がfalseを返したときのファイル状態を決める。
+     *
+     * <p>レコードが存在しないことを実際に確認できた場合だけ{@code COB_STATUS_23_KEY_NOT_EXISTS}を返す。
+     * レコードが存在するのにロックできなかった場合は想定外の状態なので{@code COB_STATUS_30_PERMANENT_ERROR}を返す。
+     *
+     * @param key ロックしようとした主キーの値
+     * @return ファイル状態
+     * @throws SQLException 存在チェックのSQLの実行に失敗した場合
+     */
+    private int statusOnLockRecordFailure(byte[] key) throws SQLException {
+        return primaryKeyExists(key) ? COB_STATUS_30_PERMANENT_ERROR : COB_STATUS_23_KEY_NOT_EXISTS;
+    }
+
     private void unlockPreviousRecord() throws SQLException {
         if (previousLockedRecordKey == null) {
             previousLockedRecordKey = null;
@@ -1219,10 +1255,11 @@ public class CobolIndexedFile extends CobolFile {
                 return COB_STATUS_51_RECORD_LOCKED;
             }
             if (!lockRecord(currentKey)) {
+                int status = statusOnLockRecordFailure(currentKey);
                 p.connection.rollback();
                 unlockPreviousRecord();
                 p.connection.commit();
-                return COB_STATUS_30_PERMANENT_ERROR;
+                return status;
             }
         } catch (SQLException e) {
             try {
@@ -1351,10 +1388,11 @@ public class CobolIndexedFile extends CobolFile {
                 return COB_STATUS_51_RECORD_LOCKED;
             }
             if (!lockRecord(currentKey)) {
+                int status = statusOnLockRecordFailure(currentKey);
                 p.connection.rollback();
                 unlockPreviousRecord();
                 p.connection.commit();
-                return COB_STATUS_30_PERMANENT_ERROR;
+                return status;
             }
         } catch (SQLException e) {
             try {
