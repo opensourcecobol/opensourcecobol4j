@@ -1,0 +1,3 @@
+AT_INIT([file-lock5])
+
+m4_include([lock-mode-clause.at])
