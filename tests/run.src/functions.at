@@ -353,6 +353,44 @@ AT_CHECK([java prog], [0],
 
 AT_CLEANUP
 
+AT_SETUP([FUNCTION DATE-TO-YYYYMMDD/DAY-TO-YYYYDDD omitted year])
+
+AT_DATA([prog.cob], [
+      *> Regression test for issue #889: when the third argument
+      *> (execution year) is omitted, the current year must be used
+      *> as the base year of the century window.
+      *> COB_DATE pins the execution date to 2026-08-15 (day 227).
+       IDENTIFICATION   DIVISION.
+       PROGRAM-ID.      prog.
+       DATA             DIVISION.
+       WORKING-STORAGE  SECTION.
+       PROCEDURE        DIVISION.
+      *> 260815 and 26227 are the values from the issue; both denote
+      *> the execution date itself (day 227 of 2026 is August 15).
+           DISPLAY FUNCTION DATE-TO-YYYYMMDD ( 260815 )
+           END-DISPLAY.
+           DISPLAY FUNCTION DAY-TO-YYYYDDD ( 26227 )
+           END-DISPLAY.
+      *> Dates different from COB_DATE: with the default interval 50
+      *> the window is 1977-2076, so 98 and 95 resolve to 1998 and
+      *> 1995, the century before the execution year.
+           DISPLAY FUNCTION DATE-TO-YYYYMMDD ( 981002 )
+           END-DISPLAY.
+           DISPLAY FUNCTION DAY-TO-YYYYDDD ( 95005 )
+           END-DISPLAY.
+           STOP RUN.
+])
+
+AT_CHECK([${COMPILE} prog.cob])
+AT_CHECK([COB_DATE=2026/08/15 java prog], [0],
+[20260815
+02026227
+19981002
+01995005
+])
+
+AT_CLEANUP
+
 AT_SETUP([FUNCTION E])
 
 AT_DATA([prog.cob], [
