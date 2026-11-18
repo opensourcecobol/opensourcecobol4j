@@ -84,6 +84,42 @@ public class CobolUtil {
     /** 順編成ファイルへの書き込みバッファサイズ(環境変数COB_FILE_SEQ_WRITE_BUFFER_SIZEで設定)。 */
     public static int fileSeqWriteBufferSize = 10;
 
+    /**
+     * 環境変数COB_FILE_IDX_COMMIT_INTERVALに{@code INF}が指定されたか。デフォルト(環境変数が
+     * 未指定)も{@code INF}である。COBOLには{@code COMMIT}文があり、コミットの時点は
+     * プログラムが{@code COMMIT}文と{@code CLOSE}文で決めるのが本来の姿であるため、
+     * ランタイムが勝手に途中でコミットすることはしない。
+     *
+     * <p>{@code true}のときINDEXEDファイルのOUTPUTモードでは途中コミットを行わず、{@code
+     * COMMIT}文と{@code CLOSE}時のみコミットする。このとき{@link #fileIdxCommitInterval}は参照されない。
+     */
+    private static boolean fileIdxCommitIntervalIsInf = true;
+
+    /**
+     * INDEXEDファイルをOUTPUTモードで書き込むときのコミット間隔(レコード数。環境変数COB_FILE_IDX_COMMIT_INTERVALで設定)。
+     * {@link #fileIdxCommitIntervalIsInf}が{@code true}のときは参照されない。
+     */
+    private static int fileIdxCommitInterval = 0;
+
+    /**
+     * 環境変数COB_FILE_IDX_COMMIT_INTERVALに{@code INF}が指定されたかを返す。
+     *
+     * @return {@code INF}が指定されていれば{@code true}。このときINDEXEDファイルのOUTPUTモードでは
+     *     途中コミットを行わず、CLOSE時のみコミットする
+     */
+    public static boolean isFileIdxCommitIntervalInf() {
+        return fileIdxCommitIntervalIsInf;
+    }
+
+    /**
+     * INDEXEDファイルをOUTPUTモードで書き込むときのコミット間隔(レコード数)を返す。
+     *
+     * @return コミット間隔(レコード数)。{@link #isFileIdxCommitIntervalInf()}が{@code true}のときは無意味な値
+     */
+    public static int getFileIdxCommitInterval() {
+        return fileIdxCommitInterval;
+    }
+
     /** DISPLAY/ACCEPT文によるデータ出力時のエンコーディング */
     public static CobolEncoding terminalEncoding = CobolEncoding.SHIFT_JIS;
 
@@ -304,6 +340,36 @@ public class CobolUtil {
     }
 
     /**
+     * INDEXEDファイルのOUTPUTモードにおけるコミット間隔を環境変数から読み取り、
+     * {@link #fileIdxCommitIntervalIsInf}と{@link #fileIdxCommitInterval}に反映する。<br>
+     * {@code INF}(大文字小文字不問)と未指定は「途中コミットしない」を意味する。<br>
+     * {@code 0}は「毎回コミット」として{@code 1}に正規化する。<br>
+     * 0以上の整数とも{@code INF}とも解釈できない場合は、警告を出力して未指定と同じ扱いにする。
+     *
+     * @param envVariableName 環境変数名
+     */
+    private static void readFileIdxCommitInterval(String envVariableName) {
+        String s = CobolUtil.getEnv(envVariableName);
+        if (s == null || "INF".equalsIgnoreCase(s.trim())) {
+            CobolUtil.fileIdxCommitIntervalIsInf = true;
+            return;
+        }
+        int interval;
+        try {
+            interval = Integer.parseInt(s.trim());
+        } catch (NumberFormatException e) {
+            interval = -1;
+        }
+        if (interval < 0) {
+            System.err.println("Warning: " + envVariableName + " format invalid, ignored.");
+            CobolUtil.fileIdxCommitIntervalIsInf = true;
+            return;
+        }
+        CobolUtil.fileIdxCommitIntervalIsInf = false;
+        CobolUtil.fileIdxCommitInterval = interval == 0 ? 1 : interval;
+    }
+
+    /**
      * COBOLランタイムを初期化する。<br>
      * 未初期化の場合は、コマンドライン引数の保存、各サブシステム(INSPECT/ファイルI/O/組み込み関数)の初期化、<br>
      * およびCOB_SWITCH_1〜COB_SWITCH_8環境変数によるスイッチ設定を行う。<br>
@@ -384,6 +450,8 @@ public class CobolUtil {
                 CobolUtil.fileSeqWriteBufferSize = size;
             }
         }
+
+        readFileIdxCommitInterval("COB_FILE_IDX_COMMIT_INTERVAL");
 
         s = System.getenv("COB_TERMINAL_ENCODING");
         CobolUtil.terminalEncoding = CobolEncoding.SHIFT_JIS;
