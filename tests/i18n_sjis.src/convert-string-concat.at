@@ -1,0 +1,28 @@
+AT_SETUP([convert '&' concatenated national strings to Java])
+
+AT_DATA([prog.cbl], [
+       IDENTIFICATION   DIVISION.
+       PROGRAM-ID.      prog.
+       DATA DIVISION.
+       WORKING-STORAGE  SECTION.
+       01  N-CONCAT     PIC N(25) VALUE "‚ ‚¢‚¤‚¦‚¨"
+        &  "‚©‚«‚­‚¯‚±"
+        &  "‚³‚µ‚·‚¹‚»"
+        &  "‚½‚¿‚Â‚Ä‚Æ"
+        &  "‚È‚É‚Ê‚Ë‚Ì".
+       PROCEDURE        DIVISION.
+       MAIN-RTN.
+           DISPLAY N-CONCAT.
+           STOP RUN.
+])
+
+AT_CHECK([${COMPILE} prog.cbl])
+AT_CHECK([java prog], [0],
+[‚ ‚¢‚¤‚¦‚¨‚©‚«‚­‚¯‚±‚³‚µ‚·‚¹‚»‚½‚¿‚Â‚Ä‚Æ‚È‚É‚Ê‚Ë‚Ì
+])
+AT_CHECK([grep -q '    "‚ ‚¢‚¤‚¦‚¨" +' prog.java])
+AT_CHECK([grep -q '    "‚©‚«‚­‚¯‚±" +' prog.java])
+AT_CHECK([grep -q '    "‚³‚µ‚·‚¹‚»" +' prog.java])
+AT_CHECK([grep -q '    "‚½‚¿‚Â‚Ä‚Æ" +' prog.java])
+AT_CHECK([grep -q '    "‚È‚É‚Ê‚Ë‚Ì"' prog.java])
+AT_CLEANUP
