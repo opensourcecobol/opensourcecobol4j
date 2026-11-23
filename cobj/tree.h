@@ -365,15 +365,33 @@ extern void cb_init_constants(void);
  * Integer
  */
 
+/*
+ * Kind of option flags carried by an integer node.
+ * An integer node with a kind other than CB_INT_FLAG_NONE is emitted
+ * as an expression of named libcobj constants (e.g.
+ * "CobolDecimal.COB_STORE_ROUND | CobolDecimal.COB_STORE_TRUNC_ON_OVERFLOW")
+ * instead of a bare number, to make the generated Java code readable.
+ */
+enum cb_int_flag_kind {
+  CB_INT_FLAG_NONE = 0, /* plain integer */
+  CB_INT_FLAG_STORE,    /* CobolDecimal.COB_STORE_* (bit mask) */
+  CB_INT_FLAG_READ,     /* CobolFile.COB_READ_* (bit mask) */
+  CB_INT_FLAG_WRITE,    /* CobolFile.COB_WRITE_* (bit mask + line/channel) */
+  CB_INT_FLAG_OPEN,     /* CobolFile.COB_OPEN_* (single value) */
+  CB_INT_FLAG_CLOSE     /* CobolFile.COB_CLOSE_* (single value) */
+};
+
 struct cb_integer {
   struct cb_tree_common common;
   int val;
+  enum cb_int_flag_kind flag_kind;
 };
 
 #define CB_INTEGER(x) (CB_TREE_CAST(CB_TAG_INTEGER, struct cb_integer, x))
 #define CB_INTEGER_P(x) (CB_TREE_TAG(x) == CB_TAG_INTEGER)
 
 extern cb_tree cb_int(int n);
+extern cb_tree cb_int_flag(int n, enum cb_int_flag_kind kind);
 
 /*
  * String

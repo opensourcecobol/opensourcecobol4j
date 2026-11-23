@@ -2039,7 +2039,11 @@ static cb_tree build_store_option(cb_tree x, const cb_tree round_opt) {
     break;
   }
 
-  return cb_int(opt);
+  if (opt == 0) {
+    /* callers compare the result with cb_int0 */
+    return cb_int0;
+  }
+  return cb_int_flag(opt, CB_INT_FLAG_STORE);
 }
 
 static cb_tree decimal_alloc(void) {
@@ -5873,8 +5877,9 @@ void cb_emit_read(cb_tree ref, const cb_tree next, cb_tree into, cb_tree keys,
     if (keys) {
       cb_warning(_("KEY ignored with sequential READ"));
     }
-    cb_emit(cb_build_method_call_4(
-        "read", file, cb_int0, CB_FILE(file)->file_status, cb_int(read_opts)));
+    cb_emit(cb_build_method_call_4("read", file, cb_int0,
+                                   CB_FILE(file)->file_status,
+                                   cb_int_flag(read_opts, CB_INT_FLAG_READ)));
   } else {
     if (keys) {
       if (CB_LIST(keys)->chain != NULL) {
@@ -5890,7 +5895,7 @@ void cb_emit_read(cb_tree ref, const cb_tree next, cb_tree into, cb_tree keys,
     /* READ */
     cb_emit(cb_build_method_call_4("read", file, key ? key : CB_FILE(file)->key,
                                    CB_FILE(file)->file_status,
-                                   cb_int(read_opts)));
+                                   cb_int_flag(read_opts, CB_INT_FLAG_READ)));
   }
   if (into) {
     current_statement->handler3 = cb_build_move(rec, into);
@@ -5938,7 +5943,8 @@ void cb_emit_rewrite(cb_tree record, cb_tree from, const cb_tree lockopt) {
   if (from) {
     cb_emit(cb_build_move(from, record));
   }
-  cb_emit(cb_build_method_call_4("rewrite", file, record, cb_int(opts),
+  cb_emit(cb_build_method_call_4("rewrite", file, record,
+                                 cb_int_flag(opts, CB_INT_FLAG_WRITE),
                                  CB_FILE(file)->file_status));
 }
 
@@ -7274,7 +7280,7 @@ void cb_emit_write(cb_tree record, cb_tree from, cb_tree opt,
       } else if (opt != cb_int0) {
         cb_error_x(CB_TREE(current_statement), _("LOCK clause invalid here"));
       } else if (lockopt == cb_int1) {
-        opt = cb_int(COB_WRITE_LOCK);
+        opt = cb_int_flag(COB_WRITE_LOCK, CB_INT_FLAG_WRITE);
       }
     }
     if (from) {
@@ -7282,7 +7288,8 @@ void cb_emit_write(cb_tree record, cb_tree from, cb_tree opt,
     }
     if (CB_FILE(file)->organization == COB_ORG_LINE_SEQUENTIAL &&
         opt == cb_int0) {
-      opt = cb_int(COB_WRITE_BEFORE | COB_WRITE_LINES | 1);
+      opt = cb_int_flag(COB_WRITE_BEFORE | COB_WRITE_LINES | 1,
+                        CB_INT_FLAG_WRITE);
     }
     /* RXW - This is horrible */
     if (current_statement->handler_id == COB_EC_I_O_EOP &&
@@ -7291,11 +7298,12 @@ void cb_emit_write(cb_tree record, cb_tree from, cb_tree opt,
       if (CB_CAST_P(opt)) {
         val = CB_INTEGER(CB_BINARY_OP(CB_CAST(opt)->val)->x)->val;
         val |= COB_WRITE_EOP;
-        CB_BINARY_OP(CB_CAST(opt)->val)->x = cb_int(val);
+        CB_BINARY_OP(CB_CAST(opt)->val)->x =
+            cb_int_flag(val, CB_INT_FLAG_WRITE);
       } else {
         val = CB_INTEGER(opt)->val;
         val |= COB_WRITE_EOP;
-        opt = cb_int(val);
+        opt = cb_int_flag(val, CB_INT_FLAG_WRITE);
       }
     }
     cb_emit(cb_build_method_call_4("write", file, record, opt,
@@ -7308,7 +7316,8 @@ cb_tree cb_build_write_advancing_lines(const cb_tree pos, cb_tree lines) {
   int opt;
 
   opt = (pos == CB_BEFORE) ? COB_WRITE_BEFORE : COB_WRITE_AFTER;
-  e = cb_build_binary_op(cb_int(opt | COB_WRITE_LINES), '+', lines);
+  e = cb_build_binary_op(cb_int_flag(opt | COB_WRITE_LINES, CB_INT_FLAG_WRITE),
+                         '+', lines);
   return cb_build_cast_integer(e);
 }
 
@@ -7320,7 +7329,7 @@ cb_tree cb_build_write_advancing_mnemonic(const cb_tree pos, cb_tree mnemonic) {
   switch (token) {
   case CB_FEATURE_FORMFEED:
     opt = (pos == CB_BEFORE) ? COB_WRITE_BEFORE : COB_WRITE_AFTER;
-    return cb_int(opt | COB_WRITE_PAGE);
+    return cb_int_flag(opt | COB_WRITE_PAGE, CB_INT_FLAG_WRITE);
   case CB_FEATURE_C01:
   case CB_FEATURE_C02:
   case CB_FEATURE_C03:
@@ -7334,7 +7343,8 @@ cb_tree cb_build_write_advancing_mnemonic(const cb_tree pos, cb_tree mnemonic) {
   case CB_FEATURE_C11:
   case CB_FEATURE_C12:
     opt = (pos == CB_BEFORE) ? COB_WRITE_BEFORE : COB_WRITE_AFTER;
-    return cb_int(opt | COB_WRITE_CHANNEL | COB_WRITE_PAGE | token);
+    return cb_int_flag(opt | COB_WRITE_CHANNEL | COB_WRITE_PAGE | token,
+                       CB_INT_FLAG_WRITE);
   default:
     cb_error_x(mnemonic, _("Invalid mnemonic name"));
     return cb_error_node;
@@ -7344,7 +7354,7 @@ cb_tree cb_build_write_advancing_mnemonic(const cb_tree pos, cb_tree mnemonic) {
 cb_tree cb_build_write_advancing_page(const cb_tree pos) {
   int opt = (pos == CB_BEFORE) ? COB_WRITE_BEFORE : COB_WRITE_AFTER;
 
-  return cb_int(opt | COB_WRITE_PAGE);
+  return cb_int_flag(opt | COB_WRITE_PAGE, CB_INT_FLAG_WRITE);
 }
 
 cb_tree cb_check_zero_division(cb_tree x) {

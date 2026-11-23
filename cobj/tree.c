@@ -941,6 +941,21 @@ cb_tree cb_int(int n) {
 }
 
 /*
+ * Make an integer node holding option flags of the given kind.
+ * Unlike cb_int(), the node is not shared: each node carries its own kind,
+ * and it must not be mistaken for cb_int0 etc. in pointer comparisons.
+ * Do not compare the result with cb_int0 etc. by pointer.
+ */
+cb_tree cb_int_flag(int n, enum cb_int_flag_kind kind) {
+  struct cb_integer *x;
+
+  x = make_tree(CB_TAG_INTEGER, CB_CATEGORY_NUMERIC, sizeof(struct cb_integer));
+  x->val = n;
+  x->flag_kind = kind;
+  return CB_TREE(x);
+}
+
+/*
  * String
  */
 

@@ -9129,31 +9129,31 @@ yyreduce:
 
   case 779: /* close_option: %empty  */
 #line 4376 "parser.y"
-                                { yyval = cb_int (COB_CLOSE_NORMAL); }
+                                { yyval = cb_int_flag (COB_CLOSE_NORMAL, CB_INT_FLAG_CLOSE); }
 #line 9134 "parser.c"
     break;
 
   case 780: /* close_option: reel_or_unit  */
 #line 4377 "parser.y"
-                                { yyval = cb_int (COB_CLOSE_UNIT); }
+                                { yyval = cb_int_flag (COB_CLOSE_UNIT, CB_INT_FLAG_CLOSE); }
 #line 9140 "parser.c"
     break;
 
   case 781: /* close_option: reel_or_unit _for REMOVAL  */
 #line 4378 "parser.y"
-                                { yyval = cb_int (COB_CLOSE_UNIT_REMOVAL); }
+                                { yyval = cb_int_flag (COB_CLOSE_UNIT_REMOVAL, CB_INT_FLAG_CLOSE); }
 #line 9146 "parser.c"
     break;
 
   case 782: /* close_option: _with NO REWIND  */
 #line 4379 "parser.y"
-                                { yyval = cb_int (COB_CLOSE_NO_REWIND); }
+                                { yyval = cb_int_flag (COB_CLOSE_NO_REWIND, CB_INT_FLAG_CLOSE); }
 #line 9152 "parser.c"
     break;
 
   case 783: /* close_option: _with LOCK  */
 #line 4380 "parser.y"
-                                { yyval = cb_int (COB_CLOSE_LOCK); }
+                                { yyval = cb_int_flag (COB_CLOSE_LOCK, CB_INT_FLAG_CLOSE); }
 #line 9158 "parser.c"
     break;
 
@@ -10483,25 +10483,25 @@ yyreduce:
 
   case 974: /* open_mode: INPUT  */
 #line 5291 "parser.y"
-                                { yyval = cb_int (COB_OPEN_INPUT); }
+                                { yyval = cb_int_flag (COB_OPEN_INPUT, CB_INT_FLAG_OPEN); }
 #line 10488 "parser.c"
     break;
 
   case 975: /* open_mode: OUTPUT  */
 #line 5292 "parser.y"
-                                { yyval = cb_int (COB_OPEN_OUTPUT); }
+                                { yyval = cb_int_flag (COB_OPEN_OUTPUT, CB_INT_FLAG_OPEN); }
 #line 10494 "parser.c"
     break;
 
   case 976: /* open_mode: "I-O"  */
 #line 5293 "parser.y"
-                                { yyval = cb_int (COB_OPEN_I_O); }
+                                { yyval = cb_int_flag (COB_OPEN_I_O, CB_INT_FLAG_OPEN); }
 #line 10500 "parser.c"
     break;
 
   case 977: /* open_mode: EXTEND  */
 #line 5294 "parser.y"
-                                { yyval = cb_int (COB_OPEN_EXTEND); }
+                                { yyval = cb_int_flag (COB_OPEN_EXTEND, CB_INT_FLAG_OPEN); }
 #line 10506 "parser.c"
     break;
 
