@@ -4373,11 +4373,11 @@ close_list:
 ;
 
 close_option:
-  /* empty */			{ $$ = cb_int (COB_CLOSE_NORMAL); }
-| reel_or_unit			{ $$ = cb_int (COB_CLOSE_UNIT); }
-| reel_or_unit _for REMOVAL	{ $$ = cb_int (COB_CLOSE_UNIT_REMOVAL); }
-| _with NO REWIND		{ $$ = cb_int (COB_CLOSE_NO_REWIND); }
-| _with LOCK			{ $$ = cb_int (COB_CLOSE_LOCK); }
+  /* empty */			{ $$ = cb_int_flag (COB_CLOSE_NORMAL, CB_INT_FLAG_CLOSE); }
+| reel_or_unit			{ $$ = cb_int_flag (COB_CLOSE_UNIT, CB_INT_FLAG_CLOSE); }
+| reel_or_unit _for REMOVAL	{ $$ = cb_int_flag (COB_CLOSE_UNIT_REMOVAL, CB_INT_FLAG_CLOSE); }
+| _with NO REWIND		{ $$ = cb_int_flag (COB_CLOSE_NO_REWIND, CB_INT_FLAG_CLOSE); }
+| _with LOCK			{ $$ = cb_int_flag (COB_CLOSE_LOCK, CB_INT_FLAG_CLOSE); }
 ;
 
 reel_or_unit:	REEL | UNIT ;
@@ -5288,10 +5288,10 @@ open_list:
 ;
 
 open_mode:
-  INPUT				{ $$ = cb_int (COB_OPEN_INPUT); }
-| OUTPUT			{ $$ = cb_int (COB_OPEN_OUTPUT); }
-| I_O				{ $$ = cb_int (COB_OPEN_I_O); }
-| EXTEND			{ $$ = cb_int (COB_OPEN_EXTEND); }
+  INPUT				{ $$ = cb_int_flag (COB_OPEN_INPUT, CB_INT_FLAG_OPEN); }
+| OUTPUT			{ $$ = cb_int_flag (COB_OPEN_OUTPUT, CB_INT_FLAG_OPEN); }
+| I_O				{ $$ = cb_int_flag (COB_OPEN_I_O, CB_INT_FLAG_OPEN); }
+| EXTEND			{ $$ = cb_int_flag (COB_OPEN_EXTEND, CB_INT_FLAG_OPEN); }
 ;
 
 open_sharing:

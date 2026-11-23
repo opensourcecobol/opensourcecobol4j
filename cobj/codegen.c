@@ -22,6 +22,7 @@
 #include "config.h"
 
 #include <ctype.h>
+#include <limits.h>
 #include <stdarg.h>
 #include <stdio.h>
 #include <stdlib.h>
@@ -1302,6 +1303,145 @@ static void joutput_const_identifier(struct literal_list *l) {
 /*
  * Integer
  */
+struct int_flag_name {
+  int val;
+  const char *name;
+};
+
+static const struct int_flag_name store_flag_names[] = {
+    {COB_STORE_ROUND, "CobolDecimal.COB_STORE_ROUND"},
+    {COB_STORE_KEEP_ON_OVERFLOW, "CobolDecimal.COB_STORE_KEEP_ON_OVERFLOW"},
+    {COB_STORE_TRUNC_ON_OVERFLOW, "CobolDecimal.COB_STORE_TRUNC_ON_OVERFLOW"},
+    {0, NULL}};
+
+static const struct int_flag_name read_flag_names[] = {
+    {COB_READ_NEXT, "CobolFile.COB_READ_NEXT"},
+    {COB_READ_PREVIOUS, "CobolFile.COB_READ_PREVIOUS"},
+    {COB_READ_FIRST, "CobolFile.COB_READ_FIRST"},
+    {COB_READ_LAST, "CobolFile.COB_READ_LAST"},
+    {COB_READ_LOCK, "CobolFile.COB_READ_LOCK"},
+    {COB_READ_NO_LOCK, "CobolFile.COB_READ_NO_LOCK"},
+    {COB_READ_KEPT_LOCK, "CobolFile.COB_READ_KEPT_LOCK"},
+    {COB_READ_WAIT_LOCK, "CobolFile.COB_READ_WAIT_LOCK"},
+    {COB_READ_IGNORE_LOCK, "CobolFile.COB_READ_IGNORE_LOCK"},
+    {0, NULL}};
+
+/* the bits in COB_WRITE_MASK (line count or channel) are output as a number */
+static const struct int_flag_name write_flag_names[] = {
+    {COB_WRITE_AFTER, "CobolFile.COB_WRITE_AFTER"},
+    {COB_WRITE_BEFORE, "CobolFile.COB_WRITE_BEFORE"},
+    {COB_WRITE_LINES, "CobolFile.COB_WRITE_LINES"},
+    {COB_WRITE_PAGE, "CobolFile.COB_WRITE_PAGE"},
+    {COB_WRITE_CHANNEL, "CobolFile.COB_WRITE_CHANNEL"},
+    {COB_WRITE_EOP, "CobolFile.COB_WRITE_EOP"},
+    {COB_WRITE_LOCK, "CobolFile.COB_WRITE_LOCK"},
+    {0, NULL}};
+
+static const struct int_flag_name open_mode_names[] = {
+    {COB_OPEN_INPUT, "CobolFile.COB_OPEN_INPUT"},
+    {COB_OPEN_OUTPUT, "CobolFile.COB_OPEN_OUTPUT"},
+    {COB_OPEN_I_O, "CobolFile.COB_OPEN_I_O"},
+    {COB_OPEN_EXTEND, "CobolFile.COB_OPEN_EXTEND"},
+    {0, NULL}};
+
+static const struct int_flag_name close_option_names[] = {
+    {COB_CLOSE_NORMAL, "CobolFile.COB_CLOSE_NORMAL"},
+    {COB_CLOSE_LOCK, "CobolFile.COB_CLOSE_LOCK"},
+    {COB_CLOSE_NO_REWIND, "CobolFile.COB_CLOSE_NO_REWIND"},
+    {COB_CLOSE_UNIT, "CobolFile.COB_CLOSE_UNIT"},
+    {COB_CLOSE_UNIT_REMOVAL, "CobolFile.COB_CLOSE_UNIT_REMOVAL"},
+    {0, NULL}};
+
+/*
+ * Output a single value as the name of the matching constant.
+ * Falls back to the number if no constant matches.
+ */
+static void joutput_int_enum(int val, const struct int_flag_name *names) {
+  const struct int_flag_name *n;
+
+  for (n = names; n->name; n++) {
+    if (n->val == val) {
+      joutput("%s", n->name);
+      return;
+    }
+  }
+  joutput("%d", val);
+}
+
+/*
+ * Output a bit mask as "A | B | ...".  The bits that have no name are
+ * output as a number at the end.  The expression is parenthesized when it
+ * has two or more terms, so that it can be used as an operand safely.
+ */
+static void joutput_int_bits(int val, const struct int_flag_name *names) {
+  const struct int_flag_name *n;
+  const char *terms[sizeof(int) * CHAR_BIT + 1]; /* every bit + the rest */
+  int nterms = 0;
+  int rest = val;
+  int i;
+
+  if (val == 0) {
+    joutput("0");
+    return;
+  }
+  for (n = names; n->name; n++) {
+    if ((rest & n->val) == n->val) {
+      terms[nterms++] = n->name;
+      rest &= ~n->val;
+    }
+  }
+  if (nterms == 0) {
+    joutput("%d", val);
+    return;
+  }
+  if (nterms > 1 || rest != 0) {
+    joutput("(");
+  }
+  for (i = 0; i < nterms; i++) {
+    joutput("%s%s", i ? " | " : "", terms[i]);
+  }
+  if (rest != 0) {
+    joutput(" | %d", rest);
+  }
+  if (nterms > 1 || rest != 0) {
+    joutput(")");
+  }
+}
+
+static void joutput_int_flag(struct cb_integer *p) {
+  switch (p->flag_kind) {
+  case CB_INT_FLAG_STORE:
+    joutput_int_bits(p->val, store_flag_names);
+    break;
+  case CB_INT_FLAG_READ:
+    joutput_int_bits(p->val, read_flag_names);
+    break;
+  case CB_INT_FLAG_WRITE:
+    joutput_int_bits(p->val, write_flag_names);
+    break;
+  case CB_INT_FLAG_OPEN:
+    joutput_int_enum(p->val, open_mode_names);
+    break;
+  case CB_INT_FLAG_CLOSE:
+    joutput_int_enum(p->val, close_option_names);
+    break;
+  default:
+    joutput("%d", p->val);
+    break;
+  }
+}
+
+/*
+ * Output an operator of CobolIntrinsic.intrBinop as a char literal
+ */
+static void joutput_binop_char(int op) {
+  if (op >= 0x20 && op < 0x7f && op != '\\' && op != '\'') {
+    joutput("'%c'", op);
+  } else {
+    joutput("%d", op);
+  }
+}
+
 static void joutput_integer(cb_tree x) {
   struct cb_binary_op *p;
   struct cb_cast *cp;
@@ -1318,7 +1458,11 @@ static void joutput_integer(cb_tree x) {
     }
     break;
   case CB_TAG_INTEGER:
-    joutput("%d", CB_INTEGER(x)->val);
+    if (CB_INTEGER(x)->flag_kind != CB_INT_FLAG_NONE) {
+      joutput_int_flag(CB_INTEGER(x));
+    } else {
+      joutput("%d", CB_INTEGER(x)->val);
+    }
     break;
   case CB_TAG_LITERAL:
     joutput("%d", cb_get_int(x));
@@ -1805,7 +1949,7 @@ static void joutput_param(cb_tree x, int id) {
     joutput("CobolIntrinsic.intrBinop (");
     joutput_param(bp->x, id);
     joutput(", ");
-    joutput("%d", bp->op);
+    joutput_binop_char(bp->op);
     joutput(", ");
     joutput_param(bp->y, id);
     joutput(")");
@@ -5163,7 +5307,8 @@ static void joutput_internal_function(struct cb_program *prog,
   for (l = prog->file_list; l; l = CB_CHAIN(l)) {
     fl = CB_FILE(CB_VALUE(l));
     if (fl->organization != COB_ORG_SORT) {
-      joutput_line("	%s%s.close (0, null);", CB_PREFIX_FILE, fl->cname);
+      joutput_line("	%s%s.close (CobolFile.COB_CLOSE_NORMAL, null);",
+                   CB_PREFIX_FILE, fl->cname);
     }
   }
   if (prog->decimal_index_max) {
